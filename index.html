@@ -2244,3 +2244,12 @@
 
 </body>
 </html>
+<script>
+(function(){
+const SB_URL='https://sqyzboesdpdussiwqpzk.supabase.co';
+const SB_KEY='sb_publishable_TF6vZ_gvSHlxuVBnsDIbnw_qFJCuGjO';
+async function getCount(t){try{const r=await fetch(SB_URL+'/rest/v1/'+t+'?select=id&limit=1',{headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,Range:'0-0',Prefer:'count=exact'}});return parseInt(r.headers.get('content-range').split('/')[1])||0}catch(e){return 0}}
+async function update(){const p=await getCount('practitioners');console.log('BLEU Live:',p,'practitioners');document.querySelectorAll('.live-stat-value').forEach(e=>{if(e.dataset.count==='847')e.textContent=p.toLocaleString();if(e.dataset.count==='12847')e.textContent=p.toLocaleString()});document.querySelectorAll('.category-count').forEach(e=>{if(e.textContent.includes('4,847'))e.textContent=p.toLocaleString()+' near you';if(e.textContent.includes('847'))e.textContent=p.toLocaleString()});document.querySelectorAll('.city-metric-value').forEach(e=>{if(e.textContent==='847')e.textContent=p.toLocaleString()})}
+update();setInterval(update,300000);
+})();
+</script>
