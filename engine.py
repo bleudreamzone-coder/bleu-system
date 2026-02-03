@@ -215,7 +215,7 @@ def scrape_google(cities):
         "acupuncture","chiropractor","organic grocery","juice bar","float tank",
         "supplement store","therapist counselor","naturopathic doctor","pilates studio",
         "health food store","spa wellness","cryotherapy","CBD shop","nutritionist"]
-    today = cities[:5]
+    today = cities[:24]
     print(f"\n  📍 GOOGLE PLACES — {len(today)} cities × {len(QUERIES)} queries")
     t0,total,seen = time.time(),0,set()
     for c in today:
@@ -544,7 +544,7 @@ def scrape_yelp(cities):
     t0, total = time.time(), 0
     CATS = ["acupuncture","chiropractors","yoga","meditation","nutritionists",
         "naturopathic","massage","floatation","cryotherapy"]
-    today = cities[:3]
+    today = cities[:24]
     for c in today:
         for cat in CATS:
             try:
