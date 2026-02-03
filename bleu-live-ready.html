@@ -1,0 +1,2246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bleu.live — The Intelligence Layer for Healthier Cities</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --ocean-abyss: #0A1418;
+      --ocean-deep: #122028;
+      --ocean-night: #1A3040;
+      --ocean: #2A5068;
+      --ocean-warm: #3A7088;
+      --ocean-light: #5A98B0;
+      --ocean-soft: #88C0D8;
+      --ocean-mist: #B8E0F0;
+      --ocean-breath: #E0F4FA;
+      
+      --earth-root: #1A2418;
+      --earth-deep: #243828;
+      --forest: #2E5038;
+      --sage: #4A7858;
+      --fern: #68A078;
+      --meadow: #90C8A0;
+      --mint: #B8E8C8;
+      --spring: #E0F8E8;
+      
+      --terra-deep: #2A1A14;
+      --clay: #4A3028;
+      --copper: #6A4840;
+      --terracotta: #8A6858;
+      --peach: #B89080;
+      --blush: #D8B8A8;
+      --rose: #F0D8D0;
+      --petal: #FFF0E8;
+      
+      --gold-deep: #2A2010;
+      --bronze: #4A3820;
+      --amber: #6A5030;
+      --honey: #8A7048;
+      --gold: #B89860;
+      --wheat: #D8C090;
+      --cream: #F0E8D0;
+      --milk: #FFFCF0;
+      
+      --void: #08090A;
+      --charcoal: #141618;
+      --graphite: #222528;
+      --slate: #404850;
+      --stone: #606870;
+      --drift: #909898;
+      --cloud: #C0C8C8;
+      --mist: #E0E8E8;
+      --fog: #F0F4F4;
+      --snow: #F8FAFA;
+      --white: #FFFFFF;
+      
+      --accent: #4A7858;
+      --accent-glow: rgba(74, 120, 88, 0.3);
+      
+      /* Status Colors */
+      --success: #4A7858;
+      --warning: #B89860;
+      --info: #5A98B0;
+    }
+    
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--snow);
+      color: var(--charcoal);
+      overflow-x: hidden;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    ::selection { background: rgba(74, 120, 88, 0.2); }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       ANIMATIONS — Maximum Life
+    ═══════════════════════════════════════════════════════════════ */
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.4; }
+      50% { transform: scale(1.15); opacity: 0.7; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.1); opacity: 0.3; }
+      100% { transform: scale(0.9); opacity: 0.6; }
+    }
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 30px var(--accent-glow); }
+      50% { box-shadow: 0 0 60px var(--accent-glow), 0 0 100px rgba(74, 120, 88, 0.15); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes ripple {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.7; }
+    }
+    @keyframes orbit {
+      from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+      to { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes dataStream {
+      0% { transform: translateY(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100px); opacity: 0; }
+    }
+    @keyframes barGrow {
+      from { width: 0%; }
+      to { width: var(--bar-width); }
+    }
+    @keyframes numberCount {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes checkIn {
+      0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+      50% { transform: scale(1.2) rotate(0deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes slideRight {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0.3; }
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       AMBIENT BACKGROUND
+    ═══════════════════════════════════════════════════════════════ */
+    .ambient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      animation: breathe 10s ease-in-out infinite;
+    }
+    .orb-1 { width: 600px; height: 600px; background: var(--ocean-soft); top: -15%; left: -15%; }
+    .orb-2 { width: 500px; height: 500px; background: var(--meadow); top: 25%; right: -10%; animation-delay: 3s; }
+    .orb-3 { width: 700px; height: 700px; background: var(--peach); bottom: 5%; left: 15%; animation-delay: 5s; opacity: 0.25; }
+    .orb-4 { width: 400px; height: 400px; background: var(--gold); bottom: -15%; right: 5%; animation-delay: 7s; }
+    .orb-5 { width: 550px; height: 550px; background: var(--mint); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 2s; opacity: 0.3; }
+    
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      background-image: 
+        linear-gradient(rgba(74, 120, 88, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 120, 88, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       NAVIGATION
+    ═══════════════════════════════════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      background: rgba(248, 250, 250, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    .nav-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      text-decoration: none;
+    }
+    .logo span { color: var(--sage); }
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+    }
+    .nav-link {
+      padding: 0.5rem 0.9rem;
+      font-size: 0.82rem;
+      color: var(--slate);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+    }
+    .nav-link:hover {
+      color: var(--charcoal);
+      background: rgba(74, 120, 88, 0.08);
+    }
+    .nav-cta {
+      background: var(--charcoal);
+      color: var(--white);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    .nav-cta:hover {
+      background: var(--sage);
+      transform: translateY(-2px);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       LIVE DATA BAR
+    ═══════════════════════════════════════════════════════════════ */
+    .live-bar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      background: var(--charcoal);
+      padding: 0.6rem 2rem;
+      overflow: hidden;
+    }
+    .live-bar-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      color: var(--meadow);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--meadow);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .live-stats {
+      display: flex;
+      gap: 2rem;
+    }
+    .live-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--cloud);
+    }
+    .live-stat-value {
+      color: var(--white);
+      font-weight: 600;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 12rem 2rem 6rem;
+      position: relative;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 1.2rem;
+      background: rgba(74, 120, 88, 0.1);
+      border: 1px solid rgba(74, 120, 88, 0.2);
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--sage);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 2rem;
+      animation: fadeUp 1s ease forwards;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--sage);
+      border-radius: 50%;
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 500;
+      line-height: 1.05;
+      color: var(--charcoal);
+      max-width: 1000px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 1s ease 0.2s forwards;
+      opacity: 0;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--sage);
+    }
+    .hero-sub {
+      font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+      color: var(--slate);
+      max-width: 750px;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 1s ease 0.4s forwards;
+      opacity: 0;
+      line-height: 1.7;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 1s ease 0.6s forwards;
+      opacity: 0;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 1rem 1.75rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--charcoal);
+      color: var(--white);
+      animation: glow 3s ease-in-out infinite;
+    }
+    .btn-primary:hover {
+      background: var(--sage);
+      transform: translateY(-3px);
+    }
+    .btn-secondary {
+      background: var(--white);
+      color: var(--charcoal);
+      border: 1px solid var(--mist);
+    }
+    .btn-secondary:hover {
+      border-color: var(--sage);
+      transform: translateY(-3px);
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--drift);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      animation: float 3s ease-in-out infinite;
+    }
+    .hero-scroll::after {
+      content: '';
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--drift), transparent);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       STATS BAR
+    ═══════════════════════════════════════════════════════════════ */
+    .stats-bar {
+      background: var(--fog);
+      padding: 4rem 2rem;
+      border-top: 1px solid rgba(0,0,0,0.04);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2rem;
+    }
+    .stat-item {
+      text-align: center;
+      animation: countUp 0.8s ease forwards;
+      opacity: 0;
+    }
+    .stat-item:nth-child(1) { animation-delay: 0.1s; }
+    .stat-item:nth-child(2) { animation-delay: 0.2s; }
+    .stat-item:nth-child(3) { animation-delay: 0.3s; }
+    .stat-item:nth-child(4) { animation-delay: 0.4s; }
+    .stat-item:nth-child(5) { animation-delay: 0.5s; }
+    .stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--sage);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--slate);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       SECTION STYLES
+    ═══════════════════════════════════════════════════════════════ */
+    section {
+      padding: 7rem 2rem;
+    }
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 4rem;
+    }
+    .section-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--sage);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 500;
+      color: var(--charcoal);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .section-sub {
+      font-size: 1.1rem;
+      color: var(--slate);
+      line-height: 1.7;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       LIVE CITIES MONITORING SECTION
+    ═══════════════════════════════════════════════════════════════ */
+    .cities-monitor-section {
+      background: var(--charcoal);
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+    .cities-monitor-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(74, 120, 88, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(88, 192, 216, 0.08) 0%, transparent 25%);
+    }
+    .cities-monitor-section .section-tag { color: var(--meadow); }
+    .cities-monitor-section .section-title { color: var(--white); }
+    .cities-monitor-section .section-sub { color: var(--cloud); }
+    
+    /* City Grid */
+    .cities-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .city-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .city-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--sage), var(--ocean-light));
+      transform: scaleX(0);
+      transition: transform 0.35s ease;
+    }
+    .city-card:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-5px);
+      border-color: rgba(144, 200, 160, 0.3);
+    }
+    .city-card:hover::before {
+      transform: scaleX(1);
+    }
+    .city-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .city-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .city-status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.65rem;
+      color: var(--meadow);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .city-status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--meadow);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .city-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .city-metric {
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      padding: 0.75rem;
+    }
+    .city-metric-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.15rem;
+    }
+    .city-metric-label {
+      font-size: 0.65rem;
+      color: var(--drift);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .city-metric-change {
+      font-size: 0.7rem;
+      color: var(--meadow);
+      margin-top: 0.25rem;
+    }
+    .city-metric-change.warning { color: var(--gold); }
+    
+    /* Live Feed */
+    .live-feed {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+    .live-feed-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .live-feed-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--cloud);
+    }
+    .live-feed-title::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--meadow);
+      border-radius: 50%;
+      animation: blink 2s ease-in-out infinite;
+    }
+    .live-feed-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 200px;
+      overflow: hidden;
+    }
+    .feed-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem;
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      animation: slideRight 0.5s ease forwards;
+    }
+    .feed-item-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(144, 200, 160, 0.15);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .feed-item-content {
+      flex: 1;
+    }
+    .feed-item-text {
+      font-size: 0.85rem;
+      color: var(--cloud);
+    }
+    .feed-item-text strong { color: var(--white); }
+    .feed-item-time {
+      font-size: 0.7rem;
+      color: var(--drift);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       MEASUREMENT SYSTEM SECTION
+    ═══════════════════════════════════════════════════════════════ */
+    .measurement-section {
+      background: linear-gradient(180deg, var(--snow) 0%, var(--fog) 100%);
+    }
+    .measurement-container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .measurement-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      line-height: 1.15;
+    }
+    .measurement-info h3 em { font-style: italic; color: var(--sage); }
+    .measurement-info > p {
+      font-size: 1.05rem;
+      color: var(--slate);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .measurement-points {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .measurement-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--white);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+    .measurement-point:hover {
+      transform: translateX(8px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+    .measurement-point-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(74, 120, 88, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .measurement-point-text h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 0.25rem;
+    }
+    .measurement-point-text p {
+      font-size: 0.85rem;
+      color: var(--slate);
+    }
+    
+    /* Measurement Visual */
+    .measurement-visual {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.06);
+    }
+    .measurement-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .measurement-title {
+      font-size: 0.8rem;
+      color: var(--slate);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .measurement-period {
+      font-size: 0.75rem;
+      color: var(--sage);
+      background: rgba(74, 120, 88, 0.1);
+      padding: 0.4rem 0.8rem;
+      border-radius: 100px;
+    }
+    
+    /* Data Bars */
+    .data-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .data-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .data-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .data-bar-label {
+      font-size: 0.85rem;
+      color: var(--charcoal);
+      font-weight: 500;
+    }
+    .data-bar-value {
+      font-size: 0.85rem;
+      color: var(--sage);
+      font-weight: 600;
+    }
+    .data-bar-track {
+      height: 10px;
+      background: var(--fog);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .data-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sage), var(--fern));
+      border-radius: 5px;
+      animation: barGrow 1.5s ease forwards;
+    }
+    .data-bar-fill.gold { background: linear-gradient(90deg, var(--amber), var(--gold)); }
+    .data-bar-fill.ocean { background: linear-gradient(90deg, var(--ocean), var(--ocean-light)); }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       VALIDATION TIERS SECTION
+    ═══════════════════════════════════════════════════════════════ */
+    .validation-section {
+      background: var(--snow);
+    }
+    .validation-process {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+    .validation-process::before {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--sage), var(--sage), transparent);
+      opacity: 0.3;
+    }
+    .validation-step {
+      text-align: center;
+      position: relative;
+    }
+    .validation-step-number {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--sage), var(--forest));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 0 auto 1rem;
+      position: relative;
+      z-index: 2;
+    }
+    .validation-step h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .validation-step p {
+      font-size: 0.8rem;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+    
+    /* Tiers Grid */
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .tier-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 2.5rem;
+      border: 2px solid var(--mist);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .tier-card.featured {
+      border-color: var(--sage);
+      transform: scale(1.02);
+    }
+    .tier-card.featured::before {
+      content: 'MOST POPULAR';
+      position: absolute;
+      top: 1rem;
+      right: -2rem;
+      background: var(--sage);
+      color: var(--white);
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: 0.4rem 2.5rem;
+      transform: rotate(45deg);
+    }
+    .tier-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.1);
+    }
+    .tier-card.featured:hover {
+      transform: scale(1.02) translateY(-8px);
+    }
+    .tier-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, rgba(74, 120, 88, 0.15), rgba(74, 120, 88, 0.05));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .tier-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .tier-price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--sage);
+      margin-bottom: 0.25rem;
+    }
+    .tier-price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--slate);
+    }
+    .tier-desc {
+      font-size: 0.9rem;
+      color: var(--slate);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .tier-features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .tier-feature {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.88rem;
+      color: var(--charcoal);
+    }
+    .tier-feature::before {
+      content: '✓';
+      width: 22px;
+      height: 22px;
+      background: rgba(74, 120, 88, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--sage);
+      flex-shrink: 0;
+    }
+    .tier-cta {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      background: var(--charcoal);
+      color: var(--white);
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .tier-cta:hover {
+      background: var(--sage);
+    }
+    .tier-card.featured .tier-cta {
+      background: var(--sage);
+    }
+    .tier-card.featured .tier-cta:hover {
+      background: var(--forest);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       WHO IT HELPS SECTION
+    ═══════════════════════════════════════════════════════════════ */
+    .audience-section {
+      background: linear-gradient(180deg, var(--fog) 0%, var(--snow) 100%);
+    }
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .audience-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 2.5rem;
+      border: 1px solid var(--mist);
+      transition: all 0.4s ease;
+    }
+    .audience-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+      border-color: var(--sage);
+    }
+    .audience-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, rgba(74, 120, 88, 0.15), rgba(74, 120, 88, 0.05));
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .audience-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .audience-card > p {
+      font-size: 0.95rem;
+      color: var(--slate);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .audience-benefits {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .audience-benefit {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.88rem;
+      color: var(--charcoal);
+    }
+    .audience-benefit::before {
+      content: '→';
+      color: var(--sage);
+      font-weight: 600;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       ALVAI SECTION
+    ═══════════════════════════════════════════════════════════════ */
+    .alvai-section {
+      background: var(--snow);
+    }
+    .alvai-container {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .alvai-chat {
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--fog);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    .chat-avatar {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--sage), var(--ocean));
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      position: relative;
+    }
+    .chat-avatar::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 16px;
+      border: 2px solid var(--sage);
+      opacity: 0.3;
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+    .chat-header-info h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .chat-header-info p {
+      font-size: 0.8rem;
+      color: var(--sage);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .chat-header-info p::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--sage);
+      border-radius: 50%;
+    }
+    .chat-messages {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-height: 280px;
+    }
+    .chat-msg {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .chat-msg.user { flex-direction: row-reverse; }
+    .chat-msg-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .chat-msg.ai .chat-msg-avatar { background: rgba(74, 120, 88, 0.15); }
+    .chat-msg.user .chat-msg-avatar { background: var(--ocean-mist); }
+    .chat-msg-bubble {
+      max-width: 85%;
+      padding: 1rem 1.25rem;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .chat-msg.ai .chat-msg-bubble {
+      background: var(--fog);
+      border-bottom-left-radius: 4px;
+    }
+    .chat-msg.user .chat-msg-bubble {
+      background: var(--charcoal);
+      color: var(--white);
+      border-bottom-right-radius: 4px;
+    }
+    .chat-input {
+      display: flex;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem 1.5rem;
+      border-top: 1px solid rgba(0,0,0,0.04);
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 0.9rem 1.25rem;
+      border: 1px solid var(--mist);
+      border-radius: 12px;
+      font-size: 0.9rem;
+      background: var(--fog);
+    }
+    .chat-input input:focus {
+      outline: none;
+      border-color: var(--sage);
+      background: var(--white);
+    }
+    .chat-input button {
+      width: 48px;
+      height: 48px;
+      background: var(--sage);
+      border: none;
+      border-radius: 12px;
+      color: var(--white);
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    .chat-input button:hover {
+      background: var(--forest);
+    }
+    .alvai-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .alvai-info h3 em { font-style: italic; color: var(--sage); }
+    .alvai-tagline {
+      font-size: 0.85rem;
+      color: var(--sage);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 1.5rem;
+    }
+    .alvai-desc {
+      font-size: 1.05rem;
+      color: var(--slate);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .alvai-capabilities {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .alvai-capability {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--fog);
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+    .alvai-capability::before {
+      content: '✓';
+      width: 24px;
+      height: 24px;
+      background: rgba(74, 120, 88, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--sage);
+      flex-shrink: 0;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       CTA SECTION
+    ═══════════════════════════════════════════════════════════════ */
+    .cta-section {
+      background: linear-gradient(180deg, var(--cream) 0%, var(--milk) 100%);
+      text-align: center;
+      padding: 8rem 2rem;
+    }
+    .cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 500;
+      color: var(--charcoal);
+      max-width: 800px;
+      margin: 0 auto 1rem;
+    }
+    .cta-sub {
+      font-size: 1.1rem;
+      color: var(--slate);
+      margin-bottom: 2.5rem;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.25rem 2.5rem;
+      font-size: 1.05rem;
+      font-weight: 500;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .cta-btn.primary {
+      background: var(--charcoal);
+      color: var(--white);
+      animation: glow 3s ease-in-out infinite;
+    }
+    .cta-btn.primary:hover {
+      background: var(--sage);
+      transform: translateY(-4px);
+    }
+    .cta-btn.secondary {
+      background: var(--white);
+      color: var(--charcoal);
+      border: 1px solid var(--mist);
+    }
+    .cta-btn.secondary:hover {
+      border-color: var(--sage);
+      transform: translateY(-4px);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════════════════ */
+    footer {
+      background: var(--charcoal);
+      color: var(--cloud);
+      padding: 4rem 2rem 2rem;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-main {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .footer-brand span { color: var(--meadow); }
+    .footer-tagline {
+      font-size: 0.85rem;
+      color: var(--drift);
+      margin-bottom: 1rem;
+    }
+    .footer-desc {
+      font-size: 0.85rem;
+      color: var(--stone);
+      max-width: 300px;
+      line-height: 1.6;
+    }
+    .footer-links {
+      display: flex;
+      gap: 4rem;
+    }
+    .footer-col h4 {
+      font-size: 0.75rem;
+      color: var(--drift);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .footer-col a {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--cloud);
+      text-decoration: none;
+      margin-bottom: 0.6rem;
+      transition: color 0.25s ease;
+    }
+    .footer-col a:hover { color: var(--meadow); }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--drift);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .stats-inner { grid-template-columns: repeat(3, 1fr); }
+      .cities-grid { grid-template-columns: repeat(2, 1fr); }
+      .validation-process { grid-template-columns: repeat(3, 1fr); }
+      .tiers-grid { grid-template-columns: 1fr; }
+      .audience-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .live-bar { display: none; }
+      .hero { padding-top: 8rem; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .cities-grid { grid-template-columns: 1fr; }
+      .measurement-container,
+      .alvai-container { grid-template-columns: 1fr; }
+      .validation-process { grid-template-columns: 1fr; }
+      .validation-process::before { display: none; }
+      .footer-main { flex-direction: column; gap: 2rem; }
+      .footer-links { flex-wrap: wrap; gap: 2rem; }
+      .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .stats-inner { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; align-items: center; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Background -->
+  <div class="ambient-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="orb orb-5"></div>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo"><span>bleu</span>.live</a>
+      <div class="nav-links">
+        <a href="#cities" class="nav-link">🏙️ Cities</a>
+        <a href="#measurement" class="nav-link">📊 System</a>
+        <a href="#validation" class="nav-link">✓ Validation</a>
+        <a href="#audience" class="nav-link">👥 Who It's For</a>
+        <a href="#alvai" class="nav-link">✦ Alvai</a>
+      </div>
+      <a href="#alvai" class="nav-cta">Talk to Alvai</a>
+    </div>
+  </nav>
+
+  <!-- Live Data Bar -->
+  <div class="live-bar">
+    <div class="live-bar-inner">
+      <div class="live-indicator">
+        <div class="live-dot"></div>
+        <span>Network Active</span>
+      </div>
+      <div class="live-stats">
+        <div class="live-stat">
+          <span>Cities Monitored:</span>
+          <span class="live-stat-value">34</span>
+        </div>
+        <div class="live-stat">
+          <span>Sources Validated:</span>
+          <span class="live-stat-value">12,847</span>
+        </div>
+        <div class="live-stat">
+          <span>Active Sessions:</span>
+          <span class="live-stat-value">2,419</span>
+        </div>
+        <div class="live-stat">
+          <span>Data Points Today:</span>
+          <span class="live-stat-value">847K</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span>Free for Cities · Paid by Results</span>
+    </div>
+    <h1>The intelligence layer that makes <em>cities healthier</em></h1>
+    <p class="hero-sub">
+      We monitor, measure, and validate every wellness source in your city — practitioners, products, protocols — 
+      giving leaders real data and citizens real trust. No cost to cities. No guessing. Just results.
+    </p>
+    <div class="hero-ctas">
+      <a href="#alvai" class="btn btn-primary">
+        <span>✦</span>
+        <span>Talk to Alvai</span>
+      </a>
+      <a href="#validation" class="btn btn-secondary">
+        <span>✓</span>
+        <span>Get Validated</span>
+      </a>
+    </div>
+    <div class="hero-scroll">
+      <span>Explore</span>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-value">34</div>
+        <div class="stat-label">Cities Monitored</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">12,847</div>
+        <div class="stat-label">Sources Validated</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">2.4M</div>
+        <div class="stat-label">Data Points Daily</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">98.2%</div>
+        <div class="stat-label">Accuracy Rate</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">$0</div>
+        <div class="stat-label">Cost to Cities</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Cities Monitoring -->
+  <section class="cities-monitor-section" id="cities">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Live City Monitoring</div>
+        <h2 class="section-title">34 Cities. Real-Time Data. Zero Cost.</h2>
+        <p class="section-sub">
+          We monitor wellness infrastructure across partner cities — tracking practitioners, outcomes, 
+          and community health metrics in real time. Cities get dashboards. Citizens get trust.
+        </p>
+      </div>
+      
+      <div class="cities-grid">
+        <div class="city-card">
+          <div class="city-header">
+            <div class="city-name">New Orleans</div>
+            <div class="city-status">Live</div>
+          </div>
+          <div class="city-metrics">
+            <div class="city-metric">
+              <div class="city-metric-value">847</div>
+              <div class="city-metric-label">Practitioners</div>
+              <div class="city-metric-change">↑ 12% this quarter</div>
+            </div>
+            <div class="city-metric">
+              <div class="city-metric-value">78.4</div>
+              <div class="city-metric-label">Health Score</div>
+              <div class="city-metric-change">↑ 6.2 from baseline</div>
+            </div>
+          </div>
+        </div>
+        <div class="city-card">
+          <div class="city-header">
+            <div class="city-name">Austin</div>
+            <div class="city-status">Live</div>
+          </div>
+          <div class="city-metrics">
+            <div class="city-metric">
+              <div class="city-metric-value">1,234</div>
+              <div class="city-metric-label">Practitioners</div>
+              <div class="city-metric-change">↑ 18% this quarter</div>
+            </div>
+            <div class="city-metric">
+              <div class="city-metric-value">82.1</div>
+              <div class="city-metric-label">Health Score</div>
+              <div class="city-metric-change">↑ 4.8 from baseline</div>
+            </div>
+          </div>
+        </div>
+        <div class="city-card">
+          <div class="city-header">
+            <div class="city-name">Portland</div>
+            <div class="city-status">Live</div>
+          </div>
+          <div class="city-metrics">
+            <div class="city-metric">
+              <div class="city-metric-value">956</div>
+              <div class="city-metric-label">Practitioners</div>
+              <div class="city-metric-change">↑ 9% this quarter</div>
+            </div>
+            <div class="city-metric">
+              <div class="city-metric-value">79.8</div>
+              <div class="city-metric-label">Health Score</div>
+              <div class="city-metric-change">↑ 5.1 from baseline</div>
+            </div>
+          </div>
+        </div>
+        <div class="city-card">
+          <div class="city-header">
+            <div class="city-name">Denver</div>
+            <div class="city-status">Live</div>
+          </div>
+          <div class="city-metrics">
+            <div class="city-metric">
+              <div class="city-metric-value">1,089</div>
+              <div class="city-metric-label">Practitioners</div>
+              <div class="city-metric-change">↑ 15% this quarter</div>
+            </div>
+            <div class="city-metric">
+              <div class="city-metric-value">81.3</div>
+              <div class="city-metric-label">Health Score</div>
+              <div class="city-metric-change">↑ 7.2 from baseline</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="live-feed">
+        <div class="live-feed-header">
+          <div class="live-feed-title">Live Validation Feed</div>
+        </div>
+        <div class="live-feed-items">
+          <div class="feed-item">
+            <div class="feed-item-icon">✓</div>
+            <div class="feed-item-content">
+              <div class="feed-item-text"><strong>Dr. Sarah Chen</strong> validated in Austin — Functional Medicine</div>
+              <div class="feed-item-time">2 minutes ago</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-item-icon">📊</div>
+            <div class="feed-item-content">
+              <div class="feed-item-text"><strong>New Orleans</strong> health score updated — now 78.4 (+0.3)</div>
+              <div class="feed-item-time">5 minutes ago</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-item-icon">🧴</div>
+            <div class="feed-item-content">
+              <div class="feed-item-text"><strong>Vitality Labs</strong> product line validated — 12 SKUs approved</div>
+              <div class="feed-item-time">12 minutes ago</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-item-icon">✓</div>
+            <div class="feed-item-content">
+              <div class="feed-item-text"><strong>Portland Wellness Collective</strong> — 8 practitioners batch validated</div>
+              <div class="feed-item-time">18 minutes ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Measurement System -->
+  <section class="measurement-section" id="measurement">
+    <div class="section-inner">
+      <div class="measurement-container">
+        <div class="measurement-info">
+          <h3>How We <em>Measure</em> Everything</h3>
+          <p>
+            Every source in the network is continuously monitored. We track credentials, outcomes, reviews, 
+            and real health impact — creating a living score that tells the truth about what works.
+          </p>
+          <div class="measurement-points">
+            <div class="measurement-point">
+              <div class="measurement-point-icon">📜</div>
+              <div class="measurement-point-text">
+                <h4>Credential Verification</h4>
+                <p>Licenses, certifications, and training verified against official databases</p>
+              </div>
+            </div>
+            <div class="measurement-point">
+              <div class="measurement-point-icon">📈</div>
+              <div class="measurement-point-text">
+                <h4>Outcome Tracking</h4>
+                <p>Anonymous, aggregated health outcomes from actual patient journeys</p>
+              </div>
+            </div>
+            <div class="measurement-point">
+              <div class="measurement-point-icon">⭐</div>
+              <div class="measurement-point-text">
+                <h4>Review Analysis</h4>
+                <p>Sentiment and pattern analysis across reviews, complaints, and testimonials</p>
+              </div>
+            </div>
+            <div class="measurement-point">
+              <div class="measurement-point-icon">🔄</div>
+              <div class="measurement-point-text">
+                <h4>Continuous Monitoring</h4>
+                <p>Scores update in real-time as new data flows through the system</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="measurement-visual">
+          <div class="measurement-header">
+            <div class="measurement-title">Network Health Metrics</div>
+            <div class="measurement-period">Live Data</div>
+          </div>
+          <div class="data-bars">
+            <div class="data-bar">
+              <div class="data-bar-header">
+                <div class="data-bar-label">Credential Verification Rate</div>
+                <div class="data-bar-value">98.2%</div>
+              </div>
+              <div class="data-bar-track">
+                <div class="data-bar-fill" style="--bar-width: 98.2%;"></div>
+              </div>
+            </div>
+            <div class="data-bar">
+              <div class="data-bar-header">
+                <div class="data-bar-label">Positive Outcome Rate</div>
+                <div class="data-bar-value">87.4%</div>
+              </div>
+              <div class="data-bar-track">
+                <div class="data-bar-fill gold" style="--bar-width: 87.4%;"></div>
+              </div>
+            </div>
+            <div class="data-bar">
+              <div class="data-bar-header">
+                <div class="data-bar-label">Review Sentiment Score</div>
+                <div class="data-bar-value">91.8%</div>
+              </div>
+              <div class="data-bar-track">
+                <div class="data-bar-fill" style="--bar-width: 91.8%;"></div>
+              </div>
+            </div>
+            <div class="data-bar">
+              <div class="data-bar-header">
+                <div class="data-bar-label">Data Freshness (24h)</div>
+                <div class="data-bar-value">94.6%</div>
+              </div>
+              <div class="data-bar-track">
+                <div class="data-bar-fill ocean" style="--bar-width: 94.6%;"></div>
+              </div>
+            </div>
+            <div class="data-bar">
+              <div class="data-bar-header">
+                <div class="data-bar-label">Source Coverage</div>
+                <div class="data-bar-value">78.3%</div>
+              </div>
+              <div class="data-bar-track">
+                <div class="data-bar-fill" style="--bar-width: 78.3%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Validation Tiers -->
+  <section class="validation-section" id="validation">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Validation System</div>
+        <h2 class="section-title">Every Source is Sifted</h2>
+        <p class="section-sub">
+          Our 5-step validation process ensures only quality sources enter the network. 
+          Rigorous. Fair. Transparent. No shortcuts.
+        </p>
+      </div>
+      
+      <div class="validation-process">
+        <div class="validation-step">
+          <div class="validation-step-number">1</div>
+          <h4>Apply</h4>
+          <p>Submit credentials and evidence</p>
+        </div>
+        <div class="validation-step">
+          <div class="validation-step-number">2</div>
+          <h4>Verify</h4>
+          <p>Cross-check all claims</p>
+        </div>
+        <div class="validation-step">
+          <div class="validation-step-number">3</div>
+          <h4>Review</h4>
+          <p>Human expert evaluation</p>
+        </div>
+        <div class="validation-step">
+          <div class="validation-step-number">4</div>
+          <h4>Score</h4>
+          <p>Initial trust score assigned</p>
+        </div>
+        <div class="validation-step">
+          <div class="validation-step-number">5</div>
+          <h4>Monitor</h4>
+          <p>Continuous tracking begins</p>
+        </div>
+      </div>
+      
+      <div class="tiers-grid">
+        <div class="tier-card">
+          <div class="tier-icon">🏙️</div>
+          <div class="tier-name">City Partners</div>
+          <div class="tier-price">$0 <span>/ forever</span></div>
+          <p class="tier-desc">
+            Cities get full access to the platform at no cost. We believe wellness infrastructure 
+            should be a public good.
+          </p>
+          <div class="tier-features">
+            <div class="tier-feature">Full city wellness dashboard</div>
+            <div class="tier-feature">Real-time health score tracking</div>
+            <div class="tier-feature">Practitioner validation network</div>
+            <div class="tier-feature">Community protocols access</div>
+            <div class="tier-feature">Economic impact reports</div>
+            <div class="tier-feature">Unlimited data export</div>
+          </div>
+          <a href="#" class="tier-cta">Partner With Us</a>
+        </div>
+        <div class="tier-card featured">
+          <div class="tier-icon">🩺</div>
+          <div class="tier-name">Practitioners</div>
+          <div class="tier-price">$49 <span>/ month</span></div>
+          <p class="tier-desc">
+            Get validated, get found, get referrals. Join the network that citizens trust.
+          </p>
+          <div class="tier-features">
+            <div class="tier-feature">Verified badge + profile</div>
+            <div class="tier-feature">Listed in city directories</div>
+            <div class="tier-feature">Referrals from Alvai</div>
+            <div class="tier-feature">Outcome tracking dashboard</div>
+            <div class="tier-feature">Review management tools</div>
+            <div class="tier-feature">Priority support</div>
+          </div>
+          <a href="#" class="tier-cta">Get Validated</a>
+        </div>
+        <div class="tier-card">
+          <div class="tier-icon">🧴</div>
+          <div class="tier-name">Product Brands</div>
+          <div class="tier-price">$199 <span>/ month</span></div>
+          <p class="tier-desc">
+            Get your products vetted, listed, and recommended by the network.
+          </p>
+          <div class="tier-features">
+            <div class="tier-feature">Product line validation</div>
+            <div class="tier-feature">Listed in marketplace</div>
+            <div class="tier-feature">Alvai recommendations</div>
+            <div class="tier-feature">Efficacy tracking</div>
+            <div class="tier-feature">Distribution partnerships</div>
+            <div class="tier-feature">Brand analytics</div>
+          </div>
+          <a href="#" class="tier-cta">Submit Products</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who It Helps -->
+  <section class="audience-section" id="audience">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Who It's For</div>
+        <h2 class="section-title">Built for Leaders, Healers, and Citizens</h2>
+        <p class="section-sub">
+          Whether you run a city, heal patients, or just want to find practitioners you can trust — 
+          this system works for you.
+        </p>
+      </div>
+      
+      <div class="audience-grid">
+        <div class="audience-card">
+          <div class="audience-icon">🏛️</div>
+          <h3>City Leaders</h3>
+          <p>
+            Mayors, health directors, urban planners — get real data on your city's wellness infrastructure 
+            and watch health scores improve over time.
+          </p>
+          <div class="audience-benefits">
+            <div class="audience-benefit">Dashboard with real-time city health metrics</div>
+            <div class="audience-benefit">Validated practitioner network at your fingertips</div>
+            <div class="audience-benefit">Economic impact tracking</div>
+            <div class="audience-benefit">Community protocol deployment</div>
+            <div class="audience-benefit">All at zero cost to your city</div>
+          </div>
+        </div>
+        <div class="audience-card">
+          <div class="audience-icon">🏢</div>
+          <h3>Businesses & Employers</h3>
+          <p>
+            Offer your employees access to validated wellness resources. Reduce healthcare costs. 
+            Build a healthier, more productive workforce.
+          </p>
+          <div class="audience-benefits">
+            <div class="audience-benefit">Curated wellness benefits for teams</div>
+            <div class="audience-benefit">Trusted practitioner referrals</div>
+            <div class="audience-benefit">Health outcome tracking</div>
+            <div class="audience-benefit">Cost reduction analytics</div>
+            <div class="audience-benefit">Wellness program support</div>
+          </div>
+        </div>
+        <div class="audience-card">
+          <div class="audience-icon">👤</div>
+          <h3>Citizens</h3>
+          <p>
+            Stop guessing. Find practitioners, products, and protocols that actually work — 
+            validated by data, not marketing.
+          </p>
+          <div class="audience-benefits">
+            <div class="audience-benefit">Search validated practitioners near you</div>
+            <div class="audience-benefit">See real outcome data, not just reviews</div>
+            <div class="audience-benefit">Talk to Alvai for personalized guidance</div>
+            <div class="audience-benefit">Track your own wellness journey</div>
+            <div class="audience-benefit">Access community protocols</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alvai Section -->
+  <section class="alvai-section" id="alvai">
+    <div class="section-inner">
+      <div class="alvai-container">
+        <div class="alvai-chat">
+          <div class="chat-header">
+            <div class="chat-avatar">🧠</div>
+            <div class="chat-header-info">
+              <h4>Alvai</h4>
+              <p>Online & Learning</p>
+            </div>
+          </div>
+          <div class="chat-messages">
+            <div class="chat-msg user">
+              <div class="chat-msg-avatar">👤</div>
+              <div class="chat-msg-bubble">How do I know which practitioners to trust?</div>
+            </div>
+            <div class="chat-msg ai">
+              <div class="chat-msg-avatar">✦</div>
+              <div class="chat-msg-bubble">
+                That's exactly why we built this. Every practitioner in our network has been through a 5-step validation process.
+                <br><br>
+                <strong>We verify:</strong> credentials, outcomes, reviews, and continuous monitoring. You see a trust score based on real data — not marketing.
+                <br><br>
+                Tell me what you're looking for, and I'll show you validated options near you.
+              </div>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input type="text" placeholder="Ask Alvai anything...">
+            <button>→</button>
+          </div>
+        </div>
+        
+        <div class="alvai-info">
+          <h3>Meet <em>Alvai</em></h3>
+          <p class="alvai-tagline">The Light That Learns</p>
+          <p class="alvai-desc">
+            Alvai is the intelligence layer connecting everything — practitioners, outcomes, protocols, and you. 
+            It doesn't guess. It shows you what works, based on real data from the network.
+          </p>
+          <div class="alvai-capabilities">
+            <div class="alvai-capability">Understands your health context</div>
+            <div class="alvai-capability">Recommends validated sources only</div>
+            <div class="alvai-capability">Shows real outcome data</div>
+            <div class="alvai-capability">Learns from the entire network</div>
+            <div class="alvai-capability">Your data stays private</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2 class="cta-title">The solution is already here. It's free for cities. It works.</h2>
+    <p class="cta-sub">
+      Start with a conversation. Explore the data. See what's validated in your area. 
+      Join 34 cities already making their communities healthier.
+    </p>
+    <div class="cta-buttons">
+      <a href="#alvai" class="cta-btn primary">
+        <span>✦</span>
+        <span>Talk to Alvai</span>
+      </a>
+      <a href="#validation" class="cta-btn secondary">
+        <span>✓</span>
+        <span>Get Validated</span>
+      </a>
+      <a href="#cities" class="cta-btn secondary">
+        <span>🏙️</span>
+        <span>Partner as a City</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-main">
+        <div>
+          <div class="footer-brand"><span>bleu</span>.live</div>
+          <div class="footer-tagline">The Intelligence Layer for Wellness</div>
+          <p class="footer-desc">
+            We monitor, measure, and validate every wellness source — giving cities real data 
+            and citizens real trust. Free for cities. Forever.
+          </p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="#cities">City Dashboard</a>
+            <a href="#measurement">How We Measure</a>
+            <a href="#alvai">Talk to Alvai</a>
+            <a href="#">Directory</a>
+          </div>
+          <div class="footer-col">
+            <h4>Get Validated</h4>
+            <a href="#validation">Practitioners</a>
+            <a href="#validation">Products</a>
+            <a href="#validation">City Partners</a>
+            <a href="#">Validation FAQ</a>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <a href="#">Our Story</a>
+            <a href="#">The Vision</a>
+            <a href="#">Press</a>
+            <a href="#">Contact</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 bleu.live — Health leads to wealth</div>
+        <div>Privacy · Terms · Trust</div>
+      </div>
+    </div>
+  </footer>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- BLEU.LIVE — REAL DATA CONNECTIONS                      -->
+<!-- Replace the 3 values below with your actual keys       -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<script>
+(function() {
+  // ── YOUR KEYS (replace these) ──────────────────────
+  const SUPABASE_URL = 'https://sqyzboesdpdussiwqpzk.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_TF6vZ_gvSHlxuVBnsDIbnw_qFJCuGjO';
+  const ALVAI_API_URL = 'YOUR_RAILWAY_ALVAI_URL_HERE';
+  // ───────────────────────────────────────────────────
+
+  const SB_HEADERS = {
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+  };
+
+  // ── LIVE STATS: Replace hardcoded numbers with real data ──
+
+  async function updateStats() {
+    if (!SUPABASE_URL || SUPABASE_URL.includes('YOUR_')) return;
+    
+    try {
+      const counts = {};
+      const tables = ['practitioners', 'products', 'locations', 'cities', 'reviews'];
+      
+      for (const table of tables) {
+        try {
+          const r = await fetch(SUPABASE_URL + '/rest/v1/' + table + '?select=id&limit=1', {
+            headers: { ...SB_HEADERS, 'Prefer': 'count=exact', 'Range': '0-0' }
+          });
+          const range = r.headers.get('content-range') || '*/0';
+          counts[table] = parseInt(range.split('/').pop()) || 0;
+        } catch(e) { counts[table] = 0; }
+      }
+      
+      const totalSources = counts.practitioners + counts.products + counts.locations;
+      const totalReviews = counts.reviews;
+      const totalCities = counts.cities || 4;
+      
+      // Update stat values on page
+      const statValues = document.querySelectorAll('.live-stat-value');
+      if (statValues.length >= 4) {
+        statValues[0].textContent = totalCities.toLocaleString();
+        statValues[1].textContent = totalSources.toLocaleString();
+        statValues[2].textContent = counts.practitioners.toLocaleString();
+        statValues[3].textContent = (totalReviews > 999 ? (totalReviews/1000).toFixed(0) + 'K' : totalReviews.toLocaleString());
+      }
+      
+      // Update the big stat bar too
+      const bigStats = document.querySelectorAll('.stat-value');
+      if (bigStats.length >= 5) {
+        bigStats[0].textContent = totalCities.toLocaleString();
+        bigStats[1].textContent = totalSources.toLocaleString();
+        bigStats[2].textContent = totalReviews > 999999 ? (totalReviews/1000000).toFixed(1) + 'M' : totalReviews.toLocaleString();
+      }
+      
+      console.log('BLEU stats loaded:', counts);
+    } catch(e) {
+      console.log('Stats not loaded (Supabase not connected yet)');
+    }
+  }
+
+  // ── WORKING ALVAI CHAT ──────────────────────────────────
+
+  function initAlvai() {
+    const chatInput = document.querySelector('.chat-input input');
+    const chatButton = document.querySelector('.chat-input button');
+    const chatMessages = document.querySelector('.chat-messages');
+    
+    if (!chatInput || !chatButton || !chatMessages) return;
+    
+    // Clear the demo messages and start fresh
+    const demoMsgs = chatMessages.querySelectorAll('.chat-msg');
+    // Keep them as examples, but make the input functional
+    
+    async function sendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      
+      // Add user message
+      const userDiv = document.createElement('div');
+      userDiv.className = 'chat-msg user';
+      userDiv.innerHTML = '<div class="chat-msg-avatar">👤</div><div class="chat-msg-bubble">' + escapeHtml(text) + '</div>';
+      chatMessages.appendChild(userDiv);
+      chatInput.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      // Show typing indicator
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'chat-msg ai';
+      typingDiv.id = 'alvai-typing';
+      typingDiv.innerHTML = '<div class="chat-msg-avatar">✦</div><div class="chat-msg-bubble" style="opacity:0.6">Thinking...</div>';
+      chatMessages.appendChild(typingDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      try {
+        let responseText = '';
+        
+        if (ALVAI_API_URL && !ALVAI_API_URL.includes('YOUR_')) {
+          // Real API call
+          const resp = await fetch(ALVAI_API_URL + '/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text })
+          });
+          const data = await resp.json();
+          responseText = data.response || "Let me look into that for you.";
+          
+          // Add source links if available
+          if (data.sources) {
+            const allSources = [
+              ...(data.sources.practitioners || []),
+              ...(data.sources.products || []),
+              ...(data.sources.locations || [])
+            ];
+            if (allSources.length > 0) {
+              responseText += '<br><br><strong style="color:var(--sage);">Sources:</strong><br>';
+              allSources.slice(0, 3).forEach(s => {
+                responseText += '• <a href="' + (s.url || '#') + '" style="color:var(--sage)">' + escapeHtml(s.name) + '</a>';
+                if (s.trust_score) responseText += ' (Trust: ' + s.trust_score.toFixed(1) + ')';
+                responseText += '<br>';
+              });
+            }
+          }
+        } else {
+          // Fallback when API not connected yet
+          responseText = "Alvai is being connected to the BLEU network. Once live, I'll be able to search " +
+            "verified practitioners, products, and locations for you. Check back soon!";
+        }
+        
+        // Remove typing, show response
+        const typing = document.getElementById('alvai-typing');
+        if (typing) typing.remove();
+        
+        const aiDiv = document.createElement('div');
+        aiDiv.className = 'chat-msg ai';
+        aiDiv.innerHTML = '<div class="chat-msg-avatar">✦</div><div class="chat-msg-bubble">' + responseText + '</div>';
+        chatMessages.appendChild(aiDiv);
+      } catch(e) {
+        const typing = document.getElementById('alvai-typing');
+        if (typing) typing.remove();
+        
+        const errDiv = document.createElement('div');
+        errDiv.className = 'chat-msg ai';
+        errDiv.innerHTML = '<div class="chat-msg-avatar">✦</div><div class="chat-msg-bubble">Having a moment — please try again.</div>';
+        chatMessages.appendChild(errDiv);
+      }
+      
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    function escapeHtml(text) {
+      const d = document.createElement('div');
+      d.textContent = text;
+      return d.innerHTML;
+    }
+    
+    chatButton.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') sendMessage();
+    });
+    
+    console.log('Alvai chat initialized');
+  }
+
+  // ── LIVE VALIDATION FEED (real data) ────────────────────
+
+  async function initLiveFeed() {
+    if (!SUPABASE_URL || SUPABASE_URL.includes('YOUR_')) return;
+    
+    try {
+      // Pull latest practitioners for live feed
+      const r = await fetch(SUPABASE_URL + '/rest/v1/practitioners?select=full_name,specialty,city,state&order=created_at.desc&limit=10', {
+        headers: SB_HEADERS
+      });
+      const pracs = await r.json();
+      
+      if (!pracs.length) return;
+      
+      const feedItems = document.querySelectorAll('.feed-item-text');
+      if (feedItems.length > 0) {
+        pracs.slice(0, feedItems.length).forEach((p, i) => {
+          if (feedItems[i]) {
+            feedItems[i].innerHTML = '<strong>' + escapeH(p.full_name) + '</strong> validated in ' + 
+              escapeH(p.city) + ' — ' + escapeH(p.specialty || 'Practitioner');
+          }
+        });
+      }
+    } catch(e) {
+      // Feed stays as demo data
+    }
+    
+    function escapeH(t) { const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
+  }
+
+  // ── INITIALIZE ──────────────────────────────────────────
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      updateStats();
+      initAlvai();
+      initLiveFeed();
+      // Refresh stats every 5 minutes
+      setInterval(updateStats, 300000);
+    });
+  } else {
+    updateStats();
+    initAlvai();
+    initLiveFeed();
+    setInterval(updateStats, 300000);
+  }
+})();
+</script>
+
+</body>
+</html>
