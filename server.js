@@ -1,7 +1,6 @@
 const http = require('http');
-const SB_URL = 'https://sqyzboesdpdussiwqpzk.supabase.co';
-const SB_KEY = 'sb_secret__zYCYtWcOx9uKnIgRPPN4Q_PWkTOf96';
-const CLAUDE_KEY = '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';
+
+const CLAUDE_KEY = process.env.CLAUDE_API_KEY || '';
 
 const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,7 +11,7 @@ const server = http.createServer(async (req, res) => {
   
   if (req.url === '/health') {
     res.writeHead(200, {'Content-Type':'application/json'});
-    res.end(JSON.stringify({status:'ok'}));
+    res.end(JSON.stringify({status:'ok', hasKey: !!CLAUDE_KEY}));
     return;
   }
   
@@ -37,12 +36,16 @@ const server = http.createServer(async (req, res) => {
           })
         });
         const data = await r.json();
-        res.writeHead(200, {'Content-Type':'text/event-stream'});
-        res.write('data: ' + JSON.stringify({type:'text',text:data.content[0].text}) + '\n\n');
-        res.end();
+        if (data.error) {
+          res.writeHead(500, {'Content-Type':'application/json'});
+          res.end(JSON.stringify({error: data.error.message}));
+          return;
+        }
+        res.writeHead(200, {'Content-Type':'application/json'});
+        res.end(JSON.stringify({text: data.content[0].text}));
       } catch(e) {
-        res.writeHead(500);
-        res.end(JSON.stringify({error:e.message}));
+        res.writeHead(500, {'Content-Type':'application/json'});
+        res.end(JSON.stringify({error: e.message}));
       }
     });
     return;
@@ -52,4 +55,4 @@ const server = http.createServer(async (req, res) => {
   res.end('Not found');
 });
 
-server.listen(3000, () => console.log('Alvai API running on port 3000'));
+server.listen(process.env.PORT || 3000, () => console.log('Alvai running on port ' + (process.env.PORT || 3000)));
