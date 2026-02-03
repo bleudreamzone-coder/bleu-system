@@ -10,6 +10,8 @@ function sendJSON(res, code, data) {
 }
 
 const server = http.createServer((req, res) => {
+  console.log('Request:', req.method, req.url);
+  
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -50,10 +52,16 @@ const server = http.createServer((req, res) => {
     return;
   }
   
-  // Serve frontend
-  if (req.url === '/' || req.url === '/index.html') {
+  // Serve frontend for root and index
+  const urlPath = req.url.split('?')[0];
+  if (urlPath === '/' || urlPath === '/index.html') {
     fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
-      if (err) return res.writeHead(404).end('Not found');
+      if (err) {
+        console.log('Error reading index.html:', err.message);
+        res.writeHead(404);
+        res.end('File not found');
+        return;
+      }
       res.writeHead(200, {'Content-Type': 'text/html'});
       res.end(data);
     });
