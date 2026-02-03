@@ -2,7 +2,7 @@ const http = require('http');
 
 const CLAUDE_KEY = process.env.CLAUDE_API_KEY || '';
 
-const server = http.createServer(async (req, res) => {
+const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -38,14 +38,15 @@ const server = http.createServer(async (req, res) => {
         const data = await r.json();
         if (data.error) {
           res.writeHead(500, {'Content-Type':'application/json'});
-          res.end(JSON.stringify({error: data.error.message}));
-          return;
+          return res.end(JSON.stringify({error: data.error.message}));
         }
         res.writeHead(200, {'Content-Type':'application/json'});
-        res.end(JSON.stringify({text: data.content[0].text}));
+        return res.end(JSON.stringify({text: data.content[0].text}));
       } catch(e) {
-        res.writeHead(500, {'Content-Type':'application/json'});
-        res.end(JSON.stringify({error: e.message}));
+        if (!res.headersSent) {
+          res.writeHead(500, {'Content-Type':'application/json'});
+          return res.end(JSON.stringify({error: e.message}));
+        }
       }
     });
     return;
