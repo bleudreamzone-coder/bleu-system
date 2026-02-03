@@ -21,7 +21,9 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       (async () => {
         try {
-          const { messages } = JSON.parse(body);
+          const parsed = JSON.parse(body);
+          const userMessage = parsed.message || (parsed.messages && parsed.messages[parsed.messages.length-1].content);
+          
           const r = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: {
@@ -33,12 +35,13 @@ const server = http.createServer((req, res) => {
               model: 'claude-sonnet-4-20250514',
               max_tokens: 1000,
               system: 'You are Alvai, the Light That Learns. Help people find wellness info. Be warm and concise.',
-              messages
+              messages: [{role: 'user', content: userMessage}]
             })
           });
           const data = await r.json();
           if (data.error) return sendJSON(res, 500, {error: data.error.message});
-          sendJSON(res, 200, {text: data.content[0].text});
+          const text = data.content[0].text;
+          sendJSON(res, 200, {response: text, text: text});
         } catch(e) {
           sendJSON(res, 500, {error: e.message});
         }
@@ -50,4 +53,4 @@ const server = http.createServer((req, res) => {
   sendJSON(res, 404, {error: 'Not found'});
 });
 
-server.listen(process.env.PORT || 3000, () => console.log('Alvai on port ' + (process.env.PORT || 3000)));
+server.listen(process.env.PORT || 8080, () => console.log('Alvai on port ' + (process.env.PORT || 8080)));
