@@ -26,7 +26,7 @@ const server = http.createServer((req, res) => {
       (async () => {
         try {
           const parsed = JSON.parse(body);
-          const userMessage = parsed.message || (parsed.messages && parsed.messages[parsed.messages.length-1].content);
+          const userMessage = parsed.message || '';
           const r = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: {
@@ -52,14 +52,11 @@ const server = http.createServer((req, res) => {
     return;
   }
   
-  // Serve frontend for root and index
-  const urlPath = req.url.split('?')[0];
-  if (urlPath === '/' || urlPath === '/index.html') {
+  if (req.url === '/' || req.url === '/index.html') {
     fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
       if (err) {
-        console.log('Error reading index.html:', err.message);
-        res.writeHead(404);
-        res.end('File not found');
+        res.writeHead(500);
+        res.end('Error loading page');
         return;
       }
       res.writeHead(200, {'Content-Type': 'text/html'});
@@ -71,4 +68,4 @@ const server = http.createServer((req, res) => {
   sendJSON(res, 404, {error: 'Not found'});
 });
 
-server.listen(process.env.PORT || 8080, () => console.log('Alvai on port ' + (process.env.PORT || 8080)));
+server.listen(process.env.PORT || 8080, () => console.log('Alvai running on port ' + (process.env.PORT || 8080)));
