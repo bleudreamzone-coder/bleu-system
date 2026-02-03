@@ -1,4 +1,6 @@
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 
 const CLAUDE_KEY = process.env.CLAUDE_API_KEY || '';
 
@@ -23,7 +25,6 @@ const server = http.createServer((req, res) => {
         try {
           const parsed = JSON.parse(body);
           const userMessage = parsed.message || (parsed.messages && parsed.messages[parsed.messages.length-1].content);
-          
           const r = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: {
@@ -40,12 +41,21 @@ const server = http.createServer((req, res) => {
           });
           const data = await r.json();
           if (data.error) return sendJSON(res, 500, {error: data.error.message});
-          const text = data.content[0].text;
-          sendJSON(res, 200, {response: text, text: text});
+          sendJSON(res, 200, {response: data.content[0].text});
         } catch(e) {
           sendJSON(res, 500, {error: e.message});
         }
       })();
+    });
+    return;
+  }
+  
+  // Serve frontend
+  if (req.url === '/' || req.url === '/index.html') {
+    fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
+      if (err) return res.writeHead(404).end('Not found');
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.end(data);
     });
     return;
   }
