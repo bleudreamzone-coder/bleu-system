@@ -1,539 +1,834 @@
-// ═══════════════════════════════════════════════════════════════════════════════
-//  BLEU.LIVE ENGINE v2.0 — FULL DECK PRODUCTION SERVER
-//  68 APIs (25 keyed + 43 free) | Safety Engine | NPI Pipeline | Scheduler
-//  Deploy to Railway: git add -A && git commit -m "v2 full deck" && git push
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════
+// BLEU.LIVE — MAXED OUT PIPELINE v5.0
+// $200/MONTH CLAUDE BUDGET — EVERY PAGE GETS UNIQUE AI CONTENT
+//
+// THE MATH:
+// ┌──────────────────────────────────────────────────────────────────────┐
+// │  Haiku 4.5:  $1/M input, $5/M output  → ~$0.005/call              │
+// │  Sonnet 4:   $3/M input, $15/M output → ~$0.014/call              │
+// │                                                                      │
+// │  BUDGET SPLIT:                                                       │
+// │  $150/mo → Haiku  = ~30,000 calls/mo = ~1,000/day (VOLUME)         │
+// │  $50/mo  → Sonnet = ~3,500 calls/mo  = ~117/day  (PILLAR)         │
+// │                                                                      │
+// │  TOTAL: ~1,117 unique AI-written pages PER DAY                      │
+// │  + unlimited free template pages                                     │
+// │  + unlimited free scraping                                           │
+// │                                                                      │
+// │  30 DAYS: 33,000 AI pages + 500K template pages = 533,000 pages    │
+// │  90 DAYS: 100K AI pages + 1.5M template pages = 1.6M pages         │
+// └──────────────────────────────────────────────────────────────────────┘
+//
+// WHY THIS MATTERS: Google ranks UNIQUE content over templates.
+// With Haiku, every practitioner page, every condition/city page,
+// every comparison gets unique AI-written content for $0.005.
+// Templates are the fallback, not the default.
+// ═══════════════════════════════════════════════════════════════════════════
 
-const http = require('http');
 const https = require('https');
-const { URL } = require('url');
+const http = require('http');
 
-const PORT = process.env.PORT || 8080;
+// ─── CONFIG ─────────────────────────────────────────────────────────
 
-// ═══ API KEYS — Railway Environment Variables ═══
-const KEYS = {
-  claude:       process.env.CLAUDE_API_KEY || '',
-  supabaseUrl:  process.env.SUPABASE_URL || '',
-  supabaseKey:  process.env.SUPABASE_SERVICE_KEY || '',
-  ncbi:         process.env.NCBI_API_KEY || '',
-  usda:         process.env.USDA_FOODDATA_API_KEY || '',
-  weather:      process.env.OPENWEATHERMAP_API_KEY || '',
-  waqi:         process.env.WAQI_API_KEY || '',
-  census:       process.env.CENSUS_API_KEY || '',
-  cannlytics:   process.env.CANNLYTICS_API_KEY || '',
-  openfda:      process.env.OPENFDA_API_KEY || '',
-  openuv:       process.env.OPENUV_API_KEY || '',
-  google:       process.env.GOOGLE_API_KEY || '',
-  yelp:         process.env.YELP_API_KEY || '',
-  nps:          process.env.NPS_API_KEY || '',
-  spoonacular:  process.env.SPOONACULAR_API_KEY || '',
-  foursquare:   process.env.FOURSQUARE_API_KEY || '',
-  eventbrite:   process.env.EVENTBRITE_API_KEY || '',
-  listenNotes:  process.env.LISTEN_NOTES_API_KEY || '',
-  edamamId:     process.env.EDAMAM_APP_ID || '',
-  edamamKey:    process.env.EDAMAM_APP_KEY || '',
-  sendgrid:     process.env.SENDGRID_API_KEY || '',
-  walkscore:    process.env.WALKSCORE_API_KEY || '',
-  airnow:       process.env.AIRNOW_API_KEY || '',
-  meersens:     process.env.MEERSENS_API_KEY || '',
-  amazon:       process.env.AMAZON_AFFILIATE_TAG || 'bleulive-20',
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const CLAUDE_KEY = process.env.CLAUDE_API_KEY;
+
+// Budget tracking — resets monthly
+const BUDGET = {
+  monthly_limit_cents: 20000,  // $200.00
+  haiku_cost_per_call: 0.5,    // $0.005 in cents
+  sonnet_cost_per_call: 1.4,   // $0.014 in cents
+  haiku_calls_today: 0,
+  sonnet_calls_today: 0,
+  haiku_calls_total: 0,
+  sonnet_calls_total: 0,
+  spent_today_cents: 0,
+  spent_total_cents: 0,
+  daily_limit_cents: 667,      // ~$6.67/day ($200/30)
+  last_reset: new Date().toDateString(),
 };
 
-function log(tag, msg) { console.log(`[${new Date().toISOString()}] [${tag}] ${msg}`); }
+function checkBudget(model) {
+  // Reset daily counters
+  const today = new Date().toDateString();
+  if (BUDGET.last_reset !== today) {
+    BUDGET.haiku_calls_today = 0;
+    BUDGET.sonnet_calls_today = 0;
+    BUDGET.spent_today_cents = 0;
+    BUDGET.last_reset = today;
+  }
+  const cost = model === 'sonnet' ? BUDGET.sonnet_cost_per_call : BUDGET.haiku_cost_per_call;
+  // Allow 10% overflow for daily, hard stop on monthly
+  if (BUDGET.spent_today_cents + cost > BUDGET.daily_limit_cents * 1.1) return false;
+  if (BUDGET.spent_total_cents + cost > BUDGET.monthly_limit_cents) return false;
+  return true;
+}
 
-// ═══ HTTP FETCH HELPER ═══
-function fetchJSON(url, options = {}) {
+function trackSpend(model) {
+  const cost = model === 'sonnet' ? BUDGET.sonnet_cost_per_call : BUDGET.haiku_cost_per_call;
+  BUDGET.spent_today_cents += cost;
+  BUDGET.spent_total_cents += cost;
+  if (model === 'sonnet') { BUDGET.sonnet_calls_today++; BUDGET.sonnet_calls_total++; }
+  else { BUDGET.haiku_calls_today++; BUDGET.haiku_calls_total++; }
+}
+
+// ─── 20 CITIES ──────────────────────────────────────────────────────
+
+const CITY_ZIPS = {
+  "new-orleans-la": ["70112","70113","70114","70115","70116","70117","70118","70119","70122","70124","70125","70126","70127","70128","70129","70130","70131","70139","70141","70142","70143","70145","70146","70148","70150","70151","70152","70153","70154","70156","70157","70158","70160","70161"],
+  "austin-tx": ["78701","78702","78703","78704","78705","78712","78717","78719","78721","78722","78723","78724","78725","78726","78727","78728","78729","78730","78731","78732","78733","78734","78735","78736","78737","78738","78739","78741","78742","78744","78745","78746","78747","78748","78749","78750","78751","78752","78753","78754","78756","78757","78758","78759"],
+  "los-angeles-ca": ["90001","90002","90003","90004","90005","90006","90007","90008","90010","90011","90012","90013","90014","90015","90016","90017","90018","90019","90020","90021","90022","90023","90024","90025","90026","90027","90028","90029","90031","90032","90033","90034","90035","90036","90037","90038","90039","90041","90042","90043","90044","90045","90046","90047","90048","90049"],
+  "new-york-ny": ["10001","10002","10003","10004","10005","10006","10007","10009","10010","10011","10012","10013","10014","10016","10017","10018","10019","10020","10021","10022","10023","10024","10025","10026","10027","10028","10029","10030","10031","10032","10033","10034","10035","10036","10037","10038","10039","10040","10044","10065","10069","10075","10128","10280","10282"],
+  "miami-fl": ["33101","33109","33125","33126","33127","33128","33129","33130","33131","33132","33133","33134","33135","33136","33137","33138","33139","33140","33141","33142","33143","33144","33145","33146","33147","33149","33150","33154","33155","33156","33157","33158","33160","33161","33162","33165","33166","33167","33168","33169","33170","33172","33173","33174","33175","33176"],
+  "denver-co": ["80201","80202","80203","80204","80205","80206","80207","80209","80210","80211","80212","80214","80216","80218","80219","80220","80221","80222","80223","80224","80226","80227","80228","80229","80230","80231","80232","80233","80234","80235","80236","80237","80238","80239","80246","80247","80249","80260","80264"],
+  "atlanta-ga": ["30301","30303","30305","30306","30307","30308","30309","30310","30312","30313","30314","30315","30316","30317","30318","30319","30322","30324","30326","30327","30328","30329","30331","30332","30334","30336","30337","30338","30339","30340","30341","30342","30344","30345","30346","30349","30350","30354","30360","30363"],
+  "chicago-il": ["60601","60602","60603","60604","60605","60606","60607","60608","60609","60610","60611","60612","60613","60614","60615","60616","60617","60618","60619","60620","60621","60622","60623","60624","60625","60626","60628","60629","60630","60631","60632","60634","60636","60637","60638","60639","60640","60641","60642","60643","60644","60645","60646","60647"],
+  "houston-tx": ["77001","77002","77003","77004","77005","77006","77007","77008","77009","77010","77011","77012","77013","77014","77015","77016","77017","77018","77019","77020","77021","77022","77023","77024","77025","77026","77027","77028","77029","77030","77031","77033","77034","77035","77036","77038","77039","77040","77041","77042","77043","77044","77045","77047","77048","77049","77050","77051"],
+  "seattle-wa": ["98101","98102","98103","98104","98105","98106","98107","98108","98109","98112","98115","98116","98117","98118","98119","98121","98122","98125","98126","98133","98134","98136","98144","98146","98154","98164","98174","98177","98178","98188","98195","98199"],
+  "nashville-tn": ["37201","37203","37204","37205","37206","37207","37208","37209","37210","37211","37212","37213","37214","37215","37216","37217","37218","37219","37220","37221","37228","37232","37234","37236"],
+  "portland-or": ["97201","97202","97203","97204","97205","97206","97209","97210","97211","97212","97213","97214","97215","97216","97217","97218","97219","97220","97221","97222","97223","97224","97225","97227","97229","97230","97231","97232","97233","97236","97239","97266"],
+  "san-francisco-ca": ["94102","94103","94104","94105","94107","94108","94109","94110","94111","94112","94114","94115","94116","94117","94118","94121","94122","94123","94124","94127","94129","94130","94131","94132","94133","94134","94158"],
+  "phoenix-az": ["85001","85003","85004","85006","85007","85008","85009","85012","85013","85014","85015","85016","85017","85018","85019","85020","85021","85022","85023","85024","85027","85028","85029","85031","85032","85033","85034","85035","85037","85040","85041","85042","85043","85044","85045","85048","85050","85051","85053","85054"],
+  "san-diego-ca": ["92101","92102","92103","92104","92105","92106","92107","92108","92109","92110","92111","92113","92114","92115","92116","92117","92119","92120","92121","92122","92123","92124","92126","92127","92128","92129","92130","92131","92132","92134","92139","92154"],
+  "dallas-tx": ["75201","75202","75203","75204","75205","75206","75207","75208","75209","75210","75211","75212","75214","75215","75216","75217","75218","75219","75220","75223","75224","75225","75226","75227","75228","75229","75230","75231","75232","75233","75234","75235","75236","75237","75238","75240","75243","75244","75246","75247","75248","75249","75251","75252","75253","75254"],
+  "philadelphia-pa": ["19102","19103","19104","19106","19107","19109","19111","19114","19115","19116","19118","19119","19120","19121","19122","19123","19124","19125","19126","19127","19128","19129","19130","19131","19132","19133","19134","19135","19136","19137","19138","19139","19140","19141","19142","19143","19144","19145","19146","19147","19148","19149","19150","19151","19152","19153","19154"],
+  "boston-ma": ["02101","02108","02109","02110","02111","02113","02114","02115","02116","02118","02119","02120","02121","02122","02124","02125","02126","02127","02128","02129","02130","02131","02132","02134","02135","02136","02163","02199","02210","02215"],
+  "minneapolis-mn": ["55401","55402","55403","55404","55405","55406","55407","55408","55409","55410","55411","55412","55413","55414","55415","55416","55417","55418","55419","55420","55422","55423","55424","55426","55427","55428","55429","55430","55431","55432","55433"],
+  "detroit-mi": ["48201","48202","48203","48204","48205","48206","48207","48208","48209","48210","48211","48212","48213","48214","48215","48216","48217","48219","48221","48223","48224","48225","48226","48227","48228","48234","48235","48236","48238","48239","48240"],
+};
+
+// ─── 85 CONDITIONS ──────────────────────────────────────────────────
+
+const CONDITIONS = [
+  "anxiety","depression","insomnia","ptsd","adhd","addiction","eating-disorder",
+  "chronic-pain","fibromyalgia","ocd","bipolar","autism","grief","anger-management",
+  "couples-therapy","trauma","substance-abuse","stress","self-esteem","phobias",
+  "panic-disorder","social-anxiety","postpartum-depression","domestic-violence",
+  "sexual-abuse-recovery","divorce-counseling","career-counseling","child-therapy",
+  "teen-therapy","family-therapy","mindfulness-therapy","cbt-therapy","emdr-therapy",
+  "dbt-therapy","somatic-therapy","art-therapy","music-therapy","play-therapy",
+  "addiction-recovery","alcohol-addiction","opioid-addiction","gambling-addiction",
+  "sex-addiction","marijuana-dependence","prescription-drug-abuse","meth-addiction",
+  "cocaine-addiction","benzo-withdrawal","sleep-disorders","chronic-fatigue","ibs",
+  "autoimmune-disease","thyroid-disorder","weight-management","nutrition-therapy",
+  "holistic-medicine","functional-medicine","acupuncture","chiropractic-care",
+  "massage-therapy","physical-therapy","occupational-therapy","speech-therapy",
+  "naturopathic-medicine","integrative-psychiatry","pain-management","headaches",
+  "migraines","back-pain","neck-pain","knee-pain","shoulder-pain","hip-pain",
+  "sciatica","sports-injury","prenatal-care","postpartum-care","fertility",
+  "menopause","pelvic-floor-therapy","hormone-therapy","mens-health","womens-health",
+  "senior-wellness","pediatric-wellness",
+];
+
+// ─── 120+ PRODUCT COMPARISONS ───────────────────────────────────────
+
+const PRODUCT_COMPARISONS = [
+  ["ashwagandha","rhodiola"],["magnesium-glycinate","magnesium-threonate"],
+  ["magnesium-glycinate","magnesium-citrate"],["magnesium-threonate","magnesium-taurate"],
+  ["cbd-oil","melatonin"],["cbd-oil","ashwagandha"],["cbd-oil","valerian-root"],
+  ["cbd-oil","l-theanine"],["cbd-oil","gaba"],
+  ["lions-mane","reishi"],["lions-mane","cordyceps"],["reishi","chaga"],
+  ["lions-mane","alpha-gpc"],["cordyceps","rhodiola"],
+  ["omega-3","krill-oil"],["omega-3","algae-oil"],["fish-oil","flaxseed-oil"],
+  ["probiotics","prebiotics"],["probiotics","digestive-enzymes"],["probiotics","kefir"],
+  ["vitamin-d3","vitamin-d2"],["vitamin-d3","vitamin-k2"],
+  ["whey-protein","plant-protein"],["whey-protein","casein-protein"],["collagen-peptides","whey-protein"],
+  ["collagen-peptides","biotin"],["collagen-peptides","hyaluronic-acid"],
+  ["turmeric","curcumin"],["turmeric","boswellia"],["turmeric","ginger"],
+  ["elderberry","echinacea"],["elderberry","vitamin-c"],["elderberry","zinc"],
+  ["zinc","quercetin"],["zinc","vitamin-c"],["zinc","copper"],
+  ["b12-methylcobalamin","b12-cyanocobalamin"],["b-complex","b12"],
+  ["coq10","pqq"],["coq10","alpha-lipoic-acid"],["coq10","ubiquinol"],
+  ["valerian-root","passionflower"],["valerian-root","melatonin"],["valerian-root","chamomile"],
+  ["gaba","l-theanine"],["gaba","magnesium"],["l-theanine","caffeine"],
+  ["sam-e","5-htp"],["sam-e","st-johns-wort"],["5-htp","tryptophan"],
+  ["berberine","metformin"],["berberine","cinnamon-extract"],["berberine","chromium"],
+  ["spirulina","chlorella"],["spirulina","wheatgrass"],
+  ["maca","tribulus"],["maca","ashwagandha"],["maca","tongkat-ali"],
+  ["creatine","beta-alanine"],["creatine","citrulline"],["creatine","hmb"],
+  ["iron-bisglycinate","iron-sulfate"],["iron-bisglycinate","ferrous-fumarate"],
+  ["melatonin","magnesium-glycinate"],["melatonin","l-theanine"],["melatonin","tart-cherry"],
+  ["saw-palmetto","pygeum"],["black-cohosh","dong-quai"],["vitex","evening-primrose-oil"],
+  ["glucosamine","chondroitin"],["glucosamine","msm"],["glucosamine","turmeric"],
+  ["milk-thistle","nac"],["nac","glutathione"],["milk-thistle","artichoke-extract"],
+  ["astragalus","echinacea"],["olive-leaf-extract","oregano-oil"],
+  ["oura-ring","whoop"],["oura-ring","apple-watch"],["whoop","fitbit"],["garmin","apple-watch"],
+  ["eight-sleep","chilipad"],["theragun","hypervolt"],["theragun","normatec"],
+  ["betterhelp","talkspace"],["betterhelp","cerebral"],["headspace","calm"],["headspace","waking-up"],
+  ["peloton","tonal"],["peloton","mirror"],["classpass","mindbody"],
+  ["ag1","bloom-greens"],["ag1","amazing-grass"],["ag1","organifi"],
+  ["noom","weight-watchers"],["noom","calibrate"],
+  ["hims","keeps"],["nurx","simple-health"],
+  ["ritual-vitamins","care-of"],["ritual-vitamins","persona"],
+];
+
+// ─── 60 "BEST FOR" TERMS ───────────────────────────────────────────
+
+const BEST_FOR = [
+  "best-magnesium-for-sleep","best-magnesium-for-anxiety","best-magnesium-for-muscle-cramps",
+  "best-probiotic-for-ibs","best-probiotic-for-bloating","best-probiotic-for-women","best-probiotic-for-men",
+  "best-supplement-for-anxiety","best-supplement-for-depression","best-supplement-for-sleep",
+  "best-supplement-for-energy","best-supplement-for-focus","best-supplement-for-stress",
+  "best-supplement-for-gut-health","best-supplement-for-joint-pain","best-supplement-for-inflammation",
+  "best-supplement-for-brain-fog","best-supplement-for-fatigue","best-supplement-for-memory",
+  "best-cbd-for-anxiety","best-cbd-for-sleep","best-cbd-for-pain","best-cbd-for-inflammation",
+  "best-mushroom-supplement","best-mushroom-for-focus","best-mushroom-for-immunity",
+  "best-adaptogen-for-stress","best-adaptogen-for-energy","best-nootropic-for-focus",
+  "best-protein-powder-for-weight-loss","best-protein-powder-for-women","best-collagen-supplement",
+  "best-omega-3-supplement","best-fish-oil","best-vitamin-d-supplement","best-b12-supplement",
+  "best-iron-supplement-for-women","best-prenatal-vitamin","best-multivitamin-for-men",
+  "best-multivitamin-for-women","best-multivitamin-for-seniors",
+  "best-wearable-for-sleep","best-fitness-tracker-2025","best-meditation-app-2025",
+  "best-therapy-app","best-online-therapy-2025","best-telehealth-platform",
+  "best-weighted-blanket","best-blue-light-glasses","best-air-purifier-for-allergies",
+  "best-journal-for-mental-health","best-books-for-anxiety","best-books-for-depression",
+  "best-podcasts-for-mental-health","best-podcasts-for-wellness",
+  "best-greens-powder","best-electrolyte-supplement","best-sleep-supplement",
+  "best-natural-anxiety-remedy","best-natural-sleep-aid","best-natural-anti-inflammatory",
+];
+
+// ─── HTTP + HELPERS ─────────────────────────────────────────────────
+
+function httpFetch(url, options = {}) {
   return new Promise((resolve, reject) => {
-    const u = new URL(url);
-    const opts = {
-      hostname: u.hostname, path: u.pathname + u.search, port: u.port || 443,
+    const parsed = new URL(url);
+    const mod = parsed.protocol === 'https:' ? https : http;
+    const req = mod.request(parsed, {
       method: options.method || 'GET',
-      headers: { 'Accept': 'application/json', 'User-Agent': 'BLEU-Live/2.0', ...(options.headers || {}) },
-      timeout: options.timeout || 15000
-    };
-    const req = https.request(opts, res => {
+      headers: options.headers || {},
+      timeout: 45000,
+    }, res => {
       let data = '';
       res.on('data', c => data += c);
-      res.on('end', () => { try { resolve(JSON.parse(data)); } catch(e) { resolve({ raw: data, status: res.statusCode }); } });
+      res.on('end', () => {
+        try { resolve({ status: res.statusCode, json: () => JSON.parse(data), text: () => data }); }
+        catch(e) { resolve({ status: res.statusCode, json: () => ({}), text: () => data }); }
+      });
     });
-    req.on('error', e => reject(e));
-    req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
-    if (options.body) req.write(typeof options.body === 'string' ? options.body : JSON.stringify(options.body));
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
+    if (options.body) req.write(options.body);
     req.end();
   });
 }
 
-// ═══ SUPABASE LIGHTWEIGHT CLIENT ═══
-const supabase = {
-  async query(table, params = '') {
-    if (!KEYS.supabaseUrl || !KEYS.supabaseKey) return { error: 'No Supabase config' };
-    try {
-      return await fetchJSON(`${KEYS.supabaseUrl}/rest/v1/${table}?${params}`, {
-        headers: { 'apikey': KEYS.supabaseKey, 'Authorization': `Bearer ${KEYS.supabaseKey}`, 'Prefer': 'return=representation' }
-      });
-    } catch(e) { return { error: e.message }; }
-  },
-  async upsert(table, data) {
-    if (!KEYS.supabaseUrl || !KEYS.supabaseKey) return { error: 'No Supabase config' };
-    try {
-      return await fetchJSON(`${KEYS.supabaseUrl}/rest/v1/${table}`, {
-        method: 'POST',
-        headers: { 'apikey': KEYS.supabaseKey, 'Authorization': `Bearer ${KEYS.supabaseKey}`,
-          'Content-Type': 'application/json', 'Prefer': 'return=representation,resolution=merge-duplicates' },
-        body: JSON.stringify(Array.isArray(data) ? data : [data])
-      });
-    } catch(e) { return { error: e.message }; }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function db(method, table, body = null, query = '') {
+  const headers = {
+    'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Content-Type': 'application/json',
+  };
+  if (method === 'POST') headers['Prefer'] = 'resolution=merge-duplicates';
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/${table}${query ? '?' + query : ''}`;
+    const opts = { method, headers };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await httpFetch(url, opts);
+    if (method === 'GET') return await res.json();
+    return res.status;
+  } catch(e) { return method === 'GET' ? [] : 500; }
+}
+
+// Batch upsert with chunking
+async function dbBatch(table, records) {
+  if (!records.length) return 0;
+  let ok = 0;
+  for (let i = 0; i < records.length; i += 500) {
+    const chunk = records.slice(i, i + 500);
+    const status = await db('POST', table, chunk);
+    if (status < 300) ok += chunk.length;
   }
+  return ok;
+}
+
+// ─── CLAUDE API — DUAL MODEL ───────────────────────────────────────
+
+async function callClaude(prompt, model = 'haiku', maxTokens = 1000) {
+  if (!checkBudget(model)) {
+    console.log(`    ⚠ Budget limit hit for ${model}, skipping`);
+    return null;
+  }
+
+  const modelId = model === 'sonnet'
+    ? 'claude-sonnet-4-20250514'
+    : 'claude-haiku-4-5-20251001';
+
+  try {
+    const res = await httpFetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': CLAUDE_KEY,
+        'anthropic-version': '2023-06-01',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: modelId,
+        max_tokens: maxTokens,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    const data = await res.json();
+    trackSpend(model);
+    const text = data.content?.[0]?.text || '';
+    try {
+      return JSON.parse(text.replace(/```json|```/g, '').trim());
+    } catch(e) {
+      return text; // Return raw if not JSON
+    }
+  } catch(e) {
+    console.error(`    ✗ Claude ${model} error:`, e.message);
+    return null;
+  }
+}
+
+// ─── SCRAPERS (ALL FREE) ────────────────────────────────────────────
+
+async function scrapeNPI(zip) {
+  try {
+    const res = await httpFetch(`https://npiregistry.cms.hhs.gov/api/?version=2.1&postal_code=${zip}&limit=200&enumeration_type=NPI-1`);
+    const data = await res.json();
+    return (data.results || []).map(r => {
+      const b = r.basic||{}, a = (r.addresses||[])[0]||{}, t = (r.taxonomies||[])[0]||{};
+      const name = `${b.first_name||''} ${b.last_name||''}`.trim();
+      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      return {
+        npi: r.number, name, slug, credential: b.credential||'',
+        specialty: t.desc||'', taxonomy_code: t.code||'',
+        city: (a.city||'').toLowerCase(), state: (a.state||'').toUpperCase(),
+        zip: (a.postal_code||'').slice(0,5), address: a.address_1||'',
+        phone: a.telephone_number||'', gender: b.gender||'',
+        source: 'npi', updated_at: new Date().toISOString(),
+      };
+    }).filter(p => p.name.length > 2);
+  } catch(e) { return []; }
+}
+
+async function scrapePubMed(query, max = 10) {
+  try {
+    const s = await httpFetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=${max}&sort=date&term=${encodeURIComponent(query)}`);
+    const ids = (await s.json()).esearchresult?.idlist || [];
+    if (!ids.length) return [];
+    const f = await httpFetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=${ids.join(',')}`);
+    const results = (await f.json()).result || {};
+    return ids.map(id => { const r = results[id]; if (!r) return null; return {
+      pmid: id, title: r.title||'', authors: (r.authors||[]).map(a=>a.name).join(', '),
+      journal: r.fulljournalname||r.source||'', pub_date: r.pubdate||'',
+      doi: (r.elocationid||'').replace('doi: ',''), query_term: query,
+      fetched_at: new Date().toISOString(),
+    };}).filter(Boolean);
+  } catch(e) { return []; }
+}
+
+async function scrapeFDA(drug) {
+  try {
+    const r = await httpFetch(`https://api.fda.gov/drug/label.json?search=openfda.generic_name:"${encodeURIComponent(drug)}"&limit=3`);
+    return ((await r.json()).results||[]).map(x => ({
+      drug_name: drug, brand_name: x.openfda?.brand_name?.[0]||'',
+      warnings: (x.warnings||[]).join(' ').slice(0,2000),
+      interactions: (x.drug_interactions||[]).join(' ').slice(0,2000),
+      adverse_reactions: (x.adverse_reactions||[]).join(' ').slice(0,2000),
+      indications: (x.indications_and_usage||[]).join(' ').slice(0,2000),
+      source: 'openfda', fetched_at: new Date().toISOString(),
+    }));
+  } catch(e) { return []; }
+}
+
+async function scrapeFDAEvents(drug) {
+  try {
+    const r = await httpFetch(`https://api.fda.gov/drug/event.json?search=patient.drug.openfda.generic_name:"${encodeURIComponent(drug)}"&count=patient.reaction.reactionmeddrapt.exact&limit=20`);
+    return ((await r.json()).results||[]).map(x => ({
+      drug_name: drug, reaction: x.term, count: x.count,
+      source: 'fda_faers', fetched_at: new Date().toISOString(),
+    }));
+  } catch(e) { return []; }
+}
+
+async function scrapeClinicalTrials(condition, max = 10) {
+  try {
+    const r = await httpFetch(`https://clinicaltrials.gov/api/v2/studies?query.cond=${encodeURIComponent(condition)}&pageSize=${max}&sort=LastUpdatePostDate:desc&fields=NCTId,BriefTitle,OverallStatus,StartDate,Condition`);
+    return ((await r.json()).studies||[]).map(s => {
+      const p = s.protocolSection||{}, id = p.identificationModule||{}, st = p.statusModule||{};
+      return { nct_id: id.nctId||'', title: id.briefTitle||'', status: st.overallStatus||'',
+        start_date: st.startDateStruct?.date||'', conditions: (p.conditionsModule?.conditions||[]).join(', '),
+        query_term: condition, fetched_at: new Date().toISOString() };
+    });
+  } catch(e) { return []; }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AI CONTENT WRITERS — HAIKU FOR VOLUME, SONNET FOR PILLAR
+// ═══════════════════════════════════════════════════════════════════
+
+// HAIKU: Quick, unique practitioner pages ($0.005 each)
+async function aiWritePractitioner(p) {
+  const prompt = `Write unique SEO content for a wellness directory listing. Be warm, professional, 200 words total.
+
+${p.name}${p.credential ? ', ' + p.credential : ''} — ${p.specialty || 'Healthcare Provider'} in ${p.city}, ${p.state} ${p.zip}
+
+Return ONLY JSON:
+{"title":"60 char SEO title with name, specialty, city","meta_description":"155 char meta","intro":"3 sentences about this practitioner","specialty_text":"2 sentences about their focus area","location_text":"2 sentences about location and access","cta":"1 sentence call to action"}`;
+
+  return await callClaude(prompt, 'haiku', 500);
+}
+
+// HAIKU: Unique condition+city pages ($0.005 each)
+async function aiWriteConditionCity(condition, cityName, state) {
+  const cond = condition.replace(/-/g,' ');
+  const prompt = `Write unique SEO content for "${cond} treatment in ${cityName}, ${state}" wellness directory page. 300 words total. Empathetic, informative, NOT medical advice.
+
+Return ONLY JSON:
+{"title":"60 char SEO title","meta_description":"155 char meta","intro":"3 sentences","what_is":"3 sentences explaining ${cond}","treatment_options":"4 sentences on approaches","finding_help":"3 sentences mentioning BLEU.LIVE directory","local_context":"2 sentences about ${cityName} wellness scene","cta":"2 sentence call to action"}`;
+
+  return await callClaude(prompt, 'haiku', 700);
+}
+
+// HAIKU: Unique comparison pages ($0.005 each)
+async function aiWriteComparison(p1, p2) {
+  const n1 = p1.replace(/-/g,' '), n2 = p2.replace(/-/g,' ');
+  const prompt = `Write "${n1} vs ${n2}" comparison for wellness directory. 300 words. Evidence-informed, balanced, not medical advice. Mention BLEU.LIVE Safety Check for interactions.
+
+Return ONLY JSON:
+{"title":"60 char title","meta_description":"155 chars","intro":"3 sentences","p1_overview":"3 sentences on ${n1}","p2_overview":"3 sentences on ${n2}","differences":"4 sentences comparing","who_should_choose":"3 sentences practical guidance","safety":"2 sentences on checking interactions","verdict":"2 sentence balanced conclusion"}`;
+
+  return await callClaude(prompt, 'haiku', 700);
+}
+
+// HAIKU: "Best for" pages ($0.005 each)
+async function aiWriteBestFor(term) {
+  const title = term.replace(/-/g,' ');
+  const prompt = `Write "${title}" guide for wellness directory. 300 words. Evidence-based picks, what to look for, safety notes. Mention BLEU.LIVE for verification.
+
+Return ONLY JSON:
+{"title":"60 char title","meta_description":"155 chars","intro":"3 sentences on why this matters","criteria":"3 sentences on what to look for","top_picks_text":"4 sentences discussing top options without specific brand endorsement","dosage_tips":"2 sentences","safety":"2 sentences on interactions","cta":"2 sentences"}`;
+
+  return await callClaude(prompt, 'haiku', 700);
+}
+
+// SONNET: Deep city wellness guides ($0.014 each — premium content)
+async function aiWriteCityGuide(cityName, state) {
+  const prompt = `Write an 800-word comprehensive wellness city guide for ${cityName}, ${state} for BLEU.LIVE — "The Operating System for Human Longevity."
+
+Cover: wellness culture & history, top neighborhoods for health-minded living, outdoor activities & nature, unique local wellness traditions, healthy food scene, practitioner landscape, mental health resources, fitness scene, community wellness events, and what makes this city unique for wellness.
+
+Write with deep local knowledge. Make someone WANT to explore wellness in ${cityName}.
+
+Return ONLY JSON:
+{"title":"SEO title 60 chars","meta_description":"155 chars","h1":"compelling heading","sections":[{"heading":"section title","content":"3-5 paragraphs of rich content"}],"local_tips":["5 insider tips"],"wellness_score_factors":"3 sentences on what drives this city's wellness profile"}`;
+
+  return await callClaude(prompt, 'sonnet', 1800);
+}
+
+// SONNET: Deep condition guides ($0.014 each — pillar content)
+async function aiWriteConditionGuide(condition) {
+  const cond = condition.replace(/-/g,' ');
+  const prompt = `Write a 1000-word comprehensive guide about ${cond} for BLEU.LIVE wellness platform. This is PILLAR content that hundreds of city/practitioner pages will link to.
+
+Cover: what it is and how it manifests, symptoms and warning signs, evidence-based treatment approaches (therapy types, medication, holistic, lifestyle), recent research developments, how to find the right provider, self-care strategies, when to seek immediate help, and the path forward.
+
+Empathetic, evidence-informed, NOT medical advice. Write for someone actively seeking help.
+
+Return ONLY JSON:
+{"title":"SEO title","meta_description":"155 chars","h1":"heading","sections":[{"heading":"title","content":"rich paragraphs"}],"key_stats":"3 important statistics","related_conditions":["5 related conditions"],"treatment_types":["list of approaches"]}`;
+
+  return await callClaude(prompt, 'sonnet', 2200);
+}
+
+// SONNET: Deep supplement guides ($0.014 each — pillar content)
+async function aiWriteSupplementGuide(supplement) {
+  const supp = supplement.replace(/-/g,' ');
+  const prompt = `Write a 800-word evidence-based guide about ${supp} for BLEU.LIVE wellness platform. PILLAR content for SEO authority.
+
+Cover: what it is, mechanism of action, research evidence, optimal dosage ranges, forms/bioavailability, timing, side effects, drug interactions (mention BLEU Safety Check Engine), who should/shouldn't use it, quality markers to look for, and bottom line.
+
+Evidence-informed, cite study types (RCTs, meta-analyses) without specific citations. NOT medical advice.
+
+Return ONLY JSON:
+{"title":"SEO title","meta_description":"155 chars","h1":"heading","sections":[{"heading":"title","content":"paragraphs"}],"quick_facts":{"forms":"types","typical_dose":"range","timing":"when to take","interactions":"key ones"},"safety_rating":"low/moderate/high concern"}`;
+
+  return await callClaude(prompt, 'sonnet', 1800);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PIPELINE ORCHESTRATOR — THE BEAST
+// ═══════════════════════════════════════════════════════════════════
+
+const S = {
+  cycle: 0, started: new Date().toISOString(),
+  practitioners: 0, aiPages: 0, templatePages: 0,
+  studies: 0, fdaRecords: 0, errors: 0,
+  running: false, lastCycle: null,
 };
 
-// ═══ TARGET CITIES ═══
-const TARGET_CITIES = [
-  { name:'New Orleans', state:'LA', lat:29.95, lng:-90.07, zip:'70112' },
-  { name:'Baton Rouge', state:'LA', lat:30.45, lng:-91.19, zip:'70801' },
-  { name:'Houston', state:'TX', lat:29.76, lng:-95.37, zip:'77001' },
-  { name:'Atlanta', state:'GA', lat:33.75, lng:-84.39, zip:'30301' },
-  { name:'Los Angeles', state:'CA', lat:34.05, lng:-118.24, zip:'90001' },
-  { name:'New York', state:'NY', lat:40.71, lng:-74.01, zip:'10001' },
-  { name:'Chicago', state:'IL', lat:41.88, lng:-87.63, zip:'60601' },
-  { name:'Miami', state:'FL', lat:25.76, lng:-80.19, zip:'33101' },
-  { name:'Denver', state:'CO', lat:39.74, lng:-104.99, zip:'80201' },
-  { name:'Portland', state:'OR', lat:45.52, lng:-122.68, zip:'97201' },
-  { name:'San Francisco', state:'CA', lat:37.77, lng:-122.42, zip:'94102' },
-  { name:'Seattle', state:'WA', lat:47.61, lng:-122.33, zip:'98101' },
-  { name:'Austin', state:'TX', lat:30.27, lng:-97.74, zip:'78701' },
-  { name:'Nashville', state:'TN', lat:36.16, lng:-86.78, zip:'37201' },
-  { name:'Phoenix', state:'AZ', lat:33.45, lng:-112.07, zip:'85001' },
-  { name:'Detroit', state:'MI', lat:42.33, lng:-83.05, zip:'48201' },
-  { name:'Philadelphia', state:'PA', lat:39.95, lng:-75.17, zip:'19101' },
-  { name:'Dallas', state:'TX', lat:32.78, lng:-96.80, zip:'75201' },
-  { name:'Las Vegas', state:'NV', lat:36.17, lng:-115.14, zip:'89101' },
-  { name:'Charlotte', state:'NC', lat:35.23, lng:-80.84, zip:'28201' },
-];
+// PHASE 1: Scrape practitioners (FREE)
+async function phaseScrape() {
+  console.log('\n── PHASE 1: SCRAPING ──');
+  const cities = Object.keys(CITY_ZIPS);
+  // 5 cities × 6 ZIPs = 30 NPI calls per cycle
+  const batch = [];
+  for (let c = 0; c < 5; c++) {
+    const city = cities[(S.cycle * 5 + c) % cities.length];
+    const zips = CITY_ZIPS[city].sort(() => Math.random() - 0.5).slice(0, 6);
+    console.log(`  📍 ${city} → ${zips.length} ZIPs`);
+    for (const zip of zips) {
+      batch.push(...await scrapeNPI(zip));
+      await sleep(400);
+    }
+  }
+  if (batch.length) {
+    await dbBatch('practitioners', batch);
+    S.practitioners += batch.length;
+    console.log(`  ✓ ${batch.length} practitioners`);
+  }
 
-const CONDITIONS = [
-  'anxiety','depression','chronic-pain','insomnia','ptsd','adhd',
-  'addiction-recovery','inflammation','migraine','fibromyalgia',
-  'ibs','arthritis','diabetes','hypertension','obesity',
-  'menopause','endometriosis','autoimmune','cancer-support','hiv-wellness'
-];
+  // Research + FDA (FREE)
+  for (let i = 0; i < 5; i++) {
+    const cond = CONDITIONS[(S.cycle * 5 + i) % CONDITIONS.length].replace(/-/g,' ');
+    const studies = await scrapePubMed(`${cond} treatment 2024 2025`, 8);
+    if (studies.length) { await dbBatch('pubmed_studies', studies); S.studies += studies.length; }
+    await sleep(350);
+  }
+  const drugs = ['cbd','melatonin','ashwagandha','turmeric','magnesium','omega-3','probiotics','zinc','iron','vitamin-d','b12','coq10','lions-mane','valerian','5-htp','nac','berberine','collagen','creatine','l-theanine'];
+  for (let i = 0; i < 3; i++) {
+    const drug = drugs[(S.cycle * 3 + i) % drugs.length];
+    const labels = await scrapeFDA(drug);
+    const events = await scrapeFDAEvents(drug);
+    if (labels.length) await dbBatch('fda_data', labels);
+    if (events.length) await dbBatch('fda_adverse_events', events);
+    S.fdaRecords += labels.length + events.length;
+    await sleep(300);
+  }
+  const trials = await scrapeClinicalTrials(CONDITIONS[S.cycle % CONDITIONS.length].replace(/-/g,' '), 10);
+  if (trials.length) await dbBatch('clinical_trials', trials);
+}
 
-// ═══════════════════════════════════════════════════════════════
-// PHARMACOLOGY DATABASE — 54 Substances
-// ═══════════════════════════════════════════════════════════════
-const PHARMA_DB = {
-  'thc': { class:'cannabinoid', cyp_substrates:['CYP2C9','CYP3A4'], cyp_inhibits:['CYP2C9','CYP3A4'], receptor:['CB1','CB2'], effects:['euphoria','pain_relief','appetite'], serotonergic:false, nti:false, half_life:'1-3h', schedule:'I/state-legal' },
-  'cbd': { class:'cannabinoid', cyp_substrates:['CYP2C19','CYP3A4'], cyp_inhibits:['CYP2C19','CYP3A4','CYP2D6','CYP2C9'], receptor:['CB1_antagonist','5HT1A','TRPV1'], effects:['anxiolytic','anti_inflammatory','anticonvulsant'], serotonergic:true, nti:false, half_life:'18-32h', schedule:'unscheduled' },
-  'cbg': { class:'cannabinoid', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['CB1_partial','CB2','5HT1A','alpha2'], effects:['anti_inflammatory','antibacterial','neuroprotective'], serotonergic:true, nti:false, half_life:'2-4h', schedule:'unscheduled' },
-  'cbn': { class:'cannabinoid', cyp_substrates:['CYP3A4','CYP2C9'], cyp_inhibits:[], receptor:['CB1_weak','CB2'], effects:['sedation','anti_inflammatory'], serotonergic:false, nti:false, half_life:'2-4h', schedule:'unscheduled' },
-  'delta-8-thc': { class:'cannabinoid', cyp_substrates:['CYP3A4','CYP2C9'], cyp_inhibits:['CYP3A4'], receptor:['CB1_partial','CB2'], effects:['mild_euphoria','antiemetic','anxiolytic'], serotonergic:false, nti:false, half_life:'1-3h', schedule:'variable' },
-  'thcv': { class:'cannabinoid', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['CB1_antagonist_low','CB2'], effects:['appetite_suppression','energizing'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'unscheduled' },
-  'thca': { class:'cannabinoid', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['TRPA1','TRPM8'], effects:['anti_inflammatory','antiemetic','neuroprotective'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'unscheduled' },
-  'cbda': { class:'cannabinoid', cyp_substrates:['CYP2C19'], cyp_inhibits:[], receptor:['5HT1A','TRPV1'], effects:['antiemetic','anti_inflammatory'], serotonergic:true, nti:false, half_life:'1-2h', schedule:'unscheduled' },
-  'sertraline': { class:'ssri', cyp_substrates:['CYP2B6','CYP2C19','CYP2D6','CYP3A4'], cyp_inhibits:['CYP2D6','CYP2B6'], receptor:['SERT'], effects:['antidepressant','anxiolytic'], serotonergic:true, nti:false, half_life:'26h', schedule:'Rx' },
-  'fluoxetine': { class:'ssri', cyp_substrates:['CYP2D6','CYP2C9'], cyp_inhibits:['CYP2D6','CYP2C19'], receptor:['SERT'], effects:['antidepressant','anxiolytic'], serotonergic:true, nti:false, half_life:'1-6 days', schedule:'Rx' },
-  'escitalopram': { class:'ssri', cyp_substrates:['CYP2C19','CYP3A4'], cyp_inhibits:['CYP2D6_weak'], receptor:['SERT'], effects:['antidepressant','anxiolytic'], serotonergic:true, nti:false, half_life:'27-33h', schedule:'Rx' },
-  'paroxetine': { class:'ssri', cyp_substrates:['CYP2D6'], cyp_inhibits:['CYP2D6'], receptor:['SERT'], effects:['antidepressant','anxiolytic'], serotonergic:true, nti:false, half_life:'21h', schedule:'Rx' },
-  'venlafaxine': { class:'snri', cyp_substrates:['CYP2D6','CYP3A4'], cyp_inhibits:[], receptor:['SERT','NET'], effects:['antidepressant','anxiolytic','pain'], serotonergic:true, nti:false, half_life:'5h', schedule:'Rx' },
-  'duloxetine': { class:'snri', cyp_substrates:['CYP1A2','CYP2D6'], cyp_inhibits:['CYP2D6'], receptor:['SERT','NET'], effects:['antidepressant','pain','fibromyalgia'], serotonergic:true, nti:false, half_life:'12h', schedule:'Rx' },
-  'bupropion': { class:'ndri', cyp_substrates:['CYP2B6'], cyp_inhibits:['CYP2D6'], receptor:['NET','DAT'], effects:['antidepressant','smoking_cessation','energizing'], serotonergic:false, nti:false, half_life:'21h', schedule:'Rx' },
-  'alprazolam': { class:'benzodiazepine', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['GABA_A'], effects:['anxiolytic','sedation','muscle_relaxant'], serotonergic:false, nti:true, half_life:'11h', schedule:'IV' },
-  'diazepam': { class:'benzodiazepine', cyp_substrates:['CYP2C19','CYP3A4'], cyp_inhibits:[], receptor:['GABA_A'], effects:['anxiolytic','sedation','anticonvulsant'], serotonergic:false, nti:true, half_life:'20-100h', schedule:'IV' },
-  'clonazepam': { class:'benzodiazepine', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['GABA_A'], effects:['anxiolytic','anticonvulsant'], serotonergic:false, nti:true, half_life:'30-40h', schedule:'IV' },
-  'gabapentin': { class:'gabapentinoid', cyp_substrates:[], cyp_inhibits:[], receptor:['alpha2delta'], effects:['pain','anticonvulsant','anxiolytic'], serotonergic:false, nti:false, half_life:'5-7h', schedule:'V' },
-  'pregabalin': { class:'gabapentinoid', cyp_substrates:[], cyp_inhibits:[], receptor:['alpha2delta'], effects:['pain','anticonvulsant','anxiolytic'], serotonergic:false, nti:false, half_life:'6h', schedule:'V' },
-  'tramadol': { class:'opioid', cyp_substrates:['CYP2D6','CYP3A4'], cyp_inhibits:[], receptor:['MOR','SERT','NET'], effects:['pain_relief'], serotonergic:true, nti:false, half_life:'6h', schedule:'IV' },
-  'oxycodone': { class:'opioid', cyp_substrates:['CYP3A4','CYP2D6'], cyp_inhibits:[], receptor:['MOR'], effects:['pain_relief'], serotonergic:false, nti:true, half_life:'3-5h', schedule:'II' },
-  'morphine': { class:'opioid', cyp_substrates:['UGT2B7'], cyp_inhibits:[], receptor:['MOR'], effects:['pain_relief'], serotonergic:false, nti:true, half_life:'2-4h', schedule:'II' },
-  'methadone': { class:'opioid', cyp_substrates:['CYP3A4','CYP2B6','CYP2D6'], cyp_inhibits:['CYP2D6'], receptor:['MOR','NMDA'], effects:['pain_relief','opioid_maintenance'], serotonergic:true, nti:true, half_life:'8-59h', schedule:'II' },
-  'suboxone': { class:'opioid_partial', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['MOR_partial','KOR_antagonist'], effects:['opioid_maintenance','pain'], serotonergic:false, nti:true, half_life:'24-42h', schedule:'III' },
-  'warfarin': { class:'anticoagulant', cyp_substrates:['CYP2C9','CYP3A4','CYP1A2'], cyp_inhibits:[], receptor:['VKORC1'], effects:['anticoagulation'], serotonergic:false, nti:true, half_life:'20-60h', schedule:'Rx' },
-  'lithium': { class:'mood_stabilizer', cyp_substrates:[], cyp_inhibits:[], receptor:['GSK3B','IMPase'], effects:['mood_stabilization','anti_suicidal'], serotonergic:false, nti:true, half_life:'18-36h', schedule:'Rx' },
-  'lamotrigine': { class:'anticonvulsant', cyp_substrates:['UGT1A4'], cyp_inhibits:[], receptor:['sodium_channel','glutamate'], effects:['mood_stabilization','anticonvulsant'], serotonergic:false, nti:false, half_life:'25-33h', schedule:'Rx' },
-  'quetiapine': { class:'atypical_antipsychotic', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['D2','5HT2A','H1','alpha1'], effects:['antipsychotic','mood_stabilization','sedation'], serotonergic:true, nti:false, half_life:'7h', schedule:'Rx' },
-  'aripiprazole': { class:'atypical_antipsychotic', cyp_substrates:['CYP2D6','CYP3A4'], cyp_inhibits:[], receptor:['D2_partial','5HT1A_partial','5HT2A'], effects:['antipsychotic','mood_stabilization'], serotonergic:true, nti:false, half_life:'75h', schedule:'Rx' },
-  'methylphenidate': { class:'stimulant', cyp_substrates:[], cyp_inhibits:[], receptor:['DAT','NET'], effects:['attention','focus','wakefulness'], serotonergic:false, nti:false, half_life:'2-3h', schedule:'II' },
-  'amphetamine': { class:'stimulant', cyp_substrates:['CYP2D6'], cyp_inhibits:[], receptor:['DAT','NET','VMAT2'], effects:['attention','focus','wakefulness'], serotonergic:false, nti:false, half_life:'10-13h', schedule:'II' },
-  'melatonin': { class:'supplement', cyp_substrates:['CYP1A2'], cyp_inhibits:[], receptor:['MT1','MT2'], effects:['sleep','circadian'], serotonergic:false, nti:false, half_life:'0.5-1h', schedule:'OTC' },
-  'st-johns-wort': { class:'supplement', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['SERT','MAO_weak'], effects:['antidepressant_mild'], serotonergic:true, nti:false, half_life:'24-48h', schedule:'OTC', cyp_inducers:['CYP3A4','CYP2C9','CYP1A2','CYP2C19'] },
-  'ashwagandha': { class:'adaptogen', cyp_substrates:['CYP3A4','CYP2D6'], cyp_inhibits:['CYP3A4_mild','CYP2D6_mild'], receptor:['GABA_A_mod','thyroid'], effects:['anxiolytic','adaptogenic','anti_inflammatory'], serotonergic:false, nti:false, half_life:'4-6h', schedule:'OTC' },
-  'valerian': { class:'supplement', cyp_substrates:['CYP3A4'], cyp_inhibits:['CYP3A4_weak'], receptor:['GABA_A_mod'], effects:['sedation','anxiolytic'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'OTC' },
-  'kava': { class:'supplement', cyp_substrates:['CYP2E1'], cyp_inhibits:['CYP2E1','CYP1A2','CYP2D6'], receptor:['GABA_A','sodium_channel'], effects:['anxiolytic','sedation','muscle_relaxant'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'OTC' },
-  'kratom': { class:'supplement', cyp_substrates:['CYP3A4','CYP2D6'], cyp_inhibits:['CYP2D6','CYP3A4'], receptor:['MOR_partial','5HT2A','alpha2'], effects:['pain_relief','euphoria','stimulant_low_dose'], serotonergic:true, nti:false, half_life:'3-6h', schedule:'unscheduled/variable' },
-  'turmeric': { class:'supplement', cyp_substrates:['CYP3A4'], cyp_inhibits:['CYP3A4','CYP2C9','CYP1A2'], receptor:['NF_kB','COX2'], effects:['anti_inflammatory','antioxidant'], serotonergic:false, nti:false, half_life:'6-7h', schedule:'OTC' },
-  'fish-oil': { class:'supplement', cyp_substrates:[], cyp_inhibits:[], receptor:['PPAR','GPR120'], effects:['anti_inflammatory','cardiovascular','brain_health'], serotonergic:false, nti:false, half_life:'48h', schedule:'OTC' },
-  'magnesium': { class:'mineral', cyp_substrates:[], cyp_inhibits:[], receptor:['NMDA_block','GABA_mod'], effects:['muscle_relaxation','sleep','nerve_function'], serotonergic:false, nti:false, half_life:'varies', schedule:'OTC' },
-  'vitamin-d': { class:'vitamin', cyp_substrates:['CYP27B1','CYP24A1'], cyp_inhibits:[], receptor:['VDR'], effects:['bone_health','immune_modulation','mood'], serotonergic:false, nti:false, half_life:'15 days', schedule:'OTC' },
-  'l-theanine': { class:'amino_acid', cyp_substrates:[], cyp_inhibits:[], receptor:['glutamate_mod','GABA_mod','alpha_wave'], effects:['calm_focus','anxiolytic_mild'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'OTC' },
-  '5-htp': { class:'amino_acid', cyp_substrates:['AADC'], cyp_inhibits:[], receptor:['serotonin_precursor'], effects:['mood','sleep','appetite'], serotonergic:true, nti:false, half_life:'2-4h', schedule:'OTC' },
-  'sam-e': { class:'supplement', cyp_substrates:[], cyp_inhibits:[], receptor:['methyl_donor'], effects:['mood','liver_health','joint_health'], serotonergic:true, nti:false, half_life:'100min', schedule:'OTC' },
-  'gaba-supplement': { class:'amino_acid', cyp_substrates:[], cyp_inhibits:[], receptor:['GABA_B_peripheral'], effects:['relaxation','sleep'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'OTC' },
-  'passionflower': { class:'supplement', cyp_substrates:['CYP3A4'], cyp_inhibits:['CYP3A4_weak'], receptor:['GABA_A_mod','MAO_weak'], effects:['anxiolytic','sedation'], serotonergic:true, nti:false, half_life:'2-4h', schedule:'OTC' },
-  'lions-mane': { class:'mushroom', cyp_substrates:[], cyp_inhibits:[], receptor:['NGF_stimulator'], effects:['neuroprotective','cognitive_enhancement','anti_inflammatory'], serotonergic:false, nti:false, half_life:'unknown', schedule:'OTC' },
-  'reishi': { class:'mushroom', cyp_substrates:['CYP3A4','CYP1A2'], cyp_inhibits:['CYP3A4_weak'], receptor:['immune_modulator','GABA_mod'], effects:['immune_modulation','sleep','anti_inflammatory'], serotonergic:false, nti:false, half_life:'unknown', schedule:'OTC' },
-  'ibuprofen': { class:'nsaid', cyp_substrates:['CYP2C9'], cyp_inhibits:['CYP2C9_weak'], receptor:['COX1','COX2'], effects:['pain_relief','anti_inflammatory','antipyretic'], serotonergic:false, nti:false, half_life:'2-4h', schedule:'OTC' },
-  'acetaminophen': { class:'analgesic', cyp_substrates:['CYP2E1','CYP1A2','CYP3A4'], cyp_inhibits:[], receptor:['COX3_central','TRPV1'], effects:['pain_relief','antipyretic'], serotonergic:false, nti:false, half_life:'2-3h', schedule:'OTC' },
-  'diphenhydramine': { class:'antihistamine', cyp_substrates:['CYP2D6'], cyp_inhibits:['CYP2D6_moderate'], receptor:['H1','mACh'], effects:['antihistamine','sedation','anticholinergic'], serotonergic:false, nti:false, half_life:'2-8h', schedule:'OTC' },
-  'caffeine': { class:'stimulant', cyp_substrates:['CYP1A2'], cyp_inhibits:[], receptor:['adenosine_A1_A2A'], effects:['wakefulness','focus','bronchodilation'], serotonergic:false, nti:false, half_life:'3-5h', schedule:'OTC' },
-  'alcohol': { class:'depressant', cyp_substrates:['ADH','CYP2E1'], cyp_inhibits:['CYP2E1_acute'], receptor:['GABA_A','NMDA_block','opioid_indirect'], effects:['sedation','disinhibition','euphoria'], serotonergic:false, nti:false, half_life:'varies', schedule:'legal', cyp_inducers:['CYP2E1_chronic'] },
-};
+// PHASE 2: AI Volume Pages (HAIKU — $0.005/each, ~1000/day budget)
+async function phaseHaikuVolume() {
+  console.log('\n── PHASE 2: HAIKU VOLUME PAGES ──');
+  const cities = Object.keys(CITY_ZIPS);
+  let written = 0;
 
-// ═══════════════════════════════════════════════════════════════
-// SAFETY CHECK ENGINE v2.0 — 5 Layers
-// ═══════════════════════════════════════════════════════════════
-function runSafetyEngine(substances) {
-  const found = substances.map(s => {
-    const key = s.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
-    return { name: s, key, data: PHARMA_DB[key] };
-  }).filter(s => s.data);
-  const unknown = substances.filter(s => !PHARMA_DB[s.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')]);
-  const interactions = [];
-
-  for (let i = 0; i < found.length; i++) {
-    for (let j = i + 1; j < found.length; j++) {
-      const a = found[i], b = found[j];
-      // L1: CYP450 Inhibition
-      for (const enz of (a.data.cyp_inhibits || [])) {
-        const clean = enz.replace(/_weak|_moderate|_mild/,'');
-        if ((b.data.cyp_substrates || []).includes(clean))
-          interactions.push({ pair:`${a.name} + ${b.name}`, layer:'CYP450', mechanism:`${a.name} inhibits ${clean} → may increase ${b.name} levels`, severity:(a.data.nti||b.data.nti)?0.9:(enz.includes('weak')||enz.includes('mild')?0.3:0.6), enzyme:clean });
+  // 20 practitioner pages per cycle
+  const unwritten = await db('GET', 'practitioners', null, 'select=npi,name,slug,credential,specialty,city,state,zip,address,phone,gender&has_content=is.null&limit=20');
+  if (Array.isArray(unwritten) && unwritten.length) {
+    console.log(`  📝 ${unwritten.length} practitioner pages...`);
+    for (const p of unwritten) {
+      const content = await aiWritePractitioner(p);
+      if (content && typeof content === 'object') {
+        const cityTitle = (p.city||'').split(' ').map(w=>w[0]?.toUpperCase()+w.slice(1)).join(' ');
+        await dbBatch('seo_pages', [{
+          slug: `directory/${p.slug}`, page_type: 'practitioner',
+          title: content.title || `${p.name} — ${p.specialty} in ${cityTitle}, ${p.state}`,
+          meta_description: content.meta_description || '',
+          h1: `${p.name}${p.credential ? ', '+p.credential : ''}`,
+          content_json: JSON.stringify(content),
+          city: p.city, state: p.state, status: 'published',
+          created_at: new Date().toISOString(),
+        }]);
+        await db('PATCH', 'practitioners', { has_content: true }, `npi=eq.${p.npi}`);
+        written++;
       }
-      for (const enz of (b.data.cyp_inhibits || [])) {
-        const clean = enz.replace(/_weak|_moderate|_mild/,'');
-        if ((a.data.cyp_substrates || []).includes(clean))
-          interactions.push({ pair:`${b.name} + ${a.name}`, layer:'CYP450', mechanism:`${b.name} inhibits ${clean} → may increase ${a.name} levels`, severity:(a.data.nti||b.data.nti)?0.9:(enz.includes('weak')||enz.includes('mild')?0.3:0.6), enzyme:clean });
-      }
-      // L1b: CYP Induction
-      for (const enz of (a.data.cyp_inducers || [])) {
-        const clean = enz.replace(/_chronic/,'');
-        if ((b.data.cyp_substrates || []).includes(clean))
-          interactions.push({ pair:`${a.name} + ${b.name}`, layer:'CYP450', mechanism:`${a.name} induces ${clean} → may reduce ${b.name} effectiveness`, severity:b.data.nti?0.9:0.6, enzyme:clean, action:'induction' });
-      }
-      // L2: Serotonin Syndrome
-      if (a.data.serotonergic && b.data.serotonergic)
-        interactions.push({ pair:`${a.name} + ${b.name}`, layer:'Serotonin', mechanism:`Both affect serotonin → serotonin syndrome risk (agitation, hyperthermia, tremor)`, severity:0.8, warning:'SEROTONIN_SYNDROME_RISK' });
-      // L3: Receptor Competition
-      const aR = new Set((a.data.receptor||[]).map(r=>r.replace(/_partial|_weak|_antagonist|_block|_mod/,'')));
-      const bR = new Set((b.data.receptor||[]).map(r=>r.replace(/_partial|_weak|_antagonist|_block|_mod/,'')));
-      const shared = [...aR].filter(r=>bR.has(r));
-      if (shared.length > 0)
-        interactions.push({ pair:`${a.name} + ${b.name}`, layer:'Receptor', mechanism:`Both act on ${shared.join(', ')}. May compete or compound effects.`, severity:0.4, receptors:shared });
-      // L4: Sedation Stacking
-      const sedA = (a.data.effects||[]).some(e=>['sedation','sleep','muscle_relaxant'].includes(e));
-      const sedB = (b.data.effects||[]).some(e=>['sedation','sleep','muscle_relaxant'].includes(e));
-      if (sedA && sedB)
-        interactions.push({ pair:`${a.name} + ${b.name}`, layer:'Sedation', mechanism:`Both cause sedation → increased drowsiness + respiratory depression risk`, severity:(a.data.class==='opioid'||b.data.class==='opioid')?0.95:(a.data.class==='benzodiazepine'||b.data.class==='benzodiazepine')?0.85:0.6 });
-      // L5: NTI Flagging
-      if ((a.data.nti||b.data.nti) && interactions.some(ix=>ix.pair.includes(a.data.nti?a.name:b.name)&&ix.layer==='CYP450'))
-        interactions.push({ pair:`${a.data.nti?a.name:b.name} (NTI)`, layer:'NTI', mechanism:`Narrow therapeutic index drug — small level changes = toxicity risk. REQUIRES MEDICAL SUPERVISION.`, severity:0.95, warning:'NTI_CRITICAL' });
+      await sleep(800);
     }
   }
 
-  const maxSev = interactions.length > 0 ? Math.max(...interactions.map(i=>i.severity)) : 0;
-  return {
-    query: substances, recognized: found.map(f=>({ name:f.name, class:f.data.class, schedule:f.data.schedule, nti:f.data.nti })),
-    unknown, interactions, risk_level: maxSev>=0.8?'HIGH':maxSev>=0.5?'MODERATE':maxSev>0?'LOW':'NONE',
-    max_severity: maxSev, interaction_count: interactions.length,
-    disclaimer: 'Educational tool only. Consult your healthcare provider before combining substances.',
-    engine_version: '2.0', substances_in_db: Object.keys(PHARMA_DB).length
-  };
-}
+  // 15 condition/city pages per cycle
+  console.log(`  📝 Condition/city pages...`);
+  for (let i = 0; i < 15; i++) {
+    const condIdx = (S.cycle * 15 + i) % CONDITIONS.length;
+    const cityIdx = Math.floor((S.cycle * 15 + i) / CONDITIONS.length) % cities.length;
+    const cityKey = cities[cityIdx];
+    const slug = `${CONDITIONS[condIdx]}-treatment-${cityKey}`;
 
-// ═══════════════════════════════════════════════════════════════
-// API QUERY FUNCTIONS
-// ═══════════════════════════════════════════════════════════════
+    // Check if exists
+    const existing = await db('GET', 'seo_pages', null, `slug=eq.${encodeURIComponent(slug)}&select=slug&limit=1`);
+    if (Array.isArray(existing) && existing.length) continue;
 
-// -- FREE APIs --
-async function queryRxNorm(drug) {
-  try { const d=await fetchJSON(`https://rxnav.nlm.nih.gov/REST/drugs.json?name=${encodeURIComponent(drug)}`); return { source:'RxNorm', drug, results:(d?.drugGroup?.conceptGroup?.flatMap(g=>g.conceptProperties||[])||[]).slice(0,10) }; } catch(e) { return { source:'RxNorm', error:e.message }; }
-}
-async function queryNPI(query, city, state) {
-  try { let url=`https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=50`;
-    if(/^\d+$/.test(query)) url+=`&number=${query}`; else url+=`&first_name=${encodeURIComponent(query.split(' ')[0]||'')}&last_name=${encodeURIComponent(query.split(' ').slice(1).join(' ')||query)}`;
-    if(city) url+=`&city=${encodeURIComponent(city)}`; if(state) url+=`&state=${encodeURIComponent(state)}`;
-    const d=await fetchJSON(url); return { source:'NPI Registry', query, results:(d.results||[]).slice(0,20), count:d.result_count||0 };
-  } catch(e) { return { source:'NPI', error:e.message }; }
-}
-async function queryFDALabels(drug) {
-  try { const k=KEYS.openfda?`&api_key=${KEYS.openfda}`:''; const d=await fetchJSON(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${encodeURIComponent(drug)}"+openfda.generic_name:"${encodeURIComponent(drug)}"&limit=3${k}`);
-    return { source:'FDA Labels', drug, results:(d.results||[]).map(r=>({ brand:r.openfda?.brand_name?.[0], generic:r.openfda?.generic_name?.[0], warnings:r.warnings?.[0]?.substring(0,500), interactions:r.drug_interactions?.[0]?.substring(0,500) })) };
-  } catch(e) { return { source:'FDA Labels', error:e.message }; }
-}
-async function queryFDAEvents(drug) {
-  try { const k=KEYS.openfda?`&api_key=${KEYS.openfda}`:''; const d=await fetchJSON(`https://api.fda.gov/drug/event.json?search=patient.drug.medicinalproduct:"${encodeURIComponent(drug)}"&count=patient.reaction.reactionmeddrapt.exact&limit=15${k}`);
-    return { source:'FDA Adverse Events', drug, reactions:d.results||[] };
-  } catch(e) { return { source:'FDA Events', error:e.message }; }
-}
-async function queryDailyMed(drug) {
-  try { const d=await fetchJSON(`https://dailymed.nlm.nih.gov/dailymed/services/v2/spls.json?drug_name=${encodeURIComponent(drug)}&pagesize=5`); return { source:'DailyMed', drug, results:d.data||[] }; } catch(e) { return { source:'DailyMed', error:e.message }; }
-}
-async function queryCPIC(gene) {
-  try { const d=await fetchJSON(`https://api.cpicpgx.org/v1/guideline?genesymbol=eq.${encodeURIComponent(gene)}`); return { source:'CPIC', gene, guidelines:d||[] }; } catch(e) { return { source:'CPIC', error:e.message }; }
-}
-async function queryClinicalTrials(condition, city) {
-  try { let url=`https://clinicaltrials.gov/api/v2/studies?query.cond=${encodeURIComponent(condition)}&pageSize=10&sort=LastUpdatePostDate:desc`; if(city) url+=`&query.locn=${encodeURIComponent(city)}`;
-    const d=await fetchJSON(url); return { source:'ClinicalTrials.gov', condition, studies:(d.studies||[]).map(s=>({ title:s.protocolSection?.identificationModule?.briefTitle, status:s.protocolSection?.statusModule?.overallStatus })) };
-  } catch(e) { return { source:'ClinicalTrials.gov', error:e.message }; }
-}
-async function querySAMHSA(zip) { try { return { source:'SAMHSA', zip, note:'Use findtreatment.gov for treatment locator' }; } catch(e) { return { source:'SAMHSA', error:e.message }; } }
-async function queryCDCPlaces(state) { try { const d=await fetchJSON(`https://data.cdc.gov/resource/swc5-untb.json?stateabbr=${encodeURIComponent(state)}&$limit=20`); return { source:'CDC PLACES', state, data:d||[] }; } catch(e) { return { source:'CDC', error:e.message }; } }
-async function queryOpenFoodFacts(product) {
-  try { const d=await fetchJSON(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(product)}&json=1&page_size=5`);
-    return { source:'Open Food Facts', products:(d.products||[]).map(p=>({ name:p.product_name, brand:p.brands, nutriscore:p.nutriscore_grade, calories:p.nutriments?.['energy-kcal_100g'] })) };
-  } catch(e) { return { source:'Open Food Facts', error:e.message }; }
-}
-async function queryWger(muscle) { try { const d=await fetchJSON(`https://wger.de/api/v2/exercise/?format=json&language=2&limit=10`); return { source:'wger', exercises:d.results||[] }; } catch(e) { return { source:'wger', error:e.message }; } }
-async function queryOpenLibrary(topic) { try { const d=await fetchJSON(`https://openlibrary.org/search.json?q=${encodeURIComponent(topic)}&limit=10`); return { source:'Open Library', books:(d.docs||[]).map(b=>({ title:b.title, author:b.author_name?.[0], year:b.first_publish_year })) }; } catch(e) { return { source:'Open Library', error:e.message }; } }
-async function queryFDARecalls(q) { try { const k=KEYS.openfda?`&api_key=${KEYS.openfda}`:''; const d=await fetchJSON(`https://api.fda.gov/drug/enforcement.json?search=reason_for_recall:"${encodeURIComponent(q)}"&limit=5${k}`); return { source:'FDA Recalls', recalls:d.results||[] }; } catch(e) { return { source:'FDA Recalls', error:e.message }; } }
+    const parts = cityKey.split('-');
+    const st = parts.pop().toUpperCase();
+    const cityName = parts.map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');
 
-// -- KEYED APIs --
-async function queryPubMed(query, max=10) {
-  try { const k=KEYS.ncbi?`&api_key=${KEYS.ncbi}`:''; const s=await fetchJSON(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=${max}&retmode=json${k}`);
-    const ids=s?.esearchresult?.idlist||[]; if(!ids.length) return { source:'PubMed', articles:[], count:0 };
-    const d=await fetchJSON(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${ids.join(',')}&retmode=json${k}`);
-    return { source:'PubMed', query, articles:ids.map(id=>{ const r=d?.result?.[id]; return r?{ pmid:id, title:r.title, journal:r.source, date:r.pubdate }:null; }).filter(Boolean), count:parseInt(s?.esearchresult?.count||0) };
-  } catch(e) { return { source:'PubMed', error:e.message }; }
-}
-async function queryUSDAFood(food) {
-  try { if(!KEYS.usda) return { source:'USDA', error:'No key' }; const d=await fetchJSON(`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${KEYS.usda}&query=${encodeURIComponent(food)}&pageSize=5`);
-    return { source:'USDA FoodData', results:(d.foods||[]).map(f=>({ name:f.description, nutrients:(f.foodNutrients||[]).filter(n=>['Energy','Protein','Total lipid (fat)','Carbohydrate, by difference'].includes(n.nutrientName)).map(n=>({ name:n.nutrientName, value:n.value, unit:n.unitName })) })) };
-  } catch(e) { return { source:'USDA', error:e.message }; }
-}
-async function queryWeather(lat, lng) {
-  try { if(!KEYS.weather) return { source:'Weather', error:'No key' }; const d=await fetchJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${KEYS.weather}&units=imperial`);
-    return { source:'OpenWeatherMap', location:d.name, temp_f:d.main?.temp, humidity:d.main?.humidity, conditions:d.weather?.[0]?.description };
-  } catch(e) { return { source:'Weather', error:e.message }; }
-}
-async function queryAirQuality(lat, lng) {
-  try { if(KEYS.waqi) { const d=await fetchJSON(`https://api.waqi.info/feed/geo:${lat};${lng}/?token=${KEYS.waqi}`); if(d.status==='ok') return { source:'WAQI', aqi:d.data?.aqi, station:d.data?.city?.name }; }
-    if(KEYS.airnow) { const d=await fetchJSON(`https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=${lat}&longitude=${lng}&distance=50&API_KEY=${KEYS.airnow}`); return { source:'AirNow', data:d }; }
-    return { source:'Air Quality', error:'No key' };
-  } catch(e) { return { source:'Air Quality', error:e.message }; }
-}
-async function queryUV(lat, lng) {
-  try { if(!KEYS.openuv) return { source:'OpenUV', error:'No key' }; const d=await fetchJSON(`https://api.openuv.io/api/v1/uv?lat=${lat}&lng=${lng}`, { headers:{'x-access-token':KEYS.openuv} });
-    return { source:'OpenUV', uv:d.result?.uv, uv_max:d.result?.uv_max, safe_exposure:d.result?.safe_exposure_time };
-  } catch(e) { return { source:'OpenUV', error:e.message }; }
-}
-async function queryGooglePlaces(query, lat, lng) {
-  try { if(!KEYS.google) return { source:'Google Places', error:'No key' }; const loc=lat&&lng?`&location=${lat},${lng}&radius=16000`:'';
-    const d=await fetchJSON(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}${loc}&key=${KEYS.google}`);
-    return { source:'Google Places', results:(d.results||[]).slice(0,10).map(p=>({ name:p.name, address:p.formatted_address, rating:p.rating })) };
-  } catch(e) { return { source:'Google Places', error:e.message }; }
-}
-async function queryYelp(term, location) {
-  try { if(!KEYS.yelp) return { source:'Yelp', error:'No key' };
-    const d=await fetchJSON(`https://api.yelp.com/v3/businesses/search?term=${encodeURIComponent(term)}&location=${encodeURIComponent(location)}&limit=10`, { headers:{'Authorization':`Bearer ${KEYS.yelp}`} });
-    return { source:'Yelp', businesses:(d.businesses||[]).map(b=>({ name:b.name, rating:b.rating, reviews:b.review_count, phone:b.phone, address:b.location?.display_address?.join(', ') })) };
-  } catch(e) { return { source:'Yelp', error:e.message }; }
-}
-async function queryFoursquare(query, lat, lng) {
-  try { if(!KEYS.foursquare) return { source:'Foursquare', error:'No key' }; const ll=lat&&lng?`&ll=${lat},${lng}`:'';
-    const d=await fetchJSON(`https://api.foursquare.com/v3/places/search?query=${encodeURIComponent(query)}${ll}&limit=10`, { headers:{'Authorization':KEYS.foursquare} });
-    return { source:'Foursquare', results:d.results||[] };
-  } catch(e) { return { source:'Foursquare', error:e.message }; }
-}
-async function querySpoonacular(query) {
-  try { if(!KEYS.spoonacular) return { source:'Spoonacular', error:'No key' };
-    const d=await fetchJSON(`https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(query)}&number=5&addRecipeNutrition=true&apiKey=${KEYS.spoonacular}`);
-    return { source:'Spoonacular', recipes:(d.results||[]).map(r=>({ title:r.title, readyIn:r.readyInMinutes, calories:r.nutrition?.nutrients?.find(n=>n.name==='Calories')?.amount })) };
-  } catch(e) { return { source:'Spoonacular', error:e.message }; }
-}
-async function queryEdamam(query) {
-  try { if(!KEYS.edamamId||!KEYS.edamamKey) return { source:'Edamam', error:'No key' };
-    const d=await fetchJSON(`https://api.edamam.com/api/nutrition-data?app_id=${KEYS.edamamId}&app_key=${KEYS.edamamKey}&ingr=${encodeURIComponent(query)}`);
-    return { source:'Edamam', calories:d.calories, nutrients:{ protein:d.totalNutrients?.PROCNT, fat:d.totalNutrients?.FAT, carbs:d.totalNutrients?.CHOCDF } };
-  } catch(e) { return { source:'Edamam', error:e.message }; }
-}
-async function queryNPS(state) {
-  try { if(!KEYS.nps) return { source:'NPS', error:'No key' }; const d=await fetchJSON(`https://developer.nps.gov/api/v1/parks?stateCode=${state}&limit=10&api_key=${KEYS.nps}`);
-    return { source:'NPS', parks:(d.data||[]).map(p=>({ name:p.fullName, designation:p.designation, url:p.url })) };
-  } catch(e) { return { source:'NPS', error:e.message }; }
-}
-async function queryEventbrite(query, location) {
-  try { if(!KEYS.eventbrite) return { source:'Eventbrite', error:'No key' };
-    const d=await fetchJSON(`https://www.eventbriteapi.com/v3/events/search/?q=${encodeURIComponent(query)}&location.address=${encodeURIComponent(location)}`, { headers:{'Authorization':`Bearer ${KEYS.eventbrite}`} });
-    return { source:'Eventbrite', events:(d.events||[]).slice(0,10).map(e=>({ name:e.name?.text, start:e.start?.local, url:e.url })) };
-  } catch(e) { return { source:'Eventbrite', error:e.message }; }
-}
-async function queryListenNotes(query) {
-  try { if(!KEYS.listenNotes) return { source:'Listen Notes', error:'No key' };
-    const d=await fetchJSON(`https://listen-api.listennotes.com/api/v2/search?q=${encodeURIComponent(query)}&type=podcast`, { headers:{'X-ListenAPI-Key':KEYS.listenNotes} });
-    return { source:'Listen Notes', podcasts:(d.results||[]).slice(0,5).map(p=>({ title:p.title_original, publisher:p.publisher_original })) };
-  } catch(e) { return { source:'Listen Notes', error:e.message }; }
-}
-async function queryWalkScore(address) {
-  try { if(!KEYS.walkscore) return { source:'WalkScore', error:'No key' };
-    const d=await fetchJSON(`https://api.walkscore.com/score?format=json&address=${encodeURIComponent(address)}&wsapikey=${KEYS.walkscore}`);
-    return { source:'WalkScore', walkscore:d.walkscore, description:d.description, transit:d.transit?.score, bike:d.bike?.score };
-  } catch(e) { return { source:'WalkScore', error:e.message }; }
-}
-async function queryCannlytics(query) {
-  try { if(!KEYS.cannlytics) return { source:'Cannlytics', error:'No key' };
-    const d=await fetchJSON(`https://cannlytics.com/api/data/coas?q=${encodeURIComponent(query)}&limit=5`, { headers:{'Authorization':`Bearer ${KEYS.cannlytics}`} });
-    return { source:'Cannlytics', results:d };
-  } catch(e) { return { source:'Cannlytics', error:e.message }; }
-}
-async function queryCensus(zip) {
-  try { if(!KEYS.census) return { source:'Census', error:'No key' };
-    const d=await fetchJSON(`https://api.census.gov/data/2022/acs/acs5?get=B01003_001E,B19013_001E,B15003_022E&for=zip%20code%20tabulation%20area:${zip}&key=${KEYS.census}`);
-    if(Array.isArray(d)&&d.length>1) return { source:'Census', zip, population:d[1][0], median_income:d[1][1], bachelors:d[1][2] };
-    return { source:'Census', raw:d };
-  } catch(e) { return { source:'Census', error:e.message }; }
-}
-async function queryGooglePollen(lat, lng) {
-  try { if(!KEYS.google) return { source:'Pollen', error:'No key' }; const d=await fetchJSON(`https://pollen.googleapis.com/v1/forecast:lookup?location.latitude=${lat}&location.longitude=${lng}&days=3&key=${KEYS.google}`); return { source:'Google Pollen', forecast:d }; } catch(e) { return { source:'Pollen', error:e.message }; }
-}
-async function queryMeersens(lat, lng) {
-  try { if(!KEYS.meersens) return { source:'Meersens', error:'No key' }; const d=await fetchJSON(`https://api.meersens.com/environment/public/air/current?lat=${lat}&lng=${lng}`, { headers:{'apikey':KEYS.meersens} }); return { source:'Meersens', data:d }; } catch(e) { return { source:'Meersens', error:e.message }; }
-}
-
-// ═══ COMPOSITE ENDPOINTS ═══
-async function getCityScore(city) {
-  const c = TARGET_CITIES.find(tc=>tc.name.toLowerCase()===city.toLowerCase()) || TARGET_CITIES[0];
-  const [w,a,u,ce,p,ws] = await Promise.allSettled([ queryWeather(c.lat,c.lng), queryAirQuality(c.lat,c.lng), queryUV(c.lat,c.lng), queryCensus(c.zip), queryNPS(c.state), queryWalkScore(`${c.name}, ${c.state}`) ]);
-  return { city:c.name, state:c.state, weather:w.value, air:a.value, uv:u.value, census:ce.value, parks:p.value, walkability:ws.value, generated:new Date().toISOString() };
-}
-async function getConditionBrief(condition) {
-  const [pub,tri] = await Promise.allSettled([ queryPubMed(`${condition} treatment 2025`,5), queryClinicalTrials(condition) ]);
-  return { condition, research:pub.value, trials:tri.value, generated:new Date().toISOString() };
-}
-async function getPractitioners(specialty, city, state) {
-  const [npi,goog,yelp] = await Promise.allSettled([ queryNPI(specialty,city,state), KEYS.google?queryGooglePlaces(`${specialty} ${city} ${state}`):null, KEYS.yelp?queryYelp(specialty,`${city}, ${state}`):null ]);
-  return { specialty, city, state, npi:npi.value, google:goog.value, yelp:yelp.value, generated:new Date().toISOString() };
-}
-async function getEnvironment(lat, lng, zip) {
-  const [w,a,u,p,m] = await Promise.allSettled([ queryWeather(lat,lng), queryAirQuality(lat,lng), queryUV(lat,lng), queryGooglePollen(lat,lng), queryMeersens(lat,lng) ]);
-  return { weather:w.value, air:a.value, uv:u.value, pollen:p.value, meersens:m.value, generated:new Date().toISOString() };
-}
-
-// ═══ NPI PIPELINE ═══
-const PRACTITIONER_TYPES = ['acupuncturist','chiropractor','massage therapist','naturopath','psychologist','psychiatrist','counselor','social worker','nutritionist','dietitian','yoga therapist','physical therapist','nurse practitioner','pharmacist'];
-
-async function runPipeline(cycle) {
-  const city = TARGET_CITIES[cycle % TARGET_CITIES.length];
-  log('PIPELINE', `Cycle ${cycle} | ${city.name}, ${city.state}`);
-  let total = 0;
-  for (const type of PRACTITIONER_TYPES) {
-    try {
-      const r = await queryNPI(type, city.name, city.state);
-      const pracs = (r.results||[]).map(p => ({ npi:p.number, name:`${p.basic?.first_name||''} ${p.basic?.last_name||''}`.trim(), specialty:type, city:city.name, state:city.state, phone:p.addresses?.[0]?.telephone_number, address:`${p.addresses?.[0]?.address_1||''}, ${p.addresses?.[0]?.city||''}, ${p.addresses?.[0]?.state||''}`, source:'NPI', scraped_at:new Date().toISOString() }));
-      if (pracs.length > 0) { await supabase.upsert('practitioners', pracs); total += pracs.length; }
-      await new Promise(r => setTimeout(r, 200));
-    } catch(e) { log('PIPELINE', `${type}: ${e.message}`); }
+    const content = await aiWriteConditionCity(CONDITIONS[condIdx], cityName, st);
+    if (content && typeof content === 'object') {
+      await dbBatch('seo_pages', [{
+        slug, page_type: 'condition_city',
+        title: content.title, meta_description: content.meta_description,
+        h1: content.title, content_json: JSON.stringify(content),
+        city: cityName.toLowerCase(), state: st, condition: CONDITIONS[condIdx],
+        status: 'published', created_at: new Date().toISOString(),
+      }]);
+      written++;
+    }
+    await sleep(800);
   }
-  await supabase.upsert('pipeline_log', [{ city:city.name, state:city.state, practitioners_found:total, cycle_index:cycle, ran_at:new Date().toISOString() }]);
-  log('PIPELINE', `${city.name} done: ${total} practitioners`);
-  return total;
+
+  // 5 comparison pages per cycle
+  console.log(`  📝 Comparison pages...`);
+  for (let i = 0; i < 5; i++) {
+    const idx = (S.cycle * 5 + i) % PRODUCT_COMPARISONS.length;
+    const [p1, p2] = PRODUCT_COMPARISONS[idx];
+    const slug = `${p1}-vs-${p2}`;
+    const existing = await db('GET', 'seo_pages', null, `slug=eq.${encodeURIComponent(slug)}&select=slug&limit=1`);
+    if (Array.isArray(existing) && existing.length) continue;
+
+    const content = await aiWriteComparison(p1, p2);
+    if (content && typeof content === 'object') {
+      await dbBatch('seo_pages', [{
+        slug, page_type: 'product_comparison',
+        title: content.title, meta_description: content.meta_description,
+        h1: content.title, content_json: JSON.stringify(content),
+        status: 'published', created_at: new Date().toISOString(),
+      }]);
+      written++;
+    }
+    await sleep(800);
+  }
+
+  // 3 "best for" pages per cycle
+  console.log(`  📝 "Best for" pages...`);
+  for (let i = 0; i < 3; i++) {
+    const idx = (S.cycle * 3 + i) % BEST_FOR.length;
+    const slug = BEST_FOR[idx];
+    const existing = await db('GET', 'seo_pages', null, `slug=eq.${encodeURIComponent(slug)}&select=slug&limit=1`);
+    if (Array.isArray(existing) && existing.length) continue;
+
+    const content = await aiWriteBestFor(slug);
+    if (content && typeof content === 'object') {
+      await dbBatch('seo_pages', [{
+        slug, page_type: 'best_for',
+        title: content.title, meta_description: content.meta_description,
+        h1: content.title, content_json: JSON.stringify(content),
+        status: 'published', created_at: new Date().toISOString(),
+      }]);
+      written++;
+    }
+    await sleep(800);
+  }
+
+  S.aiPages += written;
+  console.log(`  ✓ ${written} Haiku pages written this cycle`);
 }
 
-let pipelineCycle = 0, pipelineRunning = false;
-function startScheduler() {
-  log('SCHEDULER', `Active: ${TARGET_CITIES.length} cities, ${PRACTITIONER_TYPES.length} types`);
-  setTimeout(async () => { if(!pipelineRunning) { pipelineRunning=true; try { await runPipeline(pipelineCycle++); } catch(e) { log('SCHEDULER',e.message); } pipelineRunning=false; } }, 60000);
-  setInterval(async () => { if(!pipelineRunning) { pipelineRunning=true; try { await runPipeline(pipelineCycle++); } catch(e) { log('SCHEDULER',e.message); } pipelineRunning=false; } }, 30*60*1000);
+// PHASE 3: Sonnet Pillar Pages (premium, ~5/cycle)
+async function phaseSonnetPillars() {
+  console.log('\n── PHASE 3: SONNET PILLAR PAGES ──');
+  const cities = Object.keys(CITY_ZIPS);
+  let written = 0;
+
+  // 2 city guides
+  for (let i = 0; i < 2; i++) {
+    const cityKey = cities[(S.cycle * 2 + i) % cities.length];
+    const slug = `city-wellness-guide-${cityKey}`;
+    const existing = await db('GET', 'seo_pages', null, `slug=eq.${encodeURIComponent(slug)}&select=slug&limit=1`);
+    if (Array.isArray(existing) && existing.length) continue;
+
+    const parts = cityKey.split('-');
+    const st = parts.pop().toUpperCase();
+    const cityName = parts.map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');
+
+    console.log(`  🤖 City guide: ${cityName}, ${st}`);
+    const content = await aiWriteCityGuide(cityName, st);
+    if (content && typeof content === 'object') {
+      await dbBatch('seo_pages', [{
+        slug, page_type: 'city_guide',
+        title: content.title, meta_description: content.meta_description,
+        h1: content.h1 || content.title, content_json: JSON.stringify(content),
+        city: cityName.toLowerCase(), state: st,
+        status: 'published', created_at: new Date().toISOString(),
+      }]);
+      written++;
+    }
+    await sleep(2000);
+  }
+
+  // 2 condition deep guides
+  for (let i = 0; i < 2; i++) {
+    const condIdx = (S.cycle * 2 + i) % CONDITIONS.length;
+    const slug = `complete-guide-${CONDITIONS[condIdx]}`;
+    const existing = await db('GET', 'seo_pages', null, `slug=eq.${encodeURIComponent(slug)}&select=slug&limit=1`);
+    if (Array.isArray(existing) && existing.length) continue;
+
+    console.log(`  🤖 Condition guide: ${CONDITIONS[condIdx]}`);
+    const content = await aiWriteConditionGuide(CONDITIONS[condIdx]);
+    if (content && typeof content === 'object') {
+      await dbBatch('seo_pages', [{
+        slug, page_type: 'condition_guide',
+        title: content.title, meta_description: content.meta_description,
+        h1: content.h1 || content.title, content_json: JSON.stringify(content),
+        condition: CONDITIONS[condIdx],
+        status: 'published', created_at: new Date().toISOString(),
+      }]);
+      written++;
+    }
+    await sleep(2000);
+  }
+
+  // 1 supplement guide
+  const supps = ['ashwagandha','magnesium','cbd-oil','melatonin','lions-mane','omega-3','probiotics','turmeric','zinc','vitamin-d','b12','iron','coq10','collagen','creatine','l-theanine','gaba','5-htp','berberine','nac','rhodiola','reishi','cordyceps','maca','sam-e','valerian-root','passionflower','black-cohosh','saw-palmetto','milk-thistle'];
+  const suppIdx = S.cycle % supps.length;
+  const slug = `supplement-guide-${supps[suppIdx]}`;
+  const existing = await db('GET', 'seo_pages', null, `slug=eq.${encodeURIComponent(slug)}&select=slug&limit=1`);
+  if (!Array.isArray(existing) || !existing.length) {
+    console.log(`  🤖 Supplement guide: ${supps[suppIdx]}`);
+    const content = await aiWriteSupplementGuide(supps[suppIdx]);
+    if (content && typeof content === 'object') {
+      await dbBatch('seo_pages', [{
+        slug, page_type: 'supplement_guide',
+        title: content.title, meta_description: content.meta_description,
+        h1: content.h1 || content.title, content_json: JSON.stringify(content),
+        status: 'published', created_at: new Date().toISOString(),
+      }]);
+      written++;
+    }
+  }
+
+  S.aiPages += written;
+  console.log(`  ✓ ${written} Sonnet pillar pages`);
 }
 
-// ═══ ALVAI CHAT ═══
-async function alvaiChat(message) {
-  if (!KEYS.claude) return { response: 'Alvai needs an API key.' };
+// ─── MAIN CYCLE ─────────────────────────────────────────────────────
+
+async function runCycle() {
+  if (S.running) return;
+  S.running = true;
+  S.cycle++;
+  const start = Date.now();
+
+  console.log(`\n${'═'.repeat(60)}`);
+  console.log(`🔵 MAXED OUT PIPELINE v5.0 — CYCLE ${S.cycle}`);
+  console.log(`   ${new Date().toISOString()}`);
+  console.log(`   Budget: $${(BUDGET.spent_today_cents/100).toFixed(2)} today / $${(BUDGET.daily_limit_cents/100).toFixed(2)} limit`);
+  console.log(`${'═'.repeat(60)}`);
+
   try {
-    const d = await fetchJSON('https://api.anthropic.com/v1/messages', { method:'POST',
-      headers: { 'x-api-key':KEYS.claude, 'anthropic-version':'2023-06-01', 'Content-Type':'application/json' },
-      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1024,
-        system: `You are Alvai, the AI wellness guide for BLEU.live. You help with drug interactions, supplement safety, practitioners, cannabis education, and holistic wellness. Be warm, evidence-based, direct. Mention Safety Check Engine for interaction analysis. ${Object.keys(PHARMA_DB).length} substances in database across ${TARGET_CITIES.length} cities. Always disclaim: not a replacement for medical advice.`,
-        messages: [{ role:'user', content:message }]
-      })
+    await phaseScrape();
+    await phaseHaikuVolume();
+    await phaseSonnetPillars();
+  } catch(e) {
+    console.error('✗ CYCLE ERROR:', e.message);
+    S.errors++;
+  }
+
+  S.running = false;
+  S.lastCycle = new Date().toISOString();
+  const mins = ((Date.now() - start) / 60000).toFixed(1);
+
+  console.log(`\n── CYCLE ${S.cycle} DONE (${mins} min) ──`);
+  console.log(`  Practitioners: ${S.practitioners.toLocaleString()}`);
+  console.log(`  AI pages: ${S.aiPages.toLocaleString()}`);
+  console.log(`  Studies: ${S.studies} | FDA: ${S.fdaRecords}`);
+  console.log(`  Today: Haiku ${BUDGET.haiku_calls_today} / Sonnet ${BUDGET.sonnet_calls_today}`);
+  console.log(`  Spent: $${(BUDGET.spent_today_cents/100).toFixed(2)} today / $${(BUDGET.spent_total_cents/100).toFixed(2)} total`);
+}
+
+// ─── SERVER ─────────────────────────────────────────────────────────
+
+const server = http.createServer((req, res) => {
+  const send = (code, data) => {
+    res.writeHead(code, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify(data, null, 2));
+  };
+
+  if (req.url === '/health' || req.url === '/') {
+    return send(200, {
+      status: 'MAXED_OUT', version: '5.0',
+      ...S, budget: {
+        daily_spent: `$${(BUDGET.spent_today_cents/100).toFixed(2)}`,
+        daily_limit: `$${(BUDGET.daily_limit_cents/100).toFixed(2)}`,
+        monthly_spent: `$${(BUDGET.spent_total_cents/100).toFixed(2)}`,
+        monthly_limit: '$200.00',
+        haiku_today: BUDGET.haiku_calls_today,
+        sonnet_today: BUDGET.sonnet_calls_today,
+        haiku_total: BUDGET.haiku_calls_total,
+        sonnet_total: BUDGET.sonnet_calls_total,
+      },
+      uptime: `${(process.uptime()/3600).toFixed(1)}h`,
     });
-    return { response: d.content?.[0]?.text || 'Let me think...', model: d.model };
-  } catch(e) { return { response: 'Having trouble. Try again?', error: e.message }; }
-}
+  }
 
-// ═══════════════════════════════════════════════════════════════
-// HTTP SERVER
-// ═══════════════════════════════════════════════════════════════
-function json(res, data, status=200) {
-  res.writeHead(status, { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*', 'Access-Control-Allow-Methods':'GET,POST,OPTIONS', 'Access-Control-Allow-Headers':'Content-Type,Authorization' });
-  res.end(JSON.stringify(data, null, 2));
-}
-function getBody(req) { return new Promise(r => { let b=''; req.on('data',c=>b+=c); req.on('end',()=>r(b)); }); }
-function qp(url) { const p={}; const q=url.split('?')[1]; if(q) q.split('&').forEach(x=>{ const [k,v]=x.split('='); p[k]=decodeURIComponent(v||''); }); return p; }
+  if (req.url === '/stats') {
+    const haikuPerCycle = 43; // 20 pract + 15 cond/city + 5 comp + 3 bestfor
+    const sonnetPerCycle = 5;
+    const cyclesPerDay = 24 * 60 / 8; // every 8 min = 180 cycles
+    return send(200, {
+      throughput: {
+        haiku_pages_per_cycle: haikuPerCycle,
+        sonnet_pages_per_cycle: sonnetPerCycle,
+        total_pages_per_cycle: haikuPerCycle + sonnetPerCycle,
+        cycle_interval: '8 minutes',
+        cycles_per_day: cyclesPerDay,
+        ai_pages_per_day: `~${((haikuPerCycle + sonnetPerCycle) * cyclesPerDay).toLocaleString()}`,
+        ai_pages_per_month: `~${((haikuPerCycle + sonnetPerCycle) * cyclesPerDay * 30).toLocaleString()}`,
+        practitioners_per_day: `~${(6000 * cyclesPerDay / 180).toLocaleString()}`,
+      },
+      content_types: {
+        practitioner_profiles: `${haikuPerCycle > 15 ? '20' : '0'}/cycle (Haiku, unique AI content)`,
+        condition_city: '15/cycle (Haiku, unique for each city)',
+        comparisons: '5/cycle (Haiku, evidence-informed)',
+        best_for: '3/cycle (Haiku, product guides)',
+        city_guides: '2/cycle (Sonnet, 800-word deep guides)',
+        condition_guides: '2/cycle (Sonnet, 1000-word pillar content)',
+        supplement_guides: '1/cycle (Sonnet, 800-word pillar content)',
+      },
+      seo_capacity: {
+        condition_city_combos: `${CONDITIONS.length} × ${Object.keys(CITY_ZIPS).length} = ${CONDITIONS.length * Object.keys(CITY_ZIPS).length}`,
+        comparisons: PRODUCT_COMPARISONS.length,
+        best_for: BEST_FOR.length,
+        city_guides: Object.keys(CITY_ZIPS).length,
+        condition_guides: CONDITIONS.length,
+        supplement_guides: '30+',
+        practitioner_profiles: 'Unlimited (7M+ in NPI)',
+      },
+      budget: {
+        monthly: '$200',
+        haiku_share: '$150 (~30,000 calls)',
+        sonnet_share: '$50 (~3,500 calls)',
+        cost_per_ai_page_haiku: '$0.005',
+        cost_per_ai_page_sonnet: '$0.014',
+        total_ai_pages_possible: '~33,500/month',
+      },
+      free_data_sources: [
+        'NPI Registry — 7M+ providers, unlimited',
+        'PubMed — 36M papers, 3 req/sec',
+        'OpenFDA Labels — drug labels, 240 req/min',
+        'OpenFDA FAERS — adverse events, 240 req/min',
+        'RxNorm — drug data, unlimited',
+        'ClinicalTrials.gov — trials, unlimited',
+      ],
+    });
+  }
 
-const server = http.createServer(async (req, res) => {
-  if (req.method === 'OPTIONS') return json(res, {});
-  const path = req.url.split('?')[0];
-  const params = qp(req.url);
-  try {
-    // Health
-    if (path === '/health') { const kc=Object.entries(KEYS).filter(([k,v])=>v&&k!=='amazon').length; return json(res, { status:'ok', version:'2.0', engine:'BLEU.live Full Deck', api_keys:kc, substances:Object.keys(PHARMA_DB).length, cities:TARGET_CITIES.length, pipeline_cycle:pipelineCycle, uptime:process.uptime() }); }
-    // Chat
-    if (path==='/api/chat'&&req.method==='POST') { const b=JSON.parse(await getBody(req)); return json(res, await alvaiChat(b.message||b.query||'')); }
-    // Safety Check
-    if (path==='/api/safety-check') { const s=params.substances?params.substances.split(',').map(x=>x.trim()):[]; if(!s.length) return json(res,{error:'?substances=cbd,sertraline'},400); return json(res, runSafetyEngine(s)); }
-    if (path==='/api/safety-check'&&req.method==='POST') { const b=JSON.parse(await getBody(req)); return json(res, runSafetyEngine(b.substances||[])); }
-    // Drug/Pharma
-    if (path.match(/^\/api\/rxnorm\/(.+)/)) return json(res, await queryRxNorm(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/pubmed\/(.+)/)) return json(res, await queryPubMed(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/dailymed\/(.+)/)) return json(res, await queryDailyMed(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/cpic\/(.+)/)) return json(res, await queryCPIC(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/fda\/labels\/(.+)/)) return json(res, await queryFDALabels(decodeURIComponent(path.split('/')[4])));
-    if (path.match(/^\/api\/fda\/events\/(.+)/)) return json(res, await queryFDAEvents(decodeURIComponent(path.split('/')[4])));
-    if (path.match(/^\/api\/fda\/recalls\/(.+)/)) return json(res, await queryFDARecalls(decodeURIComponent(path.split('/')[4])));
-    // Practitioners
-    if (path.match(/^\/api\/npi\/(.+)/)) return json(res, await queryNPI(decodeURIComponent(path.split('/')[3]), params.city, params.state));
-    if (path.match(/^\/api\/practitioners\/(.+)\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await getPractitioners(decodeURIComponent(p[3]),decodeURIComponent(p[4]),decodeURIComponent(p[5]))); }
-    // Clinical
-    if (path.match(/^\/api\/trials\/(.+)/)) return json(res, await queryClinicalTrials(decodeURIComponent(path.split('/')[3]), params.city));
-    if (path.match(/^\/api\/samhsa\/(.+)/)) return json(res, await querySAMHSA(decodeURIComponent(path.split('/')[3])));
-    // Nutrition
-    if (path.match(/^\/api\/usda\/(.+)/)) return json(res, await queryUSDAFood(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/food\/(.+)/)) return json(res, await queryOpenFoodFacts(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/recipes\/(.+)/)) return json(res, await querySpoonacular(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/nutrition\/(.+)/)) return json(res, await queryEdamam(decodeURIComponent(path.split('/')[3])));
-    // Environment
-    if (path.match(/^\/api\/weather\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryWeather(p[3],p[4])); }
-    if (path.match(/^\/api\/air\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryAirQuality(p[3],p[4])); }
-    if (path.match(/^\/api\/uv\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryUV(p[3],p[4])); }
-    if (path.match(/^\/api\/pollen\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryGooglePollen(p[3],p[4])); }
-    if (path.match(/^\/api\/environment\/(.+)\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await getEnvironment(p[3],p[4],p[5])); }
-    // Places
-    if (path.match(/^\/api\/places\/(.+)/)) return json(res, await queryGooglePlaces(decodeURIComponent(path.split('/')[3]), params.lat, params.lng));
-    if (path.match(/^\/api\/yelp\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryYelp(decodeURIComponent(p[3]),decodeURIComponent(p[4]))); }
-    if (path.match(/^\/api\/foursquare\/(.+)/)) return json(res, await queryFoursquare(decodeURIComponent(path.split('/')[3]), params.lat, params.lng));
-    if (path.match(/^\/api\/events\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryEventbrite(decodeURIComponent(p[3]),decodeURIComponent(p[4]))); }
-    // Content
-    if (path.match(/^\/api\/podcasts\/(.+)/)) return json(res, await queryListenNotes(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/books\/(.+)/)) return json(res, await queryOpenLibrary(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/exercises\/(.+)/)) return json(res, await queryWger(decodeURIComponent(path.split('/')[3])));
-    // Location
-    if (path.match(/^\/api\/parks\/(.+)/)) return json(res, await queryNPS(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/walkscore\/(.+)/)) return json(res, await queryWalkScore(decodeURIComponent(path.split('/').slice(3).join('/'))));
-    if (path.match(/^\/api\/census\/(.+)/)) return json(res, await queryCensus(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/cannabis\/(.+)/)) return json(res, await queryCannlytics(decodeURIComponent(path.split('/')[3])));
-    // Composites
-    if (path.match(/^\/api\/city-score\/(.+)/)) return json(res, await getCityScore(decodeURIComponent(path.split('/')[3])));
-    if (path.match(/^\/api\/condition\/(.+)/)) return json(res, await getConditionBrief(decodeURIComponent(path.split('/')[3])));
-    // CDC/Health
-    if (path.match(/^\/api\/cdc\/(.+)/)) return json(res, await queryCDCPlaces(decodeURIComponent(path.split('/')[3])));
-    // Pipeline
-    if (path==='/api/pipeline/run'&&req.method==='POST') { if(pipelineRunning) return json(res,{status:'already_running'}); pipelineRunning=true; const n=await runPipeline(pipelineCycle++); pipelineRunning=false; return json(res,{status:'complete',found:n}); }
-    if (path==='/api/pipeline/status') return json(res, { running:pipelineRunning, cycle:pipelineCycle, next_city:TARGET_CITIES[pipelineCycle%TARGET_CITIES.length]?.name });
-    // Lists
-    if (path==='/api/substances') return json(res, { count:Object.keys(PHARMA_DB).length, substances:Object.entries(PHARMA_DB).map(([k,v])=>({ name:k, class:v.class, schedule:v.schedule, nti:v.nti })) });
-    if (path==='/api/cities') return json(res, { count:TARGET_CITIES.length, cities:TARGET_CITIES });
-    if (path==='/api/conditions') return json(res, { count:CONDITIONS.length, conditions:CONDITIONS });
-    // 404
-    json(res, { error:'Not found', hint:'/health for endpoints' }, 404);
-  } catch(e) { log('SERVER',`Error: ${e.message}`); json(res,{error:e.message},500); }
+  if (req.url === '/run') {
+    send(200, { triggered: true });
+    runCycle();
+    return;
+  }
+
+  if (req.url === '/budget') {
+    return send(200, BUDGET);
+  }
+
+  send(404, { error: 'Try /health /stats /budget /run' });
 });
 
-// ═══ START ═══
+const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
-  const kc = Object.entries(KEYS).filter(([k,v])=>v&&k!=='amazon').length;
-  log('SERVER', '═══════════════════════════════════════════');
-  log('SERVER', '  BLEU.LIVE ENGINE v2.0 — FULL DECK');
-  log('SERVER', `  Port: ${PORT} | Keys: ${kc} | Substances: ${Object.keys(PHARMA_DB).length}`);
-  log('SERVER', `  Cities: ${TARGET_CITIES.length} | Conditions: ${CONDITIONS.length}`);
-  log('SERVER', '  Pipeline: Every 30 min, cycling all cities');
-  log('SERVER', '═══════════════════════════════════════════');
-  startScheduler();
+  console.log(`\n${'═'.repeat(60)}`);
+  console.log('🔵 BLEU.LIVE — MAXED OUT PIPELINE v5.0');
+  console.log('   EVERY PAGE = UNIQUE AI CONTENT');
+  console.log('   $200/mo → 33,500 AI pages/month');
+  console.log(`${'═'.repeat(60)}`);
+  console.log(`  Port: ${PORT}`);
+  console.log(`  Cities: ${Object.keys(CITY_ZIPS).length}`);
+  console.log(`  Conditions: ${CONDITIONS.length}`);
+  console.log(`  Comparisons: ${PRODUCT_COMPARISONS.length}`);
+  console.log(`  "Best for" terms: ${BEST_FOR.length}`);
+  console.log(`  Haiku budget: $150/mo (~1,000/day)`);
+  console.log(`  Sonnet budget: $50/mo (~117/day)`);
+  console.log(`  Cycle: every 8 minutes`);
+  console.log(`${'═'.repeat(60)}\n`);
+
+  setTimeout(runCycle, 5000);
+  setInterval(runCycle, 8 * 60 * 1000);
 });
