@@ -1,1000 +1,539 @@
-// ============================================================
-// BLEU.LIVE — Safety Check Engine v1.0
-// The Google of Wellness — 5-Layer Pharmacology + 9 Live APIs
-// ============================================================
+// ═══════════════════════════════════════════════════════════════════════════════
+//  BLEU.LIVE ENGINE v2.0 — FULL DECK PRODUCTION SERVER
+//  68 APIs (25 keyed + 43 free) | Safety Engine | NPI Pipeline | Scheduler
+//  Deploy to Railway: git add -A && git commit -m "v2 full deck" && git push
+// ═══════════════════════════════════════════════════════════════════════════════
 
 const http = require('http');
 const https = require('https');
 const { URL } = require('url');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
-// ============================================================
-// PHARMACOLOGY DATABASE — CYP450 + UGT + Transporters
-// ============================================================
-const PHARMACOLOGY_DB = {
-  // CANNABINOIDS
-  cbd: {
-    name: 'Cannabidiol (CBD)',
-    category: 'cannabinoid',
-    cyp_inhibits: ['CYP3A4', 'CYP2C19', 'CYP2C9', 'CYP2D6', 'CYP1A2'],
-    cyp_substrates: ['CYP3A4', 'CYP2C19'],
-    ugt_inhibits: ['UGT1A9', 'UGT2B7'],
-    transporters: ['P-gp inhibitor'],
-    pharmacodynamic: ['sedation', 'hypotension', 'hepatotoxic_risk'],
-    severity_base: 0.6
+// ═══ API KEYS — Railway Environment Variables ═══
+const KEYS = {
+  claude:       process.env.CLAUDE_API_KEY || '',
+  supabaseUrl:  process.env.SUPABASE_URL || '',
+  supabaseKey:  process.env.SUPABASE_SERVICE_KEY || '',
+  ncbi:         process.env.NCBI_API_KEY || '',
+  usda:         process.env.USDA_FOODDATA_API_KEY || '',
+  weather:      process.env.OPENWEATHERMAP_API_KEY || '',
+  waqi:         process.env.WAQI_API_KEY || '',
+  census:       process.env.CENSUS_API_KEY || '',
+  cannlytics:   process.env.CANNLYTICS_API_KEY || '',
+  openfda:      process.env.OPENFDA_API_KEY || '',
+  openuv:       process.env.OPENUV_API_KEY || '',
+  google:       process.env.GOOGLE_API_KEY || '',
+  yelp:         process.env.YELP_API_KEY || '',
+  nps:          process.env.NPS_API_KEY || '',
+  spoonacular:  process.env.SPOONACULAR_API_KEY || '',
+  foursquare:   process.env.FOURSQUARE_API_KEY || '',
+  eventbrite:   process.env.EVENTBRITE_API_KEY || '',
+  listenNotes:  process.env.LISTEN_NOTES_API_KEY || '',
+  edamamId:     process.env.EDAMAM_APP_ID || '',
+  edamamKey:    process.env.EDAMAM_APP_KEY || '',
+  sendgrid:     process.env.SENDGRID_API_KEY || '',
+  walkscore:    process.env.WALKSCORE_API_KEY || '',
+  airnow:       process.env.AIRNOW_API_KEY || '',
+  meersens:     process.env.MEERSENS_API_KEY || '',
+  amazon:       process.env.AMAZON_AFFILIATE_TAG || 'bleulive-20',
+};
+
+function log(tag, msg) { console.log(`[${new Date().toISOString()}] [${tag}] ${msg}`); }
+
+// ═══ HTTP FETCH HELPER ═══
+function fetchJSON(url, options = {}) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(url);
+    const opts = {
+      hostname: u.hostname, path: u.pathname + u.search, port: u.port || 443,
+      method: options.method || 'GET',
+      headers: { 'Accept': 'application/json', 'User-Agent': 'BLEU-Live/2.0', ...(options.headers || {}) },
+      timeout: options.timeout || 15000
+    };
+    const req = https.request(opts, res => {
+      let data = '';
+      res.on('data', c => data += c);
+      res.on('end', () => { try { resolve(JSON.parse(data)); } catch(e) { resolve({ raw: data, status: res.statusCode }); } });
+    });
+    req.on('error', e => reject(e));
+    req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
+    if (options.body) req.write(typeof options.body === 'string' ? options.body : JSON.stringify(options.body));
+    req.end();
+  });
+}
+
+// ═══ SUPABASE LIGHTWEIGHT CLIENT ═══
+const supabase = {
+  async query(table, params = '') {
+    if (!KEYS.supabaseUrl || !KEYS.supabaseKey) return { error: 'No Supabase config' };
+    try {
+      return await fetchJSON(`${KEYS.supabaseUrl}/rest/v1/${table}?${params}`, {
+        headers: { 'apikey': KEYS.supabaseKey, 'Authorization': `Bearer ${KEYS.supabaseKey}`, 'Prefer': 'return=representation' }
+      });
+    } catch(e) { return { error: e.message }; }
   },
-  thc: {
-    name: 'THC (Delta-9-Tetrahydrocannabinol)',
-    category: 'cannabinoid',
-    cyp_inhibits: ['CYP3A4', 'CYP2C9'],
-    cyp_substrates: ['CYP2C9', 'CYP3A4'],
-    ugt_inhibits: ['UGT1A1'],
-    transporters: ['P-gp substrate'],
-    pharmacodynamic: ['sedation', 'tachycardia', 'psychoactive'],
-    severity_base: 0.5
-  },
-  cbg: {
-    name: 'Cannabigerol (CBG)',
-    category: 'cannabinoid',
-    cyp_inhibits: ['CYP3A4', 'CYP2D6'],
-    cyp_substrates: ['CYP3A4'],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['anti-inflammatory'],
-    severity_base: 0.3
-  },
-  cbn: {
-    name: 'Cannabinol (CBN)',
-    category: 'cannabinoid',
-    cyp_inhibits: ['CYP3A4'],
-    cyp_substrates: ['CYP3A4', 'CYP2C9'],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['sedation'],
-    severity_base: 0.3
-  },
-  // COMMON DRUGS
-  warfarin: {
-    name: 'Warfarin',
-    category: 'pharmaceutical',
-    cyp_inhibits: [],
-    cyp_substrates: ['CYP2C9', 'CYP3A4', 'CYP1A2'],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['bleeding_risk', 'vitamin_k_sensitive'],
-    severity_base: 0.8,
-    narrow_therapeutic_index: true
-  },
-  metformin: {
-    name: 'Metformin',
-    category: 'pharmaceutical',
-    cyp_inhibits: [],
-    cyp_substrates: [],
-    ugt_inhibits: [],
-    transporters: ['OCT1 substrate', 'OCT2 substrate', 'MATE1 substrate'],
-    pharmacodynamic: ['hypoglycemia', 'lactic_acidosis_risk'],
-    severity_base: 0.4
-  },
-  clopidogrel: {
-    name: 'Clopidogrel (Plavix)',
-    category: 'pharmaceutical',
-    cyp_inhibits: [],
-    cyp_substrates: ['CYP2C19', 'CYP3A4'],
-    ugt_inhibits: [],
-    transporters: ['P-gp substrate'],
-    pharmacodynamic: ['bleeding_risk'],
-    severity_base: 0.7,
-    narrow_therapeutic_index: true
-  },
-  metoprolol: {
-    name: 'Metoprolol',
-    category: 'pharmaceutical',
-    cyp_inhibits: [],
-    cyp_substrates: ['CYP2D6'],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['bradycardia', 'hypotension'],
-    severity_base: 0.5
-  },
-  sertraline: {
-    name: 'Sertraline (Zoloft)',
-    category: 'pharmaceutical',
-    cyp_inhibits: ['CYP2D6'],
-    cyp_substrates: ['CYP2C19', 'CYP2D6', 'CYP3A4'],
-    ugt_inhibits: [],
-    transporters: ['P-gp substrate'],
-    pharmacodynamic: ['serotonin_syndrome_risk', 'sedation'],
-    severity_base: 0.5
-  },
-  fluoxetine: {
-    name: 'Fluoxetine (Prozac)',
-    category: 'pharmaceutical',
-    cyp_inhibits: ['CYP2D6', 'CYP2C19'],
-    cyp_substrates: ['CYP2D6', 'CYP2C19'],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['serotonin_syndrome_risk', 'sedation'],
-    severity_base: 0.5
-  },
-  omeprazole: {
-    name: 'Omeprazole (Prilosec)',
-    category: 'pharmaceutical',
-    cyp_inhibits: ['CYP2C19'],
-    cyp_substrates: ['CYP2C19', 'CYP3A4'],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['nutrient_depletion'],
-    severity_base: 0.3
-  },
-  atorvastatin: {
-    name: 'Atorvastatin (Lipitor)',
-    category: 'pharmaceutical',
-    cyp_inhibits: [],
-    cyp_substrates: ['CYP3A4'],
-    ugt_inhibits: [],
-    transporters: ['P-gp substrate', 'OATP1B1 substrate'],
-    pharmacodynamic: ['myopathy_risk', 'hepatotoxic_risk'],
-    severity_base: 0.5
-  },
-  lisinopril: {
-    name: 'Lisinopril',
-    category: 'pharmaceutical',
-    cyp_inhibits: [],
-    cyp_substrates: [],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['hypotension', 'hyperkalemia'],
-    severity_base: 0.3
-  },
-  amlodipine: {
-    name: 'Amlodipine (Norvasc)',
-    category: 'pharmaceutical',
-    cyp_inhibits: [],
-    cyp_substrates: ['CYP3A4'],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['hypotension', 'edema'],
-    severity_base: 0.4
-  },
-  gabapentin: {
-    name: 'Gabapentin (Neurontin)',
-    category: 'pharmaceutical',
-    cyp_inhibits: [],
-    cyp_substrates: [],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['sedation', 'dizziness'],
-    severity_base: 0.4
-  },
-  // SUPPLEMENTS & HERBS
-  turmeric: {
-    name: 'Turmeric / Curcumin',
-    category: 'supplement',
-    cyp_inhibits: ['CYP3A4', 'CYP2C9', 'CYP1A2', 'CYP2D6'],
-    cyp_substrates: [],
-    ugt_inhibits: ['UGT1A1'],
-    transporters: ['P-gp inhibitor'],
-    pharmacodynamic: ['anti-inflammatory', 'bleeding_risk'],
-    severity_base: 0.4
-  },
-  'st-johns-wort': {
-    name: "St. John's Wort",
-    category: 'supplement',
-    cyp_inhibits: [],
-    cyp_substrates: [],
-    ugt_inhibits: [],
-    transporters: ['P-gp inducer'],
-    pharmacodynamic: ['serotonin_syndrome_risk'],
-    cyp_induces: ['CYP3A4', 'CYP2C19', 'CYP2C9', 'CYP1A2'],
-    severity_base: 0.7
-  },
-  melatonin: {
-    name: 'Melatonin',
-    category: 'supplement',
-    cyp_inhibits: [],
-    cyp_substrates: ['CYP1A2', 'CYP2C19'],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['sedation'],
-    severity_base: 0.2
-  },
-  'fish-oil': {
-    name: 'Fish Oil / Omega-3',
-    category: 'supplement',
-    cyp_inhibits: [],
-    cyp_substrates: [],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['bleeding_risk'],
-    severity_base: 0.2
-  },
-  'vitamin-d': {
-    name: 'Vitamin D',
-    category: 'supplement',
-    cyp_inhibits: [],
-    cyp_substrates: ['CYP3A4', 'CYP2R1'],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['hypercalcemia'],
-    severity_base: 0.2
-  },
-  ashwagandha: {
-    name: 'Ashwagandha',
-    category: 'supplement',
-    cyp_inhibits: ['CYP3A4', 'CYP2D6'],
-    cyp_substrates: [],
-    ugt_inhibits: [],
-    transporters: [],
-    pharmacodynamic: ['sedation', 'thyroid_modulation'],
-    severity_base: 0.3
+  async upsert(table, data) {
+    if (!KEYS.supabaseUrl || !KEYS.supabaseKey) return { error: 'No Supabase config' };
+    try {
+      return await fetchJSON(`${KEYS.supabaseUrl}/rest/v1/${table}`, {
+        method: 'POST',
+        headers: { 'apikey': KEYS.supabaseKey, 'Authorization': `Bearer ${KEYS.supabaseKey}`,
+          'Content-Type': 'application/json', 'Prefer': 'return=representation,resolution=merge-duplicates' },
+        body: JSON.stringify(Array.isArray(data) ? data : [data])
+      });
+    } catch(e) { return { error: e.message }; }
   }
 };
 
-// ============================================================
-// PHARMACODYNAMIC RISK COMBINATIONS
-// ============================================================
-const PD_RISK_MAP = {
-  'sedation+sedation': { risk: 'Additive CNS depression — drowsiness, impaired coordination, respiratory depression risk', severity: 0.6 },
-  'bleeding_risk+bleeding_risk': { risk: 'Compounded bleeding risk — bruising, GI bleeds, hemorrhagic stroke risk', severity: 0.8 },
-  'hypotension+hypotension': { risk: 'Additive blood pressure lowering — dizziness, fainting, falls', severity: 0.6 },
-  'serotonin_syndrome_risk+serotonin_syndrome_risk': { risk: 'CRITICAL: Serotonin syndrome risk — agitation, tremor, hyperthermia, seizures', severity: 0.9 },
-  'hepatotoxic_risk+hepatotoxic_risk': { risk: 'Combined liver stress — monitor liver enzymes (ALT/AST)', severity: 0.7 },
-  'sedation+hypotension': { risk: 'Combined sedation + low blood pressure — fall risk, impaired driving', severity: 0.5 },
-  'bleeding_risk+vitamin_k_sensitive': { risk: 'Bleeding risk amplified in vitamin K-sensitive medication — INR monitoring critical', severity: 0.8 },
+// ═══ TARGET CITIES ═══
+const TARGET_CITIES = [
+  { name:'New Orleans', state:'LA', lat:29.95, lng:-90.07, zip:'70112' },
+  { name:'Baton Rouge', state:'LA', lat:30.45, lng:-91.19, zip:'70801' },
+  { name:'Houston', state:'TX', lat:29.76, lng:-95.37, zip:'77001' },
+  { name:'Atlanta', state:'GA', lat:33.75, lng:-84.39, zip:'30301' },
+  { name:'Los Angeles', state:'CA', lat:34.05, lng:-118.24, zip:'90001' },
+  { name:'New York', state:'NY', lat:40.71, lng:-74.01, zip:'10001' },
+  { name:'Chicago', state:'IL', lat:41.88, lng:-87.63, zip:'60601' },
+  { name:'Miami', state:'FL', lat:25.76, lng:-80.19, zip:'33101' },
+  { name:'Denver', state:'CO', lat:39.74, lng:-104.99, zip:'80201' },
+  { name:'Portland', state:'OR', lat:45.52, lng:-122.68, zip:'97201' },
+  { name:'San Francisco', state:'CA', lat:37.77, lng:-122.42, zip:'94102' },
+  { name:'Seattle', state:'WA', lat:47.61, lng:-122.33, zip:'98101' },
+  { name:'Austin', state:'TX', lat:30.27, lng:-97.74, zip:'78701' },
+  { name:'Nashville', state:'TN', lat:36.16, lng:-86.78, zip:'37201' },
+  { name:'Phoenix', state:'AZ', lat:33.45, lng:-112.07, zip:'85001' },
+  { name:'Detroit', state:'MI', lat:42.33, lng:-83.05, zip:'48201' },
+  { name:'Philadelphia', state:'PA', lat:39.95, lng:-75.17, zip:'19101' },
+  { name:'Dallas', state:'TX', lat:32.78, lng:-96.80, zip:'75201' },
+  { name:'Las Vegas', state:'NV', lat:36.17, lng:-115.14, zip:'89101' },
+  { name:'Charlotte', state:'NC', lat:35.23, lng:-80.84, zip:'28201' },
+];
+
+const CONDITIONS = [
+  'anxiety','depression','chronic-pain','insomnia','ptsd','adhd',
+  'addiction-recovery','inflammation','migraine','fibromyalgia',
+  'ibs','arthritis','diabetes','hypertension','obesity',
+  'menopause','endometriosis','autoimmune','cancer-support','hiv-wellness'
+];
+
+// ═══════════════════════════════════════════════════════════════
+// PHARMACOLOGY DATABASE — 54 Substances
+// ═══════════════════════════════════════════════════════════════
+const PHARMA_DB = {
+  'thc': { class:'cannabinoid', cyp_substrates:['CYP2C9','CYP3A4'], cyp_inhibits:['CYP2C9','CYP3A4'], receptor:['CB1','CB2'], effects:['euphoria','pain_relief','appetite'], serotonergic:false, nti:false, half_life:'1-3h', schedule:'I/state-legal' },
+  'cbd': { class:'cannabinoid', cyp_substrates:['CYP2C19','CYP3A4'], cyp_inhibits:['CYP2C19','CYP3A4','CYP2D6','CYP2C9'], receptor:['CB1_antagonist','5HT1A','TRPV1'], effects:['anxiolytic','anti_inflammatory','anticonvulsant'], serotonergic:true, nti:false, half_life:'18-32h', schedule:'unscheduled' },
+  'cbg': { class:'cannabinoid', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['CB1_partial','CB2','5HT1A','alpha2'], effects:['anti_inflammatory','antibacterial','neuroprotective'], serotonergic:true, nti:false, half_life:'2-4h', schedule:'unscheduled' },
+  'cbn': { class:'cannabinoid', cyp_substrates:['CYP3A4','CYP2C9'], cyp_inhibits:[], receptor:['CB1_weak','CB2'], effects:['sedation','anti_inflammatory'], serotonergic:false, nti:false, half_life:'2-4h', schedule:'unscheduled' },
+  'delta-8-thc': { class:'cannabinoid', cyp_substrates:['CYP3A4','CYP2C9'], cyp_inhibits:['CYP3A4'], receptor:['CB1_partial','CB2'], effects:['mild_euphoria','antiemetic','anxiolytic'], serotonergic:false, nti:false, half_life:'1-3h', schedule:'variable' },
+  'thcv': { class:'cannabinoid', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['CB1_antagonist_low','CB2'], effects:['appetite_suppression','energizing'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'unscheduled' },
+  'thca': { class:'cannabinoid', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['TRPA1','TRPM8'], effects:['anti_inflammatory','antiemetic','neuroprotective'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'unscheduled' },
+  'cbda': { class:'cannabinoid', cyp_substrates:['CYP2C19'], cyp_inhibits:[], receptor:['5HT1A','TRPV1'], effects:['antiemetic','anti_inflammatory'], serotonergic:true, nti:false, half_life:'1-2h', schedule:'unscheduled' },
+  'sertraline': { class:'ssri', cyp_substrates:['CYP2B6','CYP2C19','CYP2D6','CYP3A4'], cyp_inhibits:['CYP2D6','CYP2B6'], receptor:['SERT'], effects:['antidepressant','anxiolytic'], serotonergic:true, nti:false, half_life:'26h', schedule:'Rx' },
+  'fluoxetine': { class:'ssri', cyp_substrates:['CYP2D6','CYP2C9'], cyp_inhibits:['CYP2D6','CYP2C19'], receptor:['SERT'], effects:['antidepressant','anxiolytic'], serotonergic:true, nti:false, half_life:'1-6 days', schedule:'Rx' },
+  'escitalopram': { class:'ssri', cyp_substrates:['CYP2C19','CYP3A4'], cyp_inhibits:['CYP2D6_weak'], receptor:['SERT'], effects:['antidepressant','anxiolytic'], serotonergic:true, nti:false, half_life:'27-33h', schedule:'Rx' },
+  'paroxetine': { class:'ssri', cyp_substrates:['CYP2D6'], cyp_inhibits:['CYP2D6'], receptor:['SERT'], effects:['antidepressant','anxiolytic'], serotonergic:true, nti:false, half_life:'21h', schedule:'Rx' },
+  'venlafaxine': { class:'snri', cyp_substrates:['CYP2D6','CYP3A4'], cyp_inhibits:[], receptor:['SERT','NET'], effects:['antidepressant','anxiolytic','pain'], serotonergic:true, nti:false, half_life:'5h', schedule:'Rx' },
+  'duloxetine': { class:'snri', cyp_substrates:['CYP1A2','CYP2D6'], cyp_inhibits:['CYP2D6'], receptor:['SERT','NET'], effects:['antidepressant','pain','fibromyalgia'], serotonergic:true, nti:false, half_life:'12h', schedule:'Rx' },
+  'bupropion': { class:'ndri', cyp_substrates:['CYP2B6'], cyp_inhibits:['CYP2D6'], receptor:['NET','DAT'], effects:['antidepressant','smoking_cessation','energizing'], serotonergic:false, nti:false, half_life:'21h', schedule:'Rx' },
+  'alprazolam': { class:'benzodiazepine', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['GABA_A'], effects:['anxiolytic','sedation','muscle_relaxant'], serotonergic:false, nti:true, half_life:'11h', schedule:'IV' },
+  'diazepam': { class:'benzodiazepine', cyp_substrates:['CYP2C19','CYP3A4'], cyp_inhibits:[], receptor:['GABA_A'], effects:['anxiolytic','sedation','anticonvulsant'], serotonergic:false, nti:true, half_life:'20-100h', schedule:'IV' },
+  'clonazepam': { class:'benzodiazepine', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['GABA_A'], effects:['anxiolytic','anticonvulsant'], serotonergic:false, nti:true, half_life:'30-40h', schedule:'IV' },
+  'gabapentin': { class:'gabapentinoid', cyp_substrates:[], cyp_inhibits:[], receptor:['alpha2delta'], effects:['pain','anticonvulsant','anxiolytic'], serotonergic:false, nti:false, half_life:'5-7h', schedule:'V' },
+  'pregabalin': { class:'gabapentinoid', cyp_substrates:[], cyp_inhibits:[], receptor:['alpha2delta'], effects:['pain','anticonvulsant','anxiolytic'], serotonergic:false, nti:false, half_life:'6h', schedule:'V' },
+  'tramadol': { class:'opioid', cyp_substrates:['CYP2D6','CYP3A4'], cyp_inhibits:[], receptor:['MOR','SERT','NET'], effects:['pain_relief'], serotonergic:true, nti:false, half_life:'6h', schedule:'IV' },
+  'oxycodone': { class:'opioid', cyp_substrates:['CYP3A4','CYP2D6'], cyp_inhibits:[], receptor:['MOR'], effects:['pain_relief'], serotonergic:false, nti:true, half_life:'3-5h', schedule:'II' },
+  'morphine': { class:'opioid', cyp_substrates:['UGT2B7'], cyp_inhibits:[], receptor:['MOR'], effects:['pain_relief'], serotonergic:false, nti:true, half_life:'2-4h', schedule:'II' },
+  'methadone': { class:'opioid', cyp_substrates:['CYP3A4','CYP2B6','CYP2D6'], cyp_inhibits:['CYP2D6'], receptor:['MOR','NMDA'], effects:['pain_relief','opioid_maintenance'], serotonergic:true, nti:true, half_life:'8-59h', schedule:'II' },
+  'suboxone': { class:'opioid_partial', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['MOR_partial','KOR_antagonist'], effects:['opioid_maintenance','pain'], serotonergic:false, nti:true, half_life:'24-42h', schedule:'III' },
+  'warfarin': { class:'anticoagulant', cyp_substrates:['CYP2C9','CYP3A4','CYP1A2'], cyp_inhibits:[], receptor:['VKORC1'], effects:['anticoagulation'], serotonergic:false, nti:true, half_life:'20-60h', schedule:'Rx' },
+  'lithium': { class:'mood_stabilizer', cyp_substrates:[], cyp_inhibits:[], receptor:['GSK3B','IMPase'], effects:['mood_stabilization','anti_suicidal'], serotonergic:false, nti:true, half_life:'18-36h', schedule:'Rx' },
+  'lamotrigine': { class:'anticonvulsant', cyp_substrates:['UGT1A4'], cyp_inhibits:[], receptor:['sodium_channel','glutamate'], effects:['mood_stabilization','anticonvulsant'], serotonergic:false, nti:false, half_life:'25-33h', schedule:'Rx' },
+  'quetiapine': { class:'atypical_antipsychotic', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['D2','5HT2A','H1','alpha1'], effects:['antipsychotic','mood_stabilization','sedation'], serotonergic:true, nti:false, half_life:'7h', schedule:'Rx' },
+  'aripiprazole': { class:'atypical_antipsychotic', cyp_substrates:['CYP2D6','CYP3A4'], cyp_inhibits:[], receptor:['D2_partial','5HT1A_partial','5HT2A'], effects:['antipsychotic','mood_stabilization'], serotonergic:true, nti:false, half_life:'75h', schedule:'Rx' },
+  'methylphenidate': { class:'stimulant', cyp_substrates:[], cyp_inhibits:[], receptor:['DAT','NET'], effects:['attention','focus','wakefulness'], serotonergic:false, nti:false, half_life:'2-3h', schedule:'II' },
+  'amphetamine': { class:'stimulant', cyp_substrates:['CYP2D6'], cyp_inhibits:[], receptor:['DAT','NET','VMAT2'], effects:['attention','focus','wakefulness'], serotonergic:false, nti:false, half_life:'10-13h', schedule:'II' },
+  'melatonin': { class:'supplement', cyp_substrates:['CYP1A2'], cyp_inhibits:[], receptor:['MT1','MT2'], effects:['sleep','circadian'], serotonergic:false, nti:false, half_life:'0.5-1h', schedule:'OTC' },
+  'st-johns-wort': { class:'supplement', cyp_substrates:['CYP3A4'], cyp_inhibits:[], receptor:['SERT','MAO_weak'], effects:['antidepressant_mild'], serotonergic:true, nti:false, half_life:'24-48h', schedule:'OTC', cyp_inducers:['CYP3A4','CYP2C9','CYP1A2','CYP2C19'] },
+  'ashwagandha': { class:'adaptogen', cyp_substrates:['CYP3A4','CYP2D6'], cyp_inhibits:['CYP3A4_mild','CYP2D6_mild'], receptor:['GABA_A_mod','thyroid'], effects:['anxiolytic','adaptogenic','anti_inflammatory'], serotonergic:false, nti:false, half_life:'4-6h', schedule:'OTC' },
+  'valerian': { class:'supplement', cyp_substrates:['CYP3A4'], cyp_inhibits:['CYP3A4_weak'], receptor:['GABA_A_mod'], effects:['sedation','anxiolytic'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'OTC' },
+  'kava': { class:'supplement', cyp_substrates:['CYP2E1'], cyp_inhibits:['CYP2E1','CYP1A2','CYP2D6'], receptor:['GABA_A','sodium_channel'], effects:['anxiolytic','sedation','muscle_relaxant'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'OTC' },
+  'kratom': { class:'supplement', cyp_substrates:['CYP3A4','CYP2D6'], cyp_inhibits:['CYP2D6','CYP3A4'], receptor:['MOR_partial','5HT2A','alpha2'], effects:['pain_relief','euphoria','stimulant_low_dose'], serotonergic:true, nti:false, half_life:'3-6h', schedule:'unscheduled/variable' },
+  'turmeric': { class:'supplement', cyp_substrates:['CYP3A4'], cyp_inhibits:['CYP3A4','CYP2C9','CYP1A2'], receptor:['NF_kB','COX2'], effects:['anti_inflammatory','antioxidant'], serotonergic:false, nti:false, half_life:'6-7h', schedule:'OTC' },
+  'fish-oil': { class:'supplement', cyp_substrates:[], cyp_inhibits:[], receptor:['PPAR','GPR120'], effects:['anti_inflammatory','cardiovascular','brain_health'], serotonergic:false, nti:false, half_life:'48h', schedule:'OTC' },
+  'magnesium': { class:'mineral', cyp_substrates:[], cyp_inhibits:[], receptor:['NMDA_block','GABA_mod'], effects:['muscle_relaxation','sleep','nerve_function'], serotonergic:false, nti:false, half_life:'varies', schedule:'OTC' },
+  'vitamin-d': { class:'vitamin', cyp_substrates:['CYP27B1','CYP24A1'], cyp_inhibits:[], receptor:['VDR'], effects:['bone_health','immune_modulation','mood'], serotonergic:false, nti:false, half_life:'15 days', schedule:'OTC' },
+  'l-theanine': { class:'amino_acid', cyp_substrates:[], cyp_inhibits:[], receptor:['glutamate_mod','GABA_mod','alpha_wave'], effects:['calm_focus','anxiolytic_mild'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'OTC' },
+  '5-htp': { class:'amino_acid', cyp_substrates:['AADC'], cyp_inhibits:[], receptor:['serotonin_precursor'], effects:['mood','sleep','appetite'], serotonergic:true, nti:false, half_life:'2-4h', schedule:'OTC' },
+  'sam-e': { class:'supplement', cyp_substrates:[], cyp_inhibits:[], receptor:['methyl_donor'], effects:['mood','liver_health','joint_health'], serotonergic:true, nti:false, half_life:'100min', schedule:'OTC' },
+  'gaba-supplement': { class:'amino_acid', cyp_substrates:[], cyp_inhibits:[], receptor:['GABA_B_peripheral'], effects:['relaxation','sleep'], serotonergic:false, nti:false, half_life:'1-2h', schedule:'OTC' },
+  'passionflower': { class:'supplement', cyp_substrates:['CYP3A4'], cyp_inhibits:['CYP3A4_weak'], receptor:['GABA_A_mod','MAO_weak'], effects:['anxiolytic','sedation'], serotonergic:true, nti:false, half_life:'2-4h', schedule:'OTC' },
+  'lions-mane': { class:'mushroom', cyp_substrates:[], cyp_inhibits:[], receptor:['NGF_stimulator'], effects:['neuroprotective','cognitive_enhancement','anti_inflammatory'], serotonergic:false, nti:false, half_life:'unknown', schedule:'OTC' },
+  'reishi': { class:'mushroom', cyp_substrates:['CYP3A4','CYP1A2'], cyp_inhibits:['CYP3A4_weak'], receptor:['immune_modulator','GABA_mod'], effects:['immune_modulation','sleep','anti_inflammatory'], serotonergic:false, nti:false, half_life:'unknown', schedule:'OTC' },
+  'ibuprofen': { class:'nsaid', cyp_substrates:['CYP2C9'], cyp_inhibits:['CYP2C9_weak'], receptor:['COX1','COX2'], effects:['pain_relief','anti_inflammatory','antipyretic'], serotonergic:false, nti:false, half_life:'2-4h', schedule:'OTC' },
+  'acetaminophen': { class:'analgesic', cyp_substrates:['CYP2E1','CYP1A2','CYP3A4'], cyp_inhibits:[], receptor:['COX3_central','TRPV1'], effects:['pain_relief','antipyretic'], serotonergic:false, nti:false, half_life:'2-3h', schedule:'OTC' },
+  'diphenhydramine': { class:'antihistamine', cyp_substrates:['CYP2D6'], cyp_inhibits:['CYP2D6_moderate'], receptor:['H1','mACh'], effects:['antihistamine','sedation','anticholinergic'], serotonergic:false, nti:false, half_life:'2-8h', schedule:'OTC' },
+  'caffeine': { class:'stimulant', cyp_substrates:['CYP1A2'], cyp_inhibits:[], receptor:['adenosine_A1_A2A'], effects:['wakefulness','focus','bronchodilation'], serotonergic:false, nti:false, half_life:'3-5h', schedule:'OTC' },
+  'alcohol': { class:'depressant', cyp_substrates:['ADH','CYP2E1'], cyp_inhibits:['CYP2E1_acute'], receptor:['GABA_A','NMDA_block','opioid_indirect'], effects:['sedation','disinhibition','euphoria'], serotonergic:false, nti:false, half_life:'varies', schedule:'legal', cyp_inducers:['CYP2E1_chronic'] },
 };
 
-// ============================================================
-// UTILITY: HTTPS GET with Promise
-// ============================================================
-function httpsGet(url, headers = {}) {
-  return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
-    const options = {
-      hostname: parsedUrl.hostname,
-      path: parsedUrl.pathname + parsedUrl.search,
-      method: 'GET',
-      headers: { 'User-Agent': 'BleuLive/1.0', 'Accept': 'application/json', ...headers },
-      timeout: 8000
-    };
-    const req = https.request(options, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try { resolve(JSON.parse(data)); }
-        catch { resolve(data); }
-      });
-    });
-    req.on('error', reject);
-    req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
-    req.end();
-  });
-}
-
-// ============================================================
-// UTILITY: HTTPS POST with Promise
-// ============================================================
-function httpsPost(url, body, headers = {}) {
-  return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
-    const payload = JSON.stringify(body);
-    const options = {
-      hostname: parsedUrl.hostname,
-      path: parsedUrl.pathname + parsedUrl.search,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(payload),
-        'User-Agent': 'BleuLive/1.0',
-        ...headers
-      },
-      timeout: 15000
-    };
-    const req = https.request(options, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try { resolve(JSON.parse(data)); }
-        catch { resolve(data); }
-      });
-    });
-    req.on('error', reject);
-    req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
-    req.write(payload);
-    req.end();
-  });
-}
-
-// ============================================================
-// UTILITY: HTTP GET (for non-TLS APIs)
-// ============================================================
-function httpGet(url) {
-  return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
-    const options = {
-      hostname: parsedUrl.hostname,
-      path: parsedUrl.pathname + parsedUrl.search,
-      method: 'GET',
-      headers: { 'User-Agent': 'BleuLive/1.0', 'Accept': 'application/json' },
-      timeout: 8000
-    };
-    const req = http.request(options, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try { resolve(JSON.parse(data)); }
-        catch { resolve(data); }
-      });
-    });
-    req.on('error', reject);
-    req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
-    req.end();
-  });
-}
-
-// ============================================================
-// API FUNCTIONS — Live calls to external data
-// ============================================================
-
-// RxNorm — Resolve drug names to standard IDs
-async function rxnormLookup(drug) {
-  try {
-    const url = `https://rxnav.nlm.nih.gov/REST/drugs.json?name=${encodeURIComponent(drug)}`;
-    const data = await httpsGet(url);
-    const group = data?.drugGroup;
-    if (!group?.conceptGroup) return { drug, found: false };
-    const concepts = [];
-    for (const cg of group.conceptGroup) {
-      if (cg.conceptProperties) {
-        for (const cp of cg.conceptProperties) {
-          concepts.push({ rxcui: cp.rxcui, name: cp.name, tty: cp.tty });
-        }
-      }
-    }
-    return { drug, found: concepts.length > 0, results: concepts.slice(0, 5) };
-  } catch (e) {
-    return { drug, found: false, error: e.message };
-  }
-}
-
-// OpenFDA — Drug label data
-async function fdaLabelLookup(drug) {
-  try {
-    const base = process.env.OPENFDA_BASE_URL || 'https://api.fda.gov';
-    const key = process.env.OPENFDA_API_KEY ? `&api_key=${process.env.OPENFDA_API_KEY}` : '';
-    const url = `${base}/drug/label.json?search=openfda.generic_name:"${encodeURIComponent(drug)}"&limit=1${key}`;
-    const data = await httpsGet(url);
-    if (!data?.results?.[0]) return { drug, found: false };
-    const r = data.results[0];
-    return {
-      drug,
-      found: true,
-      brand_name: r.openfda?.brand_name?.[0] || 'Unknown',
-      generic_name: r.openfda?.generic_name?.[0] || drug,
-      warnings: (r.warnings || []).slice(0, 2),
-      drug_interactions: (r.drug_interactions || []).slice(0, 2),
-      contraindications: (r.contraindications || []).slice(0, 2)
-    };
-  } catch (e) {
-    return { drug, found: false, error: e.message };
-  }
-}
-
-// OpenFDA — Adverse Event Reports (FAERS)
-async function fdaAdverseEvents(drug) {
-  try {
-    const base = process.env.OPENFDA_BASE_URL || 'https://api.fda.gov';
-    const key = process.env.OPENFDA_API_KEY ? `&api_key=${process.env.OPENFDA_API_KEY}` : '';
-    const url = `${base}/drug/event.json?search=patient.drug.openfda.generic_name:"${encodeURIComponent(drug)}"&count=patient.reaction.reactionmeddrapt.exact&limit=10${key}`;
-    const data = await httpsGet(url);
-    if (!data?.results) return { drug, found: false };
-    return {
-      drug,
-      found: true,
-      top_adverse_events: data.results.map(r => ({ reaction: r.term, count: r.count }))
-    };
-  } catch (e) {
-    return { drug, found: false, error: e.message };
-  }
-}
-
-// PubMed — Research citations
-async function pubmedSearch(query) {
-  try {
-    const base = process.env.PUBMED_BASE_URL || 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils';
-    const apiKey = process.env.NCBI_API_KEY ? `&api_key=${process.env.NCBI_API_KEY}` : '';
-    const searchUrl = `${base}/esearch.fcgi?db=pubmed&retmode=json&retmax=5&term=${encodeURIComponent(query)}${apiKey}`;
-    const searchData = await httpsGet(searchUrl);
-    const ids = searchData?.esearchresult?.idlist || [];
-    if (ids.length === 0) return { query, found: false, count: 0 };
-    const summaryUrl = `${base}/esummary.fcgi?db=pubmed&retmode=json&id=${ids.join(',')}${apiKey}`;
-    const summaryData = await httpsGet(summaryUrl);
-    const articles = [];
-    for (const id of ids) {
-      const a = summaryData?.result?.[id];
-      if (a) {
-        articles.push({
-          pmid: id,
-          title: a.title,
-          source: a.source,
-          pubdate: a.pubdate,
-          url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`
-        });
-      }
-    }
-    return {
-      query,
-      found: true,
-      count: parseInt(searchData.esearchresult.count),
-      articles
-    };
-  } catch (e) {
-    return { query, found: false, error: e.message };
-  }
-}
-
-// ClinicalTrials.gov — Active trials
-async function clinicalTrialsSearch(query) {
-  try {
-    const url = `https://clinicaltrials.gov/api/v2/studies?query.term=${encodeURIComponent(query)}&filter.overallStatus=RECRUITING&pageSize=3`;
-    const data = await httpsGet(url);
-    const studies = (data?.studies || []).map(s => ({
-      nctId: s.protocolSection?.identificationModule?.nctId,
-      title: s.protocolSection?.identificationModule?.briefTitle,
-      status: s.protocolSection?.statusModule?.overallStatus,
-      conditions: s.protocolSection?.conditionsModule?.conditions?.slice(0, 3),
-      locations: (s.protocolSection?.contactsLocationsModule?.locations || []).slice(0, 2).map(l => `${l.city}, ${l.state || l.country}`)
-    }));
-    return { query, found: studies.length > 0, studies };
-  } catch (e) {
-    return { query, found: false, error: e.message };
-  }
-}
-
-// NPI — Practitioner lookup
-async function npiLookup(zip, taxonomy) {
-  try {
-    const base = process.env.NPI_BASE_URL || 'https://npiregistry.cms.hhs.gov/api';
-    let url = `${base}/?version=2.1&postal_code=${encodeURIComponent(zip)}&limit=10`;
-    if (taxonomy) url += `&taxonomy_description=${encodeURIComponent(taxonomy)}`;
-    const data = await httpsGet(url);
-    const providers = (data?.results || []).map(p => ({
-      npi: p.number,
-      name: `${p.basic?.first_name || ''} ${p.basic?.last_name || ''}`.trim(),
-      credential: p.basic?.credential || '',
-      specialty: p.taxonomies?.[0]?.desc || '',
-      city: p.addresses?.[0]?.city || '',
-      state: p.addresses?.[0]?.state || '',
-      phone: p.addresses?.[0]?.telephone_number || ''
-    }));
-    return { zip, found: providers.length > 0, count: data?.result_count || 0, providers };
-  } catch (e) {
-    return { zip, found: false, error: e.message };
-  }
-}
-
-// AirNow — Air quality by ZIP
-async function airQualityLookup(zip) {
-  try {
-    const key = process.env.AIRNOW_API_KEY;
-    if (!key) return { zip, found: false, error: 'AIRNOW_API_KEY not set' };
-    const url = `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=${zip}&API_KEY=${key}`;
-    const data = await httpsGet(url);
-    if (!Array.isArray(data) || data.length === 0) return { zip, found: false };
-    return {
-      zip,
-      found: true,
-      readings: data.map(r => ({
-        parameter: r.ParameterName,
-        aqi: r.AQI,
-        category: r.Category?.Name,
-        reporting_area: r.ReportingArea,
-        state: r.StateCode
-      }))
-    };
-  } catch (e) {
-    return { zip, found: false, error: e.message };
-  }
-}
-
-// CPIC — Gene-drug guidelines
-async function cpicLookup(drug) {
-  try {
-    const base = process.env.CPIC_BASE_URL || 'https://api.cpicpgx.org/v1';
-    const url = `${base}/drug?name=eq.${encodeURIComponent(drug)}&select=drugid,name,url`;
-    const data = await httpsGet(url);
-    if (!Array.isArray(data) || data.length === 0) return { drug, found: false };
-    return { drug, found: true, guidelines: data };
-  } catch (e) {
-    return { drug, found: false, error: e.message };
-  }
-}
-
-// DailyMed — Drug label search
-async function dailymedLookup(drug) {
-  try {
-    const base = process.env.DAILYMED_BASE_URL || 'https://dailymed.nlm.nih.gov/dailymed/services';
-    const url = `${base}/v2/spls.json?drug_name=${encodeURIComponent(drug)}&page_size=3`;
-    const data = await httpsGet(url);
-    if (!data?.data) return { drug, found: false };
-    return {
-      drug,
-      found: true,
-      labels: (data.data || []).map(d => ({
-        setid: d.setid,
-        title: d.title,
-        published: d.published_date
-      }))
-    };
-  } catch (e) {
-    return { drug, found: false, error: e.message };
-  }
-}
-
-
-// ============================================================
-// 5-LAYER SAFETY CHECK ENGINE
-// ============================================================
+// ═══════════════════════════════════════════════════════════════
+// SAFETY CHECK ENGINE v2.0 — 5 Layers
+// ═══════════════════════════════════════════════════════════════
 function runSafetyEngine(substances) {
-  const normalized = substances.map(s => s.toLowerCase().replace(/\s+/g, '-'));
-  const profiles = [];
-  const unknown = [];
-
-  // Resolve profiles
-  for (const sub of normalized) {
-    if (PHARMACOLOGY_DB[sub]) {
-      profiles.push({ key: sub, ...PHARMACOLOGY_DB[sub] });
-    } else {
-      unknown.push(sub);
-    }
-  }
-
+  const found = substances.map(s => {
+    const key = s.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+    return { name: s, key, data: PHARMA_DB[key] };
+  }).filter(s => s.data);
+  const unknown = substances.filter(s => !PHARMA_DB[s.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')]);
   const interactions = [];
 
-  // LAYER 1: CYP450 Interactions
-  for (let i = 0; i < profiles.length; i++) {
-    for (let j = i + 1; j < profiles.length; j++) {
-      const a = profiles[i];
-      const b = profiles[j];
-
-      // Check if A inhibits enzymes that B is substrate of
-      const a_inhibits_b = (a.cyp_inhibits || []).filter(e => (b.cyp_substrates || []).includes(e));
-      if (a_inhibits_b.length > 0) {
-        interactions.push({
-          layer: 'CYP450',
-          pair: `${a.name} → ${b.name}`,
-          mechanism: `${a.name} inhibits ${a_inhibits_b.join(', ')} — may INCREASE ${b.name} blood levels`,
-          severity: Math.min(a.severity_base + b.severity_base + (a_inhibits_b.length * 0.1), 1.0),
-          action: b.narrow_therapeutic_index
-            ? 'CRITICAL: Narrow therapeutic index drug — dose adjustment likely needed. Consult prescriber.'
-            : 'Monitor for increased side effects. Consider dose adjustment.'
-        });
+  for (let i = 0; i < found.length; i++) {
+    for (let j = i + 1; j < found.length; j++) {
+      const a = found[i], b = found[j];
+      // L1: CYP450 Inhibition
+      for (const enz of (a.data.cyp_inhibits || [])) {
+        const clean = enz.replace(/_weak|_moderate|_mild/,'');
+        if ((b.data.cyp_substrates || []).includes(clean))
+          interactions.push({ pair:`${a.name} + ${b.name}`, layer:'CYP450', mechanism:`${a.name} inhibits ${clean} → may increase ${b.name} levels`, severity:(a.data.nti||b.data.nti)?0.9:(enz.includes('weak')||enz.includes('mild')?0.3:0.6), enzyme:clean });
       }
-
-      // Check if B inhibits enzymes that A is substrate of
-      const b_inhibits_a = (b.cyp_inhibits || []).filter(e => (a.cyp_substrates || []).includes(e));
-      if (b_inhibits_a.length > 0) {
-        interactions.push({
-          layer: 'CYP450',
-          pair: `${b.name} → ${a.name}`,
-          mechanism: `${b.name} inhibits ${b_inhibits_a.join(', ')} — may INCREASE ${a.name} blood levels`,
-          severity: Math.min(b.severity_base + a.severity_base + (b_inhibits_a.length * 0.1), 1.0),
-          action: a.narrow_therapeutic_index
-            ? 'CRITICAL: Narrow therapeutic index drug — dose adjustment likely needed. Consult prescriber.'
-            : 'Monitor for increased side effects. Consider dose adjustment.'
-        });
+      for (const enz of (b.data.cyp_inhibits || [])) {
+        const clean = enz.replace(/_weak|_moderate|_mild/,'');
+        if ((a.data.cyp_substrates || []).includes(clean))
+          interactions.push({ pair:`${b.name} + ${a.name}`, layer:'CYP450', mechanism:`${b.name} inhibits ${clean} → may increase ${a.name} levels`, severity:(a.data.nti||b.data.nti)?0.9:(enz.includes('weak')||enz.includes('mild')?0.3:0.6), enzyme:clean });
       }
-
-      // Check induction (e.g. St. John's Wort)
-      const a_induces_b = (a.cyp_induces || []).filter(e => (b.cyp_substrates || []).includes(e));
-      if (a_induces_b.length > 0) {
-        interactions.push({
-          layer: 'CYP450_INDUCTION',
-          pair: `${a.name} → ${b.name}`,
-          mechanism: `${a.name} induces ${a_induces_b.join(', ')} — may DECREASE ${b.name} effectiveness`,
-          severity: Math.min(a.severity_base + b.severity_base + 0.2, 1.0),
-          action: 'Medication may become less effective. Consult prescriber about dose adjustment.'
-        });
+      // L1b: CYP Induction
+      for (const enz of (a.data.cyp_inducers || [])) {
+        const clean = enz.replace(/_chronic/,'');
+        if ((b.data.cyp_substrates || []).includes(clean))
+          interactions.push({ pair:`${a.name} + ${b.name}`, layer:'CYP450', mechanism:`${a.name} induces ${clean} → may reduce ${b.name} effectiveness`, severity:b.data.nti?0.9:0.6, enzyme:clean, action:'induction' });
       }
-
-      const b_induces_a = (b.cyp_induces || []).filter(e => (a.cyp_substrates || []).includes(e));
-      if (b_induces_a.length > 0) {
-        interactions.push({
-          layer: 'CYP450_INDUCTION',
-          pair: `${b.name} → ${a.name}`,
-          mechanism: `${b.name} induces ${b_induces_a.join(', ')} — may DECREASE ${a.name} effectiveness`,
-          severity: Math.min(b.severity_base + a.severity_base + 0.2, 1.0),
-          action: 'Medication may become less effective. Consult prescriber about dose adjustment.'
-        });
-      }
+      // L2: Serotonin Syndrome
+      if (a.data.serotonergic && b.data.serotonergic)
+        interactions.push({ pair:`${a.name} + ${b.name}`, layer:'Serotonin', mechanism:`Both affect serotonin → serotonin syndrome risk (agitation, hyperthermia, tremor)`, severity:0.8, warning:'SEROTONIN_SYNDROME_RISK' });
+      // L3: Receptor Competition
+      const aR = new Set((a.data.receptor||[]).map(r=>r.replace(/_partial|_weak|_antagonist|_block|_mod/,'')));
+      const bR = new Set((b.data.receptor||[]).map(r=>r.replace(/_partial|_weak|_antagonist|_block|_mod/,'')));
+      const shared = [...aR].filter(r=>bR.has(r));
+      if (shared.length > 0)
+        interactions.push({ pair:`${a.name} + ${b.name}`, layer:'Receptor', mechanism:`Both act on ${shared.join(', ')}. May compete or compound effects.`, severity:0.4, receptors:shared });
+      // L4: Sedation Stacking
+      const sedA = (a.data.effects||[]).some(e=>['sedation','sleep','muscle_relaxant'].includes(e));
+      const sedB = (b.data.effects||[]).some(e=>['sedation','sleep','muscle_relaxant'].includes(e));
+      if (sedA && sedB)
+        interactions.push({ pair:`${a.name} + ${b.name}`, layer:'Sedation', mechanism:`Both cause sedation → increased drowsiness + respiratory depression risk`, severity:(a.data.class==='opioid'||b.data.class==='opioid')?0.95:(a.data.class==='benzodiazepine'||b.data.class==='benzodiazepine')?0.85:0.6 });
+      // L5: NTI Flagging
+      if ((a.data.nti||b.data.nti) && interactions.some(ix=>ix.pair.includes(a.data.nti?a.name:b.name)&&ix.layer==='CYP450'))
+        interactions.push({ pair:`${a.data.nti?a.name:b.name} (NTI)`, layer:'NTI', mechanism:`Narrow therapeutic index drug — small level changes = toxicity risk. REQUIRES MEDICAL SUPERVISION.`, severity:0.95, warning:'NTI_CRITICAL' });
     }
   }
 
-  // LAYER 2: UGT Interactions
-  for (let i = 0; i < profiles.length; i++) {
-    for (let j = i + 1; j < profiles.length; j++) {
-      const a = profiles[i];
-      const b = profiles[j];
-      const shared_ugt = (a.ugt_inhibits || []).filter(e => (b.ugt_inhibits || []).includes(e));
-      if (shared_ugt.length > 0) {
-        interactions.push({
-          layer: 'UGT',
-          pair: `${a.name} + ${b.name}`,
-          mechanism: `Both affect UGT enzymes (${shared_ugt.join(', ')}) — combined glucuronidation inhibition may increase toxicity`,
-          severity: 0.5,
-          action: 'Monitor liver function. Space doses if possible.'
-        });
-      }
-    }
-  }
-
-  // LAYER 3: Transporter Interactions
-  for (let i = 0; i < profiles.length; i++) {
-    for (let j = i + 1; j < profiles.length; j++) {
-      const a = profiles[i];
-      const b = profiles[j];
-      const a_pgp_inhib = (a.transporters || []).some(t => t.includes('P-gp inhibitor'));
-      const b_pgp_sub = (b.transporters || []).some(t => t.includes('P-gp substrate'));
-      if (a_pgp_inhib && b_pgp_sub) {
-        interactions.push({
-          layer: 'TRANSPORTER',
-          pair: `${a.name} → ${b.name}`,
-          mechanism: `${a.name} inhibits P-glycoprotein — may increase ${b.name} absorption and brain penetration`,
-          severity: 0.5,
-          action: 'May increase drug exposure. Monitor for enhanced effects.'
-        });
-      }
-      const b_pgp_inhib = (b.transporters || []).some(t => t.includes('P-gp inhibitor'));
-      const a_pgp_sub = (a.transporters || []).some(t => t.includes('P-gp substrate'));
-      if (b_pgp_inhib && a_pgp_sub) {
-        interactions.push({
-          layer: 'TRANSPORTER',
-          pair: `${b.name} → ${a.name}`,
-          mechanism: `${b.name} inhibits P-glycoprotein — may increase ${a.name} absorption and brain penetration`,
-          severity: 0.5,
-          action: 'May increase drug exposure. Monitor for enhanced effects.'
-        });
-      }
-    }
-  }
-
-  // LAYER 4: Pharmacodynamic Interactions
-  for (let i = 0; i < profiles.length; i++) {
-    for (let j = i + 1; j < profiles.length; j++) {
-      const a = profiles[i];
-      const b = profiles[j];
-      for (const pdA of (a.pharmacodynamic || [])) {
-        for (const pdB of (b.pharmacodynamic || [])) {
-          const comboKey1 = `${pdA}+${pdB}`;
-          const comboKey2 = `${pdB}+${pdA}`;
-          const match = PD_RISK_MAP[comboKey1] || PD_RISK_MAP[comboKey2];
-          if (match) {
-            // Avoid duplicates
-            const existing = interactions.find(ix =>
-              ix.layer === 'PHARMACODYNAMIC' &&
-              ix.pair === `${a.name} + ${b.name}` &&
-              ix.mechanism === match.risk
-            );
-            if (!existing) {
-              interactions.push({
-                layer: 'PHARMACODYNAMIC',
-                pair: `${a.name} + ${b.name}`,
-                mechanism: match.risk,
-                severity: match.severity,
-                action: match.severity >= 0.8 ? 'Consult prescriber before combining.' : 'Use caution. Monitor symptoms.'
-              });
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // LAYER 5: Narrow Therapeutic Index Flag
-  const ntiDrugs = profiles.filter(p => p.narrow_therapeutic_index);
-  const ntiWarnings = ntiDrugs.map(d => ({
-    layer: 'NTI_WARNING',
-    drug: d.name,
-    message: `${d.name} has a narrow therapeutic index — small changes in blood levels can be dangerous. Any interacting substance requires extra caution.`,
-    severity: 0.8
-  }));
-
-  // Overall severity
-  const maxSeverity = interactions.length > 0
-    ? Math.max(...interactions.map(i => i.severity))
-    : 0;
-
-  const riskLevel = maxSeverity >= 0.8 ? 'HIGH' : maxSeverity >= 0.5 ? 'MODERATE' : maxSeverity >= 0.2 ? 'LOW' : 'MINIMAL';
-
+  const maxSev = interactions.length > 0 ? Math.max(...interactions.map(i=>i.severity)) : 0;
   return {
-    substances_checked: substances,
-    profiles_found: profiles.map(p => ({ key: p.key, name: p.name, category: p.category })),
-    unknown_substances: unknown,
-    interaction_count: interactions.length,
-    risk_level: riskLevel,
-    max_severity: Math.round(maxSeverity * 100) / 100,
-    interactions: interactions.sort((a, b) => b.severity - a.severity),
-    nti_warnings: ntiWarnings,
-    disclaimer: 'This information is for educational purposes only. It is NOT medical advice. Always consult your healthcare provider before making changes to your medication or supplement regimen.'
+    query: substances, recognized: found.map(f=>({ name:f.name, class:f.data.class, schedule:f.data.schedule, nti:f.data.nti })),
+    unknown, interactions, risk_level: maxSev>=0.8?'HIGH':maxSev>=0.5?'MODERATE':maxSev>0?'LOW':'NONE',
+    max_severity: maxSev, interaction_count: interactions.length,
+    disclaimer: 'Educational tool only. Consult your healthcare provider before combining substances.',
+    engine_version: '2.0', substances_in_db: Object.keys(PHARMA_DB).length
   };
 }
 
+// ═══════════════════════════════════════════════════════════════
+// API QUERY FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
 
-// ============================================================
-// PARSE REQUEST BODY
-// ============================================================
-function parseBody(req) {
-  return new Promise((resolve, reject) => {
-    let body = '';
-    req.on('data', chunk => body += chunk);
-    req.on('end', () => {
-      try { resolve(JSON.parse(body)); }
-      catch { resolve({}); }
+// -- FREE APIs --
+async function queryRxNorm(drug) {
+  try { const d=await fetchJSON(`https://rxnav.nlm.nih.gov/REST/drugs.json?name=${encodeURIComponent(drug)}`); return { source:'RxNorm', drug, results:(d?.drugGroup?.conceptGroup?.flatMap(g=>g.conceptProperties||[])||[]).slice(0,10) }; } catch(e) { return { source:'RxNorm', error:e.message }; }
+}
+async function queryNPI(query, city, state) {
+  try { let url=`https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=50`;
+    if(/^\d+$/.test(query)) url+=`&number=${query}`; else url+=`&first_name=${encodeURIComponent(query.split(' ')[0]||'')}&last_name=${encodeURIComponent(query.split(' ').slice(1).join(' ')||query)}`;
+    if(city) url+=`&city=${encodeURIComponent(city)}`; if(state) url+=`&state=${encodeURIComponent(state)}`;
+    const d=await fetchJSON(url); return { source:'NPI Registry', query, results:(d.results||[]).slice(0,20), count:d.result_count||0 };
+  } catch(e) { return { source:'NPI', error:e.message }; }
+}
+async function queryFDALabels(drug) {
+  try { const k=KEYS.openfda?`&api_key=${KEYS.openfda}`:''; const d=await fetchJSON(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${encodeURIComponent(drug)}"+openfda.generic_name:"${encodeURIComponent(drug)}"&limit=3${k}`);
+    return { source:'FDA Labels', drug, results:(d.results||[]).map(r=>({ brand:r.openfda?.brand_name?.[0], generic:r.openfda?.generic_name?.[0], warnings:r.warnings?.[0]?.substring(0,500), interactions:r.drug_interactions?.[0]?.substring(0,500) })) };
+  } catch(e) { return { source:'FDA Labels', error:e.message }; }
+}
+async function queryFDAEvents(drug) {
+  try { const k=KEYS.openfda?`&api_key=${KEYS.openfda}`:''; const d=await fetchJSON(`https://api.fda.gov/drug/event.json?search=patient.drug.medicinalproduct:"${encodeURIComponent(drug)}"&count=patient.reaction.reactionmeddrapt.exact&limit=15${k}`);
+    return { source:'FDA Adverse Events', drug, reactions:d.results||[] };
+  } catch(e) { return { source:'FDA Events', error:e.message }; }
+}
+async function queryDailyMed(drug) {
+  try { const d=await fetchJSON(`https://dailymed.nlm.nih.gov/dailymed/services/v2/spls.json?drug_name=${encodeURIComponent(drug)}&pagesize=5`); return { source:'DailyMed', drug, results:d.data||[] }; } catch(e) { return { source:'DailyMed', error:e.message }; }
+}
+async function queryCPIC(gene) {
+  try { const d=await fetchJSON(`https://api.cpicpgx.org/v1/guideline?genesymbol=eq.${encodeURIComponent(gene)}`); return { source:'CPIC', gene, guidelines:d||[] }; } catch(e) { return { source:'CPIC', error:e.message }; }
+}
+async function queryClinicalTrials(condition, city) {
+  try { let url=`https://clinicaltrials.gov/api/v2/studies?query.cond=${encodeURIComponent(condition)}&pageSize=10&sort=LastUpdatePostDate:desc`; if(city) url+=`&query.locn=${encodeURIComponent(city)}`;
+    const d=await fetchJSON(url); return { source:'ClinicalTrials.gov', condition, studies:(d.studies||[]).map(s=>({ title:s.protocolSection?.identificationModule?.briefTitle, status:s.protocolSection?.statusModule?.overallStatus })) };
+  } catch(e) { return { source:'ClinicalTrials.gov', error:e.message }; }
+}
+async function querySAMHSA(zip) { try { return { source:'SAMHSA', zip, note:'Use findtreatment.gov for treatment locator' }; } catch(e) { return { source:'SAMHSA', error:e.message }; } }
+async function queryCDCPlaces(state) { try { const d=await fetchJSON(`https://data.cdc.gov/resource/swc5-untb.json?stateabbr=${encodeURIComponent(state)}&$limit=20`); return { source:'CDC PLACES', state, data:d||[] }; } catch(e) { return { source:'CDC', error:e.message }; } }
+async function queryOpenFoodFacts(product) {
+  try { const d=await fetchJSON(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(product)}&json=1&page_size=5`);
+    return { source:'Open Food Facts', products:(d.products||[]).map(p=>({ name:p.product_name, brand:p.brands, nutriscore:p.nutriscore_grade, calories:p.nutriments?.['energy-kcal_100g'] })) };
+  } catch(e) { return { source:'Open Food Facts', error:e.message }; }
+}
+async function queryWger(muscle) { try { const d=await fetchJSON(`https://wger.de/api/v2/exercise/?format=json&language=2&limit=10`); return { source:'wger', exercises:d.results||[] }; } catch(e) { return { source:'wger', error:e.message }; } }
+async function queryOpenLibrary(topic) { try { const d=await fetchJSON(`https://openlibrary.org/search.json?q=${encodeURIComponent(topic)}&limit=10`); return { source:'Open Library', books:(d.docs||[]).map(b=>({ title:b.title, author:b.author_name?.[0], year:b.first_publish_year })) }; } catch(e) { return { source:'Open Library', error:e.message }; } }
+async function queryFDARecalls(q) { try { const k=KEYS.openfda?`&api_key=${KEYS.openfda}`:''; const d=await fetchJSON(`https://api.fda.gov/drug/enforcement.json?search=reason_for_recall:"${encodeURIComponent(q)}"&limit=5${k}`); return { source:'FDA Recalls', recalls:d.results||[] }; } catch(e) { return { source:'FDA Recalls', error:e.message }; } }
+
+// -- KEYED APIs --
+async function queryPubMed(query, max=10) {
+  try { const k=KEYS.ncbi?`&api_key=${KEYS.ncbi}`:''; const s=await fetchJSON(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=${max}&retmode=json${k}`);
+    const ids=s?.esearchresult?.idlist||[]; if(!ids.length) return { source:'PubMed', articles:[], count:0 };
+    const d=await fetchJSON(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${ids.join(',')}&retmode=json${k}`);
+    return { source:'PubMed', query, articles:ids.map(id=>{ const r=d?.result?.[id]; return r?{ pmid:id, title:r.title, journal:r.source, date:r.pubdate }:null; }).filter(Boolean), count:parseInt(s?.esearchresult?.count||0) };
+  } catch(e) { return { source:'PubMed', error:e.message }; }
+}
+async function queryUSDAFood(food) {
+  try { if(!KEYS.usda) return { source:'USDA', error:'No key' }; const d=await fetchJSON(`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${KEYS.usda}&query=${encodeURIComponent(food)}&pageSize=5`);
+    return { source:'USDA FoodData', results:(d.foods||[]).map(f=>({ name:f.description, nutrients:(f.foodNutrients||[]).filter(n=>['Energy','Protein','Total lipid (fat)','Carbohydrate, by difference'].includes(n.nutrientName)).map(n=>({ name:n.nutrientName, value:n.value, unit:n.unitName })) })) };
+  } catch(e) { return { source:'USDA', error:e.message }; }
+}
+async function queryWeather(lat, lng) {
+  try { if(!KEYS.weather) return { source:'Weather', error:'No key' }; const d=await fetchJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${KEYS.weather}&units=imperial`);
+    return { source:'OpenWeatherMap', location:d.name, temp_f:d.main?.temp, humidity:d.main?.humidity, conditions:d.weather?.[0]?.description };
+  } catch(e) { return { source:'Weather', error:e.message }; }
+}
+async function queryAirQuality(lat, lng) {
+  try { if(KEYS.waqi) { const d=await fetchJSON(`https://api.waqi.info/feed/geo:${lat};${lng}/?token=${KEYS.waqi}`); if(d.status==='ok') return { source:'WAQI', aqi:d.data?.aqi, station:d.data?.city?.name }; }
+    if(KEYS.airnow) { const d=await fetchJSON(`https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=${lat}&longitude=${lng}&distance=50&API_KEY=${KEYS.airnow}`); return { source:'AirNow', data:d }; }
+    return { source:'Air Quality', error:'No key' };
+  } catch(e) { return { source:'Air Quality', error:e.message }; }
+}
+async function queryUV(lat, lng) {
+  try { if(!KEYS.openuv) return { source:'OpenUV', error:'No key' }; const d=await fetchJSON(`https://api.openuv.io/api/v1/uv?lat=${lat}&lng=${lng}`, { headers:{'x-access-token':KEYS.openuv} });
+    return { source:'OpenUV', uv:d.result?.uv, uv_max:d.result?.uv_max, safe_exposure:d.result?.safe_exposure_time };
+  } catch(e) { return { source:'OpenUV', error:e.message }; }
+}
+async function queryGooglePlaces(query, lat, lng) {
+  try { if(!KEYS.google) return { source:'Google Places', error:'No key' }; const loc=lat&&lng?`&location=${lat},${lng}&radius=16000`:'';
+    const d=await fetchJSON(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}${loc}&key=${KEYS.google}`);
+    return { source:'Google Places', results:(d.results||[]).slice(0,10).map(p=>({ name:p.name, address:p.formatted_address, rating:p.rating })) };
+  } catch(e) { return { source:'Google Places', error:e.message }; }
+}
+async function queryYelp(term, location) {
+  try { if(!KEYS.yelp) return { source:'Yelp', error:'No key' };
+    const d=await fetchJSON(`https://api.yelp.com/v3/businesses/search?term=${encodeURIComponent(term)}&location=${encodeURIComponent(location)}&limit=10`, { headers:{'Authorization':`Bearer ${KEYS.yelp}`} });
+    return { source:'Yelp', businesses:(d.businesses||[]).map(b=>({ name:b.name, rating:b.rating, reviews:b.review_count, phone:b.phone, address:b.location?.display_address?.join(', ') })) };
+  } catch(e) { return { source:'Yelp', error:e.message }; }
+}
+async function queryFoursquare(query, lat, lng) {
+  try { if(!KEYS.foursquare) return { source:'Foursquare', error:'No key' }; const ll=lat&&lng?`&ll=${lat},${lng}`:'';
+    const d=await fetchJSON(`https://api.foursquare.com/v3/places/search?query=${encodeURIComponent(query)}${ll}&limit=10`, { headers:{'Authorization':KEYS.foursquare} });
+    return { source:'Foursquare', results:d.results||[] };
+  } catch(e) { return { source:'Foursquare', error:e.message }; }
+}
+async function querySpoonacular(query) {
+  try { if(!KEYS.spoonacular) return { source:'Spoonacular', error:'No key' };
+    const d=await fetchJSON(`https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(query)}&number=5&addRecipeNutrition=true&apiKey=${KEYS.spoonacular}`);
+    return { source:'Spoonacular', recipes:(d.results||[]).map(r=>({ title:r.title, readyIn:r.readyInMinutes, calories:r.nutrition?.nutrients?.find(n=>n.name==='Calories')?.amount })) };
+  } catch(e) { return { source:'Spoonacular', error:e.message }; }
+}
+async function queryEdamam(query) {
+  try { if(!KEYS.edamamId||!KEYS.edamamKey) return { source:'Edamam', error:'No key' };
+    const d=await fetchJSON(`https://api.edamam.com/api/nutrition-data?app_id=${KEYS.edamamId}&app_key=${KEYS.edamamKey}&ingr=${encodeURIComponent(query)}`);
+    return { source:'Edamam', calories:d.calories, nutrients:{ protein:d.totalNutrients?.PROCNT, fat:d.totalNutrients?.FAT, carbs:d.totalNutrients?.CHOCDF } };
+  } catch(e) { return { source:'Edamam', error:e.message }; }
+}
+async function queryNPS(state) {
+  try { if(!KEYS.nps) return { source:'NPS', error:'No key' }; const d=await fetchJSON(`https://developer.nps.gov/api/v1/parks?stateCode=${state}&limit=10&api_key=${KEYS.nps}`);
+    return { source:'NPS', parks:(d.data||[]).map(p=>({ name:p.fullName, designation:p.designation, url:p.url })) };
+  } catch(e) { return { source:'NPS', error:e.message }; }
+}
+async function queryEventbrite(query, location) {
+  try { if(!KEYS.eventbrite) return { source:'Eventbrite', error:'No key' };
+    const d=await fetchJSON(`https://www.eventbriteapi.com/v3/events/search/?q=${encodeURIComponent(query)}&location.address=${encodeURIComponent(location)}`, { headers:{'Authorization':`Bearer ${KEYS.eventbrite}`} });
+    return { source:'Eventbrite', events:(d.events||[]).slice(0,10).map(e=>({ name:e.name?.text, start:e.start?.local, url:e.url })) };
+  } catch(e) { return { source:'Eventbrite', error:e.message }; }
+}
+async function queryListenNotes(query) {
+  try { if(!KEYS.listenNotes) return { source:'Listen Notes', error:'No key' };
+    const d=await fetchJSON(`https://listen-api.listennotes.com/api/v2/search?q=${encodeURIComponent(query)}&type=podcast`, { headers:{'X-ListenAPI-Key':KEYS.listenNotes} });
+    return { source:'Listen Notes', podcasts:(d.results||[]).slice(0,5).map(p=>({ title:p.title_original, publisher:p.publisher_original })) };
+  } catch(e) { return { source:'Listen Notes', error:e.message }; }
+}
+async function queryWalkScore(address) {
+  try { if(!KEYS.walkscore) return { source:'WalkScore', error:'No key' };
+    const d=await fetchJSON(`https://api.walkscore.com/score?format=json&address=${encodeURIComponent(address)}&wsapikey=${KEYS.walkscore}`);
+    return { source:'WalkScore', walkscore:d.walkscore, description:d.description, transit:d.transit?.score, bike:d.bike?.score };
+  } catch(e) { return { source:'WalkScore', error:e.message }; }
+}
+async function queryCannlytics(query) {
+  try { if(!KEYS.cannlytics) return { source:'Cannlytics', error:'No key' };
+    const d=await fetchJSON(`https://cannlytics.com/api/data/coas?q=${encodeURIComponent(query)}&limit=5`, { headers:{'Authorization':`Bearer ${KEYS.cannlytics}`} });
+    return { source:'Cannlytics', results:d };
+  } catch(e) { return { source:'Cannlytics', error:e.message }; }
+}
+async function queryCensus(zip) {
+  try { if(!KEYS.census) return { source:'Census', error:'No key' };
+    const d=await fetchJSON(`https://api.census.gov/data/2022/acs/acs5?get=B01003_001E,B19013_001E,B15003_022E&for=zip%20code%20tabulation%20area:${zip}&key=${KEYS.census}`);
+    if(Array.isArray(d)&&d.length>1) return { source:'Census', zip, population:d[1][0], median_income:d[1][1], bachelors:d[1][2] };
+    return { source:'Census', raw:d };
+  } catch(e) { return { source:'Census', error:e.message }; }
+}
+async function queryGooglePollen(lat, lng) {
+  try { if(!KEYS.google) return { source:'Pollen', error:'No key' }; const d=await fetchJSON(`https://pollen.googleapis.com/v1/forecast:lookup?location.latitude=${lat}&location.longitude=${lng}&days=3&key=${KEYS.google}`); return { source:'Google Pollen', forecast:d }; } catch(e) { return { source:'Pollen', error:e.message }; }
+}
+async function queryMeersens(lat, lng) {
+  try { if(!KEYS.meersens) return { source:'Meersens', error:'No key' }; const d=await fetchJSON(`https://api.meersens.com/environment/public/air/current?lat=${lat}&lng=${lng}`, { headers:{'apikey':KEYS.meersens} }); return { source:'Meersens', data:d }; } catch(e) { return { source:'Meersens', error:e.message }; }
+}
+
+// ═══ COMPOSITE ENDPOINTS ═══
+async function getCityScore(city) {
+  const c = TARGET_CITIES.find(tc=>tc.name.toLowerCase()===city.toLowerCase()) || TARGET_CITIES[0];
+  const [w,a,u,ce,p,ws] = await Promise.allSettled([ queryWeather(c.lat,c.lng), queryAirQuality(c.lat,c.lng), queryUV(c.lat,c.lng), queryCensus(c.zip), queryNPS(c.state), queryWalkScore(`${c.name}, ${c.state}`) ]);
+  return { city:c.name, state:c.state, weather:w.value, air:a.value, uv:u.value, census:ce.value, parks:p.value, walkability:ws.value, generated:new Date().toISOString() };
+}
+async function getConditionBrief(condition) {
+  const [pub,tri] = await Promise.allSettled([ queryPubMed(`${condition} treatment 2025`,5), queryClinicalTrials(condition) ]);
+  return { condition, research:pub.value, trials:tri.value, generated:new Date().toISOString() };
+}
+async function getPractitioners(specialty, city, state) {
+  const [npi,goog,yelp] = await Promise.allSettled([ queryNPI(specialty,city,state), KEYS.google?queryGooglePlaces(`${specialty} ${city} ${state}`):null, KEYS.yelp?queryYelp(specialty,`${city}, ${state}`):null ]);
+  return { specialty, city, state, npi:npi.value, google:goog.value, yelp:yelp.value, generated:new Date().toISOString() };
+}
+async function getEnvironment(lat, lng, zip) {
+  const [w,a,u,p,m] = await Promise.allSettled([ queryWeather(lat,lng), queryAirQuality(lat,lng), queryUV(lat,lng), queryGooglePollen(lat,lng), queryMeersens(lat,lng) ]);
+  return { weather:w.value, air:a.value, uv:u.value, pollen:p.value, meersens:m.value, generated:new Date().toISOString() };
+}
+
+// ═══ NPI PIPELINE ═══
+const PRACTITIONER_TYPES = ['acupuncturist','chiropractor','massage therapist','naturopath','psychologist','psychiatrist','counselor','social worker','nutritionist','dietitian','yoga therapist','physical therapist','nurse practitioner','pharmacist'];
+
+async function runPipeline(cycle) {
+  const city = TARGET_CITIES[cycle % TARGET_CITIES.length];
+  log('PIPELINE', `Cycle ${cycle} | ${city.name}, ${city.state}`);
+  let total = 0;
+  for (const type of PRACTITIONER_TYPES) {
+    try {
+      const r = await queryNPI(type, city.name, city.state);
+      const pracs = (r.results||[]).map(p => ({ npi:p.number, name:`${p.basic?.first_name||''} ${p.basic?.last_name||''}`.trim(), specialty:type, city:city.name, state:city.state, phone:p.addresses?.[0]?.telephone_number, address:`${p.addresses?.[0]?.address_1||''}, ${p.addresses?.[0]?.city||''}, ${p.addresses?.[0]?.state||''}`, source:'NPI', scraped_at:new Date().toISOString() }));
+      if (pracs.length > 0) { await supabase.upsert('practitioners', pracs); total += pracs.length; }
+      await new Promise(r => setTimeout(r, 200));
+    } catch(e) { log('PIPELINE', `${type}: ${e.message}`); }
+  }
+  await supabase.upsert('pipeline_log', [{ city:city.name, state:city.state, practitioners_found:total, cycle_index:cycle, ran_at:new Date().toISOString() }]);
+  log('PIPELINE', `${city.name} done: ${total} practitioners`);
+  return total;
+}
+
+let pipelineCycle = 0, pipelineRunning = false;
+function startScheduler() {
+  log('SCHEDULER', `Active: ${TARGET_CITIES.length} cities, ${PRACTITIONER_TYPES.length} types`);
+  setTimeout(async () => { if(!pipelineRunning) { pipelineRunning=true; try { await runPipeline(pipelineCycle++); } catch(e) { log('SCHEDULER',e.message); } pipelineRunning=false; } }, 60000);
+  setInterval(async () => { if(!pipelineRunning) { pipelineRunning=true; try { await runPipeline(pipelineCycle++); } catch(e) { log('SCHEDULER',e.message); } pipelineRunning=false; } }, 30*60*1000);
+}
+
+// ═══ ALVAI CHAT ═══
+async function alvaiChat(message) {
+  if (!KEYS.claude) return { response: 'Alvai needs an API key.' };
+  try {
+    const d = await fetchJSON('https://api.anthropic.com/v1/messages', { method:'POST',
+      headers: { 'x-api-key':KEYS.claude, 'anthropic-version':'2023-06-01', 'Content-Type':'application/json' },
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1024,
+        system: `You are Alvai, the AI wellness guide for BLEU.live. You help with drug interactions, supplement safety, practitioners, cannabis education, and holistic wellness. Be warm, evidence-based, direct. Mention Safety Check Engine for interaction analysis. ${Object.keys(PHARMA_DB).length} substances in database across ${TARGET_CITIES.length} cities. Always disclaim: not a replacement for medical advice.`,
+        messages: [{ role:'user', content:message }]
+      })
     });
-    req.on('error', reject);
-  });
+    return { response: d.content?.[0]?.text || 'Let me think...', model: d.model };
+  } catch(e) { return { response: 'Having trouble. Try again?', error: e.message }; }
 }
 
-
-// ============================================================
-// CORS + JSON RESPONSE HELPERS
-// ============================================================
-function setCors(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-}
-
-function sendJSON(res, statusCode, data) {
-  setCors(res);
-  res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+// ═══════════════════════════════════════════════════════════════
+// HTTP SERVER
+// ═══════════════════════════════════════════════════════════════
+function json(res, data, status=200) {
+  res.writeHead(status, { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*', 'Access-Control-Allow-Methods':'GET,POST,OPTIONS', 'Access-Control-Allow-Headers':'Content-Type,Authorization' });
   res.end(JSON.stringify(data, null, 2));
 }
+function getBody(req) { return new Promise(r => { let b=''; req.on('data',c=>b+=c); req.on('end',()=>r(b)); }); }
+function qp(url) { const p={}; const q=url.split('?')[1]; if(q) q.split('&').forEach(x=>{ const [k,v]=x.split('='); p[k]=decodeURIComponent(v||''); }); return p; }
 
-
-// ============================================================
-// MAIN SERVER
-// ============================================================
 const server = http.createServer(async (req, res) => {
-  setCors(res);
-
-  // Handle preflight
-  if (req.method === 'OPTIONS') {
-    res.writeHead(204);
-    return res.end();
-  }
-
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  const path = url.pathname;
-
+  if (req.method === 'OPTIONS') return json(res, {});
+  const path = req.url.split('?')[0];
+  const params = qp(req.url);
   try {
-    // ---- HEALTH CHECK ----
-    if (path === '/health' || path === '/') {
-      return sendJSON(res, 200, {
-        status: 'online',
-        service: 'bleu-system',
-        engine: 'Safety Check Engine v1.0',
-        version: '1.0.0',
-        endpoints: [
-          'POST /api/safety-check',
-          'POST /api/chat',
-          'GET /api/rxnorm/:drug',
-          'GET /api/fda/labels/:drug',
-          'GET /api/fda/events/:drug',
-          'GET /api/pubmed/:query',
-          'GET /api/npi/:zip',
-          'GET /api/air/:zip',
-          'GET /api/cpic/:drug',
-          'GET /api/dailymed/:drug',
-          'GET /api/trials/:query'
-        ],
-        substances_in_db: Object.keys(PHARMACOLOGY_DB).length,
-        timestamp: new Date().toISOString()
-      });
-    }
-
-    // ---- SAFETY CHECK ENGINE (THE BEAST) ----
-    if (path === '/api/safety-check' && req.method === 'POST') {
-      const body = await parseBody(req);
-      const substances = body.substances || [];
-      const zip = body.zip || null;
-
-      if (!substances.length) {
-        return sendJSON(res, 400, { error: 'Provide "substances" array, e.g. ["cbd", "warfarin", "turmeric"]' });
-      }
-
-      // Run 5-layer engine
-      const engineResult = runSafetyEngine(substances);
-
-      // Fire external APIs in parallel
-      const apiCalls = [];
-
-      // RxNorm for each substance
-      for (const sub of substances) {
-        apiCalls.push(rxnormLookup(sub).then(r => ({ type: 'rxnorm', data: r })));
-      }
-
-      // FDA labels for pharmaceuticals
-      for (const sub of substances) {
-        const normalized = sub.toLowerCase().replace(/\s+/g, '-');
-        const profile = PHARMACOLOGY_DB[normalized];
-        if (profile && profile.category === 'pharmaceutical') {
-          apiCalls.push(fdaLabelLookup(sub).then(r => ({ type: 'fda_label', data: r })));
-          apiCalls.push(fdaAdverseEvents(sub).then(r => ({ type: 'fda_events', data: r })));
-        }
-      }
-
-      // PubMed for interaction combos
-      if (substances.length >= 2) {
-        const query = substances.slice(0, 3).join(' AND ') + ' interaction';
-        apiCalls.push(pubmedSearch(query).then(r => ({ type: 'pubmed', data: r })));
-      }
-
-      // ClinicalTrials for combo
-      if (substances.length >= 2) {
-        const query = substances.slice(0, 2).join(' ');
-        apiCalls.push(clinicalTrialsSearch(query).then(r => ({ type: 'clinical_trials', data: r })));
-      }
-
-      // CPIC for pharmaceuticals
-      for (const sub of substances) {
-        const normalized = sub.toLowerCase().replace(/\s+/g, '-');
-        const profile = PHARMACOLOGY_DB[normalized];
-        if (profile && profile.category === 'pharmaceutical') {
-          apiCalls.push(cpicLookup(sub).then(r => ({ type: 'cpic', data: r })));
-        }
-      }
-
-      // Air quality if ZIP provided
-      if (zip) {
-        apiCalls.push(airQualityLookup(zip).then(r => ({ type: 'air_quality', data: r })));
-        apiCalls.push(npiLookup(zip).then(r => ({ type: 'practitioners', data: r })));
-      }
-
-      // Wait for all APIs
-      const apiResults = await Promise.allSettled(apiCalls);
-      const externalData = {};
-      for (const result of apiResults) {
-        if (result.status === 'fulfilled' && result.value) {
-          const { type, data } = result.value;
-          if (!externalData[type]) externalData[type] = [];
-          externalData[type].push(data);
-        }
-      }
-
-      return sendJSON(res, 200, {
-        engine: engineResult,
-        external_data: externalData,
-        apis_called: apiCalls.length,
-        timestamp: new Date().toISOString()
-      });
-    }
-
-    // ---- ALVAI CHAT (Claude-powered) ----
-    if (path === '/api/chat' && req.method === 'POST') {
-      const body = await parseBody(req);
-      const userMessage = body.message || body.content || '';
-      const apiKey = process.env.CLAUDE_API_KEY;
-
-      if (!apiKey) {
-        return sendJSON(res, 500, { error: 'CLAUDE_API_KEY not configured' });
-      }
-
-      const claudeResponse = await httpsPost('https://api.anthropic.com/v1/messages', {
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1024,
-        system: 'You are Alvai, the AI wellness assistant for bleu.live — the Google of Wellness. You help users understand drug interactions, find practitioners, check environmental health, and navigate their wellness journey. You are warm, knowledgeable, and always remind users to consult their healthcare provider. You were created by Bleu and Dr. Felicia.',
-        messages: [{ role: 'user', content: userMessage }]
-      }, {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      });
-
-      return sendJSON(res, 200, {
-        response: claudeResponse?.content?.[0]?.text || 'Alvai is thinking...',
-        model: 'alvai-v1'
-      });
-    }
-
-    // ---- INDIVIDUAL API ENDPOINTS ----
-
-    // RxNorm lookup
-    const rxMatch = path.match(/^\/api\/rxnorm\/(.+)$/);
-    if (rxMatch && req.method === 'GET') {
-      const result = await rxnormLookup(decodeURIComponent(rxMatch[1]));
-      return sendJSON(res, 200, result);
-    }
-
-    // FDA Labels
-    const fdaLabelMatch = path.match(/^\/api\/fda\/labels\/(.+)$/);
-    if (fdaLabelMatch && req.method === 'GET') {
-      const result = await fdaLabelLookup(decodeURIComponent(fdaLabelMatch[1]));
-      return sendJSON(res, 200, result);
-    }
-
-    // FDA Adverse Events
-    const fdaEventsMatch = path.match(/^\/api\/fda\/events\/(.+)$/);
-    if (fdaEventsMatch && req.method === 'GET') {
-      const result = await fdaAdverseEvents(decodeURIComponent(fdaEventsMatch[1]));
-      return sendJSON(res, 200, result);
-    }
-
-    // PubMed search
-    const pubmedMatch = path.match(/^\/api\/pubmed\/(.+)$/);
-    if (pubmedMatch && req.method === 'GET') {
-      const result = await pubmedSearch(decodeURIComponent(pubmedMatch[1]));
-      return sendJSON(res, 200, result);
-    }
-
-    // Clinical Trials
-    const trialsMatch = path.match(/^\/api\/trials\/(.+)$/);
-    if (trialsMatch && req.method === 'GET') {
-      const result = await clinicalTrialsSearch(decodeURIComponent(trialsMatch[1]));
-      return sendJSON(res, 200, result);
-    }
-
-    // NPI Practitioner lookup
-    const npiMatch = path.match(/^\/api\/npi\/(.+)$/);
-    if (npiMatch && req.method === 'GET') {
-      const zip = decodeURIComponent(npiMatch[1]);
-      const taxonomy = url.searchParams.get('specialty') || null;
-      const result = await npiLookup(zip, taxonomy);
-      return sendJSON(res, 200, result);
-    }
-
-    // Air Quality
-    const airMatch = path.match(/^\/api\/air\/(.+)$/);
-    if (airMatch && req.method === 'GET') {
-      const result = await airQualityLookup(decodeURIComponent(airMatch[1]));
-      return sendJSON(res, 200, result);
-    }
-
-    // CPIC Gene-Drug
-    const cpicMatch = path.match(/^\/api\/cpic\/(.+)$/);
-    if (cpicMatch && req.method === 'GET') {
-      const result = await cpicLookup(decodeURIComponent(cpicMatch[1]));
-      return sendJSON(res, 200, result);
-    }
-
-    // DailyMed
-    const dailymedMatch = path.match(/^\/api\/dailymed\/(.+)$/);
-    if (dailymedMatch && req.method === 'GET') {
-      const result = await dailymedLookup(decodeURIComponent(dailymedMatch[1]));
-      return sendJSON(res, 200, result);
-    }
-
-    // ---- 404 ----
-    sendJSON(res, 404, { error: 'Not found', available_endpoints: ['GET /health', 'POST /api/safety-check', 'POST /api/chat', 'GET /api/rxnorm/:drug', 'GET /api/fda/labels/:drug', 'GET /api/fda/events/:drug', 'GET /api/pubmed/:query', 'GET /api/trials/:query', 'GET /api/npi/:zip', 'GET /api/air/:zip', 'GET /api/cpic/:drug', 'GET /api/dailymed/:drug'] });
-
-  } catch (err) {
-    console.error('Server error:', err);
-    sendJSON(res, 500, { error: 'Internal server error', message: err.message });
-  }
+    // Health
+    if (path === '/health') { const kc=Object.entries(KEYS).filter(([k,v])=>v&&k!=='amazon').length; return json(res, { status:'ok', version:'2.0', engine:'BLEU.live Full Deck', api_keys:kc, substances:Object.keys(PHARMA_DB).length, cities:TARGET_CITIES.length, pipeline_cycle:pipelineCycle, uptime:process.uptime() }); }
+    // Chat
+    if (path==='/api/chat'&&req.method==='POST') { const b=JSON.parse(await getBody(req)); return json(res, await alvaiChat(b.message||b.query||'')); }
+    // Safety Check
+    if (path==='/api/safety-check') { const s=params.substances?params.substances.split(',').map(x=>x.trim()):[]; if(!s.length) return json(res,{error:'?substances=cbd,sertraline'},400); return json(res, runSafetyEngine(s)); }
+    if (path==='/api/safety-check'&&req.method==='POST') { const b=JSON.parse(await getBody(req)); return json(res, runSafetyEngine(b.substances||[])); }
+    // Drug/Pharma
+    if (path.match(/^\/api\/rxnorm\/(.+)/)) return json(res, await queryRxNorm(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/pubmed\/(.+)/)) return json(res, await queryPubMed(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/dailymed\/(.+)/)) return json(res, await queryDailyMed(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/cpic\/(.+)/)) return json(res, await queryCPIC(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/fda\/labels\/(.+)/)) return json(res, await queryFDALabels(decodeURIComponent(path.split('/')[4])));
+    if (path.match(/^\/api\/fda\/events\/(.+)/)) return json(res, await queryFDAEvents(decodeURIComponent(path.split('/')[4])));
+    if (path.match(/^\/api\/fda\/recalls\/(.+)/)) return json(res, await queryFDARecalls(decodeURIComponent(path.split('/')[4])));
+    // Practitioners
+    if (path.match(/^\/api\/npi\/(.+)/)) return json(res, await queryNPI(decodeURIComponent(path.split('/')[3]), params.city, params.state));
+    if (path.match(/^\/api\/practitioners\/(.+)\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await getPractitioners(decodeURIComponent(p[3]),decodeURIComponent(p[4]),decodeURIComponent(p[5]))); }
+    // Clinical
+    if (path.match(/^\/api\/trials\/(.+)/)) return json(res, await queryClinicalTrials(decodeURIComponent(path.split('/')[3]), params.city));
+    if (path.match(/^\/api\/samhsa\/(.+)/)) return json(res, await querySAMHSA(decodeURIComponent(path.split('/')[3])));
+    // Nutrition
+    if (path.match(/^\/api\/usda\/(.+)/)) return json(res, await queryUSDAFood(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/food\/(.+)/)) return json(res, await queryOpenFoodFacts(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/recipes\/(.+)/)) return json(res, await querySpoonacular(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/nutrition\/(.+)/)) return json(res, await queryEdamam(decodeURIComponent(path.split('/')[3])));
+    // Environment
+    if (path.match(/^\/api\/weather\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryWeather(p[3],p[4])); }
+    if (path.match(/^\/api\/air\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryAirQuality(p[3],p[4])); }
+    if (path.match(/^\/api\/uv\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryUV(p[3],p[4])); }
+    if (path.match(/^\/api\/pollen\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryGooglePollen(p[3],p[4])); }
+    if (path.match(/^\/api\/environment\/(.+)\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await getEnvironment(p[3],p[4],p[5])); }
+    // Places
+    if (path.match(/^\/api\/places\/(.+)/)) return json(res, await queryGooglePlaces(decodeURIComponent(path.split('/')[3]), params.lat, params.lng));
+    if (path.match(/^\/api\/yelp\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryYelp(decodeURIComponent(p[3]),decodeURIComponent(p[4]))); }
+    if (path.match(/^\/api\/foursquare\/(.+)/)) return json(res, await queryFoursquare(decodeURIComponent(path.split('/')[3]), params.lat, params.lng));
+    if (path.match(/^\/api\/events\/(.+)\/(.+)/)) { const p=path.split('/'); return json(res, await queryEventbrite(decodeURIComponent(p[3]),decodeURIComponent(p[4]))); }
+    // Content
+    if (path.match(/^\/api\/podcasts\/(.+)/)) return json(res, await queryListenNotes(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/books\/(.+)/)) return json(res, await queryOpenLibrary(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/exercises\/(.+)/)) return json(res, await queryWger(decodeURIComponent(path.split('/')[3])));
+    // Location
+    if (path.match(/^\/api\/parks\/(.+)/)) return json(res, await queryNPS(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/walkscore\/(.+)/)) return json(res, await queryWalkScore(decodeURIComponent(path.split('/').slice(3).join('/'))));
+    if (path.match(/^\/api\/census\/(.+)/)) return json(res, await queryCensus(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/cannabis\/(.+)/)) return json(res, await queryCannlytics(decodeURIComponent(path.split('/')[3])));
+    // Composites
+    if (path.match(/^\/api\/city-score\/(.+)/)) return json(res, await getCityScore(decodeURIComponent(path.split('/')[3])));
+    if (path.match(/^\/api\/condition\/(.+)/)) return json(res, await getConditionBrief(decodeURIComponent(path.split('/')[3])));
+    // CDC/Health
+    if (path.match(/^\/api\/cdc\/(.+)/)) return json(res, await queryCDCPlaces(decodeURIComponent(path.split('/')[3])));
+    // Pipeline
+    if (path==='/api/pipeline/run'&&req.method==='POST') { if(pipelineRunning) return json(res,{status:'already_running'}); pipelineRunning=true; const n=await runPipeline(pipelineCycle++); pipelineRunning=false; return json(res,{status:'complete',found:n}); }
+    if (path==='/api/pipeline/status') return json(res, { running:pipelineRunning, cycle:pipelineCycle, next_city:TARGET_CITIES[pipelineCycle%TARGET_CITIES.length]?.name });
+    // Lists
+    if (path==='/api/substances') return json(res, { count:Object.keys(PHARMA_DB).length, substances:Object.entries(PHARMA_DB).map(([k,v])=>({ name:k, class:v.class, schedule:v.schedule, nti:v.nti })) });
+    if (path==='/api/cities') return json(res, { count:TARGET_CITIES.length, cities:TARGET_CITIES });
+    if (path==='/api/conditions') return json(res, { count:CONDITIONS.length, conditions:CONDITIONS });
+    // 404
+    json(res, { error:'Not found', hint:'/health for endpoints' }, 404);
+  } catch(e) { log('SERVER',`Error: ${e.message}`); json(res,{error:e.message},500); }
 });
 
+// ═══ START ═══
 server.listen(PORT, () => {
-  console.log(`
-╔═══════════════════════════════════════════════════╗
-║         🔵 BLEU.LIVE — Safety Check Engine        ║
-║               v1.0 — THE BEAST                    ║
-╠═══════════════════════════════════════════════════╣
-║  Port: ${PORT}                                      ║
-║  Substances: ${Object.keys(PHARMACOLOGY_DB).length} in pharmacology DB              ║
-║  Layers: CYP450 + UGT + Transporters + PD + NTI  ║
-║  APIs: RxNorm, OpenFDA, PubMed, CPIC, DailyMed,  ║
-║        ClinicalTrials, NPI, AirNow                ║
-╠═══════════════════════════════════════════════════╣
-║  POST /api/safety-check  ← THE BEAST             ║
-║  POST /api/chat          ← Alvai                  ║
-║  GET  /api/rxnorm/:drug                           ║
-║  GET  /api/fda/labels/:drug                       ║
-║  GET  /api/fda/events/:drug                       ║
-║  GET  /api/pubmed/:query                          ║
-║  GET  /api/trials/:query                          ║
-║  GET  /api/npi/:zip                               ║
-║  GET  /api/air/:zip                               ║
-║  GET  /api/cpic/:drug                             ║
-║  GET  /api/dailymed/:drug                         ║
-╚═══════════════════════════════════════════════════╝
-  `);
+  const kc = Object.entries(KEYS).filter(([k,v])=>v&&k!=='amazon').length;
+  log('SERVER', '═══════════════════════════════════════════');
+  log('SERVER', '  BLEU.LIVE ENGINE v2.0 — FULL DECK');
+  log('SERVER', `  Port: ${PORT} | Keys: ${kc} | Substances: ${Object.keys(PHARMA_DB).length}`);
+  log('SERVER', `  Cities: ${TARGET_CITIES.length} | Conditions: ${CONDITIONS.length}`);
+  log('SERVER', '  Pipeline: Every 30 min, cycling all cities');
+  log('SERVER', '═══════════════════════════════════════════');
+  startScheduler();
 });
