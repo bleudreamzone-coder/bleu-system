@@ -121,6 +121,13 @@ try { seo = require('./seo-engine')({ sb, ENV, fetchJSON, log }); log('SEO', 'SE
 catch (e) { log('SEO', `SEO Engine not loaded: ${e.message}`); }
 
 // ═══════════════════════════════════════════════════════════════
+// AUTONOMOUS ENGINE — Content factory, events, Google, research, protocols, ZIP, media
+// ═══════════════════════════════════════════════════════════════
+let auto = null;
+try { auto = require('./autonomous-engine')({ sb, ENV, fetchJSON, log, PHARMA_DB, TARGET_CITIES }); log('AUTO', 'Autonomous Engine loaded'); }
+catch (e) { log('AUTO', `Autonomous Engine not loaded: ${e.message}`); }
+
+// ═══════════════════════════════════════════════════════════════
 // PHARMACOLOGY DATABASE — 54 substances, 5 layers
 // ═══════════════════════════════════════════════════════════════
 const PHARMA_DB = {
@@ -527,13 +534,14 @@ const server = http.createServer(async (req, res) => {
     if (path === '/' || path === '/health') {
       const practCount = await sb.count('practitioners');
       return sendJSON(res, 200, {
-        status: 'BLEU.LIVE ENGINE v3.1 — ONLINE',
+        status: 'BLEU.LIVE ENGINE v3.2 — ONLINE',
         uptime: process.uptime(),
         services: {
           safety_engine: `${Object.keys(PHARMA_DB).length} substances, 5 layers`,
           claude_ai: ENV.claude ? 'CONNECTED' : 'NO KEY',
           supabase: ENV.sbUrl ? 'CONNECTED' : 'NO CONFIG',
           seo_engine: seo ? 'LOADED — generating pages' : 'NOT LOADED',
+          autonomous_engine: auto ? 'RUNNING — 7 subsystems 24/7' : 'NOT LOADED',
           pipeline: `Cycle ${pipelineCycle}, ${TARGET_CITIES.length} cities, ${PRACTITIONER_TYPES.length} types`,
           practitioners_in_db: practCount,
         },
@@ -684,6 +692,11 @@ const server = http.createServer(async (req, res) => {
       });
     }
 
+    // ── AUTONOMOUS ENGINE STATUS ──
+    if (path === '/api/autonomous') {
+      return sendJSON(res, 200, auto ? auto.getStatus() : { status: 'NOT LOADED' });
+    }
+
     // ── SEO PAGES — city hubs, specialty listings, practitioner profiles ──
     if (seo) {
       const seoResult = await seo.handleRoute(path);
@@ -708,11 +721,12 @@ const server = http.createServer(async (req, res) => {
 // ═══════════════════════════════════════════════════════════════
 server.listen(PORT, () => {
   log('SERVER', `═══════════════════════════════════════════════`);
-  log('SERVER', `  BLEU.LIVE ENGINE v3.1 — PORT ${PORT}`);
+  log('SERVER', `  BLEU.LIVE ENGINE v3.2 — PORT ${PORT}`);
   log('SERVER', `  Safety Engine: ${Object.keys(PHARMA_DB).length} substances, 5 layers`);
   log('SERVER', `  Claude AI: ${ENV.claude ? 'CONNECTED' : 'NO KEY'}`);
   log('SERVER', `  Supabase: ${ENV.sbUrl ? 'CONNECTED' : 'NO CONFIG'}`);
   log('SERVER', `  SEO Engine: ${seo ? 'LOADED' : 'NOT LOADED'}`);
+  log('SERVER', `  Autonomous: ${auto ? 'LOADED — 7 subsystems' : 'NOT LOADED'}`);
   log('SERVER', `  Pipeline: ${TARGET_CITIES.length} cities × ${PRACTITIONER_TYPES.length} types`);
   log('SERVER', `═══════════════════════════════════════════════`);
 
@@ -723,5 +737,12 @@ server.listen(PORT, () => {
     setInterval(() => runPipelineCycle(), 30 * 60 * 1000);
   } else {
     log('SCHEDULER', 'No Supabase config — pipeline disabled');
+  }
+
+  // Start autonomous engine — content, events, Google, research, protocols, ZIP, media
+  if (auto && ENV.sbUrl && ENV.claude) {
+    auto.start();
+  } else {
+    log('AUTO', 'Autonomous Engine not started — missing Supabase or Claude config');
   }
 });
