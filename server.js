@@ -120,12 +120,7 @@ let seo = null;
 try { seo = require('./seo-engine')({ sb, ENV, fetchJSON, log }); log('SEO', 'SEO Engine loaded'); }
 catch (e) { log('SEO', `SEO Engine not loaded: ${e.message}`); }
 
-// ═══════════════════════════════════════════════════════════════
-// AUTONOMOUS ENGINE — Content factory, events, Google, research, protocols, ZIP, media
-// ═══════════════════════════════════════════════════════════════
-let auto = null;
-try { auto = require('./autonomous-engine')({ sb, ENV, fetchJSON, log, PHARMA_DB, TARGET_CITIES }); log('AUTO', 'Autonomous Engine loaded'); }
-catch (e) { log('AUTO', `Autonomous Engine not loaded: ${e.message}`); }
+// Autonomous Engine loaded after PHARMA_DB and TARGET_CITIES are defined (see below)
 
 // ═══════════════════════════════════════════════════════════════
 // PHARMACOLOGY DATABASE — 54 substances, 5 layers
@@ -394,6 +389,14 @@ const PRACTITIONER_TYPES = [
   'Physical Therapist', 'Occupational Therapist', 'Nurse Practitioner',
   'Physician Assistant', 'Yoga Therapist',
 ];
+
+// ═══════════════════════════════════════════════════════════════
+// AUTONOMOUS ENGINE — Content factory, events, Google, research, protocols, ZIP, media
+// (Loaded here because it needs PHARMA_DB and TARGET_CITIES)
+// ═══════════════════════════════════════════════════════════════
+let auto = null;
+try { auto = require('./autonomous-engine')({ sb, ENV, fetchJSON, log, PHARMA_DB, TARGET_CITIES }); log('AUTO', 'Autonomous Engine loaded'); }
+catch (e) { log('AUTO', `Autonomous Engine not loaded: ${e.message}`); }
 
 let pipelineCycle = 0;
 let pipelineRunning = false;
