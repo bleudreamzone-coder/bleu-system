@@ -1,9 +1,8 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//  BLEU.LIVE ENGINE v3.0 — FULL BACKEND
+//  BLEU.LIVE ENGINE v3.1 — FULL BACKEND + SEO ENGINE
 //  Safety Engine (54 substances, 5 layers) | NPI Pipeline (20 cities)
-//  Supabase Storage | Claude AI Chat | 24/7 Scheduler | API Proxies
+//  SEO Page Generator | Supabase | Claude AI Chat | 24/7 Scheduler | API Proxies
 //  Zero dependencies — pure Node.js
-//  Deploy: replace server.js → git add -A && git commit -m "v3" && git push
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const http = require('http');
@@ -113,6 +112,13 @@ const sb = {
     } catch { return 0; }
   }
 };
+
+// ═══════════════════════════════════════════════════════════════
+// SEO ENGINE — Content generation & page serving
+// ═══════════════════════════════════════════════════════════════
+let seo = null;
+try { seo = require('./seo-engine')({ sb, ENV, fetchJSON, log }); log('SEO', 'SEO Engine loaded'); }
+catch (e) { log('SEO', `SEO Engine not loaded: ${e.message}`); }
 
 // ═══════════════════════════════════════════════════════════════
 // PHARMACOLOGY DATABASE — 54 substances, 5 layers
@@ -439,6 +445,12 @@ async function runPipelineCycle() {
   }]);
 
   log('PIPELINE', `═══ ${city.name} complete: ${totalFound} practitioners ═══`);
+
+  // Generate SEO pages for this city
+  if (seo && totalFound > 0) {
+    seo.afterPipelineCycle(city).catch(e => log('SEO', `Page gen error: ${e.message}`));
+  }
+
   pipelineCycle++;
   pipelineRunning = false;
 }
@@ -475,6 +487,20 @@ function sendJSON(res, code, data) {
   res.end(JSON.stringify(data));
 }
 
+function sendHTML(res, code, html) {
+  res.writeHead(code, {
+    'Content-Type': 'text/html; charset=utf-8',
+    'Cache-Control': 'public, max-age=3600',
+    'Access-Control-Allow-Origin': '*'
+  });
+  res.end(html);
+}
+
+function sendText(res, code, text, type) {
+  res.writeHead(code, { 'Content-Type': type || 'text/plain' });
+  res.end(text);
+}
+
 function getBody(req) {
   return new Promise((resolve) => {
     let body = '';
@@ -501,12 +527,13 @@ const server = http.createServer(async (req, res) => {
     if (path === '/' || path === '/health') {
       const practCount = await sb.count('practitioners');
       return sendJSON(res, 200, {
-        status: 'BLEU.LIVE ENGINE v3.0 — ONLINE',
+        status: 'BLEU.LIVE ENGINE v3.1 — ONLINE',
         uptime: process.uptime(),
         services: {
           safety_engine: `${Object.keys(PHARMA_DB).length} substances, 5 layers`,
           claude_ai: ENV.claude ? 'CONNECTED' : 'NO KEY',
           supabase: ENV.sbUrl ? 'CONNECTED' : 'NO CONFIG',
+          seo_engine: seo ? 'LOADED — generating pages' : 'NOT LOADED',
           pipeline: `Cycle ${pipelineCycle}, ${TARGET_CITIES.length} cities, ${PRACTITIONER_TYPES.length} types`,
           practitioners_in_db: practCount,
         },
@@ -527,6 +554,14 @@ const server = http.createServer(async (req, res) => {
           'GET  /api/practitioners?city=Austin&state=TX',
           'GET  /api/substances',
           'GET  /api/stats',
+          '── SEO PAGES ──',
+          'GET  /cities                        — All cities index',
+          'GET  /new-orleans                   — City wellness hub',
+          'GET  /new-orleans/psychologist      — City + specialty listing',
+          'GET  /practitioner/1234567890       — Practitioner profile',
+          'GET  /safety-check                  — Interactive safety page',
+          'GET  /sitemap.xml                   — Google sitemap',
+          'GET  /robots.txt                    — Crawler instructions',
         ]
       });
     }
@@ -649,6 +684,16 @@ const server = http.createServer(async (req, res) => {
       });
     }
 
+    // ── SEO PAGES — city hubs, specialty listings, practitioner profiles ──
+    if (seo) {
+      const seoResult = await seo.handleRoute(path);
+      if (seoResult) {
+        if (seoResult.type === 'html') return sendHTML(res, 200, seoResult.content);
+        if (seoResult.type === 'xml') return sendText(res, 200, seoResult.content, 'application/xml');
+        if (seoResult.type === 'text') return sendText(res, 200, seoResult.content, 'text/plain');
+      }
+    }
+
     // ── 404 ──
     sendJSON(res, 404, { error: 'Not found', hint: 'Try / for all endpoints' });
 
@@ -663,10 +708,11 @@ const server = http.createServer(async (req, res) => {
 // ═══════════════════════════════════════════════════════════════
 server.listen(PORT, () => {
   log('SERVER', `═══════════════════════════════════════════════`);
-  log('SERVER', `  BLEU.LIVE ENGINE v3.0 — PORT ${PORT}`);
+  log('SERVER', `  BLEU.LIVE ENGINE v3.1 — PORT ${PORT}`);
   log('SERVER', `  Safety Engine: ${Object.keys(PHARMA_DB).length} substances, 5 layers`);
   log('SERVER', `  Claude AI: ${ENV.claude ? 'CONNECTED' : 'NO KEY'}`);
   log('SERVER', `  Supabase: ${ENV.sbUrl ? 'CONNECTED' : 'NO CONFIG'}`);
+  log('SERVER', `  SEO Engine: ${seo ? 'LOADED' : 'NOT LOADED'}`);
   log('SERVER', `  Pipeline: ${TARGET_CITIES.length} cities × ${PRACTITIONER_TYPES.length} types`);
   log('SERVER', `═══════════════════════════════════════════════`);
 
