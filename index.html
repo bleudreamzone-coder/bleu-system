@@ -390,7 +390,8 @@ async function loadData(){
   var t=C.p+C.pr+C.l+C.yt+C.st;
   document.getElementById('st-total').textContent=t.toLocaleString();document.getElementById('st-prac').textContent=C.p.toLocaleString();document.getElementById('st-loc').textContent=C.l.toLocaleString();document.getElementById('st-prod').textContent=C.pr;document.getElementById('dc').textContent=C.p.toLocaleString();document.getElementById('vc').textContent=C.pr;document.getElementById('ytc').textContent=C.yt;document.getElementById('stc').textContent=C.st;
   document.getElementById('alvai-st').textContent='Connected · '+t.toLocaleString()+' data points · '+C.p.toLocaleString()+' practitioners';
-  rDir();rProd();rFeatProd();rYT();rST();rSpecFilters();rValidation();
+  zones[0].p=C.p;zones[0].l=C.l;rZones();
+  rDir();rProd();rFeatProd();rYT();rST();rSpecFilters();rValidation();rFeed();
 }
 
 // ═══ 12 SHIELDS ═══
@@ -420,10 +421,11 @@ rEvents();
 
 // ═══ COMMUNITY ═══
 var stories=[];
-var feedItems=[{t:'now',m:'\ud83d\udfe2 System online. Supabase connected.',h:'BLEU'},{t:'now',m:'\ud83c\udfc5 '+C.p+' practitioners validated via NPI',h:'Directory'},{t:'now',m:'\ud83d\udc8a '+C.pr+' products filtered and scored',h:'Vessel'},{t:'now',m:'\ud83d\udcda '+C.st+' PubMed studies indexed',h:'Learn'},{t:'now',m:'\ud83d\udcf9 '+C.yt+' YouTube videos cataloged',h:'Learn'},{t:'now',m:'\ud83d\udd25 40-Day Reset launches Feb 18',h:'NOLA'},{t:'soon',m:'\ud83d\udc65 Community tracking begins with first check-in',h:'Coming'},{t:'soon',m:'\ud83c\udfdb\ufe0f Zone scoring activates with member data',h:'Coming'}];
+function mkFeed(){return[{t:'now',m:'\ud83d\udfe2 System online \u00b7 Supabase connected',h:'BLEU'},{t:'now',m:'\ud83c\udfc5 '+C.p.toLocaleString()+' practitioners validated via NPI',h:'Directory'},{t:'now',m:'\ud83d\udc8a '+C.pr+' products filtered and scored',h:'Vessel'},{t:'now',m:'\ud83d\udcda '+C.st+' PubMed studies indexed',h:'Learn'},{t:'now',m:'\ud83d\udcf9 '+C.yt+' YouTube videos cataloged',h:'Learn'},{t:'now',m:'\ud83d\udd25 40-Day Reset launches Feb 18',h:'NOLA'},{t:'soon',m:'\ud83d\udc65 Community tracking begins with first check-in',h:'Coming'},{t:'soon',m:'\ud83c\udfdb\ufe0f Zone scoring activates with member data',h:'Coming'}]}
 function rF(el,items,n){document.getElementById(el).innerHTML=items.slice(0,n).map(function(f){return'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b1)"><div style="flex:1"><div style="font-size:12px;color:var(--cream)">'+f.m+'</div><div style="font-family:var(--fm);font-size:7px;color:var(--fade);margin-top:1px">'+f.h+' · '+f.t+'</div></div></div>'}).join('')}
 function rS(el){if(!stories.length){document.getElementById(el).innerHTML='<div class="card tc" style="grid-column:span 3;border:1px dashed var(--b2)"><div style="font-size:28px;margin-bottom:10px">\ud83d\udcdd</div><div style="font-family:var(--fm);font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">REAL STORIES COMING</div><p style="font-size:12px;color:var(--fade);line-height:1.7">Community stories will appear here as participants share their 40-Day Reset experiences. No fictional testimonials.</p></div>';return}document.getElementById(el).innerHTML=stories.map(function(s){return'<div class="card"><div style="font-size:14px;font-weight:500">'+s.name+'</div><p style="font-size:12px;color:var(--warm)">'+s.q+'</p></div>'}).join('')}
-rF('home-feed',feedItems,5);rF('comm-feed',feedItems,10);rS('comm-stories');
+function rFeed(){var fi=mkFeed();rF('home-feed',fi,5);rF('comm-feed',fi,10);rS('comm-stories')}
+rFeed();
 document.getElementById('home-events').innerHTML=events.slice(0,4).map(function(e){return'<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1)"><span style="font-size:16px">'+e.i+'</span><div style="flex:1"><div style="font-size:12px">'+e.t+'</div><div style="font-family:var(--fm);font-size:8px;color:var(--fade)">'+e.d+' · '+e.loc+'</div></div><span style="font-family:var(--fm);font-size:8px;color:'+e.c+'">'+'\u2192'+'</span></div>'}).join('');
 
 // ═══ ZONES ═══
