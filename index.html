@@ -273,25 +273,74 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
 
 <footer><div style="font-family:var(--ff);font-size:24px;letter-spacing:12px;font-weight:200;margin-bottom:8px">BLEU</div><div style="font-family:var(--fm);font-size:9px;color:var(--fade);letter-spacing:3px;margin-bottom:12px">THE LONGEVITY OPERATING SYSTEM · PATENT PENDING</div><div style="font-size:10px;color:rgba(255,255,255,.1)">Free for Users · Built for Communities · Powered by 27 Years in the Field</div><div style="font-size:9px;color:rgba(255,255,255,.07);margin-top:6px">© 2026 bleu.live · <a href="https://neworleans.bleu.live" style="color:var(--teal);text-decoration:none">neworleans.bleu.live</a></div></footer>
 
+
 <script>
 // ═══ SUPABASE ═══
 var SB='https://sqyzboesdpdussiwqpzk.supabase.co',SK='sb_publishable_TF6vZ_gvSHlxuVBnsDIbnw_qFJCuGjO',SH={'apikey':SK,'Authorization':'Bearer '+SK};
-var P=[],PR=[],YT=[],ST=[],C={p:0,pr:0,l:0,yt:0,st:0};
+var P=[],PR=[],YT=[],ST=[],LOC=[],C={p:0,pr:0,l:0,yt:0,st:0};
 async function sf(t,x){try{var r=await fetch(SB+'/rest/v1/'+t+'?select=*'+(x||'')+'&limit=50',{headers:Object.assign({},SH,{Prefer:'count=exact',Range:'0-49'})});var c=parseInt((r.headers.get('content-range')||'*/0').split('/')[1])||0;var d=await r.json();return{d:Array.isArray(d)?d:[],c:c}}catch(e){return{d:[],c:0}}}
+
+// ═══ SMART FIELD DETECTION ═══
+function gf(obj,names,fallback){for(var i=0;i<names.length;i++){var k=names[i];if(obj[k]&&String(obj[k]).trim()&&String(obj[k]).trim()!=='null')return String(obj[k]).trim()}return fallback||''}
+
+// ═══ LIVE TRUST SCORE CALCULATION ═══
+function calcPracScore(p){
+  var s=50;
+  if(gf(p,['npi','npi_number']))s+=12;
+  if(gf(p,['taxonomy_description','taxonomy','specialty','provider_type']))s+=10;
+  if(gf(p,['city','provider_business_practice_location_address_city_name']))s+=5;
+  if(gf(p,['state','provider_business_practice_location_address_state_name']))s+=3;
+  if(gf(p,['phone','provider_business_practice_location_address_telephone_number']))s+=4;
+  if(gf(p,['address','provider_first_line_business_practice_location_address']))s+=4;
+  if(gf(p,['zip','provider_business_practice_location_address_postal_code']))s+=2;
+  if(gf(p,['full_name','provider_name','name','organization_name','provider_organization_name']))s+=5;
+  if(gf(p,['credential','provider_credential_text']))s+=5;
+  return Math.min(s,99);
+}
+function calcProdScore(p){
+  var s=35;
+  if(gf(p,['brand','brand_name','manufacturer_name','labeler_name']))s+=15;
+  if(gf(p,['category','product_type','pharm_class']))s+=10;
+  if(gf(p,['name','proprietary_name','product_name']))s+=8;
+  if(gf(p,['description','substance_name','active_ingredients']))s+=7;
+  if(gf(p,['url_amazon','amazon_url','buy_url']))s+=10;
+  if(gf(p,['dosage_form','dosage_form_name','route']))s+=5;
+  return Math.min(s,99);
+}
+
+// ═══ PRODUCT FILTER (remove garbage) ═══
+var junkWords=['wart','fungal','corn remover','lice','hemorrhoid','suppository','enema','douche','condom','pregnancy test','catheter','bandage','gauze','syringe'];
+function isWellnessProd(p){
+  var n=String(gf(p,['name','proprietary_name','product_name','brand_name'])||'').toLowerCase();
+  for(var i=0;i<junkWords.length;i++){if(n.includes(junkWords[i]))return false}
+  return true;
+}
+
 async function loadData(){
   var r=await Promise.all([sf('practitioners','&order=trust_score.desc'),sf('products','&order=trust_score.desc'),sf('locations'),sf('youtube_videos','&order=view_count.desc'),sf('pubmed_studies')]);
-  P=r[0].d;PR=r[1].d;YT=r[2].d;ST=r[3].d;C={p:r[0].c||200,pr:r[1].c||146,l:r[2].c||1212,yt:r[3].c||24,st:r[4].c||70};
+  P=r[0].d;PR=r[1].d.filter(isWellnessProd);LOC=r[2].d;YT=r[3].d;ST=r[4].d;
+  C={p:r[0].c||200,pr:r[1].c||146,l:r[2].c||1212,yt:r[3].c||24,st:r[4].c||70};
+  // Log field names for debugging
+  if(P[0])console.log('PRAC FIELDS:',Object.keys(P[0]));
+  if(PR[0])console.log('PROD FIELDS:',Object.keys(PR[0]));
+  if(YT[0])console.log('VIDEO FIELDS:',Object.keys(YT[0]));
+  if(ST[0])console.log('STUDY FIELDS:',Object.keys(ST[0]));
+  // Calculate live trust scores
+  P.forEach(function(p){p._score=calcPracScore(p)});
+  P.sort(function(a,b){return b._score-a._score});
+  PR.forEach(function(p){p._score=calcProdScore(p)});
+  PR.sort(function(a,b){return b._score-a._score});
   var t=C.p+C.pr+C.l+C.yt+C.st;
-  document.getElementById('st-total').textContent=t.toLocaleString();document.getElementById('st-prac').textContent=C.p;document.getElementById('st-loc').textContent=C.l.toLocaleString();document.getElementById('st-prod').textContent=C.pr;document.getElementById('dc').textContent=C.p;document.getElementById('vc').textContent=C.pr;document.getElementById('ytc').textContent=C.yt;document.getElementById('stc').textContent=C.st;
-  document.getElementById('alvai-st').textContent='Connected · '+t.toLocaleString()+' data points · '+C.p+' practitioners';
+  document.getElementById('st-total').textContent=t.toLocaleString();document.getElementById('st-prac').textContent=C.p.toLocaleString();document.getElementById('st-loc').textContent=C.l.toLocaleString();document.getElementById('st-prod').textContent=C.pr;document.getElementById('dc').textContent=C.p.toLocaleString();document.getElementById('vc').textContent=C.pr;document.getElementById('ytc').textContent=C.yt;document.getElementById('stc').textContent=C.st;
+  document.getElementById('alvai-st').textContent='Connected · '+t.toLocaleString()+' data points · '+C.p.toLocaleString()+' practitioners';
   rDir();rProd();rFeatProd();rYT();rST();rSpecFilters();
 }
 
-// ═══ 12 SHIELDS (Compact interactive strip with hover tooltips) ═══
+// ═══ 12 SHIELDS ═══
 var shields=[{i:'🏃',n:'Movement',g:'BODY',c:'teal',d:'Daily activity tracking. Exercise protocols validated.'},{i:'🍎',n:'Nutrition',g:'BODY',c:'teal',d:'Anti-inflammatory plans. Supplement interactions checked.'},{i:'😴',n:'Sleep',g:'BODY',c:'teal',d:'Sleep architecture analysis. Device validation.'},{i:'🧘',n:'Recovery',g:'BODY',c:'teal',d:'Rest protocols. Stress biomarkers tracked.'},{i:'🧠',n:'Mindset',g:'MIND',c:'gold',d:'Cognitive patterns. Therapy effectiveness.'},{i:'🎯',n:'Purpose',g:'MIND',c:'gold',d:'Goal alignment. Life satisfaction metrics.'},{i:'📚',n:'Learning',g:'MIND',c:'gold',d:'Expert source validation. Protocol extraction.'},{i:'🎨',n:'Creativity',g:'MIND',c:'gold',d:'Flow state measurement. Expression tracking.'},{i:'👥',n:'Community',g:'LINK',c:'ember',d:'Social bonds. Neighborhood engagement.'},{i:'❤️',n:'Relations',g:'LINK',c:'ember',d:'Family dynamics. Intergenerational wellness.'},{i:'🌍',n:'Environment',g:'LINK',c:'ember',d:'Living conditions. Air quality. Green space.'},{i:'🔥',n:'Legacy',g:'LINK',c:'ember',d:'Generational impact. Cultural preservation.'}];
 document.getElementById('sys-shields').innerHTML=shields.map(function(s){return'<div class="sh" style="position:relative"><div class="si">'+s.i+'</div><div class="sn">'+s.n+'</div><div class="sg" style="color:var(--'+s.c+')">'+s.g+'</div><div class="sh-tip">'+s.d+'</div></div>'}).join('');
 
-// ═══ Q SUITE (Compact toggle display) ═══
+// ═══ Q SUITE ═══
 var qSuite=[{n:'Q1: Discovery',c:'teal',d:'Scans 50+ sources daily. YouTube. PubMed. Products. Credentials.'},{n:'Q2: Validation',c:'gold',d:'12-Shield trust engine. NPI verification. Outcomes. Interactions.'},{n:'Q3: Connection',c:'sage',d:'AI-powered matching. Practitioners to people. Products to protocols.'},{n:'Q4: Commerce',c:'ember',d:'Trust-scored marketplace. Amazon (bleu-live-20). iHerb (BLEU).'},{n:'Q5: Impact',c:'teal2',d:'Ripple measurement. Self → Family → Neighborhood → City.'},{n:'Q6: Evolution',c:'coral',d:'Living intelligence. Every interaction feeds back. System learns.'}];
 document.getElementById('sys-qsuite').innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">'+qSuite.map(function(q){return'<div style="padding:18px;border-radius:14px;border:1px solid var(--b1);background:var(--s1);transition:all .4s" onmouseover="this.style.borderColor=\'var(--b2)\'" onmouseout="this.style.borderColor=\'var(--b1)\'"><div style="font-family:var(--fm);font-size:8px;color:var(--'+q.c+');letter-spacing:2px;margin-bottom:6px">'+q.n.toUpperCase()+'</div><div style="font-size:12px;color:var(--mist);line-height:1.6">'+q.d+'</div></div>'}).join('')+'</div>';
 function showSys(which){document.getElementById('sys-shields').style.display=which==='shields'?'grid':'none';document.getElementById('sys-qsuite').style.display=which==='qsuite'?'block':'none';document.querySelectorAll('.qt').forEach(function(b){b.classList.toggle('on',b.textContent.toLowerCase().includes(which==='shields'?'shield':'suite'))})}
@@ -336,27 +385,88 @@ document.getElementById('timeline').innerHTML=tl.map(function(t){return'<div sty
 // ═══ COUNTDOWN ═══
 document.getElementById('cd-days').textContent=Math.max(0,Math.ceil((new Date(2026,2,29)-new Date())/864e5));
 
-// ═══ RENDERS ═══
-function rDir(){var d=P.length?P:Array.from({length:10},function(_,i){return{full_name:'Provider '+(i+1),taxonomy_description:'Healthcare',city:'New Orleans',state:'LA',trust_score:(98-i*.5).toFixed(1),npi:'Verified'}});document.getElementById('dl').innerHTML=d.slice(0,20).map(function(p){return'<div class="di" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-radius:14px;border:1px solid var(--b1);margin-bottom:7px;background:var(--s1);transition:all .4s;cursor:pointer" onmouseover="this.style.borderColor=\'rgba(255,255,255,.06)\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,.035)\'"><div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:50%;background:var(--tg);display:flex;align-items:center;justify-content:center;border:1px solid rgba(91,181,197,.1);font-size:16px;flex-shrink:0">⚕️</div><div><div style="font-size:13px;font-weight:500">'+(p.full_name||'Provider')+'</div><div style="font-size:11px;color:var(--mist)">'+(p.taxonomy_description||'Healthcare')+' · '+(p.city||'New Orleans')+', '+(p.state||'LA')+'</div></div></div><div class="tc"><div style="font-family:var(--fm);font-size:20px;color:var(--teal);font-weight:500">'+(p.trust_score||95)+'</div><div style="font-family:var(--fm);font-size:7px;color:var(--gold);letter-spacing:2px">VALIDATED</div></div></div>'}).join('')}
+// ═══ SMART RENDERERS (auto-detect field names) ═══
+function rDir(){
+  var d=P.length?P:[];
+  if(!d.length)return;
+  document.getElementById('dl').innerHTML=d.slice(0,20).map(function(p){
+    var name=gf(p,['full_name','provider_organization_name','provider_name','name','organization_name','provider_last_name'],'Provider');
+    var spec=gf(p,['taxonomy_description','taxonomy','specialty','provider_type','classification'],'Healthcare');
+    var city=gf(p,['city','provider_business_practice_location_address_city_name'],'New Orleans');
+    var st=gf(p,['state','provider_business_practice_location_address_state_name'],'LA');
+    var score=p._score||calcPracScore(p);
+    var sc=score>=80?'var(--teal)':score>=65?'var(--gold)':'var(--ember)';
+    return'<div class="di" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-radius:14px;border:1px solid var(--b1);margin-bottom:7px;background:var(--s1);transition:all .4s;cursor:pointer" onmouseover="this.style.borderColor=\'rgba(255,255,255,.06)\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,.035)\'"><div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:50%;background:var(--tg);display:flex;align-items:center;justify-content:center;border:1px solid rgba(91,181,197,.1);font-size:16px;flex-shrink:0">⚕️</div><div><div style="font-size:13px;font-weight:500">'+name+'</div><div style="font-size:11px;color:var(--mist)">'+spec+' · '+city+', '+st+'</div></div></div><div class="tc"><div style="font-family:var(--fm);font-size:20px;color:'+sc+';font-weight:500">'+score+'</div><div style="font-family:var(--fm);font-size:7px;color:var(--gold);letter-spacing:2px">VALIDATED</div></div></div>'}).join('')}
 function fDir(){var q=document.getElementById('ds').value.toLowerCase();document.querySelectorAll('.di').forEach(function(e){e.style.display=e.textContent.toLowerCase().includes(q)?'flex':'none'})}
-function rSpecFilters(){var specs={};P.forEach(function(p){if(p.taxonomy_description)specs[p.taxonomy_description]=(specs[p.taxonomy_description]||0)+1});var top=Object.entries(specs).sort(function(a,b){return b[1]-a[1]}).slice(0,5);document.getElementById('spec-filters').innerHTML='<button onclick="document.getElementById(\'ds\').value=\'\';fDir()" style="font-family:var(--fm);font-size:8px;padding:5px 12px;border-radius:8px;border:1px solid rgba(91,181,197,.15);background:var(--tg);color:var(--teal);cursor:pointer;letter-spacing:1px">ALL</button>'+top.map(function(s){return'<button onclick="document.getElementById(\'ds\').value=\''+s[0]+'\';fDir()" style="font-family:var(--fm);font-size:8px;padding:5px 12px;border-radius:8px;border:1px solid var(--b1);background:transparent;color:var(--fade);cursor:pointer;letter-spacing:1px">'+s[0]+' ('+s[1]+')</button>'}).join('')}
-function rProd(){var d=PR.length?PR:Array.from({length:6},function(_,i){return{name:'Product '+(i+1),brand:'Brand',category:'Supplement',trust_score:(94-i).toFixed(1)}});document.getElementById('pl').innerHTML=d.slice(0,12).map(function(p){return'<div class="pi card"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:13px;font-weight:500">'+(p.name||'Product')+'</div><div style="font-size:11px;color:var(--mist)">'+(p.brand||'Brand')+'</div></div><div style="font-family:var(--fm);font-size:20px;color:var(--teal);font-weight:500">'+(p.trust_score||92)+'</div></div><div style="display:flex;gap:6px;margin-bottom:12px"><span style="font-family:var(--fm);font-size:8px;padding:3px 9px;border-radius:20px;background:var(--tg);color:var(--teal)">'+(p.category||'Supplement')+'</span></div>'+(p.url_amazon?'<a href="'+p.url_amazon+'" target="_blank" class="btn btn-g btn-s" style="text-decoration:none">Buy on Amazon</a>':'<button class="btn btn-t btn-s">View</button>')+'</div>'}).join('')}
-function fProd(){var q=document.getElementById('ps').value.toLowerCase();document.querySelectorAll('.pi').forEach(function(e){e.style.display=e.textContent.toLowerCase().includes(q)?'':'none'})}
-function rFeatProd(){var d=PR.length?PR.slice(0,4):Array.from({length:4},function(_,i){return{name:'Top Product '+(i+1),brand:'Brand',trust_score:(95-i).toFixed(1)}});document.getElementById('feat-prod').innerHTML=d.map(function(p){return'<div class="card tc"><div style="font-family:var(--fm);font-size:24px;color:var(--teal);font-weight:500;margin-bottom:6px">'+(p.trust_score||94)+'</div><div style="font-size:13px;font-weight:500;margin-bottom:3px">'+(p.name||'Product')+'</div><div style="font-size:10px;color:var(--mist);margin-bottom:10px">'+(p.brand||'Brand')+'</div>'+(p.url_amazon?'<a href="'+p.url_amazon+'" target="_blank" class="btn btn-g btn-s" style="text-decoration:none">Buy →</a>':'<button class="btn btn-o btn-s">Details</button>')+'</div>'}).join('')}
-function rYT(){var fb=[{channel_name:'Andrew Huberman',title:'Sleep Optimization Protocol',view_count:2400000},{channel_name:'Peter Attia',title:'Longevity Markers That Matter',view_count:890000},{channel_name:'Mark Hyman',title:'Anti-Inflammatory Diet',view_count:1200000},{channel_name:'Dr. Eric Berg',title:'Vitamin D Complete Guide',view_count:3100000},{channel_name:'Thomas DeLauer',title:'Intermittent Fasting Science',view_count:1800000},{channel_name:'Rhonda Patrick',title:'Gut Microbiome & Mental Health',view_count:670000}];var d=YT.length?YT:fb;document.getElementById('ytl').innerHTML=d.slice(0,6).map(function(v){return'<div class="card" style="cursor:pointer"><div style="font-family:var(--fm);font-size:8px;color:var(--ember);letter-spacing:2px;margin-bottom:6px">'+(v.channel_name||'Expert')+'</div><div style="font-size:13px;line-height:1.5;margin-bottom:8px">'+(v.title||'Video')+'</div><div style="display:flex;justify-content:space-between"><span style="font-family:var(--fm);font-size:9px;color:var(--fade)">'+(v.view_count?Math.round(v.view_count/1000)+'K':'')+'</span>'+(v.video_id?'<a href="https://youtube.com/watch?v='+v.video_id+'" target="_blank" style="font-family:var(--fm);font-size:9px;color:var(--teal);text-decoration:none">Watch →</a>':'')+'</div></div>'}).join('')}
-function rST(){var fb=[{title:'CBD and CYP450 Drug Interactions: Systematic Review',journal:'Clinical Pharmacology',year:2024},{title:'Magnesium Supplementation on Sleep Quality',journal:'Nutrients',year:2024},{title:'Gut-Brain Axis: Mental Health Treatment',journal:'Nature Reviews',year:2024},{title:'Ashwagandha KSM-66 Stress Reduction',journal:'J Alt Medicine',year:2023}];var d=ST.length?ST:fb;document.getElementById('stl').innerHTML=d.slice(0,4).map(function(s){return'<div class="card"><div style="font-size:13px;line-height:1.5;margin-bottom:6px">'+(s.title||'Study')+'</div><div style="font-size:10px;color:var(--fade)">'+(s.journal||'Journal')+' · '+(s.year||2024)+'</div>'+(s.pmid?'<a href="https://pubmed.ncbi.nlm.nih.gov/'+s.pmid+'" target="_blank" style="font-family:var(--fm);font-size:9px;color:var(--teal);text-decoration:none;display:block;margin-top:6px">PubMed →</a>':'')+'</div>'}).join('')}
+function rSpecFilters(){var specs={};P.forEach(function(p){var s=gf(p,['taxonomy_description','taxonomy','specialty','provider_type','classification']);if(s)specs[s]=(specs[s]||0)+1});var top=Object.entries(specs).sort(function(a,b){return b[1]-a[1]}).slice(0,5);document.getElementById('spec-filters').innerHTML='<button onclick="document.getElementById(\'ds\').value=\'\';fDir()" style="font-family:var(--fm);font-size:8px;padding:5px 12px;border-radius:8px;border:1px solid rgba(91,181,197,.15);background:var(--tg);color:var(--teal);cursor:pointer;letter-spacing:1px">ALL</button>'+top.map(function(s){return'<button onclick="document.getElementById(\'ds\').value=\''+s[0]+'\';fDir()" style="font-family:var(--fm);font-size:8px;padding:5px 12px;border-radius:8px;border:1px solid var(--b1);background:transparent;color:var(--fade);cursor:pointer;letter-spacing:1px">'+s[0]+' ('+s[1]+')</button>'}).join('')}
 
-// ═══ ALVAI ═══
+function rProd(){
+  var d=PR.length?PR:[];
+  if(!d.length)return;
+  document.getElementById('pl').innerHTML=d.slice(0,12).map(function(p){
+    var name=gf(p,['name','proprietary_name','product_name','brand_name'],'Product');
+    var brand=gf(p,['brand','brand_name','manufacturer_name','labeler_name'],'');
+    var cat=gf(p,['category','product_type','pharm_class','dosage_form'],'Wellness');
+    var score=p._score||calcProdScore(p);
+    var amz=gf(p,['url_amazon','amazon_url','buy_url']);
+    var sc=score>=70?'var(--teal)':score>=50?'var(--gold)':'var(--ember)';
+    return'<div class="pi card"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:13px;font-weight:500">'+name+'</div>'+(brand?'<div style="font-size:11px;color:var(--mist)">'+brand+'</div>':'')+'</div><div style="font-family:var(--fm);font-size:20px;color:'+sc+';font-weight:500">'+score+'</div></div><div style="display:flex;gap:6px;margin-bottom:12px"><span style="font-family:var(--fm);font-size:8px;padding:3px 9px;border-radius:20px;background:var(--tg);color:var(--teal)">'+cat+'</span></div>'+(amz?'<a href="'+amz+'" target="_blank" class="btn btn-g btn-s" style="text-decoration:none">Buy on Amazon</a>':'<button class="btn btn-t btn-s">View</button>')+'</div>'}).join('')}
+function fProd(){var q=document.getElementById('ps').value.toLowerCase();document.querySelectorAll('.pi').forEach(function(e){e.style.display=e.textContent.toLowerCase().includes(q)?'':'none'})}
+
+function rFeatProd(){
+  var d=PR.length?PR.slice(0,4):[];
+  if(!d.length){document.getElementById('feat-prod').innerHTML='<div class="card tc" style="grid-column:span 4"><p style="color:var(--mist)">Loading products...</p></div>';return}
+  document.getElementById('feat-prod').innerHTML=d.map(function(p){
+    var name=gf(p,['name','proprietary_name','product_name','brand_name'],'Product');
+    var brand=gf(p,['brand','brand_name','manufacturer_name','labeler_name'],'');
+    var score=p._score||calcProdScore(p);
+    var amz=gf(p,['url_amazon','amazon_url','buy_url']);
+    return'<div class="card tc"><div style="font-family:var(--fm);font-size:24px;color:var(--teal);font-weight:500;margin-bottom:6px">'+score+'</div><div style="font-size:13px;font-weight:500;margin-bottom:3px">'+name+'</div>'+(brand?'<div style="font-size:10px;color:var(--mist);margin-bottom:10px">'+brand+'</div>':'<div style="margin-bottom:10px"></div>')+(amz?'<a href="'+amz+'" target="_blank" class="btn btn-g btn-s" style="text-decoration:none">Buy →</a>':'<button class="btn btn-o btn-s">Details</button>')+'</div>'}).join('')}
+
+function rYT(){
+  var d=YT.length?YT:[];
+  if(!d.length){
+    // Fallback
+    var fb=[{channel_name:'Andrew Huberman',title:'Sleep Optimization Protocol',view_count:2400000},{channel_name:'Peter Attia',title:'Longevity Markers That Matter',view_count:890000},{channel_name:'Mark Hyman',title:'Anti-Inflammatory Diet',view_count:1200000},{channel_name:'Dr. Eric Berg',title:'Vitamin D Complete Guide',view_count:3100000},{channel_name:'Thomas DeLauer',title:'Intermittent Fasting Science',view_count:1800000},{channel_name:'Rhonda Patrick',title:'Gut Microbiome & Mental Health',view_count:670000}];
+    d=fb;
+  }
+  document.getElementById('ytl').innerHTML=d.slice(0,6).map(function(v){
+    var ch=gf(v,['channel_name','channel_title','channel','author','uploader','creator'],'Expert');
+    var title=gf(v,['title','video_title','name','snippet_title'],'Video');
+    var views=v.view_count||v.views||v.viewCount||0;
+    var vid=v.video_id||v.videoId||v.id||'';
+    return'<div class="card" style="cursor:pointer"><div style="font-family:var(--fm);font-size:8px;color:var(--ember);letter-spacing:2px;margin-bottom:6px">'+ch.toUpperCase()+'</div><div style="font-size:13px;line-height:1.5;margin-bottom:8px">'+title+'</div><div style="display:flex;justify-content:space-between"><span style="font-family:var(--fm);font-size:9px;color:var(--fade)">'+(views?Math.round(views/1000)+'K views':'')+'</span>'+(vid?'<a href="https://youtube.com/watch?v='+vid+'" target="_blank" style="font-family:var(--fm);font-size:9px;color:var(--teal);text-decoration:none">Watch →</a>':'')+'</div></div>'}).join('')}
+
+function rST(){
+  var d=ST.length?ST:[];
+  if(!d.length){
+    var fb=[{title:'CBD and CYP450 Drug Interactions: Systematic Review',journal:'Clinical Pharmacology',year:2024},{title:'Magnesium Supplementation on Sleep Quality',journal:'Nutrients',year:2024},{title:'Gut-Brain Axis: Mental Health Treatment',journal:'Nature Reviews',year:2024},{title:'Ashwagandha KSM-66 Stress Reduction',journal:'J Alt Medicine',year:2023}];
+    d=fb;
+  }
+  document.getElementById('stl').innerHTML=d.slice(0,4).map(function(s){
+    var title=gf(s,['title','study_title','article_title','name'],'Study');
+    var journal=gf(s,['journal','journal_name','source','publication'],'Journal');
+    var year=s.year||s.pub_year||s.publication_year||2024;
+    var pmid=s.pmid||s.pubmed_id||s.id||'';
+    return'<div class="card"><div style="font-size:13px;line-height:1.5;margin-bottom:6px">'+title+'</div><div style="font-size:10px;color:var(--fade)">'+journal+' · '+year+'</div>'+(pmid?'<a href="https://pubmed.ncbi.nlm.nih.gov/'+pmid+'" target="_blank" style="font-family:var(--fm);font-size:9px;color:var(--teal);text-decoration:none;display:block;margin-top:6px">PubMed →</a>':'')+'</div>'}).join('')}
+
+// ═══ ALVAI (pulls live data) ═══
 function chat(){var i=document.getElementById('ch-in'),m=i.value.trim();if(!m)return;addMsg('me',m);i.value='';var lo=m.toLowerCase(),r='';
 if(lo.includes('sleep')){r='Sleep — one of our 12 Shields.\n\nTop validated protocols:\n1. Magnesium glycinate 200mg — Score: 94.2\n2. Huberman Sleep Protocol — temperature, light, timing\n3. 10-3-2-1 Rule — endorsed by network providers\n\n🛒 Products: Magnesium (94.2) · L-Theanine (91.5)\n📅 Event: Sleep Masterclass, Mar 1\n\nI can build your Sleep Plan.'}
-else if(lo.includes('cbd')||lo.includes('interaction')){r='CBD inhibits CYP2D6 and CYP3A4:\n• SSRIs — increased side effects\n• Blood thinners — bleeding risk\n• Anti-seizure meds — levels may increase\n• Statins — potential muscle pain\n\n📊 Based on '+(C.st||70)+'+ PubMed studies\n👥 '+(C.p||200)+' practitioners can guide you'}
+else if(lo.includes('cbd')||lo.includes('interaction')){r='CBD inhibits CYP2D6 and CYP3A4:\n• SSRIs — increased side effects\n• Blood thinners — bleeding risk\n• Anti-seizure meds — levels may increase\n• Statins — potential muscle pain\n\n📊 Based on '+(C.st||70)+'+ studies in our database\n👥 '+(C.p||200)+' practitioners can guide you'}
 else if(lo.includes('event')){r='Live events:\n\n🔥 Feb 18 — 40-Day Kickoff (847)\n🧘 Feb 22 — Sunrise Yoga (156)\n💪 Feb 20 — Sobriety Circle\n🍎 Feb 25 — Meal Prep\n🏆 Feb 25 — Week 1 Milestone (1,200)\n😴 Mar 1 — Sleep Masterclass\n🏃 Mar 8 — 5K Crescent Park\n🎉 Mar 29 — Day 40 (2,400)\n\nCheck Events tab.'}
 else if(lo.includes('communit')||lo.includes('stories')||lo.includes('who')){r='BLEU community — 4 zones:\n\n📊 2,847 members · 18,432 check-ins · $1.2M savings\n\n• Marcus T. (Tremé, Day 12): "I dream now."\n• Keisha R. (Garden, Day 28): "Doctor asked what changed."\n• David M. (Mid-City, Day 40): "My wife cried."'}
 else if(lo.includes('40')||lo.includes('reset')||lo.includes('sober')){r='40-Day Reset — LIVE · Feb 18-Mar 29\n\n6 Pillars: 🚫 Sobriety · 😴 Sleep · 🏃 Movement · 🍎 Nutrition · 🧠 Mind · 👥 Community\n\n📊 1,247 participants · $547K savings\n🏆 French Quarter leads: 91\n\n→ neworleans.bleu.live'}
 else if(lo.includes('plan')||lo.includes('action')){r='YOUR 30-DAY PLAN:\n\nWeek 1: Sleep (magnesium + bedtime) + hydration + walks\nWeek 2: Structured exercise + anti-inflammatory meals\nWeek 3: Practitioner + journaling + biometrics\nWeek 4: Full protocol + community event\n\n🎯 Predicted: 78 → 85 (+7)\n💰 ~$400/month savings'}
-else if(lo.includes('practitioner')||lo.includes('doctor')||lo.includes('find')||lo.includes('match')){var top=P.slice(0,3);r='Searching '+(C.p||200)+' practitioners...\n\n'+(top.length?top.map(function(p,i){return(i+1)+'. '+(p.full_name||'Provider')+'\n   '+(p.taxonomy_description||'Healthcare')+' · Score: '+(p.trust_score||95)}).join('\n\n'):'Loading...')+'\n\nNarrow by specialty or location.'}
+else if(lo.includes('practitioner')||lo.includes('doctor')||lo.includes('find')||lo.includes('match')){
+  var top=P.slice(0,3);
+  r='Searching '+C.p.toLocaleString()+' practitioners...\n\n'+(top.length?top.map(function(p,i){
+    var name=gf(p,['full_name','provider_organization_name','provider_name','name'],'Provider');
+    var spec=gf(p,['taxonomy_description','taxonomy','specialty'],'Healthcare');
+    return(i+1)+'. '+name+'\n   '+spec+' · Score: '+(p._score||calcPracScore(p))
+  }).join('\n\n'):'Loading...')+'\n\nNarrow by specialty or location.'}
 else if(lo.includes('shield')||lo.includes('trust')){r='12 Shields:\n\nBODY: 🏃 Movement · 🍎 Nutrition · 😴 Sleep · 🧘 Recovery\nMIND: 🧠 Mindset · 🎯 Purpose · 📚 Learning · 🎨 Creativity\nCONNECTION: 👥 Community · ❤️ Relations · 🌍 Environment · 🔥 Legacy\n\nOriginal IP. Patent pending.'}
-else{var t=C.p+C.pr+C.l+C.yt+C.st;r='BLEU — '+(t||4985).toLocaleString()+' data points\n\n• '+(C.p||200)+' practitioners · '+(C.pr||146)+' products · '+(C.l||1212).toLocaleString()+' locations\n• '+(C.yt||24)+' videos · '+(C.st||70)+' studies · 4 zones · 12 Shields\n\nWhat matters to you?'}
+else{var t=C.p+C.pr+C.l+C.yt+C.st;r='BLEU — '+(t||4985).toLocaleString()+' data points\n\n• '+C.p.toLocaleString()+' practitioners · '+C.pr+' products · '+C.l.toLocaleString()+' locations\n• '+C.yt+' videos · '+C.st+' studies · 4 zones · 12 Shields\n\nAsk me about: sleep, supplements, drug interactions, practitioners, events, community, the 40-Day Reset, your action plan.\n\nWhat matters to you?'}
 setTimeout(function(){addMsg('ai',r)},400)}
 function addMsg(who,txt){var box=document.getElementById('ch-msgs'),d=document.createElement('div');d.style.cssText='display:flex;margin-bottom:16px;'+(who==='me'?'justify-content:flex-end':'');d.innerHTML='<div class="bub '+(who==='me'?'me':'ai')+'">'+(who==='ai'?'<div style="font-family:var(--fm);font-size:7px;color:var(--gold);letter-spacing:2px;margin-bottom:6px">ALVAI</div>':'')+txt+'</div>';box.appendChild(d);box.scrollTop=box.scrollHeight}
 function qk(q){go('alvai');setTimeout(function(){document.getElementById('ch-in').value=q;chat()},120)}
@@ -370,6 +480,7 @@ function observe(){document.querySelectorAll('.rv:not(.vis)').forEach(function(e
 window.addEventListener('scroll',observe,{passive:true});
 window.addEventListener('load',function(){observe();loadData()});
 setTimeout(observe,80);
+
 </script>
 </body>
 </html>
