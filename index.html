@@ -30,13 +30,9 @@ body::after{content:'';position:fixed;inset:0;opacity:.014;background:url("data:
 .rv{opacity:0;transform:translateY(30px);transition:opacity .8s var(--e),transform .8s var(--e)}.rv.vis{opacity:1;transform:none}.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
 .badge{font-family:var(--fm);font-size:10px;letter-spacing:3.5px;color:var(--gold);text-transform:uppercase;font-weight:400;display:inline-block;margin-bottom:14px}
 h1,h2,h3{font-family:var(--ff);font-weight:200;line-height:1.1}
-.card{background:var(--s1);border:1px solid var(--b1);border-radius:18px;padding:28px;transition:all .5s var(--e);position:relative;overflow:hidden}.card:hover{border-color:var(--b2);transform:translateY(-2px)}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;background:rgba(11,15,20,.92);backdrop-filter:blur(28px);border-bottom:1px solid var(--b1)}
+h1,h2,h3{font-family:var(--ff);font-weight:200;line-height:1.1}
 .logo{font-family:var(--ff);font-size:20px;letter-spacing:10px;font-weight:200;color:var(--cream);text-decoration:none;flex-shrink:0}
 .nlinks{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.nlinks::-webkit-scrollbar{display:none}.nlinks a{font-size:10px;font-weight:400;color:var(--fade);text-decoration:none;padding:6px 9px;border-radius:8px;transition:all .3s;letter-spacing:.2px;white-space:nowrap}.nlinks a:hover,.nlinks a.on{color:var(--cream);background:rgba(255,255,255,.04)}
-.btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:12px;padding:15px 28px;font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer;transition:all .4s var(--e);text-decoration:none}.btn:hover{transform:translateY(-2px)}
-.btn-t{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;box-shadow:0 4px 24px rgba(91,181,197,.1)}
-.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg)}.btn-e{background:linear-gradient(135deg,var(--ember),var(--coral));color:#fff}
 .btn-o{background:transparent;border:1px solid var(--b2);color:var(--warm);padding:13px 24px}.btn-o:hover{border-color:var(--teal);color:var(--teal)}
 .btn-s{font-size:10px;padding:10px 18px}
 .bar{height:4px;background:rgba(255,255,255,.025);border-radius:4px;overflow:hidden}.bar-f{height:100%;border-radius:4px;transition:width 1.4s var(--e)}
@@ -44,12 +40,34 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 24px;height:56px;d
 .ch-box{max-height:420px;overflow-y:auto;margin-bottom:16px}.bub{max-width:82%;padding:16px 22px;font-size:13.5px;line-height:1.8;border-radius:22px;white-space:pre-line}.bub.ai{background:var(--s2);border:1px solid var(--b1);border-radius:22px 22px 22px 6px}.bub.me{background:linear-gradient(135deg,var(--teal),rgba(91,181,197,.82));border-radius:22px 22px 6px 22px}
 .qq{font-size:11px;color:var(--mist);padding:11px 13px;text-align:left;cursor:pointer;border:1px solid var(--b1);background:transparent;border-radius:12px;font-family:var(--fb);transition:all .3s;line-height:1.3}.qq:hover{border-color:rgba(91,181,197,.15);color:var(--teal);background:var(--tg)}
 @keyframes breathe{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.65;transform:scale(1.05)}}@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(200,169,110,.06)}50%{box-shadow:0 0 50px rgba(200,169,110,.12)}}@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
+@keyframes countPulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes typeGlow{0%,100%{border-color:rgba(91,181,197,.1)}50%{border-color:rgba(91,181,197,.3)}}
+@keyframes orbFloat{0%{transform:translate(0,0) rotate(0deg)}33%{transform:translate(30px,-20px) rotate(120deg)}66%{transform:translate(-20px,10px) rotate(240deg)}100%{transform:translate(0,0) rotate(360deg)}}
 .breathe{animation:breathe 7s ease-in-out infinite}.glow{animation:glow 4s ease-in-out infinite}.pulse{animation:pulse 2s ease-in-out infinite}
+.float{animation:float 6s ease-in-out infinite}
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:18px;padding:28px;transition:all .5s var(--e);position:relative;overflow:hidden}.card:hover{border-color:var(--b2);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(91,181,197,.02),transparent,rgba(200,169,110,.02));opacity:0;transition:opacity .5s}.card:hover::after{opacity:1}
+.btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:12px;padding:15px 28px;font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer;transition:all .4s var(--e);text-decoration:none;position:relative;overflow:hidden}.btn:hover{transform:translateY(-2px)}
+.btn-t{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;box-shadow:0 4px 24px rgba(91,181,197,.15)}.btn-t:hover{box-shadow:0 8px 32px rgba(91,181,197,.25)}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);box-shadow:0 4px 24px rgba(200,169,110,.1)}.btn-g:hover{box-shadow:0 8px 32px rgba(200,169,110,.2)}
+.btn-e{background:linear-gradient(135deg,var(--ember),var(--coral));color:#fff}
+.stat-num{transition:all .6s var(--e)}.stat-num:hover{transform:scale(1.1)}
+.hero-orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(60px)}
+.nav-glow{position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(91,181,197,.15),rgba(200,169,110,.1),transparent)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;background:rgba(11,15,20,.92);backdrop-filter:blur(28px);border-bottom:1px solid var(--b1)}
+nav::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(91,181,197,.12),rgba(200,169,110,.08),transparent)}
 /* Compact interactive shields */
 .sh{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border-radius:12px;cursor:pointer;transition:all .35s var(--e);border:1px solid transparent;min-width:0}.sh:hover{background:rgba(255,255,255,.015);border-color:var(--b1);transform:translateY(-2px)}.sh .si{font-size:20px}.sh .sn{font-size:9px;color:var(--cream);font-weight:400;white-space:nowrap}.sh .sg{font-family:var(--fm);font-size:7px;letter-spacing:1.5px}.sh-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:14px 18px;font-size:11px;color:var(--mist);line-height:1.5;width:220px;text-align:left;z-index:10;box-shadow:0 8px 32px rgba(0,0,0,.4)}.sh:hover .sh-tip{display:block}
 /* Q toggle buttons */
 .qt{padding:8px 16px;border:1px solid var(--b1);background:transparent;border-radius:10px;font-family:var(--fm);font-size:9px;letter-spacing:1px;color:var(--fade);cursor:pointer;transition:all .3s}.qt.on{background:var(--tg);border-color:rgba(91,181,197,.18);color:var(--teal)}
 footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);position:relative;z-index:2}
+.prompts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}.prompts .p{font-family:var(--fm);font-size:9px;letter-spacing:.5px;padding:7px 16px;border-radius:20px;border:1px solid var(--b1);background:rgba(255,255,255,.015);color:var(--warm);cursor:pointer;transition:all .35s var(--e);white-space:nowrap}.prompts .p:hover{border-color:rgba(91,181,197,.2);background:var(--tg);color:var(--teal);transform:translateY(-1px)}
+.prompts-gold .p:hover{border-color:rgba(200,169,110,.2);background:var(--gg);color:var(--gold)}
+.prompts-sage .p:hover{border-color:rgba(127,164,127,.2);background:var(--sg);color:var(--sage)}
 @media(max-width:900px){.nlinks{max-width:55vw}}
 @media(max-width:768px){.g2,.g3,.g4{grid-template-columns:1fr}.w{padding:0 22px}.sec{padding:60px 0}}
 </style>
@@ -76,24 +94,34 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
 <!-- ═══ HOME ═══ -->
 <div id="home" class="tab on">
   <!-- HERO -->
-  <div style="min-height:94vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px;position:relative">
-    <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(91,181,197,.035),transparent 70%);top:16%;left:8%" class="breathe"></div>
-    <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,110,.025),transparent 70%);bottom:18%;right:12%" class="breathe" style="animation-delay:3s"></div>
+  <div style="min-height:94vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px;position:relative;overflow:hidden">
+    <div class="hero-orb" style="width:500px;height:500px;background:radial-gradient(circle,rgba(91,181,197,.04),transparent 70%);top:10%;left:5%;animation:orbFloat 20s ease-in-out infinite"></div>
+    <div class="hero-orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(200,169,110,.03),transparent 70%);bottom:15%;right:8%;animation:orbFloat 25s ease-in-out infinite reverse"></div>
+    <div class="hero-orb" style="width:250px;height:250px;background:radial-gradient(circle,rgba(127,164,127,.025),transparent 70%);top:50%;left:50%;animation:orbFloat 18s ease-in-out infinite 3s"></div>
     <div class="w" style="max-width:800px">
-      <div class="badge rv">THE LONGEVITY OPERATING SYSTEM · PATENT PENDING</div>
-      <h1 class="rv d1" style="font-size:clamp(32px,5.5vw,58px);margin-bottom:18px">Something Told You<br><span style="color:var(--gold)">To Look For This.</span></h1>
+      <div class="badge rv" style="animation:fadeUp .8s ease both .2s">THE LONGEVITY OPERATING SYSTEM · PATENT PENDING</div>
+      <h1 class="rv d1" style="font-size:clamp(32px,5.5vw,58px);margin-bottom:12px">Something Told You<br><span style="color:var(--gold)">To Look For This.</span></h1>
+      <div class="rv d1" style="font-family:var(--fm);font-size:9px;letter-spacing:5px;color:var(--fade);margin-bottom:22px">BEGIN · LEARN · EVOLVE · UNITE</div>
       <p class="rv d2" style="font-size:16px;color:var(--warm);max-width:620px;margin:0 auto 14px;line-height:1.9">Maybe it was the 2am Google search. Maybe it was watching someone you love make a choice that scared you. Maybe you're just tired of not knowing who to trust.</p>
       <p class="rv d2" style="font-size:14px;color:var(--mist);max-width:560px;margin:0 auto 32px;line-height:1.8">BLEU validates everything — every practitioner, every product, every study — against federal databases and clinical research. So you can stop guessing and start healing.</p>
-      <div class="rv d3" style="display:flex;max-width:540px;margin:0 auto 44px;background:var(--s1);border:1px solid var(--b1);border-radius:16px;overflow:hidden">
+      <div class="rv d3" style="display:flex;max-width:540px;margin:0 auto 44px;background:var(--s1);border:1px solid var(--b1);border-radius:16px;overflow:hidden;animation:typeGlow 3s ease-in-out infinite">
         <input type="text" id="hero-q" placeholder="What's pulling at you? Ask anything..." style="flex:1;background:transparent;border:none;padding:18px 24px;color:var(--cream);font-size:14px;font-family:var(--fb);font-weight:300;outline:none" onkeypress="if(event.key==='Enter')heroAsk()">
-        <button onclick="heroAsk()" style="background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;padding:16px 26px;color:#fff;font-family:var(--fm);font-size:9px;letter-spacing:2px;cursor:pointer;flex-shrink:0">ASK ✦</button>
+        <button onclick="heroAsk()" style="background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;padding:16px 26px;color:#fff;font-family:var(--fm);font-size:9px;letter-spacing:2px;cursor:pointer;flex-shrink:0;transition:all .3s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">ASK ✦</button>
+      </div>
+      <div class="prompts rv d3" style="margin-bottom:40px">
+        <span class="p" onclick="qk('I can\'t sleep and I don\'t know why')">😴 I can't sleep</span>
+        <span class="p" onclick="qk('What supplements should I actually take?')">💊 What should I take?</span>
+        <span class="p" onclick="qk('Find me a doctor I can trust in New Orleans')">⚕️ Find a doctor</span>
+        <span class="p" onclick="qk('How do I start the 40-Day Reset?')">🔥 40-Day Reset</span>
+        <span class="p" onclick="qk('My gut is messed up and it\'s affecting everything')">🦠 Fix my gut</span>
+        <span class="p" onclick="qk('I want to get off my medications safely')">💡 Med alternatives</span>
       </div>
       <div class="rv d4" style="display:flex;gap:36px;justify-content:center;flex-wrap:wrap">
-        <div class="tc" style="cursor:pointer" onclick="go('validate')"><div style="font-family:var(--fm);font-size:22px;color:var(--gold);font-weight:500" id="st-total">4,985</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--fade);letter-spacing:2.5px;margin-top:2px">VALIDATED</div></div>
-        <div class="tc" style="cursor:pointer" onclick="go('directory')"><div style="font-family:var(--fm);font-size:22px;color:var(--teal);font-weight:500" id="st-prac">200</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--fade);letter-spacing:2.5px;margin-top:2px">PRACTITIONERS</div></div>
-        <div class="tc" style="cursor:pointer" onclick="go('vessel')"><div style="font-family:var(--fm);font-size:22px;color:var(--sage);font-weight:500" id="st-prod">146</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--fade);letter-spacing:2.5px;margin-top:2px">PRODUCTS</div></div>
-        <div class="tc" style="cursor:pointer" onclick="go('map')"><div style="font-family:var(--fm);font-size:22px;color:var(--teal2);font-weight:500" id="st-loc">1,212</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--fade);letter-spacing:2.5px;margin-top:2px">LOCATIONS</div></div>
-        <div class="tc" style="cursor:pointer" onclick="go('validate')"><div style="font-family:var(--fm);font-size:22px;color:var(--ember);font-weight:500">12</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--fade);letter-spacing:2.5px;margin-top:2px">SHIELDS</div></div>
+        <div class="tc stat-num" style="cursor:pointer" onclick="go('validate')"><div style="font-family:var(--fm);font-size:22px;color:var(--gold);font-weight:500" id="st-total" data-target="4985">0</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--fade);letter-spacing:2.5px;margin-top:2px">VALIDATED</div></div>
+        <div class="tc stat-num" style="cursor:pointer" onclick="go('directory')"><div style="font-family:var(--fm);font-size:22px;color:var(--teal);font-weight:500" id="st-prac" data-target="200">0</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--fade);letter-spacing:2.5px;margin-top:2px">PRACTITIONERS</div></div>
+        <div class="tc stat-num" style="cursor:pointer" onclick="go('vessel')"><div style="font-family:var(--fm);font-size:22px;color:var(--sage);font-weight:500" id="st-prod" data-target="146">0</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--fade);letter-spacing:2.5px;margin-top:2px">PRODUCTS</div></div>
+        <div class="tc stat-num" style="cursor:pointer" onclick="go('map')"><div style="font-family:var(--fm);font-size:22px;color:var(--teal2);font-weight:500" id="st-loc" data-target="1212">0</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--fade);letter-spacing:2.5px;margin-top:2px">LOCATIONS</div></div>
+        <div class="tc stat-num" style="cursor:pointer" onclick="go('validate')"><div style="font-family:var(--fm);font-size:22px;color:var(--ember);font-weight:500">12</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--fade);letter-spacing:2.5px;margin-top:2px">SHIELDS</div></div>
       </div>
     </div>
   </div>
@@ -185,7 +213,8 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   <!-- CLOSING -->
   <div style="text-align:center;padding:80px 40px;position:relative;z-index:2">
     <div class="rv" style="font-family:var(--ff);font-size:clamp(18px,2.8vw,26px);font-weight:200;font-style:italic;color:var(--cream);margin-bottom:14px;line-height:1.5">"This is for the mom reading labels at 2am.<br>For the man who won't ask for help but will search for it.<br>For the neighborhoods that deserve better."</div>
-    <div class="rv d1" style="font-family:var(--fm);font-size:10px;color:var(--gold);letter-spacing:3px;margin-bottom:28px">— BLEU</div>
+    <div class="rv d1" style="font-family:var(--fm);font-size:10px;color:var(--gold);letter-spacing:3px;margin-bottom:6px">— BLEU</div>
+    <div class="rv d1" style="font-family:var(--fm);font-size:8px;letter-spacing:5px;color:var(--fade);margin-bottom:28px">BEGIN · LEARN · EVOLVE · UNITE</div>
     <div class="rv d2" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px">
       <button class="btn btn-t" onclick="go('alvai')">ASK ALVAI ✦</button>
       <button class="btn btn-g" onclick="go('vessel')">SHOP THE VESSEL →</button>
@@ -217,8 +246,15 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
 
   <!-- CHAT -->
   <div class="card" style="min-height:480px;display:flex;flex-direction:column;padding:24px">
-    <div class="ch-box" id="ch-msgs"><div style="display:flex;margin-bottom:18px"><div class="bub ai"><div style="font-family:var(--fm);font-size:8px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">ALVAI</div>Welcome to BLEU. I'm connected to the full validated ecosystem — practitioners, products, research, events, drug interactions, and community data.<br><br>You don't need to know the right question. Just tell me what's going on. I'll connect the dots.</div></div></div>
+    <div class="ch-box" id="ch-msgs"><div style="display:flex;margin-bottom:18px"><div class="bub ai"><div style="font-family:var(--fm);font-size:8px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">ALVAI</div><span id="alvai-welcome"></span></div></div></div>
     <div style="display:flex;gap:10px"><input type="text" id="ch-in" placeholder="What's pulling at you? Ask anything..." style="flex:1;background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:16px 22px;color:var(--cream);font-size:14px;font-family:var(--fb);font-weight:300;outline:none" onkeypress="if(event.key==='Enter')chat()"><button onclick="chat()" style="background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:14px;padding:16px 28px;color:var(--bg);font-weight:600;font-size:14px;cursor:pointer">Send</button></div>
+    <div class="prompts prompts-gold" style="justify-content:flex-start;margin-top:10px">
+      <span class="p" onclick="qk('What should I take for anxiety without a prescription?')">anxiety help</span>
+      <span class="p" onclick="qk('Build me a morning supplement routine')">morning stack</span>
+      <span class="p" onclick="qk('Is creatine safe for women?')">creatine + women</span>
+      <span class="p" onclick="qk('My energy crashes every afternoon')">afternoon crash</span>
+      <span class="p" onclick="qk('What blood tests should I ask my doctor for?')">blood work guide</span>
+    </div>
   </div>
 
   <!-- ECOSYSTEM QUICK ACTIONS -->
@@ -272,7 +308,15 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   </div>
 
   <!-- SEARCH -->
-  <input type="text" id="ds" placeholder="Search by name, specialty, city..." style="width:100%;background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:14px 22px;color:var(--cream);font-size:14px;font-family:var(--fb);font-weight:300;outline:none;margin-bottom:18px" oninput="fDir()">
+  <input type="text" id="ds" placeholder="Search by name, specialty, city..." style="width:100%;background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:14px 22px;color:var(--cream);font-size:14px;font-family:var(--fb);font-weight:300;outline:none;margin-bottom:8px" oninput="fDir()">
+  <div class="prompts" style="justify-content:flex-start;margin-bottom:18px">
+    <span class="p" onclick="dq('Psychiatry')">🧠 Psychiatry</span>
+    <span class="p" onclick="dq('Nurse Practitioner')">💊 Nurse Practitioner</span>
+    <span class="p" onclick="dq('Cardiology')">❤️ Cardiology</span>
+    <span class="p" onclick="dq('Dietitian')">🍎 Dietitian</span>
+    <span class="p" onclick="dq('Physical Therapy')">🏃 Physical Therapy</span>
+    <span class="p" onclick="qk('Which type of doctor should I see for chronic fatigue?')">❓ Which doctor for me?</span>
+  </div>
 
   <!-- PRACTITIONER LIST -->
   <div id="dl"></div>
@@ -312,7 +356,15 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   </div>
 
   <!-- SEARCH -->
-  <input type="text" id="ps" placeholder="Search products, brands, supplements..." style="width:100%;background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:14px 22px;color:var(--cream);font-size:14px;font-family:var(--fb);font-weight:300;outline:none;margin-bottom:18px" oninput="fProd()">
+  <input type="text" id="ps" placeholder="Search products, brands, supplements..." style="width:100%;background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:14px 22px;color:var(--cream);font-size:14px;font-family:var(--fb);font-weight:300;outline:none;margin-bottom:8px" oninput="fProd()">
+  <div class="prompts prompts-sage" style="justify-content:flex-start;margin-bottom:18px">
+    <span class="p" onclick="vq('Magnesium')">😴 Magnesium</span>
+    <span class="p" onclick="vq('Creatine')">🏃 Creatine</span>
+    <span class="p" onclick="vq('Omega')">🐟 Omega-3</span>
+    <span class="p" onclick="vq('Probiotics')">🦠 Probiotics</span>
+    <span class="p" onclick="qk('What supplements interact with my SSRI?')">⚠️ Drug interactions</span>
+    <span class="p" onclick="qk('Build me a beginner supplement stack under $50/month')">💰 Budget stack</span>
+  </div>
 
   <!-- PRODUCT GRID -->
   <div class="g2" id="pl"></div>
@@ -338,7 +390,15 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   <div class="badge rv">HARVESTED INTELLIGENCE</div>
   <h2 class="rv d1" style="font-size:34px;margin-bottom:6px">Learn</h2>
   <p class="rv d2" style="font-size:14px;color:var(--warm);max-width:620px;margin-bottom:8px;line-height:1.9">You don't need more information. You need the right information at the right time. Every video here was chosen because it changes how you think. Every study was indexed because it proves what works.</p>
-  <p class="rv d2" style="font-size:13px;color:var(--mist);max-width:620px;margin-bottom:28px;line-height:1.8">This isn't a playlist. It's a protocol. Watch one. Try it for a week. Track what shifts. That's how knowledge becomes change.</p>
+  <p class="rv d2" style="font-size:13px;color:var(--mist);max-width:620px;margin-bottom:16px;line-height:1.8">This isn't a playlist. It's a protocol. Watch one. Try it for a week. Track what shifts. That's how knowledge becomes change.</p>
+  <div class="prompts prompts-gold rv d2" style="margin-bottom:28px">
+    <span class="p" onclick="qk('Teach me the Huberman sleep protocol step by step')">😴 Sleep protocol</span>
+    <span class="p" onclick="qk('What does the science say about intermittent fasting?')">⏰ Fasting science</span>
+    <span class="p" onclick="qk('Explain the gut-brain connection in simple terms')">🦠 Gut-brain 101</span>
+    <span class="p" onclick="qk('What supplements have the strongest clinical evidence?')">📊 Evidence-ranked</span>
+    <span class="p" onclick="qk('I\'m over 40 — what should I prioritize?')">🎯 Over 40 guide</span>
+    <span class="p" onclick="go('vessel')">💊 Shop protocols →</span>
+  </div>
 
   <!-- LEARNING PATHS BY SHIELD -->
   <div class="rv d2" style="margin-bottom:36px">
@@ -379,7 +439,14 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   <div class="badge rv">THE LIVING MAP</div>
   <h2 class="rv d1" style="font-size:34px;margin-bottom:6px">Cities That Heal Together.</h2>
   <p class="rv d2" style="font-size:14px;color:var(--warm);max-width:620px;margin-bottom:8px;line-height:1.9">Wellness isn't personal. It's geographic. Your zip code predicts your health better than your genetic code. BLEU maps the infrastructure that makes healing possible — practitioners, products, events, and community — city by city.</p>
-  <p class="rv d2" style="font-size:12px;color:var(--mist);margin-bottom:28px">Each city is scored by data density, provider access, community engagement, and health outcomes. The more data, the higher the score, the more the city can serve its people.</p>
+  <p class="rv d2" style="font-size:12px;color:var(--mist);margin-bottom:14px">Each city is scored by data density, provider access, community engagement, and health outcomes. The more data, the higher the score, the more the city can serve its people.</p>
+  <div class="prompts prompts-sage rv d2" style="margin-bottom:28px">
+    <span class="p" onclick="qk('What makes New Orleans a living city?')">🏛️ Why NOLA first</span>
+    <span class="p" onclick="qk('How can I bring BLEU to my city?')">🌎 Bring to my city</span>
+    <span class="p" onclick="qk('What data does BLEU collect about cities?')">📊 City data</span>
+    <span class="p" onclick="go('events')">📅 NOLA events →</span>
+    <span class="p" onclick="go('directory')">⚕️ NOLA practitioners →</span>
+  </div>
 
   <!-- MAP VISUALIZATION -->
   <div class="card rv d2" style="height:340px;position:relative;background:linear-gradient(180deg,var(--s1),var(--bg));overflow:hidden;margin-bottom:24px">
@@ -426,7 +493,14 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   <div class="badge rv">LIVE ACROSS ALL SOURCES</div>
   <h2 class="rv d1" style="font-size:34px;margin-bottom:6px">Where It Becomes Real.</h2>
   <p class="rv d2" style="font-size:14px;color:var(--warm);max-width:620px;margin-bottom:8px;line-height:1.9">Knowledge is one thing. Showing up is another. Every event here — whether it's a community run, a practitioner workshop, or a citywide reset — is a moment where your data becomes your story.</p>
-  <p class="rv d2" style="font-size:12px;color:var(--mist);max-width:620px;margin-bottom:28px;line-height:1.8">We aggregate from Eventbrite, Meetup, Ochsner Health, local studios, and our own 40-Day programming. If it's wellness and it's happening in your city, it's here.</p>
+  <p class="rv d2" style="font-size:12px;color:var(--mist);max-width:620px;margin-bottom:14px;line-height:1.8">We aggregate from Eventbrite, Meetup, Ochsner Health, local studios, and our own 40-Day programming. If it's wellness and it's happening in your city, it's here.</p>
+  <div class="prompts rv d2" style="margin-bottom:28px">
+    <span class="p" onclick="qk('What events are happening this week in New Orleans?')">📅 This week</span>
+    <span class="p" onclick="qk('How do I join the 40-Day Reset?')">🔥 Join the Reset</span>
+    <span class="p" onclick="qk('What should I bring to my first BLEU event?')">🎒 First timer</span>
+    <span class="p" onclick="go('community')">👥 Community →</span>
+    <span class="p" onclick="go('vessel')">💊 Event prep products →</span>
+  </div>
 
   <!-- 40-DAY RESET HERO -->
   <div class="card rv d2 glow" style="margin-bottom:28px;padding:28px 24px;border-top:3px solid var(--ember);background:linear-gradient(180deg,var(--s2),var(--bg))">
@@ -509,7 +583,14 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   <div class="badge rv">THE RIPPLE IN ACTION</div>
   <h2 class="rv d1" style="font-size:34px;margin-bottom:6px">You're Not Doing This Alone.</h2>
   <p class="rv d2" style="font-size:14px;color:var(--warm);max-width:620px;margin-bottom:8px;line-height:1.9">The research is unambiguous — social connection is the strongest predictor of longevity. Stronger than exercise. Stronger than diet. The people around you literally change your biology.</p>
-  <p class="rv d2" style="font-size:12px;color:var(--mist);margin-bottom:28px">Community tracking launches Feb 18 with the 40-Day Reset. Every check-in, every event attended, every story shared becomes real data that feeds the system.</p>
+  <p class="rv d2" style="font-size:12px;color:var(--mist);margin-bottom:14px">Community tracking launches Feb 18 with the 40-Day Reset. Every check-in, every event attended, every story shared becomes real data that feeds the system.</p>
+  <div class="prompts prompts-gold rv d2" style="margin-bottom:28px">
+    <span class="p" onclick="qk('How does community affect my health outcomes?')">🔬 The science</span>
+    <span class="p" onclick="qk('I feel isolated — how do I start connecting?')">🤝 Start connecting</span>
+    <span class="p" onclick="go('events')">📅 Find an event →</span>
+    <span class="p" onclick="qk('Tell someone I love about BLEU')">💌 Tell a friend</span>
+    <span class="p" onclick="go('passport')">📊 My Passport →</span>
+  </div>
 
   <!-- LIVE ACTIVITY -->
   <div class="card rv d2" style="margin-bottom:22px;border-left:3px solid var(--teal)">
@@ -565,7 +646,14 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   <div class="badge rv">YOUR WELLNESS IDENTITY</div>
   <h2 class="rv d1" style="font-size:34px;margin-bottom:6px">One Score. Your Whole Life.</h2>
   <p class="rv d2" style="font-size:14px;color:var(--warm);max-width:620px;margin-bottom:8px;line-height:1.9">Credit scores changed finance. BLEU Scores will change wellness. One number that captures how you sleep, move, eat, recover, think, and connect — calculated from real data, not self-reported feelings.</p>
-  <p class="rv d2" style="font-size:12px;color:var(--mist);max-width:620px;margin-bottom:28px;line-height:1.8">Your Passport tracks everything. Your practitioner visits. The supplements you take. The events you attend. The protocols you follow. Over time, it becomes the most valuable health document you own.</p>
+  <p class="rv d2" style="font-size:12px;color:var(--mist);max-width:620px;margin-bottom:14px;line-height:1.8">Your Passport tracks everything. Your practitioner visits. The supplements you take. The events you attend. The protocols you follow. Over time, it becomes the most valuable health document you own.</p>
+  <div class="prompts rv d2" style="margin-bottom:28px">
+    <span class="p" onclick="qk('What will my BLEU Score measure exactly?')">📊 How scoring works</span>
+    <span class="p" onclick="qk('What\'s the fastest way to improve my wellness score?')">⚡ Fastest gains</span>
+    <span class="p" onclick="go('vessel')">💊 Start a protocol →</span>
+    <span class="p" onclick="go('directory')">⚕️ Find a practitioner →</span>
+    <span class="p" onclick="qk('How does BLEU compare to Apple Health or Oura Ring?')">🔄 vs. other trackers</span>
+  </div>
 
   <div class="rv d2" style="max-width:680px">
     <!-- SCORE PREVIEW -->
@@ -637,7 +725,14 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   <div class="badge rv">PATENT PENDING · PROPRIETARY SYSTEM</div>
   <h2 class="rv d1" style="font-size:34px;margin-bottom:6px">Nothing Gets In Unscored.</h2>
   <p class="rv d2" style="font-size:14px;color:var(--warm);max-width:620px;margin-bottom:8px;line-height:1.9">The wellness industry is a $7 trillion market built on trust you can't verify. Until now. BLEU scores everything — every practitioner, every product, every video, every study — against federal databases, clinical research, and our proprietary 12-Shield framework.</p>
-  <p class="rv d2" style="font-size:13px;color:var(--mist);max-width:620px;margin-bottom:28px;line-height:1.8">This isn't an opinion engine. It's a validation machine. And it's live right now.</p>
+  <p class="rv d2" style="font-size:13px;color:var(--mist);max-width:620px;margin-bottom:14px;line-height:1.8">This isn't an opinion engine. It's a validation machine. And it's live right now.</p>
+  <div class="prompts prompts-gold rv d2" style="margin-bottom:28px">
+    <span class="p" onclick="qk('How does BLEU calculate trust scores?')">🔢 How scoring works</span>
+    <span class="p" onclick="qk('What federal databases does BLEU check against?')">🏛️ Data sources</span>
+    <span class="p" onclick="qk('Can I validate a specific supplement or practitioner?')">🔍 Check something</span>
+    <span class="p" onclick="go('directory')">⚕️ Browse scored practitioners →</span>
+    <span class="p" onclick="go('vessel')">💊 Browse scored products →</span>
+  </div>
 
   <!-- THE BIG NUMBER -->
   <div class="card rv d2 tc glow" style="margin-bottom:28px;padding:36px 24px;background:linear-gradient(180deg,var(--s2),var(--bg))">
@@ -715,7 +810,8 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
 <!-- ═══ STORY ═══ -->
 <div id="story" class="tab"><div class="w sec" style="max-width:720px">
   <div class="badge rv">THE ORIGIN</div>
-  <h2 class="rv d1" style="font-size:clamp(28px,4.5vw,42px);margin-bottom:28px;line-height:1.15">This Didn't Start<br><span style="color:var(--gold)">With Technology.</span></h2>
+  <h2 class="rv d1" style="font-size:clamp(28px,4.5vw,42px);margin-bottom:8px;line-height:1.15">This Didn't Start<br><span style="color:var(--gold)">With Technology.</span></h2>
+  <div class="rv d1" style="font-family:var(--fm);font-size:8px;letter-spacing:5px;color:var(--fade);margin-bottom:28px">BEGIN · LEARN · EVOLVE · UNITE</div>
   <div class="rv d2" style="font-size:15px;color:var(--warm);line-height:2">
     <p style="margin-bottom:18px">It started with loss. With watching people I loved make choices that hurt them — not because they didn't care, but because nobody gave them anything real to trust.</p>
     <p style="margin-bottom:18px">I'm Bleu Michael Garner. I'm not a doctor. I'm not a tech founder. I'm someone who spent 27 years in the field — in clinics, in communities, in rooms where wellness isn't a luxury, it's survival.</p>
@@ -756,6 +852,11 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   <!-- THE ASK -->
   <div class="card rv d4 glow tc" style="border-top:2px solid rgba(200,169,110,.12);padding:32px 24px">
     <div style="font-family:var(--fm);font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:12px">NOW YOU KNOW THE STORY. HERE'S THE SYSTEM.</div>
+    <div class="prompts prompts-gold" style="margin-bottom:18px">
+      <span class="p" onclick="qk('What makes BLEU different from every other wellness app?')">🤔 Why is this different?</span>
+      <span class="p" onclick="qk('Is BLEU really free? What\'s the business model?')">💰 How is this free?</span>
+      <span class="p" onclick="qk('I want to get involved — how can I help?')">🤝 Get involved</span>
+    </div>
     <p style="font-size:14px;color:var(--warm);margin-bottom:18px;line-height:1.9;max-width:540px;margin-left:auto;margin-right:auto">Everything you just read is live. The Directory is real. The Vessel has products you can buy tonight. The events are happening this week. The Passport launches Feb 18. This isn't a pitch deck. It's a product.</p>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
       <button class="btn btn-g" onclick="go('vessel')">START WITH THE VESSEL →</button>
@@ -772,7 +873,8 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
 </div></div>
 
 <footer>
-  <div style="font-family:var(--ff);font-size:24px;letter-spacing:12px;font-weight:200;margin-bottom:8px">BLEU</div>
+  <div style="font-family:var(--ff);font-size:24px;letter-spacing:12px;font-weight:200;margin-bottom:4px">BLEU</div>
+  <div style="font-family:var(--fm);font-size:8px;letter-spacing:5px;color:var(--fade);margin-bottom:10px">BEGIN · LEARN · EVOLVE · UNITE</div>
   <div style="font-family:var(--fm);font-size:9px;color:var(--fade);letter-spacing:3px;margin-bottom:14px">THE LONGEVITY OPERATING SYSTEM · PATENT PENDING</div>
   <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
     <a href="https://neworleans.bleu.live" style="font-family:var(--fm);font-size:9px;color:var(--teal);text-decoration:none;letter-spacing:1px">neworleans.bleu.live</a>
@@ -944,7 +1046,12 @@ async function loadData(){
   PR.forEach(function(p){if(!p._score)p._score=calcProdScore(p)});
   PR.sort(function(a,b){return b._score-a._score});
   var t=C.p+C.pr+C.l+C.yt+C.st;
-  document.getElementById('st-total').textContent=t.toLocaleString();document.getElementById('st-prac').textContent=C.p.toLocaleString();document.getElementById('st-loc').textContent=C.l.toLocaleString();document.getElementById('st-prod').textContent=C.pr;document.getElementById('dc').textContent=C.p.toLocaleString();document.getElementById('vc').textContent=C.pr;document.getElementById('ytc').textContent=C.yt;document.getElementById('stc').textContent=C.st;
+  // Update counter targets and re-animate
+  var stEl=document.getElementById('st-total');if(stEl){stEl.dataset.target=t;stEl.textContent=t.toLocaleString()}
+  var spEl=document.getElementById('st-prac');if(spEl){spEl.dataset.target=C.p;spEl.textContent=C.p.toLocaleString()}
+  var slEl=document.getElementById('st-loc');if(slEl){slEl.dataset.target=C.l;slEl.textContent=C.l.toLocaleString()}
+  var svEl=document.getElementById('st-prod');if(svEl){svEl.textContent=C.pr}
+  document.getElementById('dc').textContent=C.p.toLocaleString();document.getElementById('vc').textContent=C.pr;document.getElementById('ytc').textContent=C.yt;document.getElementById('stc').textContent=C.st;
   document.getElementById('alvai-st').textContent='Connected · '+t.toLocaleString()+' data points · '+C.p.toLocaleString()+' practitioners';
   zones[0].p=C.p;zones[0].l=C.l;rZones();
   rDir();rProd();rFeatProd();rYT();rST();rSpecFilters();rValidation();rFeed();
@@ -1291,8 +1398,42 @@ function rST(){
     return'<div class="card"><div style="font-size:13px;line-height:1.5;margin-bottom:6px;font-weight:500">'+title+'</div><div style="font-size:10px;color:var(--fade);margin-bottom:8px">'+journal+' · '+year+'</div><p style="font-size:11px;color:var(--warm);line-height:1.7;margin-bottom:10px">'+why+'</p><div style="display:flex;justify-content:space-between;align-items:center">'+(pmid?'<a href="https://pubmed.ncbi.nlm.nih.gov/'+pmid+'" target="_blank" style="font-family:var(--fm);font-size:9px;color:var(--sage);text-decoration:none">Read on PubMed →</a>':'<span></span>')+'<button class="btn btn-t btn-s" onclick="go(\'vessel\')" style="font-size:8px">Related Products →</button></div></div>'}).join('')}
 rPaths();
 
-// ═══ ALVAI (pulls live data) ═══
+// ═══ ALVAI TYPING EFFECT ═══
+var alvaiWelcome='Welcome to BLEU. I\'m connected to the full validated ecosystem — practitioners, products, research, events, drug interactions, and community data.\n\nYou don\'t need to know the right question. Just tell me what\'s going on. I\'ll connect the dots.';
+var alvaiTyped=false;
+function typeAlvai(){
+  if(alvaiTyped)return;alvaiTyped=true;
+  var el=document.getElementById('alvai-welcome');if(!el)return;
+  var i=0;el.innerHTML='';
+  function tick(){
+    if(i<alvaiWelcome.length){
+      var ch=alvaiWelcome[i];
+      if(ch==='\n')el.innerHTML+='<br>';
+      else el.innerHTML+=ch;
+      i++;setTimeout(tick,ch==='.'?80:ch===','?40:18);
+    }
+  }
+  tick();
+}
+// Type on first visit to alvai tab
+var origGo=go;
+function go(id){
+  if(event)event.preventDefault();
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.nlinks a').forEach(function(a){a.classList.toggle('on',a.dataset.t===id)});
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(observe,150);
+  if(id==='alvai')setTimeout(typeAlvai,300);
+}
+
+// ═══ ALVAI CHAT (pulls live data) ═══
 function chat(){var i=document.getElementById('ch-in'),m=i.value.trim();if(!m)return;addMsg('me',m);i.value='';var lo=m.toLowerCase(),r='';
+// Show typing indicator first
+var box=document.getElementById('ch-msgs');
+var typing=document.createElement('div');typing.id='typing';typing.style.cssText='display:flex;margin-bottom:16px';
+typing.innerHTML='<div class="bub ai" style="padding:12px 18px"><div style="display:flex;gap:4px"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .2s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .4s"></div></div></div>';
+box.appendChild(typing);box.scrollTop=box.scrollHeight;
 if(lo.includes('sleep')){r='Sleep — one of our 12 Shields.\n\nTop validated protocols:\n1. Magnesium glycinate 200mg — Score: 94.2\n2. Huberman Sleep Protocol — temperature, light, timing\n3. 10-3-2-1 Rule — endorsed by network providers\n\n🛒 Products: Magnesium (94.2) · L-Theanine (91.5)\n⚕️ '+C.p.toLocaleString()+' practitioners can help\n📅 Event: Sleep Masterclass, Mar 1\n\n→ I can build your Sleep Plan\n→ Or send this to someone who needs it: bleu.live'}
 else if(lo.includes('cbd')||lo.includes('interaction')){r='CBD inhibits CYP2D6 and CYP3A4:\n• SSRIs — increased side effects\n• Blood thinners — bleeding risk\n• Anti-seizure meds — levels may increase\n• Statins — potential muscle pain\n\n📊 Based on '+(C.st||70)+'+ studies in our database\n👥 '+(C.p||200)+' practitioners can guide you'}
 else if(lo.includes('event')){r='Live events:\n\n🔥 Feb 18 — 40-Day Kickoff (847)\n🧘 Feb 22 — Sunrise Yoga (156)\n💪 Feb 20 — Sobriety Circle\n🍎 Feb 25 — Meal Prep\n🏆 Feb 25 — Week 1 Milestone (1,200)\n😴 Mar 1 — Sleep Masterclass\n🏃 Mar 8 — 5K Crescent Park\n🎉 Mar 29 — Day 40 (2,400)\n\nCheck Events tab.'}
@@ -1308,18 +1449,45 @@ else if(lo.includes('practitioner')||lo.includes('doctor')||lo.includes('find')|
   }).join('\n\n'):'Loading...')+'\n\nNarrow by specialty or location.'}
 else if(lo.includes('shield')||lo.includes('trust')){r='12 Shields:\n\nBODY: 🏃 Movement · 🍎 Nutrition · 😴 Sleep · 🧘 Recovery\nMIND: 🧠 Mindset · 🎯 Purpose · 📚 Learning · 🎨 Creativity\nCONNECTION: 👥 Community · ❤️ Relations · 🌍 Environment · 🔥 Legacy\n\nOriginal IP. Patent pending.'}
 else{var t=C.p+C.pr+C.l+C.yt+C.st;r='BLEU — '+(t||4985).toLocaleString()+' validated data points\n\n⚕️ '+C.p.toLocaleString()+' practitioners (NPI-verified)\n💊 '+C.pr+' products (FDA-checked)\n📍 '+C.l.toLocaleString()+' locations mapped\n📹 '+C.yt+' expert videos\n📚 '+C.st+' clinical studies\n🏙️ 1 living city: neworleans.bleu.live\n\nAsk me about: sleep, supplements, drug interactions, practitioners, events, the 40-Day Reset, or your personalized plan.\n\n💡 Know someone who needs this? Send them bleu.live'}
-setTimeout(function(){addMsg('ai',r)},400)}
+setTimeout(function(){var t=document.getElementById('typing');if(t)t.remove();addMsg('ai',r)},600+Math.random()*400)}
 function addMsg(who,txt){var box=document.getElementById('ch-msgs'),d=document.createElement('div');d.style.cssText='display:flex;margin-bottom:16px;'+(who==='me'?'justify-content:flex-end':'');d.innerHTML='<div class="bub '+(who==='me'?'me':'ai')+'">'+(who==='ai'?'<div style="font-family:var(--fm);font-size:7px;color:var(--gold);letter-spacing:2px;margin-bottom:6px">ALVAI</div>':'')+txt+'</div>';box.appendChild(d);box.scrollTop=box.scrollHeight}
 function qk(q){go('alvai');setTimeout(function(){document.getElementById('ch-in').value=q;chat()},120)}
 function heroAsk(){var v=document.getElementById('hero-q').value;if(v){go('alvai');setTimeout(function(){document.getElementById('ch-in').value=v;chat()},120)}}
+// Tab-specific search helpers
+function dq(q){document.getElementById('ds').value=q;fDir()}
+function vq(q){document.getElementById('ps').value=q;fProd()}
 
-// ═══ NAV ═══
-function go(id){if(event)event.preventDefault();document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});document.getElementById(id).classList.add('on');document.querySelectorAll('.nlinks a').forEach(function(a){a.classList.toggle('on',a.dataset.t===id)});window.scrollTo({top:0,behavior:'smooth'});setTimeout(observe,150)}
+// ═══ ANIMATED COUNTERS ═══
+var counted=false;
+function animateCounters(){
+  if(counted)return;counted=true;
+  document.querySelectorAll('[data-target]').forEach(function(el){
+    var target=parseInt(el.dataset.target);
+    var duration=1800;var start=0;var startTime=null;
+    function step(ts){
+      if(!startTime)startTime=ts;
+      var progress=Math.min((ts-startTime)/duration,1);
+      var eased=1-Math.pow(1-progress,3);
+      el.textContent=Math.floor(eased*target).toLocaleString();
+      if(progress<1)requestAnimationFrame(step);
+      else el.textContent=target.toLocaleString();
+    }
+    requestAnimationFrame(step);
+  });
+}
 
-// ═══ SCROLL REVEAL ═══
-function observe(){document.querySelectorAll('.rv:not(.vis)').forEach(function(el){if(el.getBoundingClientRect().top<window.innerHeight*.92)el.classList.add('vis')})}
+// ═══ SCROLL REVEAL + COUNTER TRIGGER ═══
+function observe(){
+  var triggered=false;
+  document.querySelectorAll('.rv:not(.vis)').forEach(function(el){
+    if(el.getBoundingClientRect().top<window.innerHeight*.92){el.classList.add('vis');triggered=true}
+  });
+  // Trigger counters when stats are visible
+  var st=document.getElementById('st-total');
+  if(st&&st.getBoundingClientRect().top<window.innerHeight)animateCounters();
+}
 window.addEventListener('scroll',observe,{passive:true});
-window.addEventListener('load',function(){observe();loadData()});
+window.addEventListener('load',function(){observe();loadData();setTimeout(animateCounters,800)});
 setTimeout(observe,80);
 
 </script>
