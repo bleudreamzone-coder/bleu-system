@@ -1116,6 +1116,8 @@ async function loadData(){
   var slEl=document.getElementById('st-loc');if(slEl){slEl.dataset.target=C.l;slEl.textContent=C.l.toLocaleString()}
   var svEl=document.getElementById('st-prod');if(svEl){svEl.textContent=C.pr}
   document.getElementById('dc').textContent=C.p.toLocaleString();document.getElementById('vc').textContent=C.pr;document.getElementById('ytc').textContent=C.yt;document.getElementById('stc').textContent=C.st;
+  if(document.getElementById('alvai-prac'))document.getElementById('alvai-prac').textContent=C.p.toLocaleString();
+  if(document.getElementById('alvai-prod'))document.getElementById('alvai-prod').textContent=C.pr;
   document.getElementById('alvai-st').textContent='Connected · '+t.toLocaleString()+' data points · '+C.p.toLocaleString()+' practitioners';
   zones[0].p=C.p;zones[0].l=C.l;rZones();
   rDir();rProd();rFeatProd();rYT();rST();rSpecFilters();rValidation();rFeed();
@@ -1417,7 +1419,7 @@ function rProd(){
   }).join('');
 }
 function fProd(){var q=document.getElementById('ps').value.toLowerCase();document.querySelectorAll('.pi').forEach(function(e){e.style.display=e.textContent.toLowerCase().includes(q)?'':'none'})}
-rVesselCats();rPicks();
+rVesselCats();rPicks();loadData();
 
 function rFeatProd(){
   var d=picks.slice(0,4);
