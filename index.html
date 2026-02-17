@@ -89,6 +89,7 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
     <a href="#" data-t="story" onclick="go('story')">Story</a>
   </div>
   <a href="https://neworleans.bleu.live" style="font-family:var(--fm);font-size:8px;color:var(--teal);text-decoration:none;border:1px solid rgba(91,181,197,.18);border-radius:20px;padding:5px 12px;letter-spacing:2px;flex-shrink:0;transition:all .3s" onmouseover="this.style.background='rgba(91,181,197,.06)'" onmouseout="this.style.background='transparent'">NOLA →</a>
+  <span style="font-family:var(--fm);font-size:6px;color:var(--fade);letter-spacing:1px;opacity:.4">v7</span>
 </nav>
 
 <!-- ═══ HOME ═══ -->
@@ -240,7 +241,7 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
     <h2 style="font-size:38px;letter-spacing:10px;font-weight:200">ALVAI</h2>
     <div style="font-family:var(--fm);font-size:10px;color:var(--gold);letter-spacing:3px;margin-top:5px">THE LIGHT THAT LEARNS</div>
     <p style="font-size:12px;color:var(--warm);margin-top:8px;max-width:480px;display:inline-block;line-height:1.7">I'm connected to the entire BLEU ecosystem — <span id="alvai-prac">200</span> practitioners, <span id="alvai-prod">146</span> products, <span id="alvai-ev">13</span> events, and every drug interaction in our database. Ask me anything.</p>
-    <p style="font-size:11px;color:var(--fade);margin-top:6px" id="alvai-st">Connecting to ecosystem...</p>
+    <p style="font-size:11px;color:var(--fade);margin-top:6px" id="alvai-st">Loading ecosystem...</p>
     <div style="font-family:var(--fm);font-size:8px;color:var(--teal);letter-spacing:1px;margin-top:6px;padding:4px 10px;border:1px solid rgba(91,181,197,.2);border-radius:6px;display:inline-block">LIVE AI · POWERED BY CLAUDE</div>
   </div>
 
@@ -310,12 +311,14 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   <!-- SEARCH -->
   <input type="text" id="ds" placeholder="Search by name, specialty, city..." style="width:100%;background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:14px 22px;color:var(--cream);font-size:14px;font-family:var(--fb);font-weight:300;outline:none;margin-bottom:8px" oninput="fDir()">
   <div class="prompts" style="justify-content:flex-start;margin-bottom:18px">
-    <span class="p" onclick="dq('Psychiatry')">🧠 Psychiatry</span>
-    <span class="p" onclick="dq('Nurse Practitioner')">💊 Nurse Practitioner</span>
-    <span class="p" onclick="dq('Cardiology')">❤️ Cardiology</span>
-    <span class="p" onclick="dq('Dietitian')">🍎 Dietitian</span>
-    <span class="p" onclick="dq('Physical Therapy')">🏃 Physical Therapy</span>
-    <span class="p" onclick="qk('Which type of doctor should I see for chronic fatigue?')">❓ Which doctor for me?</span>
+    <span class="p" onclick="dq('Psychiatry')">🧠 my anxiety won't stop</span>
+    <span class="p" onclick="dq('Internal Medicine')">😰 exhaustion nobody can explain</span>
+    <span class="p" onclick="dq('Chiropractic')">🔥 my back is killing me</span>
+    <span class="p" onclick="dq('Cardiology')">❤️ heart or blood pressure</span>
+    <span class="p" onclick="dq('Dietitian')">🍎 need a real nutrition plan</span>
+    <span class="p" onclick="dq('Physical Therapy')">🏃 recovering from injury</span>
+    <span class="p" onclick="dq('Gastroenterology')">🦠 gut is a mess</span>
+    <span class="p" onclick="qk('I don\'t know what kind of doctor I need — help me figure it out')">❓ I don't know where to start</span>
   </div>
 
   <!-- PRACTITIONER LIST -->
@@ -358,12 +361,14 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
   <!-- SEARCH -->
   <input type="text" id="ps" placeholder="Search products, brands, supplements..." style="width:100%;background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:14px 22px;color:var(--cream);font-size:14px;font-family:var(--fb);font-weight:300;outline:none;margin-bottom:8px" oninput="fProd()">
   <div class="prompts prompts-sage" style="justify-content:flex-start;margin-bottom:18px">
-    <span class="p" onclick="vq('Magnesium')">😴 Magnesium</span>
-    <span class="p" onclick="vq('Creatine')">🏃 Creatine</span>
-    <span class="p" onclick="vq('Omega')">🐟 Omega-3</span>
-    <span class="p" onclick="vq('Probiotics')">🦠 Probiotics</span>
-    <span class="p" onclick="qk('What supplements interact with my SSRI?')">⚠️ Drug interactions</span>
-    <span class="p" onclick="qk('Build me a beginner supplement stack under $50/month')">💰 Budget stack</span>
+    <span class="p" onclick="vq('Magnesium')">😴 can't sleep</span>
+    <span class="p" onclick="vq('Creatine')">💪 need real energy</span>
+    <span class="p" onclick="vq('Omega')">🔥 everything hurts</span>
+    <span class="p" onclick="vq('Probiotics')">🦠 gut issues</span>
+    <span class="p" onclick="vq('Ashwagandha')">🧠 stressed to the max</span>
+    <span class="p" onclick="vq('Vitamin D')">☀️ always tired + low mood</span>
+    <span class="p" onclick="qk('What supplements interact with my medication?')">⚠️ drug interactions</span>
+    <span class="p" onclick="qk('Build me a starter stack under $50/month')">💰 budget-friendly starter</span>
   </div>
 
   <!-- PRODUCT GRID -->
@@ -927,7 +932,8 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
 </footer>
 
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+console.log('BLEU v7 loading...');
 // ═══ SUPABASE ═══
 var SB='https://sqyzboesdpdussiwqpzk.supabase.co',SK='sb_publishable_TF6vZ_gvSHlxuVBnsDIbnw_qFJCuGjO',SH={'apikey':SK,'Authorization':'Bearer '+SK};
 var P=[],PR=[],YT=[],ST=[],LOC=[],C={p:200,pr:15,l:1212,yt:24,st:70};
@@ -1388,7 +1394,16 @@ document.getElementById('vc').textContent=C.pr||15;
 document.getElementById('ytc').textContent=C.yt||24;
 document.getElementById('stc').textContent=C.st||70;
 // Render immediately with embedded data
-rDir();rProd();rFeatProd();rYT();rST();rSpecFilters();rValidation();rFeed();
+console.log('BLEU v7: rendering with P='+P.length+' PR='+PR.length+' picks='+picks.length);
+try{rDir()}catch(e){console.error('rDir failed:',e)}
+try{rProd()}catch(e){console.error('rProd failed:',e)}
+try{rFeatProd()}catch(e){console.error('rFeatProd failed:',e)}
+try{rYT()}catch(e){console.error('rYT failed:',e)}
+try{rST()}catch(e){console.error('rST failed:',e)}
+try{rSpecFilters()}catch(e){console.error('rSpecFilters failed:',e)}
+try{rValidation()}catch(e){console.error('rValidation failed:',e)}
+try{rFeed()}catch(e){console.error('rFeed failed:',e)}
+console.log('BLEU v7: all renders complete');
 // Then try Supabase for live data
 loadData();
 
