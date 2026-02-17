@@ -1479,38 +1479,79 @@ function go(id){
   if(id==='alvai')setTimeout(typeAlvai,300);
 }
 
-// ═══ ALVAI CHAT (pulls live data) ═══
-var chatTimer=null;
-// === ALVAI CHAT — LIVE CLAUDE INTELLIGENCE ===
-function fmtR(t){t=t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g,function(_,x,u){var s="color:var(--teal);text-decoration:underline";if(u.match(/iherb/i))s="color:var(--sage);text-decoration:underline";if(u.match(/pubmed/i))s="color:var(--gold);text-decoration:underline";if(u.match(/youtube/i))s="color:var(--ember);text-decoration:underline";return "<a href=\""+u+"\" target=\"_blank\" style=\""+s+"\">"+x+"</a>"});t=t.replace(/(^|[\s>])(https?:\/\/[^\s<\)]+)/g,function(_,p,u){var l="Link";if(u.match(/iherb/i))l="Shop iHerb";else if(u.match(/amazon/i))l="Shop Amazon";else if(u.match(/pubmed/i))l="View Study";else if(u.match(/youtube/i))l="Watch";else if(u.match(/bleu\.live/i))l="Visit";var s="color:var(--teal);text-decoration:underline";if(u.match(/iherb/i))s="color:var(--sage);text-decoration:underline";if(u.match(/pubmed/i))s="color:var(--gold);text-decoration:underline";return p+"<a href=\""+u+"\" target=\"_blank\" style=\""+s+"\">"+l+" →</a>"});t=t.replace(/\*\*(.+?)\*\*/g,"<strong style=\"color:var(--cream)\">$1</strong>");t=t.replace(/NEXT STEP:/g,"<span style=\"font-family:var(--fm);font-size:9px;color:var(--gold);letter-spacing:1.5px;background:rgba(200,169,110,.08);padding:3px 8px;border-radius:4px\">NEXT STEP</span>");t=t.replace(/Trust:\s*(\d+)\/99/g,"<span style=\"color:var(--teal);font-weight:600\">Trust: $1/99</span>");t=t.replace(/\n/g,"<br>");t=t.replace(/(<br>){3,}/g,"<br><br>");return t}
+// === ALVAI LIVE CHAT ===
 var ALVAI_URL=SB+'/functions/v1/alvai';
-var chatHistory=[];
-var isThinking=false;
+var chatHistory=[],isThinking=false;
+function fmtR(t){
+  t=t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s\)]+)\)/g,function(_,x,u){
+    var s='color:var(--teal);text-decoration:underline';
+    if(u.match(/iherb/i))s='color:var(--sage);text-decoration:underline';
+    if(u.match(/pubmed/i))s='color:var(--gold);text-decoration:underline';
+    if(u.match(/youtube/i))s='color:var(--ember);text-decoration:underline';
+    return '<a href="'+u+'" target="_blank" style="'+s+'">'+x+'</a>';
+  });
+  t=t.replace(/(^|[\s>])(https?:\/\/[^\s<\)"]+)/g,function(_,p,u){
+    var l='Link';
+    if(u.match(/iherb/i))l='Shop iHerb';
+    else if(u.match(/amazon/i))l='Shop Amazon';
+    else if(u.match(/pubmed/i))l='View Study';
+    else if(u.match(/youtube/i))l='Watch';
+    else if(u.match(/bleu\.live/i))l='Visit';
+    var s='color:var(--teal);text-decoration:underline';
+    if(u.match(/iherb/i))s='color:var(--sage);text-decoration:underline';
+    if(u.match(/pubmed/i))s='color:var(--gold);text-decoration:underline';
+    return p+'<a href="'+u+'" target="_blank" style="'+s+'">'+l+' \u2192</a>';
+  });
+  t=t.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--cream)">$1</strong>');
+  t=t.replace(/^(\d+)\.\s+(.+)$/gm,'<div style="margin:4px 0;padding-left:8px"><span style="color:var(--gold);font-weight:600">$1.</span> $2</div>');
+  t=t.replace(/^[-\u2022]\s+(.+)$/gm,'<div style="margin:3px 0;padding-left:12px"><span style="color:var(--teal)">\u25c6</span> $1</div>');
+  t=t.replace(/NEXT STEP:/g,'<span style="font-family:var(--fm);font-size:9px;color:var(--gold);letter-spacing:1.5px;background:rgba(200,169,110,.08);padding:3px 8px;border-radius:4px">NEXT STEP</span>');
+  t=t.replace(/Trust:\s*(\d+)\/99/g,'<span style="color:var(--teal);font-weight:600">Trust: $1/99</span>');
+  t=t.replace(/\n/g,'<br>');
+  t=t.replace(/(<br>){3,}/g,'<br><br>');
+  return t;
+}
 async function chat(){
-  var i=document.getElementById('ch-in'),m=i.value.trim();if(!m||isThinking)return;
-  i.value='';isThinking=true;addMsg('me',m);
+  var inp=document.getElementById('ch-in'),m=inp.value.trim();
+  if(!m||isThinking)return;
+  inp.value='';isThinking=true;addMsg('me',m);
   chatHistory.push({role:'user',content:m});
   var box=document.getElementById('ch-msgs');
   document.querySelectorAll('.alvai-typing').forEach(function(t){t.remove()});
-  var typing=document.createElement('div');typing.className='alvai-typing';typing.style.cssText='display:flex;margin-bottom:16px';
-  typing.innerHTML='<div class="bub ai" style="padding:12px 18px"><div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .2s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .4s"></div><span style="font-size:10px;color:var(--fade);margin-left:8px">Alvai is thinking...</span></div></div>';
-  box.appendChild(typing);box.scrollTop=box.scrollHeight;
+  var ty=document.createElement('div');ty.className='alvai-typing';ty.style.cssText='display:flex;margin-bottom:16px';
+  ty.innerHTML='<div class="bub ai" style="padding:12px 18px"><div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .2s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .4s"></div><span style="font-size:10px;color:var(--fade);margin-left:8px">Alvai is thinking...</span></div></div>';
+  box.appendChild(ty);box.scrollTop=box.scrollHeight;
   try{
-    var resp=await fetch(ALVAI_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},body:JSON.stringify({message:m,history:chatHistory.slice(-12)})});
-    var data=await resp.json();
+    var r=await fetch(ALVAI_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},body:JSON.stringify({message:m,history:chatHistory.slice(-12)})});
+    var d=await r.json();
     document.querySelectorAll('.alvai-typing').forEach(function(t){t.remove()});
-    if(data.reply){
-      addMsg("ai",fmtR(data.reply),true););
-      addMsg('ai',fmt,true);
-      chatHistory.push({role:'assistant',content:data.reply});
-    }else{addMsg('ai','Let me try again in a moment.');}
-  }catch(err){
-    console.error('Alvai:',err);
+    if(d.reply){
+      addMsg('ai',fmtR(d.reply),true);
+      chatHistory.push({role:'assistant',content:d.reply});
+      if(chatHistory.length>20)chatHistory=chatHistory.slice(-20);
+    }else{addMsg('ai',alvaiLocal(m));}
+  }catch(e){
+    console.error('Alvai:',e);
     document.querySelectorAll('.alvai-typing').forEach(function(t){t.remove()});
-    addMsg('ai','Connection issue — try again in a moment.');
+    addMsg('ai',alvaiLocal(m));
   }
   isThinking=false;
 }
+function alvaiLocal(q){
+  var lo=q.toLowerCase();
+  if(lo.match(/doctor|practitioner|find|therapist/)){
+    var o='Top practitioners:\n\n';
+    P.slice(0,3).forEach(function(p,i){o+=(i+1)+'. '+gf(p,['full_name','name'],'Provider')+' \u2014 '+gf(p,['taxonomy_description','specialty'],'Healthcare')+'\n'});
+    return o+'\nSee Directory tab for full list.';
+  }
+  if(lo.match(/supplement|vitamin|sleep|energy|stress|gut|pain/)){
+    var o='Top products:\n\n';
+    picks.slice(0,4).forEach(function(p,i){o+=(i+1)+'. '+p.n+' (Score: '+p.sc+')\n'});
+    return o;
+  }
+  return 'Ask me about supplements, practitioners, drug interactions, or the 40-Day Reset.';
+}
+
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function addMsg(who,txt){var box=document.getElementById('ch-msgs'),d=document.createElement('div');d.style.cssText='display:flex;margin-bottom:16px;'+(who==='me'?'justify-content:flex-end':'');var safe=who==='me'?esc(txt):txt;var html=safe.replace(/\n/g,'<br>');d.innerHTML='<div class="bub '+(who==='me'?'me':'ai')+'">'+(who==='ai'?'<div style="font-family:var(--fm);font-size:7px;color:var(--gold);letter-spacing:2px;margin-bottom:6px">ALVAI</div>':'')+html+'</div>';box.appendChild(d);box.scrollTop=box.scrollHeight}
 function qk(q){go('alvai');setTimeout(function(){document.getElementById('ch-in').value=q;chat()},120)}
