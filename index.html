@@ -930,7 +930,7 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ SUPABASE ═══
 var SB='https://sqyzboesdpdussiwqpzk.supabase.co',SK='sb_publishable_TF6vZ_gvSHlxuVBnsDIbnw_qFJCuGjO',SH={'apikey':SK,'Authorization':'Bearer '+SK};
-var P=[],PR=[],YT=[],ST=[],LOC=[],C={p:0,pr:0,l:0,yt:0,st:0};
+var P=PRAC_DATA.slice(),PR=PROD_DATA.slice(),YT=VID_DATA.slice(),ST=STUDY_DATA.slice(),LOC=[],C={p:PRAC_DATA.length||200,pr:PROD_DATA.length||15,l:1212,yt:VID_DATA.length||24,st:STUDY_DATA.length||70};
 async function sf(t,x){try{var r=await fetch(SB+'/rest/v1/'+t+'?select=*'+(x||'')+'&limit=50',{headers:Object.assign({},SH,{Prefer:'count=exact',Range:'0-49'})});var c=parseInt((r.headers.get('content-range')||'*/0').split('/')[1])||0;var d=await r.json();return{d:Array.isArray(d)?d:[],c:c}}catch(e){return{d:[],c:0}}}
 
 // ═══ EMBEDDED REAL DATA — works instantly, zero dependencies ═══
@@ -1372,7 +1372,20 @@ function rProd(){
   }).join('');
 }
 function fProd(){var q=document.getElementById('ps').value.toLowerCase();document.querySelectorAll('.pi').forEach(function(e){e.style.display=e.textContent.toLowerCase().includes(q)?'':'none'})}
-rVesselCats();rPicks();loadData();
+rVesselCats();rPicks();
+// Score embedded data immediately
+P.forEach(function(p){if(!p._score)p._score=calcPracScore(p)});
+P.sort(function(a,b){return b._score-a._score});
+PR.forEach(function(p){if(!p._score)p._score=calcProdScore(p)});
+// Update counters with embedded data
+document.getElementById('dc').textContent=(C.p||200).toLocaleString();
+document.getElementById('vc').textContent=C.pr||15;
+document.getElementById('ytc').textContent=C.yt||24;
+document.getElementById('stc').textContent=C.st||70;
+// Render immediately with embedded data
+rDir();rProd();rFeatProd();rYT();rST();rSpecFilters();rValidation();rFeed();
+// Then try Supabase for live data
+loadData();
 
 function rFeatProd(){
   var d=picks.slice(0,4);
@@ -1654,6 +1667,88 @@ function alvaiThink(q){
     out.push('→ YOU → FAMILY → COMMUNITY → CITY');
   }
 
+  if(topics.weight){
+    out.push('⚖️ Honest answer? Losing weight is simple. Not easy. But BLEU gives you the tools that actually work.\n');
+    out.push('The science (not the marketing):\n• Caloric deficit matters, but WHAT you eat matters more for sustainability\n• Inflammation makes fat loss nearly impossible — fix this first\n• Sleep deprivation increases ghrelin (hunger hormone) by 28%\n• Stress = elevated cortisol = belly fat storage\n');
+    out.push('💊 Your protocol:\n1. Omega-3 Fish Oil (Score: 95) — kills inflammation, the invisible barrier\n2. Creatine (Score: 97) — preserves muscle during deficit, boosts metabolism\n3. LMNT Electrolytes (Score: 93) — kills cravings, most "hunger" is dehydration\n4. Vitamin D3+K2 (Score: 94) — low D = slow metabolism\n');
+    out.push('📋 Non-negotiables:\n• Protein at every meal (1g per lb of ideal body weight)\n• Walk 8,000+ steps daily — more effective than most gym sessions\n• Sleep 7+ hours — this alone can move the needle 5-10 lbs\n');
+    var pracs=findPracs(['dietitian','nutrition','endocrin','internal','naturo']);
+    if(pracs.length){out.push('\n⚕️ Work with someone who knows the science:');pracs.forEach(function(p){out.push(gf(p,['full_name','name'],'Provider')+' — '+gf(p,['taxonomy_description','specialty'],'Healthcare')+' (Score: '+(p._score||calcPracScore(p))+')')});}
+  }
+
+  if(topics.pain){
+    out.push('🔥 Pain is a signal, not a sentence. The goal isn\'t to mask it — it\'s to find what\'s driving it.\n');
+    out.push('💊 Start here:\n1. Omega-3 Fish Oil (Score: 95) — the anti-inflammatory foundation. Most chronic pain has an inflammatory component.\n2. Magnesium Glycinate (Score: 96) — muscle tension, cramps, nerve pain all respond to magnesium.\n3. Creatine (Score: 97) — joint support, muscle recovery, mitochondrial energy for healing.\n');
+    out.push('📋 Movement protocol:\n• Don\'t stop moving. Immobility makes chronic pain worse.\n• Walking > sitting. Always.\n• Targeted mobility work 10 min/day\n');
+    var pracs=findPracs(['chiropract','physical','orthop','pain','sports','rheumat']);
+    if(pracs.length){out.push('\n⚕️ Practitioners who specialize:');pracs.forEach(function(p){out.push(gf(p,['full_name','name'],'Provider')+' — '+gf(p,['taxonomy_description','specialty'],'Healthcare')+' (Score: '+(p._score||calcPracScore(p))+')')});}
+  }
+
+  if(topics.longevity){
+    out.push('🧬 Longevity isn\'t about living longer. It\'s about living better, longer. Here\'s what the research actually supports:\n');
+    out.push('💊 The Longevity Stack:\n1. Creatine (Score: 97) — mitochondrial energy, cognitive protection, muscle preservation\n2. Omega-3 (Score: 95) — reduces all-cause mortality 13% (meta-analysis of 40 RCTs)\n3. Vitamin D3+K2 (Score: 94) — immune function, bone density, cardiovascular protection\n4. Magnesium (Score: 96) — involved in 300+ enzymatic reactions. Deficiency accelerates aging.\n');
+    out.push('📋 The Big 5 Longevity Habits:\n1. Sleep 7-9 hours (non-negotiable)\n2. Strength training 3x/week (muscle is the organ of longevity)\n3. Zone 2 cardio 150 min/week\n4. Eat 1g protein per lb ideal body weight\n5. Maintain social connections (loneliness = 15 cigarettes/day)\n');
+    out.push('📚 Key researchers: Peter Attia, Andrew Huberman, Rhonda Patrick, David Sinclair\n→ Check the Learn tab for vetted video content from these sources.');
+  }
+
+  if(topics.supplement&&!topics.sleep&&!topics.energy&&!topics.gut&&!topics.stress&&!topics.weight&&!topics.pain&&!topics.longevity&&!topics.creatine){
+    out.push('💊 Here\'s what I\'d actually take — based on clinical data, not marketing:\n');
+    out.push('THE FOUNDATION (everyone should consider these):\n');
+    out.push('1. Magnesium Glycinate — NOW Foods (Score: 96)\n   400mg before bed. Most people are deficient. Affects sleep, stress, muscles, 300+ enzymes.\n');
+    out.push('2. Omega-3 Fish Oil — Nordic Naturals (Score: 95)\n   2 softgels with food. Anti-inflammatory foundation. Triglyceride form absorbs better.\n');
+    out.push('3. Vitamin D3+K2 — Sports Research (Score: 94)\n   One softgel with breakfast. 42% of Americans are deficient. K2 directs calcium properly.\n');
+    out.push('4. Creatine — Thorne (Score: 97)\n   5g daily. Most studied supplement in history. Brain + muscles + energy.\n');
+    out.push('\nADD BASED ON YOUR NEEDS:\n• Can\'t sleep → add L-Theanine (Score: 91)\n• Stressed → add Ashwagandha KSM-66 (Score: 92)\n• Gut issues → add Probiotics 50B CFU (Score: 90)\n• Low energy → add LMNT Electrolytes (Score: 93)\n');
+    out.push('Every product is in the Vessel tab with Amazon links. Your purchases keep BLEU free.');
+  }
+
+  if(topics.magnesium&&!topics.sleep){
+    var p=picks.find(function(x){return x.n.includes('Magnesium')});
+    out.push('😴 Magnesium Glycinate — NOW Foods (Score: '+p.sc+')\n');
+    out.push('WHY: '+p.w+'\n');
+    out.push('HOW: '+p.h+'\n');
+    out.push('The glycinate form is key — it crosses the blood-brain barrier and won\'t cause GI issues like oxide or citrate.\n');
+    out.push('→ Buy on Amazon: '+p.amz);
+  }
+
+  if(topics.ashwagandha&&!topics.stress&&!topics.compare){
+    var p=picks.find(function(x){return x.n.includes('Ashwagandha')});
+    out.push('🧘 Ashwagandha KSM-66 — Jarrow (Score: '+p.sc+')\n');
+    out.push('WHY: '+p.w+'\n');
+    out.push('HOW: '+p.h+'\n');
+    out.push('KSM-66 is the specific extract studied in clinical trials. Generic ashwagandha ≠ KSM-66.\n');
+    out.push('→ Buy on Amazon: '+p.amz);
+  }
+
+  if(topics.omega&&!topics.pain&&!topics.longevity&&!topics.gut){
+    var p=picks.find(function(x){return x.n.includes('Omega')});
+    out.push('🐟 Omega-3 Fish Oil — Nordic Naturals (Score: '+p.sc+')\n');
+    out.push('WHY: '+p.w+'\n');
+    out.push('HOW: '+p.h+'\n');
+    out.push('→ Buy on Amazon: '+p.amz);
+  }
+
+  if(topics.vitamin_d&&!topics.energy&&!topics.longevity){
+    var p=picks.find(function(x){return x.n.includes('Vitamin D')});
+    out.push('☀️ Vitamin D3+K2 — Sports Research (Score: '+p.sc+')\n');
+    out.push('WHY: '+p.w+'\n');
+    out.push('HOW: '+p.h+'\n');
+    out.push('→ Buy on Amazon: '+p.amz);
+  }
+
+  if(topics.learn){
+    out.push('📚 The research is in the Learn tab — '+C.yt+' expert videos and '+C.st+' PubMed studies.\n');
+    out.push('Every video was vetted against our 12-Shield framework. The ones that survived cite sources, show protocols, and don\'t sell fear.\n');
+    out.push('→ Check the Learn tab for videos and studies.');
+  }
+
+  if(topics.city&&!topics.family){
+    out.push('🏙️ Your zip code predicts your health better than your genetic code.\n');
+    out.push('BLEU maps wellness infrastructure city by city — practitioners, products, events, community.\n');
+    out.push('New Orleans is the first living city: neworleans.bleu.live\n');
+    out.push('Model: [city].bleu.live — the data layer is ready for any city that wants it.\n→ Check the Cities tab.');
+  }
+
   if(topics.event&&!topics.reset){
     out.push('📅 Upcoming Events (40-Day Reset Calendar):\n');
     out.push('🔥 Feb 18 — 40-Day Kickoff (847 registered)\n🧘 Feb 22 — Sunrise Yoga, City Park\n💪 Feb 20 — Sobriety Circle\n🍎 Feb 25 — Meal Prep Workshop\n🏆 Feb 25 — Week 1 Milestone\n😴 Mar 1 — Sleep Masterclass\n🏃 Mar 8 — 5K Crescent Park\n🎉 Mar 29 — Day 40 Celebration\n');
@@ -1662,14 +1757,13 @@ function alvaiThink(q){
 
   // If nothing specific matched, give a brilliant default
   if(out.length===0){
-    var starters=['What\'s pulling at you? I\'m connected to '+C.p.toLocaleString()+' NPI-verified practitioners, '+C.pr+' scored products, '+C.st+' clinical studies, and the full BLEU ecosystem.\n','I hear you. Let me help.\n','Let\'s figure this out together.\n'];
-    out.push(starters[Math.floor(Math.random()*starters.length)]);
+    out.push('I hear you. Let me help.\n');
     out.push('Here\'s where most people start:\n');
     out.push('😴 Sleep — Fix this first. Everything downstream improves. Magnesium (Score: 96) + L-Theanine (Score: 91).\n');
     out.push('⚡ Energy — Creatine (Score: 97) + LMNT Electrolytes (Score: 93) + Vitamin D3 (Score: 94). Three products that change your baseline.\n');
     out.push('🧠 Stress — Ashwagandha KSM-66 (Score: 92) reduces cortisol 28%. Clinical data, not marketing.\n');
-    out.push('⚕️ '+C.p.toLocaleString()+' practitioners in the Directory, ready now.\n📅 40-Day Reset starts Feb 18.\n');
-    out.push('Ask me anything specific. I don\'t do generic.');
+    out.push('⚕️ '+(C.p||200)+' practitioners in the Directory, scored and ready.\n📅 40-Day Reset starts Feb 18 — neworleans.bleu.live\n');
+    out.push('Tell me what\'s going on. Sleep, gut, stress, pain, weight, energy, supplements, drug interactions — I have answers for all of it.');
   }
 
   // Always end with the ripple
