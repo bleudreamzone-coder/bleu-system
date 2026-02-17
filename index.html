@@ -1860,3 +1860,27 @@ observe();
 </script>
 </body>
 </html>
+<script>
+var ALVAI_URL="https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai";
+var chatHistory=[];
+var isThinking=false;
+chat=async function(){
+var i=document.getElementById("ch-in"),m=i.value.trim();if(!m||isThinking)return;
+i.value="";isThinking=true;addMsg("me",m);
+chatHistory.push({role:"user",content:m});
+var box=document.getElementById("ch-msgs");
+document.querySelectorAll(".alvai-typing").forEach(function(t){t.remove()});
+var typing=document.createElement("div");typing.className="alvai-typing";typing.style.cssText="display:flex;margin-bottom:16px";
+typing.innerHTML='<div class="bub ai" style="padding:12px 18px"><div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .2s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .4s"></div><span style="font-size:10px;color:var(--fade);margin-left:8px">Alvai is thinking...</span></div></div>';
+box.appendChild(typing);box.scrollTop=box.scrollHeight;
+try{
+var resp=await fetch(ALVAI_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":"sb_publishable_TF6vZ_gvSHlxuVBnsDIbnw_qFJCuGjO","Authorization":"Bearer sb_publishable_TF6vZ_gvSHlxuVBnsDIbnw_qFJCuGjO"},body:JSON.stringify({message:m,history:chatHistory.slice(-12)})});
+var data=await resp.json();
+document.querySelectorAll(".alvai-typing").forEach(function(t){t.remove()});
+if(data.reply){var fmt=data.reply.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--cream)">$1</strong>').replace(/\n/g,'<br>');addMsg("ai",fmt);}
+else{addMsg("ai","Let me try again in a moment.");}
+chatHistory.push({role:"assistant",content:data.reply||""});
+}catch(err){document.querySelectorAll(".alvai-typing").forEach(function(t){t.remove()});addMsg("ai","Connection issue. Try again.");}
+isThinking=false;
+};
+</script>
