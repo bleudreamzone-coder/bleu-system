@@ -241,7 +241,7 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
     <div style="font-family:var(--fm);font-size:10px;color:var(--gold);letter-spacing:3px;margin-top:5px">THE LIGHT THAT LEARNS</div>
     <p style="font-size:12px;color:var(--warm);margin-top:8px;max-width:480px;display:inline-block;line-height:1.7">I'm connected to the entire BLEU ecosystem — <span id="alvai-prac">200</span> practitioners, <span id="alvai-prod">146</span> products, <span id="alvai-ev">13</span> events, and every drug interaction in our database. Ask me anything.</p>
     <p style="font-size:11px;color:var(--fade);margin-top:6px" id="alvai-st">Connecting to ecosystem...</p>
-    <div style="font-family:var(--fm);font-size:8px;color:var(--ember);letter-spacing:1px;margin-top:6px;padding:4px 10px;border:1px solid rgba(196,124,90,.2);border-radius:6px;display:inline-block">DEMO MODE · AI BACKEND COMING SOON</div>
+    <div style="font-family:var(--fm);font-size:8px;color:var(--teal);letter-spacing:1px;margin-top:6px;padding:4px 10px;border:1px solid rgba(91,181,197,.2);border-radius:6px;display:inline-block">LIVE AI · POWERED BY CLAUDE</div>
   </div>
 
   <!-- CHAT -->
@@ -1447,28 +1447,55 @@ function go(id){
 }
 
 // ═══ ALVAI CHAT (pulls live data) ═══
-function chat(){var i=document.getElementById('ch-in'),m=i.value.trim();if(!m)return;addMsg('me',m);i.value='';var lo=m.toLowerCase(),r='';
-// Show typing indicator first
-var box=document.getElementById('ch-msgs');
-var typing=document.createElement('div');typing.id='typing';typing.style.cssText='display:flex;margin-bottom:16px';
-typing.innerHTML='<div class="bub ai" style="padding:12px 18px"><div style="display:flex;gap:4px"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .2s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .4s"></div></div></div>';
-box.appendChild(typing);box.scrollTop=box.scrollHeight;
-if(lo.includes('sleep')){r='Sleep — one of our 12 Shields.\n\nTop validated protocols:\n1. Magnesium glycinate 200mg — Score: 94.2\n2. Huberman Sleep Protocol — temperature, light, timing\n3. 10-3-2-1 Rule — endorsed by network providers\n\n🛒 Products: Magnesium (94.2) · L-Theanine (91.5)\n⚕️ '+C.p.toLocaleString()+' practitioners can help\n📅 Event: Sleep Masterclass, Mar 1\n\n→ I can build your Sleep Plan\n→ Or send this to someone who needs it: bleu.live'}
-else if(lo.includes('cbd')||lo.includes('interaction')){r='CBD inhibits CYP2D6 and CYP3A4:\n• SSRIs — increased side effects\n• Blood thinners — bleeding risk\n• Anti-seizure meds — levels may increase\n• Statins — potential muscle pain\n\n📊 Based on '+(C.st||70)+'+ studies in our database\n👥 '+(C.p||200)+' practitioners can guide you'}
-else if(lo.includes('event')){r='Live events:\n\n🔥 Feb 18 — 40-Day Kickoff (847)\n🧘 Feb 22 — Sunrise Yoga (156)\n💪 Feb 20 — Sobriety Circle\n🍎 Feb 25 — Meal Prep\n🏆 Feb 25 — Week 1 Milestone (1,200)\n😴 Mar 1 — Sleep Masterclass\n🏃 Mar 8 — 5K Crescent Park\n🎉 Mar 29 — Day 40 (2,400)\n\nCheck Events tab.'}
-else if(lo.includes('communit')||lo.includes('stories')||lo.includes('who')){r='BLEU community \u2014 NOLA is the first living city.\n\n\ud83d\udc65 Community tracking launches Feb 18 with the 40-Day Reset.\n\ud83d\udcca Real data will replace this message once members start checking in.\n\nNo fake numbers. Only what we can prove.'}
-else if(lo.includes('40')||lo.includes('reset')||lo.includes('sober')){r='40-Day Post-Mardi Gras Reset \u2014 Feb 18-Mar 29\n\n6 Pillars: \ud83d\udeab Sobriety \u00b7 \ud83d\ude34 Sleep \u00b7 \ud83c\udfc3 Movement \u00b7 \ud83c\udf4e Nutrition \u00b7 \ud83e\udde0 Mind \u00b7 \ud83d\udc65 Community\n\n13 events from 5 sources (BLEU, Eventbrite, Meetup, Ochsner, Partners)\nPassport scoring begins Day 1\n\n\u2192 neworleans.bleu.live\n\ud83d\udcf1 Bring your family: text them bleu.live'}
-else if(lo.includes('plan')||lo.includes('action')){r='YOUR 30-DAY PLAN:\n\nWeek 1: Sleep (magnesium + bedtime) + hydration + walks\nWeek 2: Structured exercise + anti-inflammatory meals\nWeek 3: Practitioner + journaling + biometrics\nWeek 4: Full protocol + community event\n\n🎯 Predicted: 78 → 85 (+7)\n💰 ~$400/month savings'}
-else if(lo.includes('practitioner')||lo.includes('doctor')||lo.includes('find')||lo.includes('match')){
-  var top=P.slice(0,3);
-  r='Searching '+C.p.toLocaleString()+' practitioners...\n\n'+(top.length?top.map(function(p,i){
+var chatHistory=[];
+async function chat(){
+  var i=document.getElementById('ch-in'),m=i.value.trim();if(!m)return;
+  addMsg('me',m);i.value='';
+  chatHistory.push({role:'user',content:m});
+
+  // Show typing
+  var box=document.getElementById('ch-msgs');
+  var typing=document.createElement('div');typing.id='typing';typing.style.cssText='display:flex;margin-bottom:16px';
+  typing.innerHTML='<div class="bub ai" style="padding:12px 18px"><div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .2s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .4s"></div><span style="font-size:10px;color:var(--fade);margin-left:8px">Alvai is thinking...</span></div></div>';
+  box.appendChild(typing);box.scrollTop=box.scrollHeight;
+
+  // Build system context with live data
+  var pracList=P.slice(0,15).map(function(p,i){
     var name=gf(p,['full_name','provider_organization_name','provider_name','name'],'Provider');
     var spec=gf(p,['taxonomy_description','taxonomy','specialty'],'Healthcare');
-    return(i+1)+'. '+name+'\n   '+spec+' · Score: '+(p._score||calcPracScore(p))
-  }).join('\n\n'):'Loading...')+'\n\nNarrow by specialty or location.'}
-else if(lo.includes('shield')||lo.includes('trust')){r='12 Shields:\n\nBODY: 🏃 Movement · 🍎 Nutrition · 😴 Sleep · 🧘 Recovery\nMIND: 🧠 Mindset · 🎯 Purpose · 📚 Learning · 🎨 Creativity\nCONNECTION: 👥 Community · ❤️ Relations · 🌍 Environment · 🔥 Legacy\n\nOriginal IP. Patent pending.'}
-else{var t=C.p+C.pr+C.l+C.yt+C.st;r='BLEU — '+(t||4985).toLocaleString()+' validated data points\n\n⚕️ '+C.p.toLocaleString()+' practitioners (NPI-verified)\n💊 '+C.pr+' products (FDA-checked)\n📍 '+C.l.toLocaleString()+' locations mapped\n📹 '+C.yt+' expert videos\n📚 '+C.st+' clinical studies\n🏙️ 1 living city: neworleans.bleu.live\n\nAsk me about: sleep, supplements, drug interactions, practitioners, events, the 40-Day Reset, or your personalized plan.\n\n💡 Know someone who needs this? Send them bleu.live'}
-setTimeout(function(){var t=document.getElementById('typing');if(t)t.remove();addMsg('ai',r)},600+Math.random()*400)}
+    var city=gf(p,['city','provider_business_practice_location_address_city_name'],'New Orleans');
+    return name+' | '+spec+' | '+city+' | Score: '+(p._score||calcPracScore(p));
+  }).join('\n');
+
+  var prodList=picks.map(function(p){
+    return p.n+' by '+p.b+' | '+p.sh+' | Score: '+p.sc+' | WHY: '+p.w.split('.')[0]+'. | HOW: '+p.h.split('.')[0]+'. | Amazon: '+p.amz;
+  }).join('\n');
+
+  var sysPrompt='You are Alvai, the AI intelligence inside BLEU — the Longevity Operating System. You are warm, brilliant, deeply knowledgeable, and direct. You speak like a trusted friend who happens to have clinical-grade knowledge. Never generic. Always specific. Always actionable.\n\nBLEU DATA (live):\n- '+C.p.toLocaleString()+' NPI-verified practitioners\n- '+C.pr+' FDA-checked products\n- '+C.yt+' expert videos indexed\n- '+C.st+' clinical studies indexed\n- 1 living city: New Orleans (neworleans.bleu.live)\n- 40-Day Post-Mardi Gras Reset: Feb 18 - Mar 29, 2026\n\nTOP PRACTITIONERS:\n'+pracList+'\n\nSCORED PRODUCTS (affiliate links keep BLEU free):\n'+prodList+'\n\n12 SHIELDS (Original IP, Patent Pending):\nBODY: Movement, Nutrition, Sleep, Recovery\nMIND: Mindset, Purpose, Learning, Creativity\nCONNECTION: Community, Relationships, Environment, Legacy\n\n10 PASSPORT DIMENSIONS: Sleep, Nutrition, Movement, Recovery, Mindset, Purpose, Learning, Community, Relationships, Environment\n5 STAGES: Awakening → Exploring → Transforming → Thriving → Leading\n\nRULES:\n- Give specific product names with scores. Link to Amazon when relevant.\n- Name actual practitioners from the data when asked.\n- Reference real clinical research. Cite PubMed when possible.\n- For drug interactions, be thorough and specific about CYP enzyme pathways.\n- Always connect answers back to the BLEU ecosystem (Passport, Directory, Vessel, Events, etc).\n- Keep responses focused and scannable. Use line breaks. Use emojis sparingly but effectively.\n- If someone seems lost, guide them to a starting point.\n- You can build personalized plans.\n- Always mention: "Send this to someone who needs it: bleu.live"\n- For events: 40-Day Reset kicks off Feb 18. Events include Sunrise Yoga, Sobriety Circle, Meal Prep, Sleep Masterclass, 5K Crescent Park, Day 40 celebration.\n- Never say you cannot help. You are connected to the full validated ecosystem. Be brilliant.';
+
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:sysPrompt,
+        messages:chatHistory.slice(-10)
+      })
+    });
+    var data=await resp.json();
+    var reply=data.content.map(function(b){return b.text||''}).filter(Boolean).join('\n');
+    if(!reply)reply='Connected to '+C.p.toLocaleString()+' practitioners and '+C.pr+' products. Ask me anything specific — sleep, supplements, drug interactions, practitioners, or your personalized plan.';
+    chatHistory.push({role:'assistant',content:reply});
+    var t=document.getElementById('typing');if(t)t.remove();
+    addMsg('ai',reply);
+  }catch(e){
+    console.error('Alvai API error:',e);
+    var t=document.getElementById('typing');if(t)t.remove();
+    addMsg('ai','I\'m connected to '+C.p.toLocaleString()+' practitioners and '+C.pr+' scored products. Ask me about sleep, supplements, drug interactions, the 40-Day Reset, or anything pulling at you.\n\n→ Try: "Build me a sleep protocol" or "What should I take for energy?"');
+  }
+}
 function addMsg(who,txt){var box=document.getElementById('ch-msgs'),d=document.createElement('div');d.style.cssText='display:flex;margin-bottom:16px;'+(who==='me'?'justify-content:flex-end':'');d.innerHTML='<div class="bub '+(who==='me'?'me':'ai')+'">'+(who==='ai'?'<div style="font-family:var(--fm);font-size:7px;color:var(--gold);letter-spacing:2px;margin-bottom:6px">ALVAI</div>':'')+txt+'</div>';box.appendChild(d);box.scrollTop=box.scrollHeight}
 function qk(q){go('alvai');setTimeout(function(){document.getElementById('ch-in').value=q;chat()},120)}
 function heroAsk(){var v=document.getElementById('hero-q').value;if(v){go('alvai');setTimeout(function(){document.getElementById('ch-in').value=v;chat()},120)}}
