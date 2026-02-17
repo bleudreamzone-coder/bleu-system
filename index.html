@@ -378,8 +378,8 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
 
   <!-- SUPABASE PRODUCTS SECTION -->
   <div class="rv d4" style="margin-top:32px">
-    <div id="fda-label" style="font-family:var(--fm);font-size:10px;color:var(--sage);letter-spacing:2px;margin-bottom:14px;display:none">📦 VALIDATED WELLNESS PRODUCTS FROM DATABASE</div>
-    <div class="g2" id="pl-db"></div>
+    <div id="fda-label" style="display:none" style="font-family:var(--fm);font-size:10px;color:var(--sage);letter-spacing:2px;margin-bottom:14px;display:none">📦 VALIDATED WELLNESS PRODUCTS FROM DATABASE</div>
+    <div class="g2" id="pl-db" style="display:none"></div>
   </div>
 
   <!-- BOTTOM CTA -->
@@ -1387,7 +1387,7 @@ function rProd(){
     return'<div class="pi card" style="border-left:3px solid var(--'+p.c+')"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:14px;font-weight:500">'+p.n+'</div><div style="font-size:11px;color:var(--mist)">'+p.b+'</div></div><div style="font-family:var(--fm);font-size:22px;color:var(--'+p.c+');font-weight:500">'+p.sc+'</div></div><div style="display:flex;gap:6px;margin-bottom:10px"><span style="font-family:var(--fm);font-size:8px;padding:3px 9px;border-radius:20px;background:var(--tg);color:var(--teal)">'+p.sh+'</span><span style="font-family:var(--fm);font-size:8px;padding:3px 9px;border-radius:20px;background:var(--gg);color:var(--gold)">BLEU PICK</span></div><div style="font-family:var(--fm);font-size:8px;color:var(--gold);letter-spacing:1px;margin-bottom:3px">WHY</div><p style="font-size:11px;color:var(--warm);line-height:1.7;margin-bottom:10px">'+p.w+'</p><div style="font-family:var(--fm);font-size:8px;color:var(--teal);letter-spacing:1px;margin-bottom:3px">HOW</div><p style="font-size:11px;color:var(--mist);line-height:1.7;margin-bottom:14px">'+p.h+'</p><div style="display:flex;gap:8px"><a href="'+p.amz+'" target="_blank" rel="noopener noreferrer" class="btn btn-g btn-s" style="text-decoration:none;flex:1;justify-content:center">Amazon →</a><a href="'+IHB+p.ih+'" target="_blank" rel="noopener noreferrer" class="btn btn-o btn-s" style="text-decoration:none;flex:1;justify-content:center">iHerb →</a></div></div>'
   }).join('');
   // DB products below
-  var dbFiltered=d.filter(isWellnessProd);document.getElementById('fda-label').style.display=dbFiltered.length?'block':'none';document.getElementById('pl-db').innerHTML=dbFiltered.slice(0,12).map(function(p){
+  var dbFiltered=[];document.getElementById('fda-label').style.display=dbFiltered.length?'block':'none';document.getElementById('pl-db').innerHTML=dbFiltered.slice(0,12).map(function(p){
     var name=gf(p,['name','proprietary_name','product_name','brand_name'],'Product');
     var brand=gf(p,['brand','brand_name','manufacturer_name','labeler_name'],'');
     var cat=gf(p,['category','product_type','pharm_class','dosage_form'],'Wellness');
