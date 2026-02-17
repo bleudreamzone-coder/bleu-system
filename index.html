@@ -930,7 +930,7 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══ SUPABASE ═══
 var SB='https://sqyzboesdpdussiwqpzk.supabase.co',SK='sb_publishable_TF6vZ_gvSHlxuVBnsDIbnw_qFJCuGjO',SH={'apikey':SK,'Authorization':'Bearer '+SK};
-var P=PRAC_DATA.slice(),PR=PROD_DATA.slice(),YT=VID_DATA.slice(),ST=STUDY_DATA.slice(),LOC=[],C={p:PRAC_DATA.length||200,pr:PROD_DATA.length||15,l:1212,yt:VID_DATA.length||24,st:STUDY_DATA.length||70};
+var P=[],PR=[],YT=[],ST=[],LOC=[],C={p:200,pr:15,l:1212,yt:24,st:70};
 async function sf(t,x){try{var r=await fetch(SB+'/rest/v1/'+t+'?select=*'+(x||'')+'&limit=50',{headers:Object.assign({},SH,{Prefer:'count=exact',Range:'0-49'})});var c=parseInt((r.headers.get('content-range')||'*/0').split('/')[1])||0;var d=await r.json();return{d:Array.isArray(d)?d:[],c:c}}catch(e){return{d:[],c:0}}}
 
 // ═══ EMBEDDED REAL DATA — works instantly, zero dependencies ═══
@@ -1373,7 +1373,10 @@ function rProd(){
 }
 function fProd(){var q=document.getElementById('ps').value.toLowerCase();document.querySelectorAll('.pi').forEach(function(e){e.style.display=e.textContent.toLowerCase().includes(q)?'':'none'})}
 rVesselCats();rPicks();
-// Score embedded data immediately
+// Load embedded data immediately
+P=PRAC_DATA.slice();PR=PROD_DATA.slice();YT=VID_DATA.slice();ST=STUDY_DATA.slice();
+C={p:P.length||200,pr:PR.length||15,l:1212,yt:YT.length||24,st:ST.length||70};
+// Score embedded data
 P.forEach(function(p){if(!p._score)p._score=calcPracScore(p)});
 P.sort(function(a,b){return b._score-a._score});
 PR.forEach(function(p){if(!p._score)p._score=calcProdScore(p)});
@@ -1451,23 +1454,29 @@ function go(id){
 }
 
 // ═══ ALVAI CHAT (pulls live data) ═══
-var chatHistory=[];
+var chatTimer=null;
 function chat(){
   var i=document.getElementById('ch-in'),m=i.value.trim();if(!m)return;
   addMsg('me',m);i.value='';
 
+  // Cancel any pending response
+  if(chatTimer)clearTimeout(chatTimer);
+  // Remove ALL typing indicators
+  document.querySelectorAll('.alvai-typing').forEach(function(t){t.remove()});
+
   // Show typing
   var box=document.getElementById('ch-msgs');
-  var typing=document.createElement('div');typing.id='typing';typing.style.cssText='display:flex;margin-bottom:16px';
+  var typing=document.createElement('div');typing.className='alvai-typing';typing.style.cssText='display:flex;margin-bottom:16px';
   typing.innerHTML='<div class="bub ai" style="padding:12px 18px"><div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .2s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .4s"></div><span style="font-size:10px;color:var(--fade);margin-left:8px">Alvai is thinking...</span></div></div>';
   box.appendChild(typing);box.scrollTop=box.scrollHeight;
 
   // Think + respond
   var r=alvaiThink(m);
-  setTimeout(function(){
-    var t=document.getElementById('typing');if(t)t.remove();
+  chatTimer=setTimeout(function(){
+    document.querySelectorAll('.alvai-typing').forEach(function(t){t.remove()});
     addMsg('ai',r);
-  },500+Math.random()*700);
+    chatTimer=null;
+  },500+Math.random()*500);
 }
 
 // ═══ ALVAI LOCAL INTELLIGENCE ENGINE ═══
