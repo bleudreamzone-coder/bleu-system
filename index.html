@@ -1423,16 +1423,7 @@ var alvaiTyped=false;
 function typeAlvai(){
   if(alvaiTyped)return;alvaiTyped=true;
   var el=document.getElementById('alvai-welcome');if(!el)return;
-  var i=0;el.innerHTML='';
-  function tick(){
-    if(i<alvaiWelcome.length){
-      var ch=alvaiWelcome[i];
-      if(ch==='\n')el.innerHTML+='<br>';
-      else el.innerHTML+=ch;
-      i++;setTimeout(tick,ch==='.'?80:ch===','?40:18);
-    }
-  }
-  tick();
+  el.innerHTML=alvaiWelcome.replace(/\n/g,'<br>');
 }
 // Type on first visit to alvai tab
 var origGo=go;
@@ -1448,10 +1439,9 @@ function go(id){
 
 // ═══ ALVAI CHAT (pulls live data) ═══
 var chatHistory=[];
-async function chat(){
+function chat(){
   var i=document.getElementById('ch-in'),m=i.value.trim();if(!m)return;
   addMsg('me',m);i.value='';
-  chatHistory.push({role:'user',content:m});
 
   // Show typing
   var box=document.getElementById('ch-msgs');
@@ -1459,45 +1449,12 @@ async function chat(){
   typing.innerHTML='<div class="bub ai" style="padding:12px 18px"><div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .2s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .4s"></div><span style="font-size:10px;color:var(--fade);margin-left:8px">Alvai is thinking...</span></div></div>';
   box.appendChild(typing);box.scrollTop=box.scrollHeight;
 
-  // Build live ecosystem context
-  var pracList=P.slice(0,15).map(function(p){
-    var name=gf(p,['full_name','provider_organization_name','provider_name','name'],'Provider');
-    var spec=gf(p,['taxonomy_description','taxonomy','specialty'],'Healthcare');
-    var city=gf(p,['city','provider_business_practice_location_address_city_name'],'New Orleans');
-    return name+' | '+spec+' | '+city+' | Score: '+(p._score||calcPracScore(p));
-  }).join('\n');
-
-  var prodList=picks.map(function(p){
-    return p.n+' by '+p.b+' | '+p.sh+' | Score: '+p.sc+' | WHY: '+p.w.split('.')[0]+'. | HOW: '+p.h.split('.')[0]+'.';
-  }).join('\n');
-
-  var sysPrompt='You are Alvai, the AI inside BLEU — the Longevity Operating System. Warm, brilliant, specific, actionable. Never generic.\n\nLIVE DATA:\n'+C.p.toLocaleString()+' NPI-verified practitioners | '+C.pr+' FDA-checked products | '+C.yt+' videos | '+C.st+' studies\n1 living city: New Orleans (neworleans.bleu.live)\n40-Day Reset: Feb 18 - Mar 29, 2026\n\nPRACTITIONERS:\n'+pracList+'\n\nPRODUCTS:\n'+prodList+'\n\n12 SHIELDS: Movement, Nutrition, Sleep, Recovery, Mindset, Purpose, Learning, Creativity, Community, Relationships, Environment, Legacy\n10 PASSPORT DIMENSIONS: Sleep, Nutrition, Movement, Recovery, Mindset, Purpose, Learning, Community, Relationships, Environment\n5 STAGES: Awakening → Exploring → Transforming → Thriving → Leading\n\nRULES: Name specific products with scores. Name practitioners from data. Reference PubMed. For drug interactions, specify CYP pathways. Connect to BLEU ecosystem. Keep scannable. Build personalized plans. End with: someone you know needs this — bleu.live';
-
-  // Try Claude API (works in claude.ai artifact preview)
-  var replied=false;
-  try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sysPrompt,messages:chatHistory.slice(-10)})
-    });
-    if(resp.ok){
-      var data=await resp.json();
-      var reply=data.content.map(function(b){return b.text||''}).filter(Boolean).join('\n');
-      if(reply&&reply.length>10){
-        chatHistory.push({role:'assistant',content:reply});
-        var t=document.getElementById('typing');if(t)t.remove();
-        addMsg('ai',reply);replied=true;
-      }
-    }
-  }catch(e){console.log('API unavailable, using local intelligence')}
-
-  // Local intelligence engine (for live site)
-  if(!replied){
-    var r=alvaiThink(m);
-    chatHistory.push({role:'assistant',content:r});
-    setTimeout(function(){var t=document.getElementById('typing');if(t)t.remove();addMsg('ai',r)},400+Math.random()*600);
-  }
+  // Think + respond
+  var r=alvaiThink(m);
+  setTimeout(function(){
+    var t=document.getElementById('typing');if(t)t.remove();
+    addMsg('ai',r);
+  },500+Math.random()*700);
 }
 
 // ═══ ALVAI LOCAL INTELLIGENCE ENGINE ═══
@@ -1722,7 +1679,7 @@ function alvaiThink(q){
 
   return out.join('\n');
 }
-function addMsg(who,txt){var box=document.getElementById('ch-msgs'),d=document.createElement('div');d.style.cssText='display:flex;margin-bottom:16px;'+(who==='me'?'justify-content:flex-end':'');d.innerHTML='<div class="bub '+(who==='me'?'me':'ai')+'">'+(who==='ai'?'<div style="font-family:var(--fm);font-size:7px;color:var(--gold);letter-spacing:2px;margin-bottom:6px">ALVAI</div>':'')+txt+'</div>';box.appendChild(d);box.scrollTop=box.scrollHeight}
+function addMsg(who,txt){var box=document.getElementById('ch-msgs'),d=document.createElement('div');d.style.cssText='display:flex;margin-bottom:16px;'+(who==='me'?'justify-content:flex-end':'');var html=txt.replace(/\n/g,'<br>');d.innerHTML='<div class="bub '+(who==='me'?'me':'ai')+'">'+(who==='ai'?'<div style="font-family:var(--fm);font-size:7px;color:var(--gold);letter-spacing:2px;margin-bottom:6px">ALVAI</div>':'')+html+'</div>';box.appendChild(d);box.scrollTop=box.scrollHeight}
 function qk(q){go('alvai');setTimeout(function(){document.getElementById('ch-in').value=q;chat()},120)}
 function heroAsk(){var v=document.getElementById('hero-q').value;if(v){go('alvai');setTimeout(function(){document.getElementById('ch-in').value=v;chat()},120)}}
 // Tab-specific search helpers
