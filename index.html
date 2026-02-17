@@ -1481,332 +1481,34 @@ function go(id){
 
 // ═══ ALVAI CHAT (pulls live data) ═══
 var chatTimer=null;
-function chat(){
-  var i=document.getElementById('ch-in'),m=i.value.trim();if(!m)return;
-  addMsg('me',m);i.value='';
-
-  // Cancel any pending response
-  if(chatTimer)clearTimeout(chatTimer);
-  // Remove ALL typing indicators
-  document.querySelectorAll('.alvai-typing').forEach(function(t){t.remove()});
-
-  // Show typing
+// === ALVAI CHAT — LIVE CLAUDE INTELLIGENCE ===
+var ALVAI_URL=SB+'/functions/v1/alvai';
+var chatHistory=[];
+var isThinking=false;
+async function chat(){
+  var i=document.getElementById('ch-in'),m=i.value.trim();if(!m||isThinking)return;
+  i.value='';isThinking=true;addMsg('me',m);
+  chatHistory.push({role:'user',content:m});
   var box=document.getElementById('ch-msgs');
+  document.querySelectorAll('.alvai-typing').forEach(function(t){t.remove()});
   var typing=document.createElement('div');typing.className='alvai-typing';typing.style.cssText='display:flex;margin-bottom:16px';
   typing.innerHTML='<div class="bub ai" style="padding:12px 18px"><div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .2s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .4s"></div><span style="font-size:10px;color:var(--fade);margin-left:8px">Alvai is thinking...</span></div></div>';
   box.appendChild(typing);box.scrollTop=box.scrollHeight;
-
-  // Think + respond
-  var r=alvaiThink(m);
-  chatTimer=setTimeout(function(){
+  try{
+    var resp=await fetch(ALVAI_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SK,'Authorization':'Bearer '+SK},body:JSON.stringify({message:m,history:chatHistory.slice(-12)})});
+    var data=await resp.json();
     document.querySelectorAll('.alvai-typing').forEach(function(t){t.remove()});
-    addMsg('ai',r);
-    chatTimer=null;
-  },500+Math.random()*500);
-}
-
-// ═══ ALVAI LOCAL INTELLIGENCE ENGINE ═══
-function alvaiThink(q){
-  var lo=q.toLowerCase();
-  var out=[];
-
-  // Detect all topics in the query
-  var topics={
-    sleep:lo.match(/sleep|insomnia|tired|rest|3am|wake up|melatonin|cant sleep|can't sleep/),
-    energy:lo.match(/energy|fatigue|exhausted|crash|afternoon|caffeine|sluggish|drag/),
-    gut:lo.match(/gut|digest|bloat|ibs|microbiome|probiotic|stomach|nause/),
-    stress:lo.match(/stress|anxiety|anxious|overwhelm|cortisol|panic|worry|nervous/),
-    pain:lo.match(/pain|inflam|joint|ache|sore|chronic|hurt|arthrit/),
-    weight:lo.match(/weight|fat|lean|body comp|lose|gain|metaboli|calori/),
-    longevity:lo.match(/longevity|aging|age|lifespan|telomer|nad|sirtu/),
-    supplement:lo.match(/supplement|vitamin|mineral|take|stack|routine|morning|what should/),
-    practitioner:lo.match(/doctor|practitioner|find|therapist|provider|chiropract|psych|match me/),
-    drug:lo.match(/drug|interact|cbd|medic|ssri|blood thin|statin|pharma|prescription/),
-    reset:lo.match(/40|reset|mardi|sober|challenge|detox|cleanse/),
-    event:lo.match(/event|class|yoga|workshop|meet|gathering|5k|run/),
-    plan:lo.match(/plan|protocol|routine|schedule|program|start|begin|where do i/),
-    creatine:lo.match(/creatine/),
-    magnesium:lo.match(/magnesium|mag/),
-    ashwagandha:lo.match(/ashwa|adapto/),
-    omega:lo.match(/omega|fish oil|dha|epa/),
-    vitamin_d:lo.match(/vitamin d|d3|sunshine/),
-    theanine:lo.match(/theanine|l-theanine|calm focus/),
-    family:lo.match(/family|kid|child|wife|husband|partner|household/),
-    compare:lo.match(/compare|vs|versus|better|which one|difference/),
-    shield:lo.match(/shield|12|trust|framework|system/),
-    passport:lo.match(/passport|score|dimension|stage|bleu score/),
-    blood:lo.match(/blood|test|panel|lab|biomark|check/),
-    women:lo.match(/women|female|pregnan|hormone|menopaus|pms|period/),
-    city:lo.match(/city|cities|nola|new orleans|community score/),
-    learn:lo.match(/research|study|studies|pubmed|evidence|proof|science/)
-  };
-
-  // Count matched topics
-  var matched=Object.keys(topics).filter(function(k){return topics[k]});
-
-  // Find matching practitioners
-  function findPracs(keywords){
-    return P.filter(function(p){
-      var spec=(gf(p,['taxonomy_description','taxonomy','specialty'])||'').toLowerCase();
-      return keywords.some(function(k){return spec.includes(k)});
-    }).slice(0,3);
+    if(data.reply){
+      var fmt=data.reply.replace(/\*\*(.+?)\*\*/g,'<strong style=\"color:var(--cream)\">$1</strong>').replace(/(https:\/\/www\.amazon\.com[^\s\)]+)/g,'<a href=\"$1\" target=\"_blank\" style=\"color:var(--teal);text-decoration:underline\">Shop on Amazon →</a>').replace(/(https:\/\/www\.iherb\.com[^\s\)]+)/g,'<a href=\"$1\" target=\"_blank\" style=\"color:var(--sage);text-decoration:underline\">Shop on iHerb →</a>').replace(/(https:\/\/pubmed\.ncbi[^\s\)]+)/g,'<a href=\"$1\" target=\"_blank\" style=\"color:var(--gold);text-decoration:underline\">View Study →</a>').replace(/(https:\/\/www\.youtube\.com[^\s\)]+)/g,'<a href=\"$1\" target=\"_blank\" style=\"color:var(--ember);text-decoration:underline\">Watch →</a>').replace(/\n/g,'<br>');
+      addMsg('ai',fmt,true);
+      chatHistory.push({role:'assistant',content:data.reply});
+    }else{addMsg('ai','Let me try again in a moment.');}
+  }catch(err){
+    console.error('Alvai:',err);
+    document.querySelectorAll('.alvai-typing').forEach(function(t){t.remove()});
+    addMsg('ai','Connection issue — try again in a moment.');
   }
-
-  // Find matching products
-  function findProds(keywords){
-    return picks.filter(function(p){
-      var combo=(p.n+' '+p.sh+' '+p.w).toLowerCase();
-      return keywords.some(function(k){return combo.includes(k)});
-    });
-  }
-
-  // ═══ RESPONSE BUILDERS ═══
-
-  if(topics.sleep){
-    var pracs=findPracs(['sleep','psychiatry','neurology','internal']);
-    out.push('😴 Sleep is where everything starts. When you fix sleep, inflammation drops, cortisol normalizes, and your brain finally gets to repair.\n');
-    out.push('Here\'s what the data says:\n');
-    out.push('💊 Magnesium Glycinate (Score: 96) — Take 400mg 30 min before bed. The glycinate form crosses the blood-brain barrier and won\'t upset your stomach. Most people feel it within 3 nights.\n');
-    out.push('💊 L-Theanine (Score: 91) — 200mg with magnesium. Promotes alpha brain waves — the same state as deep meditation. Calms the racing mind without sedation.\n');
-    out.push('📋 Protocol: 10-3-2-1 Rule — No caffeine 10hrs before bed. No food 3hrs. No screens 2hrs. No excuses 1hr.\n');
-    if(pracs.length){
-      out.push('\n⚕️ Practitioners who can help:');
-      pracs.forEach(function(p){
-        out.push(gf(p,['full_name','name'],'Provider')+' — '+gf(p,['taxonomy_description','specialty'],'Healthcare')+' (Score: '+(p._score||calcPracScore(p))+')');
-      });
-    }
-    out.push('\n📅 Sleep Masterclass — Mar 1 (part of the 40-Day Reset)');
-  }
-
-  if(topics.energy){
-    out.push('⚡ Energy crashes are almost never about willpower. They\'re biochemical.\n');
-    out.push('The 3 things to check first:\n1. Hydration — LMNT Electrolytes (Score: 93) first thing in the morning. Most people are chronically dehydrated and don\'t know it.\n2. Creatine (Score: 97) — 5g daily. Not just for gym people. Your mitochondria use it for ATP production. Brain energy + muscle energy.\n3. Vitamin D3+K2 (Score: 94) — 42% of Americans are deficient. One softgel with breakfast changes mood and energy in 2-3 weeks.\n');
-    out.push('If you crash at 2-3pm specifically, it\'s likely blood sugar + cortisol. Eat protein + fat at lunch, skip the carbs.');
-  }
-
-  if(topics.gut){
-    out.push('🦠 Your gut makes 90% of your serotonin. If digestion is off, mood follows. So does immunity, inflammation, and brain fog.\n');
-    out.push('💊 Probiotics 50B CFU — Garden of Life (Score: 90) — 16 strains, no refrigeration needed. Empty stomach, morning. Give it 30 days.\n💊 Omega-3 Fish Oil — Nordic Naturals (Score: 95) — Anti-inflammatory foundation. The gut lining needs this.\n');
-    out.push('📋 Remove: Seed oils, artificial sweeteners, excess alcohol\n📋 Add: Fermented foods, bone broth, fiber diversity\n');
-    out.push('Watch your thinking change — not just your stomach.');
-  }
-
-  if(topics.stress){
-    out.push('🧠 Stress isn\'t a mindset problem. It\'s a cortisol problem. And cortisol stays elevated when your body never gets the signal that you\'re safe.\n');
-    out.push('💊 Ashwagandha KSM-66 (Score: 92) — Clinical studies show 28% cortisol reduction. One capsule morning. The edge softens within 2 weeks.\n💊 L-Theanine (Score: 91) — Calm alertness without drowsiness. Pair with coffee to remove the jitter.\n💊 Magnesium (Score: 96) — Your nervous system runs on it. Most people are deficient.\n');
-    var pracs=findPracs(['psychiatry','counsel','psychol','social work','therapy']);
-    if(pracs.length){
-      out.push('\n⚕️ Talk to someone:');
-      pracs.forEach(function(p){out.push(gf(p,['full_name','name'],'Provider')+' — '+gf(p,['taxonomy_description','specialty'],'Healthcare')+' (Score: '+(p._score||calcPracScore(p))+')')});
-    }
-  }
-
-  if(topics.drug){
-    out.push('⚠️ Drug interactions are serious. Here\'s what the research shows:\n');
-    if(lo.includes('cbd')){
-      out.push('CBD inhibits CYP2D6 and CYP3A4 liver enzymes:\n• SSRIs (Zoloft, Lexapro) — increased side effects, serotonin risk\n• Blood thinners (Warfarin) — bleeding risk increases\n• Anti-seizure (Keppra, Lamictal) — levels may spike\n• Statins (Lipitor) — muscle pain, liver stress\n• Benzodiazepines — enhanced sedation\n');
-    } else {
-      out.push('Common interactions to watch:\n• St. John\'s Wort — reduces effectiveness of birth control, SSRIs, blood thinners\n• Grapefruit — inhibits CYP3A4, affects 85+ medications\n• Turmeric — may enhance blood thinners\n• Magnesium — space 2hrs from antibiotics\n• Fish Oil — mild blood thinning at high doses\n');
-    }
-    out.push('📊 Based on '+C.st+' clinical studies in our database.\n⚕️ Always cross-reference with your provider. '+C.p.toLocaleString()+' NPI-verified practitioners in our Directory can help.');
-  }
-
-  if(topics.practitioner){
-    var specMatch=[];
-    if(lo.match(/anxiety|stress|depress|mental/))specMatch=['psychiatry','psychol','counsel','social work'];
-    else if(lo.match(/back|spine|align/))specMatch=['chiropract','physical','orthop'];
-    else if(lo.match(/gut|digest|stomach/))specMatch=['gastro','internal','naturo'];
-    else if(lo.match(/skin|acne|rash/))specMatch=['dermat'];
-    else if(lo.match(/heart|cardio|blood press/))specMatch=['cardio','internal'];
-    else specMatch=['internal','family','nurse','chiropract'];
-    var pracs=findPracs(specMatch);
-    out.push('⚕️ Searching '+C.p.toLocaleString()+' NPI-verified practitioners...\n');
-    if(pracs.length){
-      pracs.forEach(function(p,i){
-        var name=gf(p,['full_name','name'],'Provider');
-        var spec=gf(p,['taxonomy_description','specialty'],'Healthcare');
-        var city=gf(p,['city'],'New Orleans');
-        var score=p._score||calcPracScore(p);
-        out.push((i+1)+'. '+name+'\n   '+spec+' · '+city+' · Trust Score: '+score);
-      });
-      out.push('\nEvery practitioner is verified through the National Provider Index. No fake reviews. No pay-to-play. Just data.');
-    } else {
-      out.push('Loading practitioner data... Check the Directory tab for the full list with filters.');
-    }
-  }
-
-  if(topics.reset){
-    out.push('🔥 40-Day Post-Mardi Gras Reset — Feb 18 to Mar 29, 2026\n');
-    out.push('6 Pillars: 🚫 Sobriety · 😴 Sleep · 🏃 Movement · 🍎 Nutrition · 🧠 Mind · 👥 Community\n');
-    out.push('📅 Events:\n• Feb 18 — Kickoff (847 registered)\n• Feb 22 — Sunrise Yoga\n• Feb 25 — Meal Prep Workshop\n• Mar 1 — Sleep Masterclass\n• Mar 8 — 5K Crescent Park\n• Mar 29 — Day 40 Celebration (2,400 projected)\n');
-    out.push('Every supplement tracked. Every practitioner scored. Every participant\'s Passport building.\n');
-    out.push('→ neworleans.bleu.live');
-  }
-
-  if(topics.plan&&!topics.reset){
-    out.push('🎯 YOUR PERSONALIZED 30-DAY PROTOCOL\n');
-    out.push('Week 1 — Foundation:\n• Magnesium Glycinate 400mg before bed (Score: 96)\n• LMNT Electrolytes every morning (Score: 93)\n• 10-minute walks daily. No excuses.\n• Sleep: lights off by 10:30, no screens after 9:30\n');
-    out.push('Week 2 — Build:\n• Add Omega-3 with breakfast (Score: 95)\n• Add Vitamin D3+K2 (Score: 94)\n• 30 min structured movement 4x/week\n• Start tracking in your Passport\n');
-    out.push('Week 3 — Deepen:\n• Book a practitioner from the Directory\n• Add Creatine 5g daily (Score: 97)\n• Attend a community event\n• Review your 10 dimensions\n');
-    out.push('Week 4 — Compound:\n• Full protocol running\n• Passport score climbing\n• Share with your family\n• Predicted improvement: +12 points\n');
-    out.push('💰 Estimated savings: $400/month in reactive healthcare');
-  }
-
-  if(topics.creatine){
-    var p=picks.find(function(x){return x.n.includes('Creatine')});
-    out.push('🏃 Creatine Monohydrate — Thorne (Score: '+p.sc+')\n');
-    out.push('This isn\'t just for gym people. It\'s the most studied supplement in history.\n');
-    out.push('WHY: '+p.w+'\n');
-    out.push('HOW: '+p.h+'\n');
-    if(topics.women)out.push('\n✅ Safe for women. Studies show benefits for bone density, cognitive function, and muscle maintenance — especially important after 35.');
-    out.push('\n→ Buy on Amazon: '+p.amz);
-  }
-
-  if(topics.compare){
-    if(lo.includes('ashwa')&&lo.includes('theanine')){
-      out.push('⚖️ Ashwagandha vs L-Theanine — different tools, different jobs.\n');
-      out.push('Ashwagandha KSM-66 (Score: 92):\n• Lowers cortisol 28%\n• Takes 2 weeks to feel\n• Best for: chronic stress, sleep quality, recovery\n• Take morning\n');
-      out.push('L-Theanine (Score: 91):\n• Immediate calm focus\n• Works within 30 min\n• Best for: acute anxiety, focus, pairing with coffee\n• Take anytime\n');
-      out.push('💡 Best move? Take both. Ashwagandha for baseline stress. Theanine for real-time calm. They complement, not compete.');
-    } else {
-      out.push('Tell me the two things you want to compare and I\'ll break it down — mechanisms, timing, who it\'s best for, and what the studies say.');
-    }
-  }
-
-  if(topics.blood){
-    out.push('🩸 The blood panel your doctor won\'t order (but should):\n');
-    out.push('STANDARD (ask for these):\n• Complete Metabolic Panel + CBC\n• Lipid Panel (total, LDL, HDL, triglycerides)\n• HbA1c (3-month blood sugar)\n• Thyroid: TSH, Free T3, Free T4\n• Vitamin D (25-OH)\n• Iron + Ferritin\n');
-    out.push('ADVANCED (push for these):\n• hs-CRP (inflammation marker)\n• Homocysteine (cardiovascular + brain)\n• Insulin (fasting — catches pre-diabetes years early)\n• Magnesium RBC (not serum — serum is useless)\n• Omega-3 Index\n• ApoB (better than LDL for heart risk)\n');
-    out.push('Print this. Bring it to your appointment. A good doctor will respect you for it.');
-  }
-
-  if(topics.shield&&matched.length<=2){
-    out.push('🛡️ The 12-Shield Trust System (Patent Pending)\n');
-    out.push('Every practitioner, product, and protocol in BLEU is scored against this framework:\n');
-    out.push('BODY: 🏃 Movement · 🍎 Nutrition · 😴 Sleep · 🧘 Recovery\nMIND: 🧠 Mindset · 🎯 Purpose · 📚 Learning · 🎨 Creativity\nCONNECTION: 👥 Community · ❤️ Relationships · 🌍 Environment · 🔥 Legacy\n');
-    out.push('This is original IP. The framework that validates everything in the ecosystem. It\'s not borrowed. It\'s not borrowed from anyone. It was built from the ground up to measure what actually matters.');
-  }
-
-  if(topics.passport&&matched.length<=2){
-    out.push('📊 Your BLEU Passport — the key to everything.\n');
-    out.push('10 Dimensions: Sleep · Nutrition · Movement · Recovery · Mindset · Purpose · Learning · Community · Relationships · Environment\n');
-    out.push('5 Stages: Awakening → Exploring → Transforming → Thriving → Leading\n');
-    out.push('Every tab feeds your Passport:\n• Directory visits → health score\n• Vessel purchases → supplement tracking\n• Learn content → knowledge score\n• Events attended → community + XP\n• Community check-ins → relationship score\n• Your score → lifts your city\n');
-    out.push('Full scoring activates Feb 18 with the 40-Day Reset. Everything you do NOW will retroactively count.');
-  }
-
-  if(topics.family){
-    out.push('👨‍👩‍👧 Family wellness changes everything. The research is clear: health is contagious within households.\n');
-    out.push('Start here:\n1. Don\'t lecture. Just change what\'s in the house.\n2. Replace seed oils with olive/avocado. Nobody notices.\n3. Add magnesium to the family nightstand. Better sleep = better everything.\n4. Walk together after dinner. 15 minutes changes the dynamic.\n5. Share one thing you learned each week from BLEU.\n');
-    out.push('Your Passport\'s Relationships dimension tracks family impact. When you improve, the ripple is measurable.\n');
-    out.push('→ YOU → FAMILY → COMMUNITY → CITY');
-  }
-
-  if(topics.weight){
-    out.push('⚖️ Honest answer? Losing weight is simple. Not easy. But BLEU gives you the tools that actually work.\n');
-    out.push('The science (not the marketing):\n• Caloric deficit matters, but WHAT you eat matters more for sustainability\n• Inflammation makes fat loss nearly impossible — fix this first\n• Sleep deprivation increases ghrelin (hunger hormone) by 28%\n• Stress = elevated cortisol = belly fat storage\n');
-    out.push('💊 Your protocol:\n1. Omega-3 Fish Oil (Score: 95) — kills inflammation, the invisible barrier\n2. Creatine (Score: 97) — preserves muscle during deficit, boosts metabolism\n3. LMNT Electrolytes (Score: 93) — kills cravings, most "hunger" is dehydration\n4. Vitamin D3+K2 (Score: 94) — low D = slow metabolism\n');
-    out.push('📋 Non-negotiables:\n• Protein at every meal (1g per lb of ideal body weight)\n• Walk 8,000+ steps daily — more effective than most gym sessions\n• Sleep 7+ hours — this alone can move the needle 5-10 lbs\n');
-    var pracs=findPracs(['dietitian','nutrition','endocrin','internal','naturo']);
-    if(pracs.length){out.push('\n⚕️ Work with someone who knows the science:');pracs.forEach(function(p){out.push(gf(p,['full_name','name'],'Provider')+' — '+gf(p,['taxonomy_description','specialty'],'Healthcare')+' (Score: '+(p._score||calcPracScore(p))+')')});}
-  }
-
-  if(topics.pain){
-    out.push('🔥 Pain is a signal, not a sentence. The goal isn\'t to mask it — it\'s to find what\'s driving it.\n');
-    out.push('💊 Start here:\n1. Omega-3 Fish Oil (Score: 95) — the anti-inflammatory foundation. Most chronic pain has an inflammatory component.\n2. Magnesium Glycinate (Score: 96) — muscle tension, cramps, nerve pain all respond to magnesium.\n3. Creatine (Score: 97) — joint support, muscle recovery, mitochondrial energy for healing.\n');
-    out.push('📋 Movement protocol:\n• Don\'t stop moving. Immobility makes chronic pain worse.\n• Walking > sitting. Always.\n• Targeted mobility work 10 min/day\n');
-    var pracs=findPracs(['chiropract','physical','orthop','pain','sports','rheumat']);
-    if(pracs.length){out.push('\n⚕️ Practitioners who specialize:');pracs.forEach(function(p){out.push(gf(p,['full_name','name'],'Provider')+' — '+gf(p,['taxonomy_description','specialty'],'Healthcare')+' (Score: '+(p._score||calcPracScore(p))+')')});}
-  }
-
-  if(topics.longevity){
-    out.push('🧬 Longevity isn\'t about living longer. It\'s about living better, longer. Here\'s what the research actually supports:\n');
-    out.push('💊 The Longevity Stack:\n1. Creatine (Score: 97) — mitochondrial energy, cognitive protection, muscle preservation\n2. Omega-3 (Score: 95) — reduces all-cause mortality 13% (meta-analysis of 40 RCTs)\n3. Vitamin D3+K2 (Score: 94) — immune function, bone density, cardiovascular protection\n4. Magnesium (Score: 96) — involved in 300+ enzymatic reactions. Deficiency accelerates aging.\n');
-    out.push('📋 The Big 5 Longevity Habits:\n1. Sleep 7-9 hours (non-negotiable)\n2. Strength training 3x/week (muscle is the organ of longevity)\n3. Zone 2 cardio 150 min/week\n4. Eat 1g protein per lb ideal body weight\n5. Maintain social connections (loneliness = 15 cigarettes/day)\n');
-    out.push('📚 Key researchers: Peter Attia, Andrew Huberman, Rhonda Patrick, David Sinclair\n→ Check the Learn tab for vetted video content from these sources.');
-  }
-
-  if(topics.supplement&&!topics.sleep&&!topics.energy&&!topics.gut&&!topics.stress&&!topics.weight&&!topics.pain&&!topics.longevity&&!topics.creatine){
-    out.push('💊 Here\'s what I\'d actually take — based on clinical data, not marketing:\n');
-    out.push('THE FOUNDATION (everyone should consider these):\n');
-    out.push('1. Magnesium Glycinate — NOW Foods (Score: 96)\n   400mg before bed. Most people are deficient. Affects sleep, stress, muscles, 300+ enzymes.\n');
-    out.push('2. Omega-3 Fish Oil — Nordic Naturals (Score: 95)\n   2 softgels with food. Anti-inflammatory foundation. Triglyceride form absorbs better.\n');
-    out.push('3. Vitamin D3+K2 — Sports Research (Score: 94)\n   One softgel with breakfast. 42% of Americans are deficient. K2 directs calcium properly.\n');
-    out.push('4. Creatine — Thorne (Score: 97)\n   5g daily. Most studied supplement in history. Brain + muscles + energy.\n');
-    out.push('\nADD BASED ON YOUR NEEDS:\n• Can\'t sleep → add L-Theanine (Score: 91)\n• Stressed → add Ashwagandha KSM-66 (Score: 92)\n• Gut issues → add Probiotics 50B CFU (Score: 90)\n• Low energy → add LMNT Electrolytes (Score: 93)\n');
-    out.push('Every product is in the Vessel tab with Amazon links. Your purchases keep BLEU free.');
-  }
-
-  if(topics.magnesium&&!topics.sleep){
-    var p=picks.find(function(x){return x.n.includes('Magnesium')});
-    out.push('😴 Magnesium Glycinate — NOW Foods (Score: '+p.sc+')\n');
-    out.push('WHY: '+p.w+'\n');
-    out.push('HOW: '+p.h+'\n');
-    out.push('The glycinate form is key — it crosses the blood-brain barrier and won\'t cause GI issues like oxide or citrate.\n');
-    out.push('→ Buy on Amazon: '+p.amz);
-  }
-
-  if(topics.ashwagandha&&!topics.stress&&!topics.compare){
-    var p=picks.find(function(x){return x.n.includes('Ashwagandha')});
-    out.push('🧘 Ashwagandha KSM-66 — Jarrow (Score: '+p.sc+')\n');
-    out.push('WHY: '+p.w+'\n');
-    out.push('HOW: '+p.h+'\n');
-    out.push('KSM-66 is the specific extract studied in clinical trials. Generic ashwagandha ≠ KSM-66.\n');
-    out.push('→ Buy on Amazon: '+p.amz);
-  }
-
-  if(topics.omega&&!topics.pain&&!topics.longevity&&!topics.gut){
-    var p=picks.find(function(x){return x.n.includes('Omega')});
-    out.push('🐟 Omega-3 Fish Oil — Nordic Naturals (Score: '+p.sc+')\n');
-    out.push('WHY: '+p.w+'\n');
-    out.push('HOW: '+p.h+'\n');
-    out.push('→ Buy on Amazon: '+p.amz);
-  }
-
-  if(topics.vitamin_d&&!topics.energy&&!topics.longevity){
-    var p=picks.find(function(x){return x.n.includes('Vitamin D')});
-    out.push('☀️ Vitamin D3+K2 — Sports Research (Score: '+p.sc+')\n');
-    out.push('WHY: '+p.w+'\n');
-    out.push('HOW: '+p.h+'\n');
-    out.push('→ Buy on Amazon: '+p.amz);
-  }
-
-  if(topics.learn){
-    out.push('📚 The research is in the Learn tab — '+C.yt+' expert videos and '+C.st+' PubMed studies.\n');
-    out.push('Every video was vetted against our 12-Shield framework. The ones that survived cite sources, show protocols, and don\'t sell fear.\n');
-    out.push('→ Check the Learn tab for videos and studies.');
-  }
-
-  if(topics.city&&!topics.family){
-    out.push('🏙️ Your zip code predicts your health better than your genetic code.\n');
-    out.push('BLEU maps wellness infrastructure city by city — practitioners, products, events, community.\n');
-    out.push('New Orleans is the first living city: neworleans.bleu.live\n');
-    out.push('Model: [city].bleu.live — the data layer is ready for any city that wants it.\n→ Check the Cities tab.');
-  }
-
-  if(topics.event&&!topics.reset){
-    out.push('📅 Upcoming Events (40-Day Reset Calendar):\n');
-    out.push('🔥 Feb 18 — 40-Day Kickoff (847 registered)\n🧘 Feb 22 — Sunrise Yoga, City Park\n💪 Feb 20 — Sobriety Circle\n🍎 Feb 25 — Meal Prep Workshop\n🏆 Feb 25 — Week 1 Milestone\n😴 Mar 1 — Sleep Masterclass\n🏃 Mar 8 — 5K Crescent Park\n🎉 Mar 29 — Day 40 Celebration\n');
-    out.push('Every event earns XP. Every event feeds your Passport. The practitioners who lead them are in our Directory — scored and verified.');
-  }
-
-  // If nothing specific matched, give a brilliant default
-  if(out.length===0){
-    out.push('I hear you. Let me help.\n');
-    out.push('Here\'s where most people start:\n');
-    out.push('😴 Sleep — Fix this first. Everything downstream improves. Magnesium (Score: 96) + L-Theanine (Score: 91).\n');
-    out.push('⚡ Energy — Creatine (Score: 97) + LMNT Electrolytes (Score: 93) + Vitamin D3 (Score: 94). Three products that change your baseline.\n');
-    out.push('🧠 Stress — Ashwagandha KSM-66 (Score: 92) reduces cortisol 28%. Clinical data, not marketing.\n');
-    out.push('⚕️ '+(C.p||200)+' practitioners in the Directory, scored and ready.\n📅 40-Day Reset starts Feb 18 — neworleans.bleu.live\n');
-    out.push('Tell me what\'s going on. Sleep, gut, stress, pain, weight, energy, supplements, drug interactions — I have answers for all of it.');
-  }
-
-  // Always end with the ripple
-  if(!topics.drug&&!topics.shield){
-    out.push('\n💡 Someone in your life needs this. Send them bleu.live');
-  }
-
-  return out.join('\n');
+  isThinking=false;
 }
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function addMsg(who,txt){var box=document.getElementById('ch-msgs'),d=document.createElement('div');d.style.cssText='display:flex;margin-bottom:16px;'+(who==='me'?'justify-content:flex-end':'');var safe=who==='me'?esc(txt):txt;var html=safe.replace(/\n/g,'<br>');d.innerHTML='<div class="bub '+(who==='me'?'me':'ai')+'">'+(who==='ai'?'<div style="font-family:var(--fm);font-size:7px;color:var(--gold);letter-spacing:2px;margin-bottom:6px">ALVAI</div>':'')+html+'</div>';box.appendChild(d);box.scrollTop=box.scrollHeight}
@@ -1861,26 +1563,3 @@ observe();
 </body>
 </html>
 <script>
-var ALVAI_URL="https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai";
-var chatHistory=[];
-var isThinking=false;
-chat=async function(){
-var i=document.getElementById("ch-in"),m=i.value.trim();if(!m||isThinking)return;
-i.value="";isThinking=true;addMsg("me",m);
-chatHistory.push({role:"user",content:m});
-var box=document.getElementById("ch-msgs");
-document.querySelectorAll(".alvai-typing").forEach(function(t){t.remove()});
-var typing=document.createElement("div");typing.className="alvai-typing";typing.style.cssText="display:flex;margin-bottom:16px";
-typing.innerHTML='<div class="bub ai" style="padding:12px 18px"><div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .2s"></div><div style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite .4s"></div><span style="font-size:10px;color:var(--fade);margin-left:8px">Alvai is thinking...</span></div></div>';
-box.appendChild(typing);box.scrollTop=box.scrollHeight;
-try{
-var resp=await fetch(ALVAI_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":"sb_publishable_TF6vZ_gvSHlxuVBnsDIbnw_qFJCuGjO","Authorization":"Bearer sb_publishable_TF6vZ_gvSHlxuVBnsDIbnw_qFJCuGjO"},body:JSON.stringify({message:m,history:chatHistory.slice(-12)})});
-var data=await resp.json();
-document.querySelectorAll(".alvai-typing").forEach(function(t){t.remove()});
-if(data.reply){var fmt=data.reply.replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--cream)">$1</strong>').replace(/\n/g,'<br>');addMsg("ai",fmt);}
-else{addMsg("ai","Let me try again in a moment.");}
-chatHistory.push({role:"assistant",content:data.reply||""});
-}catch(err){document.querySelectorAll(".alvai-typing").forEach(function(t){t.remove()});addMsg("ai","Connection issue. Try again.");}
-isThinking=false;
-};
-</script>
