@@ -378,7 +378,7 @@ footer{padding:60px 40px;text-align:center;border-top:1px solid var(--b1);positi
 
   <!-- SUPABASE PRODUCTS SECTION -->
   <div class="rv d4" style="margin-top:32px">
-    <div style="font-family:var(--fm);font-size:10px;color:var(--sage);letter-spacing:2px;margin-bottom:14px">📦 FDA-REGISTERED PRODUCTS FROM DATABASE</div>
+    <div id="fda-label" style="font-family:var(--fm);font-size:10px;color:var(--sage);letter-spacing:2px;margin-bottom:14px;display:none">📦 VALIDATED WELLNESS PRODUCTS FROM DATABASE</div>
     <div class="g2" id="pl-db"></div>
   </div>
 
@@ -1054,11 +1054,21 @@ function calcProdScore(p){
 }
 
 // ═══ PRODUCT FILTER (remove garbage) ═══
-var junkWords=['wart','fungal','corn remover','lice','hemorrhoid','suppository','enema','douche','condom','pregnancy test','catheter','bandage','gauze','syringe'];
+// Strict wellness filter — only show real supplements, not FDA pharma drugs
 function isWellnessProd(p){
   var n=String(gf(p,['name','proprietary_name','product_name','brand_name'])||'').toLowerCase();
-  for(var i=0;i<junkWords.length;i++){if(n.includes(junkWords[i]))return false}
-  return true;
+  var cat=String(gf(p,['category','product_type','pharm_class','dosage_form'])||'').toLowerCase();
+  // BLOCK pharmaceutical drugs
+  var pharma=['tablet','injection','solution','cream','ointment','suspension','film','spray','gel','lotion','patch','implant','kit','suppository','enema','syringe','condom','catheter','bandage','gauze','inhaler','ophthalmic','nasal','rectal','vaginal','topical'];
+  var drugs=['sildenafil','estradiol','levonorgestrel','dronabinol','lidocaine','clotrimazole','naphazoline','acetaminophen','ibuprofen','aspirin','hydrocodone','oxycodone','metformin','atorvastatin','lisinopril','amlodipine','omeprazole','losartan','gabapentin','sertraline','montelukast','fluoxetine','escitalopram','bupropion','trazodone','prednisone','amoxicillin','azithromycin','ciprofloxacin','doxycycline','metronidazole','cephalexin','clindamycin','sulfamethoxazole','nitrofurantoin','valacyclovir','acyclovir','nystatin','miconazole','ketoconazole','fluconazole','terbinafine','permethrin','ivermectin','mometasone','triamcinolone','betamethasone','hydrocortisone','clobetasol','desonide','mupirocin','bacitracin','neomycin','polymyxin','glycerin','menthol','phenylephrine','oxymetazoline','diphenhydramine','cetirizine','fexofenadine','loratadine','guaifenesin','dextromethorphan','benzonatate','albuterol','fluticasone','budesonide','montelukast','theophylline','epinephrine'];
+  for(var i=0;i<pharma.length;i++){if(n.includes(pharma[i])&&!n.includes('supplement')&&!n.includes('vitamin'))return false}
+  for(var i=0;i<drugs.length;i++){if(n.includes(drugs[i]))return false}
+  // ALLOW if contains wellness keywords
+  var well=['vitamin','mineral','supplement','probiotic','omega','fish oil','magnesium','zinc','iron','calcium','collagen','protein','creatine','ashwagandha','turmeric','curcumin','melatonin','coq10','berberine','theanine','lion.*mane','mct','electrolyte','adaptogen','herb','botanical','extract','amino','bcaa','glutamine','quercetin','resveratrol','glucosamine','chondroitin','biotin','folate','b12','b-complex','d3','k2','elderberry','echinacea','ginger','garlic','spirulina','chlorella','psyllium','digestive','enzyme','prebiotic','multivitamin'];
+  for(var i=0;i<well.length;i++){if(n.match(new RegExp(well[i],'i'))||cat.match(new RegExp(well[i],'i')))return true}
+  // If trust score > 70 and not pharma, allow
+  if((p.trust_score||p._score||0)>70)return true;
+  return false;
 }
 
 async function loadData(){
@@ -1377,7 +1387,7 @@ function rProd(){
     return'<div class="pi card" style="border-left:3px solid var(--'+p.c+')"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:14px;font-weight:500">'+p.n+'</div><div style="font-size:11px;color:var(--mist)">'+p.b+'</div></div><div style="font-family:var(--fm);font-size:22px;color:var(--'+p.c+');font-weight:500">'+p.sc+'</div></div><div style="display:flex;gap:6px;margin-bottom:10px"><span style="font-family:var(--fm);font-size:8px;padding:3px 9px;border-radius:20px;background:var(--tg);color:var(--teal)">'+p.sh+'</span><span style="font-family:var(--fm);font-size:8px;padding:3px 9px;border-radius:20px;background:var(--gg);color:var(--gold)">BLEU PICK</span></div><div style="font-family:var(--fm);font-size:8px;color:var(--gold);letter-spacing:1px;margin-bottom:3px">WHY</div><p style="font-size:11px;color:var(--warm);line-height:1.7;margin-bottom:10px">'+p.w+'</p><div style="font-family:var(--fm);font-size:8px;color:var(--teal);letter-spacing:1px;margin-bottom:3px">HOW</div><p style="font-size:11px;color:var(--mist);line-height:1.7;margin-bottom:14px">'+p.h+'</p><div style="display:flex;gap:8px"><a href="'+p.amz+'" target="_blank" rel="noopener noreferrer" class="btn btn-g btn-s" style="text-decoration:none;flex:1;justify-content:center">Amazon →</a><a href="'+IHB+p.ih+'" target="_blank" rel="noopener noreferrer" class="btn btn-o btn-s" style="text-decoration:none;flex:1;justify-content:center">iHerb →</a></div></div>'
   }).join('');
   // DB products below
-  document.getElementById('pl-db').innerHTML=d.slice(0,12).map(function(p){
+  var dbFiltered=d.filter(isWellnessProd);document.getElementById('fda-label').style.display=dbFiltered.length?'block':'none';document.getElementById('pl-db').innerHTML=dbFiltered.slice(0,12).map(function(p){
     var name=gf(p,['name','proprietary_name','product_name','brand_name'],'Product');
     var brand=gf(p,['brand','brand_name','manufacturer_name','labeler_name'],'');
     var cat=gf(p,['category','product_type','pharm_class','dosage_form'],'Wellness');
