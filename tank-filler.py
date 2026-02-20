@@ -20,9 +20,9 @@ from urllib.error import HTTPError, URLError
 # CONFIG
 # ══════════════════════════════════════════════════════════
 SB_URL = os.environ.get('SUPABASE_URL', 'https://sqyzboesdpdussiwqpzk.supabase.co')
-SB_KEY = os.environ.get('SUPABASE_SERVICE_KEY', os.environ.get('SUPABASE_KEY', ''))
-GOOGLE_KEY = os.environ.get('GOOGLE_PLACES_KEY', os.environ.get('YOUTUBE_API_KEY', ''))
-YT_KEY = os.environ.get('YOUTUBE_API_KEY', GOOGLE_KEY)
+SB_KEY = os.environ.get('SUPABASE_SERVICE_KEY', 'sb_secret__zYCYtWcOx9uKnIgRPPN4Q_PWkTOf96')
+GOOGLE_KEY = os.environ.get('GOOGLE_PLACES_KEY', 'AIzaSyCGYgOuRAPS5HO95ify2ZNmQj_21Tjn0Ks')
+YT_KEY = os.environ.get('YOUTUBE_API_KEY', 'AIzaSyCGYgOuRAPS5HO95ify2ZNmQj_21Tjn0Ks')
 AMZ_TAG = 'bleu-live-20'
 IHERB_CODE = 'BLEU'
 
@@ -87,7 +87,10 @@ def fetch_json(url, headers=None, timeout=20):
         return None
 
 def make_id(s):
-    return hashlib.md5(s.encode()).hexdigest()[:12]
+    import uuid
+    return str(uuid.uuid5(uuid.NAMESPACE_DNS, s))
+def _old_make_id(s):
+    import uuid; return str(uuid.uuid5(uuid.NAMESPACE_DNS, s))
 
 def log(msg):
     ts = datetime.datetime.now().strftime('%H:%M:%S')
@@ -264,7 +267,7 @@ def run_npi(cities=None):
                     name = f"{name}, {cred}"
 
                 rows.append({
-                    'id': npi, 'npi': npi, 'full_name': name,
+                    'id': str(__import__('uuid').uuid5(__import__('uuid').NAMESPACE_DNS, npi)), 'npi': npi, 'full_name': name,
                     'provider_organization_name': org,
                     'specialty': ptax.get('desc', ''),
                     'taxonomy_description': ptax.get('desc', ''),
@@ -602,7 +605,7 @@ def run_pubmed():
                         break
 
                 rows.append({
-                    'id': pmid, 'pmid': pmid, 'title': title[:500],
+                    'id': str(__import__('uuid').uuid5(__import__('uuid').NAMESPACE_DNS, pmid)), 'pmid': pmid, 'title': title[:500],
                     'authors': first_author, 'journal': journal,
                     'year': pubdate[:4], 'pub_date': pubdate,
                     'category': category, 'search_topic': topic,
@@ -704,7 +707,7 @@ def run_youtube():
                 s = v.get('snippet', {})
                 st = v.get('statistics', {})
                 rows.append({
-                    'id': vid, 'video_id': vid, 'title': s.get('title', '')[:300],
+                    'id': str(__import__('uuid').uuid5(__import__('uuid').NAMESPACE_DNS, vid)), 'video_id': vid, 'title': s.get('title', '')[:300],
                     'channel_name': s.get('channelTitle', ''),
                     'channel_id': s.get('channelId', ''),
                     'description': s.get('description', '')[:1000],
@@ -840,7 +843,7 @@ def run_trials():
                 locs = clm.get('locations', [])
                 loc_str = f"{locs[0].get('city','')}, {locs[0].get('state','')}" if locs else ''
                 rows.append({
-                    'id': nct, 'nct_id': nct,
+                    'id': str(__import__('uuid').uuid5(__import__('uuid').NAMESPACE_DNS, nct)), 'nct_id': nct,
                     'title': ident.get('officialTitle', ident.get('briefTitle', ''))[:500],
                     'brief_title': ident.get('briefTitle', '')[:300],
                     'status': sm.get('overallStatus', ''),
@@ -880,7 +883,7 @@ def run_events():
                 continue
             seen.add(eid)
             rows.append({
-                'id': eid,
+                'id': str(__import__('uuid').uuid5(__import__('uuid').NAMESPACE_DNS, eid)),
                 'title': f'{etype.title()} in {city_info["city"]}',
                 'description': f'Find {etype} events and classes near you',
                 'category': etype.split()[0].title(),
