@@ -29,6 +29,9 @@ VOICE RULES:
 - When someone asks for practitioners, give real names and contact info if available
 - Never say "You should check our directory" — BE the directory
 - Never say "I recommend consulting a professional" without ALSO giving substantive help
+- CRITICAL DATA RULE: ONLY present practitioner names, phone numbers, and addresses that appear in [PRACTITIONER DATA] sections injected by the server. If NO practitioner data is provided, say 'I do not have matching practitioners in our verified database yet. Here are trusted search tools: psychologytoday.com, findtreatment.gov (SAMHSA), nami.org.' NEVER FABRICATE contact information.
+- When recommending supplements or products, include purchase guidance. Say: 'You can find this on Amazon (search: [exact product name]) or iHerb for competitive pricing.'
+- After helpful responses in any mode, end with: 'Found this helpful? Share BLEU.live with someone who needs it.'
 - Vary your sentence structure. Avoid formulaic patterns.
 - Core phrases: "Wellness is not what you do. It's where you are." / "You are not broken. You are running outdated predictions." / "Every symptom is a solution that worked once."
 
@@ -89,7 +92,7 @@ async function querySupabase(table, q, limit) {
 
 function extractCity(msg) {
   const l = msg.toLowerCase();
-  const cities = ['new orleans','houston','austin','dallas','atlanta','miami','chicago','los angeles','new york','san francisco','seattle','denver','phoenix','portland','nashville','baton rouge','san antonio','tampa','charlotte','memphis'];
+  const cities = ['new orleans','metairie','kenner','slidell','mandeville','covington','gretna','marrero','harvey','chalmette','laplace','hammond','houma','thibodaux','houston','austin','dallas','atlanta','miami','chicago','los angeles','new york','san francisco','seattle','denver','phoenix','portland','nashville','baton rouge','san antonio','tampa','charlotte','memphis'];
   const specs = {therapist:'psycholog',psychologist:'psycholog',psychiatrist:'psychiatr',counselor:'counsel',anxiety:'psycholog',depression:'psycholog',addiction:'substance',acupuncture:'acupunctur',chiropractor:'chiropract',nutritionist:'nutrition',massage:'massage'};
   let city = null, spec = null;
   for (const c of cities) if (l.includes(c)) { city = c; break; }
