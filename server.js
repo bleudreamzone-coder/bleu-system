@@ -236,4 +236,4 @@ server.listen(PORT, () => {
   console.log(`✦ ALVAI v3.0 — GPT-4o powered — port ${PORT}`);
   console.log(`  Engine: OpenAI (gpt-4o + gpt-4o-mini routing)`);
   console.log(`  Key loaded: ${!!OPENAI_KEY}`);
-});
+}
