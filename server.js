@@ -335,10 +335,8 @@ const server = http.createServer((req, res) => {
     const product = url.searchParams.get('product') || '';
     const session = url.searchParams.get('session') || '';
     const city = url.searchParams.get('city') || '';
-    // Log to Supabase
-    try {
-      await querySupabase('clicks', '', 0, 'POST', {partner, source_tab: source, product_or_service: product, session_id: session, city, timestamp: new Date().toISOString()});
-    } catch(e) { console.error('Track error:', e.message); }
+    // Log to Supabase (fire and forget)
+    querySupabase('clicks', '', 0, 'POST', {partner, source_tab: source, product_or_service: product, session_id: session, city, timestamp: new Date().toISOString()}).catch(()=>{});
     // Redirect to partner
     const urls = {
       betterhelp:'https://betterhelp.com/bleu',
@@ -361,9 +359,7 @@ const server = http.createServer((req, res) => {
   if (pn === '/api/ping' && req.method === 'GET') {
     const pg = url.searchParams.get('p') || '/';
     const sess = url.searchParams.get('s') || '';
-    try {
-      await querySupabase('pageviews', '', 0, 'POST', {path: pg, session_id: sess, timestamp: new Date().toISOString()});
-    } catch(e) {}
+    querySupabase('pageviews', '', 0, 'POST', {path: pg, session_id: sess, timestamp: new Date().toISOString()}).catch(()=>{});
     return json(res, 200, {ok:true});
   }
   // ═══════ SESSION UPSERT ═══════
