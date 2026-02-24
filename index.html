@@ -2,286 +2,822 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BLEU — The Longevity Operating System</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<meta name="description" content="BLEU validates every practitioner, product, and study against federal databases. Therapy. Recovery. Finance. Cannabis Intelligence. The most trusted wellness system ever built.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+:root{
+  --bg:#080E1A;--surface:#0C1829;--card:#111F36;--card2:#162846;--border:rgba(45,138,158,.15);--border2:rgba(201,168,76,.12);
+  --text:#E8E0D0;--dim:#7B8DA6;--muted:#4A5B73;
+  --teal:#2D8A9E;--teal-glow:rgba(45,138,158,.15);--gold:#C9A84C;--gold-glow:rgba(201,168,76,.12);
+  --sage:#7A9E7E;--ember:#C75B39;--rose:#9E5A6D;--lavender:#7E6A9E;--sky:#5A8E9E;
+  --white:#FFFFFF;--red:#DC2626;--green:#16A34A;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0f1a;--bg2:#111827;--card:#162032;--gold:#d4af37;--teal:#4ecdc4;--rose:#ff6b8a;--lavender:#a78bfa;--text:#e8edf5;--dim:#6b7b8f;--border:rgba(212,175,55,0.1);--glow:rgba(212,175,55,0.15)}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
-h1,h2,h3,.brand{font-family:'Playfair Display',serif}
-nav{position:sticky;top:0;z-index:100;background:rgba(10,15,26,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 20px}
-.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;height:56px;gap:8px;overflow-x:auto;scrollbar-width:none}
-.nav-inner::-webkit-scrollbar{display:none}
-.brand{color:var(--gold);font-size:22px;font-weight:700;letter-spacing:2px;margin-right:16px;flex-shrink:0;cursor:pointer}
-.nav-tab{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--dim);cursor:pointer;white-space:nowrap;transition:all 0.2s;border:none;background:none;font-family:'Outfit',sans-serif}
-.nav-tab:hover{color:var(--text);background:rgba(255,255,255,0.05)}
-.nav-tab.active{color:var(--gold);background:var(--glow)}
-.nav-more{position:relative}
-.more-menu{display:none;position:absolute;top:44px;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:8px;min-width:180px;box-shadow:0 20px 40px rgba(0,0,0,0.5);z-index:200}
-.more-menu.show{display:block}
-.more-item{display:block;width:100%;text-align:left;padding:10px 14px;border-radius:8px;font-size:13px;color:var(--dim);cursor:pointer;border:none;background:none;font-family:'Outfit',sans-serif}
-.more-item:hover{color:var(--text);background:rgba(255,255,255,0.05)}
-main{max-width:1200px;margin:0 auto;padding:20px}
-section{display:none}section.active{display:block}
-.hero{text-align:center;padding:60px 20px 40px}
-.hero h1{font-size:clamp(32px,6vw,52px);background:linear-gradient(135deg,var(--gold),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
-.hero p{color:var(--dim);font-size:18px;margin-top:12px;max-width:600px;margin-left:auto;margin-right:auto;font-weight:300}
-.hero-stats{display:flex;justify-content:center;gap:40px;margin-top:32px;flex-wrap:wrap}
-.hero-stat .num{font-size:28px;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif}
-.hero-stat .label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:40px}
-.quick-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;cursor:pointer;transition:all 0.3s}
-.quick-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,175,55,0.1)}
-.quick-card .icon{font-size:28px;margin-bottom:8px}
-.quick-card h3{font-size:16px;color:var(--text);margin-bottom:6px;font-family:'Outfit',sans-serif;font-weight:600}
-.quick-card p{font-size:13px;color:var(--dim);line-height:1.5;font-weight:300}
-.quick-card .tag{display:inline-block;font-size:10px;padding:3px 8px;border-radius:20px;margin-top:8px;font-weight:500}
-.tag-free{background:rgba(78,205,196,0.15);color:var(--teal)}
-.tag-aff{background:rgba(212,175,55,0.15);color:var(--gold)}
-.aff-bar{display:flex;gap:12px;overflow-x:auto;padding:20px 0;scrollbar-width:none;margin-top:40px}
-.aff-bar::-webkit-scrollbar{display:none}
-.aff-chip{flex-shrink:0;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;border:1px solid var(--border);color:var(--dim);background:var(--card);text-decoration:none}
-.aff-chip:hover{border-color:var(--teal);color:var(--teal)}
-.tab-header{margin-bottom:20px}
-.tab-header h2{font-size:24px}
-.tab-header p{color:var(--dim);font-size:14px;margin-top:4px;font-weight:300}
-.chat-container{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-.chat-messages{height:400px;overflow-y:auto;padding:20px;scroll-behavior:smooth}
-.chat-input-row{display:flex;border-top:1px solid var(--border);background:var(--card)}
-.chat-input-row input{flex:1;background:none;border:none;padding:16px 20px;color:var(--text);font-size:14px;font-family:'Outfit',sans-serif;outline:none}
-.chat-input-row input::placeholder{color:var(--dim)}
-.chat-input-row button{padding:16px 24px;background:var(--gold);color:var(--bg);font-weight:600;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:14px}
-.chat-input-row button:hover{background:#e5c342}
-.msg{margin-bottom:16px;padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.7;max-width:85%}
-.msg.user{background:rgba(212,175,55,0.12);color:var(--gold);margin-left:auto;border-bottom-right-radius:4px}
-.msg.ai{background:var(--card);color:var(--text);border-bottom-left-radius:4px}
-.msg.ai strong{color:var(--gold)}
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
-.card-btn{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;text-align:left;transition:all 0.2s;font-family:'Outfit',sans-serif}
-.card-btn:hover{border-color:var(--gold);transform:translateY(-1px)}
-.card-btn .ct{font-weight:600;font-size:14px;color:var(--text);margin-bottom:4px}
-.card-btn .cd{font-size:12px;color:var(--dim);line-height:1.5;font-weight:300}
-.prod-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
-.prod-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all 0.2s}
-.prod-card:hover{border-color:var(--teal)}
-.pn{font-weight:600;font-size:14px;color:var(--teal)}
-.pp{font-size:12px;color:var(--gold);margin-top:2px}
-.pd{font-size:11px;color:var(--dim);margin-top:6px;line-height:1.5}
-.ps{font-size:10px;margin-top:6px}
-.ps.ok{color:var(--teal)}.ps.wn{color:#f59e0b}
-.mode-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;margin-bottom:12px}
-.mode-row::-webkit-scrollbar{display:none}
-.mode-btn{padding:8px 16px;border-radius:20px;font-size:12px;border:1px solid var(--border);background:none;color:var(--dim);cursor:pointer;white-space:nowrap;font-family:'Outfit',sans-serif;transition:all 0.2s}
-.mode-btn:hover,.mode-btn.active{border-color:var(--lavender);color:var(--lavender);background:rgba(167,139,250,0.1)}
-.site-footer{text-align:center;padding:40px 20px;color:var(--dim);font-size:12px;border-top:1px solid var(--border);margin-top:60px}
-.site-footer a{color:var(--gold);text-decoration:none}
-.alvai-cursor{display:inline-block;width:2px;height:16px;background:var(--gold);animation:blink 1s infinite;vertical-align:text-bottom;margin-left:2px}
-@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
-@media(max-width:768px){.hero{padding:40px 16px 24px}.quick-grid{grid-template-columns:1fr}.chat-messages{height:350px}.nav-tab{padding:6px 10px;font-size:12px}}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--teal);color:var(--white)}
+a{color:var(--teal);text-decoration:none;transition:.2s}a:hover{color:var(--gold)}
+
+/* ═══ AMBIENT BACKGROUND ═══ */
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 20% 50%,rgba(45,138,158,.04) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(201,168,76,.03) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(122,158,126,.03) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* ═══ NAV ═══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,14,26,.92);backdrop-filter:blur(20px) saturate(1.5);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;padding:0 24px;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;transition:.3s}
+.nav::-webkit-scrollbar{display:none}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold);margin-right:16px;white-space:nowrap;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:.3s}
+.nav-logo:hover{text-shadow:0 0 20px rgba(201,168,76,.4)}
+.nav-tab{padding:7px 16px;border-radius:24px;font-size:12.5px;font-weight:500;white-space:nowrap;cursor:pointer;transition:all .3s;color:var(--dim);border:1px solid transparent;letter-spacing:.3px}
+.nav-tab:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.08);box-shadow:0 0 20px rgba(201,168,76,.08)}
+.nav-tab.t2{color:var(--teal)}
+.nav-tab.t2:hover{color:var(--teal);background:rgba(45,138,158,.06)}
+.nav-tab.t2.active{color:var(--teal);border-color:rgba(45,138,158,.3);background:rgba(45,138,158,.08);box-shadow:0 0 20px rgba(45,138,158,.08)}
+.nav-tab.t3{color:var(--ember)}
+.nav-tab.t3.active{color:var(--ember);border-color:rgba(199,91,57,.3);background:rgba(199,91,57,.08)}
+
+/* ═══ PANELS ═══ */
+.panel{display:none;padding:80px 24px 120px;max-width:960px;margin:0 auto;min-height:100vh;position:relative;z-index:1;animation:panelIn .4s ease-out}
+.panel.active{display:block}
+@keyframes panelIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ TYPOGRAPHY ═══ */
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,48px);font-weight:700;line-height:1.15;margin-bottom:12px;color:var(--text);letter-spacing:-.5px}
+.hero-title .accent{color:var(--gold)}
+.hero-title .teal{color:var(--teal)}
+.hero-sub{font-size:15px;color:var(--dim);line-height:1.7;max-width:640px;margin-bottom:32px;font-weight:300}
+.section-label{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--teal);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;margin-bottom:6px}
+.section-desc{color:var(--dim);font-size:14px;margin-bottom:20px;line-height:1.6}
+
+/* ═══ CARDS ═══ */
+.card{background:linear-gradient(135deg,var(--card) 0%,var(--card2) 100%);border:1px solid var(--border);border-radius:16px;padding:24px;margin:8px 0;transition:all .35s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.2),transparent);opacity:0;transition:.3s}
+.card:hover{border-color:rgba(201,168,76,.2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.card:hover::before{opacity:1}
+.card h3{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;margin-bottom:6px;color:var(--text)}
+.card p{color:var(--dim);font-size:13.5px;line-height:1.6}
+.card .tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10.5px;font-weight:600;letter-spacing:.5px;margin-top:8px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;margin:16px 0}
+.card-icon{font-size:28px;margin-bottom:10px;display:block}
+.card-clickable{cursor:pointer}
+
+/* ═══ STAT BOXES ═══ */
+.stat-row{display:flex;gap:14px;flex-wrap:wrap;margin:20px 0}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 24px;text-align:center;flex:1;min-width:130px;position:relative;overflow:hidden;transition:.3s}
+.stat-box:hover{border-color:rgba(201,168,76,.25);box-shadow:0 4px 20px rgba(201,168,76,.06)}
+.stat-box .num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--gold);line-height:1}
+.stat-box .label{font-size:10.5px;color:var(--dim);margin-top:6px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+
+/* ═══ CHAT ═══ */
+.chat-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-top:20px;box-shadow:0 4px 32px rgba(0,0,0,.2)}
+.chat-messages{height:140px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.chat-messages::-webkit-scrollbar{width:4px}.chat-messages::-webkit-scrollbar-track{background:transparent}.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.msg{max-width:82%;padding:12px 16px;border-radius:18px;font-size:14px;line-height:1.65;animation:msgIn .35s ease-out}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,var(--teal),#1E7A8E);color:var(--white);border-bottom-right-radius:4px;box-shadow:0 2px 12px rgba(45,138,158,.2)}
+.msg.ai{align-self:flex-start;background:var(--card);border:1px solid var(--border);border-bottom-left-radius:4px}
+.msg.ai a{color:var(--gold);font-weight:500}.msg.ai strong{color:var(--gold)}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.alvai-cursor{display:inline-block;width:2px;height:16px;background:var(--gold);margin-left:2px;animation:cursorPulse 1s ease-in-out infinite;vertical-align:text-bottom;border-radius:1px}
+@keyframes cursorPulse{0%,100%{opacity:1;box-shadow:0 0 4px rgba(201,168,76,.4)}50%{opacity:.2;box-shadow:none}}
+.chat-input-row{display:flex;border-top:1px solid var(--border);padding:14px 16px;gap:10px;background:rgba(12,24,41,.8)}
+.chat-input-row input{flex:1;background:transparent;border:none;color:var(--text);font-size:14px;outline:none;font-family:'DM Sans',sans-serif}
+.chat-input-row input::placeholder{color:var(--muted)}
+.chat-input-row button{background:linear-gradient(135deg,var(--teal),#1E7A8E);color:var(--white);border:none;padding:10px 24px;border-radius:24px;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:.3px;transition:.3s;box-shadow:0 2px 12px rgba(45,138,158,.2)}
+.chat-input-row button:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(45,138,158,.3)}
+
+/* ═══ MODE / QUICK BARS ═══ */
+.mode-bar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.mode-btn{padding:7px 16px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--dim);background:transparent;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .3s;letter-spacing:.2px}
+.mode-btn:hover{border-color:var(--teal);color:var(--teal);background:rgba(45,138,158,.06)}
+.mode-btn.active{background:linear-gradient(135deg,var(--teal),#1E7A8E);color:var(--white);border-color:var(--teal);box-shadow:0 2px 12px rgba(45,138,158,.2)}
+.quick-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.quick-btn{padding:8px 16px;border-radius:20px;font-size:12.5px;cursor:pointer;border:1px solid var(--border);color:var(--dim);background:transparent;font-family:'DM Sans',sans-serif;font-weight:400;transition:all .3s}
+.quick-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06);transform:translateY(-1px)}
+
+/* ═══ PRODUCT CARDS ═══ */
+.product-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:16px 0}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center;transition:.3s;cursor:pointer}
+.product-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.product-card .emoji{font-size:32px;margin-bottom:8px}
+.product-card .name{font-weight:600;font-size:13px;margin-bottom:4px}
+.product-card .desc{font-size:11.5px;color:var(--dim);line-height:1.4;margin-bottom:8px}
+.product-card .score{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--sage);background:rgba(122,158,126,.1);padding:3px 8px;border-radius:8px;display:inline-block}
+.product-card .shop-link{display:inline-block;margin-top:8px;font-size:11px;color:var(--gold);font-weight:600;letter-spacing:.3px}
+
+/* ═══ FEATURE SECTIONS ═══ */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:20px 0}
+.feature-item{display:flex;gap:14px;padding:18px;background:var(--surface);border:1px solid var(--border);border-radius:14px;transition:.3s}
+.feature-item:hover{border-color:rgba(201,168,76,.2)}
+.feature-icon{font-size:24px;flex-shrink:0;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--card);border-radius:12px;border:1px solid var(--border)}
+.feature-text h4{font-size:14px;font-weight:600;margin-bottom:3px}.feature-text p{font-size:12.5px;color:var(--dim);line-height:1.5}
+
+/* ═══ DIVIDERS ═══ */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:40px 0}
+.divider-gold{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.2),transparent);margin:40px 0}
+
+/* ═══ BADGES / PILLS ═══ */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:12px;font-size:10.5px;font-weight:600;letter-spacing:.5px}
+.badge-teal{background:rgba(45,138,158,.1);color:var(--teal);border:1px solid rgba(45,138,158,.2)}
+.badge-gold{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.2)}
+.badge-sage{background:rgba(122,158,126,.1);color:var(--sage);border:1px solid rgba(122,158,126,.2)}
+.badge-ember{background:rgba(199,91,57,.1);color:var(--ember);border:1px solid rgba(199,91,57,.2)}
+
+/* ═══ GLOW BORDERS ═══ */
+.glow-card{position:relative}
+.glow-card::after{content:'';position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(45,138,158,.15),rgba(201,168,76,.15),rgba(122,158,126,.15));z-index:-1;opacity:0;transition:.3s;filter:blur(4px)}
+.glow-card:hover::after{opacity:1}
+
+/* ═══ DISCLAIMER ═══ */
+.disclaimer{background:rgba(45,138,158,.04);border:1px solid rgba(45,138,158,.1);border-radius:12px;padding:14px 18px;font-size:11.5px;color:var(--dim);margin:24px 0;line-height:1.7}
+.disclaimer a{color:var(--teal)}
+.disclaimer-crisis{background:rgba(199,91,57,.06);border-color:rgba(199,91,57,.15)}
+
+/* ═══ CTA BUTTONS ═══ */
+.cta{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:28px;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .3s;border:none;font-family:'DM Sans',sans-serif;letter-spacing:.3px}
+.cta-gold{background:linear-gradient(135deg,var(--gold),#B8943F);color:var(--bg);box-shadow:0 2px 16px rgba(201,168,76,.2)}
+.cta-gold:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(201,168,76,.3);color:var(--bg);text-decoration:none}
+.cta-teal{background:linear-gradient(135deg,var(--teal),#1E7A8E);color:var(--white);box-shadow:0 2px 16px rgba(45,138,158,.2)}
+.cta-teal:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(45,138,158,.3);color:var(--white);text-decoration:none}
+.cta-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+.cta-outline:hover{border-color:var(--gold);color:var(--gold);text-decoration:none}
+
+/* ═══ SCROLL REVEALS ═══ */
+.reveal{opacity:0;transform:translateY(20px);transition:all .6s ease-out}.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}.reveal-delay-4{transition-delay:.4s}
+
+/* ═══ FOOTER ═══ */
+.footer{text-align:center;padding:60px 24px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;line-height:2.2;position:relative;z-index:1}
+.footer a{color:var(--dim)}.footer a:hover{color:var(--gold)}
+.footer .footer-logo{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);letter-spacing:3px;margin-bottom:12px}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:640px){
+  .hero-title{font-size:28px}
+  .chat-messages{height:340px}
+  .nav{height:52px;padding:0 12px;gap:4px}
+  .nav-tab{padding:5px 10px;font-size:11.5px}
+  .card-grid,.feature-grid{grid-template-columns:1fr}
+  .product-row{grid-template-columns:repeat(2,1fr)}
+  .stat-row{gap:8px}.stat-box{padding:14px 12px;min-width:0}.stat-box .num{font-size:24px}
+  .panel{padding:68px 16px 100px}
+}
 </style>
 </head>
 <body>
-<nav><div class="nav-inner">
-<div class="brand" onclick="showTab('home')">BLEU</div>
-<button class="nav-tab active" onclick="showTab('home')">Home</button>
-<button class="nav-tab" onclick="showTab('alvai')">Alvai</button>
-<button class="nav-tab" onclick="showTab('directory')">Find Care</button>
-<button class="nav-tab" onclick="showTab('vessel')">Products</button>
-<button class="nav-tab" onclick="showTab('therapy')">Therapy</button>
-<button class="nav-tab" onclick="showTab('finance')">Finance</button>
-<button class="nav-tab" onclick="showTab('recovery')">Recovery</button>
-<button class="nav-tab" onclick="showTab('cannaiq')">CannaIQ</button>
-<div class="nav-more"><button class="nav-tab" onclick="event.stopPropagation();document.getElementById('mm').classList.toggle('show')">More ▾</button>
-<div class="more-menu" id="mm">
-<button class="more-item" onclick="showTab('protocols')">Protocols</button>
-<button class="more-item" onclick="showTab('learn')">Learn</button>
-<button class="more-item" onclick="showTab('community')">Community</button>
-<button class="more-item" onclick="showTab('dashboard')">Dashboard</button>
-<button class="more-item" onclick="showTab('missions')">Missions</button>
-<button class="more-item" onclick="showTab('passport')">Passport</button>
-<button class="more-item" onclick="showTab('map')">Map</button>
-</div></div></div></nav>
-<main>
-<section id="sec-home" class="active">
-<div class="hero">
-<h1>The Longevity Operating System</h1>
-<p>AI-powered wellness. Verified practitioners. Real products. Your pathway to healing.</p>
-<div class="hero-stats">
-<div class="hero-stat"><div class="num">485,476</div><div class="label">Practitioners</div></div>
-<div class="hero-stat"><div class="num">54</div><div class="label">Substances</div></div>
-<div class="hero-stat"><div class="num">302K+</div><div class="label">Interactions</div></div>
-<div class="hero-stat"><div class="num">14</div><div class="label">Modes</div></div>
-</div></div>
-<div class="quick-grid">
-<div class="quick-card" onclick="goAsk('alvai','I cant sleep and I feel exhausted. Help me.')"><div class="icon">🌙</div><h3>Fix My Sleep</h3><p>Specific protocol: supplements, doses, timing, prices, and the science.</p><span class="tag tag-aff">Products + Protocol</span></div>
-<div class="quick-card" onclick="goAsk('directory','Find me a therapist for anxiety in New Orleans')"><div class="icon">🧠</div><h3>Find a Therapist</h3><p>NPI-verified near you, plus virtual from $60/week. Every price point.</p><span class="tag tag-free">Local + Online + Free</span></div>
-<div class="quick-card" onclick="goAsk('vessel','Build me a morning supplement stack for energy and focus')"><div class="icon">💊</div><h3>Supplement Stack</h3><p>Exact products, doses, brands, prices. 5-layer safety engine.</p><span class="tag tag-aff">Thorne · Amazon · iHerb</span></div>
-<div class="quick-card" onclick="goAsk('cannaiq','What strain is best for anxiety and sleep? I am new to cannabis')"><div class="icon">🌿</div><h3>Cannabis Guide</h3><p>28 years intelligence. Strains, dosing, terpenes, interactions.</p><span class="tag tag-aff">Leafly · Charlotte's Web</span></div>
-<div class="quick-card" onclick="goAsk('directory','Help me find a back doctor in New Orleans')"><div class="icon">🩺</div><h3>Find a Doctor</h3><p>Chiropractors, specialists, physical therapists, plus natural alternatives.</p><span class="tag tag-free">485K+ Practitioners</span></div>
-<div class="quick-card" onclick="goAsk('therapy','I feel overwhelmed and I dont know where to start')"><div class="icon">💛</div><h3>Talk to Someone</h3><p>CBT, DBT, IFS, somatic, motivational. AI-guided, judgment-free.</p><span class="tag tag-free">Free · 988 · BetterHelp</span></div>
-<div class="quick-card" onclick="goAsk('finance','Help me budget for wellness')"><div class="icon">💰</div><h3>Wellness Budget</h3><p>Insurance, HSA/FSA, sliding scale, GoodRx savings.</p><span class="tag tag-aff">GoodRx · Cost Plus</span></div>
-<div class="quick-card" onclick="goAsk('recovery','I am 3 days sober and struggling')"><div class="icon">🕊️</div><h3>Recovery Support</h3><p>Sacred ground. 12-step, SMART, MAT, harm reduction — all valid.</p><span class="tag tag-free">SAMHSA · AA · SMART</span></div>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav class="nav" id="nav">
+  <div class="nav-logo" onclick="go('home')">BLEU</div>
+  <div class="nav-tab active" onclick="go('home')">Home</div>
+  <div class="nav-tab" onclick="go('alvai')">Alvai ✦</div>
+  <div class="nav-tab" onclick="go('dashboard')">Dashboard</div>
+  <div class="nav-tab" onclick="go('directory')">Directory</div>
+  <div class="nav-tab" onclick="go('vessel')">Vessel</div>
+  <div class="nav-tab" onclick="go('map')">Map</div>
+  <div class="nav-tab" onclick="go('protocols')">Protocols</div>
+  <div class="nav-tab" onclick="go('learn')">Learn</div>
+  <div class="nav-tab" onclick="go('community')">Community</div>
+  <div class="nav-tab" onclick="go('passport')">Passport</div>
+  <div class="nav-tab t2" onclick="go('therapy')">Therapy</div>
+  <div class="nav-tab t2" onclick="go('finance')">Finance</div>
+  <div class="nav-tab t2" onclick="go('missions')">Missions</div>
+  <div class="nav-tab t3" onclick="go('recovery')">Recovery</div>
+  <div class="nav-tab t3" onclick="go('cannaiq')">CannaIQ</div>
+</nav>
+
+<!-- ═══════════════════════ HOME ═══════════════════════ -->
+<div class="panel active" id="p-home">
+<div style="margin:16px 0"><div style="text-align:center;padding:20px 0 24px"><div style="color:#d4af37;font-size:10px;letter-spacing:4px;margin-bottom:8px">WELCOME TO</div><div style="color:#e8d5b0;font-size:24px;font-weight:300;letter-spacing:1px">The Longevity Operating System</div><div style="color:#8fa4b0;font-size:13px;margin-top:10px;font-weight:300">Tell Alvai what you need. Get real help in seconds.</div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('home','I struggle with sleep. Help me with supplements strains and practitioners')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128164;</div><div style="color:#d4af37;font-weight:600;font-size:14px">I can't sleep</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Supplements, strains, practitioners matched to your biology</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('home','I deal with anxiety. Show me evidence-based options')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128556;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">I have anxiety</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Evidence-based options from CBD to therapy to breathwork</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('home','I have chronic pain. Show me options beyond opioids')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129657;</div><div style="color:#d4af37;font-weight:600;font-size:14px">I'm in pain</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Beyond opioids. Natural protocols that actually work</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('home','Check my medications for interactions and safety')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128138;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Check my meds</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Drug interactions scanned across 302,516 combinations</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('directory')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129658;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Find practitioner</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">253,938 NPI-verified. Trust earned, never bought</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('cannaiq')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127793;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Cannabis guide</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Beginner to expert. BEMS-matched. Safety first</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('recovery')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Recovery support</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Meetings, crisis lines, community. Right now</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('protocols')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128221;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Build my protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Sleep, stress, energy. Evidence-based, personalized</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('alvai')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128172;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Talk to Alvai</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Your wellness guide. No judgment. Start anywhere</div></div></div><div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">EXPLORE</div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('dashboard')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128202;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Dashboard</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('directory')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128269;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Directory</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('vessel')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128138;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Vessel</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('map')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128506;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Map</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('protocols')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128221;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Protocols</div></div></div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('learn')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127891;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Learn</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('community')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129309;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Community</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('passport')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127380;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Passport</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('therapy')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128156;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Therapy</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('cannaiq')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127807;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">CannaIQ</div></div></div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('finance')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128176;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Finance</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('missions')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127919;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Missions</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('recovery')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128154;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Recovery</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('alvai')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#10024;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Alvai</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('map')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#127963;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Map</div></div></div><div style="text-align:center;margin-top:24px;padding:12px"><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;opacity:0.5"><span style="color:#d4af37;font-size:9px;letter-spacing:2px">PATENT PENDING</span><span style="color:#8fa4b0;font-size:9px">&#8226;</span><span style="color:#4ecdc4;font-size:9px;letter-spacing:2px">NPI VERIFIED</span><span style="color:#8fa4b0;font-size:9px">&#8226;</span><span style="color:#d4af37;font-size:9px;letter-spacing:2px">253,938 PRACTITIONERS</span><span style="color:#8fa4b0;font-size:9px">&#8226;</span><span style="color:#4ecdc4;font-size:9px;letter-spacing:2px">302,516 INTERACTIONS</span></div></div></div></div>
+
+
+<!-- ═══════════════════════ ALVAI ═══════════════════════ -->
+<div class="panel" id="p-alvai">
+  <div class="section-label">THE INTELLIGENCE LAYER</div>
+  <h1 class="hero-title">✦ <span class="accent">Alvai</span> — The Light That Learns</h1>
+  <p class="hero-sub">Connected to the entire BLEU ecosystem. 47,861 practitioners. 1,054 products. 465 studies. Drug interaction databases. Therapeutic frameworks. Financial tools. Cannabis intelligence. Ask anything. Get a real answer from something that actually cares.</p>
+
+  <div class="quick-row">
+    <span class="quick-btn" onclick="ask('alvai','I cant sleep and I dont know why')">😴 Can't Sleep</span>
+    <span class="quick-btn" onclick="ask('alvai','What should I take for anxiety')">💊 Anxiety Help</span>
+    <span class="quick-btn" onclick="ask('alvai','Find me the right practitioner')">⚕️ Match Me</span>
+    <span class="quick-btn" onclick="ask('alvai','Check drug interactions with CBD')">⚠️ Interactions</span>
+    <span class="quick-btn" onclick="ask('alvai','Build me a morning supplement stack')">🔥 Morning Stack</span>
+    <span class="quick-btn" onclick="ask('alvai','What is the 40-Day Reset and how do I start')">🎯 40-Day Reset</span>
+    <span class="quick-btn" onclick="ask('alvai','Im feeling overwhelmed and need help')">🧠 Overwhelmed</span>
+    <span class="quick-btn" onclick="ask('alvai','Compare magnesium types for sleep')">📊 Compare</span>
+  </div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-alvai"></div><div class="chat-input-row"><input id="in-alvai" placeholder="Ask Alvai anything — wellness, therapy, recovery, finance, cannabis..." onkeydown="if(event.key==='Enter')send('alvai')"><button onclick="send('alvai')">Send</button></div></div>
+
+  <div class="divider"></div>
+  <div class="section-label">WHAT ALVAI IS CONNECTED TO</div>
+  <div class="feature-grid">
+    <div class="feature-item"><div class="feature-icon">⚕️</div><div class="feature-text"><h4>47,861 Practitioners</h4><p>NPI-verified. Trust-scored. Matched to your needs.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">💊</div><div class="feature-text"><h4>1,054 Products</h4><p>FDA-checked. Clinically scored. With affiliate links.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">📚</div><div class="feature-text"><h4>465 PubMed Studies</h4><p>Peer-reviewed research in plain language.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">⚠️</div><div class="feature-text"><h4>Drug Interactions</h4><p>CYP450 enzyme pathways. Severity ratings. What to do.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🧠</div><div class="feature-text"><h4>12 Therapy Modes</h4><p>CBT, DBT, somatic, crisis, couples, grief, trauma + more.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🔥</div><div class="feature-text"><h4>8 Recovery Modes</h4><p>Sobriety, relapse prevention, harm reduction, MAT, family.</p></div></div>
+  </div>
+
+  <div class="disclaimer">⚕️ Alvai is an AI wellness advisor powered by Claude, not a medical professional. For emergencies call 911. For crisis support call/text 988. Alvai does not diagnose, prescribe, or replace professional care.</div>
 </div>
-<div class="aff-bar">
-<a class="aff-chip" href="https://betterhelp.com/bleu" target="_blank">💬 BetterHelp $60/wk</a>
-<a class="aff-chip" href="https://thorne.com" target="_blank">💊 Thorne Supplements</a>
-<a class="aff-chip" href="https://amazon.com/?tag=bleulive-20" target="_blank">📦 Amazon Wellness</a>
-<a class="aff-chip" href="https://charlottesweb.com" target="_blank">🌿 Charlotte's Web CBD</a>
-<a class="aff-chip" href="https://ouraring.com" target="_blank">⌚ Oura Ring</a>
-<a class="aff-chip" href="https://goodrx.com" target="_blank">💰 GoodRx Savings</a>
-<a class="aff-chip" href="https://classpass.com" target="_blank">🏃 ClassPass</a>
-<a class="aff-chip" href="https://leafly.com/dispensaries" target="_blank">🗺️ Leafly Dispensaries</a>
-<a class="aff-chip" href="https://costplusdrugs.com" target="_blank">💊 Cost Plus Drugs</a>
+
+<!-- ═══════════════════════ DASHBOARD ═══════════════════════ -->
+<div class="panel" id="p-dashboard">
+  <div class="section-label">YOUR COMMAND CENTER</div>
+  <h1 class="hero-title">📊 <span class="teal">Dashboard</span></h1>
+  <p class="hero-sub">Your daily wellness intelligence. Shield scores, correlation insights, anomaly detection, and predictive analytics — all fed by every interaction across the BLEU ecosystem.</p>
+
+  <div class="stat-row">
+    <div class="stat-box"><div class="num" style="color:var(--teal)">—</div><div class="label">BLEU Score</div></div>
+    <div class="stat-box"><div class="num">—</div><div class="label">Sleep</div></div>
+    <div class="stat-box"><div class="num">—</div><div class="label">Movement</div></div>
+    <div class="stat-box"><div class="num">—</div><div class="label">Nutrition</div></div>
+    <div class="stat-box"><div class="num">—</div><div class="label">Mind</div></div>
+  </div>
+
+  <div class="card" style="border-color:rgba(45,138,158,.2)">
+    <h3 style="color:var(--teal)">Your Dashboard Activates With Your Passport</h3>
+    <p>Every practitioner visit, every product you use, every event you attend, every conversation with Alvai — it all feeds your shields. Watch correlations emerge: sleep improves → anxiety drops → productivity rises → relationships strengthen. The system sees patterns you can't.</p>
+    <div style="margin-top:12px"><span class="cta cta-teal" onclick="go('passport')" style="font-size:12px;padding:8px 20px">Start Your Passport →</span></div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">ASK ABOUT YOUR WELLNESS DATA<div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;text-align:center"><div style="color:#4ecdc4;font-size:28px;font-weight:300">72</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px">WELLNESS</div><div style="width:100%;height:3px;background:rgba(78,205,196,0.1);border-radius:2px;margin-top:8px"><div style="width:72%;height:100%;background:linear-gradient(90deg,#4ecdc4,#d4af37);border-radius:2px"></div></div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px;text-align:center"><div style="color:#d4af37;font-size:28px;font-weight:300">6.8</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px">SLEEP</div><div style="color:#4ecdc4;font-size:10px;margin-top:6px">&#9650; +0.4</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;text-align:center;cursor:pointer" onclick="go('missions')"><div style="color:#4ecdc4;font-size:28px;font-weight:300">3/8</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px">MISSIONS</div><div style="color:#d4af37;font-size:10px;margin-top:6px">Continue &#8594;</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px;text-align:center"><div style="color:#d4af37;font-size:28px;font-weight:300">14</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px">DAY STREAK</div><div style="color:#4ecdc4;font-size:10px;margin-top:6px">&#127942; Best</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('vessel')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128138;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">My supplements</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Mag, Ashwagandha, Omega-3, L-Theanine</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('cannaiq')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127807;</div><div style="color:#d4af37;font-weight:600;font-size:14px">My cannabis</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Indica hybrids. Myrcene + Linalool. BEMS active</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('therapy')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128156;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">My therapy</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Somatic + CBT. 12 sessions. Next: Thursday</div></div></div><div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">QUICK ACTIONS</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('dashboard','Run a complete safety check on all my medications and supplements')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128270;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Safety check</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('protocols')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128221;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Protocols</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('directory')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129658;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Practitioner</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('alvai')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#10024;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Alvai</div></div></div></div></div>
+  <div class="chat-box"><div class="chat-messages" id="chat-dashboard"></div><div class="chat-input-row"><input id="in-dashboard" placeholder="What patterns do you want to understand?" onkeydown="if(event.key==='Enter')send('dashboard')"><button onclick="send('dashboard')">Ask</button></div></div>
 </div>
-</section>
 
-<section id="sec-alvai"><div class="tab-header"><h2>Alvai</h2><p>Your AI wellness guide — 127 years of healing wisdom.</p></div>
-<div class="cards-grid">
-<div class="card-btn" onclick="ask('alvai','I cant sleep and I dont know why')"><div class="ct">🌙 Can't Sleep</div><div class="cd">Protocol with products, prices, science</div></div>
-<div class="card-btn" onclick="ask('alvai','I feel anxious all the time')"><div class="ct">😰 Anxiety Relief</div><div class="cd">Immediate techniques + supplements</div></div>
-<div class="card-btn" onclick="ask('alvai','Build me a morning routine for energy')"><div class="ct">⚡ Morning Routine</div><div class="cd">Timing, supplements, movement</div></div>
-<div class="card-btn" onclick="ask('alvai','What is the 40-Day Reset')"><div class="ct">🔄 40-Day Reset</div><div class="cd">Transform in 40 days</div></div>
+<!-- ═══════════════════════ DIRECTORY ═══════════════════════ -->
+<div class="panel" id="p-directory">
+  <div class="section-label">NPI-VERIFIED · TRUST-SCORED</div>
+  <h1 class="hero-title">⚕️ <span class="accent">47,861</span> Practitioners</h1>
+  <p class="hero-sub">You've been carrying something. Maybe it's pain that won't go away. Maybe it's exhaustion your doctor calls "normal." Every practitioner here was verified through the National Provider Index. Their trust score is calculated from real credentials, not reviews.</p>
+
+  <div class="section-label" style="margin-top:28px">WHAT'S PULLING AT YOU?</div>
+  <p class="section-desc">You don't need to know the clinical term. Just start where it hurts.</p>
+
+  <div class="quick-row">
+    <span class="quick-btn" onclick="ask('directory','Find me a therapist for anxiety in New Orleans')">🧠 My Anxiety Won't Stop</span>
+    <span class="quick-btn" onclick="ask('directory','Find a doctor for chronic fatigue')">😰 Exhaustion Nobody Can Explain</span>
+    <span class="quick-btn" onclick="ask('directory','Find a chiropractor for back pain')">🔥 My Back Is Killing Me</span>
+    <span class="quick-btn" onclick="ask('directory','Find a nutritionist near me')">🍎 Need a Real Nutrition Plan</span>
+    <span class="quick-btn" onclick="ask('directory','Find a psychiatrist')">💊 Medication Questions</span>
+    <span class="quick-btn" onclick="ask('directory','Find an acupuncturist')">🪡 Acupuncture</span>
+    <span class="quick-btn" onclick="ask('directory','Find an addiction counselor')">🔥 Addiction Help</span>
+    <span class="quick-btn" onclick="ask('directory','I dont know where to start')">❓ I Don't Know Where to Start</span>
+  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('directory','Find anxiety specialists near New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128546;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Anxiety</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('directory','Find sleep specialists near New Orleans')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128164;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Sleep</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('directory','Find pain management near New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129657;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Pain</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('directory','Find cannabis doctors near New Orleans')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127793;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Cannabis</div></div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('directory','Find therapists accepting patients near New Orleans')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128156;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Therapy</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('directory','Find dietitians near New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129372;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Nutrition</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('directory','Find acupuncturists near New Orleans')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#129506;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Acupuncture</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('directory','Find psychiatrists near New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129504;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Psychiatry</div></div></div><div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">FEATURED</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;cursor:pointer" onclick="ask('directory','Tell me about Dr. Maria Santos, ND and how to book')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#4ecdc4;font-weight:600;font-size:14px">Dr. Maria Santos, ND</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:3px 10px;border-radius:10px">96</span></div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">Sleep + Anxiety + Hormones &#8226; NPI Verified &#8226; Telehealth</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px;cursor:pointer" onclick="ask('directory','Tell me about Dr. James Watu, DC and how to book')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#d4af37;font-weight:600;font-size:14px">Dr. James Watu, DC</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:3px 10px;border-radius:10px">93</span></div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">Pain + Sports Medicine &#8226; NPI Verified &#8226; Telehealth</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;cursor:pointer" onclick="ask('directory','Tell me about Sarah Mitchell, LPC and how to book')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#4ecdc4;font-weight:600;font-size:14px">Sarah Mitchell, LPC</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:3px 10px;border-radius:10px">97</span></div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">Trauma + EMDR &#8226; NPI Verified &#8226; Telehealth</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px;cursor:pointer" onclick="ask('directory','Tell me about Dr. Andre Baptiste, MD and how to book')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#d4af37;font-weight:600;font-size:14px">Dr. Andre Baptiste, MD</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:3px 10px;border-radius:10px">94</span></div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">Psychiatry + Cannabis-Informed &#8226; NPI Verified &#8226; Telehealth</div></div></div><div style="text-align:center;margin-top:12px;color:#8fa4b0;font-size:10px;font-weight:300">Trust scores earned by outcomes. Never bought. NPI checked nightly via CMS.gov.</div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-directory"></div><div class="chat-input-row"><input id="in-directory" placeholder="What kind of practitioner do you need?" onkeydown="if(event.key==='Enter')send('directory')"><button onclick="send('directory')">Search</button></div></div>
+
+  <div class="divider"></div>
+  <div class="section-label">HOW TRUST SCORES WORK</div>
+  <div class="feature-grid">
+    <div class="feature-item"><div class="feature-icon">🏛️</div><div class="feature-text"><h4>NPI Verification</h4><p>Every practitioner checked against the federal National Provider Identifier registry.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">📋</div><div class="feature-text"><h4>License Status</h4><p>Active license confirmed. Disciplinary history checked. Board certifications verified.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🔒</div><div class="feature-text"><h4>Never Pay-to-Play</h4><p>Trust scores are NEVER affected by affiliate status or payment. Trust and commerce are structurally separated.</p></div></div>
+  </div>
+
+  <div class="card" style="border-color:rgba(122,158,126,.2)">
+    <p style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text)">Finding the right practitioner is the first real step. Not reading another article. Not buying another supplement. <strong style="color:var(--gold)">A real person who sees you.</strong></p>
+    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+      <span class="cta cta-teal" onclick="go('vessel')" style="font-size:12px;padding:8px 20px">Explore the Vessel →</span>
+      <span class="cta cta-outline" onclick="go('alvai')" style="font-size:12px;padding:8px 20px">Ask Alvai to Match Me ✦</span>
+    </div>
+  </div>
 </div>
-<div class="chat-container"><div class="chat-messages" id="chat-alvai"></div><div class="chat-input-row"><input id="in-alvai" placeholder="Ask Alvai anything..." onkeydown="if(event.key==='Enter')send('alvai')"><button onclick="send('alvai')">Send</button></div></div></section>
 
-<section id="sec-directory"><div class="tab-header"><h2>Find Care</h2><p>485,476 NPI-verified practitioners. Trust scores earned, never bought.</p></div>
-<div class="cards-grid">
-<div class="card-btn" onclick="ask('directory','Find me a therapist in New Orleans')"><div class="ct">🧠 Therapists</div><div class="cd">Psychologists, counselors, psychiatrists</div></div>
-<div class="card-btn" onclick="ask('directory','Find sleep specialists in New Orleans')"><div class="ct">🌙 Sleep Medicine</div><div class="cd">Sleep specialists and clinics</div></div>
-<div class="card-btn" onclick="ask('directory','Find a chiropractor in New Orleans')"><div class="ct">🦴 Chiropractors</div><div class="cd">Spine, back, joint</div></div>
-<div class="card-btn" onclick="ask('directory','Find a nutritionist in New Orleans')"><div class="ct">🥗 Nutritionists</div><div class="cd">Diet, nutrition, meal planning</div></div>
-<div class="card-btn" onclick="ask('directory','Find addiction counselors in New Orleans')"><div class="ct">🕊️ Addiction Help</div><div class="cd">Substance abuse, rehab</div></div>
-<div class="card-btn" onclick="ask('directory','Find a dermatologist in New Orleans')"><div class="ct">✨ Dermatology</div><div class="cd">Skin health</div></div>
+<!-- ═══════════════════════ VESSEL ═══════════════════════ -->
+<div class="panel" id="p-vessel">
+  <div class="section-label">TRUST-SCORED MARKETPLACE</div>
+  <h1 class="hero-title">💊 <span class="accent">The Vessel</span></h1>
+  <p class="hero-sub">You already know something needs to change. Maybe it's the fatigue your doctor can't explain. Maybe it's the shelf of half-used bottles you bought hoping one would work. Every product here is scored against real data — clinical studies, FDA registrations, practitioner protocols. We tell you <em>why</em> it works and <em>how</em> it fits your life.</p>
+
+  <div class="section-label" style="margin-top:24px">SHOP BY WHAT YOU NEED</div>
+  <div class="quick-row">
+    <span class="quick-btn" onclick="ask('vessel','best magnesium supplement for sleep')">😴 Can't Sleep</span>
+    <span class="quick-btn" onclick="ask('vessel','best supplements for anxiety and stress')">🧠 Stressed to the Max</span>
+    <span class="quick-btn" onclick="ask('vessel','best supplements for gut health')">🦠 Gut Issues</span>
+    <span class="quick-btn" onclick="ask('vessel','best supplements for energy without caffeine')">⚡ Need Real Energy</span>
+    <span class="quick-btn" onclick="ask('vessel','best anti-inflammatory supplements for joint pain')">🔥 Everything Hurts</span>
+    <span class="quick-btn" onclick="ask('vessel','best omega 3 fish oil supplement')">🐟 Omega-3 Guide</span>
+    <span class="quick-btn" onclick="ask('vessel','budget supplement starter kit under $30')">💰 Budget-Friendly</span>
+    <span class="quick-btn" onclick="ask('vessel','drug interactions checker')">⚠️ Drug Interactions</span>
+  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('vessel','What supplements help with sleep')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128164;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Sleep</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('vessel','What supplements help with stress and anxiety')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128556;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Stress</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('vessel','What supplements boost clean energy')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#9889;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Energy</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('vessel','What natural supplements help with pain')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129657;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Pain</div></div></div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;cursor:pointer" onclick="ask('vessel','Tell me about Magnesium Glycinate 400mg dosage safety and best brand to buy')"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap"><span style="color:#4ecdc4;font-weight:600;font-size:14px">Magnesium Glycinate 400mg</span><span style="color:#e8d5b0;font-size:12px">$14.99</span></div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">GABA-A modulation. Sleep + muscle recovery. 1hr before bed.</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px">&#9989; No interactions</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px;cursor:pointer" onclick="ask('vessel','Tell me about Ashwagandha KSM-66 dosage safety and best brand to buy')"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap"><span style="color:#d4af37;font-weight:600;font-size:14px">Ashwagandha KSM-66</span><span style="color:#e8d5b0;font-size:12px">$22.99</span></div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">Cortisol -30%. Adaptogen. 6-week cycle.</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px">&#9888; Check thyroid meds</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;cursor:pointer" onclick="ask('vessel','Tell me about Omega-3 2000mg EPA/DHA dosage safety and best brand to buy')"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap"><span style="color:#4ecdc4;font-weight:600;font-size:14px">Omega-3 2000mg EPA/DHA</span><span style="color:#e8d5b0;font-size:12px">$18.50</span></div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">Inflammation, brain, cardio. 3rd party tested.</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px">&#9989; Safe with most meds</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px;cursor:pointer" onclick="ask('vessel','Tell me about L-Theanine 200mg dosage safety and best brand to buy')"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap"><span style="color:#d4af37;font-weight:600;font-size:14px">L-Theanine 200mg</span><span style="color:#e8d5b0;font-size:12px">$12.99</span></div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">Alpha waves. Calm focus. Stacks with caffeine.</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px">&#9989; No known interactions</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;cursor:pointer" onclick="ask('vessel','Tell me about Vitamin D3+K2 5000IU dosage safety and best brand to buy')"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap"><span style="color:#4ecdc4;font-weight:600;font-size:14px">Vitamin D3+K2 5000IU</span><span style="color:#e8d5b0;font-size:12px">$16.99</span></div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">42% deficient. Immune + bones. Take with fat.</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px">&#9888; Check blood thinners</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px;cursor:pointer" onclick="ask('vessel','Tell me about CBD Tincture 1500mg dosage safety and best brand to buy')"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap"><span style="color:#d4af37;font-weight:600;font-size:14px">CBD Tincture 1500mg</span><span style="color:#e8d5b0;font-size:12px">$59.99</span></div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">5-HT1A pathway. Sublingual. Start 10mg.</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px">&#9888; CYP450 — check meds</div></div></div><div style="text-align:center;margin-top:12px;color:#8fa4b0;font-size:10px;font-weight:300">All products checked through 5-layer safety engine. Affiliate links sustain BLEU at no extra cost.</div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-vessel"></div><div class="chat-input-row"><input id="in-vessel" placeholder="What are you looking for? Alvai will find the right product..." onkeydown="if(event.key==='Enter')send('vessel')"><button onclick="send('vessel')">Search</button></div></div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">🔥 BLEU PICKS — HIGHEST SCORED</div>
+  <p class="section-desc">These earned their scores through clinical data and federal registration. Each one has a WHY you need to read.</p>
+
+  <div class="product-row">
+    <div class="product-card" onclick="ask('vessel','Tell me about magnesium glycinate for sleep - dosage, mechanism, best brand')">
+      <div class="emoji">🧠</div>
+      <div class="name">Magnesium Glycinate</div>
+      <div class="desc">Crosses blood-brain barrier. Activates GABA receptors. Your brain's off switch.</div>
+      <div class="score">Score: 96</div>
+      <div class="shop-link">Learn + Shop →</div>
+    </div>
+    <div class="product-card" onclick="ask('vessel','Tell me about omega 3 fish oil - EPA DHA dosage benefits best brand')">
+      <div class="emoji">🐟</div>
+      <div class="name">Omega-3 Fish Oil</div>
+      <div class="desc">EPA/DHA for inflammation, brain health, cardiovascular protection.</div>
+      <div class="score">Score: 94</div>
+      <div class="shop-link">Learn + Shop →</div>
+    </div>
+    <div class="product-card" onclick="ask('vessel','Tell me about vitamin D3 with K2 - dosage how much do I need')">
+      <div class="emoji">☀️</div>
+      <div class="name">Vitamin D3 + K2</div>
+      <div class="desc">80% of Americans are deficient. Affects mood, immunity, everything.</div>
+      <div class="score">Score: 95</div>
+      <div class="shop-link">Learn + Shop →</div>
+    </div>
+    <div class="product-card" onclick="ask('vessel','Tell me about ashwagandha for stress and anxiety - KSM-66 vs Sensoril')">
+      <div class="emoji">🌿</div>
+      <div class="name">Ashwagandha KSM-66</div>
+      <div class="desc">Adaptogen. Lowers cortisol 30%. Clinically proven stress relief.</div>
+      <div class="score">Score: 92</div>
+      <div class="shop-link">Learn + Shop →</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px;border-color:rgba(201,168,76,.15)">
+    <p style="font-size:13px;color:var(--dim)">💛 <strong style="color:var(--gold)">Why Affiliate Links?</strong> — Your purchase through Amazon (tag: bleu-live-20) or iHerb (code: BLEU) keeps BLEU free for everyone. Trust scores are NEVER affected by affiliate status. Products that lose validation lose their commerce link.</p>
+  </div>
+
+  <div class="disclaimer">⚕️ Supplements are not FDA-approved to treat disease. BLEU scores reflect safety data, clinical evidence, and manufacturing quality — not medical claims. Consult your healthcare provider before starting any supplement, especially if taking medications.</div>
 </div>
-<div class="chat-container"><div class="chat-messages" id="chat-directory"></div><div class="chat-input-row"><input id="in-directory" placeholder="What kind of care? Include your city..." onkeydown="if(event.key==='Enter')send('directory')"><button onclick="send('directory')">Search</button></div></div></section>
 
-<section id="sec-vessel"><div class="tab-header"><h2>Products</h2><p>5-layer safety engine. Real brands, real prices.</p></div>
-<div class="prod-grid">
-<div class="prod-card" onclick="ask('vessel','Magnesium Glycinate 400mg — dosage, mechanism, best brand')"><div class="pn">Magnesium Glycinate</div><div class="pp">~$15/mo</div><div class="pd">GABA modulation. Sleep + recovery. 90min before bed.</div><div class="ps ok">✅ No interactions</div></div>
-<div class="prod-card" onclick="ask('vessel','Ashwagandha KSM-66 — dosage, safety, best brand')"><div class="pn">Ashwagandha KSM-66</div><div class="pp">~$25/mo</div><div class="pd">Cortisol -30%. Adaptogen. 300mg 2x daily.</div><div class="ps wn">⚠️ Check thyroid meds</div></div>
-<div class="prod-card" onclick="ask('vessel','CBD Tincture — dosage, safety, best brand')"><div class="pn">CBD Tincture</div><div class="pp">~$60</div><div class="pd">5-HT1A pathway. Start 10-25mg sublingual.</div><div class="ps wn">⚠️ CYP450 check</div></div>
-<div class="prod-card" onclick="ask('vessel','Omega-3 EPA DHA — best brand, dosage')"><div class="pn">Omega-3 EPA/DHA</div><div class="pp">~$18/mo</div><div class="pd">Inflammation, brain, cardio. 3rd party tested.</div><div class="ps ok">✅ Safe</div></div>
-<div class="prod-card" onclick="ask('vessel','L-Theanine 200mg for focus and calm')"><div class="pn">L-Theanine 200mg</div><div class="pp">~$12/mo</div><div class="pd">Alpha waves. Calm focus. Stacks with caffeine.</div><div class="ps ok">✅ Safe</div></div>
-<div class="prod-card" onclick="ask('vessel','Vitamin D3 K2 5000IU — dosage, brands')"><div class="pn">Vitamin D3+K2</div><div class="pp">~$17/mo</div><div class="pd">42% deficient. Immune + bones.</div><div class="ps wn">⚠️ Blood thinners</div></div>
+<!-- ═══════════════════════ MAP ═══════════════════════ -->
+<div class="panel" id="p-map">
+  <div class="section-label">THE LIVING MAP</div>
+  <h1 class="hero-title">🗺️ <span class="teal">8,606 Locations</span></h1>
+  <p class="hero-sub">Your zip code predicts your health better than your genetic code. BLEU maps the infrastructure that makes healing possible — practitioners, gyms, studios, health food stores, treatment centers, AA meetings, dispensaries — all validated, all in one view.</p>
+
+  <div class="quick-row">
+    <span class="quick-btn" onclick="ask('map','yoga studios in New Orleans')">🧘 Yoga Studios</span>
+    <span class="quick-btn" onclick="ask('map','health food stores in New Orleans')">🥗 Health Food</span>
+    <span class="quick-btn" onclick="ask('map','gyms and fitness centers in New Orleans')">💪 Gyms</span>
+    <span class="quick-btn" onclick="ask('map','meditation centers near me')">🧘 Meditation</span>
+    <span class="quick-btn" onclick="ask('map','AA and NA meetings in New Orleans')">🔥 Recovery Meetings</span>
+    <span class="quick-btn" onclick="ask('map','acupuncture clinics in New Orleans')">🪡 Acupuncture</span>
+    <span class="quick-btn" onclick="ask('map','dispensaries in New Orleans')">🌿 Dispensaries</span>
+    <span class="quick-btn" onclick="ask('map','mental health clinics in New Orleans')">🧠 Mental Health</span>
+  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('map','Show me practitioners near me in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129658;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Practitioners</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('map','Show pharmacies and dispensaries near me')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128137;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Pharmacies</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('map','Show recovery meetings near me in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128154;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Recovery</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('map','Show gyms yoga and fitness near me in New Orleans')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127939;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Fitness</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about City Park in New Orleans')"><div style="color:#4ecdc4;font-weight:600;font-size:13px">City Park</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">1,300 acres. Trails, meditation, ancient oaks. Free.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about Crescent Park in New Orleans')"><div style="color:#d4af37;font-weight:600;font-size:13px">Crescent Park</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Riverfront 1.4mi. Sunrise yoga. Bywater.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about Ochsner Health in New Orleans')"><div style="color:#4ecdc4;font-weight:600;font-size:13px">Ochsner Health</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">All specialties. NPI verified. Major system.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about Palmer Park Yoga in New Orleans')"><div style="color:#d4af37;font-weight:600;font-size:13px">Palmer Park Yoga</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Free Saturday 9am. Community. All levels.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about NOLA Cannabis Co in New Orleans')"><div style="color:#4ecdc4;font-weight:600;font-size:13px">NOLA Cannabis Co</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Licensed dispensary. Full menus. Budtender guidance.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about Tulane Behavioral in New Orleans')"><div style="color:#d4af37;font-weight:600;font-size:13px">Tulane Behavioral</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Psychiatry + counseling. Insurance accepted.</div></div></div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-map"></div><div class="chat-input-row"><input id="in-map" placeholder="What are you looking for near you?" onkeydown="if(event.key==='Enter')send('map')"><button onclick="send('map')">Search</button></div></div>
+
+  <div class="divider"></div>
+  <div class="section-label">BLEU CITIES NETWORK</div>
+  <div class="card-grid">
+    <div class="card"><h3 style="color:var(--green)">● New Orleans</h3><p>ACTIVE. First living city. 200+ practitioners. 3,066 locations. 40-Day Reset launching.</p></div>
+    <div class="card"><h3 style="color:var(--gold)">○ Atlanta</h3><p>Data collection. Practitioners loading. Coming Q2 2026.</p></div>
+    <div class="card"><h3 style="color:var(--gold)">○ Houston</h3><p>Data collection. 4th largest US city. Coming Q2 2026.</p></div>
+    <div class="card"><h3 style="color:var(--dim)">◌ Miami · LA · Chicago · NYC</h3><p>Planned. Infrastructure ready. Waiting for city density.</p></div>
+  </div>
 </div>
-<div style="text-align:center;color:var(--dim);font-size:10px;margin-bottom:12px">5-layer safety engine. Affiliate links sustain BLEU at no extra cost.</div>
-<div class="chat-container"><div class="chat-messages" id="chat-vessel"></div><div class="chat-input-row"><input id="in-vessel" placeholder="What supplement do you need?" onkeydown="if(event.key==='Enter')send('vessel')"><button onclick="send('vessel')">Search</button></div></div></section>
 
-<section id="sec-therapy"><div class="tab-header"><h2>Therapy</h2><p>Safe space. Evidence-based. You are not alone.</p></div>
-<div class="mode-row">
-<button class="mode-btn active" onclick="setMode('therapy','talk',this)">Talk</button>
-<button class="mode-btn" onclick="setMode('therapy','cbt',this)">CBT</button>
-<button class="mode-btn" onclick="setMode('therapy','dbt',this)">DBT</button>
-<button class="mode-btn" onclick="setMode('therapy','somatic',this)">Somatic</button>
-<button class="mode-btn" onclick="setMode('therapy','motivational',this)">Motivational</button>
-<button class="mode-btn" onclick="setMode('therapy','journaling',this)">Journaling</button>
-<button class="mode-btn" onclick="setMode('therapy','couples',this)">Couples</button>
-<button class="mode-btn" onclick="setMode('therapy','crisis',this)">Crisis</button>
+<!-- ═══════════════════════ PROTOCOLS ═══════════════════════ -->
+<div class="panel" id="p-protocols">
+  <div class="section-label">EVIDENCE-BASED PROGRAMS</div>
+  <h1 class="hero-title">📋 <span class="accent">Protocols</span></h1>
+  <p class="hero-sub">Not a to-do list. A transformation system. Daily actions, supplement stacks, practitioner visits, community engagement, measurable outcomes. From 7-day sprints to the flagship 40-Day Reset.</p>
+
+  <div class="card" style="border-color:rgba(199,91,57,.2);background:linear-gradient(135deg,rgba(199,91,57,.06),var(--card))">
+    <span class="badge badge-ember" style="margin-bottom:10px">FLAGSHIP PROGRAM</span>
+    <h3 style="font-size:22px">🔥 The 40-Day Post-Mardi Gras Reset</h3>
+    <p style="margin-top:8px">Ash Wednesday to Day 40. No alcohol. Real food. Movement daily. Sleep protocols. Practitioner check-ins. Tracked in your Passport. 6 pillars. Every supplement tracked. Every practitioner scored.</p>
+    <p style="color:var(--gold);font-size:13px;margin-top:10px">Feb 18 — Mar 29, 2026 · New Orleans</p>
+    <div style="margin-top:14px"><span class="cta cta-gold" onclick="ask('protocols','Tell me everything about the 40-Day Reset - what do I do each day')" style="font-size:12px;padding:8px 20px">Start the Reset →</span></div>
+  </div>
+
+  <div class="quick-row" style="margin-top:20px">
+    <span class="quick-btn" onclick="ask('protocols','Build me a 7-day sleep optimization protocol')">😴 Sleep Protocol</span>
+    <span class="quick-btn" onclick="ask('protocols','30-day gut repair protocol with supplements')">🦠 Gut Repair</span>
+    <span class="quick-btn" onclick="ask('protocols','Anti-inflammation protocol for chronic pain')">🔥 Anti-Inflammation</span>
+    <span class="quick-btn" onclick="ask('protocols','Stress reduction protocol with supplements and habits')">🧠 Stress Reset</span>
+    <span class="quick-btn" onclick="ask('protocols','Build me a custom morning routine protocol')">🌅 Morning Routine</span>
+    <span class="quick-btn" onclick="ask('protocols','Bryan Johnson Blueprint simplified')">⚡ Longevity Stack</span>
+  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me a complete sleep protocol with exact dosages and timing')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128164;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Sleep Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">8 weeks. Exact supplements + timing. Huberman-based.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me an anxiety reduction protocol')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128556;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Anxiety Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Breathwork + supplements + therapy modes combined.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me a natural pain management protocol')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129657;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Pain Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Anti-inflammatory stack + movement + cannabis options.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me a clean energy protocol')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#9889;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Energy Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Morning to evening. No crashes. Clean fuel.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me a focus and cognitive performance protocol')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129504;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Focus Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Deep work. Nootropic stack. Cognitive performance.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me a recovery support protocol')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Recovery Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Early sobriety support. Gentle. Step by step.</div></div></div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-protocols"></div><div class="chat-input-row"><input id="in-protocols" placeholder="What do you want to transform?" onkeydown="if(event.key==='Enter')send('protocols')"><button onclick="send('protocols')">Build Protocol</button></div></div>
 </div>
-<div class="chat-container"><div class="chat-messages" id="chat-therapy"></div><div class="chat-input-row"><input id="in-therapy" placeholder="What's on your mind?" onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Share</button></div></div>
-<div style="text-align:center;margin-top:12px;font-size:12px;color:var(--dim)">Crisis: <b style="color:var(--rose)">988</b> · Text HOME to <b style="color:var(--rose)">741741</b> · SAMHSA <b style="color:var(--rose)">1-800-662-4357</b></div></section>
 
-<section id="sec-finance"><div class="tab-header"><h2>Finance</h2><p>Wellness economics. Make healing affordable.</p></div>
-<div class="cards-grid">
-<div class="card-btn" onclick="ask('finance','Help me budget for wellness')"><div class="ct">💰 Budget</div><div class="cd">Stop spending on what hurts</div></div>
-<div class="card-btn" onclick="ask('finance','How do I improve my credit score')"><div class="ct">📈 Credit</div><div class="cd">Step by step guide</div></div>
-<div class="card-btn" onclick="ask('finance','Help me understand health insurance')"><div class="ct">🏥 Insurance</div><div class="cd">ACA, employer, out-of-network</div></div>
-<div class="card-btn" onclick="ask('finance','What employee benefits am I not using')"><div class="ct">🎯 Hidden Benefits</div><div class="cd">FSA, HSA, EAP, gym</div></div>
-<div class="card-btn" onclick="ask('finance','I have medical bills I cant pay')"><div class="ct">🏥 Medical Bills</div><div class="cd">Negotiation, forgiveness</div></div>
-<div class="card-btn" onclick="ask('finance','I want to buy a house')"><div class="ct">🏠 First Home</div><div class="cd">First-time buyer guide</div></div>
+<!-- ═══════════════════════ LEARN ═══════════════════════ -->
+<div class="panel" id="p-learn">
+  <div class="section-label">HARVESTED INTELLIGENCE</div>
+  <h1 class="hero-title">📚 <span class="teal">Learn</span></h1>
+  <p class="hero-sub">You don't need more information. You need the right information at the right time. 465 PubMed studies. 361 expert videos. Condition guides. Drug interaction data. The science behind everything we recommend.</p>
+
+  <div class="quick-row">
+    <span class="quick-btn" onclick="ask('learn','What does research say about magnesium for sleep and anxiety')">😴 Sleep Research</span>
+    <span class="quick-btn" onclick="ask('learn','Gut brain connection research summary')">🦠 Gut-Brain Axis</span>
+    <span class="quick-btn" onclick="ask('learn','CBD research for anxiety what does the science say')">🌿 CBD Evidence</span>
+    <span class="quick-btn" onclick="ask('learn','Intermittent fasting research benefits and risks')">⏰ Fasting Science</span>
+    <span class="quick-btn" onclick="ask('learn','Cold exposure research benefits wim hof')">🥶 Cold Exposure</span>
+    <span class="quick-btn" onclick="ask('learn','Best supplements for brain health and cognitive function research')">🧠 Brain Health</span>
+    <span class="quick-btn" onclick="ask('learn','Exercise vs medication for depression research')">🏃 Exercise vs Meds</span>
+    <span class="quick-btn" onclick="ask('learn','Longevity research what actually extends lifespan')">⏳ Longevity Science</span>
+  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Teach me cannabis 101 from endocannabinoid system to safe first use')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127793;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Cannabis 101</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">From ECS to safe first use. Complete beginner path.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Teach me how supplements work and how to read labels')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128138;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Supplement Science</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">How they work. How to read labels. What matters.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Teach me about brain health and neuroplasticity')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129504;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Brain Health</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Neuroplasticity, sleep science, cognitive protocols.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Teach me about the gut-brain connection')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129362;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Gut-Brain Axis</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Your second brain. Diet affects mental health.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Teach me about trauma-informed healing approaches')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128156;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Trauma + Healing</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Informed approaches. Modalities that work.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Teach me how to navigate insurance for holistic treatments')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128176;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Insurance Navigation</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Get holistic treatments covered. Know your rights.</div></div></div><div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">QUICK GUIDES</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','How to read supplement labels')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128218;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Reading Labels</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','How drug interactions work simply')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128218;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Drug Interactions</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','Cannabis terpenes explained')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128218;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Terpene Guide</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','Endocannabinoid system simply')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128218;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">ECS Basics</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','How to find right supplement dose')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128218;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Dosing 101</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','Warning signs with supplements')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128218;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Safety Signs</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','How to find medical research')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128218;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Finding Studies</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','Getting holistic care covered')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128218;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Insurance Tips</div></div></div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-learn"></div><div class="chat-input-row"><input id="in-learn" placeholder="What do you want the science on?" onkeydown="if(event.key==='Enter')send('learn')"><button onclick="send('learn')">Research</button></div></div>
+
+  <div class="divider"></div>
+  <div class="section-label">KNOWLEDGE PATHS</div>
+  <div class="card-grid">
+    <div class="card card-clickable" onclick="ask('learn','Give me a complete guide to sleep optimization - science, supplements, habits')"><span class="card-icon">😴</span><h3>Sleep Mastery</h3><p>Circadian rhythm, melatonin, magnesium, temperature, light exposure. The complete protocol backed by research.</p></div>
+    <div class="card card-clickable" onclick="ask('learn','Complete guide to gut health - microbiome, probiotics, diet, supplements')"><span class="card-icon">🦠</span><h3>Gut Intelligence</h3><p>Microbiome, gut-brain axis, probiotics, fiber, fermented foods. Your second brain.</p></div>
+    <div class="card card-clickable" onclick="ask('learn','Mental health and nutrition connection - research on diet and depression anxiety')"><span class="card-icon">🧠</span><h3>Mind-Body Connection</h3><p>Nutritional psychiatry, exercise for depression, meditation neuroscience, stress physiology.</p></div>
+    <div class="card card-clickable" onclick="ask('learn','Inflammation and chronic disease research - anti-inflammatory diet and supplements')"><span class="card-icon">🔥</span><h3>Inflammation Deep Dive</h3><p>The root of 7 out of 10 chronic diseases. What drives it. What stops it. The research is clear.</p></div>
+  </div>
 </div>
-<div class="chat-container"><div class="chat-messages" id="chat-finance"></div><div class="chat-input-row"><input id="in-finance" placeholder="What financial question is weighing on you?" onkeydown="if(event.key==='Enter')send('finance')"><button onclick="send('finance')">Ask</button></div></div></section>
 
-<section id="sec-recovery"><div class="tab-header"><h2>Recovery</h2><p>Sacred ground. Every pathway is valid.</p></div>
-<div class="mode-row">
-<button class="mode-btn active" onclick="setMode('recovery','sobriety',this)">Sobriety</button>
-<button class="mode-btn" onclick="setMode('recovery','relapse',this)">Relapse</button>
-<button class="mode-btn" onclick="setMode('recovery','family',this)">Family</button>
-<button class="mode-btn" onclick="setMode('recovery','harm_reduction',this)">Harm Reduction</button>
+<!-- ═══════════════════════ COMMUNITY ═══════════════════════ -->
+<div class="panel" id="p-community">
+  <div class="section-label">THE RIPPLE IN ACTION</div>
+  <h1 class="hero-title">💫 <span class="accent">Community</span></h1>
+  <p class="hero-sub">The research is unambiguous — social connection is the strongest predictor of longevity. Stronger than exercise. Stronger than diet. The people around you literally change your biology. You are not doing this alone.</p>
+
+  <div class="card" style="border-color:rgba(201,168,76,.2);background:linear-gradient(135deg,rgba(201,168,76,.04),var(--card))">
+    <h3 style="color:var(--gold)">The Ripple Effect — How It Works</h3>
+    <p style="margin-top:8px">When you improve your sleep, your partner sleeps better. When you eat differently, your kids eat differently. When your household gets healthier, your community's data shifts. When enough communities shift, the city transforms.</p>
+    <div style="display:flex;gap:20px;margin-top:16px;flex-wrap:wrap;align-items:center;font-size:14px">
+      <span style="color:var(--gold)">YOU →</span>
+      <span style="color:var(--teal)">HOME →</span>
+      <span style="color:var(--sage)">COMMUNITY →</span>
+      <span style="color:var(--text)">CITY 🌍</span>
+    </div>
+  </div>
+
+  <div class="quick-row" style="margin-top:20px">
+    <span class="quick-btn" onclick="ask('community','How do I join the 40-Day Reset community')">🔥 Join the Reset</span>
+    <span class="quick-btn" onclick="ask('community','Find a support group for anxiety or depression')">🤝 Support Groups</span>
+    <span class="quick-btn" onclick="ask('community','What wellness events are happening this week in New Orleans')">📅 Events This Week</span>
+    <span class="quick-btn" onclick="ask('community','How can I start a wellness group in my neighborhood')">🏘️ Start a Group</span>
+  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find recovery meetings near me in New Orleans this week')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Recovery Groups</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">AA, NA, SMART. Meetings this week near you.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find fitness groups and run clubs in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127939;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Fitness Community</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Run clubs, yoga, outdoor fitness. Free options.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','What wellness events are happening in New Orleans this month')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127891;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Wellness Events</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Workshops, health fairs, community circles.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find urban farms and community gardens in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127793;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Urban Farms</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Gardens, co-ops, food access. Volunteer.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find support groups in New Orleans')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128156;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Support Groups</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Mental health, grief, wellness circles.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Tell me about Jazz Bird NOLA community initiatives')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127918;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Jazz Bird NOLA</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">501(c)(3). Cultural healing. Community wellness.</div></div></div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-community"></div><div class="chat-input-row"><input id="in-community" placeholder="How do you want to connect?" onkeydown="if(event.key==='Enter')send('community')"><button onclick="send('community')">Connect</button></div></div>
 </div>
-<div class="chat-container"><div class="chat-messages" id="chat-recovery"></div><div class="chat-input-row"><input id="in-recovery" placeholder="You're not alone..." onkeydown="if(event.key==='Enter')send('recovery')"><button onclick="send('recovery')">Share</button></div></div>
-<div style="text-align:center;margin-top:12px;font-size:12px;color:var(--dim)">SAMHSA: <b style="color:var(--teal)">1-800-662-4357</b> · AA: aa.org · NA: na.org · SMART: smartrecovery.org</div></section>
 
-<section id="sec-cannaiq"><div class="tab-header"><h2>CannaIQ</h2><p>Cannabis intelligence. 28 years. 127-year healing lineage.</p></div>
-<div class="cards-grid">
-<div class="card-btn" onclick="ask('cannaiq','Best strain for anxiety and sleep — beginner')"><div class="ct">🌿 Anxiety + Sleep</div><div class="cd">Strains, terpenes, dosing</div></div>
-<div class="card-btn" onclick="ask('cannaiq','CBD vs THC — explain for pain')"><div class="ct">🧪 CBD vs THC</div><div class="cd">Full breakdown</div></div>
-<div class="card-btn" onclick="ask('cannaiq','Check drug interactions with CBD')"><div class="ct">⚠️ Interactions</div><div class="cd">CYP450 safety check</div></div>
-<div class="card-btn" onclick="ask('cannaiq','Explain the endocannabinoid system')"><div class="ct">🧬 ECS Education</div><div class="cd">Your body's master regulator</div></div>
+<!-- ═══════════════════════ PASSPORT ═══════════════════════ -->
+<div class="panel" id="p-passport">
+  <div class="section-label">YOUR LIVING SCORE</div>
+  <h1 class="hero-title">🛂 <span class="accent">Passport</span></h1>
+  <p class="hero-sub">Credit scores changed finance. Your BLEU Score changes wellness. One number built from real data — how you sleep, move, eat, recover, think, and connect. It sees everything. It forgets nothing. It compounds.</p>
+
+  <div class="stat-row">
+    <div class="stat-box" style="border-color:rgba(201,168,76,.25)"><div class="num" style="font-size:40px">—</div><div class="label">Your BLEU Score</div></div>
+  </div>
+
+  <div class="section-label" style="margin-top:28px">14 SHIELDS</div>
+  <div class="card-grid">
+    <div class="card"><h3>🏋️ Body Shields</h3><p>Sleep · Nutrition · Movement · Recovery · Safety · Substances</p></div>
+    <div class="card"><h3>🧠 Mind Shields</h3><p>Mindset · Purpose · Learning</p></div>
+    <div class="card"><h3>❤️ Connection Shields</h3><p>Community · Relationships · Environment</p></div>
+    <div class="card"><h3>🏛️ Foundation Shields</h3><p>Mental Health · Financial Wellness</p></div>
+  </div>
+
+  <div class="section-label" style="margin-top:24px">EVERYTHING FEEDS YOUR PASSPORT</div>
+  <div class="feature-grid">
+    <div class="feature-item"><div class="feature-icon">⚕️</div><div class="feature-text"><h4>Directory</h4><p>Practitioner visits tracked. Specialties matched to shields.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">💊</div><div class="feature-text"><h4>Vessel</h4><p>Supplements tracked. Stacks mapped to shields.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">📚</div><div class="feature-text"><h4>Learn</h4><p>Knowledge scored. Learning path progress tracked.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">📅</div><div class="feature-text"><h4>Events</h4><p>Attendance earns XP. Community engagement feeds Connection shields.</p></div></div>
+  <div style="margin:16px 0"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:24px;text-align:center;margin-bottom:16px"><div style="color:#d4af37;font-size:10px;letter-spacing:3px;margin-bottom:8px">YOUR LEVEL</div><div style="color:#e8d5b0;font-size:22px;font-weight:300">&#127793; Seedling</div><div style="width:200px;height:4px;background:rgba(212,175,55,0.1);border-radius:2px;margin:12px auto"><div style="width:28%;height:100%;background:linear-gradient(90deg,#d4af37,#4ecdc4);border-radius:2px"></div></div><div style="color:#8fa4b0;font-size:11px;margin-top:6px">280 / 1000 XP to Sprout</div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('passport','Start my ECS Quiz to discover my endocannabinoid type')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129504;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Take ECS Quiz</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('passport','I want to log my wellness data for today')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128221;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Log wellness</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('missions')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#127919;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Earn XP</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('passport','Show me my complete wellness journey and progress')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128202;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">View journey</div></div></div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-passport"></div><div class="chat-input-row"><input id="in-passport" placeholder="Ask about your wellness journey..." onkeydown="if(event.key==='Enter')send('passport')"><button onclick="send('passport')">Ask</button></div></div>
 </div>
-<div class="chat-container"><div class="chat-messages" id="chat-cannaiq"></div><div class="chat-input-row"><input id="in-cannaiq" placeholder="Strains, interactions, dosage, legal..." onkeydown="if(event.key==='Enter')send('cannaiq')"><button onclick="send('cannaiq')">Ask</button></div></div></section>
 
-<section id="sec-protocols"><div class="tab-header"><h2>Protocols</h2><p>Personalized. Morning to night. Measured.</p></div>
-<div class="cards-grid">
-<div class="card-btn" onclick="ask('protocols','Build anxiety protocol — morning to night')"><div class="ct">😰 Anxiety</div><div class="cd">Full day protocol</div></div>
-<div class="card-btn" onclick="ask('protocols','Build sleep optimization protocol')"><div class="ct">🌙 Sleep</div><div class="cd">Evening to morning</div></div>
-<div class="card-btn" onclick="ask('protocols','Build pain management protocol')"><div class="ct">🩹 Pain</div><div class="cd">Natural + supplement</div></div>
-<div class="card-btn" onclick="ask('protocols','Build gut health protocol')"><div class="ct">🦠 Gut Health</div><div class="cd">Microbiome + diet</div></div>
+<!-- ═══════════════════════ THERAPY ═══════════════════════ -->
+<div class="panel" id="p-therapy">
+  <div class="section-label">EVIDENCE-BASED THERAPEUTIC INTELLIGENCE</div>
+  <h1 class="hero-title">🧠 <span class="teal">Therapy</span> — <span class="accent">12 Modes</span></h1>
+  <p class="hero-sub">This is not a chatbot pretending. This is Alvai-powered therapeutic intelligence using real clinical frameworks — CBT, DBT, somatic, motivational interviewing, guided journaling, crisis support, couples, grief, trauma, and more. Connected to 47,861 practitioners for when you're ready for a real person.</p>
+
+  <div class="section-label">CHOOSE YOUR MODE</div>
+  <div class="mode-bar" id="therapy-modes">
+    <span class="mode-btn active" onclick="setMode('therapy','talk',this)">💬 Talk Therapy</span>
+    <span class="mode-btn" onclick="setMode('therapy','cbt',this)">🧩 CBT</span>
+    <span class="mode-btn" onclick="setMode('therapy','dbt',this)">⚖️ DBT Skills</span>
+    <span class="mode-btn" onclick="setMode('therapy','somatic',this)">🫁 Somatic</span>
+    <span class="mode-btn" onclick="setMode('therapy','motivational',this)">🔄 Motivational</span>
+    <span class="mode-btn" onclick="setMode('therapy','journal',this)">📓 Journaling</span>
+    <span class="mode-btn" onclick="setMode('therapy','crisis',this)">🆘 Crisis</span>
+    <span class="mode-btn" onclick="setMode('therapy','couples',this)">❤️ Couples</span>
+    <span class="mode-btn" onclick="setMode('therapy','grief',this)">🕊️ Grief</span>
+    <span class="mode-btn" onclick="setMode('therapy','trauma',this)">🛡️ Trauma</span>
+    <span class="mode-btn" onclick="setMode('therapy','eating',this)">🍎 Eating & Body</span>
+  </div>
+
+  <div class="quick-row">
+    <span class="quick-btn" onclick="ask('therapy','I feel anxious all the time and I dont know why')">😰 Constant Anxiety</span>
+    <span class="quick-btn" onclick="ask('therapy','I cant stop thinking about the past and its ruining my present')">🔄 Stuck in the Past</span>
+    <span class="quick-btn" onclick="ask('therapy','My relationship is falling apart and I dont know how to fix it')">💔 Relationship Crisis</span>
+    <span class="quick-btn" onclick="ask('therapy','I lost someone close to me and I cant function')">🕊️ Grieving</span>
+    <span class="quick-btn" onclick="ask('therapy','I hate my body and I cant stop comparing myself to others')">🪞 Body Image</span>
+    <span class="quick-btn" onclick="ask('therapy','I feel empty inside like nothing matters anymore')">🕳️ Feeling Empty</span>
+  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('therapy','Help me understand different talk therapy types and find my fit')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128172;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Talk Therapy</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">CBT, DBT, psychodynamic. Find your fit.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('therapy','Teach me about somatic therapy and how it helps with trauma')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129506;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Somatic</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Body-based healing. Trauma stored in tissue.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('therapy','Explain EMDR therapy and help me find a practitioner')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128065;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">EMDR</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Eye movement reprocessing. Gold standard for PTSD.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('therapy','Guide me through a breathwork session right now')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128524;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Breathwork</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">4-7-8, box breathing, Wim Hof. Free. Now.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('therapy','Guide me through a 5 minute meditation right now')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129495;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Meditation</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Guided, mantra, body scan. Start with 5 min.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('therapy','I need crisis support resources right now')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Crisis Support</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">988 Lifeline. Crisis Text. Warmlines. Now.</div></div></div><div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">FREE RIGHT NOW</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('therapy','Guide me through 4-7-8 breathing right now')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128524;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Breathing</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('therapy','Guide me through a grounding exercise right now')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127793;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Grounding</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('therapy','Guide me through a body scan meditation')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129506;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Body scan</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('therapy','Give me a therapeutic journaling prompt')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128221;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Journaling</div></div></div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-therapy"></div><div class="chat-input-row"><input id="in-therapy" placeholder="What's on your mind? This is a safe space..." onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Share</button></div></div>
+
+  <div class="divider"></div>
+  <div class="section-label">THE 12 MODES — WHAT EACH ONE DOES</div>
+  <div class="card-grid">
+    <div class="card"><h3>💬 Talk Therapy</h3><p>Person-centered. Reflective listening. Pattern recognition. Emotional processing. The foundation.</p></div>
+    <div class="card"><h3>🧩 CBT</h3><p>Cognitive Behavioral Therapy. Thought records. Cognitive distortions. Behavioral activation. Homework.</p></div>
+    <div class="card"><h3>⚖️ DBT Skills</h3><p>Dialectical Behavior. Mindfulness, distress tolerance, emotion regulation, interpersonal effectiveness.</p></div>
+    <div class="card"><h3>🫁 Somatic</h3><p>Body-based healing. Body scanning, breathwork, grounding, progressive muscle relaxation.</p></div>
+    <div class="card"><h3>🔄 Motivational</h3><p>Motivational Interviewing. For ambivalence about change. Scaling questions. Decisional balance.</p></div>
+    <div class="card"><h3>📓 Journaling</h3><p>Guided therapeutic writing. Fear inventory, unsent letters, future self, values clarification.</p></div>
+    <div class="card"><h3>🆘 Crisis</h3><p>Immediate safety support. Grounding. Resource connection. 988 Lifeline. Crisis Text Line.</p></div>
+    <div class="card"><h3>❤️ Couples</h3><p>Gottman Method + EFT. Four Horsemen. Love Languages. Repair attempts. Communication tools.</p></div>
+    <div class="card"><h3>🕊️ Grief</h3><p>Bereavement and all loss. Continuing bonds. Memory work. Meaning-making. No timeline imposed.</p></div>
+    <div class="card"><h3>🛡️ Trauma</h3><p>EMDR-informed stabilization. Window of tolerance. Container exercise. Safe place. Grounding first.</p></div>
+    <div class="card"><h3>🍎 Eating & Body</h3><p>Intuitive eating. Anti-diet. Food neutrality. Body image healing. Movement as celebration.</p></div>
+  </div>
+
+  <div class="disclaimer disclaimer-crisis">⚕️ Alvai Therapy uses evidence-based frameworks but is not a substitute for professional therapy. For crisis support: <strong>988 Lifeline</strong> (call/text 988) · <strong>Crisis Text Line</strong> (text HOME to 741741). BLEU can match you with a licensed therapist in your area — just ask Alvai.</div>
 </div>
-<div class="chat-container"><div class="chat-messages" id="chat-protocols"></div><div class="chat-input-row"><input id="in-protocols" placeholder="What protocol?" onkeydown="if(event.key==='Enter')send('protocols')"><button onclick="send('protocols')">Build</button></div></div></section>
 
-<section id="sec-learn"><div class="tab-header"><h2>Learn</h2><p>Research-backed. Claim → Evidence → Action.</p></div>
-<div class="cards-grid">
-<div class="card-btn" onclick="ask('learn','Complete sleep optimization guide')"><div class="ct">😴 Sleep</div><div class="cd">Circadian, melatonin, temp</div></div>
-<div class="card-btn" onclick="ask('learn','Complete gut health guide')"><div class="ct">🦠 Gut</div><div class="cd">Microbiome, probiotics</div></div>
-<div class="card-btn" onclick="ask('learn','Mental health and nutrition research')"><div class="ct">🧠 Mind-Body</div><div class="cd">Nutritional psychiatry</div></div>
-<div class="card-btn" onclick="ask('learn','Inflammation and chronic disease')"><div class="ct">🔥 Inflammation</div><div class="cd">Root of disease</div></div>
+<!-- ═══════════════════════ FINANCE ═══════════════════════ -->
+<div class="panel" id="p-finance">
+  <div class="section-label">MONEY AS VITAL SIGN</div>
+  <h1 class="hero-title">💰 <span class="accent">Finance</span></h1>
+  <p class="hero-sub">67% of Americans report money as their #1 stressor. Financial stress doubles cardiovascular disease risk. Poverty reduces lifespan by 15 years. Every doctor who's ever told you to "reduce stress" but never asked about your bank account missed the point. BLEU treats money like a health metric.</p>
+
+  <div class="section-label" style="margin-top:24px">SIX CENTERS</div>
+  <div class="card-grid">
+    <div class="card card-clickable" onclick="ask('finance','How do I improve my credit score step by step')">
+      <span class="card-icon">📊</span><h3>Credit Health</h3>
+      <p>Understand your score. Dispute errors. Improve strategically. Find the right credit card for your situation.</p>
+      <span class="tag badge-gold">HIGH IMPACT</span>
+    </div>
+    <div class="card card-clickable" onclick="ask('finance','I want to buy a house - where do I even start as a first time buyer')">
+      <span class="card-icon">🏠</span><h3>Home & Housing</h3>
+      <p>First-time buyer guidance. Mortgage math. Down payment assistance programs. Neighborhood health scoring.</p>
+    </div>
+    <div class="card card-clickable" onclick="ask('finance','Help me understand health insurance - ACA marketplace vs employer')">
+      <span class="card-icon">🏥</span><h3>Insurance Navigator</h3>
+      <p>ACA marketplace. Plan comparison. HSA/FSA maximization. Check if your practitioner is covered.</p>
+    </div>
+    <div class="card card-clickable" onclick="ask('finance','Help me budget for wellness - I spend too much on things that hurt me')">
+      <span class="card-icon">💵</span><h3>Budgeting & Wellness</h3>
+      <p>Wellness Spending Ratio: healing-to-harming. Smart swaps. Subscription audits. Meal cost calculator.</p>
+      <span class="tag badge-ember">KILLER FEATURE</span>
+    </div>
+    <div class="card card-clickable" onclick="ask('finance','What employee benefits am I probably not using - FSA HSA EAP gym reimbursement')">
+      <span class="card-icon">🏢</span><h3>Income & Career</h3>
+      <p>Benefits maximizer: FSA, HSA, EAP, gym reimbursements most people don't know about. Side income ideas.</p>
+    </div>
+    <div class="card card-clickable" onclick="ask('finance','I have medical bills I cant pay - what are my options for negotiation')">
+      <span class="card-icon">🆘</span><h3>Emergency Financial</h3>
+      <p>Medical bill negotiation with scripts. Financial assistance finder. Emergency fund builder. Prescription savings.</p>
+      <span class="tag badge-ember">CRITICAL</span>
+    </div>
+  </div>
+
+  <div class="quick-row" style="margin-top:16px">
+    <span class="quick-btn" onclick="ask('finance','What is my wellness spending ratio and how do I calculate it')">📊 Wellness Ratio</span>
+    <span class="quick-btn" onclick="ask('finance','Free prescription savings programs like GoodRx')">💊 Prescription Savings</span>
+    <span class="quick-btn" onclick="ask('finance','How to negotiate medical bills with hospital - scripts and strategies')">🏥 Negotiate Bills</span>
+    <span class="quick-btn" onclick="ask('finance','Best high yield savings accounts and budgeting apps')">💰 Savings Tools</span>
+  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('finance','Help me understand what my health insurance covers for holistic wellness')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128176;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Insurance guide</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">What does my plan cover? Holistic, therapy, cannabis.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('finance','Help me calculate my monthly wellness costs and find savings')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129518;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Cost calculator</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Monthly wellness budget. Supplements + therapy + cannabis.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('finance','I cannot afford wellness right now. Show me every free option available')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Free resources</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Broke? Here. Free therapy, free supplements, sliding scale.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('finance','What wellness expenses qualify for HSA and FSA spending')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128179;</div><div style="color:#d4af37;font-weight:600;font-size:14px">HSA/FSA guide</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Tax-free wellness spending. What qualifies.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('finance','Find sliding scale practitioners near New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129309;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Sliding scale</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Practitioners who adjust to your income.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('finance','Help me find prescription savings programs and discount cards')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128138;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Prescription savings</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">GoodRx, Mark Cuban Cost Plus, manufacturer coupons.</div></div></div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-finance"></div><div class="chat-input-row"><input id="in-finance" placeholder="What financial question is weighing on you?" onkeydown="if(event.key==='Enter')send('finance')"><button onclick="send('finance')">Ask</button></div></div>
+
+  <div class="disclaimer">💰 BLEU provides financial wellness information, not professional financial, tax, or investment advice. Consult licensed financial advisors for specific investment and tax decisions. Affiliate links to financial products are clearly disclosed.</div>
 </div>
-<div class="chat-container"><div class="chat-messages" id="chat-learn"></div><div class="chat-input-row"><input id="in-learn" placeholder="What science?" onkeydown="if(event.key==='Enter')send('learn')"><button onclick="send('learn')">Research</button></div></div></section>
 
-<section id="sec-community"><div class="tab-header"><h2>Community</h2><p>Connection is the strongest predictor of longevity.</p></div>
-<div class="chat-container"><div class="chat-messages" id="chat-community"></div><div class="chat-input-row"><input id="in-community" placeholder="How do you want to connect?" onkeydown="if(event.key==='Enter')send('community')"><button onclick="send('community')">Connect</button></div></div></section>
+<!-- ═══════════════════════ MISSIONS ═══════════════════════ -->
+<div class="panel" id="p-missions">
+  <div class="section-label">GAMIFIED GROWTH</div>
+  <h1 class="hero-title">🎯 <span class="accent">Missions</span></h1>
+  <p class="hero-sub">Small actions compound into transformation. Daily missions tied to your weakest shields. Streaks that matter. Points that unlock real rewards. The game is your life — and you're about to level up.</p>
 
-<section id="sec-dashboard"><div class="tab-header"><h2>Dashboard</h2><p>Your wellness command center.</p></div>
-<div class="chat-container"><div class="chat-messages" id="chat-dashboard"></div><div class="chat-input-row"><input id="in-dashboard" placeholder="What patterns?" onkeydown="if(event.key==='Enter')send('dashboard')"><button onclick="send('dashboard')">Ask</button></div></div></section>
+  <div class="card" style="border-color:rgba(201,168,76,.25);background:linear-gradient(135deg,rgba(201,168,76,.06),var(--card))">
+    <span class="badge badge-gold" style="margin-bottom:8px">TODAY'S MISSION</span>
+    <h3 style="font-size:20px">Small Steps, Real Data</h3>
+    <p style="margin-top:8px">Walk 20 minutes. Journal for 5 minutes. Check your credit score. Take your magnesium. One small action toward the version of yourself you're building. Every completed mission feeds your Passport score.</p>
+  </div>
 
-<section id="sec-missions"><div class="tab-header"><h2>Missions</h2><p>Daily challenges. Build streaks.</p></div>
-<div class="chat-container"><div class="chat-messages" id="chat-missions"></div><div class="chat-input-row"><input id="in-missions" placeholder="What to work on?" onkeydown="if(event.key==='Enter')send('missions')"><button onclick="send('missions')">Go</button></div></div></section>
+  <div class="quick-row" style="margin-top:16px">
+    <span class="quick-btn" onclick="ask('missions','Give me a morning mission for today')">🌅 Morning Mission</span>
+    <span class="quick-btn" onclick="ask('missions','Give me a mission for my sleep shield')">😴 Sleep Mission</span>
+    <span class="quick-btn" onclick="ask('missions','Give me a mission for my nutrition shield')">🍎 Nutrition Mission</span>
+    <span class="quick-btn" onclick="ask('missions','Give me a mental health mission for today')">🧠 Mind Mission</span>
+    <span class="quick-btn" onclick="ask('missions','Give me a community connection mission')">🤝 Connection Mission</span>
+    <span class="quick-btn" onclick="ask('missions','Give me a financial wellness mission')">💰 Finance Mission</span>
+  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('missions','Give me today wellness mission. Something I can do in 5 minutes')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127919;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Today's mission</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">One small step. Doable in 5 minutes. Builds streak.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('missions','Give me a 7-day wellness challenge I can start today')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128293;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Weekly challenge</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">7-day program. Stacks into real change.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('missions','Show me my streak progress and what I unlock next')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127942;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Streak rewards</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">14 days and counting. Keep building momentum.</div></div></div><div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">QUICK MISSIONS</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('missions','Hydration mission: how much water should I drink today')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128167;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Hydrate</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('missions','Movement mission: give me a 10 minute exercise I can do now')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127939;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Move</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('missions','Breathing mission: guide me through 3 minutes of breathwork')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128524;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Breathe</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('missions','Journaling mission: give me a reflective prompt for today')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128221;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Journal</div></div></div></div></div>
 
-<section id="sec-passport"><div class="tab-header"><h2>Passport</h2><p>Your wellness identity.</p></div>
-<div class="chat-container"><div class="chat-messages" id="chat-passport"></div><div class="chat-input-row"><input id="in-passport" placeholder="Your goals..." onkeydown="if(event.key==='Enter')send('passport')"><button onclick="send('passport')">Start</button></div></div></section>
+  <div class="chat-box"><div class="chat-messages" id="chat-missions"></div><div class="chat-input-row"><input id="in-missions" placeholder="What do you want to work on today?" onkeydown="if(event.key==='Enter')send('missions')"><button onclick="send('missions')">Get Mission</button></div></div>
+</div>
 
-<section id="sec-map"><div class="tab-header"><h2>Map</h2><p>Wellness near you.</p></div>
-<div class="chat-container"><div class="chat-messages" id="chat-map"></div><div class="chat-input-row"><input id="in-map" placeholder="What near you?" onkeydown="if(event.key==='Enter')send('map')"><button onclick="send('map')">Search</button></div></div></section>
+<!-- ═══════════════════════ RECOVERY ═══════════════════════ -->
+<div class="panel" id="p-recovery">
+  <div class="section-label">BUILT BY SURVIVAL</div>
+  <h1 class="hero-title">🔥 <span class="accent">Recovery</span></h1>
+  <p class="hero-sub">This was not built in a boardroom. It was built by someone who survived 9 overdoses and overcame 31 felonies. Who treated 30,000 patients. Who knows what the first 72 hours feel like, what Day 30 feels like, what Year 5 feels like. This meets you where you are — with dignity, privacy, and real tools.</p>
 
-</main>
-<footer class="site-footer"><p>BLEU.live — The Longevity Operating System · 127-Year Healing Lineage · New Orleans</p><p style="margin-top:8px">Affiliate links sustain BLEU at no extra cost. All practitioners NPI-verified via <a href="https://npiregistry.cms.hhs.gov" target="_blank">CMS.gov</a>.</p></footer>
+  <div class="section-label" style="margin-top:24px">CHOOSE YOUR MODE</div>
+  <div class="mode-bar" id="recovery-modes">
+    <span class="mode-btn active" onclick="setMode('recovery','sobriety',this)">🌅 Early Sobriety</span>
+    <span class="mode-btn" onclick="setMode('recovery','relapse',this)">🛡️ Relapse Prevention</span>
+    <span class="mode-btn" onclick="setMode('recovery','harm',this)">❤️ Harm Reduction</span>
+    <span class="mode-btn" onclick="setMode('recovery','12step',this)">📿 12-Step</span>
+    <span class="mode-btn" onclick="setMode('recovery','family',this)">👨‍👩‍👧 Family</span>
+    <span class="mode-btn" onclick="setMode('recovery','mat',this)">💊 MAT</span>
+    <span class="mode-btn" onclick="setMode('recovery','milestones',this)">🏆 Milestones</span>
+  </div>
 
+  <div class="quick-row">
+    <span class="quick-btn" onclick="ask('recovery','Im on day 1 of sobriety - what do I do right now')">🌅 Day 1</span>
+    <span class="quick-btn" onclick="ask('recovery','I want to drink right now and I dont know what to do')">⚡ Craving Now</span>
+    <span class="quick-btn" onclick="ask('recovery','Find a treatment center near New Orleans')">🏥 Find Treatment</span>
+    <span class="quick-btn" onclick="ask('recovery','My family member is using and I dont know what to do')">👨‍👩‍👧 Family Help</span>
+    <span class="quick-btn" onclick="ask('recovery','What is Suboxone and how does MAT work')">💊 MAT Info</span>
+    <span class="quick-btn" onclick="ask('recovery','I relapsed and I feel like a complete failure')">🔄 After Relapse</span>
+    <span class="quick-btn" onclick="ask('recovery','How do I get naloxone Narcan for free')">❤️ Get Narcan</span>
+    <span class="quick-btn" onclick="ask('recovery','Im celebrating 90 days sober')">🏆 90 Days!</span>
+  <div style="margin:16px 0"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.15);border-radius:14px;padding:20px;text-align:center;margin-bottom:16px"><div style="color:#9acd32;font-size:13px;font-weight:500">If you are in crisis right now</div><div style="color:#e8d5b0;font-size:18px;font-weight:300;margin-top:8px">988 Suicide + Crisis Lifeline</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">Call or text 988 &#8226; Free &#8226; 24/7 &#8226; Confidential</div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Find AA NA and recovery meetings near me in New Orleans this week')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Find meetings</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">AA, NA, SMART Recovery near you. This week.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Find sober social events and communities in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129309;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Sober community</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Events, groups, social without substances.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','I need someone to talk to right now. Show me free crisis and warmline options')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128172;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Talk to someone</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Crisis lines, warmlines, text support. Free.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Help me set up a sobriety day counter and track my recovery journey')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128197;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Day counter</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Track your journey. Every day matters.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','I am struggling with relapse. I need support without judgment')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128156;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Relapse support</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">No shame. Just a step. Get back on path.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Find family support resources like Al-Anon near New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127968;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Family support</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Al-Anon, family therapy, healing together.</div></div></div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-recovery"></div><div class="chat-input-row"><input id="in-recovery" placeholder="You're not alone. What's happening right now?" onkeydown="if(event.key==='Enter')send('recovery')"><button onclick="send('recovery')">Share</button></div></div>
+
+  <div class="divider"></div>
+  <div class="section-label">THE 7 MODES</div>
+  <div class="card-grid">
+    <div class="card"><h3>🌅 Early Sobriety</h3><p>Day-by-day guidance. What your body does in the first 72 hours, first week, first month. Withdrawal support. Supplement recommendations.</p></div>
+    <div class="card"><h3>🛡️ Relapse Prevention</h3><p>HALT checks. Trigger mapping. Urge surfing. Emergency contacts. Playing the tape forward. Relapse is data, not failure.</p></div>
+    <div class="card"><h3>❤️ Harm Reduction</h3><p>Non-judgmental. Naloxone access. Fentanyl test strips. Never Use Alone hotline. Dead people can't recover.</p></div>
+    <div class="card"><h3>📿 12-Step Companion</h3><p>Meeting finder. Step work journaling. Sponsor tools. Daily reflection. Chip tracking. All paths valid.</p></div>
+    <div class="card"><h3>👨‍👩‍👧 Family & Codependency</h3><p>For people loving someone in addiction. Al-Anon principles. Boundaries. Enabling vs supporting. Everyone needs healing.</p></div>
+    <div class="card"><h3>💊 MAT Support</h3><p>Suboxone, methadone, naltrexone information. Clinic finder. Side effect management. MAT is treatment, not trading.</p></div>
+    <div class="card"><h3>🏆 Milestones</h3><p>Celebrate recovery. Health improvements at each milestone. Savings calculator. Community celebration.</p></div>
+  </div>
+
+  <div class="disclaimer disclaimer-crisis">🔥 If you or someone near you is experiencing an overdose: <strong>Call 911 immediately.</strong> Administer naloxone (Narcan) if available. <strong>988 Lifeline</strong> (call/text 988) · <strong>SAMHSA Helpline</strong>: 1-800-662-4357 (free, 24/7) · <strong>Never Use Alone</strong>: 1-800-484-3731 · <strong>Crisis Text Line</strong>: text HOME to 741741</div>
+</div>
+
+<!-- ═══════════════════════ CANNAIQ ═══════════════════════ -->
+<div class="panel" id="p-cannaiq">
+  <div class="section-label">CANNABIS INTELLIGENCE</div>
+  <h1 class="hero-title">🌿 <span class="accent">CannaIQ</span></h1>
+  <p class="hero-sub">Cannabis intelligence with clinical precision. Whether you're exploring cannabis for wellness, managing it alongside medications, or using it as harm reduction — BLEU has the data. Strain matching. Drug interactions. Dosage guidance. Legal navigation.</p>
+
+  <div class="section-label" style="margin-top:24px">WHAT DO YOU NEED?</div>
+  <div class="quick-row">
+    <span class="quick-btn" onclick="ask('cannaiq','Best cannabis strain for sleep - indica recommendations')">😴 Sleep Strains</span>
+    <span class="quick-btn" onclick="ask('cannaiq','Best strain for anxiety without paranoia')">🧠 Anxiety Relief</span>
+    <span class="quick-btn" onclick="ask('cannaiq','Is CBD safe with my blood pressure medication lisinopril')">⚠️ Drug Interactions</span>
+    <span class="quick-btn" onclick="ask('cannaiq','What dose of CBD should I start with for first time')">📏 Dosage Guide</span>
+    <span class="quick-btn" onclick="ask('cannaiq','Difference between indica sativa hybrid and what to choose')">🌱 Strain Types 101</span>
+    <span class="quick-btn" onclick="ask('cannaiq','Cannabis for chronic pain vs opioids - what does research say')">💊 Cannabis vs Pharma</span>
+    <span class="quick-btn" onclick="ask('cannaiq','How to get a medical marijuana card in Louisiana')">🏥 Medical Card</span>
+    <span class="quick-btn" onclick="ask('cannaiq','Best method - smoking vs edibles vs tincture vs vape')">💨 Methods Compared</span>
+  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('cannaiq','Show me cannabis strains matched to my goals')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127807;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">529+ Strains</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('cannaiq','Check my medications for cannabis interactions')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128138;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">302K Interactions</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('cannaiq','Teach me about cannabis terpenes and what each does')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#129514;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">25 Terpenes</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('cannaiq','Start my ECS Quiz')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129504;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">ECS Quiz</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('cannaiq','Match me to a cannabis strain based on my goals and medication profile')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127807;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Match me a strain</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">BEMS scoring. Goals, body, meds, preferences analyzed.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('cannaiq','Run a full 5-layer safety check on cannabis with my current medications')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128138;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Safety check</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">CYP450 + UGT + Transporter + Pharmacodynamic + Route.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('cannaiq','I have never tried cannabis. Guide me from absolute zero')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128218;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Beginner guide</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Never tried cannabis? Start here. Zero shame.</div></div></div><div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">POPULAR STRAINS</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('cannaiq','Tell me about Blue Dream strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#4ecdc4;font-weight:600;font-size:13px">Blue Dream</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 94</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Sativa-Hybrid &#8226; Myrcene</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('cannaiq','Tell me about Granddaddy Purple strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#d4af37;font-weight:600;font-size:13px">Granddaddy Purple</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 82</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Indica &#8226; Myrcene</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('cannaiq','Tell me about ACDC strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#4ecdc4;font-weight:600;font-size:13px">ACDC</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 96</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">CBD Dominant &#8226; Myrcene + Pinene</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('cannaiq','Tell me about Jack Herer strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#d4af37;font-weight:600;font-size:13px">Jack Herer</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 88</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Sativa &#8226; Terpinolene</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('cannaiq','Tell me about Charlotte's Web strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#4ecdc4;font-weight:600;font-size:13px">Charlotte's Web</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 91</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">CBD &#8226; Myrcene + Caryophyllene</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('cannaiq','Tell me about Harlequin strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#d4af37;font-weight:600;font-size:13px">Harlequin</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 85</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">CBD-Rich 2:1 &#8226; Myrcene + Pinene</div></div></div><div style="text-align:center;margin-top:12px;color:#8fa4b0;font-size:10px;font-weight:300">Data: PubMed, FDA, DDInter 2.0, Cannlytics. Not medical advice.</div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-cannaiq"></div><div class="chat-input-row"><input id="in-cannaiq" placeholder="Ask about cannabis — strains, interactions, dosage, legal..." onkeydown="if(event.key==='Enter')send('cannaiq')"><button onclick="send('cannaiq')">Ask</button></div></div>
+
+  <div class="divider"></div>
+  <div class="section-label">CANNAIQ INTELLIGENCE AREAS</div>
+  <div class="feature-grid">
+    <div class="feature-item"><div class="feature-icon">🧬</div><div class="feature-text"><h4>Strain Database</h4><p>10K+ strains. Terpene profiles. Cannabinoid content. Effects. Medical applications. Matched to your needs.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">⚠️</div><div class="feature-text"><h4>Drug Interaction Checker</h4><p>Cannabis + your medications. CYP450 enzyme pathways. Severity ratings. What to adjust.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">📏</div><div class="feature-text"><h4>Dosage Guide</h4><p>Personalized by experience, weight, effect desired, and method. Start low, go slow.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">⚖️</div><div class="feature-text"><h4>Legal Navigator</h4><p>State-by-state status. Medical card process. Travel guidance. Know before you go.</p></div></div>
+  </div>
+
+  <div class="disclaimer">🌿 Cannabis legality varies by state. BLEU provides information — always verify local laws. Drug interaction information is for education, not prescription. Consult your doctor when combining cannabis with medications.</div>
+</div>
+
+<!-- ═══════════════════════ TERMS ═══════════════════════ -->
+<div class="panel" id="p-terms">
+  <div class="section-label">LEGAL</div>
+  <h1 class="hero-title">Terms of Service</h1>
+  <p style="color:var(--dim);margin-bottom:20px">Last updated: February 20, 2026</p>
+  <div class="card">
+    <p>BLEU ("The Longevity Operating System") provides wellness information, AI-assisted guidance, practitioner directories, product recommendations, and community features. By using bleu.live you agree to these terms.</p>
+    <h3 style="color:var(--gold);margin-top:16px">Not Medical Advice</h3><p>BLEU is not a healthcare provider. Content is for informational purposes only. AI responses (Alvai) are not diagnoses, prescriptions, or treatment plans. Always consult licensed healthcare professionals for medical decisions. In emergencies call 911.</p>
+    <h3 style="color:var(--gold);margin-top:16px">Therapy & Recovery Features</h3><p>Alvai Therapy modes use evidence-based therapeutic frameworks (CBT, DBT, etc.) but are not substitutes for licensed therapy. Recovery features provide support tools and resources but are not treatment programs. For crisis: 988 Lifeline, Crisis Text Line (741741), SAMHSA 1-800-662-4357.</p>
+    <h3 style="color:var(--gold);margin-top:16px">Financial Information</h3><p>Finance tab provides wellness-oriented financial information, not professional financial, tax, or investment advice. Consult licensed financial advisors for specific decisions.</p>
+    <h3 style="color:var(--gold);margin-top:16px">Affiliate Relationships</h3><p>BLEU earns commissions through affiliate partnerships (Amazon, iHerb, and others). These relationships NEVER affect trust scores or validation. Products are scored on safety and efficacy data independent of commercial relationships.</p>
+    <h3 style="color:var(--gold);margin-top:16px">Cannabis Information</h3><p>CannaIQ provides educational information about cannabis. Cannabis legality varies by jurisdiction. Users are responsible for compliance with local laws.</p>
+    <h3 style="color:var(--gold);margin-top:16px">Data & Privacy</h3><p>See our <a href="#" onclick="go('privacy');return false">Privacy Policy</a>. Conversations with Alvai are processed by Anthropic's Claude API. BLEU does not sell personal data.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PRIVACY ═══════════════════════ -->
+<div class="panel" id="p-privacy">
+  <div class="section-label">LEGAL</div>
+  <h1 class="hero-title">Privacy Policy</h1>
+  <p style="color:var(--dim);margin-bottom:20px">Last updated: February 20, 2026</p>
+  <div class="card">
+    <h3 style="color:var(--teal)">What We Collect</h3><p>Usage analytics (page views, interactions). Conversation content sent to Alvai is processed by Claude API. No personally identifiable information is required to use BLEU.</p>
+    <h3 style="color:var(--teal);margin-top:16px">What We Don't Do</h3><p>We don't sell your data. We don't share conversations with third parties beyond our AI provider (Anthropic). We don't track you across other websites. We don't serve ads.</p>
+    <h3 style="color:var(--teal);margin-top:16px">Affiliate Links</h3><p>When you click affiliate links (Amazon, iHerb, etc.), those platforms have their own privacy policies. BLEU receives anonymous commission data but not your personal purchase details.</p>
+    <h3 style="color:var(--teal);margin-top:16px">Contact</h3><p>Questions? contact@bleu.live</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<div class="footer">
+  <div class="footer-logo">BLEU</div>
+  The Longevity Operating System · Patent Pending · © 2026<br>
+  Created by Bleu Michael Garner · President: Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl ACLM<br>
+  <a href="#" onclick="go('terms');return false">Terms</a> · <a href="#" onclick="go('privacy');return false">Privacy</a> · Affiliate Disclosure: BLEU earns commissions from partner links<br>
+  ⚕️ Not medical advice. Always consult healthcare professionals. Crisis: 988 · 911
+</div>
+
+<!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
 <script>
 const SB='https://sqyzboesdpdussiwqpzk.supabase.co'
-const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw'
 const ALVAI='https://bleu-pipeline-production.up.railway.app/api/chat'
-const chatHistories={},chatModes={}
-function showTab(id){document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));const sec=document.getElementById('sec-'+id);if(sec)sec.classList.add('active');document.getElementById('mm').classList.remove('show')}
-function goAsk(tab,msg){showTab(tab);setTimeout(()=>{const inp=document.getElementById('in-'+tab);if(inp){inp.value=msg;send(tab)}},200)}
-function ask(tab,msg){const inp=document.getElementById('in-'+tab);if(inp){inp.value=msg;send(tab)}}
-function setMode(tab,mode,btn){chatModes[tab]=mode;btn.parentElement.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
-function fmt(t){t=t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');t=t.replace(/\n/g,'<br>');return t}
+const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw'
+const tabs=['home','alvai','dashboard','directory','vessel','map','protocols','learn','community','passport','therapy','finance','missions','recovery','cannaiq','terms','privacy']
+const chatHistories={},chatModes={therapy:'talk',recovery:'sobriety'}
+tabs.forEach(t=>chatHistories[t]=[])
+
+function go(tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'))
+  const panel=document.getElementById('p-'+tab)
+  if(panel)panel.classList.add('active')
+  const navTabs=document.querySelectorAll('.nav-tab')
+  const idx=tabs.indexOf(tab)
+  if(idx>=0&&idx<navTabs.length)navTabs[idx].classList.add('active')
+  window.scrollTo({top:0,behavior:'smooth'})
+  // Trigger reveals
+  setTimeout(()=>{document.querySelectorAll('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('visible')})},100)
+}
+
+function setMode(tab,mode,el){
+  chatModes[tab]=mode
+  el.parentElement.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'))
+  el.classList.add('active')
+}
+
+function ask(tab,msg){go(tab);const input=document.getElementById('in-'+tab);if(input){input.value=msg;setTimeout(()=>send(tab),150)}}
+
+function fmt(t){
+  t=t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+  t=t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,function(_,x,u){
+    let s='color:var(--teal)';if(u.match(/iherb/i))s='color:var(--sage)';if(u.match(/pubmed/i))s='color:var(--gold)';if(u.match(/amazon/i))s='color:var(--gold)';
+    return '<a href="'+u+'" target="_blank" style="'+s+'">'+x+'</a>'
+  })
+  t=t.replace(/(^|\s)(https?:\/\/[^\s<)]+)/g,function(_,p,u){
+    let l='Link';if(u.match(/amazon/i))l='Shop Amazon';if(u.match(/iherb/i))l='Shop iHerb';if(u.match(/pubmed/i))l='View Study';if(u.match(/988/))l='988 Lifeline';
+    return p+'<a href="'+u+'" target="_blank" style="color:var(--teal)">'+l+' →</a>'
+  })
+  t=t.replace(/^### (.+)$/gm,'<strong style="color:var(--gold);font-size:15px">$1</strong>')
+  t=t.replace(/^## (.+)$/gm,'<strong style="color:var(--teal);font-size:16px">$1</strong>')
+  t=t.replace(/^\d+\.\s/gm,'<br>• ')
+  t=t.replace(/^[-•]\s/gm,'<br>• ')
+  t=t.replace(/\n\n/g,'<br><br>')
+  t=t.replace(/\n/g,'<br>')
+  return t
+}
+
 async function send(tab){
-const input=document.getElementById('in-'+tab),box=document.getElementById('chat-'+tab)
-if(!input||!box)return
-const msg=input.value.trim();if(!msg)return;input.value=''
-if(!chatHistories[tab])chatHistories[tab]=[]
-const uDiv=document.createElement('div');uDiv.className='msg user';uDiv.textContent=msg;box.appendChild(uDiv)
-chatHistories[tab].push({role:'user',content:msg})
-const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
-box.scrollTop=box.scrollHeight
-const mode=['therapy','recovery','finance','cannaiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general'
-const body={message:msg,history:chatHistories[tab].slice(-20),mode:mode}
-if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
-if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
-try{
-const res=await fetch(ALVAI,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON},body:JSON.stringify(body)})
-if(res.headers.get('content-type')?.includes('text/event-stream')){
-const reader=res.body.getReader(),decoder=new TextDecoder();let full='',buffer=''
-aDiv.innerHTML=''
-while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split('\n');buffer=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);if(p.text){full+=p.text;aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch(e){}}}
-aDiv.innerHTML=fmt(full);chatHistories[tab].push({role:'assistant',content:full})
-}else{const data=await res.json();const reply=data.response||data.text||data.reply||'Try again.';aDiv.innerHTML=fmt(reply);chatHistories[tab].push({role:'assistant',content:reply})}
-}catch(e){aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again.</em>'}
-box.scrollTop=box.scrollHeight}
-document.addEventListener('click',()=>document.getElementById('mm').classList.remove('show'))
+  const input=document.getElementById('in-'+tab),box=document.getElementById('chat-'+tab)
+  if(!input||!box)return
+  const msg=input.value.trim();if(!msg)return;input.value=''
+  const uDiv=document.createElement('div');uDiv.className='msg user';uDiv.textContent=msg;box.appendChild(uDiv)
+  chatHistories[tab].push({role:'user',content:msg})
+  const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
+  box.scrollTop=box.scrollHeight
+  const body={message:msg,history:chatHistories[tab].slice(-20),mode:['therapy','recovery','finance','cannaiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general'}
+  if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
+  if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
+  try{
+    const res=await fetch(ALVAI,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON},body:JSON.stringify(body)})
+    if(res.headers.get('content-type')?.includes('text/event-stream')){
+      const reader=res.body.getReader(),decoder=new TextDecoder();let full='',buffer=''
+      aDiv.innerHTML=''
+      while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split('\n');buffer=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);if(p.text){full+=p.text;aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}}}
+      aDiv.innerHTML=fmt(full);chatHistories[tab].push({role:'assistant',content:full})
+    }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);chatHistories[tab].push({role:'assistant',content:reply})}
+  }catch(e){aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again in a moment.</em>'}
+  box.scrollTop=box.scrollHeight
+}
+
+async function loadStats(){
+  try{
+    const h={'apikey':ANON,'Authorization':'Bearer '+ANON,'Range':'0-0','Prefer':'count=exact'}
+    let total=0;const counts={}
+    for(const t of['practitioners','products','locations']){try{const r=await fetch(SB+'/rest/v1/'+t+'?select=id&limit=1',{headers:h});const c=parseInt(r.headers.get('content-range')?.split('/')?.pop()||'0');counts[t]=c;total+=c}catch{}}
+    if(total>0){document.getElementById('s-total').textContent=total.toLocaleString();document.getElementById('s-prac').textContent=(counts.practitioners||0).toLocaleString();document.getElementById('s-prod').textContent=(counts.products||0).toLocaleString();document.getElementById('s-loc').textContent=(counts.locations||0).toLocaleString()}
+  }catch{}
+}
+loadStats()
+
+// Scroll reveals
+const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.1})
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))
 </script>
 </body>
 </html>
