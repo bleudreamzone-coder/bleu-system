@@ -94,6 +94,23 @@ AFFILIATE RESOURCES (weave naturally into prose — pick only 1-3 most relevant 
 - Rx Savings: GoodRx (goodrx.com), Cost Plus Drugs (costplusdrugs.com)
 - Dispensaries: Leafly (leafly.com/dispensaries), Eaze (eaze.com), Dutchie (dutchie.com)`;
 
+// ═══════ FALLBACK RESPONSES ═══════
+const FALLBACK_RESPONSES = {
+  sleep: "For sleep support, consider magnesium glycinate 400mg (Thorne, ~$15) 90 minutes before bed, L-theanine 200mg, and making your room 65-68°F. Start tonight and tell me how it goes tomorrow.",
+  anxiety: "For anxiety, ashwagandha KSM-66 300mg twice daily (Thorne, ~$25/mo) plus L-theanine 200mg as needed. Total: about $37/month. Are you on any medications? I need to check interactions first.",
+  therapist: "I am having a brief connection issue, but here is what I know: BetterHelp matches you with a licensed therapist in 24 hours from $60/week (betterhelp.com/bleu). For free support right now: call or text 988, or text HOME to 741741.",
+  crisis: "If you are in crisis right now: call 988 (Suicide and Crisis Lifeline), text HOME to 741741 (Crisis Text Line), or call 911. You are not alone. These are free, confidential, and available 24/7.",
+  default: "I am having a brief connection issue. Try asking again in a moment. If you need immediate help: call 988 or text HOME to 741741."
+};
+function getFallback(msg) {
+  const m = (msg||'').toLowerCase();
+  if(m.includes('sleep')||m.includes('insomnia')||m.includes('tired')) return FALLBACK_RESPONSES.sleep;
+  if(m.includes('anxi')||m.includes('stress')||m.includes('panic')||m.includes('worried')) return FALLBACK_RESPONSES.anxiety;
+  if(m.includes('therapist')||m.includes('counselor')||m.includes('doctor')) return FALLBACK_RESPONSES.therapist;
+  if(m.includes('suicide')||m.includes('kill')||m.includes('crisis')||m.includes('emergency')||m.includes('harm')) return FALLBACK_RESPONSES.crisis;
+  return FALLBACK_RESPONSES.default;
+}
+
 const MODE_PROMPTS = {
 general: ALVAI_CORE + `\n\nYou are in GENERAL WELLNESS mode — the front door of BLEU.live.\n- Answer any wellness question with depth and specificity\n- Cover: nutrition, sleep, stress, movement, mental health, supplements, lifestyle\n- Give actionable protocols, not vague advice\n- Example: "I can't sleep" → magnesium glycinate 400mg 2hrs before bed, no screens after 9pm, room 65-68°F, 4-7-8 breathing, and explain WHY each works`,
 dashboard: ALVAI_CORE + `\n\nYou are in DASHBOARD mode — personal wellness command center.\n- Help users set wellness goals and track progress\n- Offer daily check-ins: "How did you sleep? Energy level 1-10? What's weighing on you?"\n- Suggest personalized daily protocols based on their stated goals\n- Be proactive: suggest next steps, don't wait to be asked`,
@@ -303,6 +320,64 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ═══════ CLICK TRACKING (REVENUE) ═══════
+  if (pn === '/api/track' && req.method === 'GET') {
+    const partner = url.searchParams.get('partner') || 'unknown';
+    const source = url.searchParams.get('source') || 'unknown';
+    const product = url.searchParams.get('product') || '';
+    const session = url.searchParams.get('session') || '';
+    const city = url.searchParams.get('city') || '';
+    // Log to Supabase
+    try {
+      await querySupabase('clicks', '', 0, 'POST', {partner, source_tab: source, product_or_service: product, session_id: session, city, timestamp: new Date().toISOString()});
+    } catch(e) { console.error('Track error:', e.message); }
+    // Redirect to partner
+    const urls = {
+      betterhelp:'https://betterhelp.com/bleu',
+      amazon:'https://amazon.com/?tag=bleulive-20',
+      thorne:'https://thorne.com',
+      goodrx:'https://goodrx.com',
+      charlottesweb:'https://charlottesweb.com',
+      classpass:'https://classpass.com',
+      oura:'https://ouraring.com',
+      leafly:'https://leafly.com/dispensaries',
+      costplus:'https://costplusdrugs.com',
+      betterhelp_therapy:'https://betterhelp.com/bleu',
+      talkspace:'https://talkspace.com'
+    };
+    const dest = urls[partner] || 'https://bleu.live';
+    res.writeHead(302, {'Location': dest}); res.end();
+    return;
+  }
+  // ═══════ ANALYTICS PING ═══════
+  if (pn === '/api/ping' && req.method === 'GET') {
+    const pg = url.searchParams.get('p') || '/';
+    const sess = url.searchParams.get('s') || '';
+    try {
+      await querySupabase('pageviews', '', 0, 'POST', {path: pg, session_id: sess, timestamp: new Date().toISOString()});
+    } catch(e) {}
+    return json(res, 200, {ok:true});
+  }
+  // ═══════ SESSION UPSERT ═══════
+  if (pn === '/api/session' && req.method === 'POST') {
+    let b=''; req.on('data',c=>b+=c);
+    req.on('end', ()=>{ (async()=>{
+      try {
+        const p = JSON.parse(b);
+        if(!p.session_id) return json(res,400,{error:'session_id required'});
+        const existing = await querySupabase('sessions', `?session_id=eq.${p.session_id}`, 1);
+        if(existing && existing.length > 0) {
+          // Update last_active and increment count
+          const headers = {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'};
+          await fetch(SUPABASE_URL+'/rest/v1/sessions?session_id=eq.'+p.session_id, {method:'PATCH',headers,body:JSON.stringify({last_active:new Date().toISOString(),conversation_count:(existing[0].conversation_count||0)+1,city:p.city||existing[0].city})});
+        } else {
+          await querySupabase('sessions','',0,'POST',{session_id:p.session_id,city:p.city||'',conversation_count:1,created_at:new Date().toISOString(),last_active:new Date().toISOString()});
+        }
+        json(res,200,{ok:true});
+      } catch(e){ json(res,200,{ok:true}); }
+    })(); });
+    return;
+  }
   if (pn === '/api/stats') return json(res, 200, { version:'4.0', modes: Object.keys(MODE_PROMPTS).length, therapy: Object.keys(THERAPY_MODES).length, recovery: Object.keys(RECOVERY_MODES).length });
 
   if (pn === '/' || pn === '/index.html') { fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,{'Content-Type':'text/html'});res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,{'Content-Type':'text/html'});res.end(d);} }); return; }
