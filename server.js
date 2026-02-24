@@ -186,7 +186,10 @@ async function getPractitioners(msg) {
   const { city, spec } = extractCity(msg);
   if (!city && !spec) return '';
   let q = 'select=full_name,specialty,state,phone,address_line1,zip,practice_name';
-  if (city) q += `&address_line1=ilike.*${encodeURIComponent(city)}*`;
+  const zipMap={"new orleans":"701","metairie":"700","kenner":"700","slidell":"704","mandeville":"704","covington":"704","gretna":"700","baton rouge":"708","hammond":"704","houma":"703","houston":"770","austin":"787","dallas":"752","atlanta":"303","miami":"331","chicago":"606","nashville":"372","denver":"802","phoenix":"850"};
+  const zp=city?zipMap[city]:null;
+  if (zp) q += `&zip=like.${zp}*`;
+  else if (city) q += `&address_line1=ilike.*${encodeURIComponent(city)}*`;
   if (spec) q += `&specialty=ilike.*${encodeURIComponent(spec)}*`;
   q += '&order=full_name.asc';
   let r = await querySupabase('practitioners', q, 8);
