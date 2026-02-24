@@ -228,12 +228,227 @@ function pickModel(msg, mode) {
   return 'gpt-4o';
 }
 
+
+// ═══════════════════════════════════════════════════════════════════════
+// DATA ENRICHMENT ENGINE — FIRES REAL APIs, INJECTS REAL DATA
+// ═══════════════════════════════════════════════════════════════════════
+
+// Helper: fetch JSON from any URL with timeout
+async function fetchJSON(url, timeout = 4000) {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    const r = await fetch(url, {signal: controller.signal});
+    clearTimeout(timer);
+    return r.ok ? await r.json() : null;
+  } catch { return null; }
+}
+
+// 1. OpenFDA — drug interactions, adverse events, recalls
+async function fdaDrugLookup(drug) {
+  if (!drug) return '';
+  const encoded = encodeURIComponent(drug.toLowerCase());
+  const [label, events, recalls] = await Promise.all([
+    fetchJSON(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${encoded}"+openfda.generic_name:"${encoded}"&limit=1`),
+    fetchJSON(`https://api.fda.gov/drug/event.json?search=patient.drug.openfda.brand_name:"${encoded}"&count=patient.reaction.reactionmeddrapt.exact&limit=8`),
+    fetchJSON(`https://api.fda.gov/drug/enforcement.json?search="${encoded}"&limit=2`)
+  ]);
+  let data = '';
+  if (label?.results?.[0]) {
+    const l = label.results[0];
+    const warnings = l.warnings?.[0]?.substring(0, 500) || '';
+    const interactions = l.drug_interactions?.[0]?.substring(0, 500) || '';
+    const contraindications = l.contraindications?.[0]?.substring(0, 300) || '';
+    data += `\n[FDA LABEL - ${drug}] Warnings: ${warnings} | Interactions: ${interactions} | Contraindications: ${contraindications}`;
+  }
+  if (events?.results?.length) {
+    const top = events.results.slice(0, 6).map(r => r.term).join(', ');
+    data += `\n[FDA ADVERSE EVENTS - ${drug}] Most reported: ${top}`;
+  }
+  if (recalls?.results?.length) {
+    data += `\n[FDA RECALLS - ${drug}] Active recall: ${recalls.results[0].reason_for_recall?.substring(0, 200)}`;
+  }
+  return data;
+}
+
+// 2. RxNorm — normalize drug names, find interactions between 2 drugs
+async function rxNormInteraction(drug1, drug2) {
+  if (!drug1 || !drug2) return '';
+  const [rx1, rx2] = await Promise.all([
+    fetchJSON(`https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${encodeURIComponent(drug1)}&search=1`),
+    fetchJSON(`https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${encodeURIComponent(drug2)}&search=1`)
+  ]);
+  const id1 = rx1?.idGroup?.rxnormId?.[0];
+  const id2 = rx2?.idGroup?.rxnormId?.[0];
+  if (!id1 || !id2) return '';
+  const interactions = await fetchJSON(`https://rxnav.nlm.nih.gov/REST/interaction/list.json?rxcuis=${id1}+${id2}`);
+  if (!interactions?.fullInteractionTypeGroup?.length) return '';
+  let data = '';
+  const pairs = interactions.fullInteractionTypeGroup[0]?.fullInteractionType || [];
+  for (const pair of pairs.slice(0, 3)) {
+    const desc = pair.interactionPair?.[0]?.description || '';
+    const severity = pair.interactionPair?.[0]?.severity || '';
+    if (desc) data += `\n[DRUG INTERACTION: ${drug1} + ${drug2}] ${severity}: ${desc.substring(0, 300)}`;
+  }
+  return data;
+}
+
+// 3. DailyMed — detailed drug label info
+async function dailyMedLookup(drug) {
+  if (!drug) return '';
+  const r = await fetchJSON(`https://dailymed.nlm.nih.gov/dailymed/services/v2/spls.json?drug_name=${encodeURIComponent(drug)}&page_size=1`);
+  if (!r?.data?.length) return '';
+  const spl = r.data[0];
+  return `\n[DAILYMED - ${drug}] ${spl.title || ''} | Published: ${spl.published_date || 'unknown'}`;
+}
+
+// 4. PubMed — find recent research on any topic
+async function pubmedSearch(query) {
+  if (!query) return '';
+  const search = await fetchJSON(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=3&sort=date&retmode=json`);
+  const ids = search?.esearchresult?.idlist;
+  if (!ids?.length) return '';
+  const details = await fetchJSON(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${ids.join(',')}&retmode=json`);
+  if (!details?.result) return '';
+  let data = `\n[PUBMED RESEARCH - ${query}]`;
+  for (const id of ids) {
+    const art = details.result[id];
+    if (art?.title) data += `\n  - "${art.title.substring(0, 150)}" (${art.pubdate || ''}) ${art.source || ''}`;
+  }
+  return data;
+}
+
+// 5. USDA FoodData — nutrition info for foods
+async function nutritionLookup(food) {
+  if (!food) return '';
+  const r = await fetchJSON(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(food)}&pageSize=1&api_key=DEMO_KEY`);
+  if (!r?.foods?.length) return '';
+  const f = r.foods[0];
+  const nutrients = (f.foodNutrients || []).slice(0, 8).map(n => `${n.nutrientName}: ${n.value}${n.unitName}`).join(', ');
+  return `\n[NUTRITION - ${food}] ${f.description}: ${nutrients}`;
+}
+
+// 6. ClinicalTrials.gov — active trials for conditions
+async function clinicalTrials(condition) {
+  if (!condition) return '';
+  const r = await fetchJSON(`https://clinicaltrials.gov/api/v2/studies?query.cond=${encodeURIComponent(condition)}&pageSize=3&sort=LastUpdatePostDate:desc&format=json`);
+  if (!r?.studies?.length) return '';
+  let data = `\n[CLINICAL TRIALS - ${condition}]`;
+  for (const s of r.studies.slice(0, 3)) {
+    const title = s.protocolSection?.identificationModule?.briefTitle || '';
+    const status = s.protocolSection?.statusModule?.overallStatus || '';
+    data += `\n  - ${title.substring(0, 120)} (${status})`;
+  }
+  return data;
+}
+
+// 7. Open Meteo — weather for wellness recommendations
+async function getWeather(city) {
+  const coords = {
+    'new orleans': {lat:29.95,lon:-90.07}, 'houston': {lat:29.76,lon:-95.37},
+    'atlanta': {lat:33.75,lon:-84.39}, 'los angeles': {lat:34.05,lon:-118.24},
+    'miami': {lat:25.76,lon:-80.19}, 'chicago': {lat:41.88,lon:-87.63},
+    'denver': {lat:39.74,lon:-104.99}, 'seattle': {lat:47.61,lon:-122.33},
+    'new york': {lat:40.71,lon:-74.01}, 'austin': {lat:30.27,lon:-97.74}
+  };
+  const c = coords[(city||'new orleans').toLowerCase()];
+  if (!c) return '';
+  const r = await fetchJSON(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,relative_humidity_2m,uv_index&temperature_unit=fahrenheit`);
+  if (!r?.current) return '';
+  return `\n[WEATHER - ${city}] ${r.current.temperature_2m}°F, Humidity: ${r.current.relative_humidity_2m}%, UV Index: ${r.current.uv_index}`;
+}
+
+// ═══ INTENT DETECTION — what data does this question need? ═══
+function detectIntent(msg) {
+  const m = msg.toLowerCase();
+  const intents = { drugs: [], supplements: [], conditions: [], foods: [], needsResearch: false, needsWeather: false };
+
+  // Drugs
+  const drugList = ['lexapro','escitalopram','zoloft','sertraline','prozac','fluoxetine','wellbutrin','bupropion','xanax','alprazolam','adderall','amphetamine','ambien','zolpidem','gabapentin','lisinopril','metformin','atorvastatin','omeprazole','levothyroxine','amlodipine','metoprolol','losartan','hydrochlorothiazide','warfarin','clopidogrel','prednisone','tramadol','oxycodone','suboxone','naltrexone','lithium','lamotrigine','quetiapine','aripiprazole','clonazepam','lorazepam','buspirone','trazodone','mirtazapine','venlafaxine','duloxetine','cymbalta','effexor','celexa','paxil','hydroxyzine','propranolol','ozempic','wegovy','mounjaro','semaglutide','tirzepatide'];
+  for (const d of drugList) if (m.includes(d)) intents.drugs.push(d);
+
+  // Supplements
+  const suppList = ['magnesium','ashwagandha','melatonin','vitamin d','vitamin c','vitamin b','omega-3','fish oil','zinc','iron','turmeric','curcumin','l-theanine','theanine','cbd','gaba','valerian','5-htp','sam-e','st john','rhodiola','lion\'s mane','lions mane','creatine','probiotics','collagen','coq10','berberine','nac','glutathione','milk thistle'];
+  for (const s of suppList) if (m.includes(s)) intents.supplements.push(s);
+
+  // Conditions
+  const condList = ['anxiety','depression','insomnia','sleep','pain','chronic pain','adhd','ptsd','bipolar','ocd','diabetes','hypertension','high blood pressure','obesity','migraine','arthritis','fibromyalgia','ibs','crohn','cancer','addiction','alcoholism'];
+  for (const c of condList) if (m.includes(c)) intents.conditions.push(c);
+
+  // Foods
+  const foodList = ['salmon','spinach','blueberries','avocado','quinoa','kale','turmeric','ginger','green tea','dark chocolate','almonds','walnuts','sweet potato','broccoli','eggs','yogurt','oats'];
+  for (const f of foodList) if (m.includes(f)) intents.foods.push(f);
+
+  // Research trigger
+  if (m.includes('research') || m.includes('studies') || m.includes('evidence') || m.includes('clinical') || m.includes('science')) intents.needsResearch = true;
+
+  // Weather trigger
+  if (m.includes('outside') || m.includes('weather') || m.includes('walk') || m.includes('exercise outdoor') || m.includes('uv') || m.includes('sun')) intents.needsWeather = true;
+
+  return intents;
+}
+
+// ═══ MASTER ENRICHMENT — fires all relevant APIs in parallel ═══
+async function enrichWithData(msg, mode) {
+  const intents = detectIntent(msg);
+  const promises = [];
+
+  // Fire drug lookups
+  for (const drug of intents.drugs.slice(0, 2)) {
+    promises.push(fdaDrugLookup(drug));
+    promises.push(dailyMedLookup(drug));
+  }
+
+  // Fire drug interactions (if 2+ drugs/supplements mentioned)
+  const allSubstances = [...intents.drugs, ...intents.supplements];
+  if (allSubstances.length >= 2) {
+    promises.push(rxNormInteraction(allSubstances[0], allSubstances[1]));
+  }
+
+  // Fire condition research
+  for (const cond of intents.conditions.slice(0, 2)) {
+    promises.push(clinicalTrials(cond));
+    if (intents.needsResearch) promises.push(pubmedSearch(cond + ' treatment'));
+  }
+
+  // Fire supplement research if in vessel/protocols mode
+  if (['vessel','protocols','general','cannaiq'].includes(mode)) {
+    for (const supp of intents.supplements.slice(0, 2)) {
+      promises.push(pubmedSearch(supp + ' clinical trial'));
+    }
+  }
+
+  // Fire nutrition lookup
+  for (const food of intents.foods.slice(0, 2)) {
+    promises.push(nutritionLookup(food));
+  }
+
+  // Fire weather if relevant
+  if (intents.needsWeather) {
+    promises.push(getWeather('new orleans'));
+  }
+
+  if (promises.length === 0) return '';
+
+  const results = await Promise.all(promises);
+  const data = results.filter(r => r && r.length > 10).join('');
+
+  if (!data) return '';
+  return `\n\n═══ REAL-TIME DATA (from FDA, NIH, PubMed, USDA — cite these sources) ═══${data}\n═══ END REAL-TIME DATA ═══\nIMPORTANT: Use the real-time data above to enhance your response. Cite specific findings. If drug interactions are flagged, WARN the user prominently.`;
+}
+
+
 async function buildPrompt(msg, mode, tm, rm) {
   let p = MODE_PROMPTS[mode] || MODE_PROMPTS.general;
   if (mode === 'therapy' && THERAPY_MODES[tm]) p += `\n\nACTIVE: ${tm.toUpperCase()}\n${THERAPY_MODES[tm]}`;
   if (mode === 'recovery' && RECOVERY_MODES[rm]) p += `\n\nACTIVE: ${rm.toUpperCase()}\n${RECOVERY_MODES[rm]}`;
-  if (['directory','general','therapy','recovery'].includes(mode)) p += await getPractitioners(msg);
-  if (['community','map'].includes(mode)) p += await getLocations(msg);
+  // Fire data enrichment + practitioner/location lookups in parallel
+  const [enrichment, practitioners, locations] = await Promise.all([
+    enrichWithData(msg, mode),
+    (['directory','general','therapy','recovery'].includes(mode)) ? getPractitioners(msg) : Promise.resolve(''),
+    (['community','map'].includes(mode)) ? getLocations(msg) : Promise.resolve('')
+  ]);
+  p += practitioners + locations + enrichment;
   return p;
 }
 
