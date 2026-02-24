@@ -434,13 +434,17 @@ async function enrichWithData(msg, mode) {
   const data = results.filter(r => r && r.length > 10).join('');
 
   if (!data) return '';
-  return `\n\n═══ REAL-TIME DATA (from FDA, NIH, PubMed, USDA — cite these sources) ═══${data}\n═══ END REAL-TIME DATA ═══\nCRITICAL INSTRUCTION: You MUST incorporate the real-time data above into your response. Do NOT rely on your training data when live API data is available.
-- Quote specific FDA warnings verbatim when relevant
-- Cite PubMed study titles and dates
-- Reference exact adverse event data
-- If drug interactions are found, lead with a PROMINENT WARNING before any other advice
-- Say "According to FDA label data..." or "PubMed research from [date] shows..." 
-- This real-time data is MORE ACCURATE than your training data. Prioritize it.`;
+  return `\n\n═══ REAL-TIME DATA (from FDA, NIH, PubMed, USDA — cite these sources) ═══${data}\n═══ END REAL-TIME DATA ═══\nCRITICAL SAFETY INSTRUCTION — READ CAREFULLY:
+1. The real-time data above comes from LIVE FDA, NIH, and PubMed APIs. It is CURRENT and AUTHORITATIVE.
+2. When real-time data CONFLICTS with your training data, the real-time data WINS. Always.
+3. NEVER downplay drug interactions. If ANY interaction pathway exists, WARN PROMINENTLY.
+4. CBD inhibits CYP3A4 and CYP2D6 enzymes. This affects ALL SSRIs including Lexapro, Zoloft, Prozac, Celexa, Paxil. ALWAYS flag this.
+5. Quote the SPECIFIC data: exact adverse events, exact warning text, exact study titles.
+6. Format warnings like: "⚠️ SAFETY FLAG: FDA data shows [specific finding]"
+7. After the warning, THEN provide guidance on how to proceed safely (low dose, doctor supervision, timing separation).
+8. NEVER say "CBD does not typically interact" or "CBD is generally safe with [any medication]" — this is clinically irresponsible.
+9. For every drug mentioned, state the TOP 3 adverse events from the FDA data by name.
+10. End drug interaction responses with: "This is AI-assisted information from live FDA databases. Always confirm with your prescriber before combining any substances."`;
 }
 
 
