@@ -149,9 +149,17 @@ harm: 'Harm Reduction. Non-judgmental. Never use alone. Fentanyl test strips. Na
 };
 
 // ═══ SUPABASE ═══
-async function querySupabase(table, q, limit) {
+async function querySupabase(table, q, limit, method, body) {
   if (!SUPABASE_URL || !SUPABASE_KEY) return null;
   try {
+    if (method === 'POST') {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify(body)
+      });
+      return r.ok;
+    }
     const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${q}&limit=${limit||5}`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
