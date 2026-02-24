@@ -874,6 +874,7 @@ function setMode(tab,mode,el){
 }
 
 function ask(tab,msg){go(tab);const input=document.getElementById('in-'+tab);if(input){input.value=msg;setTimeout(()=>send(tab),150)}}
+function goAsk(tab,msg){go(tab);const input=document.getElementById('in-'+tab);if(input){input.value=msg;setTimeout(()=>send(tab),200)}}
 
 function fmt(t){
   t=t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
@@ -930,6 +931,16 @@ loadStats()
 // Scroll reveals
 const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.1})
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))
+
+window.addEventListener('DOMContentLoaded',function(){
+  var box=document.getElementById('chat-home');
+  if(box){
+    var g=document.createElement('div');
+    g.className='msg ai';
+    g.innerHTML="<strong style='color:#d4af37'>Hey, I'm Alvai.</strong> Welcome to BLEU — your longevity operating system.<br><br>I'm here whenever you need me. Whether it's finding a therapist, building a supplement stack, managing pain, navigating cannabis, or just figuring out where to start — <strong style='color:#4ecdc4'>tell me what's going on.</strong><br><br>Type below or tap any card. Let's get you somewhere real.";
+    box.appendChild(g);
+  }
+});
 </script>
 </body>
 </html>
