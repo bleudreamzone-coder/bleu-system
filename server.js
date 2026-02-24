@@ -597,6 +597,21 @@ const server = http.createServer((req, res) => {
     })(); });
     return;
   }
+  // ═══ DEBUG: Test data enrichment ═══
+  if (pn === '/api/debug/enrich' && req.method === 'GET') {
+    const msg = url.searchParams.get('q') || 'I take lexapro and want to try CBD';
+    const mode = url.searchParams.get('mode') || 'general';
+    (async () => {
+      try {
+        const intents = detectIntent(msg);
+        const t0 = Date.now();
+        const data = await enrichWithData(msg, mode);
+        const ms = Date.now() - t0;
+        json(res, 200, { intents, enrichment_length: data.length, time_ms: ms, preview: data.substring(0, 1000) || 'NO DATA RETURNED' });
+      } catch(e) { json(res, 500, { error: e.message, stack: e.stack?.substring(0, 300) }); }
+    })();
+    return;
+  }
   if (pn === '/api/stats') return json(res, 200, { version:'4.0', modes: Object.keys(MODE_PROMPTS).length, therapy: Object.keys(THERAPY_MODES).length, recovery: Object.keys(RECOVERY_MODES).length });
 
   if (pn === '/' || pn === '/index.html') { fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,{'Content-Type':'text/html'});res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,{'Content-Type':'text/html'});res.end(d);} }); return; }
