@@ -434,7 +434,13 @@ async function enrichWithData(msg, mode) {
   const data = results.filter(r => r && r.length > 10).join('');
 
   if (!data) return '';
-  return `\n\n═══ REAL-TIME DATA (from FDA, NIH, PubMed, USDA — cite these sources) ═══${data}\n═══ END REAL-TIME DATA ═══\nIMPORTANT: Use the real-time data above to enhance your response. Cite specific findings. If drug interactions are flagged, WARN the user prominently.`;
+  return `\n\n═══ REAL-TIME DATA (from FDA, NIH, PubMed, USDA — cite these sources) ═══${data}\n═══ END REAL-TIME DATA ═══\nCRITICAL INSTRUCTION: You MUST incorporate the real-time data above into your response. Do NOT rely on your training data when live API data is available.
+- Quote specific FDA warnings verbatim when relevant
+- Cite PubMed study titles and dates
+- Reference exact adverse event data
+- If drug interactions are found, lead with a PROMINENT WARNING before any other advice
+- Say "According to FDA label data..." or "PubMed research from [date] shows..." 
+- This real-time data is MORE ACCURATE than your training data. Prioritize it.`;
 }
 
 
