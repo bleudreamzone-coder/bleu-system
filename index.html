@@ -900,10 +900,10 @@ async function send(tab){
   if(!input||!box)return
   const msg=input.value.trim();if(!msg)return;input.value=''
   const uDiv=document.createElement('div');uDiv.className='msg user';uDiv.textContent=msg;box.appendChild(uDiv)
-  chatHistories[tab].push({role:'user',content:msg})
+  if(!chatHistories[tab])chatHistories[tab]=[];chatHistories[tab].push({role:'user',content:msg})
   const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
   box.scrollTop=box.scrollHeight
-  const body={message:msg,history:chatHistories[tab].slice(-20),mode:['therapy','recovery','finance','cannaiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general'}
+  const body={message:msg,history:chatHistories[tab].slice(-20),mode:tab==='home'?'alvai':['therapy','recovery','finance','cannaiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general'}
   if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
   if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
   try{
