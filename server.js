@@ -103,14 +103,14 @@ function extractCity(msg) {
 async function getPractitioners(msg) {
   const { city, spec } = extractCity(msg);
   if (!city && !spec) return '';
-  let q = 'select=full_name,taxonomy_description,city,state,phone,address_1,postal_code';
+  let q = 'select=full_name,taxonomy_description,city,state,phone,address_line1,zip';
   if (city) q += `&city=ilike.*${encodeURIComponent(city)}*`;
   if (spec) q += `&taxonomy_description=ilike.*${encodeURIComponent(spec)}*`;
   q += '&order=trust_score.desc.nullslast';
   const r = await querySupabase('practitioners', q, 5);
   if (!r?.length) return '';
   let out = '\n\n[PRACTITIONER DATA FROM BLEU DATABASE]\n';
-  r.forEach((p,i) => { out += `\n${i+1}. ${p.full_name||'Unknown'} — ${p.taxonomy_description||'Practitioner'}\n   Address: ${p.address_1||'N/A'}, ${p.city||''}, ${p.state||''} ${p.postal_code||''}\n   Phone: ${p.phone||'N/A'}\n`; });
+  r.forEach((p,i) => { out += `\n${i+1}. ${p.full_name||'Unknown'} — ${p.taxonomy_description||'Practitioner'}\n   Address: ${p.address_line1||'N/A'}, ${p.city||''}, ${p.state||''} ${p.zip||''}\n   Phone: ${p.phone||'N/A'}\n`; });
   return out;
 }
 
@@ -224,7 +224,7 @@ const server = http.createServer((req, res) => {
 
   if (pn === '/api/practitioners' && req.method === 'GET') {
     (async () => { try {
-      let q = 'select=full_name,taxonomy_description,city,state,phone,address_1,postal_code,trust_score';
+      let q = 'select=full_name,taxonomy_description,city,state,phone,address_line1,zip,trust_score';
       const c=url.searchParams.get('city'), s=url.searchParams.get('state'), sp=url.searchParams.get('specialty');
       if (c) q += `&city=ilike.*${encodeURIComponent(c)}*`;
       if (s) q += `&state=eq.${encodeURIComponent(s.toUpperCase())}`;
