@@ -31,7 +31,7 @@ VOICE RULES:
 - Never say "I recommend consulting a professional" without ALSO giving substantive help
 - CRITICAL DATA RULE: ONLY present practitioner names, phone numbers, and addresses that appear in [PRACTITIONER DATA] sections injected by the server. If NO practitioner data is provided, say 'I do not have matching practitioners in our verified database yet. Here are trusted search tools: psychologytoday.com, findtreatment.gov (SAMHSA), nami.org.' NEVER FABRICATE contact information.
 - When recommending supplements or products, include purchase guidance. Say: 'You can find this on Amazon (search: [exact product name]) or iHerb for competitive pricing.'
-- After helpful responses in any mode, end with: 'Found this helpful? Share BLEU.live with someone who needs it.'
+- After helpful responses in any mode, end with: 'Found this helpful? Share BLEU.live with someone who needs it.\n\nAFFILIATE RESOURCES (weave naturally when relevant — never push, always serve):\n- Supplements: Amazon (amazon.com/?tag=bleulive-20), iHerb, Thorne (thorne.com)\n- CBD: Charlotte's Web (charlottesweb.com), Extract Labs (extractlabs.com)\n- Therapy: BetterHelp (betterhelp.com/bleu)\n- Fitness: ClassPass (classpass.com)\n- Sleep: Oura Ring (ouraring.com)\n- Rx Savings: GoodRx (goodrx.com), Cost Plus Drugs (costplusdrugs.com)\n- Dispensaries: Eaze (eaze.com), Leafly (leafly.com/dispensaries), Dutchie (dutchie.com)\nWhen recommending products give SPECIFIC details: exact product, dose, form, price, link.'
 - Vary your sentence structure. Avoid formulaic patterns.
 - Core phrases: "Wellness is not what you do. It's where you are." / "You are not broken. You are running outdated predictions." / "Every symptom is a solution that worked once."
 
@@ -93,7 +93,7 @@ async function querySupabase(table, q, limit) {
 function extractCity(msg) {
   const l = msg.toLowerCase();
   const cities = ['new orleans','metairie','kenner','slidell','mandeville','covington','gretna','marrero','harvey','chalmette','laplace','hammond','houma','thibodaux','houston','austin','dallas','atlanta','miami','chicago','los angeles','new york','san francisco','seattle','denver','phoenix','portland','nashville','baton rouge','san antonio','tampa','charlotte','memphis'];
-  const specs = {therapist:'psycholog',psychologist:'psycholog',psychiatrist:'psychiatr',counselor:'counsel',anxiety:'psycholog',depression:'psycholog',addiction:'substance',acupuncture:'acupunctur',chiropractor:'chiropract',nutritionist:'nutrition',massage:'massage',sleep:'sleep',insomnia:'sleep',pain:'pain',chronic:'pain',emdr:'psycholog',trauma:'psycholog',ptsd:'psycholog',adhd:'psycholog',bipolar:'psychiatr',ocd:'psycholog',eating:'psycholog',grief:'counsel',stress:'psycholog',yoga:'yoga',physical:'physical therap',rehab:'rehabilit',dermatolog:'dermatolog',cardiol:'cardiol',neurol:'neurol',orthoped:'orthoped',pediatr:'pediatr',obgyn:'obstetric',dentist:'dentist',optometri:'optometr',podiatr:'podiatr',physician:'physician',family:'family',internal:'internal',nurse:'nurse',social:'social work',marriage:'marriage',substance:'substance',occupational:'occupational',speech:'speech',dietitian:'diet',pharmacist:'pharmac',midwife:'midwife',doula:'doula'};
+  const specs = {therapist:'psycholog',psychologist:'psycholog',psychiatrist:'psychiatr',counselor:'counsel',anxiety:'psycholog',depression:'psycholog',addiction:'substance',acupuncture:'acupunctur',chiropractor:'chiropract',nutritionist:'nutrition',massage:'massage',sleep:'sleep',insomnia:'sleep',pain:'pain',chronic:'pain',emdr:'psycholog',trauma:'psycholog',ptsd:'psycholog',adhd:'psycholog',bipolar:'psychiatr',ocd:'psycholog',eating:'psycholog',grief:'counsel',stress:'psycholog',yoga:'yoga',physical:'physical therap',rehab:'rehabilit',dermatolog:'dermatolog',cardiol:'cardiol',neurol:'neurol',orthoped:'orthoped',pediatr:'pediatr',obgyn:'obstetric',dentist:'dentist',optometri:'optometr',podiatr:'podiatr',physician:'physician',family:'family',internal:'internal',nurse:'nurse',social:'social work',marriage:'marriage',substance:'substance',occupational:'occupational',speech:'speech',dietitian:'diet',pharmacist:'pharmac',midwife:'midwife',doula:'doula',doctor:'',wellness:'',health:'',specialist:'',provider:''};
   let city = null, spec = null;
   for (const c of cities) if (l.includes(c)) { city = c; break; }
   for (const [k,v] of Object.entries(specs)) if (l.includes(k)) { spec = v; break; }
@@ -107,7 +107,7 @@ async function getPractitioners(msg) {
   if (city) q += `&city=ilike.*${encodeURIComponent(city)}*`;
   if (spec) q += `&taxonomy_description=ilike.*${encodeURIComponent(spec)}*`;
   q += '&order=trust_score.desc.nullslast';
-  const r = await querySupabase('practitioners', q, 5);
+  const r = await querySupabase('practitioners', q, 8);
   if (!r?.length) return '';
   let out = '\n\n[PRACTITIONER DATA FROM BLEU DATABASE]\n';
   r.forEach((p,i) => { out += `\n${i+1}. ${p.full_name||'Unknown'} — ${p.taxonomy_description||'Practitioner'}\n   Address: ${p.address_line1||'N/A'}, ${p.city||''}, ${p.state||''} ${p.zip||''}\n   Phone: ${p.phone||'N/A'}\n`; });
@@ -133,7 +133,7 @@ function pickModel(msg, mode) {
   const l = msg.toLowerCase();
   if (l.length > 100) return 'gpt-4o';
   for (const t of DEEP_TRIGGERS) if (l.includes(t)) return 'gpt-4o';
-  return 'gpt-4o-mini';
+  return 'gpt-4o';
 }
 
 async function buildPrompt(msg, mode, tm, rm) {
@@ -153,7 +153,7 @@ async function callAI(msg, hist, mode, tm, rm) {
   messages.push({ role: 'user', content: msg });
   const r = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model, messages, max_tokens: model === 'gpt-4o' ? 1200 : 800, temperature: 0.7 })
+    body: JSON.stringify({ model, messages, max_tokens: model === 'gpt-4o' ? 2500 : 1500, temperature: 0.7 })
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
@@ -197,7 +197,7 @@ const server = http.createServer((req, res) => {
         msgs.push({ role: 'user', content: p.message });
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model, messages: msgs, max_tokens: model==='gpt-4o'?1200:800, temperature: 0.7, stream: true })
+          body: JSON.stringify({ model, messages: msgs, max_tokens: model==='gpt-4o'?2500:1500, temperature: 0.7, stream: true })
         });
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '';
