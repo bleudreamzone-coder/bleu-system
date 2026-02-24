@@ -185,10 +185,10 @@ function extractCity(msg) {
 async function getPractitioners(msg) {
   const { city, spec } = extractCity(msg);
   if (!city && !spec) return '';
-  let q = 'select=full_name,taxonomy_description,city,state,phone,address_line1,zip';
-  if (city) q += `&city=ilike.*${encodeURIComponent(city)}*`;
-  if (spec) q += `&taxonomy_description=ilike.*${encodeURIComponent(spec)}*`;
-  q += '&order=trust_score.desc.nullslast';
+  let q = 'select=full_name,specialty,state,phone,address_line1,zip,practice_name';
+  if (city) q += `&address_line1=ilike.*${encodeURIComponent(city)}*`;
+  if (spec) q += `&specialty=ilike.*${encodeURIComponent(spec)}*`;
+  q += '&order=full_name.asc';
   let r = await querySupabase('practitioners', q, 8);
   const broadenMap = {chiropract:['physical therap','pain','orthoped'],orthoped:['physical therap','chiropract','pain'],neurol:['pain','psycholog'],podiatr:['orthoped']};
   if (r && r.length < 4 && spec && broadenMap[spec]) {
@@ -202,14 +202,14 @@ async function getPractitioners(msg) {
   }
   if (!r?.length) return '';
   let out = '\n\n[PRACTITIONER DATA FROM BLEU DATABASE]\n';
-  r.forEach((p,i) => { out += `\n${i+1}. ${p.full_name||'Unknown'} — ${p.taxonomy_description||'Practitioner'}\n   Address: ${p.address_line1||'N/A'}, ${p.city||''}, ${p.state||''} ${p.zip||''}\n   Phone: ${p.phone||'N/A'}\n`; });
+  r.forEach((p,i) => { out += `\n${i+1}. ${p.full_name||'Unknown'} — ${p.specialty||'Practitioner'}\n   Address: ${p.address_line1||'N/A'}, ${p.city||''}, ${p.state||''} ${p.zip||''}\n   Phone: ${p.phone||'N/A'}\n`; });
   return out;
 }
 
 async function getLocations(msg) {
   const { city } = extractCity(msg);
   if (!city) return '';
-  const r = await querySupabase('locations', `select=name,address,city,state,phone,website,type&city=ilike.*${encodeURIComponent(city)}*`, 5);
+  const r = await querySupabase('locations', `select=name,address,city,state,phone,website,type&address_line1=ilike.*${encodeURIComponent(city)}*`, 5);
   if (!r?.length) return '';
   let out = '\n\n[LOCATION DATA FROM BLEU DATABASE]\n';
   r.forEach((l,i) => { out += `\n${i+1}. ${l.name||'Unknown'} (${l.type||'Resource'})\n   Address: ${l.address||'N/A'}, ${l.city||''}, ${l.state||''}\n   Phone: ${l.phone||'N/A'}\n   Web: ${l.website||'N/A'}\n`; });
@@ -541,12 +541,12 @@ const server = http.createServer((req, res) => {
 
   if (pn === '/api/practitioners' && req.method === 'GET') {
     (async () => { try {
-      let q = 'select=full_name,taxonomy_description,city,state,phone,address_line1,zip,trust_score';
+      let q = 'select=full_name,specialty,state,phone,address_line1,zip,practice_name,trust_score';
       const c=url.searchParams.get('city'), s=url.searchParams.get('state'), sp=url.searchParams.get('specialty');
-      if (c) q += `&city=ilike.*${encodeURIComponent(c)}*`;
+      if (c) q += `&address_line1=ilike.*${encodeURIComponent(c)}*`;
       if (s) q += `&state=eq.${encodeURIComponent(s.toUpperCase())}`;
-      if (sp) q += `&taxonomy_description=ilike.*${encodeURIComponent(sp)}*`;
-      q += '&order=trust_score.desc.nullslast';
+      if (sp) q += `&specialty=ilike.*${encodeURIComponent(sp)}*`;
+      q += '&order=full_name.asc';
       const r = await querySupabase('practitioners', q, 10);
       json(res, 200, { count: r?.length||0, practitioners: r||[] });
     } catch (e) { json(res, 500, { error: e.message }); } })();
