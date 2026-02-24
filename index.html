@@ -790,7 +790,7 @@ async function send(tab){
   chatHistories[tab].push({role:'user',content:msg})
   const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
   box.scrollTop=box.scrollHeight
-  const body={message:msg,history:chatHistories[tab].slice(-20),mode:['therapy','recovery','finance','cannaiq'].includes(tab)?tab:'general'}
+  const body={message:msg,history:chatHistories[tab].slice(-20),mode:['therapy','recovery','finance','cannaiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general'}
   if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
   if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
   try{
