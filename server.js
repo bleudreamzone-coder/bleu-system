@@ -115,7 +115,12 @@ function extractCity(msg) {
   const specs = {therapist:'psycholog',psychologist:'psycholog',psychiatrist:'psychiatr',counselor:'counsel',anxiety:'psycholog',depression:'psycholog',addiction:'substance',acupuncture:'acupunctur',chiropractor:'chiropract',nutritionist:'nutrition',massage:'massage',sleep:'sleep',insomnia:'sleep',pain:'pain',chronic:'pain',emdr:'psycholog',trauma:'psycholog',ptsd:'psycholog',adhd:'psycholog',bipolar:'psychiatr',ocd:'psycholog',eating:'psycholog',grief:'counsel',stress:'psycholog',yoga:'yoga',physical:'physical therap',rehab:'rehabilit',dermatolog:'dermatolog',cardiol:'cardiol',neurol:'neurol',orthoped:'orthoped',pediatr:'pediatr',obgyn:'obstetric',dentist:'dentist',optometri:'optometr',podiatr:'podiatr',physician:'physician',family:'family',internal:'internal',nurse:'nurse',social:'social work',marriage:'marriage',substance:'substance',occupational:'occupational',speech:'speech',dietitian:'diet',pharmacist:'pharmac',midwife:'midwife',doula:'doula',doctor:'',wellness:'',health:'',specialist:'',provider:'',back:'chiropract',spine:'chiropract',neck:'chiropract',joint:'orthoped',knee:'orthoped',hip:'orthoped',shoulder:'orthoped',headache:'neurol',migraine:'neurol',skin:'dermatolog',acne:'dermatolog',heart:'cardiol',blood:'internal',diabetes:'internal',thyroid:'internal',hormone:'internal',pregnant:'obstetric',fertility:'obstetric',child:'pediatr',baby:'pediatr',teeth:'dentist',eye:'optometr',foot:'podiatr',weight:'nutrition',diet:'nutrition',depressed:'psycholog',panic:'psycholog',sober:'substance',alcohol:'substance',opioid:'substance',drug:'substance'};
   let city = null, spec = null;
   for (const c of cities) if (l.includes(c)) { city = c; break; }
-  for (const [k,v] of Object.entries(specs)) if (l.includes(k)) { spec = v; break; }
+  let specMatches = [];
+  for (const [k,v] of Object.entries(specs)) if (l.includes(k)) specMatches.push({k,v});
+  if (specMatches.length) {
+    const specific = specMatches.find(s => s.v.length > 0);
+    spec = specific ? specific.v : specMatches[0].v;
+  }
   return { city, spec };
 }
 
