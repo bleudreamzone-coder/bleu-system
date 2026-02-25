@@ -592,6 +592,10 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   <div id="auth-screen" style="text-align:center;padding:20px">
     <div style="font-family:Georgia;font-size:2rem;color:#4ecdc4;margin-bottom:4px">BLEU</div>
     <div style="color:#d4af37;font-size:0.85rem;margin-bottom:24px;font-style:italic">Your Wellness Passport</div>
+    <div style="background:linear-gradient(135deg,rgba(25,50,68,0.8),rgba(40,60,80,0.8));border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:20px;margin:16px 0;text-align:left">
+      <div style="font-family:Georgia;font-size:1.1rem;color:#e8d5b0;margin-bottom:8px">Your wellness journey, remembered.</div>
+      <div style="font-size:0.85rem;color:#8fa4b0;line-height:1.6">Create a free Passport to save your conversations with Alvai, track your wellness progress, access your session history, and set personal goals. Your data stays private — always.</div>
+    </div>
     <div id="auth-signup" style="max-width:320px;margin:0 auto">
       <input type="text" id="auth-name" placeholder="Your name" style="width:100%;padding:12px;margin-bottom:8px;border:1px solid rgba(78,205,196,0.2);border-radius:10px;background:rgba(25,50,68,0.6);color:#e8d5b0;font-size:0.95rem;outline:none;box-sizing:border-box">
       <input type="email" id="auth-email" placeholder="Email address" style="width:100%;padding:12px;margin-bottom:8px;border:1px solid rgba(78,205,196,0.2);border-radius:10px;background:rgba(25,50,68,0.6);color:#e8d5b0;font-size:0.95rem;outline:none;box-sizing:border-box">
@@ -610,7 +614,9 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <div id="auth-msg" style="color:#4ecdc4;font-size:0.8rem;margin:8px 0;display:none"></div>
     <p id="toggle-to-signin" onclick="toggleAuth()" style="color:#4ecdc4;cursor:pointer;font-size:0.85rem;margin-top:12px">Already have an account? <strong>Sign in</strong></p>
     <p id="toggle-to-signup" onclick="toggleAuth()" style="color:#4ecdc4;cursor:pointer;font-size:0.85rem;margin-top:12px;display:none">Need an account? <strong>Create one</strong></p>
-    <div style="margin-top:30px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06)"><p style="font-size:0.75rem;color:#8fa4b0;margin-bottom:6px">By creating an account you agree to our</p><a href="/terms.html" style="color:#8fa4b0;font-size:0.75rem">Terms</a> · <a href="/privacy.html" style="color:#8fa4b0;font-size:0.75rem">Privacy</a></div>
+    <div style="margin-top:30px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06)"><p style="font-size:0.75rem;color:#8fa4b0;margin-bottom:6px"><button onclick="go('alvai')" style="width:100%;max-width:320px;padding:12px;background:transparent;color:#8fa4b0;border:1px solid rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;font-size:0.85rem;margin:0 auto 16px;display:block">Continue without an account →</button>
+    <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-bottom:16px">You can always create a Passport later</div>
+    By creating an account you agree to our</p><a href="/terms.html" style="color:#8fa4b0;font-size:0.75rem">Terms</a> · <a href="/privacy.html" style="color:#8fa4b0;font-size:0.75rem">Privacy</a></div>
   </div>
   <div id="profile-screen" style="display:none">
     <div style="background:linear-gradient(135deg,rgba(25,50,68,0.8),rgba(40,60,80,0.8));border:1px solid rgba(78,205,196,0.15);border-radius:14px;padding:20px;margin-bottom:16px"><div style="font-family:Georgia;font-size:1.3rem;color:#e8d5b0">Welcome back, <span id="prof-name">—</span></div><span id="prof-tier" style="display:inline-block;background:#d4af37;color:#0a1628;padding:2px 10px;border-radius:16px;font-size:0.7rem;font-weight:700;text-transform:uppercase;margin-top:6px">Community</span></div>
