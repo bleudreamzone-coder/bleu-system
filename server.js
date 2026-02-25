@@ -458,7 +458,7 @@ async function buildPrompt(msg, mode, tm, rm) {
   // Fire data enrichment + practitioner/location lookups in parallel
   const [enrichment, practitioners, locations] = await Promise.all([
     enrichWithData(msg, mode),
-    (['directory','general','therapy','recovery'].includes(mode)) ? getPractitioners(msg) : Promise.resolve(''),
+    (['directory','general','therapy','recovery','alvai'].includes(mode)) ? getPractitioners(msg) : Promise.resolve(''),
     (['community','map'].includes(mode)) ? getLocations(msg) : Promise.resolve('')
   ]);
   p += practitioners + locations + enrichment;
