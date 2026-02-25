@@ -219,7 +219,7 @@ async function getPractitioners(msg) {
     r = r.slice(0, 8);
   }
   if (!r?.length) return '';
-  let out = '\n\n[PRACTITIONER DATA FROM BLEU DATABASE]\n';
+  let out = '\n\n[PRACTITIONER DATA FROM BLEU DATABASE — SHOW AT LEAST 3 OF THESE TO THE USER WITH NAME, ADDRESS, AND PHONE. Never show just one.]\n';
   r.forEach((p,i) => { out += `\n${i+1}. ${p.full_name||'Unknown'} — ${p.specialty||'Practitioner'}\n   Address: ${p.address_line1||'N/A'}, ${p.city||''}, ${p.state||''} ${p.zip||''}\n   Phone: ${p.phone||'N/A'}\n`; });
   return out;
 }
