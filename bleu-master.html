@@ -2131,7 +2131,7 @@
           const resp = await fetch(ALVAI_API_URL + '/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: text })
+            body: JSON.stringify({ message: text, mode: 'general' })
           });
           const data = await resp.json();
           responseText = data.response || "Let me look into that for you.";
