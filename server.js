@@ -512,7 +512,7 @@ async function callAI(msg, hist, mode, tm, rm) {
   messages.push({ role: 'user', content: msg });
   const r = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model, messages, max_tokens: model === 'gpt-5' ? 4000 : 2000, temperature: 0.65 })
+    body: JSON.stringify({ model, messages, max_completion_tokens: model === 'gpt-5' ? 4000 : 2000, temperature: 0.65 })
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
@@ -556,7 +556,7 @@ const server = http.createServer((req, res) => {
         msgs.push({ role: 'user', content: p.message });
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model, messages: msgs, max_tokens: model==='gpt-5'?4000:2000, temperature: 0.65, stream: true })
+          body: JSON.stringify({ model, messages: msgs, max_completion_tokens: model==='gpt-5'?4000:2000, temperature: 0.65, stream: true })
         });
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '';
@@ -573,7 +573,7 @@ const server = http.createServer((req, res) => {
     if (!sub) return json(res, 400, { error: 'substances param required' });
     (async () => { try {
       const r = await fetch('https://api.openai.com/v1/chat/completions', { method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'system', content: `Pharmacology safety engine. Analyze: ${sub}\nCheck: CYP450, serotonin syndrome, sedation, UGT, BP.\nJSON: {"substances":[],"risk_level":"LOW|MODERATE|HIGH|CRITICAL","interactions":[{"pair":"","mechanism":"","severity":"","recommendation":""}],"summary":"","disclaimer":"Consult healthcare provider"}` }], max_tokens: 1000, temperature: 0.2 })
+        body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'system', content: `Pharmacology safety engine. Analyze: ${sub}\nCheck: CYP450, serotonin syndrome, sedation, UGT, BP.\nJSON: {"substances":[],"risk_level":"LOW|MODERATE|HIGH|CRITICAL","interactions":[{"pair":"","mechanism":"","severity":"","recommendation":""}],"summary":"","disclaimer":"Consult healthcare provider"}` }], max_completion_tokens: 1000, temperature: 0.2 })
       });
       const d = await r.json(); const t = d.choices[0].message.content;
       try { json(res, 200, JSON.parse(t)); } catch { json(res, 200, { raw: t }); }
