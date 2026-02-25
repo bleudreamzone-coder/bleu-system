@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="description" content="Free AI wellness intelligence. 22 therapeutic modes. 48,000 verified practitioners.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bleu.live">
+<meta property="og:title" content="BLEU — AI Wellness Intelligence That Actually Listens">
+<link rel="canonical" href="https://bleu.live">
+<meta name="theme-color" content="#1A6B5C">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BLEU — The Longevity Operating System</title>
@@ -165,7 +171,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   .stat-row{gap:8px}.stat-box{padding:14px 12px;min-width:0}.stat-box .num{font-size:24px}
   .panel{padding:68px 16px 100px}
 }
-</style>
+.gc{display:inline-block;background:rgba(78,205,196,0.1);color:#4ecdc4;padding:5px 12px;border-radius:16px;font-size:0.8rem;cursor:pointer;border:1px solid transparent;transition:all 0.2s}.gc.active{background:#4ecdc4;color:#0a1628}.gc:hover{border-color:#4ecdc4}\n</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -581,31 +588,39 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
 <!-- ═══════════════════════ PASSPORT ═══════════════════════ -->
 <div class="panel" id="p-passport">
-  <div class="section-label">YOUR LIVING SCORE</div>
-  <h1 class="hero-title">🛂 <span class="accent">Passport</span></h1>
-  <p class="hero-sub">Credit scores changed finance. Your BLEU Score changes wellness. One number built from real data — how you sleep, move, eat, recover, think, and connect. It sees everything. It forgets nothing. It compounds.</p>
-
-  <div class="stat-row">
-    <div class="stat-box" style="border-color:rgba(201,168,76,.25)"><div class="num" style="font-size:40px">—</div><div class="label">Your BLEU Score</div></div>
+  <div class="panel-header"><div class="panel-icon">🛂</div><div><div class="panel-title">Your Passport</div><div class="panel-sub">Login · Profile · History</div></div></div>
+  <div id="auth-screen" style="text-align:center;padding:20px">
+    <div style="font-family:Georgia;font-size:2rem;color:#4ecdc4;margin-bottom:4px">BLEU</div>
+    <div style="color:#d4af37;font-size:0.85rem;margin-bottom:24px;font-style:italic">Your Wellness Passport</div>
+    <div id="auth-signup" style="max-width:320px;margin:0 auto">
+      <input type="text" id="auth-name" placeholder="Your name" style="width:100%;padding:12px;margin-bottom:8px;border:1px solid rgba(78,205,196,0.2);border-radius:10px;background:rgba(25,50,68,0.6);color:#e8d5b0;font-size:0.95rem;outline:none;box-sizing:border-box">
+      <input type="email" id="auth-email" placeholder="Email address" style="width:100%;padding:12px;margin-bottom:8px;border:1px solid rgba(78,205,196,0.2);border-radius:10px;background:rgba(25,50,68,0.6);color:#e8d5b0;font-size:0.95rem;outline:none;box-sizing:border-box">
+      <input type="password" id="auth-pass" placeholder="Password (6+ characters)" style="width:100%;padding:12px;margin-bottom:8px;border:1px solid rgba(78,205,196,0.2);border-radius:10px;background:rgba(25,50,68,0.6);color:#e8d5b0;font-size:0.95rem;outline:none;box-sizing:border-box">
+      <div id="auth-error" style="color:#ff6b6b;font-size:0.8rem;margin:4px 0;display:none"></div>
+      <button onclick="doSignUp()" style="width:100%;padding:12px;background:#4ecdc4;color:#0a1628;border:none;border-radius:10px;font-weight:600;cursor:pointer;margin-bottom:8px;font-size:0.95rem">Create My Passport</button>
+    </div>
+    <div id="auth-signin" style="display:none;max-width:320px;margin:0 auto">
+      <input type="email" id="si-email" placeholder="Email address" style="width:100%;padding:12px;margin-bottom:8px;border:1px solid rgba(78,205,196,0.2);border-radius:10px;background:rgba(25,50,68,0.6);color:#e8d5b0;font-size:0.95rem;outline:none;box-sizing:border-box">
+      <input type="password" id="si-pass" placeholder="Password" style="width:100%;padding:12px;margin-bottom:8px;border:1px solid rgba(78,205,196,0.2);border-radius:10px;background:rgba(25,50,68,0.6);color:#e8d5b0;font-size:0.95rem;outline:none;box-sizing:border-box">
+      <div id="si-error" style="color:#ff6b6b;font-size:0.8rem;margin:4px 0;display:none"></div>
+      <button onclick="doSignIn()" style="width:100%;padding:12px;background:#4ecdc4;color:#0a1628;border:none;border-radius:10px;font-weight:600;cursor:pointer;margin-bottom:8px;font-size:0.95rem">Sign In</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin:16px auto;max-width:320px;color:#8fa4b0;font-size:0.8rem"><div style="flex:1;height:1px;background:rgba(255,255,255,0.1)"></div>or<div style="flex:1;height:1px;background:rgba(255,255,255,0.1)"></div></div>
+    <button onclick="doGoogleAuth()" style="width:100%;max-width:320px;padding:12px;background:rgba(25,50,68,0.6);color:#e8d5b0;border:1px solid rgba(78,205,196,0.2);border-radius:10px;cursor:pointer;font-size:0.9rem;margin:0 auto 8px;display:block">Continue with Google</button>
+    <div id="auth-msg" style="color:#4ecdc4;font-size:0.8rem;margin:8px 0;display:none"></div>
+    <p id="toggle-to-signin" onclick="toggleAuth()" style="color:#4ecdc4;cursor:pointer;font-size:0.85rem;margin-top:12px">Already have an account? <strong>Sign in</strong></p>
+    <p id="toggle-to-signup" onclick="toggleAuth()" style="color:#4ecdc4;cursor:pointer;font-size:0.85rem;margin-top:12px;display:none">Need an account? <strong>Create one</strong></p>
+    <div style="margin-top:30px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06)"><p style="font-size:0.75rem;color:#8fa4b0;margin-bottom:6px">By creating an account you agree to our</p><a href="/terms.html" style="color:#8fa4b0;font-size:0.75rem">Terms</a> · <a href="/privacy.html" style="color:#8fa4b0;font-size:0.75rem">Privacy</a></div>
   </div>
-
-  <div class="section-label" style="margin-top:28px">14 SHIELDS</div>
-  <div class="card-grid">
-    <div class="card"><h3>🏋️ Body Shields</h3><p>Sleep · Nutrition · Movement · Recovery · Safety · Substances</p></div>
-    <div class="card"><h3>🧠 Mind Shields</h3><p>Mindset · Purpose · Learning</p></div>
-    <div class="card"><h3>❤️ Connection Shields</h3><p>Community · Relationships · Environment</p></div>
-    <div class="card"><h3>🏛️ Foundation Shields</h3><p>Mental Health · Financial Wellness</p></div>
+  <div id="profile-screen" style="display:none">
+    <div style="background:linear-gradient(135deg,rgba(25,50,68,0.8),rgba(40,60,80,0.8));border:1px solid rgba(78,205,196,0.15);border-radius:14px;padding:20px;margin-bottom:16px"><div style="font-family:Georgia;font-size:1.3rem;color:#e8d5b0">Welcome back, <span id="prof-name">—</span></div><span id="prof-tier" style="display:inline-block;background:#d4af37;color:#0a1628;padding:2px 10px;border-radius:16px;font-size:0.7rem;font-weight:700;text-transform:uppercase;margin-top:6px">Community</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:14px;text-align:center"><div id="stat-convos" style="font-family:Georgia;font-size:1.5rem;color:#4ecdc4;font-weight:bold">0</div><div style="font-size:0.7rem;color:#8fa4b0">Sessions</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:14px;text-align:center"><div id="stat-streak" style="font-family:Georgia;font-size:1.5rem;color:#d4af37;font-weight:bold">0</div><div style="font-size:0.7rem;color:#8fa4b0">Streak</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:14px;text-align:center"><div id="stat-score" style="font-family:Georgia;font-size:1.5rem;color:#4ecdc4;font-weight:bold">0</div><div style="font-size:0.7rem;color:#8fa4b0">BLEU Score</div></div></div>
+    <div style="margin-bottom:20px"><div style="font-family:Georgia;font-size:1rem;color:#e8d5b0;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.06)">Recent Sessions</div><div id="session-list"><div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Start a conversation with Alvai to see your history here.</div></div></div>
+    <div style="margin-bottom:20px"><div style="font-family:Georgia;font-size:1rem;color:#e8d5b0;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.06)">My Wellness Focus</div><div id="goal-chips" style="display:flex;flex-wrap:wrap;gap:6px"><span class="gc" data-g="sleep" onclick="togGoal(this)">Sleep</span><span class="gc" data-g="anxiety" onclick="togGoal(this)">Anxiety</span><span class="gc" data-g="nutrition" onclick="togGoal(this)">Nutrition</span><span class="gc" data-g="fitness" onclick="togGoal(this)">Fitness</span><span class="gc" data-g="recovery" onclick="togGoal(this)">Recovery</span><span class="gc" data-g="stress" onclick="togGoal(this)">Stress</span><span class="gc" data-g="grief" onclick="togGoal(this)">Grief</span><span class="gc" data-g="relationships" onclick="togGoal(this)">Relationships</span><span class="gc" data-g="cannabis" onclick="togGoal(this)">Cannabis</span><span class="gc" data-g="longevity" onclick="togGoal(this)">Longevity</span></div></div>
+    <div style="margin-bottom:16px"><div style="font-family:Georgia;font-size:1rem;color:#e8d5b0;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.06)">Settings</div><div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><span style="color:#e8d5b0;font-size:0.85rem">Email</span><span id="set-email" style="color:#8fa4b0;font-size:0.8rem">—</span></div><div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><span style="color:#e8d5b0;font-size:0.85rem">Export Data</span><span onclick="exportData()" style="color:#4ecdc4;font-size:0.8rem;cursor:pointer">Download</span></div><div style="display:flex;justify-content:space-between;padding:10px 0"><span style="color:#e8d5b0;font-size:0.85rem">Delete History</span><span onclick="clearHist()" style="color:#ff6b6b;font-size:0.8rem;cursor:pointer">Clear</span></div></div>
+    <button onclick="doSignOut()" style="width:100%;padding:12px;border:1px solid #ff6b6b;background:transparent;color:#ff6b6b;border-radius:10px;font-size:0.85rem;cursor:pointer">Sign Out</button>
+    <div style="text-align:center;margin-top:20px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)"><a href="/terms.html" style="color:#8fa4b0;font-size:0.75rem;margin:0 8px;text-decoration:none">Terms</a> · <a href="/privacy.html" style="color:#8fa4b0;font-size:0.75rem;margin:0 8px;text-decoration:none">Privacy</a><p style="margin-top:6px;font-size:0.7rem;color:rgba(255,255,255,0.2)">BLEU v1.0 · Patent Pending · © 2026</p></div>
   </div>
-
-  <div class="section-label" style="margin-top:24px">EVERYTHING FEEDS YOUR PASSPORT</div>
-  <div class="feature-grid">
-    <div class="feature-item"><div class="feature-icon">⚕️</div><div class="feature-text"><h4>Directory</h4><p>Practitioner visits tracked. Specialties matched to shields.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">💊</div><div class="feature-text"><h4>Vessel</h4><p>Supplements tracked. Stacks mapped to shields.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">📚</div><div class="feature-text"><h4>Learn</h4><p>Knowledge scored. Learning path progress tracked.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">📅</div><div class="feature-text"><h4>Events</h4><p>Attendance earns XP. Community engagement feeds Connection shields.</p></div></div>
-  <div style="margin:16px 0"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:24px;text-align:center;margin-bottom:16px"><div style="color:#d4af37;font-size:10px;letter-spacing:3px;margin-bottom:8px">YOUR LEVEL</div><div style="color:#e8d5b0;font-size:22px;font-weight:300">&#127793; Seedling</div><div style="width:200px;height:4px;background:rgba(212,175,55,0.1);border-radius:2px;margin:12px auto"><div style="width:28%;height:100%;background:linear-gradient(90deg,#d4af37,#4ecdc4);border-radius:2px"></div></div><div style="color:#8fa4b0;font-size:11px;margin-top:6px">280 / 1000 XP to Sprout</div></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('passport','Start my ECS Quiz to discover my endocannabinoid type')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129504;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Take ECS Quiz</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('passport','I want to log my wellness data for today')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128221;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Log wellness</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('missions')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#127919;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Earn XP</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('passport','Show me my complete wellness journey and progress')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128202;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">View journey</div></div></div></div></div>
-
-  <div class="chat-box"><div class="chat-messages" id="chat-passport"></div><div class="chat-input-row"><input id="in-passport" placeholder="Ask about your wellness journey..." onkeydown="if(event.key==='Enter')send('passport')"><button onclick="send('passport')">Ask</button></div></div>
 </div>
 
 <!-- ═══════════════════════ THERAPY ═══════════════════════ -->
