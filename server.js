@@ -512,7 +512,7 @@ async function callAI(msg, hist, mode, tm, rm) {
   messages.push({ role: 'user', content: msg });
   const r = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model, messages, max_completion_tokens: model === 'gpt-5' ? 4000 : 2000, temperature: 0.65 })
+    body: JSON.stringify({ model, messages, max_completion_tokens: model === 'gpt-5' ? 4000 : 2000, temperature: 1 })
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
@@ -556,7 +556,7 @@ const server = http.createServer((req, res) => {
         msgs.push({ role: 'user', content: p.message });
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model, messages: msgs, max_completion_tokens: model==='gpt-5'?4000:2000, temperature: 0.65, stream: true })
+          body: JSON.stringify({ model, messages: msgs, max_completion_tokens: model==='gpt-5'?4000:2000, temperature: 1, stream: true })
         });
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '';
