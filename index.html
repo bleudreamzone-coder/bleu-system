@@ -279,6 +279,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
       <div style="color:#4ecdc4;font-weight:600;font-size:16px;margin-bottom:6px">Recovery Support</div>
       <div style="color:#8fa4b0;font-size:13px;line-height:1.6;font-weight:300">This is sacred ground. 12-step, SMART Recovery, MAT, harm reduction — all valid. Relapse is not failure. Family support included. SAMHSA 1-800-662-4357. You are not alone.</div>
       <div style="margin-top:10px"><span style="font-size:10px;padding:3px 10px;border-radius:12px;background:rgba(78,205,196,0.12);color:#4ecdc4">SAMHSA + AA + SMART + Free</span></div>
+    <div class="card" onclick="go('enterprise')" style="border:1px solid rgba(200,169,81,.3);background:linear-gradient(135deg,rgba(200,169,81,.08),rgba(96,165,250,.05))"><h3 style="color:var(--gold)">🏛️ Built for Cities · Leaders · Business</h3><p>How BLEU measures, quantifies, and forecasts community health. How cities save millions. How businesses cut costs and boost productivity. How [city].bleu.live becomes infrastructure. See the math.</p><div style="margin-top:10px"><span style="font-size:11px;padding:4px 10px;background:rgba(200,169,81,.12);border:1px solid rgba(200,169,81,.2);border-radius:4px;color:var(--gold);font-weight:600">[city].bleu.live + ROI + Forecasting</span></div></div>
+
     </div>
 
   </div>
@@ -517,7 +519,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <p style="margin-top:8px">Ash Wednesday to Day 40. No alcohol. Real food. Movement daily. Sleep protocols. Practitioner check-ins. Tracked in your Passport. 6 pillars. Every supplement tracked. Every practitioner scored.</p>
     <p style="color:var(--gold);font-size:13px;margin-top:10px">Feb 18 — Mar 29, 2026 · New Orleans</p>
     <div style="margin-top:14px"><span class="cta cta-gold" onclick="ask('protocols','Tell me everything about the 40-Day Reset - what do I do each day')" style="font-size:12px;padding:8px 20px">Start the Reset →</span></div>
-    <div class="card" onclick="go('enterprise')" style="border:1px solid rgba(200,169,81,.25);background:linear-gradient(135deg,rgba(200,169,81,.06),rgba(96,165,250,.04))"><h3>🏛️ Built for Cities · Leaders · Business</h3><p>How BLEU deploys as infrastructure — [city].bleu.live, [business].bleu.live, [enterprise].bleu.live. The validation engine. The moat. Starting from our headquarters in New Orleans. See how we quantify what the old systems never could.</p></div>
+    
 
   </div>
 
@@ -1017,178 +1019,162 @@ updateSession();
 
 <!-- ═══════════════════════ ENTERPRISE ═══════════════════════ -->
 <div class="panel" id="p-enterprise">
-  <div class="section-label" style="letter-spacing:5px">THE INFRASTRUCTURE MOAT</div>
-  <h1 style="font-size:32px;line-height:1.2">The Old System Is Broken.<br><span style="color:var(--gold)">BLEU Is the Replacement.</span></h1>
-  <p class="hero" style="font-size:16px;line-height:1.8;max-width:800px">Wellness has been fragmented for decades — scattered directories, unverified claims, no data connecting anything. BLEU doesn't patch the old system. BLEU replaces it with infrastructure. Every city. Every business. Every health system. One operating system. One truth layer. Built from our headquarters in New Orleans, Louisiana — and scaling to every city in America.</p>
+  <div class="section-label" style="letter-spacing:5px">THE LONGEVITY OPERATING SYSTEM — FOR INSTITUTIONS</div>
+  <h1 style="font-size:32px;line-height:1.2">Every dollar spent on wellness<br><span style="color:var(--gold)">returns $3–$6 in savings.</span></h1>
+  <p class="hero" style="font-size:16px;line-height:1.8;max-width:800px">BLEU doesn't just track health — it quantifies it, forecasts it, and turns it into measurable economic outcomes. Cities reduce emergency costs. Businesses cut healthcare spend. Populations get healthier. And every metric is verifiable, because every data point traces back to a federal source. This is the infrastructure layer that was missing. Built from our headquarters in New Orleans. Deploying everywhere.</p>
 
   <div class="divider"></div>
-  <div class="section-label">HOW THE OLD WORLD WORKED vs. HOW BLEU WORKS</div>
-  
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0">
-    <div style="background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.15);border-radius:10px;padding:24px">
-      <div style="font-size:12px;letter-spacing:3px;color:#E74C3C;font-weight:700;margin-bottom:14px">❌ THE OLD SYSTEM</div>
+  <div class="section-label">THE ECONOMICS OF WELLNESS INFRASTRUCTURE</div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0">
+    <div style="text-align:center;padding:28px 20px;background:rgba(45,212,168,.06);border:1px solid rgba(45,212,168,.15);border-radius:10px">
+      <div style="font-size:36px;font-weight:700;color:var(--teal);font-family:Georgia,serif">$3.27</div>
+      <div style="font-size:13px;color:var(--cream);font-weight:600;margin:6px 0">Return per $1 invested</div>
+      <div style="font-size:11px;color:var(--dim);line-height:1.5">Harvard Business Review workplace wellness meta-analysis. Reduced absenteeism, lower insurance claims, higher retention.</div>
+    </div>
+    <div style="text-align:center;padding:28px 20px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.15);border-radius:10px">
+      <div style="font-size:36px;font-weight:700;color:var(--gold);font-family:Georgia,serif">23%</div>
+      <div style="font-size:13px;color:var(--cream);font-weight:600;margin:6px 0">Healthcare cost reduction</div>
+      <div style="font-size:11px;color:var(--dim);line-height:1.5">Average employer savings with comprehensive wellness programs. Johnson & Johnson saved $250M over a decade.</div>
+    </div>
+    <div style="text-align:center;padding:28px 20px;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.15);border-radius:10px">
+      <div style="font-size:36px;font-weight:700;color:#60A5FA;font-family:Georgia,serif">$105K</div>
+      <div style="font-size:13px;color:var(--cream);font-weight:600;margin:6px 0">GDP per resident retained</div>
+      <div style="font-size:11px;color:var(--dim);line-height:1.5">BEA/FRED 2023. Every resident who stays or moves in contributes this annually to the metro economy.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">WHAT BLEU MEASURES, QUANTIFIES & FORECASTS</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0">
+    <div style="padding:24px;background:rgba(45,212,168,.04);border:1px solid rgba(45,212,168,.12);border-radius:10px">
+      <div style="font-size:12px;letter-spacing:3px;color:var(--teal);font-weight:700;margin-bottom:10px">📊 WHAT WE MEASURE</div>
       <div style="font-size:14px;color:var(--dim);line-height:1.9">
-        <div style="margin-bottom:10px;padding:8px 12px;background:rgba(192,57,43,.04);border-radius:6px"><strong style="color:var(--cream)">Directories:</strong> Yelp, Google, ZocDoc — reviews by strangers. No federal verification. Pay-to-rank. A 5-star listing means nothing about clinical outcomes.</div>
-        <div style="margin-bottom:10px;padding:8px 12px;background:rgba(192,57,43,.04);border-radius:6px"><strong style="color:var(--cream)">Supplements:</strong> Amazon reviews. Influencer codes. No drug interaction checking. No dosage validation. No safety engine. People guess and hope.</div>
-        <div style="margin-bottom:10px;padding:8px 12px;background:rgba(192,57,43,.04);border-radius:6px"><strong style="color:var(--cream)">Mental Health:</strong> Psychology Today's directory. Filter by insurance, maybe. No AI bridge. No crisis integration. No therapy modes. Wait 6 weeks for an appointment.</div>
-        <div style="margin-bottom:10px;padding:8px 12px;background:rgba(192,57,43,.04);border-radius:6px"><strong style="color:var(--cream)">City Health:</strong> Annual PDF reports. 18 months old by publication. No real-time data. No neighborhood-level intelligence. No actionable dashboards.</div>
-        <div style="padding:8px 12px;background:rgba(192,57,43,.04);border-radius:6px"><strong style="color:var(--cream)">Recovery:</strong> Isolated from everything else. No connection to therapy, finance, nutrition, community. Treatment ends and there's nothing on the other side.</div>
+        <div style="padding:8px;border-bottom:1px solid rgba(45,212,168,.06)">✦ <strong style="color:var(--cream)">Population health</strong> — real-time vitals across 12 wellness dimensions per neighborhood</div>
+        <div style="padding:8px;border-bottom:1px solid rgba(45,212,168,.06)">✦ <strong style="color:var(--cream)">Provider density</strong> — NPI-verified practitioner coverage gaps by specialty and geography</div>
+        <div style="padding:8px;border-bottom:1px solid rgba(45,212,168,.06)">✦ <strong style="color:var(--cream)">Environmental health</strong> — EPA air quality, water quality, environmental hazard proximity</div>
+        <div style="padding:8px;border-bottom:1px solid rgba(45,212,168,.06)">✦ <strong style="color:var(--cream)">Treatment access</strong> — SAMHSA facility density, wait times, capacity, insurance acceptance</div>
+        <div style="padding:8px;border-bottom:1px solid rgba(45,212,168,.06)">✦ <strong style="color:var(--cream)">Community engagement</strong> — wellness event participation, mission completion, social connection</div>
+        <div style="padding:8px">✦ <strong style="color:var(--cream)">Economic wellness</strong> — insurance coverage rates, medical debt burden, financial stress indicators</div>
       </div>
     </div>
-    <div style="background:rgba(45,212,168,.06);border:1px solid rgba(45,212,168,.15);border-radius:10px;padding:24px">
-      <div style="font-size:12px;letter-spacing:3px;color:var(--teal);font-weight:700;margin-bottom:14px">✅ THE BLEU SYSTEM</div>
+    <div style="padding:24px;background:rgba(200,169,81,.04);border:1px solid rgba(200,169,81,.12);border-radius:10px">
+      <div style="font-size:12px;letter-spacing:3px;color:var(--gold);font-weight:700;margin-bottom:10px">🔮 WHAT WE FORECAST</div>
       <div style="font-size:14px;color:var(--dim);line-height:1.9">
-        <div style="margin-bottom:10px;padding:8px 12px;background:rgba(45,212,168,.04);border-radius:6px"><strong style="color:var(--cream)">Directory:</strong> 485,476 NPI-verified practitioners. Federal database — not reviews. Trust scores based on credentials, not popularity. Every phone number confirmed.</div>
-        <div style="margin-bottom:10px;padding:8px 12px;background:rgba(45,212,168,.04);border-radius:6px"><strong style="color:var(--cream)">Supplements:</strong> 5-layer safety engine. FDA adverse event database. Drug interaction checker. Exact doses, brands, mechanisms. Products earn their place — they don't buy it.</div>
-        <div style="margin-bottom:10px;padding:8px 12px;background:rgba(45,212,168,.04);border-radius:6px"><strong style="color:var(--cream)">Mental Health:</strong> 22 AI therapeutic modes — CBT, DBT, somatic, trauma, grief, crisis, couples, family. Available right now, 24/7. The bridge until you find a therapist. Or alongside one.</div>
-        <div style="margin-bottom:10px;padding:8px 12px;background:rgba(45,212,168,.04);border-radius:6px"><strong style="color:var(--cream)">City Health:</strong> Real-time. EPA air quality. SAMHSA treatment density. NPI provider mapping. Neighborhood-level scores across 12 dimensions. Living dashboards — not PDFs.</div>
-        <div style="padding:8px 12px;background:rgba(45,212,168,.04);border-radius:6px"><strong style="color:var(--cream)">Recovery:</strong> 8 specialized modes. Connected to therapy, finance, nutrition, community, crisis lines. SAMHSA 1-800-662-4357 built in. Recovery doesn't end — it's supported by the entire ecosystem.</div>
+        <div style="padding:8px;border-bottom:1px solid rgba(200,169,81,.06)">✦ <strong style="color:var(--cream)">Cost avoidance</strong> — predicted ER visits prevented, chronic conditions intercepted early</div>
+        <div style="padding:8px;border-bottom:1px solid rgba(200,169,81,.06)">✦ <strong style="color:var(--cream)">Revenue impact</strong> — projected economic contribution from healthier, retained populations</div>
+        <div style="padding:8px;border-bottom:1px solid rgba(200,169,81,.06)">✦ <strong style="color:var(--cream)">Productivity gains</strong> — reduced absenteeism, presenteeism, turnover projections by quarter</div>
+        <div style="padding:8px;border-bottom:1px solid rgba(200,169,81,.06)">✦ <strong style="color:var(--cream)">Migration modeling</strong> — wellness score correlation with inbound relocation and retention rates</div>
+        <div style="padding:8px;border-bottom:1px solid rgba(200,169,81,.06)">✦ <strong style="color:var(--cream)">Grant readiness</strong> — federal funding eligibility scoring for NIH, SAMHSA, CDC, EDA applications</div>
+        <div style="padding:8px">✦ <strong style="color:var(--cream)">Insurance impact</strong> — projected premium reductions based on community health trajectory</div>
       </div>
     </div>
   </div>
 
   <div class="divider"></div>
-  <div class="section-label">HOW BLEU QUANTIFIES & VALIDATES</div>
-  
+  <div class="section-label">HOW CITIES SAVE MONEY & GENERATE REVENUE</div>
+
   <div class="card-grid">
-    <div class="card" style="border-top:3px solid #A78BFA">
-      <h3 style="color:#A78BFA">🛡️ 247 Data Sources</h3>
-      <p>Direct API integration with federal health agencies. Not scraped. Not crawled. Direct. EPA environmental monitoring. SAMHSA treatment locators. NPI provider verification. FDA adverse event reporting. NIH clinical research. CMS Medicare/Medicaid coverage. PharmGKB pharmacogenomics. DrugBank interactions. Every data point traces back to its source. If it can't be verified, it doesn't exist on BLEU.</p>
+    <div class="card" style="border-top:3px solid #60A5FA">
+      <h3 style="color:#60A5FA">🏛️ Reduce Emergency Costs</h3>
+      <p>Every preventable ER visit costs a city $2,200–$3,200 in uncompensated care. BLEU's 22 AI therapeutic modes intercept crises before they become emergencies. Recovery support reduces relapse. Supplement safety prevents adverse events. One prevented ER visit per day saves a city $800K+ per year. BLEU gives cities the data to prove it.</p>
     </div>
     <div class="card" style="border-top:3px solid var(--gold)">
-      <h3 style="color:var(--gold)">📊 525,965 Verified Records</h3>
-      <p>Growing daily. Practitioners verified against NPI. Products checked against FDA. Interactions validated against clinical databases. Environmental data updated in real-time from EPA sensors. Treatment facilities confirmed through SAMHSA. This is not a static database — it's a living intelligence layer that gets smarter with every query, every interaction, every new data source connected.</p>
+      <h3 style="color:var(--gold)">📈 Attract Residents & Revenue</h3>
+      <p>NOLA lost 41,000 residents since 2020 — $4.3B in annual GDP. Every resident retained or attracted contributes ~$105K in GDP, $58K–$90K in consumer spending, $8K–$12K in tax revenue. BLEU's wellness positioning makes cities destinations for the 117M Americans age 50+ actively choosing where to live. Data-validated wellness scores on neworleans.com drive relocation decisions.</p>
     </div>
     <div class="card" style="border-top:3px solid var(--teal)">
-      <h3 style="color:var(--teal)">⚕️ Medical Oversight Standard</h3>
-      <p>Dr. Felicia Stoler — DCN, MS, RDN, FACSM, FAND, Dipl ACLM. Tulane University. Columbia University. Rutgers University. 28 years in health and wellness. Trained medical journalist. Her standard is simple: no embellishing. Every claim must be a verifiable fact. If it doesn't pass her review, it doesn't go live. This is the credibility layer most platforms don't have — because most platforms never had someone willing to hold that line.</p>
+      <h3 style="color:var(--teal)">🎯 Unlock Federal Grants</h3>
+      <p>NIH, SAMHSA, CDC, EDA — federal agencies fund communities with validated health data. BLEU provides the real-time metrics these applications require. GNO Inc. secured $50M from EDA for hydrogen infrastructure. BLEU's validated city health data supports the next federal ask — potentially worth multiples of the initial investment.</p>
     </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">HOW BUSINESSES CUT COSTS & BOOST PRODUCTIVITY</div>
+
+  <div class="card-grid">
     <div class="card" style="border-top:3px solid #F472B6">
-      <h3 style="color:#F472B6">🧠 22 AI Therapeutic Modes</h3>
-      <p>Not a chatbot with canned responses. 12 therapy modes: CBT, DBT, somatic, motivational interviewing, journaling, crisis support, couples, grief, trauma, psychoeducation, life coaching, career. 7 recovery modes: early sobriety, relapse prevention, harm reduction, MAT support, family, milestones, eating disorders. Plus ECS Intelligence, finance, and general wellness. Powered by Claude. Available 24/7. The bridge and the companion.</p>
+      <h3 style="color:#F472B6">💰 Cut Healthcare Spend</h3>
+      <p>The average employer spends $23,968 per employee per year on health insurance. Comprehensive wellness programs reduce that by 23% — saving $5,512 per employee annually. A 500-person company saves $2.75M per year. BLEU provides the infrastructure: supplement safety prevents adverse events, recovery support reduces substance-related claims, AI therapy reduces outpatient utilization.</p>
     </div>
-    <div class="card" style="border-top:3px solid #60A5FA">
-      <h3 style="color:#60A5FA">🗺️ 12-Dimension City Scoring</h3>
-      <p>Every neighborhood scored across: practitioner density, treatment access, environmental quality, food access, walkability, social infrastructure, recovery resources, financial health services, mental health access, fitness density, community organizations, and crisis response. Real-time. Actionable. The data cities need to make decisions — not the data they've been settling for.</p>
+    <div class="card" style="border-top:3px solid #A78BFA">
+      <h3 style="color:#A78BFA">⚡ Boost Productivity</h3>
+      <p>Unhealthy employees cost employers $1,685 per employee per year in lost productivity. Depression alone costs $210B annually in absenteeism and presenteeism. BLEU's 22 AI therapeutic modes are available 24/7 — no waiting lists, no scheduling barriers. Financial wellness reduces the #1 source of employee stress. The supplement safety engine prevents the adverse reactions that cause missed days.</p>
     </div>
     <div class="card" style="border-top:3px solid #FB923C">
-      <h3 style="color:#FB923C">🔒 Zero-Compromise Privacy</h3>
-      <p>No data selling. No ad targeting. No behavioral tracking. No third-party data brokers. Row-level security on Supabase. HIPAA-conscious architecture. Wellness data belongs to the people it serves — period. Cities and businesses trust BLEU because the architecture was built for trust from day one. Not retrofitted. Not promised. Built.</p>
+      <h3 style="color:#FB923C">🤝 Retain Talent</h3>
+      <p>Replacing an employee costs 50–200% of their salary. Companies with strong wellness programs see 25% lower turnover. BLEU isn't a gym membership or a meditation app — it's a complete wellness operating system: therapy, recovery, nutrition, financial health, practitioner access, community connection. The employees who have it don't leave for companies that don't.</p>
     </div>
   </div>
 
   <div class="divider"></div>
   <div class="section-label">THE DEPLOYMENT MODEL</div>
-  
+
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:20px 0">
     <div style="background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.15);border-radius:10px;padding:28px">
-      <div style="font-size:28px;margin-bottom:12px">🏛️</div>
-      <div style="font-size:12px;letter-spacing:3px;color:#60A5FA;font-weight:700;margin-bottom:8px">CITIES</div>
-      <div style="font-size:22px;font-weight:300;color:var(--cream);margin-bottom:8px;font-family:Georgia,serif">[city].bleu.live</div>
-      <div style="font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:14px">Every city gets its own living wellness portal. Neighborhood health intelligence. Population dashboards. Environmental monitoring. Treatment mapping. Provider verification. Community wellness scoring. The data layer that feeds into municipal planning, tourism positioning, economic development, and federal grant applications.</div>
-      <div style="padding:12px;background:rgba(96,165,250,.06);border-radius:6px;font-size:12px;color:#60A5FA;line-height:1.6"><strong>Live now:</strong> neworleans.bleu.live — 276 hand-verified providers. 12 categories. Real-time federal data. The model every city deployment follows.</div>
+      <div style="font-size:28px;margin-bottom:10px">🏛️</div>
+      <div style="font-size:11px;letter-spacing:3px;color:#60A5FA;font-weight:700;margin-bottom:6px">CITIES</div>
+      <div style="font-size:20px;font-weight:300;color:var(--cream);margin-bottom:10px;font-family:Georgia,serif">[city].bleu.live</div>
+      <div style="font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:12px">Neighborhood health intelligence. Population dashboards. Environmental monitoring. Provider mapping. Community wellness scoring. Federal grant data readiness. Tourism wellness positioning.</div>
+      <div style="padding:10px;background:rgba(96,165,250,.06);border-radius:6px;font-size:11px;color:#60A5FA;line-height:1.5"><strong>LIVE:</strong> neworleans.bleu.live — 276 providers, 12 categories, real-time federal data</div>
     </div>
     <div style="background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.15);border-radius:10px;padding:28px">
-      <div style="font-size:28px;margin-bottom:12px">🏢</div>
-      <div style="font-size:12px;letter-spacing:3px;color:var(--gold);font-weight:700;margin-bottom:8px">BUSINESSES</div>
-      <div style="font-size:22px;font-weight:300;color:var(--cream);margin-bottom:8px;font-family:Georgia,serif">[business].bleu.live</div>
-      <div style="font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:14px">Employee wellness infrastructure that reduces healthcare costs and improves retention. Your company portal with practitioner access, supplement safety, AI therapeutic support, health dashboards, and 40-Day Missions for team engagement. Not a perk — a system. Measurable ROI from day one.</div>
-      <div style="padding:12px;background:rgba(200,169,81,.06);border-radius:6px;font-size:12px;color:var(--gold);line-height:1.6"><strong>Example:</strong> ochsner.bleu.live — hospital system employees get BLEU's full platform under their brand. Supplement safety. Recovery support. Financial wellness. All 15 systems.</div>
+      <div style="font-size:28px;margin-bottom:10px">🏢</div>
+      <div style="font-size:11px;letter-spacing:3px;color:var(--gold);font-weight:700;margin-bottom:6px">BUSINESSES</div>
+      <div style="font-size:20px;font-weight:300;color:var(--cream);margin-bottom:10px;font-family:Georgia,serif">[business].bleu.live</div>
+      <div style="font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:12px">Employee wellness portals. Practitioner access. Supplement safety. AI therapeutic support. Health cost dashboards. Productivity analytics. Retention metrics. 40-Day team missions.</div>
+      <div style="padding:10px;background:rgba(200,169,81,.06);border-radius:6px;font-size:11px;color:var(--gold);line-height:1.5"><strong>ROI:</strong> $5,512 saved per employee/year at 23% healthcare cost reduction</div>
     </div>
     <div style="background:rgba(45,212,168,.06);border:1px solid rgba(45,212,168,.15);border-radius:10px;padding:28px">
-      <div style="font-size:28px;margin-bottom:12px">🏥</div>
-      <div style="font-size:12px;letter-spacing:3px;color:var(--teal);font-weight:700;margin-bottom:8px">ENTERPRISE</div>
-      <div style="font-size:22px;font-weight:300;color:var(--cream);margin-bottom:8px;font-family:Georgia,serif">[enterprise].bleu.live</div>
-      <div style="font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:14px">Full white-label for health systems, hospital networks, universities, insurance platforms, and government agencies. Your brand. Your data sovereignty. BLEU's 15 intelligence systems, 22 AI modes, and 525K+ verified records underneath. API integration with your existing EMR, benefits platform, or student health system.</div>
-      <div style="padding:12px;background:rgba(45,212,168,.06);border-radius:6px;font-size:12px;color:var(--teal);line-height:1.6"><strong>Example:</strong> tulane.bleu.live — student wellness, campus practitioner directory, supplement safety, recovery support, mental health access. University-branded.</div>
+      <div style="font-size:28px;margin-bottom:10px">🏥</div>
+      <div style="font-size:11px;letter-spacing:3px;color:var(--teal);font-weight:700;margin-bottom:6px">ENTERPRISE</div>
+      <div style="font-size:20px;font-weight:300;color:var(--cream);margin-bottom:10px;font-family:Georgia,serif">[enterprise].bleu.live</div>
+      <div style="font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:12px">Full white-label. Health systems, hospitals, universities, insurance, government. Your brand, your data sovereignty. 15 intelligence systems. 22 AI modes. 525K+ verified records. API integration.</div>
+      <div style="padding:10px;background:rgba(45,212,168,.06);border-radius:6px;font-size:11px;color:var(--teal);line-height:1.5"><strong>SCALE:</strong> One platform powering unlimited deployments. Each one makes the network smarter.</div>
     </div>
   </div>
 
   <div class="divider"></div>
-  <div class="section-label">🏠 HEADQUARTERED IN NEW ORLEANS</div>
-  
-  <div style="background:linear-gradient(135deg,rgba(200,169,81,.06),rgba(45,212,168,.04));border:1px solid rgba(200,169,81,.15);border-radius:12px;padding:32px;margin:20px 0">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+  <div class="section-label">🏠 HEADQUARTERED IN NEW ORLEANS, LOUISIANA</div>
+
+  <div style="background:linear-gradient(135deg,rgba(200,169,81,.06),rgba(45,212,168,.03));border:1px solid rgba(200,169,81,.12);border-radius:12px;padding:28px;margin:20px 0">
+    <div style="display:grid;grid-template-columns:3fr 2fr;gap:24px">
       <div>
-        <h3 style="font-size:22px;font-weight:300;color:var(--cream);margin-bottom:12px;font-family:Georgia,serif">New Orleans isn't just our first city.<br><em style="color:var(--gold)">It's our home.</em></h3>
-        <div style="font-size:14px;color:var(--dim);line-height:1.8">
-          <p style="margin-bottom:12px">BLEU was born in New Orleans. Built by people who live here, heal here, and belong here. Jazz Bird® NOLA is our partnership with this city — a 501(c)(3) nonprofit initiative repositioning Greater New Orleans as the wellness destination of America.</p>
-          <p style="margin-bottom:12px">This isn't a tech company parachuting into a market. This is a system built from inside the community — 28 years of healing lineage, strategic alliances with city institutions, and hand-verified local providers who we know by name.</p>
-          <p>When BLEU deploys to the next city, we bring what we built here. The methodology. The medical oversight. The validation standard. The community-first approach. New Orleans proved the model. Every city after inherits it.</p>
+        <h3 style="font-size:20px;font-weight:300;color:var(--cream);margin-bottom:10px;font-family:Georgia,serif">New Orleans isn't just our first city. <em style="color:var(--gold)">It's our home.</em></h3>
+        <div style="font-size:13px;color:var(--dim);line-height:1.8">
+          <p style="margin-bottom:10px">BLEU was born here. Built by people who live here, heal here, and belong here. Jazz Bird® NOLA is our 501(c)(3) nonprofit partnership with this city — repositioning Greater New Orleans as the wellness destination of America.</p>
+          <p style="margin-bottom:10px">This isn't a tech company parachuting into a market. This is a system built from inside the community — 28 years of healing lineage, strategic alliances with city institutions, and 276 hand-verified local providers we know by name.</p>
+          <p>When BLEU deploys to the next city, we bring what we built here. The methodology. The medical oversight. The community-first approach. New Orleans proved the model. Every city after inherits it.</p>
         </div>
       </div>
       <div>
-        <div style="font-size:12px;letter-spacing:3px;color:var(--gold);font-weight:700;margin-bottom:14px">STRATEGIC ALLIANCES</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div style="padding:10px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.1);border-radius:6px;font-size:12px;color:var(--cream);font-weight:600;text-align:center">GNO, Inc.</div>
-          <div style="padding:10px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.1);border-radius:6px;font-size:12px;color:var(--cream);font-weight:600;text-align:center">New Orleans & Company</div>
-          <div style="padding:10px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.1);border-radius:6px;font-size:12px;color:var(--cream);font-weight:600;text-align:center">Tulane Center for Aging</div>
-          <div style="padding:10px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.1);border-radius:6px;font-size:12px;color:var(--cream);font-weight:600;text-align:center">Council on Aging</div>
-          <div style="padding:10px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.1);border-radius:6px;font-size:12px;color:var(--cream);font-weight:600;text-align:center">Ochsner Eat Fit</div>
-          <div style="padding:10px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.1);border-radius:6px;font-size:12px;color:var(--cream);font-weight:600;text-align:center">Celebrate Canal!</div>
-          <div style="padding:10px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.1);border-radius:6px;font-size:12px;color:var(--cream);font-weight:600;text-align:center">Downtown Dev District</div>
-          <div style="padding:10px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.1);border-radius:6px;font-size:12px;color:var(--cream);font-weight:600;text-align:center">Mayor's Office Econ Dev</div>
-        </div>
-        <div style="margin-top:14px;padding:12px;background:rgba(45,212,168,.06);border:1px solid rgba(45,212,168,.1);border-radius:6px">
-          <div style="font-size:12px;color:var(--teal);line-height:1.6"><strong>neworleans.bleu.live</strong> — 276 verified providers. 12 wellness categories. 119 confirmed phone numbers. Live Alvai AI. Federal data integration. The proof that the model works — built right here.</div>
+        <div style="font-size:11px;letter-spacing:3px;color:var(--gold);font-weight:700;margin-bottom:10px">STRATEGIC ALLIANCES</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">GNO, Inc.</div>
+          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">NOLA & Company</div>
+          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Tulane Aging</div>
+          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Council on Aging</div>
+          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Ochsner Eat Fit</div>
+          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Celebrate Canal!</div>
+          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Downtown Dev</div>
+          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Mayor's Office</div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="divider"></div>
-  <div class="section-label">THE NETWORK EFFECT — WHY THE MOAT IS PERMANENT</div>
-
-  <div style="background:rgba(15,22,40,.8);border:1px solid rgba(200,169,81,.1);border-radius:12px;padding:28px;margin:20px 0">
-    <div style="text-align:center;margin-bottom:20px">
-      <div style="font-size:16px;color:var(--cream);line-height:1.7;max-width:700px;margin:0 auto">Every city added makes BLEU smarter. Every business deployed adds practitioners to the network. Every user interaction improves the AI. A competitor doesn't just need the technology — they need the community trust, the federal data pipeline, the medical oversight, and the years of relationship building. By the time they start, BLEU is three cities ahead.</div>
+  <!-- B.L.E.U. -->
+  <div style="margin-top:24px;text-align:center;padding:28px 16px;border-top:1px solid rgba(200,169,81,.1)">
+    <div style="display:flex;justify-content:center;gap:28px;margin-bottom:14px">
+      <div><span style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--gold)">B</span><span style="font-size:14px;color:var(--dim);margin-left:4px">elieve</span></div>
+      <div><span style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--gold)">L</span><span style="font-size:14px;color:var(--dim);margin-left:4px">ove</span></div>
+      <div><span style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--gold)">E</span><span style="font-size:14px;color:var(--dim);margin-left:4px">volve</span></div>
+      <div><span style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--gold)">U</span><span style="font-size:14px;color:var(--dim);margin-left:4px">nite</span></div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;text-align:center">
-      <div style="padding:16px 8px;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.1);border-radius:8px">
-        <div style="font-size:20px;margin-bottom:6px">🏛️</div>
-        <div style="font-size:11px;color:#60A5FA;font-weight:700">More Cities</div>
-      </div>
-      <div style="padding:16px 8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.1);border-radius:8px">
-        <div style="font-size:20px;margin-bottom:6px">👨‍⚕️</div>
-        <div style="font-size:11px;color:var(--gold);font-weight:700">More Practitioners</div>
-      </div>
-      <div style="padding:16px 8px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.1);border-radius:8px">
-        <div style="font-size:20px;margin-bottom:6px">📊</div>
-        <div style="font-size:11px;color:#A78BFA;font-weight:700">Better Data</div>
-      </div>
-      <div style="padding:16px 8px;background:rgba(45,212,168,.06);border:1px solid rgba(45,212,168,.1);border-radius:8px">
-        <div style="font-size:20px;margin-bottom:6px">💎</div>
-        <div style="font-size:11px;color:var(--teal);font-weight:700">More Value</div>
-      </div>
-      <div style="padding:16px 8px;background:rgba(244,114,182,.06);border:1px solid rgba(244,114,182,.1);border-radius:8px">
-        <div style="font-size:20px;margin-bottom:6px">🔄</div>
-        <div style="font-size:11px;color:#F472B6;font-weight:700">Compounds</div>
-      </div>
-    </div>
+    <p style="font-size:13px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7;font-style:italic">The Longevity Operating System. Born in New Orleans. 525,965 verified records. 247 federal data sources. 15 intelligence systems. Medical oversight by Dr. Felicia Stoler. Every claim verifiable. Patent Pending.</p>
   </div>
 
-  <!-- B.L.E.U. STATEMENT -->
-  <div style="margin-top:32px;text-align:center;padding:32px 20px;border-top:1px solid rgba(200,169,81,.1)">
-    <div style="display:flex;justify-content:center;gap:32px;margin-bottom:16px;flex-wrap:wrap">
-      <div><span style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:var(--gold)">B</span><span style="font-size:16px;color:var(--dim);margin-left:6px;letter-spacing:1px">elieve</span></div>
-      <div><span style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:var(--gold)">L</span><span style="font-size:16px;color:var(--dim);margin-left:6px;letter-spacing:1px">ove</span></div>
-      <div><span style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:var(--gold)">E</span><span style="font-size:16px;color:var(--dim);margin-left:6px;letter-spacing:1px">volve</span></div>
-      <div><span style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:var(--gold)">U</span><span style="font-size:16px;color:var(--dim);margin-left:6px;letter-spacing:1px">nite</span></div>
-    </div>
-    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(200,169,81,.2),transparent);max-width:400px;margin:0 auto 16px"></div>
-    <p style="font-size:15px;color:var(--dim);max-width:650px;margin:0 auto;line-height:1.8;font-style:italic">The Longevity Operating System. Born in New Orleans. Built for every city, every business, every human who deserves access to real wellness intelligence. Not the old system repackaged. The new one. Patent Pending.</p>
-    <div style="display:flex;justify-content:center;gap:6px;margin-top:16px;flex-wrap:wrap">
-      <span style="font-size:9px;padding:3px 8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:3px;color:var(--muted);font-weight:600">EPA</span>
-      <span style="font-size:9px;padding:3px 8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:3px;color:var(--muted);font-weight:600">FDA</span>
-      <span style="font-size:9px;padding:3px 8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:3px;color:var(--muted);font-weight:600">SAMHSA</span>
-      <span style="font-size:9px;padding:3px 8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:3px;color:var(--muted);font-weight:600">NPI</span>
-      <span style="font-size:9px;padding:3px 8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:3px;color:var(--muted);font-weight:600">NIH</span>
-      <span style="font-size:9px;padding:3px 8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:3px;color:var(--muted);font-weight:600">CMS</span>
-      <span style="font-size:9px;padding:3px 8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:3px;color:var(--muted);font-weight:600">PharmGKB</span>
-      <span style="font-size:9px;padding:3px 8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:3px;color:var(--muted);font-weight:600">DrugBank</span>
-    </div>
-  </div>
-
-  <div class="disclaimer">🏛️ BLEU is the longevity operating system. Medical oversight by Dr. Felicia Stoler (DCN, MS, RDN, FACSM, FAND — Tulane, Columbia, Rutgers). For enterprise inquiries: hello@bleu.live</div>
+  <div class="disclaimer">🏛️ Economic data sourced from BEA, Harvard Business Review, RAND Corporation, and CMS. BLEU projections use validated federal inputs. For enterprise inquiries: hello@bleu.live</div>
 </div>
 
