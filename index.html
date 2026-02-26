@@ -173,6 +173,174 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 }
 .gc{display:inline-block;background:rgba(78,205,196,0.1);color:#4ecdc4;padding:5px 12px;border-radius:16px;font-size:0.8rem;cursor:pointer;border:1px solid transparent;transition:all 0.2s}.gc.active{background:#4ecdc4;color:#0a1628}.gc:hover{border-color:#4ecdc4}\n</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+/* ═══ ENTERPRISE TAB ENHANCED ═══ */
+.ent-section{padding:48px 0;position:relative}
+.ent-box{max-width:1100px;margin:0 auto;padding:0 24px}
+.ent-label{font-size:11px;letter-spacing:4px;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+.ent-heading{font-family:Georgia,serif;font-size:clamp(24px,3.5vw,36px);font-weight:300;line-height:1.2;color:#E2E8F0;margin-bottom:12px}
+.ent-card{background:#151921;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:24px;transition:all .4s cubic-bezier(.16,1,.3,1)}
+.ent-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.ent-reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(.16,1,.3,1)}
+.ent-reveal.visible{opacity:1;transform:translateY(0)}
+.ent-counter{font-family:Georgia,serif;font-size:clamp(32px,5vw,48px);font-weight:700;line-height:1}
+.ent-slider{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;outline:none;cursor:pointer}
+.ent-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;cursor:pointer}
+.ent-slider.gold{background:rgba(200,169,81,.15)}
+.ent-slider.gold::-webkit-slider-thumb{background:#C8A951;box-shadow:0 0 12px rgba(200,169,81,.5)}
+.ent-slider.blue{background:rgba(96,165,250,.15)}
+.ent-slider.blue::-webkit-slider-thumb{background:#60A5FA;box-shadow:0 0 12px rgba(96,165,250,.5)}
+.ent-toggle{padding:10px 24px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:1px;transition:all .3s;font-family:inherit}
+.ent-toggle.active-red{background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);color:#E74C3C}
+.ent-toggle.active-green{background:rgba(45,212,168,.12);border:1px solid rgba(45,212,168,.3);color:#2DD4A8}
+.ent-toggle.inactive{background:transparent;border:1px solid rgba(255,255,255,.06);color:#5A6374}
+.ent-phase{padding:10px 20px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:1px;transition:all .3s;font-family:inherit}
+.ent-comp{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:10px;animation:entSlideIn 0.4s ease backwards}
+@keyframes entSlideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.ent-result-glow{animation:entResultGlow 2s ease-in-out infinite}
+@keyframes entResultGlow{0%,100%{box-shadow:0 0 20px rgba(200,169,81,.1)}50%{box-shadow:0 0 40px rgba(200,169,81,.2)}}
+.ent-tier{padding:24px;border-radius:10px;transition:all .4s cubic-bezier(.16,1,.3,1)}
+.ent-tier:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.ent-cta{display:inline-block;padding:16px 48px;font-size:16px;font-weight:700;letter-spacing:3px;border:2px solid #C8A951;color:#C8A951;background:transparent;border-radius:8px;cursor:pointer;transition:all .4s;font-family:inherit;text-transform:uppercase}
+.ent-cta:hover{background:#C8A951;color:#0E1117;box-shadow:0 0 30px rgba(200,169,81,.3);transform:scale(1.02)}
+@media(max-width:768px){.ent-grid-3,.ent-grid-2,.ent-hq-grid{grid-template-columns:1fr!important}}
+</style>
+<style>
+/* ═══ HOME PAGE ANIMATIONS ═══ */
+.home-reveal{opacity:0;transform:translateY(24px);transition:all 0.7s cubic-bezier(.16,1,.3,1)}
+.home-reveal.visible{opacity:1;transform:translateY(0)}
+.home-card-animate{opacity:0;transform:translateY(20px) scale(.97);transition:all .5s cubic-bezier(.16,1,.3,1)}
+.home-card-animate.visible{opacity:1;transform:translateY(0) scale(1)}
+.home-text-glow{animation:homeTextGlow 3s ease-in-out infinite}
+@keyframes homeTextGlow{0%,100%{text-shadow:0 0 20px rgba(200,169,81,.1)}50%{text-shadow:0 0 40px rgba(200,169,81,.25)}}
+.home-stat-pulse{animation:homeStatPulse 2.5s ease-in-out infinite}
+@keyframes homeStatPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+.home-float{animation:homeFloat 6s ease-in-out infinite}
+@keyframes homeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+</style>
+<style>
+/* ═══ ALVAI CHAT BOX — ENHANCED ═══ */
+/* Make chat container much larger and more readable */
+#chat-container,
+[id*="chat-container"],
+[class*="chat-container"],
+.chat-container {
+  min-height: 520px !important;
+  max-height: 70vh !important;
+  height: auto !important;
+}
+
+/* Chat messages area — more space */
+#chat-messages,
+[id*="chat-messages"],
+[class*="chat-messages"],
+.chat-messages {
+  min-height: 420px !important;
+  max-height: 60vh !important;
+  padding: 20px !important;
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+  overflow-y: auto !important;
+}
+
+/* Chat input area — larger, more prominent */
+#chat-input,
+[id*="chat-input"],
+.chat-input,
+textarea[placeholder*="Ask"],
+textarea[placeholder*="ask"],
+textarea[placeholder*="Talk"],
+textarea[placeholder*="talk"],
+textarea[placeholder*="Type"],
+textarea[placeholder*="type"],
+textarea[placeholder*="alvai"],
+textarea[placeholder*="Alvai"] {
+  min-height: 56px !important;
+  font-size: 15px !important;
+  padding: 16px 20px !important;
+  line-height: 1.5 !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(200,169,81,.2) !important;
+  background: rgba(15,17,23,.9) !important;
+  color: #E2E8F0 !important;
+  transition: all .3s !important;
+}
+
+#chat-input:focus,
+textarea[placeholder*="Ask"]:focus,
+textarea[placeholder*="ask"]:focus,
+textarea[placeholder*="Talk"]:focus,
+textarea[placeholder*="talk"]:focus,
+textarea[placeholder*="Type"]:focus,
+textarea[placeholder*="type"]:focus {
+  border-color: rgba(200,169,81,.4) !important;
+  box-shadow: 0 0 20px rgba(200,169,81,.1) !important;
+  outline: none !important;
+}
+
+/* Chat bubbles — larger text, better spacing */
+.chat-msg,
+[class*="chat-msg"],
+[class*="message"],
+.alvai-msg,
+.user-msg {
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+  padding: 14px 18px !important;
+  margin-bottom: 12px !important;
+  border-radius: 12px !important;
+  max-width: 85% !important;
+}
+
+/* Alvai response messages */
+.alvai-msg,
+[class*="alvai"],
+[class*="assistant"] {
+  background: rgba(200,169,81,.06) !important;
+  border: 1px solid rgba(200,169,81,.1) !important;
+}
+
+/* Send button — more prominent */
+#chat-send,
+[id*="chat-send"],
+button[type="submit"],
+.chat-send {
+  min-width: 48px !important;
+  min-height: 48px !important;
+  font-size: 16px !important;
+  border-radius: 10px !important;
+}
+
+/* Overall chat wrapper — enforce minimum size */
+[class*="alvai"],
+[id*="alvai"],
+.chat-wrapper,
+[class*="chat-wrap"] {
+  min-height: 500px !important;
+}
+
+/* Chat header — slightly larger */
+.chat-header,
+[class*="chat-header"] {
+  padding: 14px 20px !important;
+  font-size: 15px !important;
+}
+
+/* Scrollbar styling for chat */
+#chat-messages::-webkit-scrollbar,
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+#chat-messages::-webkit-scrollbar-track,
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+#chat-messages::-webkit-scrollbar-thumb,
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(200,169,81,.2);
+  border-radius: 3px;
+}
+</style>
 </head>
 <body>
 
@@ -350,7 +518,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
   <div class="chat-box"><div class="chat-messages" id="chat-alvai"></div><div class="chat-input-row"><input id="in-alvai" placeholder="Ask Alvai anything — wellness, therapy, recovery, finance, cannabis..." onkeydown="if(event.key==='Enter')send('alvai')"><button onclick="send('alvai')">Send</button></div></div>
 
-  <div class="divider"></div>
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+<div class="divider"></div>
   <div class="section-label">WHAT ALVAI IS CONNECTED TO</div>
   <div class="feature-grid">
     <div class="feature-item"><div class="feature-icon">⚕️</div><div class="feature-text"><h4>485,476 Practitioners</h4><p>NPI-verified. Trust-scored. Matched to your needs.</p></div></div>
@@ -381,10 +550,11 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   <div class="card" style="border-color:rgba(45,138,158,.2)">
     <h3 style="color:var(--teal)">Your Dashboard Activates With Your Passport</h3>
     <p>Every practitioner visit, every product you use, every event you attend, every conversation with Alvai — it all feeds your shields. Watch correlations emerge: sleep improves → anxiety drops → productivity rises → relationships strengthen. The system sees patterns you can't.</p>
-    <div style="margin-top:12px"><span class="cta cta-teal" onclick="go('passport')" style="font-size:12px;padding:8px 20px">Start Your Passport →</span></div>
+    <div style="margin-top:12px"><span class="cta cta-teal" onclick="go('passport')" style="font-size:15px;padding:8px 20px">Start Your Passport →</span></div>
   </div>
 
-  <div class="divider"></div>
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+<div class="divider"></div>
   <div class="section-label">ASK ABOUT YOUR WELLNESS DATA<div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;text-align:center"><div style="color:#4ecdc4;font-size:28px;font-weight:300">—</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px">WELLNESS</div><div style="width:100%;height:3px;background:rgba(78,205,196,0.1);border-radius:2px;margin-top:8px"><div style="width:72%;height:100%;background:linear-gradient(90deg,#4ecdc4,#d4af37);border-radius:2px"></div></div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px;text-align:center"><div style="color:#d4af37;font-size:28px;font-weight:300">—</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px">SLEEP</div><div style="color:#4ecdc4;font-size:10px;margin-top:6px">&#9650; +0.4</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;text-align:center;cursor:pointer" onclick="go('missions')"><div style="color:#4ecdc4;font-size:28px;font-weight:300">—</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px">MISSIONS</div><div style="color:#d4af37;font-size:10px;margin-top:6px">Continue &#8594;</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px;text-align:center"><div style="color:#d4af37;font-size:28px;font-weight:300">—</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px">DAY STREAK</div><div style="color:#4ecdc4;font-size:10px;margin-top:6px">&#127942; Best</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('vessel')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128138;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">My supplements</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Tell Alvai what you take</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('ecsiq')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127807;</div><div style="color:#d4af37;font-weight:600;font-size:14px">My cannabis</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Ask ECSIQ about strains</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="go('therapy')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128156;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">My therapy</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Start a therapy conversation</div></div></div><div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">QUICK ACTIONS</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('dashboard','Run a complete safety check on all my medications and supplements')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128270;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Safety check</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('protocols')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128221;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Protocols</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('directory')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129658;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Practitioner</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="go('alvai')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#10024;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Alvai</div></div></div></div></div>
   <div class="chat-box"><div class="chat-messages" id="chat-dashboard"></div><div class="chat-input-row"><input id="in-dashboard" placeholder="What patterns do you want to understand?" onkeydown="if(event.key==='Enter')send('dashboard')"><button onclick="send('dashboard')">Ask</button></div></div>
 </div>
@@ -411,7 +581,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
   <div class="chat-box"><div class="chat-messages" id="chat-directory"></div><div class="chat-input-row"><input id="in-directory" placeholder="What kind of practitioner do you need?" onkeydown="if(event.key==='Enter')send('directory')"><button onclick="send('directory')">Search</button></div></div>
 
-  <div class="divider"></div>
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+<div class="divider"></div>
   <div class="section-label">HOW TRUST SCORES WORK</div>
   <div class="feature-grid">
     <div class="feature-item"><div class="feature-icon">🏛️</div><div class="feature-text"><h4>NPI Verification</h4><p>Every practitioner checked against the federal National Provider Identifier registry.</p></div></div>
@@ -423,7 +594,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <p style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text)">Finding the right practitioner is the first real step. Not reading another article. Not buying another supplement. <strong style="color:var(--gold)">A real person who sees you.</strong></p>
     <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
       <span class="cta cta-teal" onclick="go('vessel')" style="font-size:12px;padding:8px 20px">Explore the Vessel →</span>
-      <span class="cta cta-outline" onclick="go('alvai')" style="font-size:12px;padding:8px 20px">Ask Alvai to Match Me ✦</span>
+      <span class="cta cta-outline" onclick="go('alvai')" style="font-size:15px;padding:8px 20px">Ask Alvai to Match Me ✦</span>
     </div>
   </div>
 </div>
@@ -448,7 +619,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
   <div class="chat-box"><div class="chat-messages" id="chat-vessel"></div><div class="chat-input-row"><input id="in-vessel" placeholder="What are you looking for? Alvai will find the right product..." onkeydown="if(event.key==='Enter')send('vessel')"><button onclick="send('vessel')">Search</button></div></div>
 
-  <div class="divider"></div>
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+<div class="divider"></div>
 
   <div class="section-label">🔥 BLEU PICKS — HIGHEST SCORED</div>
   <p class="section-desc">These earned their scores through clinical data and federal registration. Each one has a WHY you need to read.</p>
@@ -510,7 +682,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
   <div class="chat-box"><div class="chat-messages" id="chat-map"></div><div class="chat-input-row"><input id="in-map" placeholder="What are you looking for near you?" onkeydown="if(event.key==='Enter')send('map')"><button onclick="send('map')">Search</button></div></div>
 
-  <div class="divider"></div>
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+<div class="divider"></div>
   <div class="section-label">BLEU CITIES NETWORK</div>
   <style>
 .wow-card{position:relative;border-radius:12px;padding:24px;cursor:pointer;transition:all .4s cubic-bezier(.16,1,.3,1);overflow:hidden;background:rgba(20,26,40,.8);border:1px solid rgba(255,255,255,.06)}
@@ -698,6 +871,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me a complete sleep protocol with exact dosages and timing')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128164;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Sleep Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">8 weeks. Exact supplements + timing. Huberman-based.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me an anxiety reduction protocol')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128556;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Anxiety Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Breathwork + supplements + therapy modes combined.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me a natural pain management protocol')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129657;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Pain Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Anti-inflammatory stack + movement + cannabis options.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me a clean energy protocol')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#9889;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Energy Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Morning to evening. No crashes. Clean fuel.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me a focus and cognitive performance protocol')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129504;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Focus Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Deep work. Nootropic stack. Cognitive performance.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('protocols','Build me a recovery support protocol')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Recovery Protocol</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Early sobriety support. Gentle. Step by step.</div></div></div></div></div>
 
   <div class="chat-box"><div class="chat-messages" id="chat-protocols"></div><div class="chat-input-row"><input id="in-protocols" placeholder="What do you want to transform?" onkeydown="if(event.key==='Enter')send('protocols')"><button onclick="send('protocols')">Build Protocol</button></div></div>
+
+<div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
 </div>
 
 <!-- ═══════════════════════ LEARN ═══════════════════════ -->
@@ -719,7 +894,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
   <div class="chat-box"><div class="chat-messages" id="chat-learn"></div><div class="chat-input-row"><input id="in-learn" placeholder="What do you want the science on?" onkeydown="if(event.key==='Enter')send('learn')"><button onclick="send('learn')">Research</button></div></div>
 
-  <div class="divider"></div>
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+<div class="divider"></div>
   <div class="section-label">KNOWLEDGE PATHS</div>
   <div class="card-grid">
     <div class="card card-clickable" onclick="ask('learn','Give me a complete guide to sleep optimization - science, supplements, habits')"><span class="card-icon">😴</span><h3>Sleep Mastery</h3><p>Circadian rhythm, melatonin, magnesium, temperature, light exposure. The complete protocol backed by research.</p></div>
@@ -754,6 +930,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find recovery meetings near me in New Orleans this week')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Recovery Groups</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">AA, NA, SMART. Meetings this week near you.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find fitness groups and run clubs in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127939;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Fitness Community</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Run clubs, yoga, outdoor fitness. Free options.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','What wellness events are happening in New Orleans this month')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127891;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Wellness Events</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Workshops, health fairs, community circles.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find urban farms and community gardens in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127793;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Urban Farms</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Gardens, co-ops, food access. Volunteer.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find support groups in New Orleans')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128156;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Support Groups</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Mental health, grief, wellness circles.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Tell me about Jazz Bird NOLA community initiatives')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127918;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Jazz Bird NOLA</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">501(c)(3). Cultural healing. Community wellness.</div></div></div></div></div>
 
   <div class="chat-box"><div class="chat-messages" id="chat-community"></div><div class="chat-input-row"><input id="in-community" placeholder="How do you want to connect?" onkeydown="if(event.key==='Enter')send('community')"><button onclick="send('community')">Connect</button></div></div>
+
+<div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
 </div>
 
 <!-- ═══════════════════════ PASSPORT ═══════════════════════ -->
@@ -832,7 +1010,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
   <div class="chat-box"><div class="chat-messages" id="chat-therapy"></div><div class="chat-input-row"><input id="in-therapy" placeholder="What's on your mind? This is a safe space..." onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Share</button></div></div>
 
-  <div class="divider"></div>
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+<div class="divider"></div>
   <div class="section-label">THE 12 MODES — WHAT EACH ONE DOES</div>
   <div class="card-grid">
     <div class="card"><h3>💬 Talk Therapy</h3><p>Person-centered. Reflective listening. Pattern recognition. Emotional processing. The foundation.</p></div>
@@ -898,6 +1077,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   <div class="chat-box"><div class="chat-messages" id="chat-finance"></div><div class="chat-input-row"><input id="in-finance" placeholder="What financial question is weighing on you?" onkeydown="if(event.key==='Enter')send('finance')"><button onclick="send('finance')">Ask</button></div></div>
 
   <div class="disclaimer">💰 BLEU provides financial wellness information, not professional financial, tax, or investment advice. Consult licensed financial advisors for specific investment and tax decisions. Affiliate links to financial products are clearly disclosed.</div>
+
+<div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
 </div>
 
 <!-- ═══════════════════════ MISSIONS ═══════════════════════ -->
@@ -922,6 +1103,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('missions','Give me today wellness mission. Something I can do in 5 minutes')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127919;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Today's mission</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">One small step. Doable in 5 minutes. Builds streak.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('missions','Give me a 7-day wellness challenge I can start today')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128293;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Weekly challenge</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">7-day program. Stacks into real change.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('missions','Show me my streak progress and what I unlock next')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127942;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Streak rewards</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">14 days and counting. Keep building momentum.</div></div></div><div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">QUICK MISSIONS</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('missions','Hydration mission: how much water should I drink today')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128167;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Hydrate</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('missions','Movement mission: give me a 10 minute exercise I can do now')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127939;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Move</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('missions','Breathing mission: guide me through 3 minutes of breathwork')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128524;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Breathe</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('missions','Journaling mission: give me a reflective prompt for today')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128221;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Journal</div></div></div></div></div>
 
   <div class="chat-box"><div class="chat-messages" id="chat-missions"></div><div class="chat-input-row"><input id="in-missions" placeholder="What do you want to work on today?" onkeydown="if(event.key==='Enter')send('missions')"><button onclick="send('missions')">Get Mission</button></div></div>
+
+<div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
 </div>
 
 <!-- ═══════════════════════ RECOVERY ═══════════════════════ -->
@@ -954,7 +1137,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
   <div class="chat-box"><div class="chat-messages" id="chat-recovery"></div><div class="chat-input-row"><input id="in-recovery" placeholder="You're not alone. What's happening right now?" onkeydown="if(event.key==='Enter')send('recovery')"><button onclick="send('recovery')">Share</button></div></div>
 
-  <div class="divider"></div>
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+<div class="divider"></div>
   <div class="section-label">THE 7 MODES</div>
   <div class="card-grid">
     <div class="card"><h3>🌅 Early Sobriety</h3><p>Day-by-day guidance. What your body does in the first 72 hours, first week, first month. Withdrawal support. Supplement recommendations.</p></div>
@@ -989,7 +1173,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
   <div class="chat-box"><div class="chat-messages" id="chat-ecsiq"></div><div class="chat-input-row"><input id="in-ecsiq" placeholder="Ask about ECS wellness — protocols, interactions, terpenes, guidance..." onkeydown="if(event.key==='Enter')send('ecsiq')"><button onclick="send('ecsiq')">Ask</button></div></div>
 
-  <div class="divider"></div>
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+<div class="divider"></div>
   <div class="section-label">ECSIQ INTELLIGENCE AREAS</div>
   <div class="feature-grid">
     <div class="feature-item"><div class="feature-icon">🧬</div><div class="feature-text"><h4>Strain Database</h4><p>10K+ strains. Terpene profiles. Cannabinoid content. Effects. Medical applications. Matched to your needs.</p></div></div>
@@ -1015,6 +1200,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <h3 style="color:var(--gold);margin-top:16px">Cannabis Information</h3><p>ECSIQ provides educational information about cannabis. Cannabis legality varies by jurisdiction. Users are responsible for compliance with local laws.</p>
     <h3 style="color:var(--gold);margin-top:16px">Data & Privacy</h3><p>See our <a href="#" onclick="go('privacy');return false">Privacy Policy</a>. Conversations with Alvai are processed by Anthropic's Claude API. BLEU does not sell personal data.</p>
   </div>
+
+<div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
 </div>
 
 <!-- ═══════════════════════ PRIVACY ═══════════════════════ -->
@@ -1184,162 +1371,233 @@ updateSession();
 
 <!-- ═══════════════════════ ENTERPRISE ═══════════════════════ -->
 <div class="panel" id="p-enterprise">
-  <div class="section-label" style="letter-spacing:5px">THE LONGEVITY OPERATING SYSTEM — FOR INSTITUTIONS</div>
-  <h1 style="font-size:32px;line-height:1.2">Every dollar spent on wellness<br><span style="color:var(--gold)">returns $3–$6 in savings.</span></h1>
-  <p class="hero" style="font-size:16px;line-height:1.8;max-width:800px">BLEU doesn't just track health — it quantifies it, forecasts it, and turns it into measurable economic outcomes. Cities reduce emergency costs. Businesses cut healthcare spend. Populations get healthier. And every metric is verifiable, because every data point traces back to a federal source. This is the infrastructure layer that was missing. Built from our headquarters in New Orleans. Deploying everywhere.</p>
 
-  <div class="divider"></div>
-  <div class="section-label">THE ECONOMICS OF WELLNESS INFRASTRUCTURE</div>
+<!-- ═══ ENTERPRISE TAB — THE 90-SECOND CLOSE ═══ -->
 
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0">
-    <div style="text-align:center;padding:28px 20px;background:rgba(45,212,168,.06);border:1px solid rgba(45,212,168,.15);border-radius:10px">
-      <div style="font-size:36px;font-weight:700;color:var(--teal);font-family:Georgia,serif">$3.27</div>
-      <div style="font-size:13px;color:var(--cream);font-weight:600;margin:6px 0">Return per $1 invested</div>
-      <div style="font-size:11px;color:var(--dim);line-height:1.5">Harvard Business Review workplace wellness meta-analysis. Reduced absenteeism, lower insurance claims, higher retention.</div>
+<!-- HERO -->
+<section class="ent-section" style="padding:64px 0 48px;background:radial-gradient(ellipse at 30% 40%,rgba(200,169,81,.05),transparent 50%)">
+  <div class="ent-box">
+    <div class="ent-reveal" style="text-align:center;max-width:820px;margin:0 auto">
+      <div class="ent-label" style="color:#C8A951;text-align:center">THE LONGEVITY OPERATING SYSTEM — FOR INSTITUTIONS</div>
+      <h1 style="font-family:Georgia,serif;font-size:clamp(28px,4.5vw,44px);font-weight:300;line-height:1.15;color:#E2E8F0;margin:14px 0">
+        Every dollar spent on wellness<br><em style="color:#C8A951;font-style:italic">returns $3–$6 in savings.</em>
+      </h1>
+      <p style="font-size:15px;color:#8B95A5;line-height:1.8;max-width:660px;margin:0 auto">
+        BLEU quantifies community health, forecasts economic outcomes, and turns wellness into measurable ROI.
+        Cities reduce emergency costs. Businesses cut healthcare spend. Populations get healthier.
+        Every metric traces back to a federal source. Patent Pending.
+      </p>
     </div>
-    <div style="text-align:center;padding:28px 20px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.15);border-radius:10px">
-      <div style="font-size:36px;font-weight:700;color:var(--gold);font-family:Georgia,serif">23%</div>
-      <div style="font-size:13px;color:var(--cream);font-weight:600;margin:6px 0">Healthcare cost reduction</div>
-      <div style="font-size:11px;color:var(--dim);line-height:1.5">Average employer savings with comprehensive wellness programs. Johnson & Johnson saved $250M over a decade.</div>
-    </div>
-    <div style="text-align:center;padding:28px 20px;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.15);border-radius:10px">
-      <div style="font-size:36px;font-weight:700;color:#60A5FA;font-family:Georgia,serif">$105K</div>
-      <div style="font-size:13px;color:var(--cream);font-weight:600;margin:6px 0">GDP per resident retained</div>
-      <div style="font-size:11px;color:var(--dim);line-height:1.5">BEA/FRED 2023. Every resident who stays or moves in contributes this annually to the metro economy.</div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-  <div class="section-label">WHAT BLEU MEASURES, QUANTIFIES & FORECASTS</div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0">
-    <div style="padding:24px;background:rgba(45,212,168,.04);border:1px solid rgba(45,212,168,.12);border-radius:10px">
-      <div style="font-size:12px;letter-spacing:3px;color:var(--teal);font-weight:700;margin-bottom:10px">📊 WHAT WE MEASURE</div>
-      <div style="font-size:14px;color:var(--dim);line-height:1.9">
-        <div style="padding:8px;border-bottom:1px solid rgba(45,212,168,.06)">✦ <strong style="color:var(--cream)">Population health</strong> — real-time vitals across 12 wellness dimensions per neighborhood</div>
-        <div style="padding:8px;border-bottom:1px solid rgba(45,212,168,.06)">✦ <strong style="color:var(--cream)">Provider density</strong> — NPI-verified practitioner coverage gaps by specialty and geography</div>
-        <div style="padding:8px;border-bottom:1px solid rgba(45,212,168,.06)">✦ <strong style="color:var(--cream)">Environmental health</strong> — EPA air quality, water quality, environmental hazard proximity</div>
-        <div style="padding:8px;border-bottom:1px solid rgba(45,212,168,.06)">✦ <strong style="color:var(--cream)">Treatment access</strong> — SAMHSA facility density, wait times, capacity, insurance acceptance</div>
-        <div style="padding:8px;border-bottom:1px solid rgba(45,212,168,.06)">✦ <strong style="color:var(--cream)">Community engagement</strong> — wellness event participation, mission completion, social connection</div>
-        <div style="padding:8px">✦ <strong style="color:var(--cream)">Economic wellness</strong> — insurance coverage rates, medical debt burden, financial stress indicators</div>
+    <div class="ent-reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px">
+      <div style="text-align:center;padding:20px;background:#151921;border:1px solid rgba(255,255,255,.06);border-radius:10px">
+        <span class="ent-counter ent-count" data-target="525965" style="color:#C8A951">0</span>
+        <div style="font-size:11px;color:#8B95A5;text-transform:uppercase;letter-spacing:2px;margin-top:6px">Verified Records</div>
       </div>
-    </div>
-    <div style="padding:24px;background:rgba(200,169,81,.04);border:1px solid rgba(200,169,81,.12);border-radius:10px">
-      <div style="font-size:12px;letter-spacing:3px;color:var(--gold);font-weight:700;margin-bottom:10px">🔮 WHAT WE FORECAST</div>
-      <div style="font-size:14px;color:var(--dim);line-height:1.9">
-        <div style="padding:8px;border-bottom:1px solid rgba(200,169,81,.06)">✦ <strong style="color:var(--cream)">Cost avoidance</strong> — predicted ER visits prevented, chronic conditions intercepted early</div>
-        <div style="padding:8px;border-bottom:1px solid rgba(200,169,81,.06)">✦ <strong style="color:var(--cream)">Revenue impact</strong> — projected economic contribution from healthier, retained populations</div>
-        <div style="padding:8px;border-bottom:1px solid rgba(200,169,81,.06)">✦ <strong style="color:var(--cream)">Productivity gains</strong> — reduced absenteeism, presenteeism, turnover projections by quarter</div>
-        <div style="padding:8px;border-bottom:1px solid rgba(200,169,81,.06)">✦ <strong style="color:var(--cream)">Migration modeling</strong> — wellness score correlation with inbound relocation and retention rates</div>
-        <div style="padding:8px;border-bottom:1px solid rgba(200,169,81,.06)">✦ <strong style="color:var(--cream)">Grant readiness</strong> — federal funding eligibility scoring for NIH, SAMHSA, CDC, EDA applications</div>
-        <div style="padding:8px">✦ <strong style="color:var(--cream)">Insurance impact</strong> — projected premium reductions based on community health trajectory</div>
+      <div style="text-align:center;padding:20px;background:#151921;border:1px solid rgba(255,255,255,.06);border-radius:10px">
+        <span class="ent-counter ent-count" data-target="247" style="color:#60A5FA">0</span>
+        <div style="font-size:11px;color:#8B95A5;text-transform:uppercase;letter-spacing:2px;margin-top:6px">Federal Data Sources</div>
+      </div>
+      <div style="text-align:center;padding:20px;background:#151921;border:1px solid rgba(255,255,255,.06);border-radius:10px">
+        <span class="ent-counter ent-count" data-target="22" style="color:#2DD4A8">0</span>
+        <div style="font-size:11px;color:#8B95A5;text-transform:uppercase;letter-spacing:2px;margin-top:6px">AI Therapeutic Modes</div>
+      </div>
+      <div style="text-align:center;padding:20px;background:#151921;border:1px solid rgba(255,255,255,.06);border-radius:10px">
+        <span class="ent-counter ent-count" data-target="15" style="color:#F472B6">0</span>
+        <div style="font-size:11px;color:#8B95A5;text-transform:uppercase;letter-spacing:2px;margin-top:6px">Intelligence Systems</div>
       </div>
     </div>
   </div>
+</section>
 
-  <div class="divider"></div>
-  <div class="section-label">HOW CITIES SAVE MONEY & GENERATE REVENUE</div>
-
-  <div class="card-grid">
-    <div class="card" style="border-top:3px solid #60A5FA">
-      <h3 style="color:#60A5FA">🏛️ Reduce Emergency Costs</h3>
-      <p>Every preventable ER visit costs a city $2,200–$3,200 in uncompensated care. BLEU's 22 AI therapeutic modes intercept crises before they become emergencies. Recovery support reduces relapse. Supplement safety prevents adverse events. One prevented ER visit per day saves a city $800K+ per year. BLEU gives cities the data to prove it.</p>
+<!-- BEFORE / AFTER TOGGLE -->
+<section class="ent-section" style="background:#151921;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)">
+  <div class="ent-box">
+    <div class="ent-reveal">
+      <div class="ent-label" style="color:#C8A951">THE TRANSFORMATION</div>
+      <h2 class="ent-heading">What changes when BLEU is the infrastructure?</h2>
+      <div style="display:flex;gap:8px;margin-bottom:24px">
+        <button class="ent-toggle active-red" id="entToggleBefore" onclick="entToggle(true)">❌ WITHOUT BLEU</button>
+        <button class="ent-toggle inactive" id="entToggleAfter" onclick="entToggle(false)">✅ WITH BLEU</button>
+      </div>
     </div>
-    <div class="card" style="border-top:3px solid var(--gold)">
-      <h3 style="color:var(--gold)">📈 Attract Residents & Revenue</h3>
-      <p>NOLA lost 41,000 residents since 2020 — $4.3B in annual GDP. Every resident retained or attracted contributes ~$105K in GDP, $58K–$90K in consumer spending, $8K–$12K in tax revenue. BLEU's wellness positioning makes cities destinations for the 117M Americans age 50+ actively choosing where to live. Data-validated wellness scores on neworleans.com drive relocation decisions.</p>
-    </div>
-    <div class="card" style="border-top:3px solid var(--teal)">
-      <h3 style="color:var(--teal)">🎯 Unlock Federal Grants</h3>
-      <p>NIH, SAMHSA, CDC, EDA — federal agencies fund communities with validated health data. BLEU provides the real-time metrics these applications require. GNO Inc. secured $50M from EDA for hydrogen infrastructure. BLEU's validated city health data supports the next federal ask — potentially worth multiples of the initial investment.</p>
-    </div>
+    <div id="entCompGrid" class="ent-reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:14px"></div>
   </div>
+</section>
 
-  <div class="divider"></div>
-  <div class="section-label">HOW BUSINESSES CUT COSTS & BOOST PRODUCTIVITY</div>
-
-  <div class="card-grid">
-    <div class="card" style="border-top:3px solid #F472B6">
-      <h3 style="color:#F472B6">💰 Cut Healthcare Spend</h3>
-      <p>The average employer spends $23,968 per employee per year on health insurance. Comprehensive wellness programs reduce that by 23% — saving $5,512 per employee annually. A 500-person company saves $2.75M per year. BLEU provides the infrastructure: supplement safety prevents adverse events, recovery support reduces substance-related claims, AI therapy reduces outpatient utilization.</p>
+<!-- BUSINESS ROI CALCULATOR -->
+<section class="ent-section">
+  <div class="ent-box">
+    <div class="ent-reveal">
+      <div class="ent-label" style="color:#C8A951">INTERACTIVE ROI CALCULATOR</div>
+      <h2 class="ent-heading">See what BLEU saves <em style="color:#C8A951;font-style:italic">your</em> business.</h2>
     </div>
-    <div class="card" style="border-top:3px solid #A78BFA">
-      <h3 style="color:#A78BFA">⚡ Boost Productivity</h3>
-      <p>Unhealthy employees cost employers $1,685 per employee per year in lost productivity. Depression alone costs $210B annually in absenteeism and presenteeism. BLEU's 22 AI therapeutic modes are available 24/7 — no waiting lists, no scheduling barriers. Financial wellness reduces the #1 source of employee stress. The supplement safety engine prevents the adverse reactions that cause missed days.</p>
-    </div>
-    <div class="card" style="border-top:3px solid #FB923C">
-      <h3 style="color:#FB923C">🤝 Retain Talent</h3>
-      <p>Replacing an employee costs 50–200% of their salary. Companies with strong wellness programs see 25% lower turnover. BLEU isn't a gym membership or a meditation app — it's a complete wellness operating system: therapy, recovery, nutrition, financial health, practitioner access, community connection. The employees who have it don't leave for companies that don't.</p>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-  <div class="section-label">THE DEPLOYMENT MODEL</div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:20px 0">
-    <div style="background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.15);border-radius:10px;padding:28px">
-      <div style="font-size:28px;margin-bottom:10px">🏛️</div>
-      <div style="font-size:11px;letter-spacing:3px;color:#60A5FA;font-weight:700;margin-bottom:6px">CITIES</div>
-      <div style="font-size:20px;font-weight:300;color:var(--cream);margin-bottom:10px;font-family:Georgia,serif">[city].bleu.live</div>
-      <div style="font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:12px">Neighborhood health intelligence. Population dashboards. Environmental monitoring. Provider mapping. Community wellness scoring. Federal grant data readiness. Tourism wellness positioning.</div>
-      <div style="padding:10px;background:rgba(96,165,250,.06);border-radius:6px;font-size:11px;color:#60A5FA;line-height:1.5"><strong>LIVE:</strong> neworleans.bleu.live — 276 providers, 12 categories, real-time federal data</div>
-    </div>
-    <div style="background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.15);border-radius:10px;padding:28px">
-      <div style="font-size:28px;margin-bottom:10px">🏢</div>
-      <div style="font-size:11px;letter-spacing:3px;color:var(--gold);font-weight:700;margin-bottom:6px">BUSINESSES</div>
-      <div style="font-size:20px;font-weight:300;color:var(--cream);margin-bottom:10px;font-family:Georgia,serif">[business].bleu.live</div>
-      <div style="font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:12px">Employee wellness portals. Practitioner access. Supplement safety. AI therapeutic support. Health cost dashboards. Productivity analytics. Retention metrics. 40-Day team missions.</div>
-      <div style="padding:10px;background:rgba(200,169,81,.06);border-radius:6px;font-size:11px;color:var(--gold);line-height:1.5"><strong>ROI:</strong> $5,512 saved per employee/year at 23% healthcare cost reduction</div>
-    </div>
-    <div style="background:rgba(45,212,168,.06);border:1px solid rgba(45,212,168,.15);border-radius:10px;padding:28px">
-      <div style="font-size:28px;margin-bottom:10px">🏥</div>
-      <div style="font-size:11px;letter-spacing:3px;color:var(--teal);font-weight:700;margin-bottom:6px">ENTERPRISE</div>
-      <div style="font-size:20px;font-weight:300;color:var(--cream);margin-bottom:10px;font-family:Georgia,serif">[enterprise].bleu.live</div>
-      <div style="font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:12px">Full white-label. Health systems, hospitals, universities, insurance, government. Your brand, your data sovereignty. 15 intelligence systems. 22 AI modes. 525K+ verified records. API integration.</div>
-      <div style="padding:10px;background:rgba(45,212,168,.06);border-radius:6px;font-size:11px;color:var(--teal);line-height:1.5"><strong>SCALE:</strong> One platform powering unlimited deployments. Each one makes the network smarter.</div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-  <div class="section-label">🏠 HEADQUARTERED IN NEW ORLEANS, LOUISIANA</div>
-
-  <div style="background:linear-gradient(135deg,rgba(200,169,81,.06),rgba(45,212,168,.03));border:1px solid rgba(200,169,81,.12);border-radius:12px;padding:28px;margin:20px 0">
-    <div style="display:grid;grid-template-columns:3fr 2fr;gap:24px">
-      <div>
-        <h3 style="font-size:20px;font-weight:300;color:var(--cream);margin-bottom:10px;font-family:Georgia,serif">New Orleans isn't just our first city. <em style="color:var(--gold)">It's our home.</em></h3>
-        <div style="font-size:13px;color:var(--dim);line-height:1.8">
-          <p style="margin-bottom:10px">BLEU was born here. Built by people who live here, heal here, and belong here. Jazz Bird® NOLA is our 501(c)(3) nonprofit partnership with this city — repositioning Greater New Orleans as the wellness destination of America.</p>
-          <p style="margin-bottom:10px">This isn't a tech company parachuting into a market. This is a system built from inside the community — 28 years of healing lineage, strategic alliances with city institutions, and 276 hand-verified local providers we know by name.</p>
-          <p>When BLEU deploys to the next city, we bring what we built here. The methodology. The medical oversight. The community-first approach. New Orleans proved the model. Every city after inherits it.</p>
+    <div class="ent-reveal ent-card" style="border-color:rgba(200,169,81,.15);padding:32px">
+      <div style="margin-bottom:24px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:13px;color:#8B95A5">Number of employees</span>
+          <span id="entBizEmpDisplay" style="font-size:18px;font-weight:700;color:#C8A951;font-family:Georgia,serif">500</span>
+        </div>
+        <input type="range" class="ent-slider gold" id="entBizSlider" min="50" max="10000" step="50" value="500" oninput="entCalcBiz()">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:#5A6374;margin-top:4px"><span>50</span><span>10,000</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+        <div style="padding:20px;background:rgba(45,212,168,.06);border:1px solid rgba(45,212,168,.1);border-radius:8px;text-align:center">
+          <div style="font-size:11px;color:#2DD4A8;letter-spacing:2px;font-weight:600;margin-bottom:6px">HEALTHCARE SAVINGS</div>
+          <div id="entBizHealth" style="font-family:Georgia,serif;font-size:24px;font-weight:700;color:#2DD4A8">$2.8M</div>
+          <div id="entBizHealthSub" style="font-size:11px;color:#8B95A5;margin-top:4px">$5,512 × 500 employees</div>
+        </div>
+        <div style="padding:20px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.1);border-radius:8px;text-align:center">
+          <div style="font-size:11px;color:#A78BFA;letter-spacing:2px;font-weight:600;margin-bottom:6px">PRODUCTIVITY GAIN</div>
+          <div id="entBizProd" style="font-family:Georgia,serif;font-size:24px;font-weight:700;color:#A78BFA">$0.8M</div>
+          <div id="entBizProdSub" style="font-size:11px;color:#8B95A5;margin-top:4px">$1,685 × 500 employees</div>
+        </div>
+        <div style="padding:20px;background:rgba(244,114,182,.06);border:1px solid rgba(244,114,182,.1);border-radius:8px;text-align:center">
+          <div style="font-size:11px;color:#F472B6;letter-spacing:2px;font-weight:600;margin-bottom:6px">RETENTION SAVINGS</div>
+          <div id="entBizRetain" style="font-family:Georgia,serif;font-size:24px;font-weight:700;color:#F472B6">$1.2M</div>
+          <div id="entBizRetainSub" style="font-size:11px;color:#8B95A5;margin-top:4px">25% lower turnover</div>
         </div>
       </div>
-      <div>
-        <div style="font-size:11px;letter-spacing:3px;color:var(--gold);font-weight:700;margin-bottom:10px">STRATEGIC ALLIANCES</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">GNO, Inc.</div>
-          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">NOLA & Company</div>
-          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Tulane Aging</div>
-          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Council on Aging</div>
-          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Ochsner Eat Fit</div>
-          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Celebrate Canal!</div>
-          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Downtown Dev</div>
-          <div style="padding:8px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:var(--cream);font-weight:600;text-align:center">Mayor's Office</div>
+      <div class="ent-result-glow" style="padding:24px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.15);border-radius:8px;text-align:center">
+        <div style="font-size:11px;color:#C8A951;letter-spacing:3px;font-weight:700;margin-bottom:6px">TOTAL ANNUAL SAVINGS</div>
+        <div id="entBizTotal" style="font-family:Georgia,serif;font-size:44px;font-weight:700;color:#C8A951">$4.8M</div>
+        <div id="entBizROI" style="font-size:14px;color:#8B95A5;margin-top:8px">That's <strong style="color:#E2E8F0">$9.58 returned for every $1</strong> invested in BLEU</div>
+      </div>
+      <div style="font-size:10px;color:#5A6374;margin-top:12px;text-align:center">Sources: Harvard Business Review, RAND Corp, Society for HRM, Bureau of Labor Statistics</div>
+    </div>
+  </div>
+</section>
+
+<!-- CITY ROI CALCULATOR -->
+<section class="ent-section" style="background:#151921;border-top:1px solid rgba(255,255,255,.06)">
+  <div class="ent-box">
+    <div class="ent-reveal">
+      <div class="ent-label" style="color:#60A5FA">CITY IMPACT CALCULATOR</div>
+      <h2 class="ent-heading">See what BLEU means for <em style="color:#60A5FA;font-style:italic">your city.</em></h2>
+    </div>
+    <div class="ent-reveal ent-card" style="border-color:rgba(96,165,250,.15);padding:32px">
+      <div style="margin-bottom:24px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:13px;color:#8B95A5">City population</span>
+          <span id="entCityPopDisplay" style="font-size:18px;font-weight:700;color:#60A5FA;font-family:Georgia,serif">400,000</span>
+        </div>
+        <input type="range" class="ent-slider blue" id="entCitySlider" min="50000" max="2000000" step="10000" value="400000" oninput="entCalcCity()">
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+        <div style="padding:20px;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.1);border-radius:8px;text-align:center">
+          <div style="font-size:11px;color:#60A5FA;letter-spacing:2px;font-weight:600;margin-bottom:6px">ER COST REDUCTION</div>
+          <div id="entCityER" style="font-family:Georgia,serif;font-size:24px;font-weight:700;color:#60A5FA">$22M</div>
+          <div style="font-size:11px;color:#8B95A5;margin-top:4px">2% ER visits prevented</div>
+        </div>
+        <div style="padding:20px;background:rgba(45,212,168,.06);border:1px solid rgba(45,212,168,.1);border-radius:8px;text-align:center">
+          <div style="font-size:11px;color:#2DD4A8;letter-spacing:2px;font-weight:600;margin-bottom:6px">RESIDENT RETENTION</div>
+          <div id="entCityRetain" style="font-family:Georgia,serif;font-size:24px;font-weight:700;color:#2DD4A8">$210M</div>
+          <div style="font-size:11px;color:#8B95A5;margin-top:4px">0.5% retention improvement</div>
+        </div>
+        <div style="padding:20px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.1);border-radius:8px;text-align:center">
+          <div style="font-size:11px;color:#C8A951;letter-spacing:2px;font-weight:600;margin-bottom:6px">GRANT POTENTIAL</div>
+          <div id="entCityGrant" style="font-family:Georgia,serif;font-size:24px;font-weight:700;color:#C8A951">$4.8M</div>
+          <div style="font-size:11px;color:#8B95A5;margin-top:4px">NIH, SAMHSA, CDC, EDA</div>
+        </div>
+      </div>
+      <div style="padding:24px;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.15);border-radius:8px;text-align:center">
+        <div style="font-size:11px;color:#60A5FA;letter-spacing:3px;font-weight:700;margin-bottom:6px">TOTAL ANNUAL CITY IMPACT</div>
+        <div id="entCityTotal" style="font-family:Georgia,serif;font-size:44px;font-weight:700;color:#60A5FA">$237M</div>
+        <div style="font-size:14px;color:#8B95A5;margin-top:8px">Conservative estimates. Federal-sourced methodology. <strong style="color:#E2E8F0">Every number verifiable.</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPLOYMENT TIMELINE -->
+<section class="ent-section">
+  <div class="ent-box">
+    <div class="ent-reveal">
+      <div class="ent-label" style="color:#C8A951">WHAT HAPPENS WHEN BLEU DEPLOYS</div>
+      <h2 class="ent-heading">From zero to measurable ROI <em style="color:#C8A951;font-style:italic">in 90 days.</em></h2>
+    </div>
+    <div class="ent-reveal">
+      <div id="entPhaseButtons" style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap"></div>
+      <div id="entPhaseContent" class="ent-card" style="border-left:4px solid #60A5FA;padding:28px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- THREE DEPLOYMENT TIERS -->
+<section class="ent-section" style="background:#151921;border-top:1px solid rgba(255,255,255,.06)">
+  <div class="ent-box">
+    <div class="ent-reveal">
+      <div class="ent-label" style="color:#C8A951">THREE DEPLOYMENT TIERS</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <div class="ent-tier" style="background:rgba(96,165,250,.04);border:1px solid rgba(96,165,250,.12)">
+          <div style="font-size:28px;margin-bottom:10px">🏛️</div>
+          <div style="font-size:11px;letter-spacing:3px;color:#60A5FA;font-weight:700;margin-bottom:4px">CITIES</div>
+          <div style="font-family:Georgia,serif;font-size:18px;font-weight:300;color:#E2E8F0;margin-bottom:10px">[city].bleu.live</div>
+          <div style="font-size:13px;color:#8B95A5;line-height:1.7;margin-bottom:12px">Neighborhood health intelligence. Population dashboards. Environmental monitoring. Provider mapping. Federal grant readiness.</div>
+          <div style="padding:8px;background:rgba(96,165,250,.08);border-radius:4px;font-size:11px;color:#60A5FA;font-weight:600">LIVE: neworleans.bleu.live — 276 providers</div>
+        </div>
+        <div class="ent-tier" style="background:rgba(200,169,81,.04);border:1px solid rgba(200,169,81,.12)">
+          <div style="font-size:28px;margin-bottom:10px">🏢</div>
+          <div style="font-size:11px;letter-spacing:3px;color:#C8A951;font-weight:700;margin-bottom:4px">BUSINESSES</div>
+          <div style="font-family:Georgia,serif;font-size:18px;font-weight:300;color:#E2E8F0;margin-bottom:10px">[business].bleu.live</div>
+          <div style="font-size:13px;color:#8B95A5;line-height:1.7;margin-bottom:12px">Employee wellness portals. Practitioner access. Supplement safety. AI therapeutic support. Health cost dashboards. Productivity analytics.</div>
+          <div style="padding:8px;background:rgba(200,169,81,.08);border-radius:4px;font-size:11px;color:#C8A951;font-weight:600">ROI: $5,512 saved per employee/year</div>
+        </div>
+        <div class="ent-tier" style="background:rgba(45,212,168,.04);border:1px solid rgba(45,212,168,.12)">
+          <div style="font-size:28px;margin-bottom:10px">🏥</div>
+          <div style="font-size:11px;letter-spacing:3px;color:#2DD4A8;font-weight:700;margin-bottom:4px">ENTERPRISE</div>
+          <div style="font-family:Georgia,serif;font-size:18px;font-weight:300;color:#E2E8F0;margin-bottom:10px">[org].bleu.live</div>
+          <div style="font-size:13px;color:#8B95A5;line-height:1.7;margin-bottom:12px">Full white-label. Health systems, hospitals, universities, insurance, government. 15 intelligence systems. 22 AI modes. Data sovereignty.</div>
+          <div style="padding:8px;background:rgba(45,212,168,.08);border-radius:4px;font-size:11px;color:#2DD4A8;font-weight:600">SCALE: One platform. Unlimited deployments.</div>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- B.L.E.U. -->
-  <div style="margin-top:24px;text-align:center;padding:28px 16px;border-top:1px solid rgba(200,169,81,.1)">
-    <div style="display:flex;justify-content:center;gap:28px;margin-bottom:14px">
-      <div><span style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--gold)">B</span><span style="font-size:14px;color:var(--dim);margin-left:4px">elieve</span></div>
-      <div><span style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--gold)">L</span><span style="font-size:14px;color:var(--dim);margin-left:4px">ove</span></div>
-      <div><span style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--gold)">E</span><span style="font-size:14px;color:var(--dim);margin-left:4px">volve</span></div>
-      <div><span style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--gold)">U</span><span style="font-size:14px;color:var(--dim);margin-left:4px">nite</span></div>
+<!-- NOLA HQ + CTA + B.L.E.U. -->
+<section class="ent-section">
+  <div class="ent-box">
+    <div class="ent-reveal" style="padding:28px;background:linear-gradient(135deg,rgba(200,169,81,.05),rgba(45,212,168,.03));border:1px solid rgba(200,169,81,.15);border-radius:12px;margin-bottom:32px">
+      <div style="display:grid;grid-template-columns:3fr 2fr;gap:24px">
+        <div>
+          <div class="ent-label" style="color:#C8A951">🏠 HEADQUARTERED IN NEW ORLEANS</div>
+          <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:300;color:#E2E8F0;margin:8px 0 12px">New Orleans isn't just our first city. <em style="color:#C8A951">It's our home.</em></h3>
+          <p style="font-size:13px;color:#8B95A5;line-height:1.8;margin-bottom:10px">Built from inside the community — 28 years of healing lineage, strategic alliances with city institutions, and 276 hand-verified local providers. Jazz Bird® NOLA, our 501(c)(3) nonprofit partnership, is repositioning Greater New Orleans as the wellness destination of America.</p>
+          <p style="font-size:13px;color:#8B95A5;line-height:1.8">When BLEU deploys to the next city, we bring what we built here. The methodology. The medical oversight. The community-first approach. New Orleans proved the model.</p>
+        </div>
+        <div>
+          <div style="font-size:11px;letter-spacing:3px;color:#C8A951;font-weight:700;margin-bottom:10px">STRATEGIC ALLIANCES</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <div style="padding:7px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.12);border-radius:4px;font-size:11px;color:#E2E8F0;font-weight:600;text-align:center">GNO, Inc.</div>
+            <div style="padding:7px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.12);border-radius:4px;font-size:11px;color:#E2E8F0;font-weight:600;text-align:center">NOLA & Company</div>
+            <div style="padding:7px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.12);border-radius:4px;font-size:11px;color:#E2E8F0;font-weight:600;text-align:center">Tulane Aging</div>
+            <div style="padding:7px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.12);border-radius:4px;font-size:11px;color:#E2E8F0;font-weight:600;text-align:center">Council on Aging</div>
+            <div style="padding:7px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.12);border-radius:4px;font-size:11px;color:#E2E8F0;font-weight:600;text-align:center">Ochsner Eat Fit</div>
+            <div style="padding:7px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.12);border-radius:4px;font-size:11px;color:#E2E8F0;font-weight:600;text-align:center">Celebrate Canal!</div>
+            <div style="padding:7px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.12);border-radius:4px;font-size:11px;color:#E2E8F0;font-weight:600;text-align:center">Downtown Dev</div>
+            <div style="padding:7px;background:rgba(200,169,81,.06);border:1px solid rgba(200,169,81,.12);border-radius:4px;font-size:11px;color:#E2E8F0;font-weight:600;text-align:center">Mayor's Office</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <p style="font-size:13px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.7;font-style:italic">The Longevity Operating System. Born in New Orleans. 525,965 verified records. 247 federal data sources. 15 intelligence systems. Medical oversight by Dr. Felicia Stoler. Every claim verifiable. Patent Pending.</p>
+    <div class="ent-reveal" style="text-align:center;padding:40px 0 20px">
+      <a href="mailto:hello@bleu.live?subject=Enterprise%20Inquiry%20-%20BLEU" class="ent-cta">START THE CONVERSATION →</a>
+      <div style="font-size:12px;color:#5A6374;margin-top:12px">hello@bleu.live</div>
+    </div>
+    <div class="ent-reveal" style="text-align:center;padding:28px 0;border-top:1px solid rgba(200,169,81,.12)">
+      <div style="display:flex;justify-content:center;gap:32px;margin-bottom:14px">
+        <div><span style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#C8A951">B</span><span style="font-size:15px;color:#8B95A5;margin-left:4px">elieve</span></div>
+        <div><span style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#C8A951">L</span><span style="font-size:15px;color:#8B95A5;margin-left:4px">ove</span></div>
+        <div><span style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#C8A951">E</span><span style="font-size:15px;color:#8B95A5;margin-left:4px">volve</span></div>
+        <div><span style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#C8A951">U</span><span style="font-size:15px;color:#8B95A5;margin-left:4px">nite</span></div>
+      </div>
+      <p style="font-size:13px;color:#5A6374;max-width:600px;margin:0 auto;line-height:1.7;font-style:italic">
+        The Longevity Operating System. 525,965 verified records. 247 federal data sources. 15 intelligence systems.
+        Medical oversight by Dr. Felicia Stoler (DCN, MS, RDN, FACSM, FAND, Dipl ACLM). Patent Pending.
+      </p>
+    </div>
   </div>
+</section>
 
-  <div class="disclaimer">🏛️ Economic data sourced from BEA, Harvard Business Review, RAND Corporation, and CMS. BLEU projections use validated federal inputs. For enterprise inquiries: hello@bleu.live</div>
 </div>
 
