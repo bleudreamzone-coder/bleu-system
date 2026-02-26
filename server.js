@@ -364,6 +364,13 @@ trauma: 'Trauma-Informed. Window of tolerance. Stabilization before processing. 
 eating: 'Eating & Body. NEVER recommend restriction. HAES. Body neutrality. Intuitive eating. If active ED: 1-866-662-1235.'
 };
 
+const RECOVERY_MODES = {
+sobriety: 'Early Sobriety. Day counting. HALT check. Meeting finder: AA aa.org, NA na.org, SMART smartrecovery.org. Urge surf 15min, call someone, change environment.',
+relapse: 'Relapse Prevention. Trigger mapping. Coping hierarchy. Emergency contacts. "You are here. That matters."',
+harm: 'Harm Reduction. Non-judgmental. Never use alone. Fentanyl test strips. Naloxone/NARCAN at pharmacies. Avoid mixing opioids+benzos+alcohol. Overdose → call 911.'
+};
+
+
 
 function extractCity(msg) {
   const l = msg.toLowerCase();
