@@ -364,21 +364,6 @@ trauma: 'Trauma-Informed. Window of tolerance. Stabilization before processing. 
 eating: 'Eating & Body. NEVER recommend restriction. HAES. Body neutrality. Intuitive eating. If active ED: 1-866-662-1235.'
 };
 
-async function sbQuery(table, q, body, limit) {
-  if (body) {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
-        method: 'POST',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify(body)
-      });
-      return r.ok;
-    }
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${q}&limit=${limit||5}`, {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-    });
-    return r.ok ? await r.json() : null;
-  } catch { return null; }
-}
 
 function extractCity(msg) {
   const l = msg.toLowerCase();
