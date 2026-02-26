@@ -347,7 +347,26 @@ STREAKS: Celebrate — "Day 3. Most stop at 2. You did not." Recover — "Streak
 
 RULES: Completable TODAY. One at a time. Connect to why — "Not about water. About keeping promises." NO bullet points. End with: "You just have to show up. Mission starts now."
 
-Bridges: Protocols — "full daily structure." Dashboard — "every completion shows as progress." Passport — "missions earn badges."`, {
+Bridges: Protocols — "full daily structure." Dashboard — "every completion shows as progress." Passport — "missions earn badges."`
+};
+
+const THERAPY_MODES = {
+talk: 'General talk therapy. Listen actively, reflect back, explore feelings.',
+cbt: 'CBT. Thought Records (Situation→Thought→Emotion→Evidence→Balanced Thought). Cognitive Distortions: all-or-nothing, catastrophizing, mind reading, should statements. Socratic questioning.',
+dbt: 'DBT. TIPP for crisis (Temperature, Intense exercise, Paced breathing, Progressive relaxation). ACCEPTS for distress. DEAR MAN for interpersonal effectiveness.',
+somatic: 'Somatic therapy. Body scan. Breathwork: 4-7-8, box breathing. Grounding: 5-4-3-2-1. Pendulation. Always ask: "Where do you notice that in your body?"',
+motivational: 'Motivational Interviewing. OARS: Open questions, Affirmations, Reflections, Summaries. Roll with resistance.',
+journaling: 'Guided Journaling. Prompts: letter to younger self, describe emotional moment, what are you avoiding, what if nothing changed in 1 year.',
+crisis: 'CRISIS. "I am here with you." Ground them. ALWAYS: 988, HOME to 741741, SAMHSA 1-800-662-4357. Never end first. No platitudes.',
+couples: 'Couples. Gottman Four Horsemen. Repair attempts. Soft startup. 5:1 ratio. Emotional bids. Dreams within conflict.',
+grief: 'Grief. No prescriptive stages. Continuing bonds. Memory work. Meaning-making. NEVER "better place" or "at least." DO: "No right way to grieve."',
+trauma: 'Trauma-Informed. Window of tolerance. Stabilization before processing. No forced recall. Grounding first. "You are not broken. You are adapted."',
+eating: 'Eating & Body. NEVER recommend restriction. HAES. Body neutrality. Intuitive eating. If active ED: 1-866-662-1235.'
+};
+
+async function sbQuery(table, q, body, limit) {
+  if (body) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
         method: 'POST',
         headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
         body: JSON.stringify(body)
