@@ -2242,7 +2242,6 @@ updateSession();
 })();
 </script>
 </div>
-
 <style>
 @keyframes blTk{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .bl-tk{overflow:hidden;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:24px 0}
@@ -2255,20 +2254,17 @@ updateSession();
 <script>
 (function(){
 var io=new IntersectionObserver(function(ee){ee.forEach(function(e){if(e.isIntersecting){e.target.classList.add('bl-in');io.unobserve(e.target)}})},{threshold:0.05,rootMargin:'0px 0px -10px 0px'});
+function tag(el,i){el.classList.add('bl-up');el.style.transitionDelay=(i*80)+'ms';io.observe(el)}
 function run(){
 var h=document.getElementById('p-home');if(!h)return;
-// Tag goAsk cards
-var cards=h.querySelectorAll('[onclick*="goAsk"]');
-cards.forEach(function(c,i){c.classList.add('bl-up');c.style.transitionDelay=(i*80)+'ms';io.observe(c)});
-// Tag section-labels and section-descs
-h.querySelectorAll('.section-label,.section-desc,.divider').forEach(function(el){el.classList.add('bl-up');io.observe(el)});
-// Tag stat row
-h.querySelectorAll('[style*="justify-content:center"][style*="gap:40px"]').forEach(function(el){el.classList.add('bl-up');io.observe(el)});
-// Tag enterprise card
-h.querySelectorAll('[onclick*="enterprise"]').forEach(function(el){el.classList.add('bl-up');io.observe(el)});
-// Tag partner row
-h.querySelectorAll('[style*="overflow-x:auto"]').forEach(function(el){el.classList.add('bl-up');io.observe(el)});
-// Ticker
+// DO NOT touch goAsk cards — they already animate via cardReveal
+// Tag sections, dividers, partner row, enterprise, stats
+h.querySelectorAll('.section-label,.section-desc').forEach(function(el,i){tag(el,i)});
+h.querySelectorAll('.divider').forEach(function(el){tag(el,0)});
+h.querySelectorAll('[onclick*="enterprise"]').forEach(function(el){tag(el,0)});
+h.querySelectorAll('[style*="overflow-x:auto"]').forEach(function(el){tag(el,0)});
+h.querySelectorAll('[style*="justify-content:center"][style*="gap:40px"]').forEach(function(el){tag(el,0)});
+// Ticker after first divider
 var d=h.querySelector('.divider');if(d){
 var tk=document.createElement('div');tk.className='bl-tk';
 var items=['NPI Verified','5-Layer Safety','7 Federal APIs','Drug Interactions','AI Therapy','Cannabis Intelligence','Recovery Support','127-Year Lineage','Patent Pending','Free for Everyone'];
@@ -2276,21 +2272,20 @@ var s=items.map(function(t){return '<span class="bl-tk-i"><span class="d"></span
 tk.innerHTML='<div class="bl-tk-t">'+s+s+'</div>';
 d.parentNode.insertBefore(tk,d.nextSibling)}
 // Count-up stats
-var nums=h.querySelectorAll('[style*="font-size:28px"][style*="font-weight:300"]');
-nums.forEach(function(el){
+h.querySelectorAll('[style*="font-size:28px"][style*="font-weight:300"]').forEach(function(el){
 var orig=el.textContent.trim();var n=parseInt(orig.replace(/[^0-9]/g,''));if(!n)return;
-var suf=orig.replace(/[0-9,]/g,'');
-var cio=new IntersectionObserver(function(ee){ee.forEach(function(e){if(e.isIntersecting){
-cio.unobserve(el);var st=performance.now();
+var suf=orig.replace(/[0-9,]/g,'');var done=false;
+var cio=new IntersectionObserver(function(ee){ee.forEach(function(e){if(e.isIntersecting&&!done){
+done=true;cio.unobserve(el);var st=performance.now();
 (function tick(now){var p=Math.min((now-st)/2000,1);var ease=1-Math.pow(1-p,3);var v=Math.floor(ease*n);
 el.textContent=(n>=1000?v.toLocaleString():v)+suf;
 if(p<1)requestAnimationFrame(tick);else el.textContent=orig})(st)}})},{threshold:0.3});
 cio.observe(el)});
-// Wrap go() for tab transitions
+// Tab switch — re-trigger reveals on other panels
 var og=window.go;if(og){window.go=function(t){og(t);setTimeout(function(){
 var p=document.getElementById('p-'+t);if(!p)return;
-p.querySelectorAll('.section-label,.section-desc,.section-title,.card,.stat-box,.feature-item,.product-card,.chat-box,.disclaimer,.cta,.mode-bar,.quick-row,.divider,.divider-gold,.card-grid>.card').forEach(function(el,i){
-el.classList.add('bl-up');el.style.transitionDelay=(i*50)+'ms';io.observe(el)})},80)}}
+p.querySelectorAll('.section-label,.section-desc,.section-title,.card,.stat-box,.feature-item,.product-card,.chat-box,.disclaimer,.cta,.mode-bar,.quick-row,.divider,.divider-gold').forEach(function(el,i){
+if(!el.classList.contains('bl-up')){tag(el,i)}})},80)}}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();
