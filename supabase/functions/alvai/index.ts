@@ -11,7 +11,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // ═══ ENV VARS (these already exist in your Supabase secrets) ═══
-const OPENAI_API_KEY = Deno.env.get("CLAUDE_API_KEY");  // Your OpenAI key is stored under this name
+const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");  // Your OpenAI key is stored under this name
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
@@ -235,7 +235,8 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const body = await req.json();
+    const messages = body.messages || (body.history && body.history.length > 0 ? body.history : body.message ? [{role: "user", content: body.message}] : null);
     
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return new Response(JSON.stringify({ error: "No messages provided" }), {
