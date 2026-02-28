@@ -464,47 +464,6 @@ button[type="submit"],
 .coming-soon-notify button{padding:12px 20px;background:#4a7858;border:none;border-radius:10px;color:white;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 .coming-soon-notify button:hover{background:#3a6048}
 </style>
-
-<style>
-/* ═══ Tab Enhancement Animations ═══ */
-@keyframes subtleGlow { 0%,100%{box-shadow:0 0 0 rgba(78,205,196,0)} 50%{box-shadow:0 0 20px rgba(78,205,196,0.06)} }
-@keyframes countUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
-
-/* Stats cards entrance */
-[style*="grid-template-columns"] > div {
-  animation: countUp 0.5s ease both;
-}
-[style*="grid-template-columns"] > div:nth-child(1) { animation-delay: 0.05s }
-[style*="grid-template-columns"] > div:nth-child(2) { animation-delay: 0.1s }
-[style*="grid-template-columns"] > div:nth-child(3) { animation-delay: 0.15s }
-[style*="grid-template-columns"] > div:nth-child(4) { animation-delay: 0.2s }
-
-/* Smooth hover for all cards */
-[style*="border-radius:14px"][style*="cursor:pointer"] {
-  transition: all 0.25s ease !important;
-}
-[style*="border-radius:14px"][style*="cursor:pointer"]:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-}
-
-/* Enhanced section labels */
-.section-label {
-  position: relative;
-  padding-left: 0;
-}
-.section-label::before {
-  content: '';
-  display: inline-block;
-  width: 3px;
-  height: 12px;
-  background: linear-gradient(180deg, #4ecdc4, #d4af37);
-  border-radius: 2px;
-  margin-right: 8px;
-  vertical-align: middle;
-}
-</style>
-
 </head>
 <body>
 
@@ -562,7 +521,7 @@ button[type="submit"],
       <div style="font-size:28px;margin-bottom:10px">&#127769;</div>
       <div style="color:#4ecdc4;font-weight:600;font-size:16px;margin-bottom:6px">I Can't Sleep</div>
       <div style="color:#8fa4b0;font-size:13px;line-height:1.6;font-weight:300">Magnesium glycinate, ashwagandha, L-theanine, CBD — exact doses, brands, prices. Plus sleep hygiene protocols that actually work. Not generic advice. A real plan.</div>
-      <div style="margin-top:10px"><span style="font-size:10px;padding:3px 10px;border-radius:12px;background:rgba(78,205,196,0.12);color:#4ecdc4">Protocols · Products · Science · Safety — Connected</span></div>
+      <div style="margin-top:10px"><span style="font-size:10px;padding:3px 10px;border-radius:12px;background:rgba(78,205,196,0.12);color:#4ecdc4">Protocol + Products + Science</span></div>
     </div>
 
     <div style="background:linear-gradient(135deg,rgba(35,30,50,0.8),rgba(28,25,45,0.9));border:1px solid rgba(167,139,250,0.15);border-radius:16px;padding:24px;cursor:pointer;transition:all 0.3s" onclick="goAsk('directory','Find me a therapist for anxiety in New Orleans')" onmouseover="this.style.borderColor='#a78bfa';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(167,139,250,0.15)';this.style.transform='none'">
@@ -610,7 +569,7 @@ button[type="submit"],
     <div style="background:linear-gradient(135deg,rgba(20,45,40,0.8),rgba(18,38,35,0.9));border:1px solid rgba(78,205,196,0.15);border-radius:16px;padding:24px;cursor:pointer;transition:all 0.3s" onclick="goAsk('recovery','I am 3 days sober and struggling')" onmouseover="this.style.borderColor='#4ecdc4';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(78,205,196,0.15)';this.style.transform='none'">
       <div style="font-size:28px;margin-bottom:10px">&#128330;&#65039;</div>
       <div style="color:#4ecdc4;font-weight:600;font-size:16px;margin-bottom:6px">Recovery Support</div>
-      <div style="color:#8fa4b0;font-size:13px;line-height:1.6;font-weight:300">This is sacred ground. <span style='color:#4ecdc4'>Every path to recovery is valid here</span> — 12-step, SMART Recovery, MAT, harm reduction, faith-based, holistic. BLEU connects you to verified recovery practitioners, support communities, progress tracking, and crisis resources in one place. Relapse is not failure — it's data. Family support included. SAMHSA 1-800-662-4357. You are never alone. Our Recovery ecosystem integrates with your Passport, your practitioner from the Directory, and your protocols — so your support system actually talks to each other.</div>
+      <div style="color:#8fa4b0;font-size:13px;line-height:1.6;font-weight:300">This is sacred ground. 12-step, SMART Recovery, MAT, harm reduction — all valid. Relapse is not failure. Family support included. SAMHSA 1-800-662-4357. You are not alone.</div>
       <div style="margin-top:10px"><span style="font-size:10px;padding:3px 10px;border-radius:12px;background:rgba(78,205,196,0.12);color:#4ecdc4">SAMHSA + AA + SMART + Free</span></div>
     
 
@@ -691,8 +650,8 @@ button[type="submit"],
     <div class="feature-item"><div class="feature-icon">💊</div><div class="feature-text"><h4>1,054 Products</h4><p>FDA-checked. Clinically scored. With affiliate links.</p></div></div>
     <div class="feature-item"><div class="feature-icon">📚</div><div class="feature-text"><h4>465 PubMed Studies</h4><p>Peer-reviewed research in plain language.</p></div></div>
     <div class="feature-item"><div class="feature-icon">⚠️</div><div class="feature-text"><h4>Drug Interactions</h4><p>CYP450 enzyme pathways. Severity ratings. What to do.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">🧠</div><div class="feature-text"><h4>12 Therapy Modes</h4><p>CBT, DBT, somatic, crisis, couples, grief, trauma, motivational interviewing + more. Each mode backed by clinical frameworks and connected to Directory practitioners for escalation.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">🔥</div><div class="feature-text"><h4>8 Recovery Modes</h4><p>Sobriety, relapse prevention, harm reduction, MAT, family support, faith-based, holistic, cannabis-informed. Integrated with Recovery tab tracking and SAMHSA referrals.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🧠</div><div class="feature-text"><h4>12 Therapy Modes</h4><p>CBT, DBT, somatic, crisis, couples, grief, trauma + more.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🔥</div><div class="feature-text"><h4>8 Recovery Modes</h4><p>Sobriety, relapse prevention, harm reduction, MAT, family.</p></div></div>
   </div>
 
   <div class="disclaimer">⚕️ Alvai is an AI wellness advisor powered by Claude, not a medical professional. For emergencies call 911. For crisis support call/text 988. Alvai does not diagnose, prescribe, or replace professional care.</div>
@@ -702,26 +661,6 @@ button[type="submit"],
 <div class="panel" id="p-dashboard">
   <div class="section-label">YOUR COMMAND CENTER</div>
   <h1 class="hero-title">📊 <span class="teal">Dashboard</span></h1>
-    <p style="color:#8fa4b0;font-size:15px;line-height:1.85;max-width:740px;font-weight:300;margin:14px 0 0">
-      Every tab feeds here. Your supplements from The Vessel, your practitioners from the Directory, your therapy progress, your recovery milestones, your protocols, your community connections — all converging into one <span style="color:#4ecdc4">living snapshot of your wellness journey</span>. No other platform does this. Not your doctor's portal. Not your insurance app. Not your fitness tracker. BLEU is the first system that sees the whole you.
-    </p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0">
-      <div style="background:rgba(25,50,68,0.5);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;text-align:center">
-        <div style="font-size:22px;margin-bottom:6px">🔗</div>
-        <div style="color:#4ecdc4;font-weight:600;font-size:12px">Connected Tabs</div>
-        <div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Vessel · Directory · Protocols · Therapy · Recovery · ECSIQ</div>
-      </div>
-      <div style="background:rgba(28,45,58,0.5);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px;text-align:center">
-        <div style="font-size:22px;margin-bottom:6px">📊</div>
-        <div style="color:#d4af37;font-weight:600;font-size:12px">Tracks Everything</div>
-        <div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Wellness score · Sleep · Streaks · Missions · Safety alerts</div>
-      </div>
-      <div style="background:rgba(25,50,68,0.5);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:16px;text-align:center">
-        <div style="font-size:22px;margin-bottom:6px">🧠</div>
-        <div style="color:#4ecdc4;font-weight:600;font-size:12px">ALVAI Powered</div>
-        <div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Ask anything about your data — Alvai knows your full history</div>
-      </div>
-    </div>
   <p class="hero-sub">Your daily wellness intelligence. Shield scores, correlation insights, anomaly detection, and predictive analytics — all fed by every interaction across the BLEU ecosystem.</p>
 
   <div class="stat-row">
@@ -733,7 +672,7 @@ button[type="submit"],
   </div>
 
   <div class="card" style="border-color:rgba(45,138,158,.2)">
-    <h3 style="color:var(--teal)">Your Dashboard — The Nerve Center of Your Wellness</h3>
+    <h3 style="color:var(--teal)">Your Dashboard Activates With Your Passport</h3>
     <p>Every practitioner visit, every product you use, every event you attend, every conversation with Alvai — it all feeds your shields. Watch correlations emerge: sleep improves → anxiety drops → productivity rises → relationships strengthen. The system sees patterns you can't.</p>
     <div style="margin-top:12px"><span class="cta cta-teal" onclick="go('passport')" style="font-size:15px;padding:8px 20px">Start Your Passport →</span></div>
   </div>
@@ -747,8 +686,8 @@ button[type="submit"],
 <!-- ═══════════════════════ DIRECTORY ═══════════════════════ -->
 <div class="panel" id="p-directory">
   <div class="section-label">NPI-VERIFIED · TRUST-SCORED</div>
-  <h1 class="hero-title">⚕️ <span class="accent">485,476</span> Verified Practitioners</h1>
-  <p class="hero-sub">You've been carrying something. Maybe it's pain that won't go away. Maybe it's exhaustion your doctor calls "normal." This isn't another directory — it's a <span style='color:#4ecdc4'>federally validated intelligence layer</span>. Every one of the 485,476 practitioners was verified through the National Provider Identifier registry via CMS.gov. Licensed providers, validated businesses, sole proprietors, clinics, telehealth — all organized so you find exactly who you need. Trust scores calculated from real credentials and outcomes. Never bought.</p>
+  <h1 class="hero-title">⚕️ <span class="accent">485,476</span> Practitioners</h1>
+  <p class="hero-sub">You've been carrying something. Maybe it's pain that won't go away. Maybe it's exhaustion your doctor calls "normal." Every practitioner here was verified through the National Provider Index. Their trust score is calculated from real credentials, not reviews.</p>
 
   <div class="section-label" style="margin-top:28px">WHAT'S PULLING AT YOU?</div>
   <p class="section-desc">You don't need to know the clinical term. Just start where it hurts.</p>
@@ -788,61 +727,7 @@ button[type="submit"],
 <div class="panel" id="p-vessel">
   <div class="section-label">TRUST-SCORED MARKETPLACE</div>
   <h1 class="hero-title">💊 <span class="accent">The Vessel</span></h1>
-    <p style="color:#8fa4b0;font-size:15px;line-height:1.85;max-width:740px;font-weight:300;margin:14px 0 0">
-      The wellness industry sells you hope. We sell you <span style="color:#4ecdc4">proof</span>. Every product in The Vessel is scored against clinical studies, FDA registrations, and practitioner protocols. We show you <em>why</em> it works, <em>how</em> it fits your life, and flag every interaction with your current medications before you buy.
-    </p>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0">
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:18px;text-align:center">
-        <div style="color:#4ecdc4;font-size:26px;font-weight:600">5-Layer</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Safety Engine</div>
-      </div>
-      <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:18px;text-align:center">
-        <div style="color:#d4af37;font-size:26px;font-weight:600">302K+</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Interactions Mapped</div>
-      </div>
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:18px;text-align:center">
-        <div style="color:#4ecdc4;font-size:26px;font-weight:600">7</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Federal APIs</div>
-      </div>
-      <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:18px;text-align:center">
-        <div style="color:#d4af37;font-size:26px;font-weight:600">$0</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">To Browse</div>
-      </div>
-    </div>
-
-    <!-- HOW VESSEL WORKS -->
-    <div style="background:rgba(25,50,68,0.35);border:1px solid rgba(78,205,196,0.08);border-radius:18px;padding:28px;margin:24px 0">
-      <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">HOW THE VESSEL WORKS FOR YOU</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
-        <div style="text-align:center">
-          <div style="font-size:26px;margin-bottom:8px">🎯</div>
-          <div style="color:#4ecdc4;font-weight:600;font-size:12px;margin-bottom:5px">Shop By Need</div>
-          <div style="color:#8fa4b0;font-size:11px;line-height:1.5;font-weight:300">Can't sleep? Stressed? Gut issues? Start with the problem, not the product aisle.</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:26px;margin-bottom:8px">🔬</div>
-          <div style="color:#d4af37;font-weight:600;font-size:12px;margin-bottom:5px">See The Science</div>
-          <div style="color:#8fa4b0;font-size:11px;line-height:1.5;font-weight:300">Every product shows mechanism of action, clinical evidence, and dosing from real studies.</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:26px;margin-bottom:8px">🛡️</div>
-          <div style="color:#4ecdc4;font-weight:600;font-size:12px;margin-bottom:5px">Safety Check</div>
-          <div style="color:#8fa4b0;font-size:11px;line-height:1.5;font-weight:300">CYP450, UGT Phase II, transporters, PD effects — checked against YOUR meds before you buy.</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:26px;margin-bottom:8px">🛒</div>
-          <div style="color:#d4af37;font-weight:600;font-size:12px;margin-bottom:5px">Best Price Found</div>
-          <div style="color:#8fa4b0;font-size:11px;line-height:1.5;font-weight:300">Amazon, iHerb, Walmart, Whole Foods — we compare so you don't overpay.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- AFFILIATE TRANSPARENCY -->
-    <div style="background:linear-gradient(135deg,rgba(78,205,196,0.04),rgba(212,175,55,0.04));border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;text-align:center;margin-bottom:8px">
-      <div style="color:#d4af37;font-size:12px;font-weight:500">💛 Transparency: Some product links earn a commission that funds this free platform.</div>
-      <div style="color:#8fa4b0;font-size:11px;margin-top:3px;font-weight:300">We never recommend based on commission. Science first. Always. — Dr. Felicia Stoler, DCN, MS, RDN, FACSM</div>
-    </div>
-  <p class="hero-sub">You already know something needs to change. Maybe it's the fatigue your doctor can't explain. Maybe it's the shelf of half-used bottles you bought hoping one would work. The Vessel is a <span style='color:#4ecdc4'>trust-scored marketplace</span> powered by 7 live federal APIs. Every product is checked against OpenFDA adverse events, DailyMed labels, PubMed clinical studies, and screened through our 5-layer Safety Engine against YOUR current medications. Affiliates from Amazon, iHerb, Walmart, Whole Foods, and GNC are woven in — we compare prices so you get the best deal. We tell you <em>why</em> it works and <em>how</em> it fits your life.</p>
+  <p class="hero-sub">You already know something needs to change. Maybe it's the fatigue your doctor can't explain. Maybe it's the shelf of half-used bottles you bought hoping one would work. Every product here is scored against real data — clinical studies, FDA registrations, practitioner protocols. We tell you <em>why</em> it works and <em>how</em> it fits your life.</p>
 
   <div class="section-label" style="margin-top:24px">SHOP BY WHAT YOU NEED</div>
   <div class="quick-row">
@@ -953,7 +838,7 @@ button[type="submit"],
     <span class="card-icon">🌙</span>
     <div class="card-title" style="color:#FB923C">I Can't Sleep</div>
     <div class="card-desc">Magnesium glycinate, ashwagandha, L-theanine — exact doses, brands, prices. Plus sleep hygiene protocols that actually work. Not generic advice. A real plan.</div>
-    <div class="card-tags"><span class="card-tag" style="background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.2);color:#FB923C">Protocols · Products · Science · Safety — Connected</span></div>
+    <div class="card-tags"><span class="card-tag" style="background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.2);color:#FB923C">Protocol + Products + Science</span></div>
     <div class="card-expand" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(251,146,60,.1)">
       <div style="font-size:12px;color:var(--dim);line-height:1.8">
         <div style="margin-bottom:8px"><strong style="color:var(--cream)">What Alvai builds for you:</strong> A personalized sleep stack with exact products from Thorne, Nordic Naturals, or NOW Foods — checked against your medications for interactions via our FDA adverse event database.</div>
@@ -1057,7 +942,7 @@ button[type="submit"],
   <div class="wow-card" style="--accent:var(--teal)" onclick="this.classList.toggle('open')">
     <span class="card-icon">🛡️</span>
     <div class="card-title" style="color:var(--teal)">Recovery Support</div>
-    <div class="card-desc">This is sacred ground. <span style='color:#4ecdc4'>Every path to recovery is valid here</span> — 12-step, SMART Recovery, MAT, harm reduction, faith-based, holistic. BLEU connects you to verified recovery practitioners, support communities, progress tracking, and crisis resources in one place. Relapse is not failure — it's data. Family support included. SAMHSA 1-800-662-4357. You are never alone. Our Recovery ecosystem integrates with your Passport, your practitioner from the Directory, and your protocols — so your support system actually talks to each other.</div>
+    <div class="card-desc">This is sacred ground. 12-step, SMART Recovery, MAT, harm reduction — all valid. Relapse is not failure. Family support included. SAMHSA 1-800-662-4357. You are not alone.</div>
     <div class="card-tags"><span class="card-tag" style="background:rgba(45,212,168,.12);border:1px solid rgba(45,212,168,.2);color:var(--teal)">SAMHSA + AA + SMART + Free</span></div>
     <div class="card-expand" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,212,168,.1)">
       <div style="font-size:12px;color:var(--dim);line-height:1.8">
