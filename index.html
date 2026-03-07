@@ -367,6 +367,24 @@ button[type="submit"],
   background: rgba(200,169,81,.2);
   border-radius: 3px;
 }
+/* ═══ RUFUS COMMERCE CARDS ═══ */
+.rufus-cards{margin-top:10px;display:flex;flex-direction:column;gap:7px}
+.rufus-label{font-size:9px;letter-spacing:2px;color:#8fa4b0;font-family:monospace;margin-bottom:2px;padding-left:2px}
+.rufus-card{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:rgba(15,24,35,0.85);border:1px solid rgba(78,205,196,0.1);border-radius:12px;transition:border-color 0.2s}
+.rufus-card:hover{border-color:rgba(78,205,196,0.25)}
+.rufus-card-icon{font-size:20px;flex-shrink:0;line-height:1}
+.rufus-card-body{flex:1;min-width:0}
+.rufus-card-name{font-size:11px;font-weight:600;color:#e8d5b0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rufus-card-why{font-size:10px;color:#8fa4b0;line-height:1.5;margin-top:2px}
+.rufus-card-safety{font-size:9px;font-family:monospace;margin-top:3px}
+.rufus-card-safety.safe{color:#22c55e}.rufus-card-safety.warn{color:#f59e0b}
+.rufus-card-actions{display:flex;gap:5px;margin-top:7px}
+.rufus-btn-primary{flex:1;padding:5px 8px;background:rgba(78,205,196,0.07);border:1px solid rgba(78,205,196,0.15);border-radius:8px;color:#4ecdc4;font-size:9px;font-family:monospace;cursor:pointer;text-align:center;text-decoration:none;display:block;transition:all 0.2s}
+.rufus-btn-primary:hover{background:rgba(78,205,196,0.14);border-color:#4ecdc4}
+.rufus-card-meta{display:flex;justify-content:space-between;align-items:center;margin-top:5px}
+.rufus-card-price{font-family:monospace;font-size:12px;color:#e8d5b0;flex-shrink:0}
+.rufus-card-rating{font-size:9px;color:#8fa4b0}
+.rufus-disclosure{font-size:8px;color:rgba(143,164,176,0.5);text-align:center;margin-top:4px;font-style:italic}
 </style>
 <style>
 /* ═══ HOME PAGE SHOWSTOPPER ═══ */
@@ -1768,6 +1786,130 @@ function fmt(t){
   return t
 }
 
+
+// ═══════════════════════════════════════════════
+// RUFUS COMMERCE ENGINE — Contextual product cards
+// Fires after every Alvai response. Client-side only.
+// Products surface in conversation, not a static bar.
+// ═══════════════════════════════════════════════
+
+const RUFUS_PRODUCTS = {
+  'thorne-mag': {n:'Thorne Magnesium Bisglycinate',i:'💊',p:'$25',u:'60 caps',r:'⭐ 4.8 · 12K',why:"The GABA-A pathway activator. Glycinate form crosses the blood-brain barrier — oxide doesn't. Take 400mg 1hr before bed. Thorne is NSF Certified, no fillers.",sf:'✅ No CYP450 interactions',url:'https://amazon.com/s?k=thorne+magnesium+bisglycinate&tag=bleu-live-20',label:'Buy on Amazon'},
+  'omega3': {n:'Nordic Naturals Ultimate Omega',i:'🐟',p:'$28',u:'60 softgels',r:'⭐ 4.7 · 22K',why:"Triglyceride form — 70% better absorbed than ethyl ester. EPA is the anti-inflammatory molecule. Target 2:1 EPA:DHA ratio. Take with your fattiest meal.",sf:'✅ Safe with most meds',url:'https://amazon.com/s?k=nordic+naturals+ultimate+omega&tag=bleu-live-20',label:'Buy on Amazon'},
+  'ashwa': {n:'NOW Ashwagandha KSM-66 450mg',i:'🌿',p:'$12',u:'90 caps',r:'⭐ 4.6 · 30K',why:"KSM-66 is the only extract with 22 completed clinical trials. Reduces cortisol 28-30% over 60 days. Run 6-week cycles — don't take continuously.",sf:'✅ No major CYP interactions',url:'https://amazon.com/s?k=now+ashwagandha+ksm-66&tag=bleu-live-20',label:'Buy on Amazon'},
+  'ltheanine': {n:'L-Theanine 200mg',i:'🧘',p:'$13',u:'100 caps',r:'⭐ 4.6 · 18K',why:"Crosses blood-brain barrier in 30 min. Raises alpha waves — same brain state as eyes-closed meditation. Pairs with morning coffee to eliminate jitters.",sf:'✅ No known interactions',url:'https://iherb.com/search?kw=l-theanine+200mg&rcode=BLEU',label:'Buy on iHerb'},
+  'cw-cbd': {n:"Charlotte's Web CBD Oil",i:'🌿',p:'$45',u:'60mL',r:'⭐ 4.5 · 15K',why:"Full-spectrum, USDA organic. 5-HT1A pathway — same as SSRIs but gentler. Start at 10mg sublingual, hold 60 seconds. 11pm timing for sleep.",sf:'⚠️ CYP3A4 + CYP2C19 — check meds',url:'https://iherb.com/search?kw=charlotte+web+cbd&rcode=BLEU',label:'Buy on iHerb'},
+  'betterhelp': {n:'BetterHelp — Licensed Therapy',i:'💬',p:'$65/wk',u:'Online',r:'⭐ 4.3 · 2M',why:"Matched with a licensed therapist in 48 hours. More affordable than most in-office copays. CBT, DBT, trauma, grief, couples — full specialization.",sf:'✅ Licensed professionals',url:'https://betterhelp.com/bleu',label:'Start Therapy →'},
+  'talkspace': {n:'Talkspace — Text + Video',i:'💬',p:'$69/wk',u:'Online',r:'⭐ 4.2 · 500K',why:"Text your therapist any time — good for 3am thoughts. Video sessions available. Insurance often accepted. Especially good for anxiety and depression.",sf:'✅ Licensed professionals',url:'https://talkspace.com',label:'Start Therapy →'},
+  'goodrx': {n:'GoodRx — Prescription Savings',i:'💊',p:'Free',u:'App',r:'⭐ 4.8 · 1M',why:"Pull this up at the pharmacy counter before paying. Saves up to 80% on brand and generic prescriptions. No insurance needed. Completely free.",sf:'✅ No side effects',url:'https://goodrx.com',label:'Get Free Card →'},
+  'costplus': {n:'Mark Cuban Cost Plus Drugs',i:'🏥',p:'At cost',u:'Online pharmacy',r:'⭐ 4.6 · 200K',why:"Manufacturing cost + 15% + $3 pharmacist fee. Metformin $5. Generic statins $3. Lisinopril $1. Life-changing if you're uninsured or underinsured.",sf:'✅ Transparent pricing',url:'https://costplusdrugs.com',label:'Check Your Drug →'},
+  'dollarfor': {n:'Dollar For — Medical Bill Help',i:'🏥',p:'100% Free',u:'Nonprofit',r:'⭐ 4.9 · 10K',why:"Submit your medical bill. They negotiate elimination with the hospital's charity care program. $5.4 billion in debt eliminated. Completely free — they're a nonprofit.",sf:'✅ Free nonprofit service',url:'https://dollarfor.org',label:'Submit Your Bill →'},
+  'classpass': {n:'ClassPass — Every Studio',i:'🏃',p:'$19/mo',u:'800+ studios',r:'⭐ 4.5 · 1M',why:"Boxing, yoga, pilates, cycling, swim — every studio in your city on one membership. First month discounted. No gym contract.",sf:'✅ No interactions',url:'https://classpass.com',label:'Start Free →'},
+  'oura': {n:'Oura Ring Gen 3',i:'💍',p:'$299',u:'+ $5.99/mo',r:'⭐ 4.5 · 50K',why:"Sleep staging, HRV, readiness score, cycle tracking. The only wearable that tracks sleep architecture objectively. Invisible on your finger. No screen.",sf:'✅ No interactions',url:'https://amazon.com/dp/B09Q2JY797?tag=bleu-live-20',label:'Buy on Amazon'},
+  'insighttimer': {n:'Insight Timer — Free Meditation',i:'🧘',p:'Free',u:'App',r:'⭐ 4.8 · 1M',why:"200,000+ free guided meditations. Best free meditation app period. Sleep, anxiety, PTSD-specific sessions from world-class teachers.",sf:'✅ Free forever',url:'https://insighttimer.com',label:'Download Free →'},
+  'weedmaps': {n:'Weedmaps — Find Dispensaries',i:'🗺️',p:'Free',u:'App',r:'⭐ 4.3 · 2M',why:"Real-time menus, deals, lab-tested products. Read reviews from actual patients. Compare prices across dispensaries. Delivery or pickup.",sf:'⚠️ Check your state law',url:'https://weedmaps.com',label:'Find Dispensary →'},
+  'leafly': {n:'Leafly — Strain Intelligence',i:'🌿',p:'Free',u:'App',r:'⭐ 4.4 · 1M',why:"2,500+ strain profiles with terpene breakdowns. Myrcene = sedative. Limonene = mood. Caryophyllene = inflammation. Pinene = memory. Match strain to symptom.",sf:'⚠️ CYP450 if on medications',url:'https://leafly.com',label:'Find Your Strain →'},
+  'endel': {n:'Endel — AI Soundscapes for Sleep',i:'🎵',p:'$50/yr',u:'App',r:'⭐ 4.6 · 50K',why:"AI soundscapes that adapt to your heart rate, time of day, location. Scientifically validated to reduce cortisol. Better than white noise or music.",sf:'✅ No interactions',url:'https://endel.io',label:'Try Free →'},
+  'creatine': {n:'Momentous Creatine Monohydrate',i:'💪',p:'$30',u:'30 servings',r:'⭐ 4.6 · 5K',why:"Most studied supplement in existence. 5g/day, every day. Muscle, brain, energy. No loading needed. Informed Sport certified. Takes 4 weeks to fully saturate.",sf:'✅ No significant interactions',url:'https://amazon.com/s?k=momentous+creatine&tag=bleu-live-20',label:'Buy on Amazon'},
+};
+
+// Keyword → product ID mapping (1-2 products per topic, most relevant first)
+const RUFUS_MAP = {
+  sleep:    ['thorne-mag','endel'],
+  insomnia: ['thorne-mag','cw-cbd'],
+  melatonin:['thorne-mag','endel'],
+  fatigue:  ['omega3','thorne-mag'],
+  exhausted:['thorne-mag','omega3'],
+  anxiety:  ['ashwa','ltheanine'],
+  anxious:  ['ashwa','ltheanine'],
+  stress:   ['ashwa','ltheanine'],
+  cortisol: ['ashwa','endel'],
+  inflammation:['omega3'],
+  pain:     ['omega3','cw-cbd'],
+  therapist:['betterhelp','talkspace'],
+  therapy:  ['betterhelp','talkspace'],
+  counselor:['betterhelp'],
+  'mental health':['betterhelp'],
+  prescription:['goodrx','costplus'],
+  medication:['goodrx','costplus'],
+  pharmacy: ['goodrx','costplus'],
+  'medical bill':['dollarfor'],
+  'hospital bill':['dollarfor'],
+  debt:     ['dollarfor'],
+  gym:      ['classpass'],
+  fitness:  ['classpass'],
+  workout:  ['classpass'],
+  boxing:   ['classpass'],
+  yoga:     ['classpass'],
+  sleep: ['thorne-mag','oura'],
+  tracking: ['oura'],
+  hrv:      ['oura'],
+  meditation:['insighttimer'],
+  mindfulness:['insighttimer'],
+  cannabis: ['weedmaps','leafly'],
+  dispensary:['weedmaps'],
+  strain:   ['leafly'],
+  thc:      ['leafly','weedmaps'],
+  cbd:      ['cw-cbd'],
+  muscle:   ['creatine'],
+  creatine: ['creatine'],
+  protein:  ['creatine'],
+};
+
+// Detect which products to surface based on conversation text
+function detectRufusProducts(userText, alvaiText) {
+  const combined = (userText + ' ' + alvaiText).toLowerCase();
+  const seen = new Set();
+  const ids = [];
+  for (const [kw, productIds] of Object.entries(RUFUS_MAP)) {
+    if (combined.includes(kw)) {
+      for (const id of productIds) {
+        if (!seen.has(id) && ids.length < 2) { seen.add(id); ids.push(id); }
+      }
+    }
+    if (ids.length >= 2) break;
+  }
+  return ids;
+}
+
+// Render Rufus product cards below a message div
+function renderRufusCards(containerDiv, productIds) {
+  if (!productIds || !productIds.length) return;
+  const wrapper = document.createElement('div');
+  wrapper.className = 'rufus-cards';
+  const label = document.createElement('div');
+  label.className = 'rufus-label';
+  label.textContent = 'ALVAI RECOMMENDS';
+  wrapper.appendChild(label);
+  for (const id of productIds) {
+    const p = RUFUS_PRODUCTS[id];
+    if (!p) continue;
+    const isSafe = p.sf && p.sf.startsWith('✅');
+    const card = document.createElement('div');
+    card.className = 'rufus-card';
+    card.innerHTML = `
+      <div class="rufus-card-icon">${p.i}</div>
+      <div class="rufus-card-body">
+        <div class="rufus-card-name">${p.n}</div>
+        <div class="rufus-card-why">${p.why}</div>
+        <div class="rufus-card-safety ${isSafe?'safe':'warn'}">${p.sf||''}</div>
+        <div class="rufus-card-meta">
+          <span class="rufus-card-price">${p.p} <span style="font-size:9px;color:#8fa4b0">/ ${p.u}</span></span>
+          <span class="rufus-card-rating">${p.r}</span>
+        </div>
+        <div class="rufus-card-actions">
+          <a href="${p.url}" target="_blank" class="rufus-btn-primary">${p.label}</a>
+        </div>
+      </div>`;
+    wrapper.appendChild(card);
+  }
+  const disc = document.createElement('div');
+  disc.className = 'rufus-disclosure';
+  disc.textContent = 'BLEU earns a small commission — trust scores are never affected by affiliate status.';
+  wrapper.appendChild(disc);
+  containerDiv.appendChild(wrapper);
+}
+
 async function send(tab){
   const input=document.getElementById('in-'+tab),box=document.getElementById('chat-'+tab)
   if(!input||!box)return
@@ -1787,7 +1929,15 @@ async function send(tab){
       aDiv.innerHTML=''
       while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split('\n');buffer=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);if(p.text||p.content){full+=(p.text||p.content);aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}}}
       aDiv.innerHTML=fmt(full);chatHistories[tab].push({role:'assistant',content:full})
-    }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);chatHistories[tab].push({role:'assistant',content:reply})}
+      // Rufus: surface contextual product cards after response (not during emotional distress)
+      const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];
+      const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));
+      if(!isDistress){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}
+    }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);
+      const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];
+      const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));
+      if(!isDistress){const rufusIds=detectRufusProducts(msg,reply);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}
+      chatHistories[tab].push({role:'assistant',content:reply})}
     if(currentUser){saveConvo(tab,chatHistories[tab]).catch(()=>{});updateBleScore(tab).catch(()=>{})}
   }catch(e){aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again in a moment.</em>'}
   box.scrollTop=box.scrollHeight
