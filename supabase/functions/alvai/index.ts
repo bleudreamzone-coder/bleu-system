@@ -332,6 +332,68 @@ serve(async (req) => {
     // Limit conversation history to last 8 exchanges (16 messages)
     const recentMessages = messages.slice(-16);
     
+    // ═══ RUFUS AFFILIATE INTELLIGENCE ═══
+    // Contextual affiliate surfacing — triggered by topic, not by mode
+    // Only fires when user is action-ready (information-seeking, not in distress)
+    const AFFILIATE_MAP: Record<string, { name: string; why: string; link: string; price?: string; label?: string }[]> = {
+      sleep: [
+        { name: "Magnesium Glycinate 400mg", why: "The GABA-A pathway agonist that most people are deficient in. Glycinate form crosses the blood-brain barrier. Take 1 hour before bed. Not oxide — that's a laxative.", link: "https://amazon.com/s?k=magnesium+glycinate+400mg&tag=bleu-live-20", price: "~$15", label: "Amazon" },
+        { name: "Thorne Magnesium Bisglycinate", why: "Thorne's version is NSF Certified for Sport, third-party tested, no fillers. Their bisglycinate has the best bioavailability data.", link: "https://thorne.com/products/dp/magnesium-bisglycinate", price: "~$25", label: "Thorne" },
+      ],
+      anxiety: [
+        { name: "Ashwagandha KSM-66", why: "KSM-66 is the only extract with 22 clinical trials specifically. Reduces cortisol 30% in 60 days. Run 6-week cycles — don't take indefinitely.", link: "https://amazon.com/s?k=ashwagandha+ksm-66&tag=bleu-live-20", price: "~$22", label: "Amazon" },
+        { name: "L-Theanine 200mg", why: "Crosses the blood-brain barrier in 30 minutes. Raises alpha wave activity — the same brain state as eyes-closed meditation. Stacks perfectly with morning coffee.", link: "https://iherb.com/search?kw=l-theanine+200mg&rcode=BLEU", price: "~$13", label: "iHerb" },
+      ],
+      inflammation: [
+        { name: "Omega-3 2000mg EPA/DHA", why: "EPA does the anti-inflammatory heavy lifting. You want a 2:1 EPA:DHA ratio. Nordic Naturals and Carlson are the gold standard — both third-party tested for oxidation.", link: "https://amazon.com/s?k=nordic+naturals+omega-3&tag=bleu-live-20", price: "~$28", label: "Amazon" },
+        { name: "Turmeric with Piperine", why: "Curcumin alone has near-zero bioavailability. Piperine (black pepper extract) increases absorption 2,000%. Always buy the combination.", link: "https://iherb.com/search?kw=turmeric+piperine&rcode=BLEU", price: "~$18", label: "iHerb" },
+      ],
+      energy: [
+        { name: "Vitamin D3+K2 5000IU", why: "42% of Americans are deficient. D3 is the energy and immune version — D2 is the weak pharmaceutical form. K2 routes calcium to bones not arteries. Take with fat.", link: "https://amazon.com/s?k=vitamin+d3+k2+5000iu&tag=bleu-live-20", price: "~$17", label: "Amazon" },
+        { name: "CoQ10 200mg (Ubiquinol form)", why: "The mitochondrial fuel. Ubiquinol is the reduced, active form — 8x more bioavailable than ubiquinone. Critical if you're on statins, which deplete it.", link: "https://iherb.com/search?kw=ubiquinol+200mg&rcode=BLEU", price: "~$32", label: "iHerb" },
+      ],
+      therapy: [
+        { name: "BetterHelp", why: "Licensed therapists, matched within 48 hours. $60-$100/week — more affordable than most in-office copays. Full sliding scale available. Specialties across CBT, DBT, trauma, grief, couples.", link: "https://betterhelp.com/bleu", price: "from $60/wk", label: "BetterHelp" },
+      ],
+      prescription: [
+        { name: "GoodRx", why: "Free. No insurance needed. Saves up to 80% on brand and generic prescriptions. Pull it up at the pharmacy counter — pharmacists honor it.", link: "https://goodrx.com", price: "Free", label: "GoodRx" },
+        { name: "Mark Cuban Cost Plus Drugs", why: "Transparent pricing: manufacturing cost + 15% markup + $3 pharmacist fee. Metformin is $5. Statins are $3. Life-changing if you're uninsured.", link: "https://costplusdrugs.com", price: "At-cost", label: "Cost Plus" },
+      ],
+      fitness: [
+        { name: "ClassPass", why: "One membership, access to gyms, yoga, pilates, cycling, swimming — hundreds of studios. First month discounted. No long-term contract.", link: "https://classpass.com", price: "from $19/mo", label: "ClassPass" },
+      ],
+      cannabis: [
+        { name: "iHerb CBD", why: "Third-party tested hemp-derived CBD. iHerb vets every brand — no pesticides, accurate labeling. Use code BLEU for 5% off.", link: "https://iherb.com/search?kw=cbd&rcode=BLEU", price: "varies", label: "iHerb" },
+      ],
+    };
+
+    // Detect which affiliates are relevant to this conversation
+    function detectAffiliates(text: string): string {
+      const msg = text.toLowerCase();
+      const relevant: string[] = [];
+      if (/sleep|insomnia|melatonin|can.t sleep|wake.*night|exhausted.*morning/.test(msg)) relevant.push("sleep");
+      if (/anxiety|anxious|stress|cortisol|panic|worry|nervous/.test(msg)) relevant.push("anxiety");
+      if (/inflam|pain|joint|arthritis|sore|ache|omega|fish oil/.test(msg)) relevant.push("inflammation");
+      if (/energy|fatigue|tired|exhausted|brain fog|focus|mitochond/.test(msg)) relevant.push("energy");
+      if (/therapist|therapy|counselor|mental health|betterhelp|talk to someone/.test(msg)) relevant.push("therapy");
+      if (/prescription|medication|rx|drug|pharmacy|cost|afford|insurance|goodrx/.test(msg)) relevant.push("prescription");
+      if (/gym|workout|exercise|yoga|fitness|classpass|pilates/.test(msg)) relevant.push("fitness");
+      if (/cannabis|cbd|thc|marijuana|hemp|weed|cannabi/.test(msg)) relevant.push("cannabis");
+      if (!relevant.length) return "";
+
+      let layer = "\n\n[BLEU AFFILIATE INTELLIGENCE — Surface these ONLY when user is action-ready, not in distress. Weave naturally into your response. Explain WHY this specific product, what to look for, and where to get it. ONE recommendation max per response. Never list multiple links. Be the trusted friend who knows the product, not a salesperson.]\n";
+      for (const key of relevant.slice(0, 2)) {
+        const items = AFFILIATE_MAP[key];
+        if (items && items.length > 0) {
+          const pick = items[0];
+          layer += `RELEVANT: ${pick.name} — ${pick.why} | Buy: ${pick.link} (${pick.label}, ${pick.price || ""}) | Disclosure: "BLEU earns a small commission — never affects our trust scores."\n`;
+        }
+      }
+      return layer;
+    }
+
+    const affiliateLayer = detectAffiliates(userText);
+
     // ═══ MODE LAYERS ═══
     const MODE_LAYERS: Record<string, string> = {
       therapy: "ACTIVE MODE: THERAPY. Lead with emotional attunement before any information. Framework options available: CBT (thought records, cognitive distortions), DBT (TIPP, opposite action, radical acceptance), somatic (body sensations, grounding), grief (Worden's tasks, continuing bonds), trauma (titrated exposure, window of tolerance), crisis (immediate stabilization — 988 Suicide & Crisis Lifeline). One question at a time. Never rush.",
@@ -353,7 +415,7 @@ serve(async (req) => {
     const passportLayer = user_context ? `\n\n${user_context}` : "";
 
     // If we have database context, inject it into the system prompt
-    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modePrompt, therapyLayer, recoveryLayer, contextData, passportLayer]
+    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modePrompt, therapyLayer, recoveryLayer, contextData, affiliateLayer, passportLayer]
       .filter(Boolean).join("\n\n");
 
     // ═══ CALL OPENAI — GPT-4o FOR EVERYTHING ═══
