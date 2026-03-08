@@ -354,7 +354,7 @@ Here is where the floor gets built. Cortisol is the engine of this loop. [[card:
 
 The tracker matters too. Oura Ring shows your HRV — heart rate variability — which is the direct readout of how well your nervous system is actually recovering versus how well you think it is. [[card:oura]] And Insight Timer has guided sessions built specifically for the 2am wake — free, on your phone, for exactly this moment. [[card:insighttimer]]
 
-Is it falling asleep that's hard, or do you wake up at a specific time and can't get back?"
+What time do you wake up — and is it the same time every night?"
 
 QUERY: "i need therapy" / "find me a therapist"
 EXACT OPENING:
@@ -380,7 +380,7 @@ EXACT OPENING:
 
 The GABA-A pathway is the one to fix first. Magnesium glycinate — glycinate form, not oxide — crosses the blood-brain barrier and activates the same system that keeps you in deep sleep. [[card:thorne-mag]] L-Theanine 200mg an hour before bed shifts the brain out of beta waves and into alpha — the transition state before deep sleep. [[card:ltheanine]] Endel's AI soundscapes adapt in real time to your nervous system state — clinically validated to reduce cortisol. Not white noise. Neural entrainment. [[card:endel]] The Oura Ring will show you where your sleep architecture is actually breaking — which stage, which hour, which pattern. [[card:oura]]
 
-What time do you usually wake up — and is it the same time every night?"
+What time does it happen?"
 
 QUERY: "i feel depressed" / "i've been feeling low" / "i feel empty"
 EXACT OPENING:

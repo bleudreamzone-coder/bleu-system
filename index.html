@@ -426,7 +426,7 @@ button[type="submit"],
 .rufus-save-btn{flex-shrink:0;font-size:9px;font-weight:700;color:#c9a84c;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:4px 10px;cursor:pointer;white-space:nowrap;transition:background 0.2s}
 .rufus-save-btn:hover{background:rgba(201,168,76,0.2)}
 /* INLINE PRODUCT CARDS — anchored to clinical sentence */
-.inline-card{display:inline-flex;align-items:center;gap:10px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.35);border-left:3px solid var(--gold);border-radius:10px;padding:9px 14px;margin:6px 0;cursor:pointer;transition:.2s;max-width:100%;width:100%;box-sizing:border-box;position:relative}
+.inline-card{display:flex;align-items:center;gap:10px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.35);border-left:3px solid var(--gold);border-radius:10px;padding:9px 14px;margin:10px 0 4px 0;cursor:pointer;transition:.2s;max-width:100%;width:100%;box-sizing:border-box;position:relative;clear:both}
 .inline-card:hover{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.6)}
 .inline-card-icon{font-size:18px;flex-shrink:0}
 .inline-card-body{flex:1;min-width:0}
@@ -1872,7 +1872,7 @@ function renderInlineCard(id){
   const cid='ic-'+id+'-'+Math.random().toString(36).slice(2,7);
   const isFree=(p.p||'').toLowerCase().includes('free');
   const priceColor=isFree?'color:#22c55e':'';
-  return '<span class="inline-card" id="'+cid+'" onclick="toggleInlineCard(\''+cid+'\')" style="display:inline-flex">'+
+  return '</p><div class="inline-card" id="'+cid+'" onclick="toggleInlineCard(\''+cid+'\')" style="display:flex">'+
     '<span class="inline-card-icon">'+p.i+'</span>'+
     '<span class="inline-card-body">'+
       '<span class="inline-card-name">'+p.n+'</span>'+
@@ -1885,7 +1885,7 @@ function renderInlineCard(id){
     '</span>'+
     '<span class="inline-card-price" style="'+priceColor+'">'+p.p+'</span>'+
     '<span class="inline-card-expand">▾</span>'+
-  '</span>';
+  '</div><p>';
 }
 function toggleInlineCard(cid){
   const el=document.getElementById(cid);
