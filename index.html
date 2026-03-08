@@ -1811,6 +1811,31 @@ const RUFUS_PRODUCTS = {
   'leafly': {n:'Leafly — Strain Intelligence',i:'🌿',p:'Free',u:'App',r:'⭐ 4.4 · 1M',why:"2,500+ strain profiles with terpene breakdowns. Myrcene = sedative. Limonene = mood. Caryophyllene = inflammation. Pinene = memory. Match strain to symptom.",sf:'⚠️ CYP450 if on medications',url:'https://leafly.com',label:'Find Your Strain →'},
   'endel': {n:'Endel — AI Soundscapes for Sleep',i:'🎵',p:'$50/yr',u:'App',r:'⭐ 4.6 · 50K',why:"AI soundscapes that adapt to your heart rate, time of day, location. Scientifically validated to reduce cortisol. Better than white noise or music.",sf:'✅ No interactions',url:'https://endel.io',label:'Try Free →'},
   'creatine': {n:'Momentous Creatine Monohydrate',i:'💪',p:'$30',u:'30 servings',r:'⭐ 4.6 · 5K',why:"Most studied supplement in existence. 5g/day, every day. Muscle, brain, energy. No loading needed. Informed Sport certified. Takes 4 weeks to fully saturate.",sf:'✅ No significant interactions',url:'https://amazon.com/s?k=momentous+creatine&tag=bleu-live-20',label:'Buy on Amazon'},
+  // ─── GLP-1 / WEIGHT LOSS PRESCRIBERS ───
+  'hims-weight': {n:'Hims — GLP-1 Weight Loss',i:'⚖️',p:'from $199/mo',u:'Telehealth',r:'⭐ 4.5 · 200K',why:"Telehealth prescriber for semaglutide (Ozempic/Wegovy equivalent) and tirzepatide. Requires bloodwork first — they handle the prescription, medication delivery, and ongoing monitoring. 95% of people qualify.",sf:'⚠️ Bloodwork required first — A1C, metabolic panel',url:'https://forhims.com/weight-loss',label:'Check Eligibility →'},
+  'ro-body': {n:'Ro Body — GLP-1 Program',i:'⚖️',p:'from $145/mo',u:'Telehealth',r:'⭐ 4.4 · 150K',why:"Prescribes compounded semaglutide with physician oversight. Often $100-200/mo less than brand-name. Includes nutrition coaching and metabolic health tracking. No insurance needed.",sf:'⚠️ Not for Type 1 diabetes, pancreatitis history',url:'https://ro.co/weight-loss',label:'Check Eligibility →'},
+  'found-weight': {n:'Found — Metabolic Health',i:'⚖️',p:'from $99/mo',u:'Online program',r:'⭐ 4.3 · 100K',why:"GLP-1 AND non-GLP-1 paths — they match you to what works for your biology. Works with most insurance plans. Includes behavioral coaching, nutrition, movement plan.",sf:'⚠️ Medical evaluation required',url:'https://joinfound.com',label:'Start Assessment →'},
+  'calibrate': {n:'Calibrate — Year-Long Reset',i:'⚖️',p:'$1,649/yr',u:'Online program',r:'⭐ 4.2 · 30K',why:"GLP-1 + 1-year metabolic coaching. Works with insurance — average out-of-pocket $0-200. Hormones, sleep, food, movement all addressed. For people serious about systemic change.",sf:'⚠️ Insurance pre-auth required',url:'https://joincalibrate.com',label:'Check Insurance →'},
+  // ─── GLP-1 SUPPORT STACK ───
+  'berberine': {n:'Berberine HCl 1200mg',i:'🌿',p:'$20/mo',u:'60 caps',r:'⭐ 4.5 · 45K',why:"Natural GLP-1 sensitizer. Reduces fasting glucose comparably to Metformin in multiple RCTs. $20/month vs $200+ for prescriptions. Stack with magnesium and protein. Take 600mg twice daily with meals.",sf:'⚠️ CYP3A4 interaction — check meds. Lower dose if on Metformin.',url:'https://amazon.com/s?k=berberine+1200mg&tag=bleu-live-20',label:'Buy on Amazon'},
+  'protein-powder': {n:'Momentous Essential Protein',i:'💪',p:'$55',u:'30 servings',r:'⭐ 4.7 · 8K',why:"On GLP-1, muscle loss is the #1 risk. Target 0.7g/lb bodyweight. Informed Sport certified, NSF Certified — one of the only proteins tested for everything. Whey isolate, 20g/serving.",sf:'✅ NSF Certified',url:'https://amazon.com/s?k=momentous+essential+protein&tag=bleu-live-20',label:'Buy on Amazon'},
+  'b12-methyl': {n:'Methylcobalamin B12 1000mcg',i:'💊',p:'$8',u:'100 lozenges',r:'⭐ 4.7 · 25K',why:"GLP-1 medications deplete B12 — it's a known side effect almost nobody warns you about. Methylcobalamin (not cyanocobalamin) is the active form your body actually uses. Sublingual dissolves better.",sf:'✅ No significant interactions',url:'https://amazon.com/s?k=methylcobalamin+b12+1000mcg&tag=bleu-live-20',label:'Buy on Amazon'},
+  // ─── BLOODWORK / LABS ───
+  'function-health': {n:'Function Health — 100+ Biomarkers',i:'🔬',p:'$499/yr',u:'2 panels/yr',r:'⭐ 4.8 · 20K',why:"100+ biomarkers twice a year — metabolic, hormonal, inflammatory, nutritional. Know your baseline BEFORE starting GLP-1 or any peptide. Results in 48hrs, reviewed by a physician. The gold standard.",sf:'✅ Diagnostic only — no treatments',url:'https://functionhealth.com',label:'Order Your Panel →'},
+  'labcorp-demand': {n:'LabCorp OnDemand — Self-Order Labs',i:'🔬',p:'varies',u:'2,000 locations',r:'⭐ 4.4 · 50K',why:"Order your own bloodwork without a doctor's order. Pay per test. A1C ($30), fasting insulin ($40), full metabolic panel ($80). Results to your phone in 24-48hrs. Thousands of draw locations.",sf:'✅ Diagnostic only',url:'https://ondemand.labcorp.com',label:'Order Labs →'},
+  'insidetracker': {n:'InsideTracker — Personalized Analysis',i:'🔬',p:'$299-599',u:'Annual',r:'⭐ 4.5 · 15K',why:"Blood + DNA analysis with personalized food, supplement, and lifestyle targets. Unlike generic labs, it tells you what to DO with the numbers. Good follow-up after Function Health baseline.",sf:'✅ Diagnostic only',url:'https://insidetracker.com',label:'Get Your Plan →'},
+  // ─── PEPTIDES — GRAY ZONE, PROPERLY FRAMED ───
+  'peptide-info': {n:'Peptide Research — What You Need to Know',i:'🧬',p:'Research only',u:'Gray zone',r:'⭐ Not FDA-cleared',why:"BPC-157, TB-500, and other research peptides: NOT FDA-approved for human use, NOT illegal for personal use, NOT covered by insurance. Tissue repair, inflammation, joint recovery. Sources matter enormously — purity, sterility, dosing vary wildly. This requires serious research before any consideration.",sf:'⚠️ Gray zone — discuss with a physician. Never dose from AI.',url:'https://bleu.live',label:'Talk to Alvai →'},
+  // ─── MEDIA / EDUCATION ───
+  'audible': {n:'Audible — The Wellness Trinity',i:'📚',p:'$14.95/mo',u:'1 credit/mo',r:'⭐ 4.8 · 500K',why:"Start with these three: Why We Sleep (Walker) — changes everything. The Body Keeps the Score (van der Kolk) — trauma and the body. Atomic Habits (Clear) — behavior change that sticks. These three books shift trajectories.",sf:'✅ No interactions',url:'https://audible.com?source_code=BLEU',label:'Start Listening →'},
+  'gaia-tv': {n:'Gaia — Conscious Media',i:'🎬',p:'$11.99/mo',u:'Streaming',r:'⭐ 4.3 · 100K',why:"Wellness documentaries, yoga, meditation, longevity content — different DNA from Netflix. Built for the healing journey. Exclusive content on functional medicine, plant medicine, consciousness.",sf:'✅ No interactions',url:'https://gaia.com',label:'Try Free →'},
+  'brainfm': {n:'Brain.fm — Neural Music',i:'🎵',p:'$6.99/mo',u:'App',r:'⭐ 4.5 · 80K',why:"Neuroscience-designed music for focus, deep work, and sleep. Not ambient noise — functional neural entrainment. Studied at MIT. Deep work mode cuts distraction time by 47% in clinical data.",sf:'✅ No interactions',url:'https://brain.fm',label:'Try Free →'},
+  // ─── COMMUNITY / EVENTS ───  
+  'eventbrite-local': {n:'Eventbrite — Wellness Events',i:'📅',p:'Free to search',u:'Local',r:'⭐ 4.4 · 2M',why:"Filter by free events first — yoga in the park, sound baths, recovery meetings, nutrition workshops, farmers markets. In NOLA: second lines, French Quarter Festival events, Jazz Fest wellness activations.",sf:'✅ Community connection',url:'https://eventbrite.com',label:'Find Events →'},
+  'meetup': {n:'Meetup — Find Your People',i:'🤝',p:'Free',u:'Local groups',r:'⭐ 4.2 · 3M',why:"Walking clubs, run crews, meditation circles, recovery support, nutrition accountability groups. Social connection reduces mortality by 50% — same magnitude as quitting smoking. This is medicine.",sf:'✅ Social medicine',url:'https://meetup.com',label:'Find Groups →'},
+  // ─── WALKING / FREE FITNESS ───
+  'mapmywalk': {n:'MapMyWalk — Free Walk Tracker',i:'🚶',p:'Free',u:'App',r:'⭐ 4.4 · 1M',why:"Track steps, routes, pace, calories. Set daily goals. 8,000 steps/day reduces all-cause mortality by 51% — more than most supplements. The most underrated longevity intervention that exists.",sf:'✅ Free forever',url:'https://mapmywalk.com',label:'Download Free →'},
+  'walmart-plus': {n:'Walmart+ — SNAP Grocery Delivery',i:'🛒',p:'$13/mo',u:'Free delivery $35+',r:'⭐ 4.3 · 500K',why:"SNAP/EBT accepted online for delivery. Free delivery on $35+. Access to fresh produce, protein, whole foods — delivered. Week 1 healthy meal plan under $60: eggs, chicken, sweet potatoes, spinach, avocados, blueberries, quinoa.",sf:'✅ SNAP/EBT accepted',url:'https://walmart.com/plus',label:'Start Free Trial →'},
 };
 
 // Keyword → product ID mapping (1-2 products per topic, most relevant first)
@@ -1853,7 +1878,76 @@ const RUFUS_MAP = {
   cbd:      ['cw-cbd'],
   muscle:   ['creatine'],
   creatine: ['creatine'],
-  protein:  ['creatine'],
+  protein:  ['protein-powder','creatine'],
+  // ─── GLP-1 / WEIGHT LOSS ───
+  'weight loss': ['hims-weight','found-weight'],
+  'lose weight': ['hims-weight','ro-body'],
+  overweight:   ['hims-weight','found-weight'],
+  obese:        ['hims-weight','found-weight'],
+  obesity:      ['found-weight','calibrate'],
+  'glp-1':      ['hims-weight','ro-body'],
+  'glp1':       ['hims-weight','ro-body'],
+  semaglutide:  ['hims-weight','ro-body'],
+  ozempic:      ['hims-weight','ro-body'],
+  wegovy:       ['hims-weight','ro-body'],
+  tirzepatide:  ['ro-body','found-weight'],
+  mounjaro:     ['ro-body','found-weight'],
+  zepbound:     ['ro-body','calibrate'],
+  berberine:    ['berberine'],
+  metabolism:   ['berberine','found-weight'],
+  metabolic:    ['berberine','function-health'],
+  insulin:      ['berberine','function-health'],
+  'blood sugar':['berberine','labcorp-demand'],
+  glucose:      ['berberine','function-health'],
+  // ─── PEPTIDES ───
+  peptide:      ['peptide-info'],
+  'bpc-157':    ['peptide-info'],
+  'tb-500':     ['peptide-info'],
+  'bpc157':     ['peptide-info'],
+  'tb500':      ['peptide-info'],
+  'research peptide':['peptide-info'],
+  // ─── BLOODWORK ───
+  bloodwork:    ['function-health','labcorp-demand'],
+  biomarkers:   ['function-health','insidetracker'],
+  hormones:     ['function-health','labcorp-demand'],
+  testosterone: ['function-health','labcorp-demand'],
+  thyroid:      ['function-health','labcorp-demand'],
+  cortisol:     ['ashwa','function-health'],
+  'a1c':        ['labcorp-demand','function-health'],
+  'lab test':   ['labcorp-demand','function-health'],
+  labs:         ['function-health','labcorp-demand'],
+  // ─── MEDIA ───
+  audiobook:    ['audible'],
+  audible:      ['audible'],
+  'why we sleep':['audible'],
+  'atomic habits':['audible'],
+  'body keeps the score':['audible'],
+  documentary:  ['gaia-tv'],
+  gaia:         ['gaia-tv'],
+  'brain.fm':   ['brainfm'],
+  'focus music':['brainfm'],
+  'deep work':  ['brainfm'],
+  // ─── COMMUNITY ───
+  events:       ['eventbrite-local','meetup'],
+  meetup:       ['meetup'],
+  'walking club':['meetup','mapmywalk'],
+  'run club':   ['meetup'],
+  lonely:       ['meetup','eventbrite-local'],
+  loneliness:   ['meetup','eventbrite-local'],
+  connection:   ['meetup','eventbrite-local'],
+  // ─── WALKING ───
+  walking:      ['mapmywalk'],
+  steps:        ['mapmywalk'],
+  '10000 steps':['mapmywalk'],
+  '8000 steps': ['mapmywalk'],
+  hiking:       ['mapmywalk'],
+  trails:       ['mapmywalk'],
+  // ─── GROCERIES / SNAP ───
+  snap:         ['walmart-plus'],
+  ebt:          ['walmart-plus'],
+  'food stamps':['walmart-plus'],
+  groceries:    ['walmart-plus'],
+  'grocery delivery':['walmart-plus'],
 };
 
 // Detect which products to surface based on conversation text

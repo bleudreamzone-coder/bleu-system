@@ -356,9 +356,15 @@ serve(async (req) => {
         { name: "iHerb CBD", why: "Third-party tested hemp-derived CBD. iHerb vets every brand — no pesticides, accurate labeling. Code BLEU for 5% off.", link: "https://iherb.com/search?kw=cbd&rcode=BLEU", price: "varies", label: "iHerb" },
       ],
       weight: [
-        { name: "Hims Weight Loss", why: "Telehealth prescriber for semaglutide and tirzepatide. Requires bloodwork first — they handle the prescription and ongoing monitoring.", link: "https://forhims.com/weight-loss", price: "from $199/mo", label: "Hims" },
-        { name: "Found Weight Care", why: "Comprehensive metabolic program — medication, coaching, nutrition. Works with insurance. GLP-1 and non-GLP-1 paths available.", link: "https://joinfound.com", price: "from $99/mo", label: "Found" },
-        { name: "Berberine", why: "Natural GLP-1 sensitizer. Reduces fasting glucose comparably to Metformin in several studies. $20/month. Stack with magnesium and protein.", link: "https://amazon.com/s?k=berberine+500mg&tag=bleu-live-20", price: "~$20/mo", label: "Amazon" },
+        { name: "Hims GLP-1 Weight Loss", why: "Telehealth prescriber for semaglutide and tirzepatide. Bloodwork required first — A1C, metabolic panel. They handle prescription delivery and ongoing monitoring. 95% of applicants qualify.", link: "https://forhims.com/weight-loss", price: "from $199/mo", label: "Hims" },
+        { name: "Ro Body Program", why: "Compounded semaglutide often $100-200/mo less than brand-name. Physician oversight, nutrition coaching, metabolic tracking. No insurance needed.", link: "https://ro.co/weight-loss", price: "from $145/mo", label: "Ro" },
+        { name: "Found Weight Care", why: "GLP-1 AND non-GLP-1 paths — matched to your biology. Works with most insurance. Behavioral coaching, nutrition, movement plan included.", link: "https://joinfound.com", price: "from $99/mo", label: "Found" },
+        { name: "Calibrate", why: "Year-long metabolic reset with GLP-1 + coaching. Works with insurance — average out-of-pocket $0-200. Addresses hormones, sleep, food, movement systematically.", link: "https://joincalibrate.com", price: "$1,649/yr", label: "Calibrate" },
+        { name: "Berberine HCl 1200mg", why: "Natural GLP-1 sensitizer. Reduces fasting glucose comparably to Metformin in multiple RCTs. $20/month. Take 600mg twice daily with meals. Stack with magnesium and protein target.", link: "https://amazon.com/s?k=berberine+1200mg&tag=bleu-live-20", price: "~$20/mo", label: "Amazon" },
+        { name: "Methylcobalamin B12 1000mcg", why: "GLP-1 medications deplete B12 — a known side effect almost nobody mentions. Methylcobalamin (not cyanocobalamin) is the active form. Sublingual for best absorption.", link: "https://amazon.com/s?k=methylcobalamin+b12+1000mcg&tag=bleu-live-20", price: "~$8", label: "Amazon" },
+      ],
+      peptides: [
+        { name: "Peptide Research — What to Know First", why: "BPC-157, TB-500: NOT FDA-approved for human use, NOT illegal for personal use, NOT covered by insurance. Gray zone. Used for tissue repair, inflammation, joint recovery. Sources matter enormously — purity and sterility vary wildly. Requires serious research and physician conversation before any consideration.", link: "https://bleu.live", price: "Gray zone", label: "Research only" },
       ],
       bloodwork: [
         { name: "Function Health", why: "100+ biomarkers annually — hormones, metabolic panel, thyroid, inflammation, nutrients. $499/yr. Know your baseline before starting any GLP-1 or peptide.", link: "https://functionhealth.com", price: "$499/yr", label: "Function Health" },
@@ -393,7 +399,8 @@ serve(async (req) => {
       if (/prescription|medication|rx|drug|pharmacy|cost|afford|insurance|goodrx/.test(msg)) relevant.push("prescription");
       if (/gym|workout|exercise|yoga|fitness|classpass|pilates|boxing|cycling/.test(msg)) relevant.push("fitness");
       if (/cannabis|cbd|thc|marijuana|hemp|weed|cannabi/.test(msg)) relevant.push("cannabis");
-      if (/weight|glp.1|semaglutide|ozempic|wegovy|tirzepatide|mounjaro|peptide|bpc|tb.500|lose weight|weight loss|overweight|obese/.test(msg)) relevant.push("weight");
+      if (/weight loss|lose weight|overweight|obese|obesity|glp.1|glp1|semaglutide|ozempic|wegovy|tirzepatide|mounjaro|zepbound|berberine|metabolism|blood sugar|fasting glucose/.test(msg)) relevant.push("weight");
+      if (/peptide|bpc.157|tb.500|bpc157|tb500|research peptide|growth hormone|ipamorelin|sermorelin/.test(msg)) relevant.push("peptides");
       if (/bloodwork|labs|biomarkers|hormones|testosterone|thyroid|a1c|insulin|blood test|function health/.test(msg)) relevant.push("bloodwork");
       if (/podcast|audiobook|book|documentary|music|focus|concentration|audible|gaia/.test(msg)) relevant.push("media");
       if (/meetup|community|events|social|lonely|loneliness|connection|friends|group/.test(msg)) relevant.push("community");
