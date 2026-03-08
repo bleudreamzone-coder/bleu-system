@@ -2118,9 +2118,13 @@ const RUFUS_JOURNEYS = {
 
 function detectJourney(userText, alvaiText) {
   const combined = (userText + ' ' + (alvaiText || '')).toLowerCase();
+  const userLower = userText.toLowerCase();
   // Distress check — no commerce in crisis
   const distress = /crisis|emergency|suicide|hurt myself|end it|want to die|hopeless|worthless|kill myself/.test(combined);
   if (distress) return null;
+  // In-person request — suppress all online affiliate cards, let Alvai directory handle it
+  const inPerson = /in.?person|face.to.face|see someone in|where can i go|where can i see|anyone in|anyone near|near me|local therapist|cbd area|downtown|uptown|french quarter|garden district|mid.city|marigny|bywater/.test(userLower);
+  if (inPerson) return null;
   // Match first journey that fires
   for (const [key, journey] of Object.entries(RUFUS_JOURNEYS)) {
     if (journey.triggers.test(combined)) return key;
