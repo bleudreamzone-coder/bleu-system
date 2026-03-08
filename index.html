@@ -384,6 +384,32 @@ button[type="submit"],
 .rufus-card-meta{display:flex;justify-content:space-between;align-items:center;margin-top:5px}
 .rufus-card-price{font-family:monospace;font-size:12px;color:#e8d5b0;flex-shrink:0}
 .rufus-card-rating{font-size:9px;color:#8fa4b0}
+.rufus-journey{margin-top:12px;background:rgba(10,12,16,0.9);border:1px solid rgba(201,168,76,0.2);border-radius:14px;overflow:hidden}
+.rufus-journey-header{padding:10px 14px 8px;background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(34,197,94,0.05));border-bottom:1px solid rgba(201,168,76,0.12);display:flex;align-items:center;gap:8px}
+.rufus-journey-title{font-size:10px;font-weight:700;letter-spacing:0.12em;color:#c9a84c;text-transform:uppercase}
+.rufus-journey-badge{font-size:8px;padding:2px 6px;background:rgba(34,197,94,0.15);color:#22c55e;border-radius:20px;font-weight:600;letter-spacing:0.08em}
+.rufus-journey-scroll{display:flex;gap:8px;padding:10px 12px 12px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.rufus-journey-scroll::-webkit-scrollbar{display:none}
+.rufus-jcard{flex:0 0 160px;background:rgba(18,21,28,0.95);border:1px solid rgba(37,42,54,0.8);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:5px;transition:border-color 0.2s,transform 0.2s;cursor:pointer}
+.rufus-jcard:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-2px)}
+.rufus-jcard-step{font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;border-radius:10px;width:fit-content}
+.step-start{background:rgba(34,197,94,0.15);color:#22c55e}
+.step-prescriber{background:rgba(59,130,246,0.15);color:#60a5fa}
+.step-stack{background:rgba(201,168,76,0.15);color:#c9a84c}
+.step-track{background:rgba(139,92,246,0.15);color:#a78bfa}
+.step-move{background:rgba(251,146,60,0.15);color:#fb923c}
+.step-learn{background:rgba(236,72,153,0.15);color:#f472b6}
+.step-community{background:rgba(20,184,166,0.15);color:#2dd4bf}
+.step-rx{background:rgba(239,68,68,0.15);color:#f87171}
+.rufus-jcard-icon{font-size:18px;line-height:1}
+.rufus-jcard-name{font-size:10px;font-weight:600;color:#e8d5b0;line-height:1.3}
+.rufus-jcard-why{font-size:9px;color:#8fa4b0;line-height:1.4;flex:1}
+.rufus-jcard-price{font-size:10px;font-family:monospace;color:#c9a84c;font-weight:600}
+.rufus-jcard-safety{font-size:8px;margin-top:2px}
+.rufus-jcard-safety.safe{color:#22c55e}.rufus-jcard-safety.warn{color:#f59e0b}
+.rufus-jcard-btn{display:block;text-align:center;padding:5px 8px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:6px;font-size:9px;font-weight:600;color:#c9a84c;text-decoration:none;margin-top:4px;transition:background 0.2s}
+.rufus-jcard-btn:hover{background:rgba(201,168,76,0.22)}
+.rufus-journey-footer{padding:6px 14px;font-size:8px;color:#4a5568;text-align:center;border-top:1px solid rgba(37,42,54,0.5)}
 .rufus-disclosure{font-size:8px;color:rgba(143,164,176,0.5);text-align:center;margin-top:4px;font-style:italic}
 </style>
 <style>
@@ -1951,6 +1977,203 @@ const RUFUS_MAP = {
 };
 
 // Detect which products to surface based on conversation text
+// ═══ RUFUS JOURNEY ENGINE — 360° Affiliate Commerce ═══
+// Like Amazon Rufus / Google Shopping AI: full ecosystem, not single products
+// Each journey maps the complete path for a health goal
+
+const RUFUS_JOURNEYS = {
+
+  weight_loss: {
+    title: "YOUR WEIGHT LOSS JOURNEY",
+    triggers: /weight loss|lose weight|overweight|obese|obesity|glp.?1|semaglutide|ozempic|wegovy|tirzepatide|mounjaro|zepbound|berberine|metaboli|insulin resistance|blood sugar control/i,
+    steps: [
+      {step:'START HERE',label:'step-start',id:'function-health'},
+      {step:'PRESCRIBER',label:'step-prescriber',id:'hims-weight'},
+      {step:'PRESCRIBER',label:'step-prescriber',id:'ro-body'},
+      {step:'SUPPORT',label:'step-stack',id:'berberine'},
+      {step:'SUPPORT',label:'step-stack',id:'b12-methyl'},
+      {step:'SUPPORT',label:'step-stack',id:'protein-powder'},
+      {step:'SUPPORT',label:'step-stack',id:'thorne-mag'},
+      {step:'TRACK',label:'step-track',id:'oura'},
+      {step:'MOVE',label:'step-move',id:'classpass'},
+      {step:'LABS',label:'step-start',id:'labcorp-demand'},
+      {step:'LEARN',label:'step-learn',id:'audible'},
+      {step:'COMMUNITY',label:'step-community',id:'meetup'},
+    ]
+  },
+
+  peptides: {
+    title: "PEPTIDE INTELLIGENCE",
+    triggers: /peptide|bpc.?157|tb.?500|ipamorelin|sermorelin|growth hormone peptide|research peptide|gh peptide/i,
+    steps: [
+      {step:'START HERE',label:'step-start',id:'function-health'},
+      {step:'BLOODWORK',label:'step-start',id:'labcorp-demand'},
+      {step:'GRAY ZONE',label:'step-rx',id:'peptide-info'},
+      {step:'SUPPORT',label:'step-stack',id:'thorne-mag'},
+      {step:'SUPPORT',label:'step-stack',id:'omega3'},
+      {step:'SUPPORT',label:'step-stack',id:'creatine'},
+      {step:'TRACK',label:'step-track',id:'oura'},
+      {step:'PRESCRIBER',label:'step-prescriber',id:'hims-weight'},
+    ]
+  },
+
+  sleep: {
+    title: "YOUR SLEEP PROTOCOL",
+    triggers: /can.?t sleep|insomnia|wake.*night|exhausted.*morning|sleep quality|sleep architecture|sleep issues|poor sleep|trouble sleeping/i,
+    steps: [
+      {step:'FOUNDATION',label:'step-start',id:'thorne-mag'},
+      {step:'CALM',label:'step-stack',id:'ltheanine'},
+      {step:'CALM',label:'step-stack',id:'ashwa'},
+      {step:'TRACK',label:'step-track',id:'oura'},
+      {step:'SOUNDSCAPE',label:'step-learn',id:'endel'},
+      {step:'MEDITATE',label:'step-community',id:'insighttimer'},
+      {step:'CBD OPTION',label:'step-rx',id:'cw-cbd'},
+      {step:'LABS',label:'step-start',id:'labcorp-demand'},
+    ]
+  },
+
+  mental_health: {
+    title: "YOUR MENTAL HEALTH PATH",
+    triggers: /therapist|therapy|counselor|mental health|depression|anxiety treatment|ptsd|trauma therapy|need help|struggling emotionally|betterhelp|talkspace/i,
+    steps: [
+      {step:'ONLINE FIRST',label:'step-start',id:'betterhelp'},
+      {step:'TEXT ANYTIME',label:'step-prescriber',id:'talkspace'},
+      {step:'CALM DOWN',label:'step-stack',id:'ashwa'},
+      {step:'CALM DOWN',label:'step-stack',id:'ltheanine'},
+      {step:'TRACK HRV',label:'step-track',id:'oura'},
+      {step:'MEDITATE',label:'step-community',id:'insighttimer'},
+      {step:'MOVE',label:'step-move',id:'classpass'},
+      {step:'LEARN',label:'step-learn',id:'audible'},
+      {step:'COMMUNITY',label:'step-community',id:'meetup'},
+    ]
+  },
+
+  bloodwork: {
+    title: "KNOW YOUR NUMBERS",
+    triggers: /bloodwork|labs|biomarkers|hormones|testosterone|thyroid|cortisol|a1c|fasting insulin|metabolic panel|want to know my|get tested|check my levels/i,
+    steps: [
+      {step:'COMPREHENSIVE',label:'step-start',id:'function-health'},
+      {step:'SELF-ORDER',label:'step-prescriber',id:'labcorp-demand'},
+      {step:'PERSONALIZED',label:'step-track',id:'insidetracker'},
+      {step:'FOUNDATION',label:'step-stack',id:'thorne-mag'},
+      {step:'FOUNDATION',label:'step-stack',id:'omega3'},
+      {step:'D3+K2',label:'step-stack',id:'ltheanine'},
+      {step:'PRIMARY CARE',label:'step-community',id:'goodrx'},
+    ]
+  },
+
+  prescriptions: {
+    title: "MAKE YOUR MEDS AFFORDABLE",
+    triggers: /prescription|medication cost|can.?t afford.*med|pharmacy|drug cost|insulin cost|goodrx|cost plus|mark cuban|uninsured|medical bill|hospital bill/i,
+    steps: [
+      {step:'FREE SAVINGS',label:'step-start',id:'goodrx'},
+      {step:'AT COST',label:'step-prescriber',id:'costplus'},
+      {step:'BILL HELP',label:'step-rx',id:'dollarfor'},
+      {step:'SNAP GROCERIES',label:'step-stack',id:'walmart-plus'},
+      {step:'FOUNDATION',label:'step-stack',id:'berberine'},
+    ]
+  },
+
+  cannabis: {
+    title: "CANNABIS INTELLIGENCE",
+    triggers: /cannabis|marijuana|thc|cbd|dispensary|strain|terpene|endocannabinoid|hemp|weed/i,
+    steps: [
+      {step:'FIND STRAINS',label:'step-start',id:'leafly'},
+      {step:'DISPENSARIES',label:'step-prescriber',id:'weedmaps'},
+      {step:'SAFE CBD',label:'step-stack',id:'cw-cbd'},
+      {step:'CHECK MEDS',label:'step-rx',id:'goodrx'},
+      {step:'TRACK',label:'step-track',id:'oura'},
+      {step:'CALM',label:'step-stack',id:'insighttimer'},
+    ]
+  },
+
+  fitness: {
+    title: "YOUR FITNESS ECOSYSTEM",
+    triggers: /gym|workout|exercise|fitness|yoga|boxing|pilates|cycling|run|walk.*steps|8000 steps|10000 steps/i,
+    steps: [
+      {step:'EVERY STUDIO',label:'step-start',id:'classpass'},
+      {step:'WALK FREE',label:'step-move',id:'mapmywalk'},
+      {step:'PERFORMANCE',label:'step-stack',id:'creatine'},
+      {step:'RECOVERY',label:'step-stack',id:'omega3'},
+      {step:'TRACK',label:'step-track',id:'oura'},
+      {step:'COMMUNITY',label:'step-community',id:'meetup'},
+      {step:'LEARN',label:'step-learn',id:'audible'},
+    ]
+  },
+
+  community: {
+    title: "FIND YOUR PEOPLE",
+    triggers: /lonely|loneliness|isolated|connection|community|social|find people|support group|meetup|local events|alone/i,
+    steps: [
+      {step:'LOCAL EVENTS',label:'step-start',id:'eventbrite-local'},
+      {step:'FIND GROUPS',label:'step-community',id:'meetup'},
+      {step:'WALK TOGETHER',label:'step-move',id:'mapmywalk'},
+      {step:'STUDIOS',label:'step-move',id:'classpass'},
+      {step:'MEDITATE',label:'step-community',id:'insighttimer'},
+      {step:'GROCERIES',label:'step-stack',id:'walmart-plus'},
+    ]
+  },
+
+};
+
+function detectJourney(userText, alvaiText) {
+  const combined = (userText + ' ' + (alvaiText || '')).toLowerCase();
+  // Distress check — no commerce in crisis
+  const distress = /crisis|emergency|suicide|hurt myself|end it|want to die|hopeless|worthless|kill myself/.test(combined);
+  if (distress) return null;
+  // Match first journey that fires
+  for (const [key, journey] of Object.entries(RUFUS_JOURNEYS)) {
+    if (journey.triggers.test(combined)) return key;
+  }
+  return null;
+}
+
+function renderJourney(containerDiv, journeyKey) {
+  const journey = RUFUS_JOURNEYS[journeyKey];
+  if (!journey) return;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'rufus-journey';
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'rufus-journey-header';
+  header.innerHTML = `<span class="rufus-journey-title">${journey.title}</span><span class="rufus-journey-badge">BLEU INTELLIGENCE</span>`;
+  wrap.appendChild(header);
+
+  // Scroll row
+  const row = document.createElement('div');
+  row.className = 'rufus-journey-scroll';
+
+  for (const stepDef of journey.steps) {
+    const p = RUFUS_PRODUCTS[stepDef.id];
+    if (!p) continue;
+    const isSafe = p.sf && p.sf.startsWith('✅');
+    const card = document.createElement('div');
+    card.className = 'rufus-jcard';
+    card.innerHTML = `
+      <span class="rufus-jcard-step ${stepDef.label}">${stepDef.step}</span>
+      <div class="rufus-jcard-icon">${p.i}</div>
+      <div class="rufus-jcard-name">${p.n}</div>
+      <div class="rufus-jcard-why">${p.why.substring(0,80)}...</div>
+      <div class="rufus-jcard-price">${p.p}</div>
+      <div class="rufus-jcard-safety ${isSafe?'safe':'warn'}">${p.sf||''}</div>
+      <a href="${p.url}" target="_blank" class="rufus-jcard-btn">${p.label}</a>`;
+    row.appendChild(card);
+  }
+
+  wrap.appendChild(row);
+
+  // Footer disclosure
+  const footer = document.createElement('div');
+  footer.className = 'rufus-journey-footer';
+  footer.textContent = 'BLEU earns a small commission on some products — never affects trust scores or recommendations.';
+  wrap.appendChild(footer);
+
+  containerDiv.appendChild(wrap);
+}
+
+// Keep old single-product detect for non-journey fallback
 function detectRufusProducts(userText, alvaiText) {
   const combined = (userText + ' ' + alvaiText).toLowerCase();
   const seen = new Set();
@@ -2023,14 +2246,14 @@ async function send(tab){
       aDiv.innerHTML=''
       while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split('\n');buffer=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);if(p.text||p.content){full+=(p.text||p.content);aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}}}
       aDiv.innerHTML=fmt(full);chatHistories[tab].push({role:'assistant',content:full})
-      // Rufus: surface contextual product cards after response (not during emotional distress)
-      const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];
-      const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));
-      if(!isDistress){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}
+      // Rufus 360: detect full journey first, fallback to single products
+      const journeyKey=detectJourney(msg,full);
+      if(journeyKey){renderJourney(aDiv,journeyKey);}
+      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
     }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);
-      const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];
-      const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));
-      if(!isDistress){const rufusIds=detectRufusProducts(msg,reply);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}
+      const journeyKey2=detectJourney(msg,reply);
+      if(journeyKey2){renderJourney(aDiv,journeyKey2);}
+      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2){const rufusIds=detectRufusProducts(msg,reply);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
       chatHistories[tab].push({role:'assistant',content:reply})}
     if(currentUser){saveConvo(tab,chatHistories[tab]).catch(()=>{});updateBleScore(tab).catch(()=>{})}
   }catch(e){aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again in a moment.</em>'}
