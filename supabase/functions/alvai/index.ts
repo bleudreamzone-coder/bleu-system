@@ -966,7 +966,7 @@ ALWAYS HAVE READY:
 SAMHSA Helpline: 1-800-662-4357 — free, confidential, 24/7, no insurance needed
 Crisis: 988
 MAT locator: findtreatment.gov
-Online meetings: AA.org, NA.org, SMART Recovery online
+Online meetings: AA.org, NA.org, SMART Recovery online`,
 
       ecsiq: `ACTIVE MODE: ECS INTELLIGENCE — CANNAIQ.
 
