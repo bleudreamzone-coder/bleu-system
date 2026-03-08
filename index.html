@@ -410,6 +410,21 @@ button[type="submit"],
 .rufus-jcard-btn{display:block;text-align:center;padding:5px 8px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:6px;font-size:9px;font-weight:600;color:#c9a84c;text-decoration:none;margin-top:4px;transition:background 0.2s}
 .rufus-jcard-btn:hover{background:rgba(201,168,76,0.22)}
 .rufus-journey-footer{padding:6px 14px;font-size:8px;color:#4a5568;text-align:center;border-top:1px solid rgba(37,42,54,0.5)}
+.rufus-journey-meta{display:flex;gap:8px;align-items:center;margin-left:auto}
+.rufus-free-badge{font-size:8px;padding:2px 7px;background:rgba(34,197,94,0.15);color:#22c55e;border-radius:20px;font-weight:700;letter-spacing:0.08em}
+.rufus-jcard{flex:0 0 160px;background:rgba(18,21,28,0.95);border:1px solid rgba(37,42,54,0.8);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:5px;transition:border-color 0.2s,transform 0.2s;cursor:pointer}
+.rufus-jcard.free-card{border-color:rgba(34,197,94,0.2)}
+.rufus-jcard.free-card:hover{border-color:rgba(34,197,94,0.4);transform:translateY(-2px)}
+.rufus-jcard:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-2px)}
+.rufus-jcard-expand{display:none;font-size:9px;color:#b0c4ce;line-height:1.5;margin-top:4px;padding-top:4px;border-top:1px solid rgba(37,42,54,0.6)}
+.rufus-jcard.expanded .rufus-jcard-expand{display:block}
+.rufus-jcard.expanded .rufus-jcard-btn{background:rgba(201,168,76,0.2);border-color:rgba(201,168,76,0.5)}
+.rufus-jcard.free-card .rufus-jcard-btn{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:#22c55e}
+.rufus-save-hook{margin:0 12px 10px;padding:8px 12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rufus-save-text{font-size:9px;color:#8fa4b0;line-height:1.4}
+.rufus-save-text strong{color:#c9a84c}
+.rufus-save-btn{flex-shrink:0;font-size:9px;font-weight:700;color:#c9a84c;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:4px 10px;cursor:pointer;white-space:nowrap;transition:background 0.2s}
+.rufus-save-btn:hover{background:rgba(201,168,76,0.2)}
 .rufus-disclosure{font-size:8px;color:rgba(143,164,176,0.5);text-align:center;margin-top:4px;font-style:italic}
 </style>
 <style>
@@ -2139,34 +2154,72 @@ function renderJourney(containerDiv, journeyKey) {
   const wrap = document.createElement('div');
   wrap.className = 'rufus-journey';
 
-  // Header
+  // Sort: free products first, then paid — trust before transaction
+  const steps = [...journey.steps].sort((a, b) => {
+    const aFree = (RUFUS_PRODUCTS[a.id]?.p || '').toLowerCase().includes('free');
+    const bFree = (RUFUS_PRODUCTS[b.id]?.p || '').toLowerCase().includes('free');
+    return bFree - aFree;
+  });
+
+  // Check if any free products exist
+  const hasFree = steps.some(s => (RUFUS_PRODUCTS[s.id]?.p || '').toLowerCase().includes('free'));
+  const paidOnly = steps.filter(s => !(RUFUS_PRODUCTS[s.id]?.p || '').toLowerCase().includes('free'));
+  const minPrice = paidOnly.length ? paidOnly.reduce((min, s) => {
+    const p = RUFUS_PRODUCTS[s.id]?.p || '';
+    const num = parseFloat(p.replace(/[^0-9.]/g,''));
+    return (!isNaN(num) && num < min) ? num : min;
+  }, 9999) : 0;
+
+  // Header with meta
   const header = document.createElement('div');
   header.className = 'rufus-journey-header';
-  header.innerHTML = `<span class="rufus-journey-title">${journey.title}</span><span class="rufus-journey-badge">BLEU INTELLIGENCE</span>`;
+  header.innerHTML = `
+    <span class="rufus-journey-title">${journey.title}</span>
+    <div class="rufus-journey-meta">
+      ${hasFree ? '<span class="rufus-free-badge">FREE OPTIONS INCLUDED</span>' : ''}
+      <span class="rufus-journey-badge">BLEU INTELLIGENCE</span>
+    </div>`;
   wrap.appendChild(header);
 
   // Scroll row
   const row = document.createElement('div');
   row.className = 'rufus-journey-scroll';
 
-  for (const stepDef of journey.steps) {
+  for (const stepDef of steps) {
     const p = RUFUS_PRODUCTS[stepDef.id];
     if (!p) continue;
     const isSafe = p.sf && p.sf.startsWith('✅');
+    const isFree = (p.p || '').toLowerCase().includes('free');
     const card = document.createElement('div');
-    card.className = 'rufus-jcard';
+    card.className = 'rufus-jcard' + (isFree ? ' free-card' : '');
+
     card.innerHTML = `
       <span class="rufus-jcard-step ${stepDef.label}">${stepDef.step}</span>
       <div class="rufus-jcard-icon">${p.i}</div>
       <div class="rufus-jcard-name">${p.n}</div>
-      <div class="rufus-jcard-why">${p.why.substring(0,80)}...</div>
-      <div class="rufus-jcard-price">${p.p}</div>
-      <div class="rufus-jcard-safety ${isSafe?'safe':'warn'}">${p.sf||''}</div>
+      <div class="rufus-jcard-why">${p.why.substring(0,75)}...</div>
+      <div class="rufus-jcard-expand">${p.why}<br><br><span class="${isSafe?'safe':'warn'}" style="font-size:8px">${p.sf||''}</span></div>
+      <div class="rufus-jcard-price">${p.p}${isFree ? ' ✓' : ''}</div>
       <a href="${p.url}" target="_blank" class="rufus-jcard-btn">${p.label}</a>`;
+
+    // Tap to expand — show full WHY before sending to buy
+    card.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') return;
+      this.classList.toggle('expanded');
+    });
+
     row.appendChild(card);
   }
 
   wrap.appendChild(row);
+
+  // Save to Passport hook — retention + account creation
+  const saveHook = document.createElement('div');
+  saveHook.className = 'rufus-save-hook';
+  saveHook.innerHTML = `
+    <div class="rufus-save-text"><strong>Save this path to your Wellness Passport</strong><br>Track what you try. See what works. Your journey builds over time.</div>
+    <button class="rufus-save-btn" onclick="document.getElementById('auth-modal')?.classList.add('show') || alert('Sign in to save your wellness path')">Save Path →</button>`;
+  wrap.appendChild(saveHook);
 
   // Footer disclosure
   const footer = document.createElement('div');
