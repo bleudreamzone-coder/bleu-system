@@ -367,82 +367,6 @@ button[type="submit"],
   background: rgba(200,169,81,.2);
   border-radius: 3px;
 }
-/* ═══ RUFUS COMMERCE CARDS ═══ */
-.rufus-cards{margin-top:10px;display:flex;flex-direction:column;gap:7px}
-.rufus-label{font-size:9px;letter-spacing:2px;color:#8fa4b0;font-family:monospace;margin-bottom:2px;padding-left:2px}
-.rufus-card{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:rgba(15,24,35,0.85);border:1px solid rgba(78,205,196,0.1);border-radius:12px;transition:border-color 0.2s}
-.rufus-card:hover{border-color:rgba(78,205,196,0.25)}
-.rufus-card-icon{font-size:20px;flex-shrink:0;line-height:1}
-.rufus-card-body{flex:1;min-width:0}
-.rufus-card-name{font-size:11px;font-weight:600;color:#e8d5b0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rufus-card-why{font-size:10px;color:#8fa4b0;line-height:1.5;margin-top:2px}
-.rufus-card-safety{font-size:9px;font-family:monospace;margin-top:3px}
-.rufus-card-safety.safe{color:#22c55e}.rufus-card-safety.warn{color:#f59e0b}
-.rufus-card-actions{display:flex;gap:5px;margin-top:7px}
-.rufus-btn-primary{flex:1;padding:5px 8px;background:rgba(78,205,196,0.07);border:1px solid rgba(78,205,196,0.15);border-radius:8px;color:#4ecdc4;font-size:9px;font-family:monospace;cursor:pointer;text-align:center;text-decoration:none;display:block;transition:all 0.2s}
-.rufus-btn-primary:hover{background:rgba(78,205,196,0.14);border-color:#4ecdc4}
-.rufus-card-meta{display:flex;justify-content:space-between;align-items:center;margin-top:5px}
-.rufus-card-price{font-family:monospace;font-size:12px;color:#e8d5b0;flex-shrink:0}
-.rufus-card-rating{font-size:9px;color:#8fa4b0}
-.rufus-journey{margin-top:12px;background:rgba(10,12,16,0.9);border:1px solid rgba(201,168,76,0.2);border-radius:14px;overflow:hidden}
-.rufus-journey-header{padding:10px 14px 8px;background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(34,197,94,0.05));border-bottom:1px solid rgba(201,168,76,0.12);display:flex;align-items:center;gap:8px}
-.rufus-journey-title{font-size:10px;font-weight:700;letter-spacing:0.12em;color:#c9a84c;text-transform:uppercase}
-.rufus-journey-badge{font-size:8px;padding:2px 6px;background:rgba(34,197,94,0.15);color:#22c55e;border-radius:20px;font-weight:600;letter-spacing:0.08em}
-.rufus-journey-scroll{display:flex;gap:8px;padding:10px 12px 12px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.rufus-journey-scroll::-webkit-scrollbar{display:none}
-.rufus-jcard{flex:0 0 160px;background:rgba(18,21,28,0.95);border:1px solid rgba(37,42,54,0.8);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:5px;transition:border-color 0.2s,transform 0.2s;cursor:pointer}
-.rufus-jcard:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-2px)}
-.rufus-jcard-step{font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;border-radius:10px;width:fit-content}
-.step-start{background:rgba(34,197,94,0.15);color:#22c55e}
-.step-prescriber{background:rgba(59,130,246,0.15);color:#60a5fa}
-.step-stack{background:rgba(201,168,76,0.15);color:#c9a84c}
-.step-track{background:rgba(139,92,246,0.15);color:#a78bfa}
-.step-move{background:rgba(251,146,60,0.15);color:#fb923c}
-.step-learn{background:rgba(236,72,153,0.15);color:#f472b6}
-.step-community{background:rgba(20,184,166,0.15);color:#2dd4bf}
-.step-rx{background:rgba(239,68,68,0.15);color:#f87171}
-.rufus-jcard-icon{font-size:18px;line-height:1}
-.rufus-jcard-name{font-size:10px;font-weight:600;color:#e8d5b0;line-height:1.3}
-.rufus-jcard-why{font-size:9px;color:#8fa4b0;line-height:1.4;flex:1}
-.rufus-jcard-price{font-size:10px;font-family:monospace;color:#c9a84c;font-weight:600}
-.rufus-jcard-safety{font-size:8px;margin-top:2px}
-.rufus-jcard-safety.safe{color:#22c55e}.rufus-jcard-safety.warn{color:#f59e0b}
-.rufus-jcard-btn{display:block;text-align:center;padding:5px 8px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:6px;font-size:9px;font-weight:600;color:#c9a84c;text-decoration:none;margin-top:4px;transition:background 0.2s}
-.rufus-jcard-btn:hover{background:rgba(201,168,76,0.22)}
-.rufus-journey-footer{padding:6px 14px;font-size:8px;color:#4a5568;text-align:center;border-top:1px solid rgba(37,42,54,0.5)}
-.rufus-journey-meta{display:flex;gap:8px;align-items:center;margin-left:auto}
-.rufus-free-badge{font-size:8px;padding:2px 7px;background:rgba(34,197,94,0.15);color:#22c55e;border-radius:20px;font-weight:700;letter-spacing:0.08em}
-.rufus-jcard{flex:0 0 160px;background:rgba(18,21,28,0.95);border:1px solid rgba(37,42,54,0.8);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:5px;transition:border-color 0.2s,transform 0.2s;cursor:pointer}
-.rufus-jcard.free-card{border-color:rgba(34,197,94,0.2)}
-.rufus-jcard.free-card:hover{border-color:rgba(34,197,94,0.4);transform:translateY(-2px)}
-.rufus-jcard:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-2px)}
-.rufus-jcard-expand{display:none;font-size:9px;color:#b0c4ce;line-height:1.5;margin-top:4px;padding-top:4px;border-top:1px solid rgba(37,42,54,0.6)}
-.rufus-jcard.expanded .rufus-jcard-expand{display:block}
-.rufus-jcard.expanded .rufus-jcard-btn{background:rgba(201,168,76,0.2);border-color:rgba(201,168,76,0.5)}
-.rufus-jcard.free-card .rufus-jcard-btn{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:#22c55e}
-.rufus-save-hook{margin:0 12px 10px;padding:8px 12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.rufus-save-text{font-size:9px;color:#8fa4b0;line-height:1.4}
-.rufus-save-text strong{color:#c9a84c}
-.rufus-save-btn{flex-shrink:0;font-size:9px;font-weight:700;color:#c9a84c;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:4px 10px;cursor:pointer;white-space:nowrap;transition:background 0.2s}
-.rufus-save-btn:hover{background:rgba(201,168,76,0.2)}
-/* INLINE PRODUCT CARDS — anchored to clinical sentence */
-.inline-card{display:inline-flex;align-items:center;gap:10px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.35);border-left:3px solid var(--gold);border-radius:10px;padding:9px 14px;margin:6px 0;cursor:pointer;transition:.2s;max-width:100%;width:100%;box-sizing:border-box;position:relative}
-.inline-card:hover{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.6)}
-.inline-card-icon{font-size:18px;flex-shrink:0}
-.inline-card-body{flex:1;min-width:0}
-.inline-card-name{color:#e8d5b0;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.inline-card-meta{color:#8fa4b0;font-size:11px;margin-top:1px}
-.inline-card-price{color:var(--gold);font-size:12px;font-weight:700;flex-shrink:0}
-.inline-card-why{display:none;color:#c8d8e0;font-size:12px;line-height:1.6;padding:8px 0 2px 0;border-top:1px solid rgba(201,168,76,0.2);margin-top:8px;width:100%}
-.inline-card.expanded .inline-card-why{display:block}
-.inline-card-actions{display:none;gap:8px;margin-top:8px;flex-wrap:wrap}
-.inline-card.expanded .inline-card-actions{display:flex}
-.inline-card-buy{background:linear-gradient(135deg,var(--gold),#b8943c);color:#0a0c10;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;border:none;cursor:pointer;text-decoration:none;display:inline-block}
-.inline-card-save{background:transparent;color:var(--gold);font-size:11px;font-weight:600;padding:5px 10px;border-radius:20px;border:1px solid rgba(201,168,76,0.4);cursor:pointer}
-.inline-card-expand{color:#8fa4b0;font-size:10px;margin-left:4px;flex-shrink:0;transition:.2s}
-.inline-card.expanded .inline-card-expand{transform:rotate(180deg)}
-.inline-card-sf{font-size:10px;color:#5a8a6a;margin-top:4px}
-.rufus-disclosure{font-size:8px;color:rgba(143,164,176,0.5);text-align:center;margin-top:4px;font-style:italic}
 </style>
 <style>
 /* ═══ HOME PAGE SHOWSTOPPER ═══ */
@@ -1766,7 +1690,7 @@ button[type="submit"],
 <script>
 const SB='https://sqyzboesdpdussiwqpzk.supabase.co'
 const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw'
-let sbClient=null,currentUser=null,currentConvoIds={}
+let sbClient=null,currentUser=null,currentConvoId=null
 try{if(window.supabase)sbClient=window.supabase.createClient(SB,SB_ANON)}catch(e){}
 window.addEventListener('DOMContentLoaded',()=>{
   if(!sbClient&&window.supabase)sbClient=window.supabase.createClient(SB,SB_ANON)
@@ -1779,7 +1703,7 @@ function toggleAuth(){authMode=!authMode;document.getElementById('auth-signup').
 async function doSignUp(){if(!sbClient)return sErr('System loading, try again');const n=document.getElementById('auth-name').value.trim(),e=document.getElementById('auth-email').value.trim(),p=document.getElementById('auth-pass').value;if(!n||!e||!p)return sErr('Please fill in all fields');if(p.length<6)return sErr('Password needs 6+ characters');hErr();const{data,error}=await sbClient.auth.signUp({email:e,password:p,options:{data:{full_name:n}}});if(error)return sErr(error.message);if(data.user&&!data.session)sMsg('Check your email to confirm your account!');else if(data.session){currentUser=data.user;showProfile()}}
 async function doSignIn(){if(!sbClient)return siErr('Loading...');const e=document.getElementById('si-email').value.trim(),p=document.getElementById('si-pass').value;if(!e||!p)return siErr('Enter email and password');hSiErr();const{data,error}=await sbClient.auth.signInWithPassword({email:e,password:p});if(error)return siErr(error.message);currentUser=data.user;showProfile()}
 async function doGoogleAuth(){if(sbClient)await sbClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin}})}
-async function doSignOut(){if(sbClient)await sbClient.auth.signOut();currentUser=null;currentConvoIds={};showAuth()}
+async function doSignOut(){if(sbClient)await sbClient.auth.signOut();currentUser=null;currentConvoId=null;showAuth()}
 function sErr(m){const e=document.getElementById('auth-error');e.textContent=m;e.style.display='block'}
 function hErr(){document.getElementById('auth-error').style.display='none'}
 function siErr(m){const e=document.getElementById('si-error');e.textContent=m;e.style.display='block'}
@@ -1788,55 +1712,10 @@ function sMsg(m){const e=document.getElementById('auth-msg');e.textContent=m;e.s
 function showAuth(){document.getElementById('auth-screen').style.display='block';document.getElementById('profile-screen').style.display='none'}
 async function showProfile(){document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;document.getElementById('stat-score').textContent=p.bleu_score||0;if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
 async function loadSessions(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('id,title,mode,created_at').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(10);const el=document.getElementById('session-list');if(!data||!data.length){el.innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Talk to Alvai to see history here.</div>';return}el.innerHTML=data.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center">💚</div><div><div style="color:#e8d5b0;font-size:0.85rem">'+(c.title||'Session')+'</div><div style="color:#8fa4b0;font-size:0.7rem">'+new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+(c.mode||'general')+'</div></div></div>').join('')}
-async function saveConvo(tab,msgs){if(!sbClient||!currentUser||!msgs.length)return;const mode=tab==='home'?'alvai':tab;const title=(msgs.find(m=>m.role==='user')?.content||'Session').slice(0,60);try{if(currentConvoIds[tab]){await sbClient.from('conversations').update({messages:msgs,updated_at:new Date().toISOString()}).eq('id',currentConvoIds[tab])}else{const{data}=await sbClient.from('conversations').insert({user_id:currentUser.id,mode,title,messages:msgs}).select('id').single();if(data)currentConvoIds[tab]=data.id}}catch(e){console.warn('saveConvo failed',e)}}
+async function saveConvo(tab,msgs){if(!sbClient||!currentUser||!msgs.length)return;const mode=tab==='home'?'alvai':tab;const title=(msgs.find(m=>m.role==='user')?.content||'Session').slice(0,60);if(currentConvoId){await sbClient.from('conversations').update({messages:msgs,updated_at:new Date().toISOString()}).eq('id',currentConvoId)}else{const{data}=await sbClient.from('conversations').insert({user_id:currentUser.id,mode,title,messages:msgs}).select('id').single();if(data)currentConvoId=data.id}}
 function togGoal(el){el.classList.toggle('active');if(!sbClient||!currentUser)return;const g=[...document.querySelectorAll('.gc.active')].map(c=>c.dataset.g);sbClient.from('profiles').update({wellness_goals:g}).eq('id',currentUser.id)}
-// =======================================
-// BLEU WELLNESS CART SYSTEM
-// =======================================
-let BLEU_CART = JSON.parse(localStorage.getItem('bleu_cart') || '[]');
-let BLEU_SAVED_PATHS = JSON.parse(localStorage.getItem('bleu_paths') || '[]');
-
-function saveCart() { localStorage.setItem('bleu_cart', JSON.stringify(BLEU_CART)); renderCart(); }
-function savePaths() { localStorage.setItem('bleu_paths', JSON.stringify(BLEU_SAVED_PATHS)); renderPaths(); }
-
-function addToCart(productId) {
-  const p = RUFUS_PRODUCTS[productId];
-  if (!p) return;
-  if (BLEU_CART.find(i => i.id === productId)) {
-    showCartToast(`${p.n} already in your stack`); return;
-  }
-  BLEU_CART.push({ id: productId, n: p.n, i: p.i, p: p.p, url: p.url, why: p.why.substring(0,60), addedAt: new Date().toISOString() });
-  saveCart();
-  showCartToast(`✓ ${p.n} added to your stack`);
-}
-
-function removeFromCart(productId) {
-  BLEU_CART = BLEU_CART.filter(i => i.id !== productId);
-  saveCart();
-}
-
-function clearCart() {
-  if (!confirm('Clear your wellness stack?')) return;
-  BLEU_CART = [];
-  saveCart();
-}
-
-function exportCart() {
-  var out = "MY BLEU WELLNESS STACK\nGenerated " + new Date().toLocaleDateString() + "\n\n";
-  BLEU_CART.forEach(function(it) { out += it.i + " " + it.n + " - " + it.p + "\n  " + it.why + "\n  " + it.url + "\n\n"; });
-  out += "Built with BLEU - The Longevity Operating System\nbleu.live";
-  var b = new Blob([out], {type:"text/plain"});
-  var a = document.createElement("a"); a.href = URL.createObjectURL(b);
-  a.download = "my-bleu-wellness-stack.txt"; a.click();
-}
-async function clearHist(){if(!confirm('Delete all history? Cannot undo.'))return;if(!sbClient||!currentUser)return;await sbClient.from('conversations').delete().eq('user_id',currentUser.id);currentConvoIds={};document.getElementById('session-list').innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px">Cleared.</div>'}
-let _passportCache=null,_passportCacheTime=0
-async function getUserContext(){if(!sbClient||!currentUser)return null;if(_passportCache&&Date.now()-_passportCacheTime<60000)return _passportCache;try{const{data:prof}=await sbClient.from('profiles').select('wellness_goals,bleu_score,streak_days,conversations_count').eq('id',currentUser.id).single();const{data:convos}=await sbClient.from('conversations').select('mode,title,messages').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(5);const name=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';const goals=(prof?.wellness_goals||[]).join(', ')||'not yet set';const recentSessions=(convos||[]).map(c=>`${c.mode||'general'}: ${(c.title||'session').slice(0,40)}`).join(' | ')||'first session';const allMsgs=(convos||[]).flatMap(c=>(c.messages||[]).slice(-10)).map(m=>m.content||'');const medRegex=/\b(sertraline|zoloft|prozac|lexapro|effexor|wellbutrin|xanax|klonopin|adderall|ritalin|suboxone|methadone|naltrexone|lithium|seroquel|abilify|ssri|antidepressant|medication|prescription)\b/gi;const meds=[...new Set((allMsgs.join(' ').match(medRegex)||[]).map(m=>m.toLowerCase()))];const medNote=meds.length?`Medications mentioned in prior sessions: ${meds.join(', ')}. Flag CYP450 interactions before recommending supplements or cannabis.`:'';const healthData = JSON.parse(sessionStorage.getItem('bleu_health_data')||'{}');
-const healthNote = Object.keys(healthData).length ? 'Imported health data: '+Object.entries(healthData).map(([k,v])=>`${k}: ${v.insights.map(i=>i.label+': '+i.val).join(', ')}`).join(' | ') : '';
-const cartNote = BLEU_CART.length ? 'Current wellness stack ('+BLEU_CART.length+' items): '+BLEU_CART.map(i=>i.n).join(', ') : '';
-const ctx=`BLEU PASSPORT CONTEXT — Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
-const _TAB_SCORE_WEIGHT={therapy:5,recovery:5,ecsiq:4,protocols:4,missions:4,passport:3,vessel:3,finance:3,directory:3,learn:2,community:2,dashboard:2,alvai:2,home:1,map:1}
-async function updateBleScore(tab){if(!sbClient||!currentUser)return;try{const{data:p}=await sbClient.from('profiles').select('bleu_score,conversations_count').eq('id',currentUser.id).single();const delta=_TAB_SCORE_WEIGHT[tab]||2;const newScore=Math.min(100,(p?.bleu_score||0)+delta);const newCount=(p?.conversations_count||0)+1;await sbClient.from('profiles').update({bleu_score:newScore,conversations_count:newCount,updated_at:new Date().toISOString()}).eq('id',currentUser.id);_passportCache=null;const el=document.getElementById('stat-score');if(el)el.textContent=newScore;const el2=document.getElementById('stat-convos');if(el2)el2.textContent=newCount}catch(e){}}
+async function exportData(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('*').eq('user_id',currentUser.id);const b=new Blob([JSON.stringify(data||[],null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='bleu-data.json';a.click()}
+async function clearHist(){if(!confirm('Delete all history? Cannot undo.'))return;if(!sbClient||!currentUser)return;await sbClient.from('conversations').delete().eq('user_id',currentUser.id);document.getElementById('session-list').innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px">Cleared.</div>'}
 
 const ALVAI='https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai'
 const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw'
@@ -1866,36 +1745,7 @@ function setMode(tab,mode,el){
 function ask(tab,msg){go(tab);const input=document.getElementById('in-'+tab);if(input){input.value=msg;setTimeout(()=>send(tab),150)}}
 function goAsk(tab,msg){go(tab);const input=document.getElementById('in-'+tab);if(input){input.value=msg;setTimeout(()=>send(tab),200)}}
 
-function renderInlineCard(id){
-  const p=RUFUS_PRODUCTS[id];
-  if(!p)return'';
-  const cid='ic-'+id+'-'+Math.random().toString(36).slice(2,7);
-  const isFree=(p.p||'').toLowerCase().includes('free');
-  const priceColor=isFree?'color:#22c55e':'';
-  return '<span class="inline-card" id="'+cid+'" onclick="toggleInlineCard(\''+cid+'\')" style="display:inline-flex">'+
-    '<span class="inline-card-icon">'+p.i+'</span>'+
-    '<span class="inline-card-body">'+
-      '<span class="inline-card-name">'+p.n+'</span>'+
-      '<span class="inline-card-meta">'+p.u+' &middot; '+p.r+'</span>'+
-      '<span class="inline-card-why">'+p.why+'<div class="inline-card-sf">'+p.sf+'</div></span>'+
-      '<span class="inline-card-actions">'+
-        '<a class="inline-card-buy" href="'+p.url+'" target="_blank">'+p.label+'</a>'+
-        '<button class="inline-card-save" onclick="event.stopPropagation();addToCart(\''+id+'\');this.textContent=\'Saved ✓\';this.style.color=\'#22c55e\'">+ Passport</button>'+
-      '</span>'+
-    '</span>'+
-    '<span class="inline-card-price" style="'+priceColor+'">'+p.p+'</span>'+
-    '<span class="inline-card-expand">▾</span>'+
-  '</span>';
-}
-function toggleInlineCard(cid){
-  const el=document.getElementById(cid);
-  if(el)el.classList.toggle('expanded');
-}
-
 function fmt(t){
-  // Inline card injection — [[card:PRODUCT_ID]] → rendered mini card
-  t=t.replace(/\[\[card:([a-z0-9_-]+)\]\]/gi,function(_,id){return renderInlineCard(id)||''});
-
   t=t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
   t=t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,function(_,x,u){
     let s='color:var(--teal)';if(u.match(/iherb/i))s='color:var(--sage)';if(u.match(/pubmed/i))s='color:var(--gold)';if(u.match(/amazon/i))s='color:var(--gold)';
@@ -1914,464 +1764,6 @@ function fmt(t){
   return t
 }
 
-
-// ===============================================
-// RUFUS COMMERCE ENGINE = Contextual product cards
-// Fires after every Alvai response. Client-side only.
-// Products surface in conversation, not a static bar.
-// ===============================================
-
-const RUFUS_PRODUCTS = {
-  'thorne-mag': {n:'Thorne Magnesium Bisglycinate',i:'💊',p:'$25',u:'60 caps',r:'⭐ 4.8 · 12K',why:"The GABA-A pathway activator. Glycinate form crosses the blood-brain barrier — oxide doesn't. Take 400mg 1hr before bed. Thorne is NSF Certified, no fillers.",sf:'✅ No CYP450 interactions',url:'https://amazon.com/s?k=thorne+magnesium+bisglycinate&tag=bleu-live-20',label:'Buy on Amazon'},
-  'omega3': {n:'Nordic Naturals Ultimate Omega',i:'🐟',p:'$28',u:'60 softgels',r:'⭐ 4.7 · 22K',why:"Triglyceride form — 70% better absorbed than ethyl ester. EPA is the anti-inflammatory molecule. Target 2:1 EPA:DHA ratio. Take with your fattiest meal.",sf:'✅ Safe with most meds',url:'https://amazon.com/s?k=nordic+naturals+ultimate+omega&tag=bleu-live-20',label:'Buy on Amazon'},
-  'ashwa': {n:'NOW Ashwagandha KSM-66 450mg',i:'🌿',p:'$12',u:'90 caps',r:'⭐ 4.6 · 30K',why:"KSM-66 is the only extract with 22 completed clinical trials. Reduces cortisol 28-30% over 60 days. Run 6-week cycles — don't take continuously.",sf:'✅ No major CYP interactions',url:'https://amazon.com/s?k=now+ashwagandha+ksm-66&tag=bleu-live-20',label:'Buy on Amazon'},
-  'ltheanine': {n:'L-Theanine 200mg',i:'🧘',p:'$13',u:'100 caps',r:'⭐ 4.6 · 18K',why:"Crosses blood-brain barrier in 30 min. Raises alpha waves — same brain state as eyes-closed meditation. Pairs with morning coffee to eliminate jitters.",sf:'✅ No known interactions',url:'https://iherb.com/search?kw=l-theanine+200mg&rcode=BLEU',label:'Buy on iHerb'},
-  'cw-cbd': {n:"Charlotte's Web CBD Oil",i:'🌿',p:'$45',u:'60mL',r:'⭐ 4.5 · 15K',why:"Full-spectrum, USDA organic. 5-HT1A pathway — same as SSRIs but gentler. Start at 10mg sublingual, hold 60 seconds. 11pm timing for sleep.",sf:'⚠️ CYP3A4 + CYP2C19 — check meds',url:'https://iherb.com/search?kw=charlotte+web+cbd&rcode=BLEU',label:'Buy on iHerb'},
-  'betterhelp': {n:'BetterHelp — Licensed Therapy',i:'💬',p:'$65/wk',u:'Online',r:'⭐ 4.3 · 2M',why:"Matched with a licensed therapist in 48 hours. More affordable than most in-office copays. CBT, DBT, trauma, grief, couples — full specialization.",sf:'✅ Licensed professionals',url:'https://betterhelp.com/bleu',label:'Start Therapy ='},
-  'talkspace': {n:'Talkspace — Text + Video',i:'💬',p:'$69/wk',u:'Online',r:'⭐ 4.2 · 500K',why:"Text your therapist any time — good for 3am thoughts. Video sessions available. Insurance often accepted. Especially good for anxiety and depression.",sf:'✅ Licensed professionals',url:'https://talkspace.com',label:'Start Therapy ='},
-  'goodrx': {n:'GoodRx — Prescription Savings',i:'💊',p:'Free',u:'App',r:'⭐ 4.8 · 1M',why:"Pull this up at the pharmacy counter before paying. Saves up to 80% on brand and generic prescriptions. No insurance needed. Completely free.",sf:'✅ No side effects',url:'https://goodrx.com',label:'Get Free Card ='},
-  'costplus': {n:'Mark Cuban Cost Plus Drugs',i:'🏥',p:'At cost',u:'Online pharmacy',r:'⭐ 4.6 · 200K',why:"Manufacturing cost + 15% + $3 pharmacist fee. Metformin $5. Generic statins $3. Lisinopril $1. Life-changing if you're uninsured or underinsured.",sf:'✅ Transparent pricing',url:'https://costplusdrugs.com',label:'Check Your Drug ='},
-  'dollarfor': {n:'Dollar For — Medical Bill Help',i:'🏥',p:'100% Free',u:'Nonprofit',r:'⭐ 4.9 · 10K',why:"Submit your medical bill. They negotiate elimination with the hospital's charity care program. $5.4 billion in debt eliminated. Completely free — they're a nonprofit.",sf:'✅ Free nonprofit service',url:'https://dollarfor.org',label:'Submit Your Bill ='},
-  'classpass': {n:'ClassPass — Every Studio',i:'🏃',p:'$19/mo',u:'800+ studios',r:'⭐ 4.5 · 1M',why:"Boxing, yoga, pilates, cycling, swim — every studio in your city on one membership. First month discounted. No gym contract.",sf:'✅ No interactions',url:'https://classpass.com',label:'Start Free ='},
-  'oura': {n:'Oura Ring Gen 3',i:'💍',p:'$299',u:'+ $5.99/mo',r:'⭐ 4.5 · 50K',why:"Sleep staging, HRV, readiness score, cycle tracking. The only wearable that tracks sleep architecture objectively. Invisible on your finger. No screen.",sf:'✅ No interactions',url:'https://amazon.com/dp/B09Q2JY797?tag=bleu-live-20',label:'Buy on Amazon'},
-  'insighttimer': {n:'Insight Timer — Free Meditation',i:'🧘',p:'Free',u:'App',r:'⭐ 4.8 · 1M',why:"200,000+ free guided meditations. Best free meditation app period. Sleep, anxiety, PTSD-specific sessions from world-class teachers.",sf:'✅ Free forever',url:'https://insighttimer.com',label:'Download Free ='},
-  'weedmaps': {n:'Weedmaps — Find Dispensaries',i:'🗺️',p:'Free',u:'App',r:'⭐ 4.3 · 2M',why:"Real-time menus, deals, lab-tested products. Read reviews from actual patients. Compare prices across dispensaries. Delivery or pickup.",sf:'⚠️ Check your state law',url:'https://weedmaps.com',label:'Find Dispensary ='},
-  'leafly': {n:'Leafly — Strain Intelligence',i:'🌿',p:'Free',u:'App',r:'⭐ 4.4 · 1M',why:"2,500+ strain profiles with terpene breakdowns. Myrcene = sedative. Limonene = mood. Caryophyllene = inflammation. Pinene = memory. Match strain to symptom.",sf:'⚠️ CYP450 if on medications',url:'https://leafly.com',label:'Find Your Strain ='},
-  'endel': {n:'Endel — AI Soundscapes for Sleep',i:'🎵',p:'$50/yr',u:'App',r:'⭐ 4.6 · 50K',why:"AI soundscapes that adapt to your heart rate, time of day, location. Scientifically validated to reduce cortisol. Better than white noise or music.",sf:'✅ No interactions',url:'https://endel.io',label:'Try Free ='},
-  'creatine': {n:'Momentous Creatine Monohydrate',i:'💪',p:'$30',u:'30 servings',r:'⭐ 4.6 · 5K',why:"Most studied supplement in existence. 5g/day, every day. Muscle, brain, energy. No loading needed. Informed Sport certified. Takes 4 weeks to fully saturate.",sf:'✅ No significant interactions',url:'https://amazon.com/s?k=momentous+creatine&tag=bleu-live-20',label:'Buy on Amazon'},
-  // === GLP-1 / WEIGHT LOSS PRESCRIBERS ===
-  'hims-weight': {n:'Hims — GLP-1 Weight Loss',i:'⚖️',p:'from $199/mo',u:'Telehealth',r:'⭐ 4.5 · 200K',why:"Telehealth prescriber for semaglutide (Ozempic/Wegovy equivalent) and tirzepatide. Requires bloodwork first — they handle the prescription, medication delivery, and ongoing monitoring. 95% of people qualify.",sf:'⚠️ Bloodwork required first — A1C, metabolic panel',url:'https://forhims.com/weight-loss',label:'Check Eligibility ='},
-  'ro-body': {n:'Ro Body — GLP-1 Program',i:'⚖️',p:'from $145/mo',u:'Telehealth',r:'⭐ 4.4 · 150K',why:"Prescribes compounded semaglutide with physician oversight. Often $100-200/mo less than brand-name. Includes nutrition coaching and metabolic health tracking. No insurance needed.",sf:'⚠️ Not for Type 1 diabetes, pancreatitis history',url:'https://ro.co/weight-loss',label:'Check Eligibility ='},
-  'found-weight': {n:'Found — Metabolic Health',i:'⚖️',p:'from $99/mo',u:'Online program',r:'⭐ 4.3 · 100K',why:"GLP-1 AND non-GLP-1 paths — they match you to what works for your biology. Works with most insurance plans. Includes behavioral coaching, nutrition, movement plan.",sf:'⚠️ Medical evaluation required',url:'https://joinfound.com',label:'Start Assessment ='},
-  'calibrate': {n:'Calibrate — Year-Long Reset',i:'⚖️',p:'$1,649/yr',u:'Online program',r:'⭐ 4.2 · 30K',why:"GLP-1 + 1-year metabolic coaching. Works with insurance — average out-of-pocket $0-200. Hormones, sleep, food, movement all addressed. For people serious about systemic change.",sf:'⚠️ Insurance pre-auth required',url:'https://joincalibrate.com',label:'Check Insurance ='},
-  // === GLP-1 SUPPORT STACK ===
-  'berberine': {n:'Berberine HCl 1200mg',i:'🌿',p:'$20/mo',u:'60 caps',r:'⭐ 4.5 · 45K',why:"Natural GLP-1 sensitizer. Reduces fasting glucose comparably to Metformin in multiple RCTs. $20/month vs $200+ for prescriptions. Stack with magnesium and protein. Take 600mg twice daily with meals.",sf:'⚠️ CYP3A4 interaction — check meds. Lower dose if on Metformin.',url:'https://amazon.com/s?k=berberine+1200mg&tag=bleu-live-20',label:'Buy on Amazon'},
-  'protein-powder': {n:'Momentous Essential Protein',i:'💪',p:'$55',u:'30 servings',r:'⭐ 4.7 · 8K',why:"On GLP-1, muscle loss is the #1 risk. Target 0.7g/lb bodyweight. Informed Sport certified, NSF Certified — one of the only proteins tested for everything. Whey isolate, 20g/serving.",sf:'✅ NSF Certified',url:'https://amazon.com/s?k=momentous+essential+protein&tag=bleu-live-20',label:'Buy on Amazon'},
-  'b12-methyl': {n:'Methylcobalamin B12 1000mcg',i:'💊',p:'$8',u:'100 lozenges',r:'⭐ 4.7 · 25K',why:"GLP-1 medications deplete B12 — it's a known side effect almost nobody warns you about. Methylcobalamin (not cyanocobalamin) is the active form your body actually uses. Sublingual dissolves better.",sf:'✅ No significant interactions',url:'https://amazon.com/s?k=methylcobalamin+b12+1000mcg&tag=bleu-live-20',label:'Buy on Amazon'},
-  // === BLOODWORK / LABS ===
-  'function-health': {n:'Function Health — 100+ Biomarkers',i:'🔬',p:'$499/yr',u:'2 panels/yr',r:'⭐ 4.8 · 20K',why:"100+ biomarkers twice a year — metabolic, hormonal, inflammatory, nutritional. Know your baseline BEFORE starting GLP-1 or any peptide. Results in 48hrs, reviewed by a physician. The gold standard.",sf:'✅ Diagnostic only — no treatments',url:'https://functionhealth.com',label:'Order Your Panel ='},
-  'labcorp-demand': {n:'LabCorp OnDemand — Self-Order Labs',i:'🔬',p:'varies',u:'2,000 locations',r:'⭐ 4.4 · 50K',why:"Order your own bloodwork without a doctor's order. Pay per test. A1C ($30), fasting insulin ($40), full metabolic panel ($80). Results to your phone in 24-48hrs. Thousands of draw locations.",sf:'✅ Diagnostic only',url:'https://ondemand.labcorp.com',label:'Order Labs ='},
-  'insidetracker': {n:'InsideTracker — Personalized Analysis',i:'🔬',p:'$299-599',u:'Annual',r:'⭐ 4.5 · 15K',why:"Blood + DNA analysis with personalized food, supplement, and lifestyle targets. Unlike generic labs, it tells you what to DO with the numbers. Good follow-up after Function Health baseline.",sf:'✅ Diagnostic only',url:'https://insidetracker.com',label:'Get Your Plan ='},
-  // === PEPTIDES = GRAY ZONE, PROPERLY FRAMED ===
-  'peptide-info': {n:'Peptide Research — What You Need to Know',i:'🧬',p:'Research only',u:'Gray zone',r:'⭐ Not FDA-cleared',why:"BPC-157, TB-500, and other research peptides: NOT FDA-approved for human use, NOT illegal for personal use, NOT covered by insurance. Tissue repair, inflammation, joint recovery. Sources matter enormously — purity, sterility, dosing vary wildly. This requires serious research before any consideration.",sf:'⚠️ Gray zone — discuss with a physician. Never dose from AI.',url:'https://bleu.live',label:'Talk to Alvai ='},
-  // === MEDIA / EDUCATION ===
-  'audible': {n:'Audible — The Wellness Trinity',i:'📚',p:'$14.95/mo',u:'1 credit/mo',r:'⭐ 4.8 · 500K',why:"Start with these three: Why We Sleep (Walker) — changes everything. The Body Keeps the Score (van der Kolk) — trauma and the body. Atomic Habits (Clear) — behavior change that sticks. These three books shift trajectories.",sf:'✅ No interactions',url:'https://audible.com?source_code=BLEU',label:'Start Listening ='},
-  'gaia-tv': {n:'Gaia — Conscious Media',i:'🎬',p:'$11.99/mo',u:'Streaming',r:'⭐ 4.3 · 100K',why:"Wellness documentaries, yoga, meditation, longevity content — different DNA from Netflix. Built for the healing journey. Exclusive content on functional medicine, plant medicine, consciousness.",sf:'✅ No interactions',url:'https://gaia.com',label:'Try Free ='},
-  'brainfm': {n:'Brain.fm — Neural Music',i:'🎵',p:'$6.99/mo',u:'App',r:'⭐ 4.5 · 80K',why:"Neuroscience-designed music for focus, deep work, and sleep. Not ambient noise — functional neural entrainment. Studied at MIT. Deep work mode cuts distraction time by 47% in clinical data.",sf:'✅ No interactions',url:'https://brain.fm',label:'Try Free ='},
-  // === COMMUNITY / EVENTS ===  
-  'eventbrite-local': {n:'Eventbrite — Wellness Events',i:'📅',p:'Free to search',u:'Local',r:'⭐ 4.4 · 2M',why:"Filter by free events first — yoga in the park, sound baths, recovery meetings, nutrition workshops, farmers markets. In NOLA: second lines, French Quarter Festival events, Jazz Fest wellness activations.",sf:'✅ Community connection',url:'https://eventbrite.com',label:'Find Events ='},
-  'meetup': {n:'Meetup — Find Your People',i:'🤝',p:'Free',u:'Local groups',r:'⭐ 4.2 · 3M',why:"Walking clubs, run crews, meditation circles, recovery support, nutrition accountability groups. Social connection reduces mortality by 50% — same magnitude as quitting smoking. This is medicine.",sf:'✅ Social medicine',url:'https://meetup.com',label:'Find Groups ='},
-  // === WALKING / FREE FITNESS ===
-  'mapmywalk': {n:'MapMyWalk — Free Walk Tracker',i:'🚶',p:'Free',u:'App',r:'⭐ 4.4 · 1M',why:"Track steps, routes, pace, calories. Set daily goals. 8,000 steps/day reduces all-cause mortality by 51% — more than most supplements. The most underrated longevity intervention that exists.",sf:'✅ Free forever',url:'https://mapmywalk.com',label:'Download Free ='},
-  'walmart-plus': {n:'Walmart+ — SNAP Grocery Delivery',i:'🛒',p:'$13/mo',u:'Free delivery $35+',r:'⭐ 4.3 · 500K',why:"SNAP/EBT accepted online for delivery. Free delivery on $35+. Access to fresh produce, protein, whole foods — delivered. Week 1 healthy meal plan under $60: eggs, chicken, sweet potatoes, spinach, avocados, blueberries, quinoa.",sf:'✅ SNAP/EBT accepted',url:'https://walmart.com/plus',label:'Start Free Trial ='},
-};
-
-// Keyword = product ID mapping (1-2 products per topic, most relevant first)
-const RUFUS_MAP = {
-  sleep:    ['thorne-mag','endel'],
-  insomnia: ['thorne-mag','cw-cbd'],
-  melatonin:['thorne-mag','endel'],
-  fatigue:  ['omega3','thorne-mag'],
-  exhausted:['thorne-mag','omega3'],
-  anxiety:  ['ashwa','ltheanine'],
-  anxious:  ['ashwa','ltheanine'],
-  stress:   ['ashwa','ltheanine'],
-  cortisol: ['ashwa','endel'],
-  inflammation:['omega3'],
-  pain:     ['omega3','cw-cbd'],
-  therapist:['betterhelp','talkspace'],
-  therapy:  ['betterhelp','talkspace'],
-  counselor:['betterhelp'],
-  'mental health':['betterhelp'],
-  prescription:['goodrx','costplus'],
-  medication:['goodrx','costplus'],
-  pharmacy: ['goodrx','costplus'],
-  'medical bill':['dollarfor'],
-  'hospital bill':['dollarfor'],
-  debt:     ['dollarfor'],
-  gym:      ['classpass'],
-  fitness:  ['classpass'],
-  workout:  ['classpass'],
-  boxing:   ['classpass'],
-  yoga:     ['classpass'],
-  sleep: ['thorne-mag','oura'],
-  tracking: ['oura'],
-  hrv:      ['oura'],
-  meditation:['insighttimer'],
-  mindfulness:['insighttimer'],
-  cannabis: ['weedmaps','leafly'],
-  dispensary:['weedmaps'],
-  strain:   ['leafly'],
-  thc:      ['leafly','weedmaps'],
-  cbd:      ['cw-cbd'],
-  muscle:   ['creatine'],
-  creatine: ['creatine'],
-  protein:  ['protein-powder','creatine'],
-  // === GLP-1 / WEIGHT LOSS ===
-  'weight loss': ['hims-weight','found-weight'],
-  'lose weight': ['hims-weight','ro-body'],
-  overweight:   ['hims-weight','found-weight'],
-  obese:        ['hims-weight','found-weight'],
-  obesity:      ['found-weight','calibrate'],
-  'glp-1':      ['hims-weight','ro-body'],
-  'glp1':       ['hims-weight','ro-body'],
-  semaglutide:  ['hims-weight','ro-body'],
-  ozempic:      ['hims-weight','ro-body'],
-  wegovy:       ['hims-weight','ro-body'],
-  tirzepatide:  ['ro-body','found-weight'],
-  mounjaro:     ['ro-body','found-weight'],
-  zepbound:     ['ro-body','calibrate'],
-  berberine:    ['berberine'],
-  metabolism:   ['berberine','found-weight'],
-  metabolic:    ['berberine','function-health'],
-  insulin:      ['berberine','function-health'],
-  'blood sugar':['berberine','labcorp-demand'],
-  glucose:      ['berberine','function-health'],
-  // === PEPTIDES ===
-  peptide:      ['peptide-info'],
-  'bpc-157':    ['peptide-info'],
-  'tb-500':     ['peptide-info'],
-  'bpc157':     ['peptide-info'],
-  'tb500':      ['peptide-info'],
-  'research peptide':['peptide-info'],
-  // === BLOODWORK ===
-  bloodwork:    ['function-health','labcorp-demand'],
-  biomarkers:   ['function-health','insidetracker'],
-  hormones:     ['function-health','labcorp-demand'],
-  testosterone: ['function-health','labcorp-demand'],
-  thyroid:      ['function-health','labcorp-demand'],
-  cortisol:     ['ashwa','function-health'],
-  'a1c':        ['labcorp-demand','function-health'],
-  'lab test':   ['labcorp-demand','function-health'],
-  labs:         ['function-health','labcorp-demand'],
-  // === MEDIA ===
-  audiobook:    ['audible'],
-  audible:      ['audible'],
-  'why we sleep':['audible'],
-  'atomic habits':['audible'],
-  'body keeps the score':['audible'],
-  documentary:  ['gaia-tv'],
-  gaia:         ['gaia-tv'],
-  'brain.fm':   ['brainfm'],
-  'focus music':['brainfm'],
-  'deep work':  ['brainfm'],
-  // === COMMUNITY ===
-  events:       ['eventbrite-local','meetup'],
-  meetup:       ['meetup'],
-  'walking club':['meetup','mapmywalk'],
-  'run club':   ['meetup'],
-  lonely:       ['meetup','eventbrite-local'],
-  loneliness:   ['meetup','eventbrite-local'],
-  connection:   ['meetup','eventbrite-local'],
-  // === WALKING ===
-  walking:      ['mapmywalk'],
-  steps:        ['mapmywalk'],
-  '10000 steps':['mapmywalk'],
-  '8000 steps': ['mapmywalk'],
-  hiking:       ['mapmywalk'],
-  trails:       ['mapmywalk'],
-  // === GROCERIES / SNAP ===
-  snap:         ['walmart-plus'],
-  ebt:          ['walmart-plus'],
-  'food stamps':['walmart-plus'],
-  groceries:    ['walmart-plus'],
-  'grocery delivery':['walmart-plus'],
-};
-
-// Detect which products to surface based on conversation text
-// === RUFUS JOURNEY ENGINE = 360= Affiliate Commerce ===
-// Like Amazon Rufus / Google Shopping AI: full ecosystem, not single products
-// Each journey maps the complete path for a health goal
-
-const RUFUS_JOURNEYS = {
-
-  weight_loss: {
-    title: "YOUR WEIGHT LOSS JOURNEY",
-    triggers: /weight loss|lose weight|overweight|obese|obesity|glp.?1|semaglutide|ozempic|wegovy|tirzepatide|mounjaro|zepbound|berberine|metaboli|insulin resistance|blood sugar control/i,
-    steps: [
-      {step:'START HERE',label:'step-start',id:'function-health'},
-      {step:'PRESCRIBER',label:'step-prescriber',id:'hims-weight'},
-      {step:'PRESCRIBER',label:'step-prescriber',id:'ro-body'},
-      {step:'SUPPORT',label:'step-stack',id:'berberine'},
-      {step:'SUPPORT',label:'step-stack',id:'b12-methyl'},
-      {step:'SUPPORT',label:'step-stack',id:'protein-powder'},
-      {step:'SUPPORT',label:'step-stack',id:'thorne-mag'},
-      {step:'TRACK',label:'step-track',id:'oura'},
-      {step:'MOVE',label:'step-move',id:'classpass'},
-      {step:'LABS',label:'step-start',id:'labcorp-demand'},
-      {step:'LEARN',label:'step-learn',id:'audible'},
-      {step:'COMMUNITY',label:'step-community',id:'meetup'},
-    ]
-  },
-
-  peptides: {
-    title: "PEPTIDE INTELLIGENCE",
-    triggers: /peptide|bpc.?157|tb.?500|ipamorelin|sermorelin|growth hormone peptide|research peptide|gh peptide/i,
-    steps: [
-      {step:'START HERE',label:'step-start',id:'function-health'},
-      {step:'BLOODWORK',label:'step-start',id:'labcorp-demand'},
-      {step:'GRAY ZONE',label:'step-rx',id:'peptide-info'},
-      {step:'SUPPORT',label:'step-stack',id:'thorne-mag'},
-      {step:'SUPPORT',label:'step-stack',id:'omega3'},
-      {step:'SUPPORT',label:'step-stack',id:'creatine'},
-      {step:'TRACK',label:'step-track',id:'oura'},
-      {step:'PRESCRIBER',label:'step-prescriber',id:'hims-weight'},
-    ]
-  },
-
-  sleep: {
-    title: "YOUR SLEEP PROTOCOL",
-    triggers: /can.?t sleep|insomnia|wake.*night|exhausted.*morning|sleep quality|sleep architecture|sleep issues|poor sleep|trouble sleeping/i,
-    steps: [
-      {step:'FOUNDATION',label:'step-start',id:'thorne-mag'},
-      {step:'CALM',label:'step-stack',id:'ltheanine'},
-      {step:'CALM',label:'step-stack',id:'ashwa'},
-      {step:'TRACK',label:'step-track',id:'oura'},
-      {step:'SOUNDSCAPE',label:'step-learn',id:'endel'},
-      {step:'MEDITATE',label:'step-community',id:'insighttimer'},
-      {step:'CBD OPTION',label:'step-rx',id:'cw-cbd'},
-      {step:'LABS',label:'step-start',id:'labcorp-demand'},
-    ]
-  },
-
-  mental_health: {
-    title: "YOUR MENTAL HEALTH PATH",
-    triggers: /therapist|therapy|counselor|mental health|depression|anxiety treatment|ptsd|trauma therapy|need help|struggling emotionally|betterhelp|talkspace/i,
-    steps: [
-      {step:'ONLINE FIRST',label:'step-start',id:'betterhelp'},
-      {step:'TEXT ANYTIME',label:'step-prescriber',id:'talkspace'},
-      {step:'CALM DOWN',label:'step-stack',id:'ashwa'},
-      {step:'CALM DOWN',label:'step-stack',id:'ltheanine'},
-      {step:'TRACK HRV',label:'step-track',id:'oura'},
-      {step:'MEDITATE',label:'step-community',id:'insighttimer'},
-      {step:'MOVE',label:'step-move',id:'classpass'},
-      {step:'LEARN',label:'step-learn',id:'audible'},
-      {step:'COMMUNITY',label:'step-community',id:'meetup'},
-    ]
-  },
-
-  bloodwork: {
-    title: "KNOW YOUR NUMBERS",
-    triggers: /bloodwork|labs|biomarkers|hormones|testosterone|thyroid|cortisol|a1c|fasting insulin|metabolic panel|want to know my|get tested|check my levels/i,
-    steps: [
-      {step:'COMPREHENSIVE',label:'step-start',id:'function-health'},
-      {step:'SELF-ORDER',label:'step-prescriber',id:'labcorp-demand'},
-      {step:'PERSONALIZED',label:'step-track',id:'insidetracker'},
-      {step:'FOUNDATION',label:'step-stack',id:'thorne-mag'},
-      {step:'FOUNDATION',label:'step-stack',id:'omega3'},
-      {step:'D3+K2',label:'step-stack',id:'ltheanine'},
-      {step:'PRIMARY CARE',label:'step-community',id:'goodrx'},
-    ]
-  },
-
-  prescriptions: {
-    title: "MAKE YOUR MEDS AFFORDABLE",
-    triggers: /prescription|medication cost|can.?t afford.*med|pharmacy|drug cost|insulin cost|goodrx|cost plus|mark cuban|uninsured|medical bill|hospital bill/i,
-    steps: [
-      {step:'FREE SAVINGS',label:'step-start',id:'goodrx'},
-      {step:'AT COST',label:'step-prescriber',id:'costplus'},
-      {step:'BILL HELP',label:'step-rx',id:'dollarfor'},
-      {step:'SNAP GROCERIES',label:'step-stack',id:'walmart-plus'},
-      {step:'FOUNDATION',label:'step-stack',id:'berberine'},
-    ]
-  },
-
-  cannabis: {
-    title: "CANNABIS INTELLIGENCE",
-    triggers: /cannabis|marijuana|thc|cbd|dispensary|strain|terpene|endocannabinoid|hemp|weed/i,
-    steps: [
-      {step:'FIND STRAINS',label:'step-start',id:'leafly'},
-      {step:'DISPENSARIES',label:'step-prescriber',id:'weedmaps'},
-      {step:'SAFE CBD',label:'step-stack',id:'cw-cbd'},
-      {step:'CHECK MEDS',label:'step-rx',id:'goodrx'},
-      {step:'TRACK',label:'step-track',id:'oura'},
-      {step:'CALM',label:'step-stack',id:'insighttimer'},
-    ]
-  },
-
-  fitness: {
-    title: "YOUR FITNESS ECOSYSTEM",
-    triggers: /gym|workout|exercise|fitness|yoga|boxing|pilates|cycling|run|walk.*steps|8000 steps|10000 steps/i,
-    steps: [
-      {step:'EVERY STUDIO',label:'step-start',id:'classpass'},
-      {step:'WALK FREE',label:'step-move',id:'mapmywalk'},
-      {step:'PERFORMANCE',label:'step-stack',id:'creatine'},
-      {step:'RECOVERY',label:'step-stack',id:'omega3'},
-      {step:'TRACK',label:'step-track',id:'oura'},
-      {step:'COMMUNITY',label:'step-community',id:'meetup'},
-      {step:'LEARN',label:'step-learn',id:'audible'},
-    ]
-  },
-
-  community: {
-    title: "FIND YOUR PEOPLE",
-    triggers: /lonely|loneliness|isolated|connection|community|social|find people|support group|meetup|local events|alone/i,
-    steps: [
-      {step:'LOCAL EVENTS',label:'step-start',id:'eventbrite-local'},
-      {step:'FIND GROUPS',label:'step-community',id:'meetup'},
-      {step:'WALK TOGETHER',label:'step-move',id:'mapmywalk'},
-      {step:'STUDIOS',label:'step-move',id:'classpass'},
-      {step:'MEDITATE',label:'step-community',id:'insighttimer'},
-      {step:'GROCERIES',label:'step-stack',id:'walmart-plus'},
-    ]
-  },
-
-};
-
-function detectJourney(userText, alvaiText) {
-  const combined = (userText + ' ' + (alvaiText || '')).toLowerCase();
-  const userLower = userText.toLowerCase();
-  // Distress check = no commerce in crisis
-  const distress = /crisis|emergency|suicide|hurt myself|end it|want to die|hopeless|worthless|kill myself/.test(combined);
-  if (distress) return null;
-  // In-person request = suppress all online affiliate cards, let Alvai directory handle it
-  const inPerson = /in.?person|face.to.face|see someone in|where can i go|where can i see|anyone in|anyone near|near me|local therapist|cbd area|downtown|uptown|french quarter|garden district|mid.city|marigny|bywater/.test(userLower);
-  if (inPerson) return null;
-  // Match first journey that fires
-  for (const [key, journey] of Object.entries(RUFUS_JOURNEYS)) {
-    if (journey.triggers.test(combined)) return key;
-  }
-  return null;
-}
-
-function renderJourney(containerDiv, journeyKey) {
-  const journey = RUFUS_JOURNEYS[journeyKey];
-  if (!journey) return;
-
-  const wrap = document.createElement('div');
-  wrap.className = 'rufus-journey';
-
-  // Sort: free products first, then paid = trust before transaction
-  const steps = [...journey.steps].sort((a, b) => {
-    const aFree = (RUFUS_PRODUCTS[a.id]?.p || '').toLowerCase().includes('free');
-    const bFree = (RUFUS_PRODUCTS[b.id]?.p || '').toLowerCase().includes('free');
-    return bFree - aFree;
-  });
-
-  // Check if any free products exist
-  const hasFree = steps.some(s => (RUFUS_PRODUCTS[s.id]?.p || '').toLowerCase().includes('free'));
-  const paidOnly = steps.filter(s => !(RUFUS_PRODUCTS[s.id]?.p || '').toLowerCase().includes('free'));
-  const minPrice = paidOnly.length ? paidOnly.reduce((min, s) => {
-    const p = RUFUS_PRODUCTS[s.id]?.p || '';
-    const num = parseFloat(p.replace(/[^0-9.]/g,''));
-    return (!isNaN(num) && num < min) ? num : min;
-  }, 9999) : 0;
-
-  // Header with meta
-  const header = document.createElement('div');
-  header.className = 'rufus-journey-header';
-  header.innerHTML = `
-    <span class="rufus-journey-title">${journey.title}</span>
-    <div class="rufus-journey-meta">
-      ${hasFree ? '<span class="rufus-free-badge">FREE OPTIONS INCLUDED</span>' : ''}
-      <span class="rufus-journey-badge">BLEU INTELLIGENCE</span>
-    </div>`;
-  wrap.appendChild(header);
-
-  // Scroll row
-  const row = document.createElement('div');
-  row.className = 'rufus-journey-scroll';
-
-  for (const stepDef of steps) {
-    const p = RUFUS_PRODUCTS[stepDef.id];
-    if (!p) continue;
-    const isSafe = p.sf && p.sf.startsWith('✅');
-    const isFree = (p.p || '').toLowerCase().includes('free');
-    const card = document.createElement('div');
-    card.className = 'rufus-jcard' + (isFree ? ' free-card' : '');
-
-    card.innerHTML = `
-      <span class="rufus-jcard-step ${stepDef.label}">${stepDef.step}</span>
-      <div class="rufus-jcard-icon">${p.i}</div>
-      <div class="rufus-jcard-name">${p.n}</div>
-      <div class="rufus-jcard-why">${p.why.substring(0,75)}...</div>
-      <div class="rufus-jcard-expand">${p.why}<br><br><span class="${isSafe?'safe':'warn'}" style="font-size:8px">${p.sf||''}</span><br><button class="rufus-add-cart" onclick="addToCart('${stepDef.id}');event.stopPropagation()" style="margin-top:6px;font-size:9px;padding:4px 10px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);border-radius:6px;color:#c9a84c;cursor:pointer;font-weight:700;width:100%">+ Add to Wellness Stack</button></div>
-      <div class="rufus-jcard-price">${p.p}${isFree ? ' ✓' : ''}</div>
-      <a href="${p.url}" target="_blank" class="rufus-jcard-btn">${p.label}</a>`;
-
-    // Tap to expand = show full WHY before sending to buy
-    card.addEventListener('click', function(e) {
-      if (e.target.tagName === 'A') return;
-      if (e.target.classList.contains('rufus-add-cart')) return;
-      this.classList.toggle('expanded');
-    });
-
-    row.appendChild(card);
-  }
-
-  wrap.appendChild(row);
-
-  // Save to Passport hook = retention + account creation
-  const saveHook = document.createElement('div');
-  saveHook.className = 'rufus-save-hook';
-  saveHook.innerHTML = `
-    <div class="rufus-save-text"><strong>Save this path to your Wellness Passport</strong><br>Track what you try. See what works. Every step builds your longevity profile.</div>
-    <button class="rufus-save-btn" onclick="saveJourneyPath('${journeyKey}','${journey.title}')">Save Path →</button>`;
-  wrap.appendChild(saveHook);
-
-  // Footer disclosure
-  const footer = document.createElement('div');
-  footer.className = 'rufus-journey-footer';
-  footer.textContent = 'BLEU earns a small commission on some products — never affects trust scores or recommendations.';
-  wrap.appendChild(footer);
-
-  containerDiv.appendChild(wrap);
-}
-
-// Keep old single-product detect for non-journey fallback
-function detectRufusProducts(userText, alvaiText) {
-  const combined = (userText + ' ' + alvaiText).toLowerCase();
-  const seen = new Set();
-  const ids = [];
-  for (const [kw, productIds] of Object.entries(RUFUS_MAP)) {
-    if (combined.includes(kw)) {
-      for (const id of productIds) {
-        if (!seen.has(id) && ids.length < 2) { seen.add(id); ids.push(id); }
-      }
-    }
-    if (ids.length >= 2) break;
-  }
-  return ids;
-}
-
-// Render Rufus product cards below a message div
-function renderRufusCards(containerDiv, productIds) {
-  if (!productIds || !productIds.length) return;
-  const wrapper = document.createElement('div');
-  wrapper.className = 'rufus-cards';
-  const label = document.createElement('div');
-  label.className = 'rufus-label';
-  label.textContent = 'ALVAI RECOMMENDS';
-  wrapper.appendChild(label);
-  for (const id of productIds) {
-    const p = RUFUS_PRODUCTS[id];
-    if (!p) continue;
-    const isSafe = p.sf && p.sf.startsWith('✅');
-    const card = document.createElement('div');
-    card.className = 'rufus-card';
-    card.innerHTML = `
-      <div class="rufus-card-icon">${p.i}</div>
-      <div class="rufus-card-body">
-        <div class="rufus-card-name">${p.n}</div>
-        <div class="rufus-card-why">${p.why}</div>
-        <div class="rufus-card-safety ${isSafe?'safe':'warn'}">${p.sf||''}</div>
-        <div class="rufus-card-meta">
-          <span class="rufus-card-price">${p.p} <span style="font-size:9px;color:#8fa4b0">/ ${p.u}</span></span>
-          <span class="rufus-card-rating">${p.r}</span>
-        </div>
-        <div class="rufus-card-actions">
-          <a href="${p.url}" target="_blank" class="rufus-btn-primary">${p.label}</a>
-        </div>
-      </div>`;
-    wrapper.appendChild(card);
-  }
-  const disc = document.createElement('div');
-  disc.className = 'rufus-disclosure';
-  disc.textContent = 'BLEU earns a small commission — trust scores are never affected by affiliate status.';
-  wrapper.appendChild(disc);
-  containerDiv.appendChild(wrapper);
-}
-
 async function send(tab){
   const input=document.getElementById('in-'+tab),box=document.getElementById('chat-'+tab)
   if(!input||!box)return
@@ -2380,8 +1772,7 @@ async function send(tab){
   if(!chatHistories[tab])chatHistories[tab]=[];chatHistories[tab].push({role:'user',content:msg})
   const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
   box.scrollTop=box.scrollHeight
-  const passport=await getUserContext().catch(()=>null)
-  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-20),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:passport||undefined}
+  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-20),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general'}
   if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
   if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
   try{
@@ -2391,16 +1782,7 @@ async function send(tab){
       aDiv.innerHTML=''
       while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split('\n');buffer=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);if(p.text||p.content){full+=(p.text||p.content);aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}}}
       aDiv.innerHTML=fmt(full);chatHistories[tab].push({role:'assistant',content:full})
-      // Rufus 360: detect full journey first, fallback to single products
-      const journeyKey=detectJourney(msg,full);
-      if(journeyKey){renderJourney(aDiv,journeyKey);}
-      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
-    }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);
-      const journeyKey2=detectJourney(msg,reply);
-      if(journeyKey2){renderJourney(aDiv,journeyKey2);}
-      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2){const rufusIds=detectRufusProducts(msg,reply);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
-      chatHistories[tab].push({role:'assistant',content:reply})}
-    if(currentUser){saveConvo(tab,chatHistories[tab]).catch(()=>{});updateBleScore(tab).catch(()=>{})}
+    }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);chatHistories[tab].push({role:'assistant',content:reply})}
   }catch(e){aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again in a moment.</em>'}
   box.scrollTop=box.scrollHeight
 }
@@ -2415,7 +1797,7 @@ async function loadStats(){
 }
 loadStats()
 
-// === Enhanced scroll reveals ===
+// ═══ Enhanced scroll reveals ═══
 const revealObs=new IntersectionObserver((entries)=>{entries.forEach((e,i)=>{if(e.isIntersecting){const p=e.target.parentElement;if(p&&(p.classList.contains('card-grid')||p.style.display==='grid')){const idx=Array.from(p.children).indexOf(e.target);e.target.style.transitionDelay=(idx*0.06)+'s'}e.target.classList.add('visible')}})},{threshold:0.08,rootMargin:'0px 0px -20px 0px'});
 document.querySelectorAll('.reveal,.card,.stat-box').forEach(el=>{if(!el.classList.contains('reveal'))el.classList.add('reveal');revealObs.observe(el)});
 var _origGo=window.go;window.go=function(t){_origGo(t);setTimeout(function(){document.querySelectorAll('#p-'+t+' .reveal').forEach(function(el){if(el.getBoundingClientRect().top<window.innerHeight+50)el.classList.add('visible')})},120)}
@@ -2448,16 +1830,16 @@ window.addEventListener('DOMContentLoaded',function(){
   });
 });
 
-// ======= SESSION IDENTITY =======
+// ═══════ SESSION IDENTITY ═══════
 function getSession(){
   let s=localStorage.getItem('bleu_session');
   if(!s){s='bleu_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);localStorage.setItem('bleu_session',s);}
   return s;
 }
-// ======= ANALYTICS PING =======
+// ═══════ ANALYTICS PING ═══════
 function ping(p){fetch(ALVAI.replace('/chat','/ping')+'?p='+encodeURIComponent(p)+'&s='+getSession()).catch(()=>{});}
 ping(window.location.pathname);
-// ======= SESSION UPSERT =======
+// ═══════ SESSION UPSERT ═══════
 function updateSession(){
   const city=window.location.hostname.match(/^(\w+)\.bleu\.live$/)?.[1]||'';
   fetch(ALVAI.replace('/chat','/session'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:getSession(),city})}).catch(()=>{});
@@ -2752,7 +2134,7 @@ updateSession();
 <!-- ═══ ALL ENTERPRISE JS — INLINE, SELF-CONTAINED ═══ -->
 <script>
 (function(){
-  // == COUNTERS ==
+  // ── COUNTERS ──
   function animCount(id,target){
     var el=document.getElementById(id);if(!el)return;
     var s=Date.now(),d=2200;
@@ -2760,7 +2142,7 @@ updateSession();
   }
   function initCounters(){animCount('ec1',525965);animCount('ec2',247);animCount('ec3',22);animCount('ec4',15)}
 
-  // == BEFORE/AFTER ==
+  // ── BEFORE/AFTER ──
   var bData=[
     {i:'\u{1F4CB}',t:'Annual PDF reports',d:'18 months old by publication. No real-time data. No neighborhood-level intelligence.'},
     {i:'\u2B50',t:'Yelp & Google reviews',d:'Popularity contests. No federal verification. Pay-to-rank. Means nothing clinically.'},
@@ -2787,7 +2169,7 @@ updateSession();
     g.innerHTML=h;
   };
 
-  // == BUSINESS ROI ==
+  // ── BUSINESS ROI ──
   window.eBiz=function(){
     var e=parseInt(document.getElementById('eBizSlider').value),h=Math.round(e*5512),p=Math.round(e*1685),r=Math.round(e*.15*65000*.25),t=h+p+r,roi=Math.round(t/(e*8)*100)/100;
     document.getElementById('eBizEmp').textContent=e.toLocaleString();
@@ -2800,7 +2182,7 @@ updateSession();
     document.getElementById('eBROI').innerHTML="That's <strong style='color:#E2E8F0'>$"+roi+" returned per $1</strong> invested in BLEU";
   };
 
-  // == CITY ROI ==
+  // ── CITY ROI ──
   window.eCity=function(){
     var p=parseInt(document.getElementById('eCSlider').value),er=Math.round(p*.02*2700),ret=Math.round(p*.005*105000),gr=Math.round(p*12),t=er+ret+gr;
     document.getElementById('eCPop').textContent=p.toLocaleString();
@@ -2810,7 +2192,7 @@ updateSession();
     document.getElementById('eCT').textContent='$'+(t/1e6).toFixed(0)+'M';
   };
 
-  // == TIMELINE ==
+  // ── TIMELINE ──
   var phases=[
     {l:'Week 1-2',t:'Data Integration',c:'#60A5FA',items:['Connect federal APIs: EPA, SAMHSA, NPI, FDA, NIH, CMS','Import & validate existing provider databases','Configure neighborhood boundaries & 12 scoring dimensions','Deploy Alvai with all 22 therapeutic modes','Launch [city].bleu.live or [business].bleu.live portal']},
     {l:'Month 1',t:'Intelligence Activated',c:'#C8A951',items:['Real-time dashboards live: population health, provider gaps, environmental','Full platform access: therapy, recovery, directory, supplements, finance','AI learning community patterns, seasonal trends, usage gaps','First wellness scores published at neighborhood level','Crisis resources integrated: 988, SAMHSA, local warm handoffs']},
@@ -2828,7 +2210,7 @@ updateSession();
     box.innerHTML=ch;
   };
 
-  // == SCROLL REVEAL ==
+  // ── SCROLL REVEAL ──
   function reveal(){
     document.querySelectorAll('.e-fade').forEach(function(el){
       var r=el.getBoundingClientRect();
@@ -2836,7 +2218,7 @@ updateSession();
     });
   }
 
-  // == INIT ==
+  // ── INIT ──
   function initAll(){
     initCounters();
     eToggle(true);
@@ -2875,7 +2257,7 @@ var io=new IntersectionObserver(function(ee){ee.forEach(function(e){if(e.isInter
 function tag(el,i){el.classList.add('bl-up');el.style.transitionDelay=(i*80)+'ms';io.observe(el)}
 function run(){
 var h=document.getElementById('p-home');if(!h)return;
-// DO NOT touch goAsk cards = they already animate via cardReveal
+// DO NOT touch goAsk cards — they already animate via cardReveal
 // Tag sections, dividers, partner row, enterprise, stats
 h.querySelectorAll('.section-label,.section-desc').forEach(function(el,i){tag(el,i)});
 h.querySelectorAll('.divider').forEach(function(el){tag(el,0)});
@@ -2899,7 +2281,7 @@ done=true;cio.unobserve(el);var st=performance.now();
 el.textContent=(n>=1000?v.toLocaleString():v)+suf;
 if(p<1)requestAnimationFrame(tick);else el.textContent=orig})(st)}})},{threshold:0.3});
 cio.observe(el)});
-// Tab switch = re-trigger reveals on other panels
+// Tab switch — re-trigger reveals on other panels
 var og=window.go;if(og){window.go=function(t){og(t);setTimeout(function(){
 var p=document.getElementById('p-'+t);if(!p)return;
 p.querySelectorAll('.section-label,.section-desc,.section-title,.card,.stat-box,.feature-item,.product-card,.chat-box,.disclaimer,.cta,.mode-bar,.quick-row,.divider,.divider-gold').forEach(function(el,i){

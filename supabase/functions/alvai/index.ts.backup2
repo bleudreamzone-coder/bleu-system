@@ -237,6 +237,7 @@ serve(async (req) => {
   try {
     const body = await req.json();
     const messages = body.messages || (body.history && body.history.length > 0 ? body.history : body.message ? [{role: "user", content: body.message}] : null);
+    const { mode, therapy_mode, recovery_mode, user_context } = body;
     
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return new Response(JSON.stringify({ error: "No messages provided" }), {
@@ -307,10 +308,29 @@ serve(async (req) => {
     // Limit conversation history to last 8 exchanges (16 messages)
     const recentMessages = messages.slice(-16);
     
+    // ═══ MODE LAYERS ═══
+    const MODE_LAYERS: Record<string, string> = {
+      therapy: "ACTIVE MODE: THERAPY. Lead with emotional attunement before any information. Framework options available: CBT (thought records, cognitive distortions), DBT (TIPP, opposite action, radical acceptance), somatic (body sensations, grounding), grief (Worden's tasks, continuing bonds), trauma (titrated exposure, window of tolerance), crisis (immediate stabilization — 988 Suicide & Crisis Lifeline). One question at a time. Never rush.",
+      recovery: "ACTIVE MODE: RECOVERY INTELLIGENCE. No hierarchy of valid paths — 12-step, SMART Recovery, MAT, harm reduction, sober curious, California Sober all respected equally. Count sober days with them. Celebrate every milestone. Relapse is data, not failure. Address family codependency with equal care. SAMHSA National Helpline: 1-800-662-4357.",
+      ecsiq: "ACTIVE MODE: ECS INTELLIGENCE — CANNAIQ. Endocannabinoid system precision. Strain matching by condition. Terpene profiles: myrcene (sedative), limonene (mood), pinene (focus/memory), caryophyllene (inflammation/CB2). Cannabinoid ratios for specific outcomes. CYP450 drug interactions (3A4, 2C9, 2C19) are non-negotiable safety checks — flag every time. Microdosing protocols for naive users. State law compliance always noted.",
+      finance: "ACTIVE MODE: WELLNESS FINANCE. Every financial barrier to healthcare has a workaround. GoodRx (free), Cost Plus Drugs (transparent pricing), Dollar For (free medical bill elimination — mention for any bill over $500), Patient Advocate Foundation, community health centers (FQHC), sliding scale therapy, HSA/FSA eligible expenses. Financial stress is a health crisis — treat it as one.",
+      vessel: "ACTIVE MODE: VESSEL — BODY INTELLIGENCE. Evidence-based supplement guidance. Only reference products from the PROVIDED DATABASE. Lead with mechanism of action, then product, then dose, then source. Five-layer safety check: CYP450 interactions, contraindications, drug-nutrient interactions, population cautions (pregnancy, kidney disease, etc.), quality markers (NSF Certified, USP Verified, Informed Sport).",
+      directory: "ACTIVE MODE: PRACTITIONER DIRECTORY. Only reference providers from the PROVIDED VERIFIED DATA — full name, specialty, address, phone, NPI. Help user identify what specialty they need, then match. Always mention telehealth options. Note insurance compatibility when known.",
+      protocols: "ACTIVE MODE: EVIDENCE PROTOCOLS. Dr. Felicia Stoler-informed protocol delivery. Each protocol includes: clear goal, realistic timeline, daily action steps, evidence-based supplement stack with doses, lifestyle modifications, measurable progress markers, and when to escalate to a professional.",
+      learn: "ACTIVE MODE: EVIDENCE LIBRARY. PubMed, ClinicalTrials.gov, peer-reviewed research. When citing studies: finding first, then sample size, then key limitation. Teach the mechanism — not just the conclusion. Match depth to the user: beginner gets concepts and analogies, expert gets methodology and effect sizes.",
+      community: "ACTIVE MODE: COMMUNITY + CONNECTION. Local wellness resources, events, support groups, and communities. New Orleans context: Jazz Bird NOLA, French Quarter culture, second-line tradition as healing metaphor. Recovery communities, run clubs, meditation circles, farmers markets, neighborhood wellness scores.",
+      missions: "ACTIVE MODE: MISSIONS + ACCOUNTABILITY. Daily and weekly challenges that build compounding wellness habits. Be specific and measurable. Celebrate streaks out loud. Reframe missed days as data. Progress over perfection — always.",
+      dashboard: "ACTIVE MODE: WELLNESS DASHBOARD. Synthesize the user's journey across BLEU tabs. Identify patterns in their engagement. Surface wins they may have missed. Forecast logical next actions based on their goals and history.",
+      alvai: "ACTIVE MODE: OPEN INTELLIGENCE. Full Alvai capability deployed. Deep research, clinical precision, emotional presence, all 22 therapeutic domains accessible. This is the flagship experience.",
+    };
+    const modePrompt = MODE_LAYERS[mode as string] || MODE_LAYERS["alvai"];
+    const therapyLayer = therapy_mode ? `\nTherapy modality active: ${therapy_mode.toUpperCase()}. Apply this framework's specific tools and language.` : "";
+    const recoveryLayer = recovery_mode ? `\nRecovery mode active: ${recovery_mode.toUpperCase()}.` : "";
+    const passportLayer = user_context ? `\n\n${user_context}` : "";
+
     // If we have database context, inject it into the system prompt
-    const systemPrompt = contextData 
-      ? ALVAI_SYSTEM_PROMPT + contextData
-      : ALVAI_SYSTEM_PROMPT;
+    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modePrompt, therapyLayer, recoveryLayer, contextData, passportLayer]
+      .filter(Boolean).join("\n\n");
 
     // ═══ CALL OPENAI — GPT-4o FOR EVERYTHING ═══
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
