@@ -1773,10 +1773,259 @@ async function showProfile(){document.getElementById('auth-screen').style.displa
 async function loadSessions(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('id,title,mode,created_at').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(10);const el=document.getElementById('session-list');if(!data||!data.length){el.innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Talk to Alvai to see history here.</div>';return}el.innerHTML=data.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center">💚</div><div><div style="color:#e8d5b0;font-size:0.85rem">'+(c.title||'Session')+'</div><div style="color:#8fa4b0;font-size:0.7rem">'+new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+(c.mode||'general')+'</div></div></div>').join('')}
 async function saveConvo(tab,msgs){if(!sbClient||!currentUser||!msgs.length)return;const mode=tab==='home'?'alvai':tab;const title=(msgs.find(m=>m.role==='user')?.content||'Session').slice(0,60);try{if(currentConvoIds[tab]){await sbClient.from('conversations').update({messages:msgs,updated_at:new Date().toISOString()}).eq('id',currentConvoIds[tab])}else{const{data}=await sbClient.from('conversations').insert({user_id:currentUser.id,mode,title,messages:msgs}).select('id').single();if(data)currentConvoIds[tab]=data.id}}catch(e){console.warn('saveConvo failed',e)}}
 function togGoal(el){el.classList.toggle('active');if(!sbClient||!currentUser)return;const g=[...document.querySelectorAll('.gc.active')].map(c=>c.dataset.g);sbClient.from('profiles').update({wellness_goals:g}).eq('id',currentUser.id)}
+// ═══════════════════════════════════════
+// BLEU WELLNESS CART SYSTEM
+// ═══════════════════════════════════════
+let BLEU_CART = JSON.parse(localStorage.getItem('bleu_cart') || '[]');
+let BLEU_SAVED_PATHS = JSON.parse(localStorage.getItem('bleu_paths') || '[]');
+
+function saveCart() { localStorage.setItem('bleu_cart', JSON.stringify(BLEU_CART)); renderCart(); }
+function savePaths() { localStorage.setItem('bleu_paths', JSON.stringify(BLEU_SAVED_PATHS)); renderPaths(); }
+
+function addToCart(productId) {
+  const p = RUFUS_PRODUCTS[productId];
+  if (!p) return;
+  if (BLEU_CART.find(i => i.id === productId)) {
+    showCartToast(`${p.n} already in your stack`); return;
+  }
+  BLEU_CART.push({ id: productId, n: p.n, i: p.i, p: p.p, url: p.url, why: p.why.substring(0,60), addedAt: new Date().toISOString() });
+  saveCart();
+  showCartToast(`✓ ${p.n} added to your stack`);
+}
+
+function removeFromCart(productId) {
+  BLEU_CART = BLEU_CART.filter(i => i.id !== productId);
+  saveCart();
+}
+
+function clearCart() {
+  if (!confirm('Clear your wellness stack?')) return;
+  BLEU_CART = [];
+  saveCart();
+}
+
+function exportCart() {
+  const lines = BLEU_CART.map(i => `${i.i} ${i.n} — ${i.p}
+   ${i.why}
+   ${i.url}`).join('
+
+');
+  const text = `MY BLEU WELLNESS STACK
+Generated ${new Date().toLocaleDateString()}
+
+${lines}
+
+Built with BLEU — The Longevity Operating System
+bleu.live`;
+  const b = new Blob([text], {type:'text/plain'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b);
+  a.download = 'my-bleu-wellness-stack.txt'; a.click();
+}
+
+function saveJourneyPath(journeyKey, journeyTitle) {
+  const existing = BLEU_SAVED_PATHS.find(p => p.key === journeyKey);
+  if (existing) { showCartToast('Path already saved to Passport'); return; }
+  BLEU_SAVED_PATHS.unshift({ key: journeyKey, title: journeyTitle, savedAt: new Date().toISOString(), notes: '' });
+  savePaths();
+  showCartToast(`✓ "${journeyTitle}" saved to Passport`);
+}
+
+function removeFromPaths(key) {
+  BLEU_SAVED_PATHS = BLEU_SAVED_PATHS.filter(p => p.key !== key);
+  savePaths();
+}
+
+function renderCart() {
+  const el = document.getElementById('cart-items');
+  const empty = document.getElementById('cart-empty');
+  const checkout = document.getElementById('cart-checkout');
+  const label = document.getElementById('cart-count-label');
+  if (!el) return;
+  if (!BLEU_CART.length) {
+    el.innerHTML = ''; if(empty) empty.style.display = 'block'; if(checkout) checkout.style.display='none';
+    if(label) label.textContent = '0 items'; return;
+  }
+  if(empty) empty.style.display = 'none'; if(checkout) checkout.style.display='block';
+  if(label) label.textContent = `${BLEU_CART.length} item${BLEU_CART.length!==1?'s':''}`;
+  el.innerHTML = BLEU_CART.map(item => `
+    <div class="cart-item">
+      <span class="cart-item-icon">${item.i}</span>
+      <div style="flex:1;min-width:0">
+        <div class="cart-item-name">${item.n}</div>
+        <div style="font-size:10px;color:#8fa4b0;margin-top:1px">${item.why}...</div>
+      </div>
+      <span class="cart-item-price">${item.p}</span>
+      <a href="${item.url}" target="_blank" class="cart-item-buy">Get →</a>
+      <span class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</span>
+    </div>`).join('');
+}
+
+function renderPaths() {
+  const el = document.getElementById('paths-list');
+  const empty = document.getElementById('paths-empty');
+  const label = document.getElementById('paths-count-label');
+  if (!el) return;
+  if (!BLEU_SAVED_PATHS.length) {
+    el.innerHTML = ''; if(empty) empty.style.display='block';
+    if(label) label.textContent='0 saved'; return;
+  }
+  if(empty) empty.style.display='none';
+  if(label) label.textContent=`${BLEU_SAVED_PATHS.length} saved`;
+  el.innerHTML = BLEU_SAVED_PATHS.map(path => `
+    <div class="saved-path">
+      <div class="saved-path-title">🗺️ ${path.title}</div>
+      <div class="saved-path-meta">Saved ${new Date(path.savedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+      <div class="saved-path-actions">
+        <span class="sp-action" style="color:#22c55e;border-color:rgba(34,197,94,0.3)" onclick="goAsk('alvai','Resume my ${path.title} journey')">Resume →</span>
+        <span class="sp-action" style="color:#c9a84c;border-color:rgba(201,168,76,0.3)" onclick="goAsk('alvai','Update my ${path.title} protocol based on my progress')">Update</span>
+        <span class="sp-action" style="color:#ff6b6b;border-color:rgba(255,107,107,0.2)" onclick="removeFromPaths('${path.key}')">Remove</span>
+      </div>
+    </div>`).join('');
+}
+
+function showCartToast(msg) {
+  let t = document.getElementById('bleu-toast');
+  if (!t) { t=document.createElement('div'); t.id='bleu-toast'; t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a2332;border:1px solid rgba(201,168,76,0.4);color:#c9a84c;padding:8px 18px;border-radius:20px;font-size:11px;font-weight:600;z-index:9999;transition:opacity 0.3s;pointer-events:none'; document.body.appendChild(t); }
+  t.textContent = msg; t.style.opacity='1';
+  clearTimeout(t._timer); t._timer = setTimeout(() => t.style.opacity='0', 2500);
+}
+
+// Init cart + paths on load
+window.addEventListener('load', () => { renderCart(); renderPaths(); });
+
+// ═══════════════════════════════════════
+// HEALTH DATA PARSER — LOCAL ONLY
+// ═══════════════════════════════════════
+function parseHealthData(input, platform) {
+  const file = input.files[0];
+  if (!file) return;
+  const btn = input.previousElementSibling;
+  if(btn) { btn.textContent = 'Reading...'; btn.classList.add('connected-btn'); }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const raw = e.target.result;
+    let insights = [];
+    try {
+      if (platform === 'apple') {
+        // Apple Health XML — parse key records
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(raw, 'text/xml');
+        const records = xml.querySelectorAll('Record');
+        let steps=[], sleep=[], hr=[], weight=[];
+        records.forEach(r => {
+          const type = r.getAttribute('type')||'';
+          const val = parseFloat(r.getAttribute('value')||'0');
+          if (type.includes('StepCount')) steps.push(val);
+          if (type.includes('HeartRate')) hr.push(val);
+          if (type.includes('BodyMass')) weight.push(val);
+          if (type.includes('SleepAnalysis')) sleep.push(r.getAttribute('value'));
+        });
+        if (steps.length) insights.push({ label:'Avg Daily Steps', val: Math.round(steps.reduce((a,b)=>a+b,0)/steps.length).toLocaleString(), note: steps.length+' days logged' });
+        if (hr.length) insights.push({ label:'Avg Resting HR', val: Math.round(hr.reduce((a,b)=>a+b,0)/hr.length)+' bpm', note: 'Target: under 60 bpm' });
+        if (weight.length) { const kg = weight[weight.length-1]; insights.push({ label:'Last Recorded Weight', val: (kg*2.205).toFixed(1)+' lbs / '+kg.toFixed(1)+' kg', note: '' }); }
+        if (!insights.length) insights.push({ label:'Apple Health', val: records.length+' health records imported', note: 'Ask Alvai to analyze your data' });
+      } else if (platform === 'oura') {
+        const data = JSON.parse(raw);
+        if (data.sleep) {
+          const recent = data.sleep.slice(-7);
+          const avgScore = recent.reduce((a,b)=>a+(b.score||b.sleep_score||0),0)/recent.length;
+          const avgDur = recent.reduce((a,b)=>a+(b.total||b.duration||0),0)/recent.length;
+          insights.push({ label:'7-Day Sleep Score', val: Math.round(avgScore)+'/100', note:'Oura verified' });
+          if(avgDur) insights.push({ label:'Avg Sleep Duration', val: (avgDur/3600).toFixed(1)+' hrs', note:'Target: 7–9 hrs' });
+        }
+        if (data.readiness) {
+          const rScore = data.readiness.slice(-1)[0]?.score||0;
+          insights.push({ label:'Latest Readiness', val: rScore+'/100', note: rScore<70?'Recovery focus recommended':'You're ready to push' });
+        }
+        if (data.activity) {
+          const steps = data.activity.slice(-1)[0]?.steps||0;
+          if(steps) insights.push({ label:'Last Activity Steps', val: steps.toLocaleString(), note:'Target: 8,000+/day' });
+        }
+        if (!insights.length) insights.push({ label:'Oura Data', val:'Imported successfully', note:'Ask Alvai to analyze your sleep patterns' });
+      } else if (platform === 'whoop') {
+        const lines = raw.split('
+').filter(l=>l.trim());
+        const headers = lines[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
+        let recovery=[], strain=[], sleep=[];
+        for(let i=1;i<Math.min(lines.length,31);i++) {
+          const vals = lines[i].split(',').map(v=>v.replace(/"/g,'').trim());
+          const row = Object.fromEntries(headers.map((h,j)=>[h,vals[j]]));
+          if(row.recovery_score) recovery.push(parseFloat(row.recovery_score));
+          if(row.day_strain) strain.push(parseFloat(row.day_strain));
+          if(row.sleep_performance_percentage) sleep.push(parseFloat(row.sleep_performance_percentage));
+        }
+        if(recovery.length) insights.push({label:'Avg Recovery Score', val:Math.round(recovery.reduce((a,b)=>a+b,0)/recovery.length)+'%', note:`${recovery.length} days`});
+        if(strain.length) insights.push({label:'Avg Day Strain', val:(strain.reduce((a,b)=>a+b,0)/strain.length).toFixed(1)+'/21', note:'Target: 10–14 for longevity'});
+        if(sleep.length) insights.push({label:'Avg Sleep Performance', val:Math.round(sleep.reduce((a,b)=>a+b,0)/sleep.length)+'%', note:'Target: 85%+'});
+        if(!insights.length) insights.push({label:'Whoop Data', val:'Imported successfully', note:'Ask Alvai to analyze your recovery trends'});
+      } else if (platform === 'mfp') {
+        const lines = raw.split('
+').filter(l=>l.trim());
+        const headers = lines[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
+        let calories=[], protein=[], carbs=[], fat=[];
+        for(let i=1;i<Math.min(lines.length,31);i++) {
+          const vals = lines[i].split(',').map(v=>v.replace(/"/g,'').trim());
+          const row = Object.fromEntries(headers.map((h,j)=>[h,vals[j]]));
+          if(row.calories) calories.push(parseFloat(row.calories)||0);
+          if(row.protein) protein.push(parseFloat(row.protein)||0);
+          if(row.carbohydrates) carbs.push(parseFloat(row.carbohydrates)||0);
+          if(row.fat) fat.push(parseFloat(row.fat)||0);
+        }
+        if(calories.length) insights.push({label:'Avg Daily Calories', val:Math.round(calories.reduce((a,b)=>a+b,0)/calories.length).toLocaleString()+' kcal', note:`${calories.length} days logged`});
+        if(protein.length) insights.push({label:'Avg Protein', val:Math.round(protein.reduce((a,b)=>a+b,0)/protein.length)+'g/day', note:'Target: 0.7–1g per lb body weight'});
+        if(!insights.length) insights.push({label:'MyFitnessPal', val:'Nutrition data imported', note:'Ask Alvai to analyze your macro balance'});
+      } else {
+        // Generic CSV / JSON fallback
+        if (raw.startsWith('{') || raw.startsWith('[')) {
+          const data = JSON.parse(raw);
+          const keys = Array.isArray(data) ? Object.keys(data[0]||{}) : Object.keys(data);
+          insights.push({label:'Health Data Imported', val:`${Array.isArray(data)?data.length:Object.keys(data).length} records`, note:'Fields: '+keys.slice(0,5).join(', ')+(keys.length>5?'...':'')});
+        } else {
+          const lines = raw.split('
+').filter(l=>l.trim());
+          insights.push({label:'Health CSV Imported', val:`${lines.length-1} records`, note:'Ask Alvai to analyze: "I just uploaded my health data"'});
+        }
+      }
+    } catch(err) {
+      insights.push({label:'File Imported', val:file.name, note:'Ask Alvai: "I just uploaded my health data — analyze it"'});
+    }
+
+    // Mark platform as connected
+    const dpEl = document.getElementById('dp-'+platform);
+    if(dpEl) dpEl.classList.add('connected');
+    if(btn) { btn.textContent='✓ Connected'; btn.classList.add('connected-btn'); }
+
+    // Show insights
+    const insightEl = document.getElementById('data-insights');
+    if(insightEl) {
+      insightEl.style.display='block';
+      const platformNames = {apple:'Apple Health',oura:'Oura Ring',whoop:'Whoop',garmin:'Garmin',mfp:'MyFitnessPal',fitbit:'Fitbit',csv:'Health Data'};
+      insightEl.innerHTML = `<div class="data-insight"><div class="data-insight-title">📊 ${platformNames[platform]||'Health Data'} — BLEU Analysis</div><div class="data-insight-val">${
+        insights.map(i=>`<strong style="color:#c9a84c">${i.label}:</strong> ${i.val}${i.note?` <span style="color:#8fa4b0;font-size:10px">(${i.note})</span>`:''}`).join('<br>')
+      }</div><div style="margin-top:8px"><span style="font-size:10px;color:#22c55e;cursor:pointer;font-weight:600" onclick="goAsk('alvai','I just imported my ${platformNames[platform]} data. Here is what BLEU read: ${insights.map(i=>i.label+': '+i.val).join(', ')}. Please analyze this and tell me what to focus on for my longevity.')">Ask Alvai to analyze this data →</span></div></div>` +
+      (insightEl.innerHTML||'');
+    }
+
+    // Store in session for Alvai context
+    const existing = JSON.parse(sessionStorage.getItem('bleu_health_data')||'{}');
+    existing[platform] = { insights, importedAt: new Date().toISOString(), fileName: file.name };
+    sessionStorage.setItem('bleu_health_data', JSON.stringify(existing));
+
+    showCartToast(`✓ ${file.name} imported — ${insights.length} insights ready`);
+    input.value='';
+  };
+  reader.onerror = () => { if(btn) btn.textContent='Upload XML'; showCartToast('Error reading file'); };
+  if (platform === 'apple') reader.readAsText(file);
+  else reader.readAsText(file);
+}
+
 async function exportData(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('*').eq('user_id',currentUser.id);const b=new Blob([JSON.stringify(data||[],null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='bleu-data.json';a.click()}
 async function clearHist(){if(!confirm('Delete all history? Cannot undo.'))return;if(!sbClient||!currentUser)return;await sbClient.from('conversations').delete().eq('user_id',currentUser.id);currentConvoIds={};document.getElementById('session-list').innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px">Cleared.</div>'}
 let _passportCache=null,_passportCacheTime=0
-async function getUserContext(){if(!sbClient||!currentUser)return null;if(_passportCache&&Date.now()-_passportCacheTime<60000)return _passportCache;try{const{data:prof}=await sbClient.from('profiles').select('wellness_goals,bleu_score,streak_days,conversations_count').eq('id',currentUser.id).single();const{data:convos}=await sbClient.from('conversations').select('mode,title,messages').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(5);const name=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';const goals=(prof?.wellness_goals||[]).join(', ')||'not yet set';const recentSessions=(convos||[]).map(c=>`${c.mode||'general'}: ${(c.title||'session').slice(0,40)}`).join(' | ')||'first session';const allMsgs=(convos||[]).flatMap(c=>(c.messages||[]).slice(-10)).map(m=>m.content||'');const medRegex=/\b(sertraline|zoloft|prozac|lexapro|effexor|wellbutrin|xanax|klonopin|adderall|ritalin|suboxone|methadone|naltrexone|lithium|seroquel|abilify|ssri|antidepressant|medication|prescription)\b/gi;const meds=[...new Set((allMsgs.join(' ').match(medRegex)||[]).map(m=>m.toLowerCase()))];const medNote=meds.length?`Medications mentioned in prior sessions: ${meds.join(', ')}. Flag CYP450 interactions before recommending supplements or cannabis.`:'';const ctx=`BLEU PASSPORT CONTEXT — Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
+async function getUserContext(){if(!sbClient||!currentUser)return null;if(_passportCache&&Date.now()-_passportCacheTime<60000)return _passportCache;try{const{data:prof}=await sbClient.from('profiles').select('wellness_goals,bleu_score,streak_days,conversations_count').eq('id',currentUser.id).single();const{data:convos}=await sbClient.from('conversations').select('mode,title,messages').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(5);const name=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';const goals=(prof?.wellness_goals||[]).join(', ')||'not yet set';const recentSessions=(convos||[]).map(c=>`${c.mode||'general'}: ${(c.title||'session').slice(0,40)}`).join(' | ')||'first session';const allMsgs=(convos||[]).flatMap(c=>(c.messages||[]).slice(-10)).map(m=>m.content||'');const medRegex=/\b(sertraline|zoloft|prozac|lexapro|effexor|wellbutrin|xanax|klonopin|adderall|ritalin|suboxone|methadone|naltrexone|lithium|seroquel|abilify|ssri|antidepressant|medication|prescription)\b/gi;const meds=[...new Set((allMsgs.join(' ').match(medRegex)||[]).map(m=>m.toLowerCase()))];const medNote=meds.length?`Medications mentioned in prior sessions: ${meds.join(', ')}. Flag CYP450 interactions before recommending supplements or cannabis.`:'';const healthData = JSON.parse(sessionStorage.getItem('bleu_health_data')||'{}');
+const healthNote = Object.keys(healthData).length ? 'Imported health data: '+Object.entries(healthData).map(([k,v])=>`${k}: ${v.insights.map(i=>i.label+': '+i.val).join(', ')}`).join(' | ') : '';
+const cartNote = BLEU_CART.length ? 'Current wellness stack ('+BLEU_CART.length+' items): '+BLEU_CART.map(i=>i.n).join(', ') : '';
+const ctx=`BLEU PASSPORT CONTEXT — Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
 const _TAB_SCORE_WEIGHT={therapy:5,recovery:5,ecsiq:4,protocols:4,missions:4,passport:3,vessel:3,finance:3,directory:3,learn:2,community:2,dashboard:2,alvai:2,home:1,map:1}
 async function updateBleScore(tab){if(!sbClient||!currentUser)return;try{const{data:p}=await sbClient.from('profiles').select('bleu_score,conversations_count').eq('id',currentUser.id).single();const delta=_TAB_SCORE_WEIGHT[tab]||2;const newScore=Math.min(100,(p?.bleu_score||0)+delta);const newCount=(p?.conversations_count||0)+1;await sbClient.from('profiles').update({bleu_score:newScore,conversations_count:newCount,updated_at:new Date().toISOString()}).eq('id',currentUser.id);_passportCache=null;const el=document.getElementById('stat-score');if(el)el.textContent=newScore;const el2=document.getElementById('stat-convos');if(el2)el2.textContent=newCount}catch(e){}}
 
@@ -2198,13 +2447,14 @@ function renderJourney(containerDiv, journeyKey) {
       <div class="rufus-jcard-icon">${p.i}</div>
       <div class="rufus-jcard-name">${p.n}</div>
       <div class="rufus-jcard-why">${p.why.substring(0,75)}...</div>
-      <div class="rufus-jcard-expand">${p.why}<br><br><span class="${isSafe?'safe':'warn'}" style="font-size:8px">${p.sf||''}</span></div>
+      <div class="rufus-jcard-expand">${p.why}<br><br><span class="${isSafe?'safe':'warn'}" style="font-size:8px">${p.sf||''}</span><br><button class="rufus-add-cart" onclick="addToCart('${stepDef.id}');event.stopPropagation()" style="margin-top:6px;font-size:9px;padding:4px 10px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);border-radius:6px;color:#c9a84c;cursor:pointer;font-weight:700;width:100%">+ Add to Wellness Stack</button></div>
       <div class="rufus-jcard-price">${p.p}${isFree ? ' ✓' : ''}</div>
       <a href="${p.url}" target="_blank" class="rufus-jcard-btn">${p.label}</a>`;
 
     // Tap to expand — show full WHY before sending to buy
     card.addEventListener('click', function(e) {
       if (e.target.tagName === 'A') return;
+      if (e.target.classList.contains('rufus-add-cart')) return;
       this.classList.toggle('expanded');
     });
 
@@ -2217,8 +2467,8 @@ function renderJourney(containerDiv, journeyKey) {
   const saveHook = document.createElement('div');
   saveHook.className = 'rufus-save-hook';
   saveHook.innerHTML = `
-    <div class="rufus-save-text"><strong>Save this path to your Wellness Passport</strong><br>Track what you try. See what works. Your journey builds over time.</div>
-    <button class="rufus-save-btn" onclick="document.getElementById('auth-modal')?.classList.add('show') || alert('Sign in to save your wellness path')">Save Path →</button>`;
+    <div class="rufus-save-text"><strong>Save this path to your Wellness Passport</strong><br>Track what you try. See what works. Every step builds your longevity profile.</div>
+    <button class="rufus-save-btn" onclick="saveJourneyPath('${journeyKey}','${journey.title}')">Save Path →</button>`;
   wrap.appendChild(saveHook);
 
   // Footer disclosure
