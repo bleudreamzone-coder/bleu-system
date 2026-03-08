@@ -1533,6 +1533,7 @@ button[type="submit"],
       <div style="flex:1">
         <div style="font-family:Georgia,serif;font-size:20px;color:#e8d5b0;margin-bottom:4px">Welcome back, <span id="prof-name">—</span></div>
         <span id="prof-tier" style="display:inline-block;background:linear-gradient(135deg,#d4af37,#c49b2f);color:#0a1628;padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Community</span>
+        <div id="set-email" style="font-size:10px;color:#8fa4b0;margin-top:4px;letter-spacing:0.3px"></div>
         <div style="display:flex;gap:16px;margin-top:12px">
           <div><div id="stat-convos" style="font-family:Georgia,serif;font-size:22px;color:#4ecdc4;font-weight:700">0</div><div style="font-size:9px;color:#8fa4b0;letter-spacing:1px">SESSIONS</div></div>
           <div><div id="stat-streak" style="font-family:Georgia,serif;font-size:22px;color:#d4af37;font-weight:700">0</div><div style="font-size:9px;color:#8fa4b0;letter-spacing:1px">STREAK</div></div>
@@ -1595,7 +1596,7 @@ button[type="submit"],
         <div style="font-size:10px;color:#8fa4b0;margin-top:2px">Apple Health, Oura, Whoop, Garmin</div>
       </div>
     </div>
-    <input type="file" id="pp-file-import" style="display:none" accept=".xml,.json,.csv" onchange="handleHealthImport(this)">
+    <input type="file" id="pp-file-import" accept=".xml,.json,.csv" style="display:none" onchange="handleHealthFileImport(event)">
     <!-- MANUAL ENTRY FORM -->
     <div id="pp-manual-form" style="display:none;border-top:1px solid rgba(255,255,255,0.06);padding-top:12px">
       <div style="font-size:11px;color:#8fa4b0;margin-bottom:10px;letter-spacing:1px">ENTER WHAT YOU KNOW — leave blank what you don't</div>
@@ -1939,7 +1940,7 @@ function siErr(m){const e=document.getElementById('si-error');e.textContent=m;e.
 function hSiErr(){document.getElementById('si-error').style.display='none'}
 function sMsg(m){const e=document.getElementById('auth-msg');e.textContent=m;e.style.display='block';setTimeout(()=>e.style.display='none',5000)}
 function showAuth(){document.getElementById('auth-screen').style.display='block';document.getElementById('profile-screen').style.display='none'}
-async function showProfile(){document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;document.getElementById('stat-score').textContent=p.bleu_score||0;if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
+async function showProfile(){document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
 async function loadSessions(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('id,title,mode,created_at').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(10);const el=document.getElementById('session-list');if(!data||!data.length){el.innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Talk to Alvai to see history here.</div>';return}el.innerHTML=data.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center">💚</div><div><div style="color:#e8d5b0;font-size:0.85rem">'+(c.title||'Session')+'</div><div style="color:#8fa4b0;font-size:0.7rem">'+new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+(c.mode||'general')+'</div></div></div>').join('')}
 async function saveConvo(tab,msgs){if(!sbClient||!currentUser||!msgs.length)return;const mode=tab==='home'?'alvai':tab;const title=(msgs.find(m=>m.role==='user')?.content||'Session').slice(0,60);try{if(currentConvoIds[tab]){await sbClient.from('conversations').update({messages:msgs,updated_at:new Date().toISOString()}).eq('id',currentConvoIds[tab])}else{const{data}=await sbClient.from('conversations').insert({user_id:currentUser.id,mode,title,messages:msgs}).select('id').single();if(data)currentConvoIds[tab]=data.id}}catch(e){console.warn('saveConvo failed',e)}}
 function togGoal(el){el.classList.toggle('active');if(!sbClient||!currentUser)return;const g=[...document.querySelectorAll('.gc.active')].map(c=>c.dataset.g);sbClient.from('profiles').update({wellness_goals:g}).eq('id',currentUser.id)}
@@ -2135,6 +2136,7 @@ function saveManualHealthData() {
   });
   try { localStorage.setItem('bleu_health', JSON.stringify(hd)); } catch(e) {}
   renderHealthData();
+  syncHealthToSupabase(hd).catch(()=>{});
   updateBleScore();
   document.getElementById('pp-health-panel').style.display = 'none';
   showCartToast('Health data saved to your Passport ✓');
@@ -2243,6 +2245,179 @@ function exportFullPassport() {
   a.href = URL.createObjectURL(b);
   a.download = 'bleu-passport-' + Date.now() + '.txt';
   a.click();
+}
+
+
+// ── RING ANIMATION ────────────────────────────────────────────────────────────
+function animateRing(score) {
+  const ring = document.getElementById('pp-score-ring');
+  if (!ring) return;
+  const circumference = 327; // 2πr where r=52
+  const offset = circumference - (score / 100) * circumference;
+  ring.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(.16,1,.3,1)';
+  ring.style.strokeDashoffset = offset;
+  // Update tier badge
+  const tier = document.getElementById('prof-tier');
+  if (tier) {
+    const t = score >= 80 ? 'Healer' : score >= 60 ? 'Practitioner' : score >= 40 ? 'Advocate' : score >= 20 ? 'Explorer' : 'Community';
+    tier.textContent = t;
+  }
+}
+
+// ── UPSERT PROFILE (auto-create on first login) ───────────────────────────────
+async function upsertProfile(updates) {
+  if (!sbClient || !currentUser) return;
+  try {
+    const { data: existing } = await sbClient.from('profiles').select('id').eq('id', currentUser.id).single();
+    if (existing) {
+      await sbClient.from('profiles').update({ updated_at: new Date().toISOString(), ...updates }).eq('id', currentUser.id);
+    } else {
+      await sbClient.from('profiles').insert({
+        id: currentUser.id,
+        email: currentUser.email,
+        full_name: currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'Friend',
+        bleu_score: 0,
+        conversations_count: 0,
+        streak_days: 0,
+        last_active: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        ...updates
+      });
+    }
+  } catch(e) {}
+}
+
+// ── SYNC HEALTH DATA TO SUPABASE ──────────────────────────────────────────────
+async function syncHealthToSupabase(hd) {
+  if (!sbClient || !currentUser) return;
+  try {
+    const clean = {};
+    if (hd.weight) clean.weight_lbs = parseFloat(hd.weight);
+    if (hd.rhr) clean.resting_hr = parseInt(hd.rhr);
+    if (hd.hrv) clean.hrv_ms = parseInt(hd.hrv);
+    if (hd.sleep) clean.sleep_hrs = parseFloat(hd.sleep);
+    if (hd.steps) clean.steps_daily = parseInt(hd.steps);
+    if (hd.energy) clean.energy_score = parseInt(hd.energy);
+    if (hd.anxiety) clean.anxiety_score = parseInt(hd.anxiety);
+    if (hd.mood) clean.mood_score = parseInt(hd.mood);
+    if (hd.meds) clean.medications = hd.meds;
+    if (hd.goal) clean.primary_goal = hd.goal;
+    clean.health_updated_at = new Date().toISOString();
+    await upsertProfile(clean);
+  } catch(e) {}
+}
+
+// ── STREAK CALCULATION ─────────────────────────────────────────────────────────
+async function updateStreak() {
+  if (!sbClient || !currentUser) return;
+  try {
+    const { data: p } = await sbClient.from('profiles').select('last_active,streak_days').eq('id', currentUser.id).single();
+    if (!p) return;
+    const last = p.last_active ? new Date(p.last_active) : null;
+    const now = new Date();
+    const daysSince = last ? Math.floor((now - last) / 86400000) : 999;
+    let newStreak = p.streak_days || 0;
+    if (daysSince === 0) { /* same day, no change */ }
+    else if (daysSince === 1) { newStreak += 1; } // consecutive day
+    else { newStreak = 1; } // streak broken
+    await sbClient.from('profiles').update({ streak_days: newStreak, last_active: now.toISOString() }).eq('id', currentUser.id);
+    const el = document.getElementById('stat-streak');
+    if (el) el.textContent = newStreak;
+  } catch(e) {}
+}
+
+// ── APPLE HEALTH XML PARSER ───────────────────────────────────────────────────
+function parseAppleHealth(xmlText) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xmlText, 'text/xml');
+  const records = doc.querySelectorAll('Record');
+  const data = {};
+  records.forEach(r => {
+    const type = r.getAttribute('type') || '';
+    const val = parseFloat(r.getAttribute('value') || 0);
+    if (type.includes('HeartRate') && !type.includes('Variability')) data.rhr = Math.round(val);
+    if (type.includes('HeartRateVariability')) data.hrv = Math.round(val);
+    if (type.includes('StepCount')) data.steps = Math.round(val);
+    if (type.includes('SleepAnalysis')) data.sleep = val;
+    if (type.includes('BodyMass')) data.weight = (val * 2.20462).toFixed(1); // kg to lbs
+  });
+  return data;
+}
+
+// ── OURA JSON PARSER ──────────────────────────────────────────────────────────
+function parseOura(jsonText) {
+  try {
+    const obj = JSON.parse(jsonText);
+    const data = {};
+    // Oura sleep
+    const sleep = (obj.sleep || obj.data || []);
+    if (sleep.length) {
+      const latest = sleep[sleep.length - 1];
+      if (latest.total_sleep_duration) data.sleep = (latest.total_sleep_duration / 3600).toFixed(1);
+      if (latest.rmssd) data.hrv = Math.round(latest.rmssd);
+      if (latest.lowest_heart_rate) data.rhr = latest.lowest_heart_rate;
+    }
+    // Oura activity
+    const activity = (obj.activity || obj.activity_logs || []);
+    if (activity.length) {
+      const latest = activity[activity.length - 1];
+      if (latest.steps) data.steps = latest.steps;
+    }
+    return data;
+  } catch(e) { return {}; }
+}
+
+// ── CSV PARSER (Garmin/Whoop/Fitbit) ─────────────────────────────────────────
+function parseWellnessCSV(csvText) {
+  const lines = csvText.trim().split('\n');
+  if (lines.length < 2) return {};
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/[^a-z_]/g,'_'));
+  const latest = lines[lines.length - 1].split(',').map(v => v.trim().replace(/"/g,''));
+  const row = {};
+  headers.forEach((h, i) => { row[h] = latest[i]; });
+  const data = {};
+  // Try common column names
+  const stepKey = headers.find(h => h.includes('step'));
+  const sleepKey = headers.find(h => h.includes('sleep') && h.includes('hour'));
+  const hrKey = headers.find(h => h.includes('resting') && h.includes('heart'));
+  const hrvKey = headers.find(h => h.includes('hrv') || h.includes('heart_rate_variability'));
+  if (stepKey) data.steps = parseInt(row[stepKey]) || 0;
+  if (sleepKey) data.sleep = parseFloat(row[sleepKey]) || 0;
+  if (hrKey) data.rhr = parseInt(row[hrKey]) || 0;
+  if (hrvKey) data.hrv = parseInt(row[hrvKey]) || 0;
+  return data;
+}
+
+// ── FILE IMPORT HANDLER ───────────────────────────────────────────────────────
+function handleHealthFileImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const text = e.target.result;
+    let parsed = {};
+    if (file.name.endsWith('.xml')) {
+      parsed = parseAppleHealth(text);
+    } else if (file.name.endsWith('.json')) {
+      parsed = parseOura(text);
+    } else if (file.name.endsWith('.csv')) {
+      parsed = parseWellnessCSV(text);
+    }
+    if (Object.keys(parsed).length === 0) {
+      showCartToast('Could not parse file. Try a different format or enter manually.');
+      return;
+    }
+    // Merge with existing
+    let existing = {};
+    try { existing = JSON.parse(localStorage.getItem('bleu_health') || '{}'); } catch(e) {}
+    const merged = { ...existing, ...parsed, saved_at: Date.now(), source: file.name };
+    localStorage.setItem('bleu_health', JSON.stringify(merged));
+    renderHealthData();
+    syncHealthToSupabase(merged).catch(()=>{});
+    showCartToast('Health data imported from ' + file.name + ' ✓');
+    document.getElementById('pp-import-platforms').style.display = 'none';
+  };
+  reader.readAsText(file);
 }
 
 function initPassport() {
