@@ -1460,57 +1460,110 @@ button[type="submit"],
     <div class="pp-life-item" onclick="go('ecsiq')"><div class="pp-li-icon">🌿</div><div class="pp-li-name">ECS</div><div class="pp-li-val">—</div></div>
   </div>
   <div class="pp-sect pp-anim">My Wellness Focus</div>
-  <div id="goal-chips" class="pp-anim" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px">
-    <span class="gc" data-g="sleep" onclick="togGoal(this)">😴 Sleep</span><span class="gc" data-g="anxiety" onclick="togGoal(this)">🧠 Anxiety</span><span class="gc" data-g="nutrition" onclick="togGoal(this)">🍎 Nutrition</span><span class="gc" data-g="fitness" onclick="togGoal(this)">💪 Fitness</span><span class="gc" data-g="recovery" onclick="togGoal(this)">🦋 Recovery</span><span class="gc" data-g="stress" onclick="togGoal(this)">🔥 Stress</span><span class="gc" data-g="grief" onclick="togGoal(this)">💜 Grief</span><span class="gc" data-g="relationships" onclick="togGoal(this)">❤️ Relationships</span><span class="gc" data-g="cannabis" onclick="togGoal(this)">🌿 Cannabis</span><span class="gc" data-g="longevity" onclick="togGoal(this)">⏳ Longevity</span><span class="gc" data-g="finance" onclick="togGoal(this)">💰 Finance</span><span class="gc" data-g="career" onclick="togGoal(this)">📈 Career</span><span class="gc" data-g="pain" onclick="togGoal(this)">🔥 Pain</span><span class="gc" data-g="weight" onclick="togGoal(this)">⚖️ Weight</span><span class="gc" data-g="hormones" onclick="togGoal(this)">🧬 Hormones</span><span class="gc" data-g="gut" onclick="togGoal(this)">🦠 Gut Health</span>
+  <div id="pp-focus-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px">
+    <span class="gc active" onclick="toggleFocus(this,'sleep')">😴 Sleep</span>
+    <span class="gc" onclick="toggleFocus(this,'anxiety')">🧠 Anxiety</span>
+    <span class="gc" onclick="toggleFocus(this,'weight')">⚖️ Weight</span>
+    <span class="gc" onclick="toggleFocus(this,'energy')">⚡ Energy</span>
+    <span class="gc" onclick="toggleFocus(this,'longevity')">🌿 Longevity</span>
+    <span class="gc" onclick="toggleFocus(this,'recovery')">🔥 Recovery</span>
+    <span class="gc" onclick="toggleFocus(this,'pain')">💊 Pain</span>
+    <span class="gc" onclick="toggleFocus(this,'financial')">💰 Financial</span>
   </div>
-  <div class="pp-anim" style="font-size:11px;color:#8fa4b0;margin-bottom:6px">Tap goals to activate — Alvai, protocols, and resources align to your focus.</div>
-  <div class="pp-sect pp-anim">My Stack <span class="pp-act" onclick="go('vessel')">Browse Vessel →</span></div>
-  <div class="pp-anim" style="background:rgba(25,50,68,0.4);border:1px solid rgba(212,175,55,0.08);border-radius:14px;padding:16px;margin-bottom:6px"><div style="text-align:center;padding:12px 0"><div style="font-size:28px;margin-bottom:8px">💊</div><div style="font-size:13px;color:#e8d5b0;margin-bottom:4px">No supplements tracked yet</div><div style="font-size:12px;color:#8fa4b0;margin-bottom:14px">Tell Alvai what you take — interactions checked, stack built, everything tracked.</div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><span style="padding:6px 14px;border-radius:20px;font-size:11px;color:#d4af37;border:1px solid rgba(212,175,55,0.2);cursor:pointer" onclick="goAsk('vessel','I take magnesium and vitamin D - check my stack')">Start with common supps</span><span style="padding:6px 14px;border-radius:20px;font-size:11px;color:#4ecdc4;border:1px solid rgba(78,205,196,0.2);cursor:pointer" onclick="goAsk('vessel','Build me a beginner supplement stack for overall wellness')">Build me a stack</span></div></div></div>
-  <div class="pp-sect pp-anim">My Practitioners <span class="pp-act" onclick="go('directory')">Find More →</span></div>
-  <div class="pp-anim" style="background:rgba(25,50,68,0.4);border:1px solid rgba(78,205,196,0.08);border-radius:14px;padding:16px;margin-bottom:6px"><div style="text-align:center;padding:8px 0"><div style="font-size:13px;color:#e8d5b0;margin-bottom:4px">No practitioners saved yet</div><div style="font-size:12px;color:#8fa4b0;margin-bottom:12px">Find practitioners in the Directory — they'll appear here.</div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><span style="padding:6px 14px;border-radius:20px;font-size:11px;color:#4ecdc4;border:1px solid rgba(78,205,196,0.2);cursor:pointer" onclick="goAsk('directory','Find me a therapist in New Orleans')">Find a therapist</span><span style="padding:6px 14px;border-radius:20px;font-size:11px;color:#d4af37;border:1px solid rgba(212,175,55,0.2);cursor:pointer" onclick="goAsk('directory','Find a nutritionist near me')">Find a nutritionist</span></div></div></div>
-  <div class="pp-sect pp-anim">My Learning <span class="pp-act" onclick="go('learn')">Explore →</span></div>
-  <div class="pp-anim" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
-    <div class="pp-card" onclick="goAsk('learn','Recommend a sleep meditation or sleep podcast')"><div style="font-size:18px;margin-bottom:6px">🎧</div><div style="font-size:12px;color:#e8d5b0;font-weight:600">Sleep Audio</div><div style="font-size:11px;color:#8fa4b0;margin-top:2px">Meditations, NSDR, binaural</div></div>
-    <div class="pp-card" onclick="goAsk('learn','Best YouTube channels for wellness and longevity')"><div style="font-size:18px;margin-bottom:6px">📺</div><div style="font-size:12px;color:#e8d5b0;font-weight:600">Video Learning</div><div style="font-size:11px;color:#8fa4b0;margin-top:2px">Huberman, Attia, curated</div></div>
-    <div class="pp-card" onclick="goAsk('learn','Recommend books for my wellness journey')"><div style="font-size:18px;margin-bottom:6px">📚</div><div style="font-size:12px;color:#e8d5b0;font-weight:600">Reading List</div><div style="font-size:11px;color:#8fa4b0;margin-top:2px">Books, articles, research</div></div>
-    <div class="pp-card" onclick="goAsk('learn','What is the endocannabinoid system and how does it work')"><div style="font-size:18px;margin-bottom:6px">🧬</div><div style="font-size:12px;color:#e8d5b0;font-weight:600">ECS Education</div><div style="font-size:11px;color:#8fa4b0;margin-top:2px">127-year knowledge base</div></div>
+
+  <!-- WELLNESS CART -->
+  <div class="pp-sect pp-anim">My Wellness Stack <span class="pp-act" onclick="go('vessel')">+ Add Products</span></div>
+  <div id="pp-cart-container" class="pp-anim"></div>
+
+  <!-- SAVED JOURNEYS -->
+  <div class="pp-sect pp-anim">My Saved Journeys <span class="pp-act" onclick="go('home')">Start New Journey</span></div>
+  <div id="pp-paths-container" class="pp-anim"></div>
+
+  <!-- HEALTH DATA — MANUAL + IMPORT -->
+  <div class="pp-sect pp-anim">My Health Data <span class="pp-act" onclick="toggleHealthPanel()">+ Add Data</span></div>
+  <div id="pp-health-display" class="pp-anim" style="margin-bottom:8px"></div>
+  <div id="pp-health-panel" style="display:none;background:rgba(25,50,68,0.5);border:1px solid rgba(78,205,196,0.2);border-radius:14px;padding:16px;margin-bottom:12px">
+    <div style="font-size:12px;color:#4ecdc4;font-weight:700;letter-spacing:1px;margin-bottom:12px">HOW WOULD YOU LIKE TO ADD DATA?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      <div onclick="showManualEntry()" style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.25)'">
+        <div style="font-size:22px;margin-bottom:4px">✏️</div>
+        <div style="font-size:11px;color:#e8d5b0;font-weight:600">Enter Manually</div>
+        <div style="font-size:10px;color:#8fa4b0;margin-top:2px">Type your numbers</div>
+      </div>
+      <div onclick="document.getElementById('pp-file-import').click()" style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(78,205,196,0.4)'" onmouseout="this.style.borderColor='rgba(78,205,196,0.2)'">
+        <div style="font-size:22px;margin-bottom:4px">📁</div>
+        <div style="font-size:11px;color:#4ecdc4;font-weight:600">Import File</div>
+        <div style="font-size:10px;color:#8fa4b0;margin-top:2px">Apple Health, Oura, Whoop, Garmin</div>
+      </div>
+    </div>
+    <input type="file" id="pp-file-import" style="display:none" accept=".xml,.json,.csv" onchange="handleHealthImport(this)">
+    <!-- MANUAL ENTRY FORM -->
+    <div id="pp-manual-form" style="display:none;border-top:1px solid rgba(255,255,255,0.06);padding-top:12px">
+      <div style="font-size:11px;color:#8fa4b0;margin-bottom:10px;letter-spacing:1px">ENTER WHAT YOU KNOW — leave blank what you don't</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">Weight (lbs)</div><input id="hd-weight" type="number" placeholder="185" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;color:#e8d5b0;font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">Resting HR (bpm)</div><input id="hd-rhr" type="number" placeholder="62" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;color:#e8d5b0;font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">HRV (ms)</div><input id="hd-hrv" type="number" placeholder="45" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;color:#e8d5b0;font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">Sleep (hrs/night)</div><input id="hd-sleep" type="number" step="0.5" placeholder="6.5" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;color:#e8d5b0;font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">Steps/day</div><input id="hd-steps" type="number" placeholder="7200" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;color:#e8d5b0;font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">Energy (1-10)</div><input id="hd-energy" type="number" min="1" max="10" placeholder="6" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;color:#e8d5b0;font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">Anxiety level (1-10)</div><input id="hd-anxiety" type="number" min="1" max="10" placeholder="5" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;color:#e8d5b0;font-size:13px;box-sizing:border-box"></div>
+        <div><div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">Mood (1-10)</div><input id="hd-mood" type="number" min="1" max="10" placeholder="7" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;color:#e8d5b0;font-size:13px;box-sizing:border-box"></div>
+      </div>
+      <div style="margin-top:8px"><div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">Current medications or supplements (optional)</div><input id="hd-meds" type="text" placeholder="e.g. Metformin 500mg, Fish Oil 2g" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;color:#e8d5b0;font-size:13px;box-sizing:border-box"></div>
+      <div style="margin-top:8px"><div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">Primary health goal</div><input id="hd-goal" type="text" placeholder="e.g. lose 20 lbs, sleep better, reduce anxiety" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px;color:#e8d5b0;font-size:13px;box-sizing:border-box"></div>
+      <button onclick="saveManualHealthData()" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#c9a84c,#b8943c);color:#0a0c10;font-weight:700;border:none;border-radius:10px;padding:11px;font-size:13px;cursor:pointer">Save My Health Data →</button>
+    </div>
+    <!-- IMPORT PLATFORMS -->
+    <div id="pp-import-platforms" style="border-top:1px solid rgba(255,255,255,0.06);padding-top:12px">
+      <div style="font-size:11px;color:#8fa4b0;margin-bottom:10px;letter-spacing:1px">IMPORT FROM YOUR DEVICE — stored locally, never transmitted</div>
+      <div style="display:grid;gap:6px">
+        <div onclick="document.getElementById('pp-file-import').click()" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(78,205,196,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><span style="font-size:18px">🍎</span><div><div style="font-size:12px;color:#e8d5b0;font-weight:600">Apple Health</div><div style="font-size:10px;color:#8fa4b0">Export XML from Health app → Share → Save to Files</div></div><span style="margin-left:auto;font-size:10px;color:#4ecdc4">Upload →</span></div>
+        <div onclick="document.getElementById('pp-file-import').click()" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(78,205,196,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><span style="font-size:18px">💍</span><div><div style="font-size:12px;color:#e8d5b0;font-weight:600">Oura Ring</div><div style="font-size:10px;color:#8fa4b0">Oura app → Profile → Export Data → JSON</div></div><span style="margin-left:auto;font-size:10px;color:#4ecdc4">Upload →</span></div>
+        <div onclick="document.getElementById('pp-file-import').click()" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(78,205,196,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'"><span style="font-size:18px">💪</span><div><div style="font-size:12px;color:#e8d5b0;font-weight:600">Whoop / Garmin / Fitbit</div><div style="font-size:10px;color:#8fa4b0">Export CSV from your app → Upload here</div></div><span style="margin-left:auto;font-size:10px;color:#4ecdc4">Upload →</span></div>
+      </div>
+    </div>
   </div>
-  <div class="pp-sect pp-anim">My Community <span class="pp-act" onclick="go('community')">Find Events →</span></div>
-  <div class="pp-anim" style="background:rgba(25,50,68,0.4);border:1px solid rgba(78,205,196,0.08);border-radius:14px;padding:16px;margin-bottom:6px"><div style="text-align:center;padding:8px 0"><div style="font-size:13px;color:#e8d5b0;margin-bottom:4px">No events saved yet</div><div style="font-size:12px;color:#8fa4b0;margin-bottom:12px">Meetups, recovery circles, wellness walks — find what's near you.</div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><span style="padding:6px 14px;border-radius:20px;font-size:11px;color:#4ecdc4;border:1px solid rgba(78,205,196,0.2);cursor:pointer" onclick="goAsk('community','Find wellness meetups near New Orleans')">Find meetups</span><span style="padding:6px 14px;border-radius:20px;font-size:11px;color:#d4af37;border:1px solid rgba(212,175,55,0.2);cursor:pointer" onclick="goAsk('community','Find recovery meetings near me')">Recovery circles</span></div></div></div>
-  <div class="pp-sect pp-anim">Financial Wellness <span class="pp-act" onclick="go('finance')">Full Finance →</span></div>
-  <div class="pp-anim" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px">
-    <div class="pp-card" onclick="goAsk('finance','Help me budget for wellness expenses')" style="text-align:center"><div style="font-size:18px;margin-bottom:4px">📊</div><div style="font-size:11px;color:#d4af37;font-weight:600">Budget</div></div>
-    <div class="pp-card" onclick="goAsk('finance','What supplements and prescriptions can I save money on')" style="text-align:center"><div style="font-size:18px;margin-bottom:4px">💊</div><div style="font-size:11px;color:#4ecdc4;font-weight:600">Rx Savings</div></div>
-    <div class="pp-card" onclick="goAsk('finance','How do I use HSA FSA for wellness expenses')" style="text-align:center"><div style="font-size:18px;margin-bottom:4px">🏦</div><div style="font-size:11px;color:#d4af37;font-weight:600">HSA/FSA</div></div>
+
+  <!-- WELLNESS TOURIST — Jazz Bird NOLA -->
+  <div class="pp-sect pp-anim" style="border-bottom-color:rgba(201,168,76,0.2)">
+    <span style="color:#c9a84c">🎺 Wellness Tourism</span>
+    <span class="pp-act" style="color:#c9a84c" onclick="go('map')">Explore NOLA →</span>
   </div>
-  <div class="pp-sect pp-anim">Resources for You</div>
-  <div class="pp-aff-strip pp-anim">
-    <a href="https://betterhelp.com/bleu" target="_blank" class="pp-aff-chip" style="border-color:rgba(167,139,250,0.2);color:#a78bfa;background:rgba(167,139,250,0.06)">💬 BetterHelp</a>
-    <a href="https://thorne.com" target="_blank" class="pp-aff-chip" style="border-color:rgba(212,175,55,0.2);color:#d4af37;background:rgba(212,175,55,0.06)">💊 Thorne</a>
-    <a href="https://amazon.com/?tag=bleulive-20" target="_blank" class="pp-aff-chip" style="border-color:rgba(78,205,196,0.2);color:#4ecdc4;background:rgba(78,205,196,0.06)">📦 Amazon</a>
-    <a href="https://goodrx.com" target="_blank" class="pp-aff-chip" style="border-color:rgba(78,205,196,0.2);color:#4ecdc4;background:rgba(78,205,196,0.06)">💰 GoodRx</a>
-    <a href="https://ouraring.com" target="_blank" class="pp-aff-chip" style="border-color:rgba(212,175,55,0.2);color:#d4af37;background:rgba(212,175,55,0.06)">⌚ Oura</a>
-    <a href="https://charlottesweb.com" target="_blank" class="pp-aff-chip" style="border-color:rgba(78,205,140,0.2);color:#4ecd8c;background:rgba(78,205,140,0.06)">🌿 Charlotte's Web</a>
-    <a href="https://costplusdrugs.com" target="_blank" class="pp-aff-chip" style="border-color:rgba(212,175,55,0.2);color:#d4af37;background:rgba(212,175,55,0.06)">💊 Cost Plus</a>
+  <div class="pp-anim" style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.03));border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:16px;margin-bottom:4px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <span style="font-size:28px">🎺</span>
+      <div>
+        <div style="font-size:14px;color:#c9a84c;font-weight:700">Jazz Bird NOLA</div>
+        <div style="font-size:11px;color:#8fa4b0">Greater New Orleans Wellness Destination</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#c8d8e0;line-height:1.7;margin-bottom:12px">New Orleans is repositioning as a premier destination for active, purpose-driven living. Practitioners, wellness studios, healing traditions, community — all in one of the most culturally alive cities on earth.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div onclick="go('directory')" style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:10px;text-align:center;cursor:pointer"><div style="font-size:18px">⚕️</div><div style="font-size:10px;color:#c9a84c;font-weight:600;margin-top:4px">Find Practitioners</div></div>
+      <div onclick="go('map')" style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:10px;text-align:center;cursor:pointer"><div style="font-size:18px">🗺️</div><div style="font-size:10px;color:#c9a84c;font-weight:600;margin-top:4px">Wellness Map</div></div>
+      <div onclick="go('community')" style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:10px;text-align:center;cursor:pointer"><div style="font-size:18px">🎶</div><div style="font-size:10px;color:#c9a84c;font-weight:600;margin-top:4px">Events & Culture</div></div>
+      <div onclick="ask('passport','Build me a NOLA wellness itinerary')" style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:10px;text-align:center;cursor:pointer"><div style="font-size:18px">✨</div><div style="font-size:10px;color:#c9a84c;font-weight:600;margin-top:4px">Build My Itinerary</div></div>
+    </div>
+    <a href="https://jazzbirdnola.org" target="_blank" style="display:block;text-align:center;font-size:11px;color:rgba(201,168,76,0.6);text-decoration:none;letter-spacing:1px">JAZZBIRDNOLA.ORG →</a>
   </div>
-  <div class="pp-sect pp-anim">Connected Services</div>
-  <div class="pp-anim" style="display:grid;gap:8px;margin-bottom:6px">
-    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(25,50,68,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:12px"><div style="font-size:20px;width:32px;text-align:center">🍎</div><div style="font-size:13px;color:#e8d5b0;font-weight:500">Apple Health</div><div style="margin-left:auto;font-size:10px;padding:3px 10px;border-radius:10px;background:rgba(212,175,55,0.1);color:#d4af37;border:1px solid rgba(212,175,55,0.15);font-weight:600">Coming Soon</div></div>
-    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(25,50,68,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:12px"><div style="font-size:20px;width:32px;text-align:center">📱</div><div style="font-size:13px;color:#e8d5b0;font-weight:500">Google Fit</div><div style="margin-left:auto;font-size:10px;padding:3px 10px;border-radius:10px;background:rgba(212,175,55,0.1);color:#d4af37;border:1px solid rgba(212,175,55,0.15);font-weight:600">Coming Soon</div></div>
-    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(25,50,68,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:12px"><div style="font-size:20px;width:32px;text-align:center">💍</div><div style="font-size:13px;color:#e8d5b0;font-weight:500">Oura Ring</div><div style="margin-left:auto;font-size:10px;padding:3px 10px;border-radius:10px;background:rgba(212,175,55,0.1);color:#d4af37;border:1px solid rgba(212,175,55,0.15);font-weight:600">Coming Soon</div></div>
-  </div>
-  <div class="pp-sect pp-anim">Session History <span class="pp-act" onclick="exportData()">Export →</span></div>
-  <div id="session-list" class="pp-anim"><div style="text-align:center;color:#8fa4b0;padding:16px;font-size:13px">Talk to Alvai to see your history here.</div></div>
+
+  <!-- SESSION HISTORY -->
+  <div class="pp-sect pp-anim">Session History <span class="pp-act" onclick="loadSessions()">Refresh</span></div>
+  <div id="session-list" class="pp-anim" style="display:grid;gap:6px"></div>
+
+  <!-- SETTINGS -->
   <div class="pp-sect pp-anim">Settings</div>
-  <div class="pp-anim" style="background:rgba(25,50,68,0.4);border:1px solid rgba(255,255,255,0.04);border-radius:14px;overflow:hidden;margin-bottom:16px">
-    <div style="display:flex;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.04)"><span style="color:#e8d5b0;font-size:13px">Email</span><span id="set-email" style="color:#8fa4b0;font-size:12px">—</span></div>
-    <div style="display:flex;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.04)"><span style="color:#e8d5b0;font-size:13px">Export All Data</span><span onclick="exportData()" style="color:#4ecdc4;font-size:12px;cursor:pointer">Download JSON</span></div>
-    <div style="display:flex;justify-content:space-between;padding:14px 16px"><span style="color:#e8d5b0;font-size:13px">Delete History</span><span onclick="clearHist()" style="color:#ff6b6b;font-size:12px;cursor:pointer">Clear All</span></div>
+  <div class="pp-anim" style="display:grid;gap:8px;padding-bottom:20px">
+    <button onclick="clearAllPassportData()" style="background:transparent;border:1px solid rgba(255,59,48,0.3);color:rgba(255,59,48,0.7);border-radius:10px;padding:10px;font-size:12px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(255,59,48,0.6)'" onmouseout="this.style.borderColor='rgba(255,59,48,0.3)'">Clear All Passport Data</button>
+    <button onclick="exportFullPassport()" style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:#c9a84c;border-radius:10px;padding:10px;font-size:12px;cursor:pointer">Export My Wellness Report</button>
   </div>
-  <button onclick="doSignOut()" style="width:100%;padding:14px;border:1px solid rgba(255,107,107,0.3);background:transparent;color:#ff6b6b;border-radius:12px;font-size:13px;cursor:pointer">Sign Out</button>
-  <div style="text-align:center;margin-top:20px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.04)"><a href="#" onclick="go('terms');return false" style="color:#8fa4b0;font-size:11px;text-decoration:none">Terms</a><span style="color:rgba(255,255,255,0.15);margin:0 8px">·</span><a href="#" onclick="go('privacy');return false" style="color:#8fa4b0;font-size:11px;text-decoration:none">Privacy</a><div style="margin-top:8px;font-size:10px;color:rgba(255,255,255,0.2)">BLEU · The Longevity Operating System · Patent Pending · © 2026</div></div>
+
+  <div style="text-align:center;padding:10px 0 20px;font-size:10px;color:rgba(255,255,255,0.15);letter-spacing:2px">BLEU · THE LONGEVITY OPERATING SYSTEM · PATENT PENDING</div>
+  <div style="text-align:center;font-size:10px;padding-bottom:20px"><a href="#" onclick="go('privacy')" style="color:rgba(255,255,255,0.2);font-size:10px;text-decoration:none">Privacy</a></div>
 </div>
-<div class="chat-box"><div class="chat-messages" id="chat-passport"></div><div class="chat-input-row"><input autocomplete="off" id="in-passport" placeholder="Track my supplements... show my progress... update my goals..." onkeydown="if(event.key==='Enter')send('passport')"><button onclick="send('passport')">Ask</button></div></div>
+
+<div class="chat-box"><div class="chat-box"><div class="chat-messages" id="chat-passport"></div><div class="chat-input-row"><input autocomplete="off" id="in-passport" placeholder="Track my supplements... show my progress... update my goals..." onkeydown="if(event.key==='Enter')send('passport')"><button onclick="send('passport')">Ask</button></div></div>
 </div>
 
 
@@ -1844,6 +1897,269 @@ const tabs=['home','alvai','dashboard','directory','vessel','map','protocols','l
 const chatHistories={},chatModes={therapy:'talk',recovery:'sobriety'}
 tabs.forEach(t=>chatHistories[t]=[])
 
+// ═══════════════════════════════════════════════════════════
+// PASSPORT ENGINE
+// ═══════════════════════════════════════════════════════════
+
+function renderCart() {
+  const el = document.getElementById('pp-cart-container');
+  if (!el) return;
+  if (!BLEU_CART.length) {
+    el.innerHTML = '<div style="background:rgba(25,50,68,0.3);border:1px dashed rgba(255,255,255,0.08);border-radius:12px;padding:20px;text-align:center"><div style="font-size:24px;margin-bottom:6px">🧬</div><div style="font-size:12px;color:#8fa4b0;margin-bottom:8px">Your wellness stack is empty.<br>Ask Alvai about any health goal — products appear automatically.</div><button onclick="ask(\'passport\',\'Build me a longevity supplement stack\')" style="background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);color:#c9a84c;border-radius:8px;padding:7px 16px;font-size:11px;cursor:pointer;font-weight:600">Build My Stack →</button></div>';
+    return;
+  }
+  const totalItems = BLEU_CART.length;
+  let html = '<div style="display:grid;gap:8px">';
+  BLEU_CART.forEach(function(item, idx) {
+    const isFree = (item.p||'').toLowerCase().includes('free');
+    html += '<div style="display:flex;align-items:center;gap:10px;background:rgba(25,50,68,0.5);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px;position:relative">';
+    html += '<span style="font-size:22px;width:32px;text-align:center">' + (item.i||'💊') + '</span>';
+    html += '<div style="flex:1;min-width:0"><div style="font-size:12px;color:#e8d5b0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + item.n + '</div>';
+    html += '<div style="font-size:10px;color:#8fa4b0;margin-top:2px">' + (item.why||'') + '</div></div>';
+    html += '<div style="text-align:right;flex-shrink:0"><div style="font-size:12px;font-weight:700;color:' + (isFree?'#22c55e':'#c9a84c') + '">' + (item.p||'') + '</div>';
+    html += '<a href="' + item.url + '" target="_blank" style="font-size:9px;color:#4ecdc4;text-decoration:none;letter-spacing:0.5px">BUY →</a></div>';
+    html += '<button onclick="removeFromCart(\'' + item.id + '\')" style="position:absolute;top:6px;right:6px;background:none;border:none;color:rgba(255,255,255,0.2);font-size:14px;cursor:pointer;line-height:1;padding:2px" title="Remove">×</button>';
+    html += '</div>';
+  });
+  html += '</div>';
+  // Affiliate revenue strip
+  const totalEst = BLEU_CART.filter(i => !( (i.p||'').toLowerCase().includes('free'))).length;
+  if (totalEst > 0) {
+    html += '<div style="margin-top:10px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:space-between">';
+    html += '<span style="font-size:11px;color:#22c55e">💰 ' + totalItems + ' item' + (totalItems>1?'s':'') + ' in your stack</span>';
+    html += '<button onclick="exportCart()" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#22c55e;border-radius:8px;padding:5px 12px;font-size:10px;cursor:pointer;font-weight:600">Export Stack</button>';
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function removeFromCart(id) {
+  BLEU_CART = BLEU_CART.filter(i => i.id !== id);
+  try { localStorage.setItem('bleu_cart', JSON.stringify(BLEU_CART)); } catch(e) {}
+  renderCart();
+  updateBleScore();
+}
+
+function renderPaths() {
+  const el = document.getElementById('pp-paths-container');
+  if (!el) return;
+  let paths = [];
+  try { paths = JSON.parse(localStorage.getItem('bleu_paths') || '[]'); } catch(e) {}
+  if (!paths.length) {
+    el.innerHTML = '<div style="background:rgba(25,50,68,0.3);border:1px dashed rgba(255,255,255,0.08);border-radius:12px;padding:20px;text-align:center"><div style="font-size:24px;margin-bottom:6px">🗺️</div><div style="font-size:12px;color:#8fa4b0;margin-bottom:8px">No saved journeys yet.<br>After any Alvai conversation, tap "Save Path" to track it here.</div><button onclick="ask(\'passport\',\'I want to start a wellness journey\')" style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);color:#4ecdc4;border-radius:8px;padding:7px 16px;font-size:11px;cursor:pointer;font-weight:600">Start a Journey →</button></div>';
+    return;
+  }
+  let html = '<div style="display:grid;gap:8px">';
+  paths.slice().reverse().forEach(function(p, idx) {
+    const d = new Date(p.saved_at || Date.now());
+    const dateStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    html += '<div style="background:rgba(25,50,68,0.5);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px;position:relative">';
+    html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">';
+    html += '<div style="font-size:12px;color:#e8d5b0;font-weight:600">' + (p.title||'Wellness Journey') + '</div>';
+    html += '<span style="font-size:10px;color:#8fa4b0">' + dateStr + '</span></div>';
+    if (p.summary) html += '<div style="font-size:11px;color:#8fa4b0;line-height:1.5;margin-bottom:8px">' + p.summary.substring(0,120) + (p.summary.length>120?'…':'') + '</div>';
+    if (p.products && p.products.length) {
+      html += '<div style="display:flex;gap:4px;flex-wrap:wrap">';
+      p.products.slice(0,4).forEach(function(pr) { html += '<span style="font-size:10px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.15);color:#c9a84c;border-radius:6px;padding:2px 7px">' + pr + '</span>'; });
+      html += '</div>';
+    }
+    html += '<button onclick="deletePath(' + idx + ')" style="position:absolute;top:8px;right:32px;background:none;border:none;color:rgba(255,255,255,0.15);font-size:11px;cursor:pointer">delete</button>';
+    html += '</div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function deletePath(revIdx) {
+  let paths = [];
+  try { paths = JSON.parse(localStorage.getItem('bleu_paths') || '[]'); } catch(e) {}
+  const realIdx = paths.length - 1 - revIdx;
+  paths.splice(realIdx, 1);
+  try { localStorage.setItem('bleu_paths', JSON.stringify(paths)); } catch(e) {}
+  renderPaths();
+}
+
+function renderHealthData() {
+  const el = document.getElementById('pp-health-display');
+  if (!el) return;
+  let hd = {};
+  try { hd = JSON.parse(localStorage.getItem('bleu_health') || '{}'); } catch(e) {}
+  const keys = Object.keys(hd).filter(k => k !== 'saved_at' && k !== 'goal' && k !== 'meds' && hd[k]);
+  if (!keys.length) {
+    el.innerHTML = '<div style="font-size:11px;color:#8fa4b0;padding:8px 0">No health data yet — add it manually or import from your device.</div>';
+    return;
+  }
+  const labels = {weight:'⚖️ Weight',rhr:'❤️ Resting HR',hrv:'📊 HRV',sleep:'😴 Sleep',steps:'👟 Steps',energy:'⚡ Energy',anxiety:'🧠 Anxiety',mood:'😊 Mood'};
+  const units = {weight:'lbs',rhr:'bpm',hrv:'ms',sleep:'hrs',steps:'steps/day',energy:'/10',anxiety:'/10',mood:'/10'};
+  let html = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">';
+  keys.slice(0,6).forEach(function(k) {
+    html += '<div style="background:rgba(25,50,68,0.5);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">';
+    html += '<div style="font-size:10px;color:#8fa4b0;margin-bottom:3px">' + (labels[k]||k) + '</div>';
+    html += '<div style="font-size:16px;font-weight:700;color:#e8d5b0">' + hd[k] + '</div>';
+    html += '<div style="font-size:9px;color:#8fa4b0">' + (units[k]||'') + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  if (hd.goal) html += '<div style="font-size:11px;color:#c9a84c;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:8px;padding:8px 10px;margin-bottom:4px">🎯 Goal: ' + hd.goal + '</div>';
+  if (hd.meds) html += '<div style="font-size:11px;color:#8fa4b0;padding:4px 0">💊 ' + hd.meds + '</div>';
+  const saved = hd.saved_at ? new Date(hd.saved_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+  if (saved) html += '<div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:4px">Last updated ' + saved + ' · <span style="cursor:pointer;color:#4ecdc4" onclick="toggleHealthPanel()">Update →</span></div>';
+  el.innerHTML = html;
+}
+
+function toggleHealthPanel() {
+  const panel = document.getElementById('pp-health-panel');
+  if (!panel) return;
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function showManualEntry() {
+  const form = document.getElementById('pp-manual-form');
+  const platforms = document.getElementById('pp-import-platforms');
+  if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  // Pre-fill from existing data
+  let hd = {};
+  try { hd = JSON.parse(localStorage.getItem('bleu_health') || '{}'); } catch(e) {}
+  ['weight','rhr','hrv','sleep','steps','energy','anxiety','mood','meds','goal'].forEach(function(k) {
+    const el = document.getElementById('hd-' + k);
+    if (el && hd[k]) el.value = hd[k];
+  });
+}
+
+function saveManualHealthData() {
+  const fields = ['weight','rhr','hrv','sleep','steps','energy','anxiety','mood','meds','goal'];
+  const hd = { saved_at: Date.now() };
+  fields.forEach(function(k) {
+    const el = document.getElementById('hd-' + k);
+    if (el && el.value.trim()) hd[k] = el.value.trim();
+  });
+  try { localStorage.setItem('bleu_health', JSON.stringify(hd)); } catch(e) {}
+  renderHealthData();
+  updateBleScore();
+  document.getElementById('pp-health-panel').style.display = 'none';
+  showCartToast('Health data saved to your Passport ✓');
+}
+
+function handleHealthImport(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const content = e.target.result;
+    let hd = { saved_at: Date.now(), source: file.name };
+    // Apple Health XML
+    if (file.name.endsWith('.xml') || content.includes('HKQuantityTypeIdentifier')) {
+      const weightMatch = content.match(/HKQuantityTypeIdentifierBodyMass[^>]*value="([\d.]+)"/);
+      const hrMatch = content.match(/HKQuantityTypeIdentifierHeartRate[^>]*value="([\d.]+)"/);
+      const sleepMatch = content.match(/HKCategoryTypeIdentifierSleepAnalysis[^>]*/g);
+      const stepsMatch = content.match(/HKQuantityTypeIdentifierStepCount[^>]*value="([\d.]+)"/);
+      if (weightMatch) hd.weight = Math.round(parseFloat(weightMatch[1]) * 2.205);
+      if (hrMatch) hd.rhr = parseInt(hrMatch[1]);
+      if (stepsMatch) hd.steps = parseInt(stepsMatch[1]);
+      if (sleepMatch) hd.sleep = '~7';
+      hd.imported_from = 'Apple Health';
+    }
+    // Oura JSON
+    else if (file.name.endsWith('.json')) {
+      try {
+        const data = JSON.parse(content);
+        if (data.sleep) { const s = data.sleep[0]; if (s) hd.sleep = ((s.total || 0)/3600).toFixed(1); }
+        if (data.readiness) { const r = data.readiness[0]; if (r) hd.hrv = r.contributors?.hrv_balance || ''; }
+        hd.imported_from = 'Oura Ring';
+      } catch(ex) {}
+    }
+    // CSV fallback
+    else if (file.name.endsWith('.csv')) {
+      const lines = content.split('\n').slice(0,10);
+      hd.imported_from = 'Device Export';
+      hd.raw_preview = lines[0];
+    }
+    try { localStorage.setItem('bleu_health', JSON.stringify(hd)); } catch(ex) {}
+    renderHealthData();
+    document.getElementById('pp-health-panel').style.display = 'none';
+    showCartToast('Health data imported from ' + (hd.imported_from || file.name) + ' ✓');
+  };
+  reader.readAsText(file);
+}
+
+function toggleFocus(el, topic) {
+  el.classList.toggle('active');
+  let focuses = [];
+  try { focuses = JSON.parse(localStorage.getItem('bleu_focuses') || '[]'); } catch(e) {}
+  if (el.classList.contains('active')) {
+    if (!focuses.includes(topic)) focuses.push(topic);
+  } else {
+    focuses = focuses.filter(f => f !== topic);
+  }
+  try { localStorage.setItem('bleu_focuses', JSON.stringify(focuses)); } catch(e) {}
+}
+
+function loadSessions() {
+  const el = document.getElementById('session-list');
+  if (!el) return;
+  let sessions = [];
+  try { sessions = JSON.parse(localStorage.getItem('bleu_sessions') || '[]'); } catch(e) {}
+  if (!sessions.length) {
+    el.innerHTML = '<div style="font-size:11px;color:#8fa4b0;padding:8px 0">No sessions saved yet. After a conversation, tap the save icon.</div>';
+    return;
+  }
+  let html = '';
+  sessions.slice().reverse().slice(0,10).forEach(function(s) {
+    const d = new Date(s.ts || Date.now()).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    html += '<div style="display:flex;align-items:center;gap:10px;background:rgba(25,50,68,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 12px">';
+    html += '<span style="font-size:16px">' + (s.tab_icon||'💬') + '</span>';
+    html += '<div style="flex:1"><div style="font-size:11px;color:#e8d5b0;font-weight:600">' + (s.tab||'Session') + ' · ' + d + '</div>';
+    html += '<div style="font-size:10px;color:#8fa4b0">' + (s.preview||'').substring(0,60) + '</div></div></div>';
+  });
+  el.innerHTML = html;
+}
+
+function clearAllPassportData() {
+  if (!confirm('Clear all Passport data? This cannot be undone.')) return;
+  ['bleu_cart','bleu_paths','bleu_health','bleu_sessions','bleu_focuses'].forEach(k => {
+    try { localStorage.removeItem(k); } catch(e) {}
+  });
+  BLEU_CART = [];
+  renderCart(); renderPaths(); renderHealthData(); loadSessions();
+  updateBleScore();
+  showCartToast('Passport cleared');
+}
+
+function exportFullPassport() {
+  let hd = {};
+  try { hd = JSON.parse(localStorage.getItem('bleu_health') || '{}'); } catch(e) {}
+  let paths = [];
+  try { paths = JSON.parse(localStorage.getItem('bleu_paths') || '[]'); } catch(e) {}
+  let out = 'MY BLEU WELLNESS PASSPORT\nGenerated ' + new Date().toLocaleDateString() + '\nbleu.live\n';
+  out += '\n═══ HEALTH DATA ═══\n';
+  Object.keys(hd).forEach(k => { if (hd[k] && k !== 'saved_at') out += k + ': ' + hd[k] + '\n'; });
+  out += '\n═══ MY WELLNESS STACK ═══\n';
+  BLEU_CART.forEach(i => { out += i.i + ' ' + i.n + ' - ' + i.p + '\n  ' + i.why + '\n  ' + i.url + '\n'; });
+  out += '\n═══ SAVED JOURNEYS ═══\n';
+  paths.forEach(p => { out += '• ' + (p.title||'Journey') + ': ' + (p.summary||'').substring(0,80) + '\n'; });
+  out += '\nBLEU · The Longevity Operating System · Patent Pending';
+  const b = new Blob([out], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b);
+  a.download = 'bleu-passport-' + Date.now() + '.txt';
+  a.click();
+}
+
+function initPassport() {
+  renderCart();
+  renderPaths();
+  renderHealthData();
+  loadSessions();
+  // Restore focus chips
+  let focuses = [];
+  try { focuses = JSON.parse(localStorage.getItem('bleu_focuses') || '[]'); } catch(e) {}
+  document.querySelectorAll('#pp-focus-chips .gc').forEach(function(chip) {
+    const t = chip.getAttribute('onclick').match(/toggleFocus\(this,'(\w+)'\)/);
+    if (t && focuses.includes(t[1])) chip.classList.add('active');
+    else if (t) chip.classList.remove('active');
+  });
+}
+
 function go(tab){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'))
@@ -1853,6 +2169,7 @@ function go(tab){
   const idx=tabs.indexOf(tab)
   if(idx>=0&&idx<navTabs.length)navTabs[idx].classList.add('active')
   window.scrollTo({top:0,behavior:'smooth'})
+  if(tab==='passport'){setTimeout(initPassport,80)}
   // Trigger reveals
   setTimeout(()=>{document.querySelectorAll('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('visible')})},100)
 }
