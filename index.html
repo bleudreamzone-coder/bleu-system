@@ -1773,9 +1773,9 @@ async function showProfile(){document.getElementById('auth-screen').style.displa
 async function loadSessions(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('id,title,mode,created_at').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(10);const el=document.getElementById('session-list');if(!data||!data.length){el.innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Talk to Alvai to see history here.</div>';return}el.innerHTML=data.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center">💚</div><div><div style="color:#e8d5b0;font-size:0.85rem">'+(c.title||'Session')+'</div><div style="color:#8fa4b0;font-size:0.7rem">'+new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+(c.mode||'general')+'</div></div></div>').join('')}
 async function saveConvo(tab,msgs){if(!sbClient||!currentUser||!msgs.length)return;const mode=tab==='home'?'alvai':tab;const title=(msgs.find(m=>m.role==='user')?.content||'Session').slice(0,60);try{if(currentConvoIds[tab]){await sbClient.from('conversations').update({messages:msgs,updated_at:new Date().toISOString()}).eq('id',currentConvoIds[tab])}else{const{data}=await sbClient.from('conversations').insert({user_id:currentUser.id,mode,title,messages:msgs}).select('id').single();if(data)currentConvoIds[tab]=data.id}}catch(e){console.warn('saveConvo failed',e)}}
 function togGoal(el){el.classList.toggle('active');if(!sbClient||!currentUser)return;const g=[...document.querySelectorAll('.gc.active')].map(c=>c.dataset.g);sbClient.from('profiles').update({wellness_goals:g}).eq('id',currentUser.id)}
-// ═══════════════════════════════════════
+// =======================================
 // BLEU WELLNESS CART SYSTEM
-// ═══════════════════════════════════════
+// =======================================
 let BLEU_CART = JSON.parse(localStorage.getItem('bleu_cart') || '[]');
 let BLEU_SAVED_PATHS = JSON.parse(localStorage.getItem('bleu_paths') || '[]');
 
@@ -1893,9 +1893,9 @@ function showCartToast(msg) {
 // Init cart + paths on load
 window.addEventListener('load', () => { renderCart(); renderPaths(); });
 
-// ═══════════════════════════════════════
-// HEALTH DATA PARSER — LOCAL ONLY
-// ═══════════════════════════════════════
+// =======================================
+// HEALTH DATA PARSER = LOCAL ONLY
+// =======================================
 function parseHealthData(input, platform) {
   const file = input.files[0];
   if (!file) return;
@@ -1907,7 +1907,7 @@ function parseHealthData(input, platform) {
     let insights = [];
     try {
       if (platform === 'apple') {
-        // Apple Health XML — parse key records
+        // Apple Health XML = parse key records
         const parser = new DOMParser();
         const xml = parser.parseFromString(raw, 'text/xml');
         const records = xml.querySelectorAll('Record');
@@ -2077,11 +2077,11 @@ function fmt(t){
 }
 
 
-// ═══════════════════════════════════════════════
-// RUFUS COMMERCE ENGINE — Contextual product cards
+// ===============================================
+// RUFUS COMMERCE ENGINE = Contextual product cards
 // Fires after every Alvai response. Client-side only.
 // Products surface in conversation, not a static bar.
-// ═══════════════════════════════════════════════
+// ===============================================
 
 const RUFUS_PRODUCTS = {
   'thorne-mag': {n:'Thorne Magnesium Bisglycinate',i:'💊',p:'$25',u:'60 caps',r:'⭐ 4.8 · 12K',why:"The GABA-A pathway activator. Glycinate form crosses the blood-brain barrier — oxide doesn't. Take 400mg 1hr before bed. Thorne is NSF Certified, no fillers.",sf:'✅ No CYP450 interactions',url:'https://amazon.com/s?k=thorne+magnesium+bisglycinate&tag=bleu-live-20',label:'Buy on Amazon'},
@@ -2089,46 +2089,46 @@ const RUFUS_PRODUCTS = {
   'ashwa': {n:'NOW Ashwagandha KSM-66 450mg',i:'🌿',p:'$12',u:'90 caps',r:'⭐ 4.6 · 30K',why:"KSM-66 is the only extract with 22 completed clinical trials. Reduces cortisol 28-30% over 60 days. Run 6-week cycles — don't take continuously.",sf:'✅ No major CYP interactions',url:'https://amazon.com/s?k=now+ashwagandha+ksm-66&tag=bleu-live-20',label:'Buy on Amazon'},
   'ltheanine': {n:'L-Theanine 200mg',i:'🧘',p:'$13',u:'100 caps',r:'⭐ 4.6 · 18K',why:"Crosses blood-brain barrier in 30 min. Raises alpha waves — same brain state as eyes-closed meditation. Pairs with morning coffee to eliminate jitters.",sf:'✅ No known interactions',url:'https://iherb.com/search?kw=l-theanine+200mg&rcode=BLEU',label:'Buy on iHerb'},
   'cw-cbd': {n:"Charlotte's Web CBD Oil",i:'🌿',p:'$45',u:'60mL',r:'⭐ 4.5 · 15K',why:"Full-spectrum, USDA organic. 5-HT1A pathway — same as SSRIs but gentler. Start at 10mg sublingual, hold 60 seconds. 11pm timing for sleep.",sf:'⚠️ CYP3A4 + CYP2C19 — check meds',url:'https://iherb.com/search?kw=charlotte+web+cbd&rcode=BLEU',label:'Buy on iHerb'},
-  'betterhelp': {n:'BetterHelp — Licensed Therapy',i:'💬',p:'$65/wk',u:'Online',r:'⭐ 4.3 · 2M',why:"Matched with a licensed therapist in 48 hours. More affordable than most in-office copays. CBT, DBT, trauma, grief, couples — full specialization.",sf:'✅ Licensed professionals',url:'https://betterhelp.com/bleu',label:'Start Therapy →'},
-  'talkspace': {n:'Talkspace — Text + Video',i:'💬',p:'$69/wk',u:'Online',r:'⭐ 4.2 · 500K',why:"Text your therapist any time — good for 3am thoughts. Video sessions available. Insurance often accepted. Especially good for anxiety and depression.",sf:'✅ Licensed professionals',url:'https://talkspace.com',label:'Start Therapy →'},
-  'goodrx': {n:'GoodRx — Prescription Savings',i:'💊',p:'Free',u:'App',r:'⭐ 4.8 · 1M',why:"Pull this up at the pharmacy counter before paying. Saves up to 80% on brand and generic prescriptions. No insurance needed. Completely free.",sf:'✅ No side effects',url:'https://goodrx.com',label:'Get Free Card →'},
-  'costplus': {n:'Mark Cuban Cost Plus Drugs',i:'🏥',p:'At cost',u:'Online pharmacy',r:'⭐ 4.6 · 200K',why:"Manufacturing cost + 15% + $3 pharmacist fee. Metformin $5. Generic statins $3. Lisinopril $1. Life-changing if you're uninsured or underinsured.",sf:'✅ Transparent pricing',url:'https://costplusdrugs.com',label:'Check Your Drug →'},
-  'dollarfor': {n:'Dollar For — Medical Bill Help',i:'🏥',p:'100% Free',u:'Nonprofit',r:'⭐ 4.9 · 10K',why:"Submit your medical bill. They negotiate elimination with the hospital's charity care program. $5.4 billion in debt eliminated. Completely free — they're a nonprofit.",sf:'✅ Free nonprofit service',url:'https://dollarfor.org',label:'Submit Your Bill →'},
-  'classpass': {n:'ClassPass — Every Studio',i:'🏃',p:'$19/mo',u:'800+ studios',r:'⭐ 4.5 · 1M',why:"Boxing, yoga, pilates, cycling, swim — every studio in your city on one membership. First month discounted. No gym contract.",sf:'✅ No interactions',url:'https://classpass.com',label:'Start Free →'},
+  'betterhelp': {n:'BetterHelp — Licensed Therapy',i:'💬',p:'$65/wk',u:'Online',r:'⭐ 4.3 · 2M',why:"Matched with a licensed therapist in 48 hours. More affordable than most in-office copays. CBT, DBT, trauma, grief, couples — full specialization.",sf:'✅ Licensed professionals',url:'https://betterhelp.com/bleu',label:'Start Therapy ='},
+  'talkspace': {n:'Talkspace — Text + Video',i:'💬',p:'$69/wk',u:'Online',r:'⭐ 4.2 · 500K',why:"Text your therapist any time — good for 3am thoughts. Video sessions available. Insurance often accepted. Especially good for anxiety and depression.",sf:'✅ Licensed professionals',url:'https://talkspace.com',label:'Start Therapy ='},
+  'goodrx': {n:'GoodRx — Prescription Savings',i:'💊',p:'Free',u:'App',r:'⭐ 4.8 · 1M',why:"Pull this up at the pharmacy counter before paying. Saves up to 80% on brand and generic prescriptions. No insurance needed. Completely free.",sf:'✅ No side effects',url:'https://goodrx.com',label:'Get Free Card ='},
+  'costplus': {n:'Mark Cuban Cost Plus Drugs',i:'🏥',p:'At cost',u:'Online pharmacy',r:'⭐ 4.6 · 200K',why:"Manufacturing cost + 15% + $3 pharmacist fee. Metformin $5. Generic statins $3. Lisinopril $1. Life-changing if you're uninsured or underinsured.",sf:'✅ Transparent pricing',url:'https://costplusdrugs.com',label:'Check Your Drug ='},
+  'dollarfor': {n:'Dollar For — Medical Bill Help',i:'🏥',p:'100% Free',u:'Nonprofit',r:'⭐ 4.9 · 10K',why:"Submit your medical bill. They negotiate elimination with the hospital's charity care program. $5.4 billion in debt eliminated. Completely free — they're a nonprofit.",sf:'✅ Free nonprofit service',url:'https://dollarfor.org',label:'Submit Your Bill ='},
+  'classpass': {n:'ClassPass — Every Studio',i:'🏃',p:'$19/mo',u:'800+ studios',r:'⭐ 4.5 · 1M',why:"Boxing, yoga, pilates, cycling, swim — every studio in your city on one membership. First month discounted. No gym contract.",sf:'✅ No interactions',url:'https://classpass.com',label:'Start Free ='},
   'oura': {n:'Oura Ring Gen 3',i:'💍',p:'$299',u:'+ $5.99/mo',r:'⭐ 4.5 · 50K',why:"Sleep staging, HRV, readiness score, cycle tracking. The only wearable that tracks sleep architecture objectively. Invisible on your finger. No screen.",sf:'✅ No interactions',url:'https://amazon.com/dp/B09Q2JY797?tag=bleu-live-20',label:'Buy on Amazon'},
-  'insighttimer': {n:'Insight Timer — Free Meditation',i:'🧘',p:'Free',u:'App',r:'⭐ 4.8 · 1M',why:"200,000+ free guided meditations. Best free meditation app period. Sleep, anxiety, PTSD-specific sessions from world-class teachers.",sf:'✅ Free forever',url:'https://insighttimer.com',label:'Download Free →'},
-  'weedmaps': {n:'Weedmaps — Find Dispensaries',i:'🗺️',p:'Free',u:'App',r:'⭐ 4.3 · 2M',why:"Real-time menus, deals, lab-tested products. Read reviews from actual patients. Compare prices across dispensaries. Delivery or pickup.",sf:'⚠️ Check your state law',url:'https://weedmaps.com',label:'Find Dispensary →'},
-  'leafly': {n:'Leafly — Strain Intelligence',i:'🌿',p:'Free',u:'App',r:'⭐ 4.4 · 1M',why:"2,500+ strain profiles with terpene breakdowns. Myrcene = sedative. Limonene = mood. Caryophyllene = inflammation. Pinene = memory. Match strain to symptom.",sf:'⚠️ CYP450 if on medications',url:'https://leafly.com',label:'Find Your Strain →'},
-  'endel': {n:'Endel — AI Soundscapes for Sleep',i:'🎵',p:'$50/yr',u:'App',r:'⭐ 4.6 · 50K',why:"AI soundscapes that adapt to your heart rate, time of day, location. Scientifically validated to reduce cortisol. Better than white noise or music.",sf:'✅ No interactions',url:'https://endel.io',label:'Try Free →'},
+  'insighttimer': {n:'Insight Timer — Free Meditation',i:'🧘',p:'Free',u:'App',r:'⭐ 4.8 · 1M',why:"200,000+ free guided meditations. Best free meditation app period. Sleep, anxiety, PTSD-specific sessions from world-class teachers.",sf:'✅ Free forever',url:'https://insighttimer.com',label:'Download Free ='},
+  'weedmaps': {n:'Weedmaps — Find Dispensaries',i:'🗺️',p:'Free',u:'App',r:'⭐ 4.3 · 2M',why:"Real-time menus, deals, lab-tested products. Read reviews from actual patients. Compare prices across dispensaries. Delivery or pickup.",sf:'⚠️ Check your state law',url:'https://weedmaps.com',label:'Find Dispensary ='},
+  'leafly': {n:'Leafly — Strain Intelligence',i:'🌿',p:'Free',u:'App',r:'⭐ 4.4 · 1M',why:"2,500+ strain profiles with terpene breakdowns. Myrcene = sedative. Limonene = mood. Caryophyllene = inflammation. Pinene = memory. Match strain to symptom.",sf:'⚠️ CYP450 if on medications',url:'https://leafly.com',label:'Find Your Strain ='},
+  'endel': {n:'Endel — AI Soundscapes for Sleep',i:'🎵',p:'$50/yr',u:'App',r:'⭐ 4.6 · 50K',why:"AI soundscapes that adapt to your heart rate, time of day, location. Scientifically validated to reduce cortisol. Better than white noise or music.",sf:'✅ No interactions',url:'https://endel.io',label:'Try Free ='},
   'creatine': {n:'Momentous Creatine Monohydrate',i:'💪',p:'$30',u:'30 servings',r:'⭐ 4.6 · 5K',why:"Most studied supplement in existence. 5g/day, every day. Muscle, brain, energy. No loading needed. Informed Sport certified. Takes 4 weeks to fully saturate.",sf:'✅ No significant interactions',url:'https://amazon.com/s?k=momentous+creatine&tag=bleu-live-20',label:'Buy on Amazon'},
-  // ─── GLP-1 / WEIGHT LOSS PRESCRIBERS ───
-  'hims-weight': {n:'Hims — GLP-1 Weight Loss',i:'⚖️',p:'from $199/mo',u:'Telehealth',r:'⭐ 4.5 · 200K',why:"Telehealth prescriber for semaglutide (Ozempic/Wegovy equivalent) and tirzepatide. Requires bloodwork first — they handle the prescription, medication delivery, and ongoing monitoring. 95% of people qualify.",sf:'⚠️ Bloodwork required first — A1C, metabolic panel',url:'https://forhims.com/weight-loss',label:'Check Eligibility →'},
-  'ro-body': {n:'Ro Body — GLP-1 Program',i:'⚖️',p:'from $145/mo',u:'Telehealth',r:'⭐ 4.4 · 150K',why:"Prescribes compounded semaglutide with physician oversight. Often $100-200/mo less than brand-name. Includes nutrition coaching and metabolic health tracking. No insurance needed.",sf:'⚠️ Not for Type 1 diabetes, pancreatitis history',url:'https://ro.co/weight-loss',label:'Check Eligibility →'},
-  'found-weight': {n:'Found — Metabolic Health',i:'⚖️',p:'from $99/mo',u:'Online program',r:'⭐ 4.3 · 100K',why:"GLP-1 AND non-GLP-1 paths — they match you to what works for your biology. Works with most insurance plans. Includes behavioral coaching, nutrition, movement plan.",sf:'⚠️ Medical evaluation required',url:'https://joinfound.com',label:'Start Assessment →'},
-  'calibrate': {n:'Calibrate — Year-Long Reset',i:'⚖️',p:'$1,649/yr',u:'Online program',r:'⭐ 4.2 · 30K',why:"GLP-1 + 1-year metabolic coaching. Works with insurance — average out-of-pocket $0-200. Hormones, sleep, food, movement all addressed. For people serious about systemic change.",sf:'⚠️ Insurance pre-auth required',url:'https://joincalibrate.com',label:'Check Insurance →'},
-  // ─── GLP-1 SUPPORT STACK ───
+  // === GLP-1 / WEIGHT LOSS PRESCRIBERS ===
+  'hims-weight': {n:'Hims — GLP-1 Weight Loss',i:'⚖️',p:'from $199/mo',u:'Telehealth',r:'⭐ 4.5 · 200K',why:"Telehealth prescriber for semaglutide (Ozempic/Wegovy equivalent) and tirzepatide. Requires bloodwork first — they handle the prescription, medication delivery, and ongoing monitoring. 95% of people qualify.",sf:'⚠️ Bloodwork required first — A1C, metabolic panel',url:'https://forhims.com/weight-loss',label:'Check Eligibility ='},
+  'ro-body': {n:'Ro Body — GLP-1 Program',i:'⚖️',p:'from $145/mo',u:'Telehealth',r:'⭐ 4.4 · 150K',why:"Prescribes compounded semaglutide with physician oversight. Often $100-200/mo less than brand-name. Includes nutrition coaching and metabolic health tracking. No insurance needed.",sf:'⚠️ Not for Type 1 diabetes, pancreatitis history',url:'https://ro.co/weight-loss',label:'Check Eligibility ='},
+  'found-weight': {n:'Found — Metabolic Health',i:'⚖️',p:'from $99/mo',u:'Online program',r:'⭐ 4.3 · 100K',why:"GLP-1 AND non-GLP-1 paths — they match you to what works for your biology. Works with most insurance plans. Includes behavioral coaching, nutrition, movement plan.",sf:'⚠️ Medical evaluation required',url:'https://joinfound.com',label:'Start Assessment ='},
+  'calibrate': {n:'Calibrate — Year-Long Reset',i:'⚖️',p:'$1,649/yr',u:'Online program',r:'⭐ 4.2 · 30K',why:"GLP-1 + 1-year metabolic coaching. Works with insurance — average out-of-pocket $0-200. Hormones, sleep, food, movement all addressed. For people serious about systemic change.",sf:'⚠️ Insurance pre-auth required',url:'https://joincalibrate.com',label:'Check Insurance ='},
+  // === GLP-1 SUPPORT STACK ===
   'berberine': {n:'Berberine HCl 1200mg',i:'🌿',p:'$20/mo',u:'60 caps',r:'⭐ 4.5 · 45K',why:"Natural GLP-1 sensitizer. Reduces fasting glucose comparably to Metformin in multiple RCTs. $20/month vs $200+ for prescriptions. Stack with magnesium and protein. Take 600mg twice daily with meals.",sf:'⚠️ CYP3A4 interaction — check meds. Lower dose if on Metformin.',url:'https://amazon.com/s?k=berberine+1200mg&tag=bleu-live-20',label:'Buy on Amazon'},
   'protein-powder': {n:'Momentous Essential Protein',i:'💪',p:'$55',u:'30 servings',r:'⭐ 4.7 · 8K',why:"On GLP-1, muscle loss is the #1 risk. Target 0.7g/lb bodyweight. Informed Sport certified, NSF Certified — one of the only proteins tested for everything. Whey isolate, 20g/serving.",sf:'✅ NSF Certified',url:'https://amazon.com/s?k=momentous+essential+protein&tag=bleu-live-20',label:'Buy on Amazon'},
   'b12-methyl': {n:'Methylcobalamin B12 1000mcg',i:'💊',p:'$8',u:'100 lozenges',r:'⭐ 4.7 · 25K',why:"GLP-1 medications deplete B12 — it's a known side effect almost nobody warns you about. Methylcobalamin (not cyanocobalamin) is the active form your body actually uses. Sublingual dissolves better.",sf:'✅ No significant interactions',url:'https://amazon.com/s?k=methylcobalamin+b12+1000mcg&tag=bleu-live-20',label:'Buy on Amazon'},
-  // ─── BLOODWORK / LABS ───
-  'function-health': {n:'Function Health — 100+ Biomarkers',i:'🔬',p:'$499/yr',u:'2 panels/yr',r:'⭐ 4.8 · 20K',why:"100+ biomarkers twice a year — metabolic, hormonal, inflammatory, nutritional. Know your baseline BEFORE starting GLP-1 or any peptide. Results in 48hrs, reviewed by a physician. The gold standard.",sf:'✅ Diagnostic only — no treatments',url:'https://functionhealth.com',label:'Order Your Panel →'},
-  'labcorp-demand': {n:'LabCorp OnDemand — Self-Order Labs',i:'🔬',p:'varies',u:'2,000 locations',r:'⭐ 4.4 · 50K',why:"Order your own bloodwork without a doctor's order. Pay per test. A1C ($30), fasting insulin ($40), full metabolic panel ($80). Results to your phone in 24-48hrs. Thousands of draw locations.",sf:'✅ Diagnostic only',url:'https://ondemand.labcorp.com',label:'Order Labs →'},
-  'insidetracker': {n:'InsideTracker — Personalized Analysis',i:'🔬',p:'$299-599',u:'Annual',r:'⭐ 4.5 · 15K',why:"Blood + DNA analysis with personalized food, supplement, and lifestyle targets. Unlike generic labs, it tells you what to DO with the numbers. Good follow-up after Function Health baseline.",sf:'✅ Diagnostic only',url:'https://insidetracker.com',label:'Get Your Plan →'},
-  // ─── PEPTIDES — GRAY ZONE, PROPERLY FRAMED ───
-  'peptide-info': {n:'Peptide Research — What You Need to Know',i:'🧬',p:'Research only',u:'Gray zone',r:'⭐ Not FDA-cleared',why:"BPC-157, TB-500, and other research peptides: NOT FDA-approved for human use, NOT illegal for personal use, NOT covered by insurance. Tissue repair, inflammation, joint recovery. Sources matter enormously — purity, sterility, dosing vary wildly. This requires serious research before any consideration.",sf:'⚠️ Gray zone — discuss with a physician. Never dose from AI.',url:'https://bleu.live',label:'Talk to Alvai →'},
-  // ─── MEDIA / EDUCATION ───
-  'audible': {n:'Audible — The Wellness Trinity',i:'📚',p:'$14.95/mo',u:'1 credit/mo',r:'⭐ 4.8 · 500K',why:"Start with these three: Why We Sleep (Walker) — changes everything. The Body Keeps the Score (van der Kolk) — trauma and the body. Atomic Habits (Clear) — behavior change that sticks. These three books shift trajectories.",sf:'✅ No interactions',url:'https://audible.com?source_code=BLEU',label:'Start Listening →'},
-  'gaia-tv': {n:'Gaia — Conscious Media',i:'🎬',p:'$11.99/mo',u:'Streaming',r:'⭐ 4.3 · 100K',why:"Wellness documentaries, yoga, meditation, longevity content — different DNA from Netflix. Built for the healing journey. Exclusive content on functional medicine, plant medicine, consciousness.",sf:'✅ No interactions',url:'https://gaia.com',label:'Try Free →'},
-  'brainfm': {n:'Brain.fm — Neural Music',i:'🎵',p:'$6.99/mo',u:'App',r:'⭐ 4.5 · 80K',why:"Neuroscience-designed music for focus, deep work, and sleep. Not ambient noise — functional neural entrainment. Studied at MIT. Deep work mode cuts distraction time by 47% in clinical data.",sf:'✅ No interactions',url:'https://brain.fm',label:'Try Free →'},
-  // ─── COMMUNITY / EVENTS ───  
-  'eventbrite-local': {n:'Eventbrite — Wellness Events',i:'📅',p:'Free to search',u:'Local',r:'⭐ 4.4 · 2M',why:"Filter by free events first — yoga in the park, sound baths, recovery meetings, nutrition workshops, farmers markets. In NOLA: second lines, French Quarter Festival events, Jazz Fest wellness activations.",sf:'✅ Community connection',url:'https://eventbrite.com',label:'Find Events →'},
-  'meetup': {n:'Meetup — Find Your People',i:'🤝',p:'Free',u:'Local groups',r:'⭐ 4.2 · 3M',why:"Walking clubs, run crews, meditation circles, recovery support, nutrition accountability groups. Social connection reduces mortality by 50% — same magnitude as quitting smoking. This is medicine.",sf:'✅ Social medicine',url:'https://meetup.com',label:'Find Groups →'},
-  // ─── WALKING / FREE FITNESS ───
-  'mapmywalk': {n:'MapMyWalk — Free Walk Tracker',i:'🚶',p:'Free',u:'App',r:'⭐ 4.4 · 1M',why:"Track steps, routes, pace, calories. Set daily goals. 8,000 steps/day reduces all-cause mortality by 51% — more than most supplements. The most underrated longevity intervention that exists.",sf:'✅ Free forever',url:'https://mapmywalk.com',label:'Download Free →'},
-  'walmart-plus': {n:'Walmart+ — SNAP Grocery Delivery',i:'🛒',p:'$13/mo',u:'Free delivery $35+',r:'⭐ 4.3 · 500K',why:"SNAP/EBT accepted online for delivery. Free delivery on $35+. Access to fresh produce, protein, whole foods — delivered. Week 1 healthy meal plan under $60: eggs, chicken, sweet potatoes, spinach, avocados, blueberries, quinoa.",sf:'✅ SNAP/EBT accepted',url:'https://walmart.com/plus',label:'Start Free Trial →'},
+  // === BLOODWORK / LABS ===
+  'function-health': {n:'Function Health — 100+ Biomarkers',i:'🔬',p:'$499/yr',u:'2 panels/yr',r:'⭐ 4.8 · 20K',why:"100+ biomarkers twice a year — metabolic, hormonal, inflammatory, nutritional. Know your baseline BEFORE starting GLP-1 or any peptide. Results in 48hrs, reviewed by a physician. The gold standard.",sf:'✅ Diagnostic only — no treatments',url:'https://functionhealth.com',label:'Order Your Panel ='},
+  'labcorp-demand': {n:'LabCorp OnDemand — Self-Order Labs',i:'🔬',p:'varies',u:'2,000 locations',r:'⭐ 4.4 · 50K',why:"Order your own bloodwork without a doctor's order. Pay per test. A1C ($30), fasting insulin ($40), full metabolic panel ($80). Results to your phone in 24-48hrs. Thousands of draw locations.",sf:'✅ Diagnostic only',url:'https://ondemand.labcorp.com',label:'Order Labs ='},
+  'insidetracker': {n:'InsideTracker — Personalized Analysis',i:'🔬',p:'$299-599',u:'Annual',r:'⭐ 4.5 · 15K',why:"Blood + DNA analysis with personalized food, supplement, and lifestyle targets. Unlike generic labs, it tells you what to DO with the numbers. Good follow-up after Function Health baseline.",sf:'✅ Diagnostic only',url:'https://insidetracker.com',label:'Get Your Plan ='},
+  // === PEPTIDES = GRAY ZONE, PROPERLY FRAMED ===
+  'peptide-info': {n:'Peptide Research — What You Need to Know',i:'🧬',p:'Research only',u:'Gray zone',r:'⭐ Not FDA-cleared',why:"BPC-157, TB-500, and other research peptides: NOT FDA-approved for human use, NOT illegal for personal use, NOT covered by insurance. Tissue repair, inflammation, joint recovery. Sources matter enormously — purity, sterility, dosing vary wildly. This requires serious research before any consideration.",sf:'⚠️ Gray zone — discuss with a physician. Never dose from AI.',url:'https://bleu.live',label:'Talk to Alvai ='},
+  // === MEDIA / EDUCATION ===
+  'audible': {n:'Audible — The Wellness Trinity',i:'📚',p:'$14.95/mo',u:'1 credit/mo',r:'⭐ 4.8 · 500K',why:"Start with these three: Why We Sleep (Walker) — changes everything. The Body Keeps the Score (van der Kolk) — trauma and the body. Atomic Habits (Clear) — behavior change that sticks. These three books shift trajectories.",sf:'✅ No interactions',url:'https://audible.com?source_code=BLEU',label:'Start Listening ='},
+  'gaia-tv': {n:'Gaia — Conscious Media',i:'🎬',p:'$11.99/mo',u:'Streaming',r:'⭐ 4.3 · 100K',why:"Wellness documentaries, yoga, meditation, longevity content — different DNA from Netflix. Built for the healing journey. Exclusive content on functional medicine, plant medicine, consciousness.",sf:'✅ No interactions',url:'https://gaia.com',label:'Try Free ='},
+  'brainfm': {n:'Brain.fm — Neural Music',i:'🎵',p:'$6.99/mo',u:'App',r:'⭐ 4.5 · 80K',why:"Neuroscience-designed music for focus, deep work, and sleep. Not ambient noise — functional neural entrainment. Studied at MIT. Deep work mode cuts distraction time by 47% in clinical data.",sf:'✅ No interactions',url:'https://brain.fm',label:'Try Free ='},
+  // === COMMUNITY / EVENTS ===  
+  'eventbrite-local': {n:'Eventbrite — Wellness Events',i:'📅',p:'Free to search',u:'Local',r:'⭐ 4.4 · 2M',why:"Filter by free events first — yoga in the park, sound baths, recovery meetings, nutrition workshops, farmers markets. In NOLA: second lines, French Quarter Festival events, Jazz Fest wellness activations.",sf:'✅ Community connection',url:'https://eventbrite.com',label:'Find Events ='},
+  'meetup': {n:'Meetup — Find Your People',i:'🤝',p:'Free',u:'Local groups',r:'⭐ 4.2 · 3M',why:"Walking clubs, run crews, meditation circles, recovery support, nutrition accountability groups. Social connection reduces mortality by 50% — same magnitude as quitting smoking. This is medicine.",sf:'✅ Social medicine',url:'https://meetup.com',label:'Find Groups ='},
+  // === WALKING / FREE FITNESS ===
+  'mapmywalk': {n:'MapMyWalk — Free Walk Tracker',i:'🚶',p:'Free',u:'App',r:'⭐ 4.4 · 1M',why:"Track steps, routes, pace, calories. Set daily goals. 8,000 steps/day reduces all-cause mortality by 51% — more than most supplements. The most underrated longevity intervention that exists.",sf:'✅ Free forever',url:'https://mapmywalk.com',label:'Download Free ='},
+  'walmart-plus': {n:'Walmart+ — SNAP Grocery Delivery',i:'🛒',p:'$13/mo',u:'Free delivery $35+',r:'⭐ 4.3 · 500K',why:"SNAP/EBT accepted online for delivery. Free delivery on $35+. Access to fresh produce, protein, whole foods — delivered. Week 1 healthy meal plan under $60: eggs, chicken, sweet potatoes, spinach, avocados, blueberries, quinoa.",sf:'✅ SNAP/EBT accepted',url:'https://walmart.com/plus',label:'Start Free Trial ='},
 };
 
-// Keyword → product ID mapping (1-2 products per topic, most relevant first)
+// Keyword = product ID mapping (1-2 products per topic, most relevant first)
 const RUFUS_MAP = {
   sleep:    ['thorne-mag','endel'],
   insomnia: ['thorne-mag','cw-cbd'],
@@ -2169,7 +2169,7 @@ const RUFUS_MAP = {
   muscle:   ['creatine'],
   creatine: ['creatine'],
   protein:  ['protein-powder','creatine'],
-  // ─── GLP-1 / WEIGHT LOSS ───
+  // === GLP-1 / WEIGHT LOSS ===
   'weight loss': ['hims-weight','found-weight'],
   'lose weight': ['hims-weight','ro-body'],
   overweight:   ['hims-weight','found-weight'],
@@ -2189,14 +2189,14 @@ const RUFUS_MAP = {
   insulin:      ['berberine','function-health'],
   'blood sugar':['berberine','labcorp-demand'],
   glucose:      ['berberine','function-health'],
-  // ─── PEPTIDES ───
+  // === PEPTIDES ===
   peptide:      ['peptide-info'],
   'bpc-157':    ['peptide-info'],
   'tb-500':     ['peptide-info'],
   'bpc157':     ['peptide-info'],
   'tb500':      ['peptide-info'],
   'research peptide':['peptide-info'],
-  // ─── BLOODWORK ───
+  // === BLOODWORK ===
   bloodwork:    ['function-health','labcorp-demand'],
   biomarkers:   ['function-health','insidetracker'],
   hormones:     ['function-health','labcorp-demand'],
@@ -2206,7 +2206,7 @@ const RUFUS_MAP = {
   'a1c':        ['labcorp-demand','function-health'],
   'lab test':   ['labcorp-demand','function-health'],
   labs:         ['function-health','labcorp-demand'],
-  // ─── MEDIA ───
+  // === MEDIA ===
   audiobook:    ['audible'],
   audible:      ['audible'],
   'why we sleep':['audible'],
@@ -2217,7 +2217,7 @@ const RUFUS_MAP = {
   'brain.fm':   ['brainfm'],
   'focus music':['brainfm'],
   'deep work':  ['brainfm'],
-  // ─── COMMUNITY ───
+  // === COMMUNITY ===
   events:       ['eventbrite-local','meetup'],
   meetup:       ['meetup'],
   'walking club':['meetup','mapmywalk'],
@@ -2225,14 +2225,14 @@ const RUFUS_MAP = {
   lonely:       ['meetup','eventbrite-local'],
   loneliness:   ['meetup','eventbrite-local'],
   connection:   ['meetup','eventbrite-local'],
-  // ─── WALKING ───
+  // === WALKING ===
   walking:      ['mapmywalk'],
   steps:        ['mapmywalk'],
   '10000 steps':['mapmywalk'],
   '8000 steps': ['mapmywalk'],
   hiking:       ['mapmywalk'],
   trails:       ['mapmywalk'],
-  // ─── GROCERIES / SNAP ───
+  // === GROCERIES / SNAP ===
   snap:         ['walmart-plus'],
   ebt:          ['walmart-plus'],
   'food stamps':['walmart-plus'],
@@ -2241,7 +2241,7 @@ const RUFUS_MAP = {
 };
 
 // Detect which products to surface based on conversation text
-// ═══ RUFUS JOURNEY ENGINE — 360° Affiliate Commerce ═══
+// === RUFUS JOURNEY ENGINE = 360= Affiliate Commerce ===
 // Like Amazon Rufus / Google Shopping AI: full ecosystem, not single products
 // Each journey maps the complete path for a health goal
 
@@ -2383,10 +2383,10 @@ const RUFUS_JOURNEYS = {
 function detectJourney(userText, alvaiText) {
   const combined = (userText + ' ' + (alvaiText || '')).toLowerCase();
   const userLower = userText.toLowerCase();
-  // Distress check — no commerce in crisis
+  // Distress check = no commerce in crisis
   const distress = /crisis|emergency|suicide|hurt myself|end it|want to die|hopeless|worthless|kill myself/.test(combined);
   if (distress) return null;
-  // In-person request — suppress all online affiliate cards, let Alvai directory handle it
+  // In-person request = suppress all online affiliate cards, let Alvai directory handle it
   const inPerson = /in.?person|face.to.face|see someone in|where can i go|where can i see|anyone in|anyone near|near me|local therapist|cbd area|downtown|uptown|french quarter|garden district|mid.city|marigny|bywater/.test(userLower);
   if (inPerson) return null;
   // Match first journey that fires
@@ -2403,7 +2403,7 @@ function renderJourney(containerDiv, journeyKey) {
   const wrap = document.createElement('div');
   wrap.className = 'rufus-journey';
 
-  // Sort: free products first, then paid — trust before transaction
+  // Sort: free products first, then paid = trust before transaction
   const steps = [...journey.steps].sort((a, b) => {
     const aFree = (RUFUS_PRODUCTS[a.id]?.p || '').toLowerCase().includes('free');
     const bFree = (RUFUS_PRODUCTS[b.id]?.p || '').toLowerCase().includes('free');
@@ -2451,7 +2451,7 @@ function renderJourney(containerDiv, journeyKey) {
       <div class="rufus-jcard-price">${p.p}${isFree ? ' ✓' : ''}</div>
       <a href="${p.url}" target="_blank" class="rufus-jcard-btn">${p.label}</a>`;
 
-    // Tap to expand — show full WHY before sending to buy
+    // Tap to expand = show full WHY before sending to buy
     card.addEventListener('click', function(e) {
       if (e.target.tagName === 'A') return;
       if (e.target.classList.contains('rufus-add-cart')) return;
@@ -2463,7 +2463,7 @@ function renderJourney(containerDiv, journeyKey) {
 
   wrap.appendChild(row);
 
-  // Save to Passport hook — retention + account creation
+  // Save to Passport hook = retention + account creation
   const saveHook = document.createElement('div');
   saveHook.className = 'rufus-save-hook';
   saveHook.innerHTML = `
@@ -2577,7 +2577,7 @@ async function loadStats(){
 }
 loadStats()
 
-// ═══ Enhanced scroll reveals ═══
+// === Enhanced scroll reveals ===
 const revealObs=new IntersectionObserver((entries)=>{entries.forEach((e,i)=>{if(e.isIntersecting){const p=e.target.parentElement;if(p&&(p.classList.contains('card-grid')||p.style.display==='grid')){const idx=Array.from(p.children).indexOf(e.target);e.target.style.transitionDelay=(idx*0.06)+'s'}e.target.classList.add('visible')}})},{threshold:0.08,rootMargin:'0px 0px -20px 0px'});
 document.querySelectorAll('.reveal,.card,.stat-box').forEach(el=>{if(!el.classList.contains('reveal'))el.classList.add('reveal');revealObs.observe(el)});
 var _origGo=window.go;window.go=function(t){_origGo(t);setTimeout(function(){document.querySelectorAll('#p-'+t+' .reveal').forEach(function(el){if(el.getBoundingClientRect().top<window.innerHeight+50)el.classList.add('visible')})},120)}
@@ -2610,16 +2610,16 @@ window.addEventListener('DOMContentLoaded',function(){
   });
 });
 
-// ═══════ SESSION IDENTITY ═══════
+// ======= SESSION IDENTITY =======
 function getSession(){
   let s=localStorage.getItem('bleu_session');
   if(!s){s='bleu_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);localStorage.setItem('bleu_session',s);}
   return s;
 }
-// ═══════ ANALYTICS PING ═══════
+// ======= ANALYTICS PING =======
 function ping(p){fetch(ALVAI.replace('/chat','/ping')+'?p='+encodeURIComponent(p)+'&s='+getSession()).catch(()=>{});}
 ping(window.location.pathname);
-// ═══════ SESSION UPSERT ═══════
+// ======= SESSION UPSERT =======
 function updateSession(){
   const city=window.location.hostname.match(/^(\w+)\.bleu\.live$/)?.[1]||'';
   fetch(ALVAI.replace('/chat','/session'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:getSession(),city})}).catch(()=>{});
@@ -2914,7 +2914,7 @@ updateSession();
 <!-- ═══ ALL ENTERPRISE JS — INLINE, SELF-CONTAINED ═══ -->
 <script>
 (function(){
-  // ── COUNTERS ──
+  // == COUNTERS ==
   function animCount(id,target){
     var el=document.getElementById(id);if(!el)return;
     var s=Date.now(),d=2200;
@@ -2922,7 +2922,7 @@ updateSession();
   }
   function initCounters(){animCount('ec1',525965);animCount('ec2',247);animCount('ec3',22);animCount('ec4',15)}
 
-  // ── BEFORE/AFTER ──
+  // == BEFORE/AFTER ==
   var bData=[
     {i:'\u{1F4CB}',t:'Annual PDF reports',d:'18 months old by publication. No real-time data. No neighborhood-level intelligence.'},
     {i:'\u2B50',t:'Yelp & Google reviews',d:'Popularity contests. No federal verification. Pay-to-rank. Means nothing clinically.'},
@@ -2949,7 +2949,7 @@ updateSession();
     g.innerHTML=h;
   };
 
-  // ── BUSINESS ROI ──
+  // == BUSINESS ROI ==
   window.eBiz=function(){
     var e=parseInt(document.getElementById('eBizSlider').value),h=Math.round(e*5512),p=Math.round(e*1685),r=Math.round(e*.15*65000*.25),t=h+p+r,roi=Math.round(t/(e*8)*100)/100;
     document.getElementById('eBizEmp').textContent=e.toLocaleString();
@@ -2962,7 +2962,7 @@ updateSession();
     document.getElementById('eBROI').innerHTML="That's <strong style='color:#E2E8F0'>$"+roi+" returned per $1</strong> invested in BLEU";
   };
 
-  // ── CITY ROI ──
+  // == CITY ROI ==
   window.eCity=function(){
     var p=parseInt(document.getElementById('eCSlider').value),er=Math.round(p*.02*2700),ret=Math.round(p*.005*105000),gr=Math.round(p*12),t=er+ret+gr;
     document.getElementById('eCPop').textContent=p.toLocaleString();
@@ -2972,7 +2972,7 @@ updateSession();
     document.getElementById('eCT').textContent='$'+(t/1e6).toFixed(0)+'M';
   };
 
-  // ── TIMELINE ──
+  // == TIMELINE ==
   var phases=[
     {l:'Week 1-2',t:'Data Integration',c:'#60A5FA',items:['Connect federal APIs: EPA, SAMHSA, NPI, FDA, NIH, CMS','Import & validate existing provider databases','Configure neighborhood boundaries & 12 scoring dimensions','Deploy Alvai with all 22 therapeutic modes','Launch [city].bleu.live or [business].bleu.live portal']},
     {l:'Month 1',t:'Intelligence Activated',c:'#C8A951',items:['Real-time dashboards live: population health, provider gaps, environmental','Full platform access: therapy, recovery, directory, supplements, finance','AI learning community patterns, seasonal trends, usage gaps','First wellness scores published at neighborhood level','Crisis resources integrated: 988, SAMHSA, local warm handoffs']},
@@ -2990,7 +2990,7 @@ updateSession();
     box.innerHTML=ch;
   };
 
-  // ── SCROLL REVEAL ──
+  // == SCROLL REVEAL ==
   function reveal(){
     document.querySelectorAll('.e-fade').forEach(function(el){
       var r=el.getBoundingClientRect();
@@ -2998,7 +2998,7 @@ updateSession();
     });
   }
 
-  // ── INIT ──
+  // == INIT ==
   function initAll(){
     initCounters();
     eToggle(true);
@@ -3037,7 +3037,7 @@ var io=new IntersectionObserver(function(ee){ee.forEach(function(e){if(e.isInter
 function tag(el,i){el.classList.add('bl-up');el.style.transitionDelay=(i*80)+'ms';io.observe(el)}
 function run(){
 var h=document.getElementById('p-home');if(!h)return;
-// DO NOT touch goAsk cards — they already animate via cardReveal
+// DO NOT touch goAsk cards = they already animate via cardReveal
 // Tag sections, dividers, partner row, enterprise, stats
 h.querySelectorAll('.section-label,.section-desc').forEach(function(el,i){tag(el,i)});
 h.querySelectorAll('.divider').forEach(function(el){tag(el,0)});
@@ -3061,7 +3061,7 @@ done=true;cio.unobserve(el);var st=performance.now();
 el.textContent=(n>=1000?v.toLocaleString():v)+suf;
 if(p<1)requestAnimationFrame(tick);else el.textContent=orig})(st)}})},{threshold:0.3});
 cio.observe(el)});
-// Tab switch — re-trigger reveals on other panels
+// Tab switch = re-trigger reveals on other panels
 var og=window.go;if(og){window.go=function(t){og(t);setTimeout(function(){
 var p=document.getElementById('p-'+t);if(!p)return;
 p.querySelectorAll('.section-label,.section-desc,.section-title,.card,.stat-box,.feature-item,.product-card,.chat-box,.disclaimer,.cta,.mode-bar,.quick-row,.divider,.divider-gold').forEach(function(el,i){
