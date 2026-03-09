@@ -1838,7 +1838,73 @@ button[type="submit"],
 
   <div class="chat-box"><div class="chat-messages" id="chat-finance"></div><div class="chat-input-row"><input autocomplete="off" id="in-finance" placeholder="Help me save on prescriptions... budget for wellness... navigate insurance..." onkeydown="if(event.key==='Enter')send('finance')"><button onclick="send('finance')">Help Me</button></div></div>
 
-  <div class="disclaimer">💰 BLEU provides financial wellness information, not professional financial, tax, or investment advice. Consult licensed financial advisors for specific investment and tax decisions. Affiliate links to financial products are clearly disclosed.</div>
+  
+  <!-- WELLNESS SPENDING CALCULATOR -->
+  <div style="background:rgba(25,50,68,0.4);border:1px solid rgba(212,175,55,0.15);border-radius:18px;padding:24px;margin:24px 0">
+    <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">💰 WELLNESS SPENDING RATIO CALCULATOR</div>
+    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:16px;font-weight:300">How much of your monthly spend goes toward healing vs harming? Enter your numbers:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div>
+        <div style="color:#4ecdc4;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">HEALING (monthly $)</div>
+        <input id="wsr-therapy" placeholder="Therapy / counseling" type="number" style="background:rgba(25,50,68,0.8);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box;margin-bottom:6px">
+        <input id="wsr-supplements" placeholder="Supplements / vitamins" type="number" style="background:rgba(25,50,68,0.8);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box;margin-bottom:6px">
+        <input id="wsr-fitness" placeholder="Gym / fitness / movement" type="number" style="background:rgba(25,50,68,0.8);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box;margin-bottom:6px">
+        <input id="wsr-food" placeholder="Healthy food / meal prep" type="number" style="background:rgba(25,50,68,0.8);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <div style="color:#d4af37;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">HARMING (monthly $)</div>
+        <input id="wsr-alcohol" placeholder="Alcohol" type="number" style="background:rgba(25,50,68,0.8);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box;margin-bottom:6px">
+        <input id="wsr-tobacco" placeholder="Tobacco / nicotine" type="number" style="background:rgba(25,50,68,0.8);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box;margin-bottom:6px">
+        <input id="wsr-junk" placeholder="Fast food / junk food" type="number" style="background:rgba(25,50,68,0.8);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box;margin-bottom:6px">
+        <input id="wsr-other" placeholder="Other harmful habits" type="number" style="background:rgba(25,50,68,0.8);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box">
+      </div>
+    </div>
+    <button onclick="calcWSR()" style="background:linear-gradient(135deg,#d4af37,#b8962e);border:none;border-radius:10px;padding:11px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer;width:100%;margin-bottom:14px">Calculate My Ratio →</button>
+    <div id="wsr-result" style="display:none;background:rgba(25,50,68,0.6);border-radius:12px;padding:16px"></div>
+  </div>
+
+  <!-- AFFILIATE CARDS: YNAB + GOODRX -->
+  <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:24px 0 14px">BLEU FINANCIAL PARTNERS</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px">
+
+    <div style="background:linear-gradient(135deg,rgba(212,175,55,0.06),rgba(28,45,58,0.6));border:1px solid rgba(212,175,55,0.15);border-radius:16px;padding:22px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(212,175,55,0.15);display:flex;align-items:center;justify-content:center;font-size:20px">📊</div>
+        <div>
+          <div style="color:#d4af37;font-weight:700;font-size:16px">YNAB</div>
+          <div style="color:#8fa4b0;font-size:11px">You Need A Budget — wellness-first budgeting</div>
+        </div>
+      </div>
+      <p style="color:#8fa4b0;font-size:12px;line-height:1.7;margin-bottom:14px;font-weight:300">Average user saves $600 in their first 2 months. Zero-based budgeting gives every dollar a job — including your therapy, supplements, and healing. 34-day free trial.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+        <span style="background:rgba(212,175,55,0.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ 34-day free trial</span>
+        <span style="background:rgba(212,175,55,0.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ Avg saves $600/mo</span>
+        <span style="background:rgba(212,175,55,0.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ Wellness categories built in</span>
+      </div>
+      <a href="https://www.ynab.com" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#d4af37,#b8962e);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none">Start Free Trial →</a>
+      <div style="text-align:center;color:rgba(212,175,55,0.4);font-size:10px;margin-top:8px">💛 Affiliate — funds this free platform</div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(78,205,196,0.06),rgba(25,50,68,0.6));border:1px solid rgba(78,205,196,0.15);border-radius:16px;padding:22px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(78,205,196,0.15);display:flex;align-items:center;justify-content:center;font-size:20px">💊</div>
+        <div>
+          <div style="color:#4ecdc4;font-weight:700;font-size:16px">GoodRx</div>
+          <div style="color:#8fa4b0;font-size:11px">Prescription savings — up to 80% off</div>
+        </div>
+      </div>
+      <p style="color:#8fa4b0;font-size:12px;line-height:1.7;margin-bottom:14px;font-weight:300">Free to use. No insurance needed. Compare prices at every pharmacy near you. Americans overpay billions on prescriptions every year — GoodRx fixes that in 30 seconds.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+        <span style="background:rgba(78,205,196,0.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ Completely free</span>
+        <span style="background:rgba(78,205,196,0.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ No insurance needed</span>
+        <span style="background:rgba(78,205,196,0.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ Up to 80% savings</span>
+      </div>
+      <a href="https://www.goodrx.com" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#4ecdc4,#2a9d8f);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none">Check My Prescription Price →</a>
+      <div style="text-align:center;color:rgba(212,175,55,0.4);font-size:10px;margin-top:8px">💛 Affiliate — funds this free platform</div>
+    </div>
+  </div>
+
+<div class="disclaimer">💰 BLEU provides financial wellness information, not professional financial, tax, or investment advice. Consult licensed financial advisors for specific investment and tax decisions. Affiliate links to financial products are clearly disclosed.</div>
 
 <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
 </div>
@@ -3068,6 +3134,53 @@ async function searchTreatment() {
 
 // Auto-load counter if date exists
 document.addEventListener('DOMContentLoaded', () => { if(localStorage.getItem('bleu_sober_date')) updateSoberDisplay(); });
+
+
+// ── FINANCE TOOLS ─────────────────────────────────────────────────
+function calcWSR() {
+  const get = id => parseFloat(document.getElementById(id)?.value || 0) || 0;
+  const healing = get('wsr-therapy') + get('wsr-supplements') + get('wsr-fitness') + get('wsr-food');
+  const harming = get('wsr-alcohol') + get('wsr-tobacco') + get('wsr-junk') + get('wsr-other');
+  const total = healing + harming;
+  if (total === 0) { alert('Enter at least one number.'); return; }
+  const ratio = total > 0 ? Math.round((healing / total) * 100) : 0;
+  const annualHarming = harming * 12;
+  const el = document.getElementById('wsr-result');
+  el.style.display = 'block';
+  let grade, color, msg;
+  if (ratio >= 75) { grade = 'EXCELLENT'; color = '#4ecdc4'; msg = 'You are investing in yourself. Keep building on this foundation.'; }
+  else if (ratio >= 50) { grade = 'GOOD'; color = '#d4af37'; msg = 'More goes to healing than harm. One smart swap could push you to excellent.'; }
+  else if (ratio >= 25) { grade = 'NEEDS WORK'; color = '#d4af37'; msg = `You spend $${annualHarming.toLocaleString()}/year on things that hurt you. Redirecting even 20% would transform your health.`; }
+  else { grade = 'CRITICAL'; color = '#e07070'; msg = `$${annualHarming.toLocaleString()}/year against your health. Every dollar shifted toward healing compounds for decades.`; }
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+      <div style="text-align:center">
+        <div style="color:${color};font-size:36px;font-weight:700">${ratio}%</div>
+        <div style="color:#8fa4b0;font-size:10px;letter-spacing:1px">HEALING RATIO</div>
+      </div>
+      <div style="flex:1">
+        <div style="color:${color};font-weight:700;font-size:14px;margin-bottom:4px">${grade}</div>
+        <div style="background:rgba(25,50,68,0.6);border-radius:6px;height:8px;overflow:hidden;margin-bottom:8px">
+          <div style="background:${color};height:100%;width:${ratio}%;border-radius:6px;transition:width 0.8s ease"></div>
+        </div>
+        <div style="color:#8fa4b0;font-size:12px;line-height:1.6">${msg}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px">
+      <div style="text-align:center;background:rgba(78,205,196,0.06);border-radius:8px;padding:10px">
+        <div style="color:#4ecdc4;font-weight:600">$${healing.toFixed(0)}/mo</div>
+        <div style="color:#8fa4b0;font-size:10px;margin-top:3px">Healing</div>
+      </div>
+      <div style="text-align:center;background:rgba(212,175,55,0.06);border-radius:8px;padding:10px">
+        <div style="color:#d4af37;font-weight:600">$${harming.toFixed(0)}/mo</div>
+        <div style="color:#8fa4b0;font-size:10px;margin-top:3px">Harming</div>
+      </div>
+      <div style="text-align:center;background:rgba(212,175,55,0.06);border-radius:8px;padding:10px">
+        <div style="color:#d4af37;font-weight:600">$${annualHarming.toLocaleString()}/yr</div>
+        <div style="color:#8fa4b0;font-size:10px;margin-top:3px">Annual cost of harm</div>
+      </div>
+    </div>`;
+}
 
 function go(tab){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
