@@ -964,6 +964,178 @@ button[type="submit"],
 </div>
 
 <!-- ═══════════════════════ DASHBOARD ═══════════════════════ -->
+<!-- ═══════════════════════ ALVAI ═══════════════════════ -->
+<div class="panel" id="p-alvai">
+
+  <style>
+    @keyframes alvaipulse{0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}50%{box-shadow:0 0 32px 4px rgba(212,175,55,.12)}}
+    @keyframes alvaifloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    @keyframes alvaibeam{0%{opacity:0;transform:scaleX(0)}100%{opacity:1;transform:scaleX(1)}}
+    @keyframes modepop{from{opacity:0;transform:scale(.92) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .amode-card{border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .25s;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);animation:modepop .4s ease both}
+    .amode-card:hover{transform:translateY(-3px);border-color:rgba(212,175,55,.35);background:rgba(212,175,55,.05)}
+    .amode-card.active{border-color:rgba(212,175,55,.6);background:rgba(212,175,55,.08);box-shadow:0 0 24px rgba(212,175,55,.1)}
+    .alvai-stat{text-align:center;padding:16px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05)}
+    .aconnect-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid;margin:3px}
+  </style>
+
+  <!-- HEADER -->
+  <div style="text-align:center;padding:20px 0 32px;position:relative">
+    <div style="font-size:48px;margin-bottom:12px;animation:alvaifloat 4s ease-in-out infinite">&#10024;</div>
+    <div style="font-size:10px;letter-spacing:5px;color:rgba(212,175,55,.5);margin-bottom:10px">THE INTELLIGENCE LAYER</div>
+    <h1 style="font-family:Georgia,serif;font-size:clamp(28px,5vw,44px);font-weight:300;color:#e8d5b0;margin:0 0 8px;animation:alvaipulse 3s ease infinite">Alvai</h1>
+    <div style="font-size:13px;color:#8b95a5;max-width:560px;margin:0 auto;line-height:1.8">Connected to 800K+ practitioners, 1,054 products, 465 studies, and every system inside BLEU. Not a chatbot. A therapeutic intelligence that actually knows what you need.</div>
+    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.3),transparent);margin:24px auto;max-width:300px;animation:alvaibeam .8s ease .3s both"></div>
+  </div>
+
+  <!-- LIVE STAT ROW -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px">
+    <div class="alvai-stat">
+      <div style="font-size:22px;font-weight:300;color:#d4af37;font-family:Georgia,serif">800K+</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">PRACTITIONERS</div>
+    </div>
+    <div class="alvai-stat">
+      <div style="font-size:22px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif">302K+</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">INTERACTIONS</div>
+    </div>
+    <div class="alvai-stat">
+      <div style="font-size:22px;font-weight:300;color:#a78bfa;font-family:Georgia,serif">22</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">AI MODES</div>
+    </div>
+    <div class="alvai-stat">
+      <div style="font-size:22px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif">FREE</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">ALWAYS</div>
+    </div>
+  </div>
+
+  <!-- QUICK PROMPTS -->
+  <div style="margin-bottom:28px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.2);margin-bottom:14px">START HERE &mdash; REAL ENTRY POINTS</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <span onclick="ask('alvai','I cant sleep and I feel exhausted every morning. Give me a full sleep protocol.')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4;transition:all .2s" onmouseover="this.style.background='rgba(78,205,196,.18)'" onmouseout="this.style.background='rgba(78,205,196,.08)'">&#128164; Can&apos;t Sleep</span>
+      <span onclick="ask('alvai','I feel overwhelmed and anxious. I need something that actually helps right now.')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa;transition:all .2s" onmouseover="this.style.background='rgba(167,139,250,.18)'" onmouseout="this.style.background='rgba(167,139,250,.08)'">&#129504; Anxiety</span>
+      <span onclick="ask('alvai','I am 3 days sober and struggling. What do I do right now?')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(255,107,138,.08);border:1px solid rgba(255,107,138,.2);color:#ff6b8a;transition:all .2s" onmouseover="this.style.background='rgba(255,107,138,.18)'" onmouseout="this.style.background='rgba(255,107,138,.08)'">&#128330; Recovery</span>
+      <span onclick="ask('alvai','Build me a morning supplement stack for energy focus and longevity. Real brands, real doses.')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37;transition:all .2s" onmouseover="this.style.background='rgba(212,175,55,.18)'" onmouseout="this.style.background='rgba(212,175,55,.08)'">&#128138; Stack</span>
+      <span onclick="ask('alvai','Check interactions between CBD, melatonin, and sertraline.')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#ef4444;transition:all .2s" onmouseover="this.style.background='rgba(239,68,68,.18)'" onmouseout="this.style.background='rgba(239,68,68,.08)'">&#9888; Interactions</span>
+      <span onclick="ask('alvai','Find me a therapist in New Orleans who specializes in trauma and accepts sliding scale.')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4;transition:all .2s" onmouseover="this.style.background='rgba(78,205,196,.18)'" onmouseout="this.style.background='rgba(78,205,196,.08)'">&#9877; Find Doctor</span>
+      <span onclick="ask('alvai','What cannabis strain is best for chronic pain and sleep? I have no tolerance.')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(78,205,140,.08);border:1px solid rgba(78,205,140,.2);color:#4ecd8c;transition:all .2s" onmouseover="this.style.background='rgba(78,205,140,.18)'" onmouseout="this.style.background='rgba(78,205,140,.08)'">&#127807; Cannabis</span>
+      <span onclick="ask('alvai','I have $200 a month for wellness. Build me the highest ROI protocol possible.')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37;transition:all .2s" onmouseover="this.style.background='rgba(212,175,55,.18)'" onmouseout="this.style.background='rgba(212,175,55,.08)'">&#128176; Budget</span>
+    </div>
+  </div>
+
+  <!-- MAIN CHAT BOX -->
+  <div class="chat-box" style="margin-bottom:32px">
+    <div class="chat-messages" id="chat-alvai"></div>
+    <div class="chat-input-row">
+      <input autocomplete="off" id="in-alvai" placeholder="What hurts? What keeps you up? What do you need right now?" onkeydown="if(event.key===&apos;Enter&apos;)send(&apos;alvai&apos;)">
+      <button onclick="send(&apos;alvai&apos;)">Ask Alvai &#10024;</button>
+    </div>
+  </div>
+
+  <!-- 22 AI MODES -->
+  <div style="margin-bottom:32px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <div style="font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.2)">22 AI MODES</div>
+      <div style="flex:1;height:1px;background:rgba(255,255,255,.05)"></div>
+      <div style="font-size:10px;color:#5a6374">Click any mode to activate it</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="alvai-modes"></div>
+  </div>
+
+  <!-- WHAT ALVAI KNOWS -->
+  <div style="margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.2);margin-bottom:16px">WHAT ALVAI IS CONNECTED TO</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+      <div class="aconnect-block" onclick="go(&apos;directory&apos;)" style="padding:16px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.12);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.4)'" onmouseout="this.style.borderColor='rgba(78,205,196,.12)'">
+        <div style="font-size:20px;margin-bottom:8px">&#9877;&#65039;</div>
+        <div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">800K+ Practitioners</div>
+        <div style="font-size:11px;color:#5a6374;line-height:1.6">NPI-verified. Trust-scored. Matched by specialty, city, insurance, telehealth.</div>
+      </div>
+      <div onclick="go(&apos;vessel&apos;)" style="padding:16px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.12);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(212,175,55,.4)'" onmouseout="this.style.borderColor='rgba(212,175,55,.12)'">
+        <div style="font-size:20px;margin-bottom:8px">&#128138;</div>
+        <div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">1,054 Products</div>
+        <div style="font-size:11px;color:#5a6374;line-height:1.6">FDA-checked. Clinically dosed. Thorne, Amazon, iHerb — linked with safety scores.</div>
+      </div>
+      <div onclick="go(&apos;ecsiq&apos;)" style="padding:16px;border-radius:12px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.12);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,140,.4)'" onmouseout="this.style.borderColor='rgba(78,205,140,.12)'">
+        <div style="font-size:20px;margin-bottom:8px">&#127807;</div>
+        <div style="font-size:12px;font-weight:700;color:#4ecd8c;margin-bottom:4px">529+ Strains + ECS Engine</div>
+        <div style="font-size:11px;color:#5a6374;line-height:1.6">28 years of plant intelligence. Terpene matching. Drug interaction checking. No judgment.</div>
+      </div>
+      <div onclick="go(&apos;therapy&apos;)" style="padding:16px;border-radius:12px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.12);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(167,139,250,.4)'" onmouseout="this.style.borderColor='rgba(167,139,250,.12)'">
+        <div style="font-size:20px;margin-bottom:8px">&#129504;</div>
+        <div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">12 Therapy Frameworks</div>
+        <div style="font-size:11px;color:#5a6374;line-height:1.6">CBT, DBT, somatic, trauma, grief, crisis, motivational. A bridge to a real therapist.</div>
+      </div>
+      <div onclick="go(&apos;recovery&apos;)" style="padding:16px;border-radius:12px;background:rgba(255,107,138,.04);border:1px solid rgba(255,107,138,.12);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(255,107,138,.4)'" onmouseout="this.style.borderColor='rgba(255,107,138,.12)'">
+        <div style="font-size:20px;margin-bottom:8px">&#128330;&#65039;</div>
+        <div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">8 Recovery Pathways</div>
+        <div style="font-size:11px;color:#5a6374;line-height:1.6">12-step, SMART, MAT, harm reduction, faith-based. SAMHSA integrated. Relapse is data.</div>
+      </div>
+      <div style="padding:16px;border-radius:12px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.12)">
+        <div style="font-size:20px;margin-bottom:8px">&#9888;&#65039;</div>
+        <div style="font-size:12px;font-weight:700;color:#ef4444;margin-bottom:4px">302K+ Drug Interactions</div>
+        <div style="font-size:11px;color:#5a6374;line-height:1.6">CYP450 enzyme pathways. 54 substances. Severity rated. What to do about it.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALVAI IDENTITY -->
+  <div style="background:linear-gradient(135deg,rgba(212,175,55,.06),rgba(10,12,16,.8));border:1px solid rgba(212,175,55,.15);border-radius:16px;padding:24px;text-align:center;margin-bottom:20px">
+    <div style="font-size:10px;letter-spacing:4px;color:rgba(212,175,55,.4);margin-bottom:12px">THE CENTRAL FIRE</div>
+    <div style="font-size:14px;color:#e8d5b0;line-height:1.9;max-width:580px;margin:0 auto;font-style:italic">"Alvai is not a chatbot. It is the light at the center of the BLEU ecosystem — a therapeutic intelligence trained on 28 years of clinical experience, plant medicine, and a 127-year healing lineage. It does not give advice. It gives you the infrastructure to make your own best decisions."</div>
+    <div style="margin-top:16px;font-size:11px;color:rgba(212,175,55,.5);letter-spacing:2px">BLEU.LIVE · THE LONGEVITY OPERATING SYSTEM · PATENT PENDING</div>
+  </div>
+
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System &middot; Patent Pending &middot; &copy; 2026</span></div>
+
+  <script>
+  (function(){
+    var MODES = [
+      {icon:"&#128164;",label:"Sleep Intelligence",color:"#4ecdc4",bg:"rgba(78,205,196,.08)",prompt:"I want to work on my sleep. Analyze my situation and build a complete protocol."},
+      {icon:"&#129504;",label:"Anxiety & Stress",color:"#a78bfa",bg:"rgba(167,139,250,.08)",prompt:"I am dealing with anxiety and stress. Help me understand what is happening and what to do."},
+      {icon:"&#128330;&#65039;",label:"Recovery Guide",color:"#ff6b8a",bg:"rgba(255,107,138,.08)",prompt:"I need recovery support. Meet me where I am and help me take the next step."},
+      {icon:"&#128138;",label:"Supplement Stack",color:"#d4af37",bg:"rgba(212,175,55,.08)",prompt:"Build me a personalized supplement stack. Ask me about my goals first."},
+      {icon:"&#127807;",label:"Cannabis Guide",color:"#4ecd8c",bg:"rgba(78,205,140,.08)",prompt:"Guide me through cannabis options. I want science-based recommendations with no judgment."},
+      {icon:"&#9888;&#65039;",label:"Drug Interactions",color:"#ef4444",bg:"rgba(239,68,68,.08)",prompt:"Check my drug and supplement interactions. I will tell you what I take."},
+      {icon:"&#129658;",label:"Find a Provider",color:"#4ecdc4",bg:"rgba(78,205,196,.08)",prompt:"Help me find the right healthcare provider. Ask me what I need."},
+      {icon:"&#128176;",label:"Wellness Finance",color:"#d4af37",bg:"rgba(212,175,55,.08)",prompt:"Help me afford my wellness. Analyze my situation and find savings I am missing."},
+      {icon:"&#129494;",label:"Nutrition Intel",color:"#4ecd8c",bg:"rgba(78,205,140,.08)",prompt:"Build me a personalized nutrition protocol based on my health goals."},
+      {icon:"&#127939;",label:"Movement Protocol",color:"#a78bfa",bg:"rgba(167,139,250,.08)",prompt:"Design a movement and exercise protocol matched to my body and goals."},
+      {icon:"&#128155;",label:"Grief Support",color:"#ff6b8a",bg:"rgba(255,107,138,.08)",prompt:"I am going through grief or loss. I need support that meets me where I am."},
+      {icon:"&#128248;",label:"Trauma-Informed",color:"#a78bfa",bg:"rgba(167,139,250,.08)",prompt:"I want trauma-informed support. Gentle, non-invasive. Start slowly."},
+      {icon:"&#128106;",label:"Family Support",color:"#4ecdc4",bg:"rgba(78,205,196,.08)",prompt:"Help me support a family member who is struggling. What can I do?"},
+      {icon:"&#129504;",label:"CBT Mode",color:"#a78bfa",bg:"rgba(167,139,250,.08)",prompt:"Use Cognitive Behavioral Therapy techniques to help me reframe a thought pattern."},
+      {icon:"&#127774;",label:"Hormone & Aging",color:"#d4af37",bg:"rgba(212,175,55,.08)",prompt:"I want to understand my hormones and optimize my aging trajectory."},
+      {icon:"&#129440;",label:"Gut Health",color:"#4ecd8c",bg:"rgba(78,205,140,.08)",prompt:"Analyze my gut health situation and build a microbiome optimization protocol."},
+      {icon:"&#128137;",label:"Pain Management",color:"#ef4444",bg:"rgba(239,68,68,.08)",prompt:"I have chronic pain. Help me understand my options beyond opioids."},
+      {icon:"&#9728;&#65039;",label:"Energy & Fatigue",color:"#d4af37",bg:"rgba(212,175,55,.08)",prompt:"I am exhausted all the time. Help me find the root cause and fix it."},
+      {icon:"&#127774;",label:"Longevity Protocol",color:"#4ecdc4",bg:"rgba(78,205,196,.08)",prompt:"Design me a longevity protocol based on the latest science. All-in."},
+      {icon:"&#128336;",label:"40-Day Reset",color:"#d4af37",bg:"rgba(212,175,55,.08)",prompt:"I want to do the 40-Day Reset. Walk me through how it works and help me start."},
+      {icon:"&#128203;",label:"Lab Results",color:"#a78bfa",bg:"rgba(167,139,250,.08)",prompt:"Help me understand my lab results in plain language and tell me what to do."},
+      {icon:"&#128736;",label:"Care Coordinator",color:"#4ecdc4",bg:"rgba(78,205,196,.08)",prompt:"Help me coordinate my care across multiple providers and track everything in one place."}
+    ];
+
+    var container = document.getElementById('alvai-modes');
+    if(!container) return;
+
+    MODES.forEach(function(m, idx){
+      var d = document.createElement('div');
+      d.className = 'amode-card';
+      d.style.animationDelay = (idx * 0.04) + 's';
+      d.innerHTML = '<div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px">' + m.icon + '</span><div><div style="font-size:12px;font-weight:700;color:' + m.color + '">' + m.label + '</div><div style="font-size:10px;color:#5a6374;margin-top:2px">Tap to activate</div></div></div>';
+      d.addEventListener('click', function(){
+        document.querySelectorAll('.amode-card').forEach(function(c){ c.classList.remove('active'); });
+        d.classList.add('active');
+        var input = document.getElementById('in-alvai');
+        if(input){ input.value = m.prompt; input.focus(); }
+      });
+      container.appendChild(d);
+    });
+  })();
+  </script>
+
+</div>
+
 <div class="panel" id="p-dashboard">
   <div class="section-label">YOUR COMMAND CENTER</div>
   <h1 class="hero-title">📊 <span class="teal">Dashboard</span></h1>
