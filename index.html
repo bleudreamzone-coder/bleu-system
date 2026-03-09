@@ -5351,9 +5351,6 @@ updateSession();
         +'</div></div>';
     });
     g.innerHTML=h;
-    // Stagger items in
-    var items=g.querySelectorAll('div[style*="eSlide"]');
-    items.forEach(function(el,i){el.style.opacity='0';setTimeout(function(){el.style.opacity='1';},i*60+50);});
   };
 
   // == BUSINESS ROI ==
@@ -5413,12 +5410,13 @@ updateSession();
     eCity();
     ePhase(0);
     showGrowthLevel(0);
-    // Force ALL e-fade visible immediately
+    // Force ALL e-fade visible
     setTimeout(function(){
       document.querySelectorAll('#p-enterprise .e-fade').forEach(function(el){
         el.classList.add('e-vis');
       });
-    }, 50);
+      eToggle(false);
+    }, 150);
     // Staggered reveal for depth
     setTimeout(function(){
       document.querySelectorAll('#p-enterprise .e-fade').forEach(function(el,i){
