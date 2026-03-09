@@ -1693,7 +1693,103 @@ button[type="submit"],
     <div class="card"><h3>🍎 Eating & Body</h3><p>Intuitive eating. Anti-diet. Food neutrality. Body image healing. Movement as celebration.</p></div>
   </div>
 
-  <div class="disclaimer disclaimer-crisis">⚕️ Alvai Therapy uses evidence-based frameworks but is not a substitute for professional therapy. For crisis support: <strong>988 Lifeline</strong> (call/text 988) · <strong>Crisis Text Line</strong> (text HOME to 741741). BLEU can match you with a licensed therapist in your area — just ask Alvai.</div>
+  
+  <!-- MOOD CHECK-IN -->
+  <div style="background:rgba(25,50,68,0.4);border:1px solid rgba(78,205,196,0.1);border-radius:18px;padding:24px;margin:24px 0">
+    <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">⚡ QUICK MOOD CHECK-IN</div>
+    <div style="color:#e8d5b0;font-size:14px;margin-bottom:14px;font-weight:300">How are you feeling right now?</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px" id="mood-btns">
+      <button onclick="moodCheck('anxious')" style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);border-radius:20px;padding:8px 16px;color:#4ecdc4;font-size:13px;cursor:pointer;transition:all 0.2s">😰 Anxious</button>
+      <button onclick="moodCheck('depressed')" style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);border-radius:20px;padding:8px 16px;color:#4ecdc4;font-size:13px;cursor:pointer;transition:all 0.2s">😞 Low</button>
+      <button onclick="moodCheck('angry')" style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);border-radius:20px;padding:8px 16px;color:#4ecdc4;font-size:13px;cursor:pointer;transition:all 0.2s">😤 Angry</button>
+      <button onclick="moodCheck('grief')" style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);border-radius:20px;padding:8px 16px;color:#4ecdc4;font-size:13px;cursor:pointer;transition:all 0.2s">🕊️ Grieving</button>
+      <button onclick="moodCheck('numb')" style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);border-radius:20px;padding:8px 16px;color:#4ecdc4;font-size:13px;cursor:pointer;transition:all 0.2s">🕳️ Numb</button>
+      <button onclick="moodCheck('overwhelmed')" style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);border-radius:20px;padding:8px 16px;color:#4ecdc4;font-size:13px;cursor:pointer;transition:all 0.2s">🌊 Overwhelmed</button>
+      <button onclick="moodCheck('okay')" style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:20px;padding:8px 16px;color:#d4af37;font-size:13px;cursor:pointer;transition:all 0.2s">🙂 Okay actually</button>
+    </div>
+    <div id="mood-response" style="display:none;background:rgba(78,205,196,0.06);border-radius:12px;padding:14px;color:#8fa4b0;font-size:13px;line-height:1.7"></div>
+  </div>
+
+  <!-- FIND A REAL THERAPIST — Live Directory -->
+  <div style="background:rgba(28,45,58,0.5);border:1px solid rgba(212,175,55,0.12);border-radius:18px;padding:24px;margin:24px 0">
+    <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">WHEN YOU'RE READY FOR A REAL PERSON</div>
+    <div style="color:#e8d5b0;font-size:18px;font-weight:600;margin-bottom:8px;font-family:'Cormorant Garamond',serif">Find a Verified Therapist Near You</div>
+    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:16px;font-weight:300">800,000+ NPI-verified providers. Search by city and specialty — real licensed therapists, psychiatrists, and counselors with real phone numbers.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-bottom:16px">
+      <input id="th-specialty" placeholder="Therapist, psychiatrist, LPC..." style="background:rgba(25,50,68,0.8);border:1px solid rgba(78,205,196,0.2);border-radius:10px;padding:10px 14px;color:#e8d5b0;font-size:13px;outline:none" value="therapist">
+      <input id="th-city" placeholder="Your city..." style="background:rgba(25,50,68,0.8);border:1px solid rgba(78,205,196,0.2);border-radius:10px;padding:10px 14px;color:#e8d5b0;font-size:13px;outline:none">
+      <button onclick="searchTherapists()" style="background:linear-gradient(135deg,#4ecdc4,#2a9d8f);border:none;border-radius:10px;padding:10px 20px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer">Search</button>
+    </div>
+    <div id="therapist-results" style="margin-bottom:8px">
+      <div style="text-align:center;color:#8fa4b0;font-size:12px;padding:10px">Enter your city above to find verified therapists near you.</div>
+    </div>
+  </div>
+
+  <!-- AFFILIATE: BETTERHELP + TALKSPACE -->
+  <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px">ONLINE THERAPY — START TODAY</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px">
+
+    <div style="background:linear-gradient(135deg,rgba(78,205,196,0.06),rgba(25,50,68,0.6));border:1px solid rgba(78,205,196,0.15);border-radius:16px;padding:22px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(78,205,196,0.15);display:flex;align-items:center;justify-content:center;font-size:20px">💬</div>
+        <div>
+          <div style="color:#4ecdc4;font-weight:700;font-size:16px">BetterHelp</div>
+          <div style="color:#8fa4b0;font-size:11px">World's largest therapy platform</div>
+        </div>
+      </div>
+      <div style="color:#8fa4b0;font-size:12px;line-height:1.7;margin-bottom:14px;font-weight:300">
+        30,000+ licensed therapists. Match in 48 hours. Video, phone, or text. Financial aid available. From $60–$100/week — often cheaper than insurance copays.
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <span style="background:rgba(78,205,196,0.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ Licensed & verified</span>
+        <span style="background:rgba(78,205,196,0.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ Switch anytime</span>
+        <span style="background:rgba(78,205,196,0.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ Financial aid</span>
+      </div>
+      <a href="https://betterhelp.com/bleu" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#4ecdc4,#2a9d8f);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none;transition:opacity 0.2s" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">Start with BetterHelp →</a>
+      <div style="text-align:center;color:rgba(212,175,55,0.4);font-size:10px;margin-top:8px">💛 Affiliate — funds this free platform</div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(212,175,55,0.06),rgba(28,45,58,0.6));border:1px solid rgba(212,175,55,0.15);border-radius:16px;padding:22px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(212,175,55,0.15);display:flex;align-items:center;justify-content:center;font-size:20px">🧠</div>
+        <div>
+          <div style="color:#d4af37;font-weight:700;font-size:16px">Talkspace</div>
+          <div style="color:#8fa4b0;font-size:11px">Therapy + psychiatry + medication</div>
+        </div>
+      </div>
+      <div style="color:#8fa4b0;font-size:12px;line-height:1.7;margin-bottom:14px;font-weight:300">
+        Therapy AND psychiatry in one place. Get a diagnosis AND a prescription if needed. Accepts many insurance plans. Ideal if you think you need medication evaluation.
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <span style="background:rgba(212,175,55,0.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ Accepts insurance</span>
+        <span style="background:rgba(212,175,55,0.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ Psychiatry + Rx</span>
+        <span style="background:rgba(212,175,55,0.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ Text between sessions</span>
+      </div>
+      <a href="https://www.talkspace.com" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#d4af37,#b8962e);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none;transition:opacity 0.2s" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">Start with Talkspace →</a>
+      <div style="text-align:center;color:rgba(212,175,55,0.4);font-size:10px;margin-top:8px">💛 Affiliate — funds this free platform</div>
+    </div>
+  </div>
+
+  <!-- FREE OPTIONS -->
+  <div style="background:rgba(25,50,68,0.3);border:1px solid rgba(78,205,196,0.06);border-radius:14px;padding:20px;margin-bottom:24px">
+    <div style="color:rgba(78,205,196,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px">CAN'T AFFORD THERAPY? HERE'S WHAT'S FREE</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <a href="https://988lifeline.org" target="_blank" style="text-decoration:none;background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:12px;padding:14px;display:block;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'">
+        <div style="color:#4ecdc4;font-weight:600;font-size:13px;margin-bottom:4px">📞 988 Lifeline</div>
+        <div style="color:#8fa4b0;font-size:11px;line-height:1.5">Call or text 988. Free. 24/7. Crisis + general mental health.</div>
+      </a>
+      <a href="https://www.crisistextline.org" target="_blank" style="text-decoration:none;background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:14px;display:block;transition:border-color 0.2s" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'">
+        <div style="color:#d4af37;font-weight:600;font-size:13px;margin-bottom:4px">💬 Crisis Text Line</div>
+        <div style="color:#8fa4b0;font-size:11px;line-height:1.5">Text HOME to 741741. Free trained counselors via text.</div>
+      </a>
+      <a href="https://openpathcollective.org" target="_blank" style="text-decoration:none;background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:12px;padding:14px;display:block;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'">
+        <div style="color:#4ecdc4;font-weight:600;font-size:13px;margin-bottom:4px">💚 Open Path</div>
+        <div style="color:#8fa4b0;font-size:11px;line-height:1.5">$30–$80/session with licensed therapists. Sliding scale.</div>
+      </a>
+    </div>
+  </div>
+
+<div class="disclaimer disclaimer-crisis">⚕️ Alvai Therapy uses evidence-based frameworks but is not a substitute for professional therapy. For crisis support: <strong>988 Lifeline</strong> (call/text 988) · <strong>Crisis Text Line</strong> (text HOME to 741741). BLEU can match you with a licensed therapist in your area — just ask Alvai.</div>
 </div>
 
 <!-- ═══════════════════════ FINANCE ═══════════════════════ -->
@@ -2748,6 +2844,71 @@ function buildStack() {
 
 // Auto-load foundation on tab open
 document.addEventListener('DOMContentLoaded', () => showVesselCategory('foundation'));
+
+
+// ── THERAPY TOOLS ─────────────────────────────────────────────────
+const MOOD_RESPONSES = {
+  anxious: { mode: 'cbt', msg: 'Anxiety responds well to CBT — we can challenge the thoughts driving it. Or try the 4-7-8 breathing exercise right now to calm your nervous system in 4 minutes.', btn: 'Start CBT Session' },
+  depressed: { mode: 'talk', msg: 'Low mood deserves space, not fixing. Let's talk — no agenda, no homework, just presence. Or try a guided body scan to reconnect with yourself.', btn: 'Talk to Alvai' },
+  angry: { mode: 'dbt', msg: 'Anger is information. DBT's TIPP skills (Temperature, Intense exercise, Paced breathing, Progressive relaxation) can down-regulate fast.', btn: 'DBT Skills Now' },
+  grief: { mode: 'grief', msg: 'Grief has no timeline. There is no "getting over it" — only learning to carry it. Alvai's grief mode uses continuing bonds theory and meaning-making.', btn: 'Open Grief Mode' },
+  numb: { mode: 'somatic', msg: 'Numbness is often the nervous system's protection. Somatic work — gentle body awareness, breath — can safely bring you back into feeling.', btn: 'Somatic Session' },
+  overwhelmed: { mode: 'somatic', msg: '5-4-3-2-1 grounding: Name 5 things you see, 4 you hear, 3 you can touch, 2 you smell, 1 you taste. You're here. You're okay. Let's go slow.', btn: 'Ground Me Now' },
+  okay: { mode: 'journal', msg: 'Good. Let's build on that. A quick journaling prompt: What is one thing you did this week that you're quietly proud of?', btn: 'Journal Prompt' }
+};
+
+function moodCheck(mood) {
+  const r = MOOD_RESPONSES[mood];
+  if (!r) return;
+  const el = document.getElementById('mood-response');
+  el.style.display = 'block';
+  el.innerHTML = `<div style="color:#e8d5b0;margin-bottom:10px;font-size:14px">${r.msg}</div>
+    <button onclick="setModeAndAsk('therapy','${r.mode}')" style="background:linear-gradient(135deg,#4ecdc4,#2a9d8f);border:none;border-radius:8px;padding:9px 20px;color:#0a1628;font-weight:700;font-size:12px;cursor:pointer">${r.btn} →</button>`;
+  document.querySelectorAll('#mood-btns button').forEach(b => b.style.opacity = '0.4');
+  event.target.style.opacity = '1';
+  event.target.style.borderColor = '#4ecdc4';
+}
+
+function setModeAndAsk(tab, mode) {
+  const modeBtn = document.querySelector(`#therapy-modes .mode-btn[onclick*="'${mode}'"]`);
+  if (modeBtn) { setMode(tab, mode, modeBtn); }
+  const inp = document.getElementById('in-therapy');
+  if (inp) inp.focus();
+}
+
+async function searchTherapists() {
+  const q = document.getElementById('th-specialty')?.value?.trim() || 'therapist';
+  const city = document.getElementById('th-city')?.value?.trim() || '';
+  const el = document.getElementById('therapist-results');
+  if (!city) { el.innerHTML = '<div style="text-align:center;color:#d4af37;font-size:12px;padding:10px">Please enter your city to search.</div>'; return; }
+  el.innerHTML = '<div style="text-align:center;color:#8fa4b0;font-size:12px;padding:10px">Searching...</div>';
+  const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw';
+  const SB = 'https://sqyzboesdpdussiwqpzk.supabase.co';
+  try {
+    const params = ['select=full_name,first_name,last_name,credential,specialty,taxonomy_description,city,state,phone,trust_score,telehealth,accepting_patients','is_active=eq.true','limit=6','order=trust_score.desc.nullslast',
+      `city=ilike.*${encodeURIComponent(city)}*`,
+      `or=(specialty.ilike.*${encodeURIComponent(q)}*,taxonomy_description.ilike.*${encodeURIComponent(q)}*)`
+    ];
+    const r = await fetch(`${SB}/rest/v1/practitioners?${params.join('&')}`, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } });
+    const data = await r.json();
+    if (!data || !data.length) {
+      el.innerHTML = '<div style="text-align:center;color:#8fa4b0;font-size:12px;padding:10px">No results. Try a broader search or ask Alvai below.</div>'; return;
+    }
+    el.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' + data.map(p => {
+      const name = p.full_name || [p.first_name,p.last_name].filter(Boolean).join(' ') || 'Provider';
+      const cred = p.credential ? `, ${p.credential.trim()}` : '';
+      const city2 = [p.city,p.state].filter(Boolean).map((v,i)=>i===0?v.charAt(0).toUpperCase()+v.slice(1).toLowerCase():v).join(', ');
+      const phone = p.phone ? `<a href="tel:${p.phone}" style="color:#4ecdc4;text-decoration:none;font-size:11px">📞 ${p.phone}</a>` : '';
+      return `<div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:12px;padding:14px;cursor:pointer" onclick="ask('therapy','Tell me about ${name.replace(/'/g,"\'")} in ${city2} and how to connect')">
+        <div style="color:#e8d5b0;font-weight:600;font-size:13px;margin-bottom:4px">${name}${cred}</div>
+        <div style="color:#8fa4b0;font-size:11px;margin-bottom:6px">${city2} · ${p.specialty||p.taxonomy_description||''}</div>
+        ${p.telehealth?'<span style="background:rgba(78,205,196,0.08);color:#4ecdc4;font-size:10px;padding:2px 7px;border-radius:4px;margin-right:4px">🌐 Telehealth</span>':''}
+        ${p.accepting_patients?'<span style="background:rgba(78,205,196,0.08);color:#4ecdc4;font-size:10px;padding:2px 7px;border-radius:4px">✅ Accepting</span>':''}
+        ${phone ? `<div style="margin-top:8px">${phone}</div>` : ''}
+      </div>`;
+    }).join('') + '</div>';
+  } catch(e) { el.innerHTML = '<div style="text-align:center;color:#8fa4b0;font-size:12px;padding:10px">Search error. Ask Alvai below.</div>'; }
+}
 
 function go(tab){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
