@@ -2253,6 +2253,164 @@ button[type="submit"],
 </div>
 
 <!-- ═══════════════════════ TERMS ═══════════════════════ -->
+<!-- SLEEP -->
+<div class="panel" id="p-sleep">
+  <div class="section-label">SLEEP INTELLIGENCE</div>
+  <h1 class="hero-title">&#128164; <span class="accent">Sleep</span></h1>
+  <p class="hero-sub">Sleep is not rest. It is the most anabolic, neuroprotective, immune-enhancing process your body runs. Every hour of lost sleep costs you cellular repair, memory consolidation, hormone production, and lifespan. BLEU treats sleep as medicine.</p>
+
+  <div class="section-label" style="margin-top:24px">SLEEP MODE</div>
+  <div class="mode-bar" id="sleep-modes">
+    <span class="mode-btn active" onclick="setMode('sleep','optimize',this)">&#9889; Optimize</span>
+    <span class="mode-btn" onclick="setMode('sleep','insomnia',this)">&#128164; Insomnia</span>
+    <span class="mode-btn" onclick="setMode('sleep','circadian',this)">&#9728;&#65039; Circadian</span>
+    <span class="mode-btn" onclick="setMode('sleep','supplements',this)">&#128138; Supplements</span>
+    <span class="mode-btn" onclick="setMode('sleep','tracking',this)">&#128202; Tracking</span>
+    <span class="mode-btn" onclick="setMode('sleep','cbdsleep',this)">&#127807; CBD + Sleep</span>
+  </div>
+
+  <div class="quick-row">
+    <span class="quick-btn" onclick="ask('sleep','I cannot fall asleep no matter what I try. What do I do tonight?')">&#128164; Can't Fall Asleep</span>
+    <span class="quick-btn" onclick="ask('sleep','I wake up at 3am every night. What is causing this and how do I fix it?')">&#9200; Wake at 3am</span>
+    <span class="quick-btn" onclick="ask('sleep','Build me a complete sleep optimization protocol with supplements and timing')">&#128221; Sleep Protocol</span>
+    <span class="quick-btn" onclick="ask('sleep','What is the best magnesium for sleep and what dose?')">&#128138; Magnesium Guide</span>
+    <span class="quick-btn" onclick="ask('sleep','How does light exposure affect sleep and what should I do morning vs evening?')">&#9728;&#65039; Light Protocol</span>
+    <span class="quick-btn" onclick="ask('sleep','Is the Oura Ring worth it for sleep tracking? What does it measure?')">&#128141; Oura Ring</span>
+    <span class="quick-btn" onclick="ask('sleep','CBD for sleep - what dose, what timing, indica vs CBD only?')">&#127807; CBD for Sleep</span>
+    <span class="quick-btn" onclick="ask('sleep','My sleep score is low. Walk me through every variable that affects sleep quality.')">&#128202; Sleep Score</span>
+  </div>
+
+  <!-- SLEEP QUALITY CALCULATOR -->
+  <div style="background:rgba(25,50,68,0.4);border:1px solid rgba(78,205,196,0.15);border-radius:18px;padding:24px;margin:24px 0">
+    <div style="color:rgba(78,205,196,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px">&#128202; SLEEP QUALITY CALCULATOR</div>
+    <div style="color:#e8d5b0;font-size:18px;font-weight:600;margin-bottom:8px">Your Sleep Score</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div>
+        <div style="color:#4ecdc4;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Hours slept last night</div>
+        <input id="slp-hrs" type="number" min="0" max="12" step="0.5" placeholder="e.g. 6.5" style="background:rgba(25,50,68,0.8);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <div style="color:#4ecdc4;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Minutes to fall asleep</div>
+        <input id="slp-onset" type="number" min="0" max="120" placeholder="e.g. 25" style="background:rgba(25,50,68,0.8);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <div style="color:#d4af37;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Times woken up</div>
+        <input id="slp-wake" type="number" min="0" max="10" placeholder="e.g. 2" style="background:rgba(25,50,68,0.8);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box">
+      </div>
+      <div>
+        <div style="color:#d4af37;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Energy on waking (1-10)</div>
+        <input id="slp-energy" type="number" min="1" max="10" placeholder="e.g. 5" style="background:rgba(25,50,68,0.8);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:9px 12px;color:#e8d5b0;font-size:13px;outline:none;width:100%;box-sizing:border-box">
+      </div>
+    </div>
+    <button onclick="calcSleepScore()" style="background:linear-gradient(135deg,#4ecdc4,#2a9d8f);border:none;border-radius:10px;padding:11px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer;width:100%;margin-bottom:14px">Calculate My Sleep Score &#8594;</button>
+    <div id="sleep-score-result" style="display:none"></div>
+  </div>
+
+  <!-- CIRCADIAN GUIDE -->
+  <div style="background:rgba(28,45,58,0.5);border:1px solid rgba(212,175,55,0.12);border-radius:18px;padding:24px;margin:24px 0">
+    <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px">&#9728;&#65039; CIRCADIAN PROTOCOL</div>
+    <div style="color:#e8d5b0;font-size:18px;font-weight:600;margin-bottom:16px">The 24-Hour Sleep Architecture</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      <div style="background:rgba(212,175,55,0.06);border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ask('sleep','What should I do in the first 30 minutes after waking for optimal sleep tonight?')">
+        <div style="color:#d4af37;font-size:22px;margin-bottom:6px">&#127774;</div>
+        <div style="color:#d4af37;font-weight:600;font-size:11px">6-9am</div>
+        <div style="color:#8fa4b0;font-size:10px;margin-top:4px;line-height:1.5">Bright light. No sunglasses. Cortisol anchor.</div>
+      </div>
+      <div style="background:rgba(78,205,196,0.06);border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ask('sleep','What should I avoid in the afternoon to protect my sleep tonight?')">
+        <div style="color:#4ecdc4;font-size:22px;margin-bottom:6px">&#9728;&#65039;</div>
+        <div style="color:#4ecdc4;font-weight:600;font-size:11px">12-3pm</div>
+        <div style="color:#8fa4b0;font-size:10px;margin-top:4px;line-height:1.5">Last caffeine. Short nap OK. Avoid blue light.</div>
+      </div>
+      <div style="background:rgba(212,175,55,0.06);border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ask('sleep','What should I do 2-3 hours before bed to prepare for deep sleep?')">
+        <div style="color:#d4af37;font-size:22px;margin-bottom:6px">&#127755;</div>
+        <div style="color:#d4af37;font-weight:600;font-size:11px">7-9pm</div>
+        <div style="color:#8fa4b0;font-size:10px;margin-top:4px;line-height:1.5">Dim lights. Take supplements. Lower temp.</div>
+      </div>
+      <div style="background:rgba(78,205,196,0.06);border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ask('sleep','What is the ideal sleep environment - temperature, darkness, sound?')">
+        <div style="color:#4ecdc4;font-size:22px;margin-bottom:6px">&#127769;</div>
+        <div style="color:#4ecdc4;font-weight:600;font-size:11px">10pm+</div>
+        <div style="color:#8fa4b0;font-size:10px;margin-top:4px;line-height:1.5">67-69F. Total dark. Phone off. Deep sleep window.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OURA AFFILIATE -->
+  <div style="background:linear-gradient(135deg,rgba(212,175,55,0.06),rgba(28,45,58,0.6));border:1px solid rgba(212,175,55,0.2);border-radius:18px;padding:24px;margin:24px 0">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+      <div style="width:48px;height:48px;border-radius:14px;background:rgba(212,175,55,0.15);display:flex;align-items:center;justify-content:center;font-size:24px">&#128141;</div>
+      <div>
+        <div style="color:#d4af37;font-weight:700;font-size:18px">Oura Ring</div>
+        <div style="color:#8fa4b0;font-size:12px">The gold standard in sleep + HRV + readiness tracking</div>
+      </div>
+    </div>
+    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:16px;font-weight:300">Oura is the only wearable clinically validated for sleep staging accuracy comparable to polysomnography. Tracks deep sleep, REM, HRV, body temperature, respiratory rate, and gives you a daily Readiness Score.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:10px;padding:12px;text-align:center">
+        <div style="color:#d4af37;font-weight:600;font-size:13px">Sleep Score</div>
+        <div style="color:#8fa4b0;font-size:11px;margin-top:4px">Deep + REM + timing + efficiency</div>
+      </div>
+      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:10px;padding:12px;text-align:center">
+        <div style="color:#4ecdc4;font-weight:600;font-size:13px">HRV Tracking</div>
+        <div style="color:#8fa4b0;font-size:11px;margin-top:4px">Recovery + nervous system balance</div>
+      </div>
+      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:10px;padding:12px;text-align:center">
+        <div style="color:#d4af37;font-weight:600;font-size:13px">Readiness Score</div>
+        <div style="color:#8fa4b0;font-size:11px;margin-top:4px">Know before you train how hard to push</div>
+      </div>
+    </div>
+    <a href="https://ouraring.com" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#d4af37,#b8962e);border-radius:10px;padding:12px;text-align:center;color:#0a1628;font-weight:700;font-size:14px;text-decoration:none">Shop Oura Ring &#8594;</a>
+    <div style="text-align:center;color:rgba(212,175,55,0.4);font-size:10px;margin-top:8px">&#128155; Affiliate - funds this free platform</div>
+  </div>
+
+  <!-- SLEEP SUPPLEMENTS -->
+  <div style="background:rgba(25,50,68,0.4);border:1px solid rgba(78,205,196,0.12);border-radius:18px;padding:24px;margin:24px 0">
+    <div style="color:rgba(78,205,196,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px">&#128138; EVIDENCE-BASED SLEEP SUPPLEMENTS</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="color:#d4af37;font-weight:700;font-size:14px">Magnesium Glycinate</div>
+          <div style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:10px;padding:2px 8px;border-radius:6px">Tier 1</div>
+        </div>
+        <div style="color:#8fa4b0;font-size:12px;line-height:1.6;margin-bottom:10px;font-weight:300">300-400mg 1hr before bed. GABA-A activation. Reduces cortisol. Most bioavailable form. Deficiency causes insomnia in 68% of Americans.</div>
+        <a href="https://www.thorne.com/products/dp/magnesium-bisglycinate" target="_blank" rel="noopener" style="display:inline-block;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:6px 12px;color:#d4af37;font-size:11px;font-weight:600;text-decoration:none;margin-right:6px">Thorne &#8594;</a>
+        <a href="https://www.iherb.com/c/magnesium-glycinate?rcode=BLEU" target="_blank" rel="noopener" style="display:inline-block;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:6px 12px;color:#4ecdc4;font-size:11px;font-weight:600;text-decoration:none">iHerb &#8594;</a>
+      </div>
+      <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="color:#d4af37;font-weight:700;font-size:14px">Apigenin</div>
+          <div style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:10px;padding:2px 8px;border-radius:6px">Tier 1</div>
+        </div>
+        <div style="color:#8fa4b0;font-size:12px;line-height:1.6;margin-bottom:10px;font-weight:300">50mg 1hr before bed. Chamomile-derived. Binds GABA-A receptors. Huberman Protocol. Reduces anxiety and improves sleep onset.</div>
+        <a href="https://www.amazon.com/s?k=apigenin+50mg&tag=bleu-live-20" target="_blank" rel="noopener" style="display:inline-block;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:6px 12px;color:#d4af37;font-size:11px;font-weight:600;text-decoration:none;margin-right:6px">Amazon &#8594;</a>
+        <a href="https://www.iherb.com/c/apigenin?rcode=BLEU" target="_blank" rel="noopener" style="display:inline-block;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:6px 12px;color:#4ecdc4;font-size:11px;font-weight:600;text-decoration:none">iHerb &#8594;</a>
+      </div>
+      <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(154,205,50,0.1);border-radius:14px;padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="color:#9acd32;font-weight:700;font-size:14px">L-Theanine</div>
+          <div style="background:rgba(154,205,50,0.1);color:#9acd32;font-size:10px;padding:2px 8px;border-radius:6px">Tier 1</div>
+        </div>
+        <div style="color:#8fa4b0;font-size:12px;line-height:1.6;margin-bottom:10px;font-weight:300">200mg before bed. Increases alpha brain waves. Reduces anxiety without sedation. Pairs with magnesium for compounding effect.</div>
+        <a href="https://www.thorne.com/products/dp/theanine" target="_blank" rel="noopener" style="display:inline-block;background:rgba(154,205,50,0.1);border:1px solid rgba(154,205,50,0.2);border-radius:8px;padding:6px 12px;color:#9acd32;font-size:11px;font-weight:600;text-decoration:none;margin-right:6px">Thorne &#8594;</a>
+        <a href="https://www.iherb.com/c/l-theanine?rcode=BLEU" target="_blank" rel="noopener" style="display:inline-block;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:6px 12px;color:#4ecdc4;font-size:11px;font-weight:600;text-decoration:none">iHerb &#8594;</a>
+      </div>
+      <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(154,205,50,0.1);border-radius:14px;padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="color:#9acd32;font-weight:700;font-size:14px">Melatonin (low dose)</div>
+          <div style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:10px;padding:2px 8px;border-radius:6px">Tier 2</div>
+        </div>
+        <div style="color:#8fa4b0;font-size:12px;line-height:1.6;margin-bottom:10px;font-weight:300">0.5mg only. High doses backfire. Signal not sedative. Take 30min before target sleep time. For circadian shifting, not sleep depth.</div>
+        <a href="https://www.thorne.com/products/dp/melaton-3" target="_blank" rel="noopener" style="display:inline-block;background:rgba(154,205,50,0.1);border:1px solid rgba(154,205,50,0.2);border-radius:8px;padding:6px 12px;color:#9acd32;font-size:11px;font-weight:600;text-decoration:none;margin-right:6px">Thorne &#8594;</a>
+        <a href="https://www.iherb.com/c/melatonin?rcode=BLEU" target="_blank" rel="noopener" style="display:inline-block;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:6px 12px;color:#4ecdc4;font-size:11px;font-weight:600;text-decoration:none">iHerb &#8594;</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-box"><div class="chat-messages" id="chat-sleep"></div><div class="chat-input-row"><input autocomplete="off" id="in-sleep" placeholder="How do I fix my sleep? Why do I wake at 3am?" onkeydown="if(event.key==='Enter')send('sleep')"><button onclick="send('sleep')">Ask Alvai</button></div></div>
+
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System &middot; Patent Pending &middot; &copy; 2026</span></div>
+  <div class="disclaimer">&#128164; Sleep information is educational. Consult your physician before starting supplements, especially with existing medications.</div>
+</div>
+
 <div class="panel" id="p-terms">
   <div class="section-label">LEGAL</div>
   <h1 class="hero-title">Terms of Service</h1>
@@ -3356,6 +3514,30 @@ function checkCannabisInteraction() {
   el.innerHTML = "<div style=\"background:rgba(212,175,55,0.06);border-radius:8px;padding:12px;color:#8fa4b0;font-size:12px;line-height:1.6\">Alvai is running your interaction check above ↑ — full CYP450 analysis with severity ratings.</div>";
 }
 
+
+// SLEEP TOOLS
+function calcSleepScore() {
+  var hrs = parseFloat(document.getElementById("slp-hrs").value || 0);
+  var onset = parseFloat(document.getElementById("slp-onset").value || 0);
+  var wakes = parseFloat(document.getElementById("slp-wake").value || 0);
+  var energy = parseFloat(document.getElementById("slp-energy").value || 0);
+  if (!hrs && !energy) { alert("Enter at least hours slept and energy level."); return; }
+  var hrsScore = Math.min(hrs / 8, 1) * 35;
+  var onsetScore = onset <= 15 ? 20 : onset <= 30 ? 15 : onset <= 45 ? 8 : 0;
+  var wakeScore = wakes === 0 ? 25 : wakes === 1 ? 18 : wakes === 2 ? 10 : 0;
+  var energyScore = (energy / 10) * 20;
+  var total = Math.round(hrsScore + onsetScore + wakeScore + energyScore);
+  var deficit = Math.max(0, 8 - hrs);
+  var grade, color, msg, recs;
+  if (total >= 80) { grade = "EXCELLENT"; color = "#4ecdc4"; msg = "Your sleep architecture is strong. Focus on consistency."; recs = "Maintain your schedule. Consider Oura Ring to track HRV trends."; }
+  else if (total >= 60) { grade = "GOOD"; color = "#9acd32"; msg = "Solid foundation. One or two tweaks could push you to excellent."; recs = "Try magnesium glycinate 300mg + apigenin 50mg 1hr before bed."; }
+  else if (total >= 40) { grade = "NEEDS WORK"; color = "#d4af37"; msg = "Your sleep is costing you recovery, cognition, and longevity."; recs = "Start with light protocol + magnesium glycinate + no screens 1hr before bed."; }
+  else { grade = "CRITICAL"; color = "#e07070"; msg = "Chronic sleep deprivation has the same cognitive impact as being legally drunk."; recs = "Talk to Alvai about a full sleep rehabilitation protocol. Tonight: dark room, 67F, no phone, magnesium."; }
+  var el = document.getElementById("sleep-score-result");
+  el.style.display = "block";
+  el.innerHTML = "<div style='display:flex;align-items:center;gap:16px;margin-bottom:14px'><div style='text-align:center'><div style='color:" + color + ";font-size:42px;font-weight:700'>" + total + "</div><div style='color:#8fa4b0;font-size:10px;letter-spacing:1px'>SLEEP SCORE</div></div><div style='flex:1'><div style='color:" + color + ";font-weight:700;font-size:14px;margin-bottom:6px'>" + grade + "</div><div style='background:rgba(25,50,68,0.6);border-radius:6px;height:8px;overflow:hidden;margin-bottom:8px'><div style='background:" + color + ";height:100%;width:" + total + "%;border-radius:6px'></div></div><div style='color:#8fa4b0;font-size:12px;line-height:1.6'>" + msg + "</div></div></div><div style='background:rgba(78,205,196,0.06);border-radius:10px;padding:12px'><div style='color:#4ecdc4;font-size:11px;font-weight:600;margin-bottom:4px'>RECOMMENDATION</div><div style='color:#8fa4b0;font-size:12px;line-height:1.6'>" + recs + "</div></div>";
+}
+
 function go(tab){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'))
@@ -3379,7 +3561,8 @@ function setMode(tab,mode,el){
 function ask(tab,msg){go(tab);
   if(tab==='directory')setTimeout(initDirectory,50);
   if(tab==='vessel')setTimeout(()=>showVesselCategory(currentVesselCategory||'foundation'),50);
-  if(tab==='recovery'){setTimeout(()=>{if(localStorage.getItem('bleu_sober_date'))updateSoberDisplay();},50);}const input=document.getElementById('in-'+tab);if(input){input.value=msg;setTimeout(()=>send(tab),150)}}
+  if(tab==='recovery'){setTimeout(()=>{if(localStorage.getItem('bleu_sober_date'))updateSoberDisplay();},50);}
+  if(tab==='sleep')setTimeout(()=>{var c=document.getElementById('chat-sleep');if(c&&!c.innerHTML)addMsg('sleep','ai','&#128164; Sleep is the most powerful longevity tool you have. What are you struggling with?');},50);const input=document.getElementById('in-'+tab);if(input){input.value=msg;setTimeout(()=>send(tab),150)}}
 function goAsk(tab,msg){go(tab);const input=document.getElementById('in-'+tab);if(input){input.value=msg;setTimeout(()=>send(tab),200)}}
 
 function renderInlineCard(id){
