@@ -4788,7 +4788,7 @@ async function send(tab){
   if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
   try{
     const res=await fetch(ALVAI,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON},body:JSON.stringify(body)})
-    if(res.headers.get('content-type')?.includes('text/event-stream')){
+    if(true){
       const reader=res.body.getReader(),decoder=new TextDecoder();let full='',buffer=''
       aDiv.innerHTML=''
       while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split('\n');buffer=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);if(p.text||p.content){full+=(p.text||p.content);aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}}}
