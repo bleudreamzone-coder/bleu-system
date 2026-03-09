@@ -4728,7 +4728,7 @@ updateSession();
   var cEl = document.getElementById("cert-tracks");
   if (cEl) {
     cEl.innerHTML = certTracks.map(function(c) {
-      return "<div style='background:#151921;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:16px;cursor:pointer;transition:all .3s' onmouseover="this.style.borderColor='" + c.color + "40'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">" +
+      return "<div style='background:#151921;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:16px;cursor:pointer;transition:all .3s' data-hc='" + c.color + "'>" +
         "<div style='font-size:22px;margin-bottom:8px'>" + c.icon + "</div>" +
         "<div style='font-size:10px;letter-spacing:2px;color:" + c.color + ";font-weight:700;margin-bottom:6px'>" + c.label + "</div>" +
         "<div style='font-size:11px;color:#5A6374;line-height:1.6'>" + c.desc + "</div></div>";
