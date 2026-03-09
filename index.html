@@ -3157,7 +3157,7 @@ button[type="submit"],
 <script>
 const SB='https://sqyzboesdpdussiwqpzk.supabase.co'
 const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw'
-let sbClient=null,currentUser=null,currentConvoIds={}
+let sbClient=null,currentUser=null,currentConvoIds={},touristMsgCount={}
 try{if(window.supabase)sbClient=window.supabase.createClient(SB,SB_ANON)}catch(e){}
 window.addEventListener('DOMContentLoaded',()=>{
   if(!sbClient&&window.supabase)sbClient=window.supabase.createClient(SB,SB_ANON)
@@ -3227,6 +3227,13 @@ const healthNote = Object.keys(healthData).length ? 'Imported health data: '+Obj
 const cartNote = BLEU_CART.length ? 'Current wellness stack ('+BLEU_CART.length+' items): '+BLEU_CART.map(i=>i.n).join(', ') : '';
 const ctx=`BLEU PASSPORT CONTEXT — Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
 const _TAB_SCORE_WEIGHT={therapy:5,recovery:5,ecsiq:4,protocols:4,missions:4,passport:3,vessel:3,finance:3,directory:3,learn:2,community:2,dashboard:2,alvai:2,home:1,map:1}
+function getDepthLevel(score){
+  if(score>=80)return{name:'Illuminating',icon:'✦',color:'#f0c040'};
+  if(score>=60)return{name:'Thriving',icon:'◈',color:'#4ecdc4'};
+  if(score>=40)return{name:'Transforming',icon:'◆',color:'#a78bfa'};
+  if(score>=20)return{name:'Exploring',icon:'◇',color:'#7fb285'};
+  return{name:'Awakening',icon:'○',color:'#8fa4b0'};
+}
 async function updateBleScore(tab){if(!sbClient||!currentUser)return;try{const{data:p}=await sbClient.from('profiles').select('bleu_score,conversations_count').eq('id',currentUser.id).single();const delta=_TAB_SCORE_WEIGHT[tab]||2;const newScore=Math.min(100,(p?.bleu_score||0)+delta);const newCount=(p?.conversations_count||0)+1;await sbClient.from('profiles').update({bleu_score:newScore,conversations_count:newCount,updated_at:new Date().toISOString()}).eq('id',currentUser.id);_passportCache=null;const el=document.getElementById('stat-score');if(el)el.textContent=newScore;const el2=document.getElementById('stat-convos');if(el2)el2.textContent=newCount}catch(e){}}
 
 const ALVAI='https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai'
@@ -4774,6 +4781,13 @@ function renderRufusCards(containerDiv, productIds) {
   containerDiv.appendChild(wrapper);
 }
 
+function send_tourist_continue(tab){
+  touristMsgCount[tab]=0;
+  const box=document.getElementById('chat-'+tab);
+  const last=box.querySelector('.msg.ai:last-child');
+  if(last)last.remove();
+  send(tab);
+}
 async function send(tab){
   const input=document.getElementById('in-'+tab),box=document.getElementById('chat-'+tab)
   if(!input||!box)return
@@ -4782,8 +4796,22 @@ async function send(tab){
   if(!chatHistories[tab])chatHistories[tab]=[];chatHistories[tab].push({role:'user',content:msg})
   const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
   box.scrollTop=box.scrollHeight
+
+  // TOURIST GATE — 3 free exchanges then soft passport prompt
+  if(!currentUser){
+    if(!touristMsgCount[tab])touristMsgCount[tab]=0;
+    touristMsgCount[tab]++;
+    if(touristMsgCount[tab]===4){
+      aDiv.innerHTML='<div style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.25);border-radius:14px;padding:18px 20px;margin-top:4px"><div style="color:#4ecdc4;font-size:11px;letter-spacing:0.2em;margin-bottom:8px">✦ YOUR WELLNESS PASSPORT</div><div style="color:#e8d5b0;font-size:14px;line-height:1.7;margin-bottom:14px">I can keep going — but everything we just covered disappears when you close this tab. Take 20 seconds to save your Passport and I'll remember your goals, your history, and pick up exactly where we left off.</div><button onclick="go('passport')" style="background:linear-gradient(135deg,#4ecdc4,#7fb285);color:#0a1628;border:none;padding:10px 22px;border-radius:100px;font-size:12px;letter-spacing:0.1em;cursor:pointer;font-weight:600">Save My Passport →</button><span onclick="send_tourist_continue(''+tab+'')" style="color:#8fa4b0;font-size:11px;margin-left:14px;cursor:pointer;text-decoration:underline">Continue without saving</span></div>';
+      box.scrollTop=box.scrollHeight;
+      return;
+    }
+  }
+
   const passport=await getUserContext().catch(()=>null)
-  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-20),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:passport||undefined}
+  const depthInfo=passport?getDepthLevel(passport.bleu_score||0):null;
+  const enrichedContext=passport?{...passport,depth_level:depthInfo?.name,depth_icon:depthInfo?.icon,is_traveler:true}:{is_traveler:false,tourist_session:true};
+  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-20),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:enrichedContext}
   if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
   if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
   try{
