@@ -1669,34 +1669,188 @@ button[type="submit"],
 
 <!-- ═══════════════════════ COMMUNITY ═══════════════════════ -->
 <div class="panel" id="p-community">
-  <div class="section-label">THE RIPPLE IN ACTION</div>
-  <h1 class="hero-title">💫 <span class="accent">Community</span></h1>
-  <p class="hero-sub">The research is unambiguous — social connection is the strongest predictor of longevity. Stronger than exercise. Stronger than diet. The people around you literally change your biology. You are not doing this alone.</p>
+  <style>
+    @keyframes ripple{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.5);opacity:0}}
+    .comm-card{border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);cursor:pointer;transition:all .25s}
+    .comm-card:hover{transform:translateY(-3px);background:rgba(78,205,196,.04);border-color:rgba(78,205,196,.3)}
+    .comm-platform{border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);transition:all .2s;display:block;text-decoration:none}
+    .comm-platform:hover{border-color:rgba(212,175,55,.35);background:rgba(212,175,55,.04);transform:translateY(-2px)}
+  </style>
 
-  <div class="card" style="border-color:rgba(201,168,76,.2);background:linear-gradient(135deg,rgba(201,168,76,.04),var(--card))">
-    <h3 style="color:var(--gold)">The Ripple Effect — How It Works</h3>
-    <p style="margin-top:8px">When you improve your sleep, your partner sleeps better. When you eat differently, your kids eat differently. When your household gets healthier, your community's data shifts. When enough communities shift, the city transforms.</p>
-    <div style="display:flex;gap:20px;margin-top:16px;flex-wrap:wrap;align-items:center;font-size:14px">
-      <span style="color:var(--gold)">YOU →</span>
-      <span style="color:var(--teal)">HOME →</span>
-      <span style="color:var(--sage)">COMMUNITY →</span>
-      <span style="color:var(--text)">CITY 🌍</span>
+  <!-- HERO -->
+  <div style="text-align:center;padding:16px 0 28px">
+    <div style="font-size:10px;letter-spacing:5px;color:rgba(78,205,196,.5);margin-bottom:10px">THE LONGEVITY FACTOR</div>
+    <h1 style="font-family:Georgia,serif;font-size:clamp(26px,5vw,40px);font-weight:300;color:#e8d5b0;margin:0 0 10px">💫 Community</h1>
+    <p style="font-size:13px;color:#8b95a5;max-width:600px;margin:0 auto;line-height:1.9">Social connection is the strongest predictor of longevity — stronger than exercise, stronger than diet, stronger than not smoking. The people around you literally change your biology. You are not doing this alone.</p>
+    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,.3),transparent);margin:20px auto;max-width:280px"></div>
+  </div>
+
+  <!-- SCIENCE STATS -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px">
+    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1)"><div style="font-size:22px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif">+50%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LONGER LIFE</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Strong social ties</div></div>
+    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.1)"><div style="font-size:22px;font-weight:300;color:#d4af37;font-family:Georgia,serif">148</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">STUDIES</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Holt-Lunstad meta-analysis</div></div>
+    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1)"><div style="font-size:22px;font-weight:300;color:#a78bfa;font-family:Georgia,serif">29%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LESS DEMENTIA</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Socially connected adults</div></div>
+    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(255,107,138,.04);border:1px solid rgba(255,107,138,.1)"><div style="font-size:22px;font-weight:300;color:#ff6b8a;font-family:Georgia,serif">#1</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">BLUE ZONE FACTOR</div><div style="font-size:9px;color:#5a6374;margin-top:2px">All 5 zones: belonging</div></div>
+  </div>
+
+  <!-- RIPPLE EFFECT -->
+  <div style="background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(10,12,16,.8));border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:22px;margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(201,168,76,.5);margin-bottom:14px">THE RIPPLE EFFECT — HOW CHANGE SPREADS</div>
+    <p style="font-size:13px;color:#8b95a5;line-height:1.8;margin-bottom:16px">When you improve your sleep, your partner sleeps better. When you eat differently, your kids eat differently. When your household gets healthier, your community data shifts. When enough communities shift, the city transforms.</p>
+    <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap">
+      <div style="text-align:center;padding:12px 16px;border-radius:10px;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2)"><div style="font-size:18px">🧑</div><div style="font-size:10px;color:#d4af37;font-weight:700;margin-top:4px">YOU</div></div>
+      <div style="color:rgba(255,255,255,.2);font-size:20px;padding:0 8px">→</div>
+      <div style="text-align:center;padding:12px 16px;border-radius:10px;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2)"><div style="font-size:18px">🏠</div><div style="font-size:10px;color:#4ecdc4;font-weight:700;margin-top:4px">HOME</div></div>
+      <div style="color:rgba(255,255,255,.2);font-size:20px;padding:0 8px">→</div>
+      <div style="text-align:center;padding:12px 16px;border-radius:10px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2)"><div style="font-size:18px">🏘️</div><div style="font-size:10px;color:#a78bfa;font-weight:700;margin-top:4px">BLOCK</div></div>
+      <div style="color:rgba(255,255,255,.2);font-size:20px;padding:0 8px">→</div>
+      <div style="text-align:center;padding:12px 16px;border-radius:10px;background:rgba(78,205,140,.08);border:1px solid rgba(78,205,140,.2)"><div style="font-size:18px">🌆</div><div style="font-size:10px;color:#4ecd8c;font-weight:700;margin-top:4px">CITY</div></div>
+      <div style="color:rgba(255,255,255,.2);font-size:20px;padding:0 8px">→</div>
+      <div style="text-align:center;padding:12px 16px;border-radius:10px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2)"><div style="font-size:18px">🌍</div><div style="font-size:10px;color:#d4af37;font-weight:700;margin-top:4px">WORLD</div></div>
     </div>
   </div>
 
-  <div class="quick-row" style="margin-top:20px">
-    <span class="quick-btn" onclick="ask('community','How do I join the 40-Day Reset community')">🔥 Join the Reset</span>
-    <span class="quick-btn" onclick="ask('community','Find a support group for anxiety or depression')">🤝 Support Groups</span>
-    <span class="quick-btn" onclick="ask('community','What wellness events are happening this week in New Orleans')">📅 Events This Week</span>
-    <span class="quick-btn" onclick="ask('community','How can I start a wellness group in my neighborhood')">🏘️ Start a Group</span>
-  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find recovery meetings near me in New Orleans this week')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Recovery Groups</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">AA, NA, SMART. Meetings this week near you.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find fitness groups and run clubs in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127939;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Fitness Community</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Run clubs, yoga, outdoor fitness. Free options.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','What wellness events are happening in New Orleans this month')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127891;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Wellness Events</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Workshops, health fairs, community circles.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find urban farms and community gardens in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127793;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Urban Farms</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Gardens, co-ops, food access. Volunteer.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Find support groups in New Orleans')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128156;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Support Groups</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Mental health, grief, wellness circles.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('community','Tell me about Jazz Bird NOLA community initiatives')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127918;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Jazz Bird NOLA</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">501(c)(3). Cultural healing. Community wellness.</div></div></div></div></div>
+  <!-- ALVAI COMMUNITY CHAT -->
+  <div style="margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(78,205,196,.4);margin-bottom:14px">FIND YOUR PEOPLE — ASK ALVAI</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+      <span onclick="ask('community','Find AA and NA recovery meetings near me this week. Give me real meeting finders.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(255,107,138,.08);border:1px solid rgba(255,107,138,.2);color:#ff6b8a;transition:all .2s">💚 Recovery Meetings</span>
+      <span onclick="ask('community','Find free mental health support groups near me. NAMI, DBSA, online options.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa;transition:all .2s">🧠 Mental Health Groups</span>
+      <span onclick="ask('community','Find run clubs, fitness groups, and free outdoor workouts near me.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4;transition:all .2s">🏃 Fitness Community</span>
+      <span onclick="ask('community','Find grief support groups and bereavement resources near me.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37;transition:all .2s">🕊 Grief Support</span>
+      <span onclick="ask('community','How do I start a wellness group in my neighborhood? Step by step.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(78,205,140,.08);border:1px solid rgba(78,205,140,.2);color:#4ecd8c;transition:all .2s">🏘️ Start a Group</span>
+      <span onclick="ask('community','Find wellness events, health fairs, and community circles happening this month near me.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4;transition:all .2s">📅 Events Near Me</span>
+    </div>
+    <div class="chat-box"><div class="chat-messages" id="chat-community"></div><div class="chat-input-row"><input autocomplete="off" id="in-community" placeholder="Find recovery groups, fitness clubs, support circles, or wellness events near you..." onkeydown="if(event.key===&apos;Enter&apos;)send(&apos;community&apos;)"><button onclick="send(&apos;community&apos;)">Connect</button></div></div>
+  </div>
 
-  <div class="chat-box"><div class="chat-messages" id="chat-community"></div><div class="chat-input-row"><input autocomplete="off" id="in-community" placeholder="Find meetups, recovery groups, wellness events near me..." onkeydown="if(event.key==='Enter')send('community')"><button onclick="send('community')">Connect</button></div></div>
+  <!-- CITY COMMUNITY FINDER -->
+  <div style="background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.12);border-radius:14px;padding:20px;margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(78,205,196,.5);margin-bottom:12px">FIND COMMUNITY IN ANY CITY</div>
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <input id="comm-city" placeholder="Your city..." style="flex:1;min-width:140px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none" onkeydown="if(event.key===&apos;Enter&apos;)findCommunity()">
+      <select id="comm-type" style="background:rgba(15,20,30,.9);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:12px;outline:none">
+        <option value="wellness community groups">All Wellness</option>
+        <option value="AA NA recovery meetings">Recovery</option>
+        <option value="mental health support groups">Mental Health</option>
+        <option value="run club fitness group">Fitness</option>
+        <option value="grief support group">Grief Support</option>
+        <option value="meditation group">Meditation</option>
+        <option value="community garden urban farm">Urban Farms</option>
+        <option value="LGBTQ wellness community">LGBTQ+</option>
+        <option value="sober social events">Sober Social</option>
+      </select>
+      <button onclick="findCommunity()" style="background:linear-gradient(135deg,#4ecdc4,#3ab8b0);color:#0a0c10;font-weight:700;border:none;border-radius:8px;padding:10px 20px;cursor:pointer;font-size:12px">Find →</button>
+    </div>
+    <div id="comm-results" style="font-size:12px;color:#5a6374;line-height:1.8">Enter your city to find real wellness communities, groups, and events.</div>
+  </div>
 
-<div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+  <!-- RECOVERY COMMUNITIES -->
+  <div style="margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(255,107,138,.5);margin-bottom:16px">RECOVERY COMMUNITIES &mdash; REAL MEETING FINDERS</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <a href="https://www.aa.org/find-aa" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">💚</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">Alcoholics Anonymous</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Official AA meeting finder. 70,000+ groups worldwide. In-person and online.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">aa.org/find-aa · FREE</div></a>
+      <a href="https://www.na.org/meetingsearch/" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🔵</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">Narcotics Anonymous</div><div style="font-size:11px;color:#5a6374;line-height:1.6">NA meeting search by zip code, city, or country. Any substance, every path.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">na.org · FREE</div></a>
+      <a href="https://www.smartrecovery.org/community/meeting-search.php" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🟠</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">SMART Recovery</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Science-based, non-12-step. In-person + 30+ online meetings daily. Secular.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">smartrecovery.org · FREE</div></a>
+      <a href="https://intherooms.com" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🌐</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">In The Rooms</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Online recovery community. 100+ live meetings weekly. All programs.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">intherooms.com · FREE</div></a>
+      <a href="https://www.refugerecovery.org/find-a-meeting" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">☸️</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">Refuge Recovery</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Buddhist-inspired recovery. Meditation-based. No higher power requirement.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">refugerecovery.org · FREE</div></a>
+      <a href="https://www.samhsa.gov/find-help/national-helpline" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">📞</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">SAMHSA Helpline</div><div style="font-size:11px;color:#5a6374;line-height:1.6">1-800-662-4357. Free, confidential, 24/7. Treatment referrals and information.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">1-800-662-4357 · FREE 24/7</div></a>
+    </div>
+  </div>
+
+  <!-- MENTAL HEALTH COMMUNITIES -->
+  <div style="margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(167,139,250,.5);margin-bottom:16px">MENTAL HEALTH COMMUNITIES</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <a href="https://www.nami.org/Support-Education/Support-Groups" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🧠</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">NAMI Support Groups</div><div style="font-size:11px;color:#5a6374;line-height:1.6">National Alliance on Mental Illness. Free peer-led groups nationwide. Family support included.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">nami.org · FREE</div></a>
+      <a href="https://www.dbsalliance.org/support/chapters-and-support-groups/" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">💜</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">DBSA</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Depression & Bipolar Support Alliance. 700+ chapters. In-person and online.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">dbsalliance.org · FREE</div></a>
+      <a href="https://www.7cups.com" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">☕</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">7 Cups</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Free emotional support from trained listeners. Online community forums 24/7.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">7cups.com · FREE</div></a>
+      <a href="https://www.reddit.com/r/mentalhealth/" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🔴</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">Reddit Mental Health</div><div style="font-size:11px;color:#5a6374;line-height:1.6">r/mentalhealth, r/anxiety, r/depression — millions of members, peer support, 24/7.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">reddit.com · FREE</div></a>
+    </div>
+  </div>
+
+  <!-- FITNESS COMMUNITIES -->
+  <div style="margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(78,205,196,.5);margin-bottom:16px">FITNESS &amp; MOVEMENT COMMUNITIES</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <a href="https://www.strava.com/clubs" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🏃</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">Strava Clubs</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Find local run, cycle, and fitness clubs. 100M+ athletes. Free to join.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">strava.com · FREE</div></a>
+      <a href="https://www.parkrun.com" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🌳</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">parkrun</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Free weekly 5K events worldwide. Every Saturday. All paces welcome. 2,000+ locations.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">parkrun.com · FREE FOREVER</div></a>
+      <a href="https://www.classpass.com" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🧘</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">ClassPass</div><div style="font-size:11px;color:#5a6374;line-height:1.6">35,000+ studios. Yoga, pilates, HIIT, martial arts. Find your fitness community.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">classpass.com · FROM $19/MO</div></a>
+      <a href="https://www.meetup.com/topics/fitness/" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🤝</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">Fitness Meetups</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Local fitness groups, hiking clubs, outdoor workouts. Most are free.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">meetup.com · FREE TO JOIN</div></a>
+    </div>
+  </div>
+
+  <!-- GRIEF & SPECIALIZED SUPPORT -->
+  <div style="margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(212,175,55,.5);margin-bottom:16px">GRIEF, CHRONIC ILLNESS &amp; SPECIALIZED SUPPORT</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <a href="https://www.griefshare.org/findagroup" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🕊</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">GriefShare</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Find grief support groups near you. 14,000+ groups worldwide. Loss of any kind.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">griefshare.org · FREE</div></a>
+      <a href="https://www.cancersupportcommunity.org/find-location" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🎗️</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">Cancer Support Community</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Free support groups for patients and families. 175+ locations + online.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">cancersupportcommunity.org · FREE</div></a>
+      <a href="https://www.alz.org/help-support/community/support-groups" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🧡</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">Alzheimer's Association</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Support groups for caregivers and those living with dementia. Virtual and in-person.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">alz.org · FREE</div></a>
+      <a href="https://www.thehotline.org" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🛡️</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">National DV Hotline</div><div style="font-size:11px;color:#5a6374;line-height:1.6">1-800-799-7233. Safe community support for domestic violence survivors. 24/7.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">1-800-799-7233 · FREE 24/7</div></a>
+    </div>
+  </div>
+
+  <!-- ONLINE COMMUNITY PLATFORMS -->
+  <div style="margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.2);margin-bottom:16px">CONNECT ONLINE — PLATFORMS WITH REAL COMMUNITIES</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+      <a href="https://www.meetup.com" target="_blank" class="comm-platform" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">🤝</div><div style="font-size:12px;font-weight:700;color:#e8d5b0;margin-bottom:4px">Meetup</div><div style="font-size:10px;color:#5a6374">50M+ members. Local groups for everything wellness.</div></a>
+      <a href="https://nextdoor.com" target="_blank" class="comm-platform" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">🏡</div><div style="font-size:12px;font-weight:700;color:#e8d5b0;margin-bottom:4px">Nextdoor</div><div style="font-size:10px;color:#5a6374">Hyperlocal. Your actual neighbors. Local wellness groups.</div></a>
+      <a href="https://discord.com/servers/health-wellness" target="_blank" class="comm-platform" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">💬</div><div style="font-size:12px;font-weight:700;color:#e8d5b0;margin-bottom:4px">Discord</div><div style="font-size:10px;color:#5a6374">Wellness servers. Recovery communities. Mental health spaces.</div></a>
+      <a href="https://www.reddit.com/r/wellness" target="_blank" class="comm-platform" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">🔴</div><div style="font-size:12px;font-weight:700;color:#e8d5b0;margin-bottom:4px">Reddit</div><div style="font-size:10px;color:#5a6374">r/wellness, r/sobriety, r/fitness, r/meditation — millions.</div></a>
+      <a href="https://www.facebook.com/groups" target="_blank" class="comm-platform" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">👥</div><div style="font-size:12px;font-weight:700;color:#e8d5b0;margin-bottom:4px">FB Groups</div><div style="font-size:10px;color:#5a6374">Local wellness, recovery, and support groups by city.</div></a>
+    </div>
+  </div>
+
+  <!-- NOLA COMMUNITY -->
+  <div style="margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(201,168,76,.4);margin-bottom:6px">⚜ NEW ORLEANS COMMUNITY NETWORK</div>
+    <div style="font-size:11px;color:#5a6374;margin-bottom:16px">Real wellness organizations rooted in New Orleans.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+      <a href="https://www.jazzbirdfoundation.org" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🎺</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">Jazz Bird NOLA · 501(c)(3)</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Our community partner. Cultural healing, wellness infrastructure, and active aging in New Orleans.</div></a>
+      <a href="https://www.unitedwaysegla.org" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🤝</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">United Way Southeast LA</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Community health, social services, and wellness resources across Greater New Orleans.</div></a>
+      <a href="https://www.nolahealth.org" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🏥</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">NOLA Health Dept.</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Free clinics, community health programs, mental health resources for New Orleans residents.</div></a>
+      <a href="https://www.cresencenutrition.org" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🌿</div><div style="font-size:12px;font-weight:700;color:#4ecd8c;margin-bottom:4px">Crescent City Community</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Urban gardens, food access, and nutrition education across New Orleans neighborhoods.</div></a>
+    </div>
+  </div>
+
+  <!-- CRISIS + HOTLINES -->
+  <div style="background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.15);border-radius:14px;padding:20px;margin-bottom:32px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(239,68,68,.6);margin-bottom:14px">CRISIS &amp; IMMEDIATE SUPPORT — REAL HUMANS, FREE, 24/7</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+      <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(239,68,68,.1)"><div style="font-size:13px;font-weight:700;color:#ef4444;margin-bottom:4px">988 Suicide &amp; Crisis</div><div style="font-size:11px;color:#5a6374">Call or text 988. Free. Confidential. 24/7.</div></div>
+      <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(239,68,68,.1)"><div style="font-size:13px;font-weight:700;color:#ef4444;margin-bottom:4px">Crisis Text Line</div><div style="font-size:11px;color:#5a6374">Text HOME to 741741. Free. Any crisis. 24/7.</div></div>
+      <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(239,68,68,.1)"><div style="font-size:13px;font-weight:700;color:#ef4444;margin-bottom:4px">SAMHSA</div><div style="font-size:11px;color:#5a6374">1-800-662-4357. Substance use + mental health. 24/7.</div></div>
+      <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(239,68,68,.1)"><div style="font-size:13px;font-weight:700;color:#ef4444;margin-bottom:4px">Trevor Project</div><div style="font-size:11px;color:#5a6374">1-866-488-7386. LGBTQ+ youth crisis. 24/7.</div></div>
+    </div>
+  </div>
+
+  <!-- RESEARCH ANCHOR -->
+  <div style="background:rgba(10,12,16,.5);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:20px;margin-bottom:24px">
+    <div style="font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.2);margin-bottom:14px">THE SCIENCE — WHY COMMUNITY IS MEDICINE</div>
+    <div onclick="ask('community','Tell me about the Holt-Lunstad meta-analysis on social connection and mortality.')" style="padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);cursor:pointer;margin-bottom:8px;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.05)'"><div style="display:flex;justify-content:space-between"><div style="font-size:12px;font-weight:600;color:#e8d5b0">Holt-Lunstad Meta-Analysis — Social Connection & Mortality</div><div style="font-size:9px;color:#5a6374">2010 · PLOS Medicine</div></div><div style="font-size:11px;color:#5a6374;margin-top:4px">148 studies, 308,849 people. Strong social ties = 50% greater likelihood of survival.</div></div>
+    <div onclick="ask('community','How does loneliness affect physical health according to research?')" style="padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);cursor:pointer;margin-bottom:8px;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.05)'"><div style="display:flex;justify-content:space-between"><div style="font-size:12px;font-weight:600;color:#e8d5b0">Cacioppo & Hawkley — Loneliness as a Health Risk</div><div style="font-size:9px;color:#5a6374">University of Chicago</div></div><div style="font-size:11px;color:#5a6374;margin-top:4px">Loneliness raises cortisol, increases inflammation, disrupts sleep, and accelerates cognitive decline.</div></div>
+    <div onclick="ask('community','What does Blue Zones research say about belonging and longevity?')" style="padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.05)'"><div style="display:flex;justify-content:space-between"><div style="font-size:12px;font-weight:600;color:#e8d5b0">Blue Zones — The Power 9: Belonging</div><div style="font-size:9px;color:#5a6374">Buettner · National Geographic</div></div><div style="font-size:11px;color:#5a6374;margin-top:4px">All 5 Blue Zones: centenarians belong to a faith or social community. Belonging = +4 to 14 years.</div></div>
+  </div>
+
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System &middot; Patent Pending &middot; &copy; 2026</span></div>
+
+  <script>
+  (function(){
+    window.findCommunity = function(){
+      var city = document.getElementById('comm-city').value.trim();
+      var type = document.getElementById('comm-type').value;
+      if(!city){ document.getElementById('comm-results').innerHTML='<span style="color:#ff6b8a">Enter a city first</span>'; return; }
+      document.getElementById('comm-results').innerHTML='<span style="color:#4ecdc4">Searching for '+type+' in '+city+'...</span>';
+      ask('community','Find real '+type+' in '+city+'. Include organization names, websites, phone numbers if available, meeting times if known. Format as a useful local directory. Real resources only.');
+      setTimeout(function(){ document.getElementById('comm-results').innerHTML='<span style="color:#4ecdc4">&#10003; Results sent to Alvai above &uarr;</span>'; }, 1200);
+    };
+  })();
+  </script>
+
 </div>
 
-<!-- ═══════════════════════ PASSPORT ═══════════════════════ -->
 <div class="panel" id="p-passport">
 <style>
 .pp-ring{position:relative;width:120px;height:120px;margin:0 auto 12px}
