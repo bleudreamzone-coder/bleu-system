@@ -4423,7 +4423,101 @@ updateSession();
     </div>
 
     <!-- CTA -->
-    <div class="e-fade" style="text-align:center;padding:36px 0 20px">
+    
+<!-- THE HEALER ECOSYSTEM -->
+<div style="padding:44px 0;border-top:1px solid rgba(255,255,255,.04)">
+  <div class="e-box">
+    <div class="e-fade">
+      <div class="e-lbl" style="color:#2DD4A8">THE HEALER ECOSYSTEM</div>
+      <h2 class="e-h">A new economy of wellness — from <em style="color:#2DD4A8;font-style:italic">practitioner to city.</em></h2>
+      <p style="font-size:14px;color:#8B95A5;line-height:1.8;max-width:720px;margin-bottom:32px">BLEU does not just list providers. It builds a living credentialing civilization — where healers grow, neighborhoods deepen, businesses invest, and cities transform. Every practitioner has a path. Every city has a blueprint.</p>
+    </div>
+
+    <!-- GROWTH PATH: NEIGHBORHOOD → CITY -->
+    <div class="e-fade" style="margin-bottom:40px">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin-bottom:8px">
+        <div style="position:absolute;top:32px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,rgba(45,212,168,.3),rgba(200,169,81,.3),rgba(96,165,250,.3),rgba(244,114,182,.4));z-index:0"></div>
+        <div style="text-align:center;position:relative;z-index:1;cursor:pointer" onclick="showGrowthLevel(0)">
+          <div id="gl0" style="width:64px;height:64px;border-radius:50%;background:rgba(45,212,168,.1);border:2px solid rgba(45,212,168,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;transition:all .3s">&#127968;</div>
+          <div style="font-size:10px;letter-spacing:3px;color:#2DD4A8;font-weight:700">PRACTITIONER</div>
+          <div style="font-size:12px;color:#8B95A5;margin-top:4px">Individual healer</div>
+        </div>
+        <div style="text-align:center;position:relative;z-index:1;cursor:pointer" onclick="showGrowthLevel(1)">
+          <div id="gl1" style="width:64px;height:64px;border-radius:50%;background:rgba(200,169,81,.1);border:2px solid rgba(200,169,81,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;transition:all .3s">&#127982;</div>
+          <div style="font-size:10px;letter-spacing:3px;color:#C8A951;font-weight:700">NEIGHBORHOOD</div>
+          <div style="font-size:12px;color:#8B95A5;margin-top:4px">Block by block</div>
+        </div>
+        <div style="text-align:center;position:relative;z-index:1;cursor:pointer" onclick="showGrowthLevel(2)">
+          <div id="gl2" style="width:64px;height:64px;border-radius:50%;background:rgba(96,165,250,.1);border:2px solid rgba(96,165,250,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;transition:all .3s">&#127963;&#65039;</div>
+          <div style="font-size:10px;letter-spacing:3px;color:#60A5FA;font-weight:700">BUSINESS</div>
+          <div style="font-size:12px;color:#8B95A5;margin-top:4px">Workforce wellness</div>
+        </div>
+        <div style="text-align:center;position:relative;z-index:1;cursor:pointer" onclick="showGrowthLevel(3)">
+          <div id="gl3" style="width:64px;height:64px;border-radius:50%;background:rgba(244,114,182,.1);border:2px solid rgba(244,114,182,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px;transition:all .3s">&#127758;</div>
+          <div style="font-size:10px;letter-spacing:3px;color:#F472B6;font-weight:700">CITY</div>
+          <div style="font-size:12px;color:#8B95A5;margin-top:4px">Population scale</div>
+        </div>
+      </div>
+      <div id="growth-detail" style="background:#151921;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:28px;margin-top:16px;min-height:120px"></div>
+    </div>
+
+    <!-- PRACTITIONER STATUS TIERS -->
+    <div class="e-fade" style="margin-bottom:40px">
+      <div class="e-lbl" style="color:#C8A951;margin-bottom:16px">PRACTITIONER STATUS — THE PATH TO ASTEROID</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+        <div style="background:rgba(139,149,165,.04);border:1px solid rgba(139,149,165,.12);border-radius:12px;padding:18px;text-align:center">
+          <div style="font-size:28px;margin-bottom:8px">&#127807;</div>
+          <div style="font-size:10px;letter-spacing:3px;color:#8B95A5;font-weight:700;margin-bottom:6px">SEED</div>
+          <div style="font-size:11px;color:#5A6374;line-height:1.6">NPI verified. Listed in directory. Profile active.</div>
+          <div style="margin-top:10px;font-size:10px;color:#8B95A5;background:rgba(139,149,165,.06);border-radius:6px;padding:4px 8px">800K+ providers</div>
+        </div>
+        <div style="background:rgba(45,212,168,.04);border:1px solid rgba(45,212,168,.15);border-radius:12px;padding:18px;text-align:center">
+          <div style="font-size:28px;margin-bottom:8px">&#127818;</div>
+          <div style="font-size:10px;letter-spacing:3px;color:#2DD4A8;font-weight:700;margin-bottom:6px">ROOT</div>
+          <div style="font-size:11px;color:#8B95A5;line-height:1.6">Profile complete. Telehealth enabled. First patient reviews.</div>
+          <div style="margin-top:10px;font-size:10px;color:#2DD4A8;background:rgba(45,212,168,.08);border-radius:6px;padding:4px 8px">Verified active</div>
+        </div>
+        <div style="background:rgba(96,165,250,.04);border:1px solid rgba(96,165,250,.15);border-radius:12px;padding:18px;text-align:center">
+          <div style="font-size:28px;margin-bottom:8px">&#127795;</div>
+          <div style="font-size:10px;letter-spacing:3px;color:#60A5FA;font-weight:700;margin-bottom:6px">BRANCH</div>
+          <div style="font-size:11px;color:#8B95A5;line-height:1.6">1+ BLEU certification. 90 days active. Neighborhood anchor.</div>
+          <div style="margin-top:10px;font-size:10px;color:#60A5FA;background:rgba(96,165,250,.08);border-radius:6px;padding:4px 8px">BLEU Certified</div>
+        </div>
+        <div style="background:rgba(200,169,81,.04);border:1px solid rgba(200,169,81,.2);border-radius:12px;padding:18px;text-align:center;position:relative">
+          <div style="font-size:28px;margin-bottom:8px">&#127852;</div>
+          <div style="font-size:10px;letter-spacing:3px;color:#C8A951;font-weight:700;margin-bottom:6px">CROWN</div>
+          <div style="font-size:11px;color:#8B95A5;line-height:1.6">3+ certifications. City ambassador. 100+ patients served.</div>
+          <div style="margin-top:10px;font-size:10px;color:#C8A951;background:rgba(200,169,81,.08);border-radius:6px;padding:4px 8px">City anchor</div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(244,114,182,.06),rgba(200,169,81,.06));border:1px solid rgba(244,114,182,.3);border-radius:12px;padding:18px;text-align:center;animation:eGlow 2.5s ease-in-out infinite">
+          <div style="font-size:28px;margin-bottom:8px">&#11088;</div>
+          <div style="font-size:10px;letter-spacing:3px;color:#F472B6;font-weight:700;margin-bottom:6px">ASTEROID</div>
+          <div style="font-size:11px;color:#8B95A5;line-height:1.6">Diamond status. Thought leader. Platform-wide feature. City-defining.</div>
+          <div style="margin-top:10px;font-size:10px;color:#F472B6;background:rgba(244,114,182,.08);border-radius:6px;padding:4px 8px">Elite designation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATION TRACKS -->
+    <div class="e-fade" style="margin-bottom:40px">
+      <div class="e-lbl" style="color:#60A5FA;margin-bottom:16px">7 CERTIFICATION TRACKS</div>
+      <div id="cert-tracks" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+    </div>
+
+    <!-- CITY DEPLOYMENT LADDER -->
+    <div class="e-fade" style="margin-bottom:40px">
+      <div class="e-lbl" style="color:#F472B6;margin-bottom:6px">CITY DEPLOYMENT LADDER</div>
+      <p style="font-size:13px;color:#8B95A5;margin-bottom:20px;line-height:1.7">Every BLEU city starts with one neighborhood. New Orleans proved the model. This is how it scales.</p>
+      <div style="position:relative;padding-left:32px">
+        <div style="position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,rgba(45,212,168,.4),rgba(200,169,81,.4),rgba(96,165,250,.4),rgba(244,114,182,.4),rgba(244,114,182,.2))"></div>
+        <div id="deploy-ladder"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="e-fade" style="text-align:center;padding:36px 0 20px">
       <div style="font-size:12px;color:#8B95A5;margin-bottom:16px;letter-spacing:2px">YOUR CITY &middot; YOUR BUSINESS &middot; YOUR DATA &middot; OUR INFRASTRUCTURE</div>
       <a href="mailto:hello@bleu.live?subject=Enterprise%20Inquiry%20-%20BLEU" class="e-btn">START THE CONVERSATION &rarr;</a>
       <div style="font-size:12px;color:#5A6374;margin-top:12px">hello@bleu.live</div>
@@ -4547,6 +4641,122 @@ updateSession();
     var panel=document.getElementById('p-enterprise');
     if(panel){panel.addEventListener('scroll',reveal);window.addEventListener('scroll',reveal)}
   }
+
+  
+  // == HEALER ECOSYSTEM ==
+  var growthLevels = [
+    {
+      color: "#2DD4A8",
+      title: "Practitioner Level",
+      sub: "The individual healer — verified, trusted, findable.",
+      points: [
+        "NPI-verified identity linked to federal database",
+        "Trust score calculated from credential depth, specialty match, telehealth availability",
+        "Certification path begins — 7 tracks available from cannabis intelligence to longevity medicine",
+        "Each certification adds 15-40 points to trust score and unlocks featured placement",
+        "Asteroid-status practitioners become neighborhood anchors and city ambassadors"
+      ]
+    },
+    {
+      color: "#C8A951",
+      title: "Neighborhood Level",
+      sub: "When 3+ certified practitioners cluster — a neighborhood activates.",
+      points: [
+        "BLEU maps wellness density block by block using NPI + EPA + SAMHSA + Census data",
+        "Neighborhoods with 3+ Crown/Asteroid practitioners earn Activated status",
+        "Activated neighborhoods appear in city dashboards with live health scoring",
+        "Residents see who is nearest, what they treat, what it costs",
+        "Gap analysis shows where practitioners are needed — creating recruitment targets"
+      ]
+    },
+    {
+      color: "#60A5FA",
+      title: "Business Level",
+      sub: "Employers deploy BLEU as workforce wellness infrastructure.",
+      points: [
+        "White-label [company].bleu.live portal for employees",
+        "Access to Directory, Vessel, Therapy, Recovery, ECSIQ, Finance — all branded",
+        "Alvai configured for company-specific wellness programs and EAP integration",
+        "Monthly ROI reporting: absenteeism reduction, claims trending, engagement rates",
+        "Preferred practitioner networks built from neighborhood-level verified providers"
+      ]
+    },
+    {
+      color: "#F472B6",
+      title: "City Level",
+      sub: "The full deployment — population health intelligence at civic scale.",
+      points: [
+        "12-dimension neighborhood scoring fed by 247 federal data sources",
+        "Population dashboards for mayor, public health, tourism, economic development",
+        "Federal grant applications backed by live city health data — NIH, SAMHSA, CDC, EDA",
+        "Practitioner ecosystem visible to city planners for zoning and incentive decisions",
+        "New Orleans proved the model. Your city is next."
+      ]
+    }
+  ];
+
+  window.showGrowthLevel = function(idx) {
+    var d = growthLevels[idx];
+    var colors = ["#2DD4A8","#C8A951","#60A5FA","#F472B6"];
+    for (var i = 0; i < 4; i++) {
+      var el = document.getElementById("gl" + i);
+      if (el) {
+        el.style.background = i === idx ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)";
+        el.style.borderColor = i === idx ? colors[i] : "rgba(255,255,255,.08)";
+        el.style.transform = i === idx ? "scale(1.12)" : "scale(1)";
+      }
+    }
+    var box = document.getElementById("growth-detail");
+    if (!box) return;
+    var items = d.points.map(function(p, i) {
+      return "<div style='display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;animation:eSlide .3s ease " + (i * 0.06) + "s backwards'><span style='color:" + d.color + ";font-size:14px;flex-shrink:0'>&#10022;</span><span style='font-size:13px;color:#8B95A5;line-height:1.7'>" + p + "</span></div>";
+    }).join("");
+    box.innerHTML = "<div style='font-size:10px;letter-spacing:3px;color:" + d.color + ";font-weight:700;margin-bottom:4px'>" + d.title + "</div><div style='font-family:Georgia,serif;font-size:16px;color:#E2E8F0;margin-bottom:16px;font-weight:300'>" + d.sub + "</div>" + items;
+    box.style.borderColor = d.color + "30";
+  };
+
+  // Certification tracks
+  var certTracks = [
+    { icon: "&#127807;", label: "Cannabis Intelligence", color: "#2DD4A8", desc: "ECS science, strain matching, drug interactions, patient guidance" },
+    { icon: "&#128154;", label: "Recovery Navigator", color: "#60A5FA", desc: "MAT, harm reduction, 12-step, family support, crisis intervention" },
+    { icon: "&#9752;&#65039;", label: "Longevity Medicine", color: "#C8A951", desc: "Biomarkers, supplementation, sleep, HRV, cellular health" },
+    { icon: "&#129504;", label: "Mental Wellness", color: "#A78BFA", desc: "CBT, DBT, trauma-informed care, grief, somatic approaches" },
+    { icon: "&#129367;", label: "Nutrition & Metabolism", color: "#F472B6", desc: "Micronutrients, gut health, anti-inflammatory protocols" },
+    { icon: "&#128164;", label: "Sleep Medicine", color: "#60A5FA", desc: "Circadian biology, sleep architecture, disorder support" },
+    { icon: "&#128170;", label: "Movement & Rehab", color: "#2DD4A8", desc: "Exercise science, injury recovery, mobility, Zone 2 training" }
+  ];
+  var cEl = document.getElementById("cert-tracks");
+  if (cEl) {
+    cEl.innerHTML = certTracks.map(function(c) {
+      return "<div style='background:#151921;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:16px;cursor:pointer;transition:all .3s' onmouseover="this.style.borderColor='" + c.color + "40'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">" +
+        "<div style='font-size:22px;margin-bottom:8px'>" + c.icon + "</div>" +
+        "<div style='font-size:10px;letter-spacing:2px;color:" + c.color + ";font-weight:700;margin-bottom:6px'>" + c.label + "</div>" +
+        "<div style='font-size:11px;color:#5A6374;line-height:1.6'>" + c.desc + "</div></div>";
+    }).join("");
+  }
+
+  // Deployment ladder
+  var ladderSteps = [
+    { color: "#2DD4A8", phase: "Phase 1", title: "First Neighborhood", detail: "3+ certified practitioners. Neighborhood health score live. Residents can find and book verified care." },
+    { color: "#C8A951", phase: "Phase 2", title: "District Activation", detail: "5+ neighborhoods activated. Business wellness portals deployed. 100+ practitioners in ecosystem." },
+    { color: "#60A5FA", phase: "Phase 3", title: "City Intelligence", detail: "[city].bleu.live live. Mayor dashboard. All 12 health dimensions scoring. Federal data integrated." },
+    { color: "#A78BFA", phase: "Phase 4", title: "Grant & Policy Layer", detail: "City health data submitted to NIH, SAMHSA, CDC, EDA. Grant pipeline open. Policy decisions data-driven." },
+    { color: "#F472B6", phase: "Phase 5", title: "Regional Anchor", detail: "City becomes model for region. Surrounding cities adopt. Population health transforms at metro scale." }
+  ];
+  var lEl = document.getElementById("deploy-ladder");
+  if (lEl) {
+    lEl.innerHTML = ladderSteps.map(function(s, i) {
+      return "<div style='margin-bottom:20px;padding:16px 16px 16px 20px;background:#151921;border:1px solid " + s.color + "20;border-left:3px solid " + s.color + ";border-radius:0 10px 10px 0'>" +
+        "<div style='display:flex;align-items:center;gap:10px;margin-bottom:6px'>" +
+        "<span style='font-size:10px;letter-spacing:2px;color:" + s.color + ";font-weight:700'>" + s.phase + "</span>" +
+        "<span style='font-family:Georgia,serif;font-size:16px;color:#E2E8F0;font-weight:300'>" + s.title + "</span></div>" +
+        "<div style='font-size:13px;color:#8B95A5;line-height:1.7'>" + s.detail + "</div></div>";
+    }).join("");
+  }
+
+  // Auto-show first growth level
+  showGrowthLevel(0);
+
 
   // Hook into tab switch
   var og=window.go;
