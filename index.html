@@ -1965,6 +1965,9 @@ button[type="submit"],
     <span class="gc" onclick="toggleFocus(this,'financial')">💰 Financial</span>
   </div>
 
+  <!-- AFFILIATE STRIP -->
+  <div id="pp-aff-strip-container" class="pp-anim" style="margin-bottom:4px"></div>
+
   <!-- WELLNESS CART -->
   <div class="pp-sect pp-anim">My Wellness Stack <span class="pp-act" onclick="go('vessel')">+ Add Products</span></div>
   <div id="pp-cart-container" class="pp-anim"></div>
@@ -3245,6 +3248,29 @@ tabs.forEach(t=>chatHistories[t]=[])
 // ═══════════════════════════════════════════════════════════
 // PASSPORT ENGINE
 // ═══════════════════════════════════════════════════════════
+
+function renderAffStrip() {
+  const el = document.getElementById('pp-aff-strip-container');
+  if (!el) return;
+  const focuses = [];
+  try { focuses.push(...JSON.parse(localStorage.getItem('bleu_focuses') || '[]')); } catch(e) {}
+  const affiliates = [
+    {key:'sleep',label:'😴 Magnesium',url:'https://amazon.com/s?k=magnesium+glycinate+400mg&tag=bleu-live-20',color:'#4ecdc4'},
+    {key:'anxiety',label:'🌿 Ashwagandha',url:'https://amazon.com/s?k=ashwagandha+ksm-66&tag=bleu-live-20',color:'#7fb285'},
+    {key:'energy',label:'☀️ Vitamin D3+K2',url:'https://amazon.com/s?k=vitamin+d3+k2+5000iu&tag=bleu-live-20',color:'#d4af37'},
+    {key:'weight',label:'🔬 Berberine',url:'https://amazon.com/s?k=berberine+1200mg&tag=bleu-live-20',color:'#c9a84c'},
+    {key:'therapy',label:'💚 BetterHelp',url:'https://betterhelp.com/bleu',color:'#4ecdc4'},
+    {key:'fitness',label:'🏃 ClassPass',url:'https://classpass.com',color:'#7fb285'},
+    {key:'recovery',label:'💊 Cost Plus Drugs',url:'https://costplusdrugs.com',color:'#4ecdc4'},
+    {key:'longevity',label:'🧬 Function Health',url:'https://functionhealth.com',color:'#d4af37'},
+  ];
+  const sorted = [...affiliates].sort((a,b) => focuses.includes(b.key)?1:-1);
+  const chips = sorted.map(a => {
+    const active = focuses.includes(a.key);
+    return `<a href="${a.url}" target="_blank" class="pp-aff-chip" style="color:${a.color};border-color:${active?a.color:'rgba(255,255,255,0.08)'};background:${active?'rgba(78,205,196,0.08)':'transparent'}">${a.label}</a>`;
+  }).join('');
+  el.innerHTML = `<div class="pp-aff-strip">${chips}</div><div style="font-size:9px;color:rgba(255,255,255,0.2);margin-top:2px;letter-spacing:0.3px">BLEU earns a small commission — never affects trust scores</div>`;
+}
 
 function renderCart() {
   const el = document.getElementById('pp-cart-container');
