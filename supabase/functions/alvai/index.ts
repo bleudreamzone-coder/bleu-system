@@ -865,6 +865,246 @@ const AFFILIATE_MAP: Record<string, {name:string;why:string;link:string;price?:s
   medical_debt:[{name:"Dollar For",why:"Free nonprofit that eliminates medical debt through hospital charity care. Most hospitals have charity care they don't advertise.",link:"https://dollarfor.org",price:"Free",label:"Dollar For"}],
 };
 
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PRESCRIPTION ENGINE — Pathway Classifier + Precision Output
+// Reads biomarkers + message patterns → specific dose/timing/mechanism/link
+// ═══════════════════════════════════════════════════════════════════════════
+
+function classifyPathway(msg: string, biomarkers: any): string[] {
+  const t = msg.toLowerCase();
+  const paths: string[] = [];
+
+  // SLEEP PATHWAYS — distinguish mechanism
+  const hope = (biomarkers?.hopelessness as number) || 0;
+  const anx  = (biomarkers?.anxiety_load as number) || 0;
+  const man  = (biomarkers?.manic_energy as number) || 0;
+
+  if (/sleep|insomnia|can.t sleep|wake.*night|3am|4am|waking up/.test(t)) {
+    if (anx > 0.4 || /racing.*thought|mind.*won.t|can.t.*wind/.test(t)) paths.push("sleep_cortisol");
+    else if (/wake.*3|wake.*4|fall.*back|middle.*night/.test(t)) paths.push("sleep_gaba");
+    else if (/late|shift|schedule|never tired|2am|3am.*awake/.test(t)) paths.push("sleep_circadian");
+    else paths.push("sleep_gaba"); // default sleep
+  }
+
+  // ANXIETY PATHWAYS
+  if (/anxious|anxiety|panic|worry|stress|overwhelm|dread/.test(t)) {
+    if (/work|job|boss|deadline|meeting|performance/.test(t)) paths.push("anxiety_cortisol");
+    else if (/social|people|crowd|judg|embarrass/.test(t)) paths.push("anxiety_social");
+    else paths.push("anxiety_cortisol");
+  }
+
+  // INFLAMMATION / PAIN
+  if (/pain|inflam|joint|arthritis|stiff|sore|ache|chronic/.test(t)) paths.push("inflammation");
+
+  // ENERGY / COGNITIVE
+  if (/tired|fatigue|brain fog|focus|energy|crash|afternoon/.test(t)) {
+    if (/statin|cholesterol|lipitor|crestor/.test(t)) paths.push("energy_statin");
+    else paths.push("energy_mitochondria");
+  }
+
+  // MOOD / DEPRESSION
+  if (/depress|sad|numb|empty|hopeless|low mood|no motivation/.test(t) || hope > 0.5) paths.push("mood");
+
+  // GUT
+  if (/gut|digestion|bloat|ibs|constipat|diarrhea|stomach/.test(t)) paths.push("gut");
+
+  // HORMONE
+  if (/hormone|testosterone|estrogen|thyroid|perimenopause|menopause|libido/.test(t)) paths.push("hormone");
+
+  // IMMUNE
+  if (/sick|immune|cold|flu|infection|always getting sick/.test(t)) paths.push("immune");
+
+  // CARDIOVASCULAR
+  if (/heart|blood pressure|hypertension|cholesterol|cardiovascular/.test(t)) paths.push("cardiovascular");
+
+  // WEIGHT / METABOLIC
+  if (/weight|lose.*weight|metabolism|blood sugar|insulin|glp|ozempic|semaglutide/.test(t)) paths.push("metabolic");
+
+  return paths;
+}
+
+const PRESCRIPTION_MAP: Record<string, {
+  rx: string; dose: string; timing: string; mechanism: string;
+  duration: string; link: string; label: string; price: string;
+  caution?: string; therapy?: string; movement?: string; nutrition?: string;
+}> = {
+  sleep_cortisol: {
+    rx: "Ashwagandha KSM-66 600mg + Phosphatidylserine 200mg",
+    dose: "600mg ashwagandha, 200mg PS",
+    timing: "Both with dinner — cortisol suppression requires evening dosing, not morning",
+    mechanism: "KSM-66 reduces cortisol 30% over 60 days via HPA axis modulation. Phosphatidylserine blunts the cortisol spike that causes racing thoughts at sleep onset.",
+    duration: "6-week minimum to see cortisol shift. Cycle off for 2 weeks after 12 weeks.",
+    link: "https://amazon.com/s?k=ashwagandha+ksm-66+600mg&tag=bleu-live-20",
+    label: "Amazon", price: "~$22/mo",
+    caution: "Avoid if on immunosuppressants or thyroid medication without physician review.",
+    therapy: "CBT-I (Cognitive Behavioral Therapy for Insomnia) — addresses the cognitive hyperarousal driving this pattern. More effective than medication long-term.",
+    nutrition: "Cut caffeine after 12pm. The cortisol-caffeine interaction extends half-life by 40% in high-stress states.",
+  },
+  sleep_gaba: {
+    rx: "Magnesium Glycinate 400mg",
+    dose: "400mg elemental magnesium — glycinate form only, not oxide",
+    timing: "90-120 minutes before your target sleep time",
+    mechanism: "Magnesium is a cofactor for GABA-A receptor binding. Glycinate chelation allows blood-brain barrier crossing. Oxide stays in the gut and causes diarrhea — this is the form that actually works.",
+    duration: "Ongoing. Most people are chronically deficient. Retest sleep quality at 3 weeks.",
+    link: "https://amazon.com/s?k=magnesium+glycinate+400mg&tag=bleu-live-20",
+    label: "Amazon", price: "~$15/mo",
+    therapy: "Sleep restriction therapy if the 3am wake pattern has been consistent for more than 3 months — this resets the homeostatic sleep drive.",
+    movement: "Zone 2 cardio (walking, light cycling) for 30 min in the morning raises adenosine pressure and deepens sleep architecture.",
+  },
+  sleep_circadian: {
+    rx: "Melatonin 0.5mg microdose",
+    dose: "0.5mg — not 5mg or 10mg. High doses desensitize receptors and worsen the problem over time.",
+    timing: "5 hours before your desired sleep time. If you want to sleep at 11pm, take at 6pm.",
+    mechanism: "This is chronobiological phase shifting, not sedation. Melatonin at low dose advances the circadian phase. High-dose melatonin at bedtime is a pharmaceutical myth that became a habit.",
+    duration: "3-week protocol. If you're not shifting within 10 days, the pattern is behavioral not hormonal.",
+    link: "https://iherb.com/search?kw=melatonin+0.5mg&rcode=BLEU",
+    label: "iHerb", price: "~$8/mo",
+    nutrition: "No screens after 9pm — blue light suppresses melatonin onset regardless of supplement dose.",
+    movement: "Morning sunlight in the eyes within 30 minutes of waking. This is the most powerful free circadian anchor that exists.",
+  },
+  anxiety_cortisol: {
+    rx: "L-Theanine 200mg + Ashwagandha KSM-66 300mg",
+    dose: "L-Theanine 200mg acute (as needed). Ashwagandha 300mg daily for cortisol baseline.",
+    timing: "L-Theanine: 30 minutes before the stressor. Ashwagandha: with dinner daily.",
+    mechanism: "Theanine raises alpha wave activity — the same brain state as eyes-closed meditation — within 30 minutes of dosing. Ashwagandha works on the HPA axis over 4-6 weeks to lower the baseline cortisol level that makes everything feel harder.",
+    duration: "Theanine: indefinite as needed. Ashwagandha: 12-week cycles with 2-week breaks.",
+    link: "https://iherb.com/search?kw=l-theanine+200mg&rcode=BLEU",
+    label: "iHerb", price: "~$13/mo",
+    therapy: "Somatic therapy or EMDR if the anxiety pattern has a trauma root. CBT if it is primarily cognitive. The distinction matters — CBT on an unresolved trauma response often fails.",
+    movement: "Zone 2 cardio only — HIIT raises cortisol short-term and can worsen anxiety in the first 6 weeks.",
+  },
+  anxiety_social: {
+    rx: "L-Theanine 400mg + Magnesium Glycinate 300mg",
+    dose: "400mg theanine for social anxiety (double the standard dose), 300mg magnesium daily",
+    timing: "Theanine 45 minutes before social exposure. Magnesium nightly.",
+    mechanism: "Higher theanine dose increases inhibitory neurotransmission more substantially. Social anxiety specifically involves heightened amygdala reactivity — theanine dampens this through GABAergic pathways.",
+    duration: "Ongoing. Social anxiety has a strong conditioning component — consistent use during exposure is the protocol.",
+    link: "https://amazon.com/s?k=l-theanine+400mg&tag=bleu-live-20",
+    label: "Amazon", price: "~$18/mo",
+    therapy: "CBT with exposure hierarchy — this is the gold standard for social anxiety. BetterHelp can match you within 48 hours.",
+  },
+  inflammation: {
+    rx: "Omega-3 2000mg EPA/DHA + Curcumin Phytosome 500mg",
+    dose: "2g EPA/DHA (check the label — total fish oil mg is not the same as EPA/DHA). 500mg curcumin phytosome form.",
+    timing: "Both with the largest meal of the day. Fat improves absorption of both significantly.",
+    mechanism: "EPA is the specific anti-inflammatory omega. 2:1 EPA:DHA ratio is the clinical standard. Curcumin phytosome has 20x better bioavailability than standard curcumin — standard curcumin supplements mostly pass through.",
+    duration: "Ongoing. Inflammatory markers take 8-12 weeks to shift measurably.",
+    link: "https://amazon.com/s?k=nordic+naturals+omega-3+EPA&tag=bleu-live-20",
+    label: "Amazon", price: "~$28/mo",
+    nutrition: "Eliminate seed oils (canola, soybean, sunflower, corn). These are the primary dietary driver of the omega-6/omega-3 imbalance that causes systemic inflammation.",
+    caution: "If on blood thinners, review with physician before high-dose omega-3.",
+  },
+  energy_mitochondria: {
+    rx: "CoQ10 Ubiquinol 200mg + Vitamin D3 5000IU + K2 100mcg",
+    dose: "200mg ubiquinol (not ubiquinone), 5000IU D3, 100mcg K2 MK-7",
+    timing: "All three with breakfast and fat. D3 and CoQ10 are fat-soluble — absorption is significantly reduced without dietary fat.",
+    mechanism: "Ubiquinol is the active, reduced form of CoQ10 — 8x more bioavailable than ubiquinone. It is the electron carrier in the mitochondrial ATP production chain. D3 deficiency (>40% of population) directly impairs mitochondrial function. K2 routes the calcium that D3 mobilizes to bone instead of arteries.",
+    duration: "Ongoing. Check D3 levels (25-OH vitamin D) at 90 days — target 50-70 ng/mL.",
+    link: "https://iherb.com/search?kw=ubiquinol+200mg&rcode=BLEU",
+    label: "iHerb", price: "~$38/mo combined",
+  },
+  energy_statin: {
+    rx: "CoQ10 Ubiquinol 400mg — this is specifically urgent if you are on a statin",
+    dose: "400mg ubiquinol — double standard dose because statins deplete CoQ10 at the biosynthesis level",
+    timing: "Split: 200mg with breakfast, 200mg with dinner",
+    mechanism: "Statins inhibit the mevalonate pathway which produces both cholesterol AND CoQ10. The muscle fatigue, brain fog, and exhaustion you may be experiencing is a documented side effect of this depletion — not the disease itself.",
+    duration: "Ongoing while on statin therapy. This is not optional — it is a correction.",
+    link: "https://amazon.com/s?k=coq10+ubiquinol+400mg&tag=bleu-live-20",
+    label: "Amazon", price: "~$45/mo",
+    caution: "Inform your prescribing physician. This does not interact with the statin but they should know your full supplement picture.",
+  },
+  mood: {
+    rx: "Omega-3 EPA-dominant 2000mg + Vitamin D3 5000IU + Magnesium Glycinate 400mg",
+    dose: "EPA:DHA ratio should be at least 2:1. Pure EPA formulations exist and have the strongest mood evidence.",
+    timing: "Omega-3 and D3 with breakfast. Magnesium 2 hours before bed.",
+    mechanism: "EPA has 23 RCTs specifically for depression — it modulates neuroinflammation, which is the biological mechanism underlying a significant percentage of depressive episodes. D3 deficiency doubles depression risk. Magnesium is required for serotonin synthesis.",
+    duration: "8-12 weeks before full clinical effect. These work on the inflammatory substrate, not the neurotransmitter level.",
+    link: "https://amazon.com/s?k=omega-3+high+EPA+2000mg&tag=bleu-live-20",
+    label: "Amazon", price: "~$28/mo",
+    therapy: "If the pattern has been present for more than 3 months, therapy runs parallel to the nutritional protocol — not after. BetterHelp matches within 48 hours.",
+    caution: "These are adjunct interventions. If you are experiencing persistent depression, please also speak with a physician.",
+  },
+  gut: {
+    rx: "Spore-based Probiotic 50B CFU + L-Glutamine 5g",
+    dose: "50 billion CFU multi-strain including Lactobacillus and Bifidobacterium. 5g L-glutamine powder.",
+    timing: "Probiotic with first meal. L-Glutamine on an empty stomach — mixes easily in water.",
+    mechanism: "L-glutamine is the primary fuel for enterocytes — the intestinal wall cells. It repairs intestinal permeability (leaky gut) that drives systemic inflammation. Spore-based probiotics survive stomach acid, which most capsule probiotics don't.",
+    duration: "L-glutamine: 8-week repair protocol. Probiotic: ongoing.",
+    link: "https://iherb.com/search?kw=spore+probiotic+50+billion&rcode=BLEU",
+    label: "iHerb", price: "~$35/mo",
+    nutrition: "Add fermented foods daily — kimchi, sauerkraut, kefir. These feed the probiotic strains you are supplementing.",
+  },
+  metabolic: {
+    rx: "Berberine HCl 1500mg/day + Chromium Picolinate 400mcg",
+    dose: "500mg berberine three times daily with meals. 400mcg chromium with largest carbohydrate meal.",
+    timing: "Berberine with every meal — split dosing prevents GI side effects. Chromium with lunch or dinner.",
+    mechanism: "Berberine activates AMPK — the same cellular energy sensor that metformin activates. Multiple RCTs show comparable fasting glucose reduction to Metformin 500mg. Chromium enhances insulin receptor sensitivity.",
+    duration: "3-month protocol, then reassess fasting glucose and HbA1c.",
+    link: "https://amazon.com/s?k=berberine+hcl+1500mg&tag=bleu-live-20",
+    label: "Amazon", price: "~$22/mo",
+    caution: "If on diabetes medication, physician review required — additive blood sugar lowering effect.",
+    nutrition: "Time-restricted eating 16:8 window — the most evidence-supported dietary intervention for metabolic function.",
+  },
+  cardiovascular: {
+    rx: "Omega-3 EPA/DHA 3000mg + CoQ10 Ubiquinol 200mg + Magnesium Glycinate 400mg",
+    dose: "3g EPA/DHA daily (therapeutic dose). 200mg ubiquinol. 400mg magnesium glycinate.",
+    timing: "Omega-3 and CoQ10 with largest meal. Magnesium before bed.",
+    mechanism: "3g EPA/DHA is the dose that reduces triglycerides 20-30% and lowers cardiovascular event risk in the REDUCE-IT trial. Magnesium deficiency increases arterial stiffness and hypertension risk independently.",
+    duration: "Ongoing. Check lipid panel at 90 days.",
+    link: "https://amazon.com/s?k=omega-3+3000mg+EPA+DHA&tag=bleu-live-20",
+    label: "Amazon", price: "~$38/mo",
+    caution: "If on anticoagulants, cardiology consultation before high-dose omega-3.",
+  },
+  immune: {
+    rx: "Zinc Picolinate 30mg + Vitamin D3 5000IU + Vitamin C 1000mg buffered",
+    dose: "30mg zinc, 5000IU D3, 1000mg buffered C",
+    timing: "Zinc and D3 with dinner (reduces nausea from zinc on empty stomach). Vitamin C in the morning.",
+    mechanism: "Zinc deficiency is the most common nutritional immune deficiency. Picolinate form has highest bioavailability. D3 is the master immune regulator — D3 deficiency directly impairs innate immune response. Buffered C (calcium ascorbate) avoids GI irritation at therapeutic doses.",
+    duration: "Ongoing in cold/flu season. Check D3 level at 90 days.",
+    link: "https://amazon.com/s?k=zinc+picolinate+30mg&tag=bleu-live-20",
+    label: "Amazon", price: "~$22/mo",
+  },
+  hormone: {
+    rx: "Bloodwork first — cannot prescribe without baseline labs",
+    dose: "Labs needed: testosterone (total + free), DHEA-S, cortisol AM, thyroid panel (TSH, Free T3, Free T4), estradiol if applicable",
+    timing: "Morning labs — cortisol and testosterone peak between 7-9am, false lows in afternoon",
+    mechanism: "Hormone optimization without baseline labs is guessing. The intervention depends entirely on which specific hormone is dysregulated and in which direction.",
+    duration: "Results in 3-5 business days. Then we build the specific protocol.",
+    link: "https://ondemand.labcorp.com",
+    label: "LabCorp OnDemand", price: "~$150-200 panel",
+    caution: "If cost is a barrier, Function Health at $499/year includes 100+ biomarkers and is more cost-effective for ongoing monitoring.",
+  },
+};
+
+function generatePrescription(msg: string, biomarkers: any, isCrisis: boolean): string {
+  if (isCrisis) return "";
+  const paths = classifyPathway(msg, biomarkers);
+  if (!paths.length) return "";
+
+  let output = "\n\n[BLEU PRESCRIPTION — Agent generated. MUST include in response. Format as prescribed action.]:\n";
+
+  for (const path of paths.slice(0, 2)) {
+    const rx = PRESCRIPTION_MAP[path];
+    if (!rx) continue;
+
+    output += `\nPRESCRIBED SUPPLEMENT: ${rx.rx}\n`;
+    output += `DOSE: ${rx.dose}\n`;
+    output += `TIMING: ${rx.timing}\n`;
+    output += `MECHANISM: ${rx.mechanism}\n`;
+    output += `DURATION: ${rx.duration}\n`;
+    output += `BUY: ${rx.link} (${rx.label}, ${rx.price})\n`;
+    if (rx.therapy) output += `PRESCRIBED THERAPY: ${rx.therapy}\n`;
+    if (rx.movement) output += `PRESCRIBED MOVEMENT: ${rx.movement}\n`;
+    if (rx.nutrition) output += `PRESCRIBED NUTRITION: ${rx.nutrition}\n`;
+    if (rx.caution) output += `CLINICAL CAUTION: ${rx.caution}\n`;
+  }
+
+  output += `\nINSTRUCTION: Surface the most relevant prescription above as a specific named recommendation. State the dose and timing exactly. Explain the mechanism in one sentence. Include the buy link naturally. If therapy or movement is prescribed, mention it after the supplement. Never say "you might want to try" — say "here is what the evidence supports for your specific pattern."\n`;
+
+  return output;
+}
+
 function detectAffiliates(text: string): string {
   const msg = text.toLowerCase();
   const relevant: string[] = [];
@@ -1001,12 +1241,13 @@ serve(async (req) => {
     }
 
     const affiliateLayer = isCrisis ? "" : detectAffiliates(userText);
+    const prescriptionLayer = generatePrescription(userText, currentBiomarkers, isCrisis);
     const modeLayer = isCrisis ? CRISIS_OVERRIDE_PROMPT : (MODE_LAYERS[mode as string] || MODE_LAYERS["alvai"]);
     const therapyLayer = (!isCrisis && therapy_mode) ? `\nTherapy modality: ${therapy_mode.toUpperCase()}.` : "";
     const recoveryLayer = (!isCrisis && recovery_mode) ? `\nRecovery mode: ${recovery_mode.toUpperCase()}.` : "";
     const passportLayer = user_context ? `\n\n${user_context}` : "";
 
-    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, affiliateLayer, passportLayer]
+    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, affiliateLayer, passportLayer]
       .filter(Boolean).join("\n\n");
 
     const selectedModel = isCrisis ? "gpt-4o" : getModel(mode as string);
