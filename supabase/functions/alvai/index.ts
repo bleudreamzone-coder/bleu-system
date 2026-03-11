@@ -9,6 +9,7 @@
 // AGENT 05 — Local Discovery    : NPI geo-search, GoodRx pricing
 // AGENT 06 — Transformation     : Arc state, Tonight's Next Step
 // AGENT 07 — Orchestrator       : Parallel fan-out, conflict resolution, Armstrong voice
+// AGENT 11 — Causal Research     : PubMed synthesis, evidence grading A-D, ClinicalTrials
 // AGENT 08 — Publisher          : BEAST GitHub Actions (external)
 // AGENT 09 — Predictive         : TimescaleDB signals (Phase 2)
 // AGENT 10 — Emotional Resonance: Linguistic biomarkers (Phase 2)
@@ -282,6 +283,7 @@ function detectLookupNeeds(message: string) {
   if (productWords.some(w => msg.includes(w))) { needs.products = true; needs.query = needs.query || "supplement"; }
   const clinicalKeywords = ["does","research","study","evidence","proven","effective","treatment for","causes of","side effect","interaction"];
   const supplementWords = ["magnesium","ashwagandha","vitamin","omega","melatonin","berberine","creatine","collagen","probiotic","zinc","b12","d3","turmeric","cbd","theanine","coq10"];
+  needs.needsCausalResearch = needsCausalResearch(msg);
   needs.needsPubMed = (clinicalKeywords.some(w => msg.includes(w)) || supplementWords.some(w => msg.includes(w))) && msg.length > 20;
   const medPatterns = /\b(metformin|lisinopril|atorvastatin|sertraline|fluoxetine|alprazolam|warfarin|metoprolol|omeprazole|levothyroxine|amlodipine|bupropion|gabapentin|hydrochlorothiazide)\b/i;
   needs.medicationDetected = message.match(medPatterns)?.[0] || null;
@@ -376,6 +378,163 @@ async function runPredictiveAnalysis(supabase, userId, b) {
     return p + "\n";
   } catch { return ""; }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AGENT 11 — CAUSAL RESEARCH ENGINE (L105–L115)
+// ═══════════════════════════════════════════════════════════════════════════
+
+interface StudyEvidence {
+  pmid: string; title: string; abstract: string;
+  grade: "A"|"B"|"C"|"D"; studyType: string; sampleSize: number|null;
+  effectDirection: "positive"|"negative"|"neutral"|"mixed"|"unknown";
+  effectSize: string; year: number|null; causalMechanism: string; confidenceScore: number;
+}
+interface CausalSynthesis {
+  overallGrade: "A"|"B"|"C"|"D"; confidenceScore: number; studyCount: number;
+  effectDirection: "positive"|"negative"|"neutral"|"mixed";
+  causalChain: string; synthesisText: string; trialMatches: string; pmids: string[];
+}
+
+function gradeStudy(abstract: string, title: string): Omit<StudyEvidence,"pmid"|"abstract"|"causalMechanism"> {
+  const text = (abstract+" "+title).toLowerCase();
+  let studyType="observational", baseScore=0.3;
+  if(/meta-analysis|systematic review|cochrane/.test(text)){studyType="meta-analysis";baseScore=1.0;}
+  else if(/randomized controlled|randomised controlled|double.blind|rct|placebo.controlled/.test(text)){studyType="RCT";baseScore=0.85;}
+  else if(/randomized|randomised/.test(text)){studyType="randomized";baseScore=0.75;}
+  else if(/prospective cohort|longitudinal cohort/.test(text)){studyType="prospective cohort";baseScore=0.65;}
+  else if(/cohort study|cohort of/.test(text)){studyType="cohort";baseScore=0.55;}
+  else if(/case.control/.test(text)){studyType="case-control";baseScore=0.45;}
+  else if(/pilot study|feasibility/.test(text)){studyType="pilot";baseScore=0.4;}
+  else if(/in vitro|animal model|mouse model|rat model/.test(text)){studyType="preclinical";baseScore=0.2;}
+  let sampleSize:number|null=null;
+  const nMatch=text.match(/\bn\s*[=:]\s*(\d+)|(\d+)\s*(?:participants|subjects|patients|adults|individuals|volunteers)\b/);
+  if(nMatch)sampleSize=parseInt(nMatch[1]||nMatch[2]);
+  let year:number|null=null;
+  const yearMatch=abstract.match(/\b(19[89]\d|20[012]\d)\b/g);
+  if(yearMatch)year=parseInt(yearMatch[yearMatch.length-1]);
+  if(sampleSize){if(sampleSize>=1000)baseScore=Math.min(1.0,baseScore+0.15);else if(sampleSize>=100)baseScore=Math.min(1.0,baseScore+0.1);else if(sampleSize>=30)baseScore=Math.min(1.0,baseScore+0.05);else if(sampleSize<20)baseScore=Math.max(0.1,baseScore-0.1);}
+  const currentYear=new Date().getFullYear();
+  if(year){const age=currentYear-year;if(age<=3)baseScore=Math.min(1.0,baseScore+0.1);else if(age<=7)baseScore=Math.min(1.0,baseScore+0.05);else if(age>20)baseScore=Math.max(0.1,baseScore-0.1);}
+  let effectDirection:"positive"|"negative"|"neutral"|"mixed"|"unknown"="unknown";
+  const pos=["significant improvement","significantly improved","significant reduction","significantly reduced","beneficial effect","positive effect","effective treatment","efficacious","superior to placebo","significant decrease","significant increase in","significant benefit","improved outcomes","reduced symptoms","enhanced","protective effect","associated with lower"];
+  const neg=["no significant","not significantly","no effect","ineffective","failed to","no difference","no improvement","no benefit","comparable to placebo","did not improve","no reduction","no association"];
+  const mix=["mixed results","inconsistent","some improvement","modest effect","small effect"];
+  const pc=pos.filter(t=>text.includes(t)).length,nc=neg.filter(t=>text.includes(t)).length,mc=mix.filter(t=>text.includes(t)).length;
+  if(pc>nc&&pc>mc)effectDirection="positive";else if(nc>pc)effectDirection="negative";else if(mc>0||(pc>0&&nc>0))effectDirection="mixed";
+  let effectSize="";
+  const em=text.match(/(?:effect size|cohen.s d|odds ratio|or\s*[=:]\s*|hazard ratio|hr\s*[=:]\s*|relative risk|rr\s*[=:]\s*|mean difference|standardized mean)[^\.,;]{0,40}/i);
+  if(em)effectSize=em[0].trim();
+  const grade:"A"|"B"|"C"|"D"=baseScore>=0.8&&(sampleSize===null||sampleSize>=30)?"A":baseScore>=0.6?"B":baseScore>=0.35?"C":"D";
+  return{title,grade,studyType,sampleSize,effectDirection,effectSize,year,confidenceScore:baseScore};
+}
+
+function extractMechanism(abstract: string, query: string): string {
+  const patterns=[/(?:through|via|by|mechanism[s]? (?:include|involve|of action)[^.]{0,80})/i,/(?:activat(?:es?|ing)|inhibit(?:es?|ing)|modulates?|regulates?|binds? to|interacts? with)[^.]{0,60}/i,/(?:pathway|receptor|enzyme|neurotransmitter|hormone|cytokine)[^.]{0,80}/i,/(?:increases?|decreases?|elevates?|reduces?|suppresses?|enhances?)[^.]{0,60}(?:level|concentration|activity|expression)/i,/(?:gaba|serotonin|dopamine|cortisol|melatonin|inflammatory|nmda|adenosine)[^.]{0,80}/i];
+  const mechanisms:string[]=[];
+  for(const p of patterns){const m=abstract.match(p);if(m){const c=m[0].replace(/\s+/g," ").trim();if(c.length>20&&c.length<200)mechanisms.push(c);}}
+  return mechanisms.slice(0,2).join(". ")||"";
+}
+
+function buildCausalChain(studies: StudyEvidence[], query: string): string {
+  const pos=studies.filter(s=>s.effectDirection==="positive");
+  const ab=studies.filter(s=>s.grade==="A"||s.grade==="B");
+  const mechs=studies.map(s=>s.causalMechanism).filter(m=>m.length>20).slice(0,3);
+  if(pos.length===0)return`The current evidence base for this query is limited. ${studies.length} studies examined, with inconsistent findings.`;
+  const mText=mechs.length>0?` The proposed mechanism: ${mechs[0].charAt(0).toUpperCase()+mechs[0].slice(1)}.`:"";
+  const gText=ab.length>0?`${ab.length} of ${studies.length} studies are Grade A or B evidence.`:`Available evidence is primarily Grade C/D.`;
+  const sText=pos.filter(s=>s.sampleSize!==null).map(s=>`n=${s.sampleSize}`).slice(0,3).join(", ");
+  const yrs=studies.filter(s=>s.year!==null).map(s=>s.year as number);
+  const yText=yrs.length>0?` Studies span ${Math.min(...yrs)}–${Math.max(...yrs)}.`:"";
+  return`${pos.length} of ${studies.length} studies show positive effect direction.${mText} ${gText}${sText?` Sample sizes: ${sText}`:""}.${yText}`;
+}
+
+function buildSynthesisText(studies: StudyEvidence[], query: string, overallGrade: string, confidence: number): string {
+  const top=[...studies].sort((a,b)=>b.confidenceScore-a.confidenceScore)[0];
+  const pc=studies.filter(s=>s.effectDirection==="positive").length;
+  const pct=Math.round(confidence*100);
+  const gd:Record<string,string>={A:"strong clinical evidence (RCT or meta-analysis level)",B:"moderate evidence (randomized or prospective cohort)",C:"preliminary evidence (observational or small trials)",D:"limited evidence (case reports or preclinical data only)"};
+  let s=`[AGENT 11 — CAUSAL SYNTHESIS | Grade ${overallGrade} | ${pct}% confidence | ${studies.length} studies]:\n`;
+  s+=`Evidence direction: ${pc}/${studies.length} studies positive.\n`;
+  s+=`Evidence quality: ${gd[overallGrade]||"unknown"}.\n`;
+  if(top.studyType&&top.studyType!=="observational"){s+=`Strongest evidence from ${top.studyType}`;if(top.sampleSize)s+=` (n=${top.sampleSize})`;if(top.year)s+=`, ${top.year}`;s+=".\n";}
+  if(top.causalMechanism?.length>20)s+=`Proposed mechanism: ${top.causalMechanism.charAt(0).toUpperCase()+top.causalMechanism.slice(1)}.\n`;
+  if(top.effectSize)s+=`Effect size noted: ${top.effectSize}.\n`;
+  s+=`\nINSTRUCTION: Reference this graded evidence. State the grade and confidence. Explain mechanism in plain language. Do NOT generalize beyond what the data shows.`;
+  return s;
+}
+
+async function fetchClinicalTrials(query: string, condition: string): Promise<string> {
+  try{
+    const term=condition||query.slice(0,60);
+    const r=await fetch(`https://clinicaltrials.gov/api/query/full_studies?expr=${encodeURIComponent(term)}&min_rnk=1&max_rnk=3&fmt=json`);
+    if(!r.ok)return"";
+    const d=await r.json();
+    const st=d.FullStudiesResponse?.FullStudies;
+    if(!st?.length)return"";
+    const trials=st.slice(0,2).map((s:any)=>{const m=s.Study?.ProtocolSection;return`${m?.IdentificationModule?.NCTId||""}: ${(m?.IdentificationModule?.BriefTitle||"").slice(0,100)} [${m?.StatusModule?.OverallStatus||""}]`;}).join("\n");
+    return trials?`\n[ACTIVE CLINICAL TRIALS — Agent 11]:\n${trials}\n`:"";
+  }catch{return"";}
+}
+
+function hashQuery(q: string): string {
+  let h=0;for(let i=0;i<q.length;i++){h=((h<<5)-h)+q.charCodeAt(i);h=h&h;}return Math.abs(h).toString(36);
+}
+
+async function checkSynthesisCache(supabase: any, qh: string): Promise<string> {
+  try{const{data,error}=await supabase.from("agent11_syntheses").select("synthesis_text,created_at").eq("query_hash",qh).order("created_at",{ascending:false}).limit(1).single();if(error||!data)return"";return(Date.now()-new Date(data.created_at).getTime())/86400000>7?"":(data.synthesis_text||"");}catch{return"";}
+}
+
+async function writeSynthesisCache(supabase: any, qh: string, qt: string, syn: CausalSynthesis): Promise<void> {
+  try{await supabase.from("agent11_syntheses").insert({query_hash:qh,query_text:qt,study_count:syn.studyCount,overall_grade:syn.overallGrade,confidence_score:syn.confidenceScore,causal_chain:syn.causalChain,effect_direction:syn.effectDirection,synthesis_text:syn.synthesisText,pmids:syn.pmids});}catch{/*silent*/}
+}
+
+function needsCausalResearch(message: string): boolean {
+  const msg=message.toLowerCase();
+  const kw=["why does","how does","mechanism","cause","causes","evidence for","research on","studies on","studies show","clinical evidence","proven","effective for","meta-analysis","randomized","pathophysiology","etiology","biological basis"];
+  const rx=[/does .+ work/,/how .+ work/,/what does .+ do/,/why .+ help/];
+  return msg.length>25&&(kw.some(k=>msg.includes(k))||rx.some(r=>r.test(msg)));
+}
+
+async function runCausalResearch(supabase: any, openaiKey: string, query: string, condition: string): Promise<string> {
+  try{
+    const qh=hashQuery(query.slice(0,80).toLowerCase());
+    const cached=await checkSynthesisCache(supabase,qh);
+    if(cached)return cached;
+    const sr=await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=5&retmode=json&sort=relevance`);
+    if(!sr.ok)return"";
+    const ids:string[]=(await sr.json()).esearchresult?.idlist||[];
+    if(!ids.length)return"";
+    const fr=await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${ids.join(",")}&retmode=xml&rettype=abstract`);
+    if(!fr.ok)return"";
+    const xml=await fr.text();
+    const arts=xml.match(/<PubmedArticle>[\s\S]*?<\/PubmedArticle>/g)||[];
+    const studies:StudyEvidence[]=[];
+    for(let i=0;i<arts.length;i++){
+      const art=arts[i];
+      const pmid=art.match(/<PMID[^>]*>(\d+)<\/PMID>/)?.[1]||ids[i]||"";
+      const title=art.match(/<ArticleTitle>([^<]+)<\/ArticleTitle>/)?.[1]?.trim()||"";
+      const abParts=art.match(/<AbstractText[^>]*>([^<]+)<\/AbstractText>/g)||[];
+      const abstract=abParts.map((a:string)=>a.replace(/<[^>]+>/g,"")).join(" ").trim();
+      if(!abstract||abstract.length<50)continue;
+      studies.push({pmid,title,abstract,...gradeStudy(abstract,title),causalMechanism:extractMechanism(abstract,query)});
+    }
+    if(!studies.length)return"";
+    const avg=studies.reduce((s,r)=>s+r.confidenceScore,0)/studies.length;
+    const topC=Math.max(...studies.map(s=>s.confidenceScore));
+    const wc=avg*0.4+topC*0.6;
+    const dc:{[k:string]:number}={positive:0,negative:0,neutral:0,mixed:0,unknown:0};
+    studies.forEach(s=>dc[s.effectDirection]++);
+    const od=Object.keys(dc).reduce((a,b)=>dc[a]>=dc[b]?a:b);
+    const og:"A"|"B"|"C"|"D"=wc>=0.75?"A":wc>=0.55?"B":wc>=0.35?"C":"D";
+    const synthesis:CausalSynthesis={overallGrade:og,confidenceScore:wc,studyCount:studies.length,effectDirection:od as CausalSynthesis["effectDirection"],causalChain:buildCausalChain(studies,query),synthesisText:buildSynthesisText(studies,query,og,wc),trialMatches:"",pmids:studies.map(s=>s.pmid)};
+    const trials=await fetchClinicalTrials(query,condition);
+    synthesis.synthesisText+=trials;
+    synthesis.trialMatches=trials;
+    writeSynthesisCache(supabase,qh,query,synthesis).catch(()=>{});
+    return synthesis.synthesisText;
+  }catch{return"";}
+}
+
 
 // AGENT 06 — TRANSFORMATION: Arc state
 // ═══════════════════════════════════════════════════════════════
@@ -774,7 +933,7 @@ serve(async (req) => {
       arcContext,
       emotionalTrend,
       [practitioners, products],
-      [pubmedContext, fdaContext, rxnormContext],
+      [causalContext, fdaContext, rxnormContext],
     ] = await Promise.all([
       runSafetyClassifier(userText),                                          // Agent 01
       retrieveMemory(user_id || "", userText),                                // Agent 03
@@ -788,7 +947,9 @@ serve(async (req) => {
           ])
         : Promise.resolve([null, null]),
       Promise.all([                                                            // Agent 04
-        lookupNeeds.needsPubMed ? fetchPubMed(userText.slice(0,100)) : Promise.resolve(""),
+        lookupNeeds.needsCausalResearch
+          ? runCausalResearch(supabase, OPENAI_API_KEY!, userText, lookupNeeds.medicationDetected || "")
+          : (lookupNeeds.needsPubMed ? fetchPubMed(userText.slice(0,100)) : Promise.resolve("")),
         lookupNeeds.medicationDetected ? fetchFDAAlert(lookupNeeds.medicationDetected) : Promise.resolve(""),
         lookupNeeds.medicationDetected ? fetchRxNorm(lookupNeeds.medicationDetected) : Promise.resolve(""),
       ]),
@@ -807,7 +968,7 @@ serve(async (req) => {
     if (emotionalTrend) contextData += emotionalTrend;
     const predictiveContext = await runPredictiveAnalysis(supabase, user_id || "", currentBiomarkers);
     if (predictiveContext) contextData += predictiveContext;
-    if (pubmedContext) contextData += pubmedContext;
+    if (causalContext) contextData += causalContext;
     if (fdaContext) contextData += fdaContext;
     if (rxnormContext) contextData += rxnormContext;
 
