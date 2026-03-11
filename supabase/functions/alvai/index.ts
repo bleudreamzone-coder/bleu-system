@@ -224,6 +224,10 @@ async function searchPractitioners(query: string, options: Record<string,any> = 
       .select("full_name, npi, specialty, practice_name, address_line1, state, zip, county, phone");
     if (options.state) q = q.eq("state", options.state);
     if (options.zipPrefix) q = q.like("zip", `${options.zipPrefix}%`);
+    if (options.lat && options.lng && options.radius) {
+      q = q.gte("lat", options.lat - options.radius).lte("lat", options.lat + options.radius)
+           .gte("lng", options.lng - options.radius).lte("lng", options.lng + options.radius);
+    }
     q = q.or(`specialty.ilike.%${query}%,full_name.ilike.%${query}%,practice_name.ilike.%${query}%`);
     q = q.not("full_name","is",null);
     const { data, error } = await q.limit(options.limit || 5);
