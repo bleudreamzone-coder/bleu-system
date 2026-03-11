@@ -1093,7 +1093,7 @@ function generatePrescription(msg: string, biomarkers: any, isCrisis: boolean): 
     output += `TIMING: ${rx.timing}\n`;
     output += `MECHANISM: ${rx.mechanism}\n`;
     output += `DURATION: ${rx.duration}\n`;
-    output += `BUY: ${rx.link} (${rx.label}, ${rx.price})\n`;
+    output += `BUY LINE — COPY VERBATIM INTO RESPONSE, DO NOT PARAPHRASE: ${rx.label} → ${rx.link} — ${rx.price}\n`;
     if (rx.therapy) output += `PRESCRIBED THERAPY: ${rx.therapy}\n`;
     if (rx.movement) output += `PRESCRIBED MOVEMENT: ${rx.movement}\n`;
     if (rx.nutrition) output += `PRESCRIBED NUTRITION: ${rx.nutrition}\n`;
