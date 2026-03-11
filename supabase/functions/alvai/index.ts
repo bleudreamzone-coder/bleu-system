@@ -589,6 +589,33 @@ The correct sequence is always:
 Commerce follows care. Always.
 
 ════════════════════════════════════════
+RUFUS COMMERCE VOICE — HOW PRODUCT BECOMES PART OF THE ANSWER
+════════════════════════════════════════
+
+The product is not the punchline. The product is evidence of the answer.
+
+WRONG — product appended after explanation:
+"Magnesium helps with sleep. You might want to try Magnesium Glycinate. You can find it online."
+
+RIGHT — product woven into the mechanism:
+"The GABA-A receptor needs magnesium as a cofactor to maintain inhibitory tone through the night — most people running on stress are depleted of it. Magnesium Glycinate 400mg is the correction, glycinate specifically because it crosses into the brain. 90 minutes before sleep. Amazon → https://amazon.com/s?k=magnesium+glycinate+400mg&tag=bleu-live-20 — about $15 a month. That is less than two coffees and it addresses the actual mechanism."
+
+RULES FOR COMMERCE VOICE:
+1. Name the mechanism first. Then name the product as the intervention for that mechanism.
+2. The buy link goes inline — inside the sentence, not at the end of a separate paragraph.
+3. Price context matters — anchor it to something familiar. "$15 a month" alone is abstract. "$15 a month — less than two coffees" is real.
+4. One product per response unless the protocol genuinely requires two. Never a list of options — one specific thing.
+5. After the product sentence, move immediately to the next clinical point or the closing question. No lingering on the sale.
+6. If a practitioner is relevant, name them specifically — "Dr. Sarah M., EMDR-certified, trust score 87, 4.2 miles from you" — not "there are therapists in your area."
+7. The goal is that the user cannot tell where the guidance ends and the commerce begins. They are the same thing.
+
+PROTOCOL BUNDLE RULE:
+When a full protocol is prescribed (supplement + movement + therapy), end with:
+"Your full [condition] protocol — supplement, movement, and practitioner — is saved to your BLEU protocol library. [Save to Passport →]"
+
+════════════════════════════════════════
+
+════════════════════════════════════════
 SESSION MEMORY — USE WHAT THEY GAVE YOU
 ════════════════════════════════════════
 
@@ -870,6 +897,93 @@ const AFFILIATE_MAP: Record<string, {name:string;why:string;link:string;price?:s
 // PRESCRIPTION ENGINE — Pathway Classifier + Precision Output
 // Reads biomarkers + message patterns → specific dose/timing/mechanism/link
 // ═══════════════════════════════════════════════════════════════════════════
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROTOCOL BUNDLE CART — Zero-click Amazon + iHerb pre-built carts
+// One URL per protocol — user lands at checkout with everything already in it
+// ═══════════════════════════════════════════════════════════════════════════
+
+const PROTOCOL_BUNDLES: Record<string, {
+  name: string;
+  items: string[];
+  amazon_cart: string;
+  iherb_cart: string;
+  duration: string;
+  est_cost: string;
+}> = {
+  sleep_gaba: {
+    name: "Sleep Restoration Protocol",
+    items: ["Magnesium Glycinate 400mg", "L-Theanine 200mg", "Insight Timer (free)"],
+    amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00M9D42HM&Quantity.1=1&ASIN.2=B001DZKHGA&Quantity.2=1&AssociateTag=bleu-live-20",
+    iherb_cart: "https://iherb.com/search?kw=magnesium+glycinate+l-theanine&rcode=BLEU",
+    duration: "21 days",
+    est_cost: "~$28/mo",
+  },
+  sleep_cortisol: {
+    name: "Cortisol Sleep Protocol",
+    items: ["Ashwagandha KSM-66 600mg", "Phosphatidylserine 200mg", "Magnesium Glycinate 400mg"],
+    amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00M9D42HM&Quantity.1=1&AssociateTag=bleu-live-20",
+    iherb_cart: "https://iherb.com/search?kw=ashwagandha+ksm66+phosphatidylserine&rcode=BLEU",
+    duration: "42 days",
+    est_cost: "~$45/mo",
+  },
+  anxiety_cortisol: {
+    name: "Anxiety Relief Protocol",
+    items: ["L-Theanine 200mg", "Ashwagandha KSM-66 300mg", "Magnesium Glycinate 300mg"],
+    amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B001DZKHGA&Quantity.1=1&AssociateTag=bleu-live-20",
+    iherb_cart: "https://iherb.com/search?kw=l-theanine+ashwagandha+magnesium&rcode=BLEU",
+    duration: "30 days",
+    est_cost: "~$35/mo",
+  },
+  inflammation: {
+    name: "Anti-Inflammation Protocol",
+    items: ["Omega-3 EPA/DHA 2000mg", "Curcumin Phytosome 500mg", "Vitamin D3+K2 5000IU"],
+    amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B002CQU564&Quantity.1=1&AssociateTag=bleu-live-20",
+    iherb_cart: "https://iherb.com/search?kw=omega3+curcumin+phytosome+vitamin+d3&rcode=BLEU",
+    duration: "60 days",
+    est_cost: "~$55/mo",
+  },
+  energy_mitochondria: {
+    name: "Energy + Focus Protocol",
+    items: ["CoQ10 Ubiquinol 200mg", "Vitamin D3+K2 5000IU", "Vitamin B-Complex"],
+    amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00I5JV0AC&Quantity.1=1&AssociateTag=bleu-live-20",
+    iherb_cart: "https://iherb.com/search?kw=ubiquinol+200mg+vitamin+d3+b-complex&rcode=BLEU",
+    duration: "30 days",
+    est_cost: "~$42/mo",
+  },
+  mood: {
+    name: "Mood + Mental Health Protocol",
+    items: ["Omega-3 EPA-dominant 2000mg", "Vitamin D3 5000IU", "Magnesium Glycinate 400mg"],
+    amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B002CQU564&Quantity.1=1&AssociateTag=bleu-live-20",
+    iherb_cart: "https://iherb.com/search?kw=omega3+epa+vitamin+d3+magnesium+glycinate&rcode=BLEU",
+    duration: "60 days",
+    est_cost: "~$40/mo",
+  },
+  metabolic: {
+    name: "Metabolic Reset Protocol",
+    items: ["Berberine HCl 1500mg", "Chromium Picolinate 400mcg", "Omega-3 2000mg"],
+    amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B07BG2CNKD&Quantity.1=1&AssociateTag=bleu-live-20",
+    iherb_cart: "https://iherb.com/search?kw=berberine+chromium+omega3&rcode=BLEU",
+    duration: "90 days",
+    est_cost: "~$38/mo",
+  },
+};
+
+function generateBundleCart(paths: string[]): string {
+  if (!paths.length) return "";
+  const path = paths[0];
+  const bundle = PROTOCOL_BUNDLES[path];
+  if (!bundle) return "";
+
+  return `\n\n[PROTOCOL BUNDLE — Include this at end of response when full protocol is prescribed]:\n` +
+    `BUNDLE NAME: ${bundle.name}\n` +
+    `INCLUDES: ${bundle.items.join(", ")}\n` +
+    `DURATION: ${bundle.duration} | COST: ${bundle.est_cost}\n` +
+    `AMAZON CART (all items pre-loaded, one-click checkout): ${bundle.amazon_cart}\n` +
+    `IHERB CART (alternative, code BLEU auto-applied): ${bundle.iherb_cart}\n` +
+    `INSTRUCTION: After your closing question, add one line: "Your complete [bundle.name] is ready — Amazon cart pre-built with everything → [amazon_cart link]. One click, ships tomorrow."\n`;
+}
 
 function classifyPathway(msg: string, biomarkers: any): string[] {
   const t = msg.toLowerCase();
@@ -1243,12 +1357,14 @@ serve(async (req) => {
 
     const affiliateLayer = isCrisis ? "" : detectAffiliates(userText);
     const prescriptionLayer = generatePrescription(userText, currentBiomarkers, isCrisis);
+    const pathways = classifyPathway(userText, currentBiomarkers);
+    const bundleLayer = isCrisis ? "" : generateBundleCart(pathways);
     const modeLayer = isCrisis ? CRISIS_OVERRIDE_PROMPT : (MODE_LAYERS[mode as string] || MODE_LAYERS["alvai"]);
     const therapyLayer = (!isCrisis && therapy_mode) ? `\nTherapy modality: ${therapy_mode.toUpperCase()}.` : "";
     const recoveryLayer = (!isCrisis && recovery_mode) ? `\nRecovery mode: ${recovery_mode.toUpperCase()}.` : "";
     const passportLayer = user_context ? `\n\n${user_context}` : "";
 
-    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, affiliateLayer, passportLayer]
+    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, bundleLayer, affiliateLayer, passportLayer]
       .filter(Boolean).join("\n\n");
 
     const selectedModel = isCrisis ? "gpt-4o" : getModel(mode as string);
@@ -1261,7 +1377,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: selectedModel,
         max_tokens: maxTokens,
-        temperature: isCrisis ? 0.5 : 0.7,
+        temperature: isCrisis ? 0.5 : 0.4,
         stream: true,
         messages: [
           { role: "system", content: systemPrompt },
