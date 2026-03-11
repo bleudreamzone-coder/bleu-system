@@ -188,7 +188,7 @@ async function fetchPubMed(query: string): Promise<string> {
     const abstracts = xml.match(/<AbstractText[^>]*>([^<]+)<\/AbstractText>/g)?.slice(0,2)
       .map((a:string) => a.replace(/<[^>]+>/g,"").trim()) || [];
     if (abstracts.length === 0) return "";
-    return `\n[PUBMED EVIDENCE — cite as "per published research"]:\n${abstracts.map((a:string,i:number)=>`${i+1}. ${a.slice(0,300)}...`).join("\n")}\n`;
+    return `\n[PUBMED EVIDENCE — YOU MUST use these specific findings in your response. Do not write from memory. Reference this data directly]:\n${abstracts.map((a:string,i:number)=>`${i+1}. ${a.slice(0,300)}...`).join("\n")}\n`;
   } catch { return ""; }
 }
 
@@ -263,7 +263,8 @@ function detectLookupNeeds(message: string) {
   }
   if (productWords.some(w => msg.includes(w))) { needs.products = true; needs.query = needs.query || "supplement"; }
   const clinicalKeywords = ["does","research","study","evidence","proven","effective","treatment for","causes of","side effect","interaction"];
-  needs.needsPubMed = clinicalKeywords.some(w => msg.includes(w)) && msg.length > 30;
+  const supplementWords = ["magnesium","ashwagandha","vitamin","omega","melatonin","berberine","creatine","collagen","probiotic","zinc","b12","d3","turmeric","cbd","theanine","coq10"];
+  needs.needsPubMed = (clinicalKeywords.some(w => msg.includes(w)) || supplementWords.some(w => msg.includes(w))) && msg.length > 20;
   const medPatterns = /\b(metformin|lisinopril|atorvastatin|sertraline|fluoxetine|alprazolam|warfarin|metoprolol|omeprazole|levothyroxine|amlodipine|bupropion|gabapentin|hydrochlorothiazide)\b/i;
   needs.medicationDetected = message.match(medPatterns)?.[0] || null;
   return needs;
