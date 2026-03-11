@@ -48,7 +48,21 @@ function getModel(mode: string): string { return MODEL_ROUTER[mode] || "gpt-4o";
 // ═══════════════════════════════════════════════════════════════
 const SAFETY_CLASSIFIER_PROMPT = `You are a crisis detection classifier. Analyze the user message for risk signals.
 Return ONLY valid JSON, nothing else.
-Risk tiers: 0=no risk, 1=mild distress, 2=moderate concern, 3=active crisis/suicidal ideation, 4=immediate emergency.
+
+Risk tiers:
+0 = no risk
+1 = mild distress (stress, tiredness, general sadness)
+2 = moderate concern (persistent low mood, sleep issues with emotional pain)
+3 = active crisis (hopelessness, emptiness, nothing ever gets better, no point, giving up, don't want to exist, numb, can't go on)
+4 = immediate emergency (active suicidal attempt or immediate danger)
+
+EXAMPLES:
+"I feel completely empty and nothing ever gets better" -> risk_tier: 3
+"nothing matters anymore and I haven't slept in days" -> risk_tier: 3
+"I've been waking up at 3am" -> risk_tier: 1
+"I want to kill myself" -> risk_tier: 4
+"feeling kind of down lately" -> risk_tier: 2
+
 Also extract 8-dimension state (1-5, 3=baseline): stress, energy, mood, pain, cognitive_bandwidth, social_openness, motivation, time_available.
 Return ONLY: {"risk_tier": 0, "crisis_type": null, "state": {"stress":3,"energy":3,"mood":3,"pain":1,"cognitive_bandwidth":3,"social_openness":3,"motivation":3,"time_available":3}}`;
 
@@ -781,7 +795,9 @@ serve(async (req) => {
     ]);
 
     // ═══ CONFLICT RESOLUTION — Safety > Knowledge > Memory > Local > Arc ═══
-    const isCrisis = safetyResult.risk_tier >= 3;
+    const hopeKeywords = ["nothing ever gets better","completely empty","no point anymore","nothing matters","empty inside","can't keep going","don't want to be here","nothing left","so done","give up on life","no reason","pointless","never get better","can't do this anymore"];
+    const keywordCrisis = hopeKeywords.some(w => userText.toLowerCase().includes(w));
+    const isCrisis = safetyResult.risk_tier >= 3 || keywordCrisis;
 
     // ═══ ASSEMBLE CONTEXT ═══
     let contextData = "";
