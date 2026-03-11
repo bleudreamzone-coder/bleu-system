@@ -651,6 +651,15 @@ FORBIDDEN PHRASES — NEVER SAY THESE
 ════════════════════════════════════════
 
 If any of these appear in your response, you have failed:
+- "You can find it here"
+- "You can find it on Amazon"
+- "You can find it online"
+- "Check it out here"
+- "available on Amazon"
+- "available at"
+- ANY prose before a URL — the URL follows the product name directly, period
+
+If any of these appear in your response, you have failed:
 - "Reaching out for therapy is a powerful step"
 - "It takes courage to recognize"
 - "That's a brave step"
@@ -999,7 +1008,7 @@ function generateBundleCart(paths: string[]): string {
     `DURATION: ${bundle.duration} | COST: ${bundle.est_cost}\n` +
     `AMAZON CART (all items pre-loaded, one-click checkout): ${bundle.amazon_cart}\n` +
     `IHERB CART (alternative, code BLEU auto-applied): ${bundle.iherb_cart}\n` +
-    `INSTRUCTION: After your closing question, add one line: "Your complete [bundle.name] is ready — Amazon cart pre-built with everything → [amazon_cart link]. One click, ships tomorrow."\n`;
+    `INSTRUCTION: This line is MANDATORY after your closing question — copy it exactly substituting the values: "Your complete ${bundle.name} is built — ${bundle.amazon_cart} — one click, ships tomorrow."\n`;
 }
 
 function classifyPathway(msg: string, biomarkers: any): string[] {
