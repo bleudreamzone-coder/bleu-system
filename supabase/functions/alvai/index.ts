@@ -1101,6 +1101,7 @@ function generatePrescription(msg: string, biomarkers: any, isCrisis: boolean): 
   }
 
   output += `\nINSTRUCTION: Surface the most relevant prescription above as a specific named recommendation. State the dose and timing exactly. Explain the mechanism in one sentence. Include the buy link naturally. If therapy or movement is prescribed, mention it after the supplement. Never say "you might want to try" — say "here is what the evidence supports for your specific pattern."\n`;
+  output += `\nPRESCRIPTION AUTHORITY RULES — NON-NEGOTIABLE:\n1. Exact product name as given. Not magnesium — Magnesium Glycinate 400mg.\n2. Exact dose and timing. Not before bed — 90 minutes before your target sleep time.\n3. Buy link with price inline. Not you can find it online — Amazon arrow url ~$15/mo.\n4. Zero hedging. No if you are open to trying. No you might consider. No could help. State what the evidence supports for this specific pattern.\n5. You just ran a clinical research engine, a biomarker pathway classifier, and a drug safety check simultaneously. A clinician who reviewed this evidence does not hedge. Neither do you.\n`;
 
   return output;
 }
