@@ -275,6 +275,94 @@ function detectLookupNeeds(message: string) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// AGENT 10 — EMOTIONAL RESONANCE (L91-L104)
+// ═══════════════════════════════════════════════════════════════
+function detectEmotionalBiomarkers(text) {
+  const msg = text.toLowerCase();
+  const b = {};
+  const score = (markers, scale) => Math.min(1, markers.filter(m => msg.includes(m)).length / markers.length * scale);
+  b.hopelessness = score(["never get better","no point","give up","can't anymore","nothing works","always been","no future","too late","lost cause","numb","empty","stopped caring"],4);
+  b.manic_energy = score(["haven't slept","don't need sleep","i figured it out","i can do anything","racing","so much energy","so many ideas","my purpose","chosen","they don't understand"],5);
+  b.dissociation = score(["not real","watching myself","floating","outside my body","fog","zoned out","blank","can't feel","like a dream","going through motions","autopilot","disconnected"],6);
+  b.grief_intensity = score(["miss them","they're gone","lost them","grief","grieving","died","death","passed away","never see","empty chair","ache","mourning"],5);
+  b.anxiety_load = score(["can't breathe","heart racing","chest tight","overwhelmed","panic","spiraling","what if","worst case","can't stop worrying","mind won't stop","dread","terrified","on edge"],4);
+  b.resilience = score(["getting better","making progress","trying again","learned","stronger","grateful","found meaning","healed","moved forward","acceptance","managing","small win"],5);
+  if (/always leave|everyone leaves|abandon|terrified.*alone|they.ll leave/.test(msg)) b.attachment_style = "anxious-preoccupied";
+  else if (/don.t need anyone|fine alone|don.t trust|keep distance|walls up/.test(msg)) b.attachment_style = "dismissive-avoidant";
+  else if (/want close but scared|push pull|confused|hot and cold/.test(msg)) b.attachment_style = "fearful-avoidant";
+  else b.attachment_style = "unknown";
+  const hyper = b.anxiety_load > 0.4 || b.manic_energy > 0.3;
+  const hypo = b.dissociation > 0.3 || b.hopelessness > 0.4;
+  if (hyper && !hypo) b.window_of_tolerance = "hyperarousal";
+  else if (hypo && !hyper) b.window_of_tolerance = "hypoarousal";
+  else if (hyper && hypo) b.window_of_tolerance = "collapsed";
+  else b.window_of_tolerance = "within";
+  return b;
+}
+
+async function writeEmotionalSignal(supabase, userId, sessionId, b) {
+  if (!userId) return;
+  try { await supabase.from("emotional_signals").insert({user_id:userId,session_id:sessionId,hopelessness:b.hopelessness||0,manic_energy:b.manic_energy||0,dissociation:b.dissociation||0,grief_intensity:b.grief_intensity||0,anxiety_load:b.anxiety_load||0,resilience:b.resilience||0,attachment_style:b.attachment_style||"unknown",window_of_tolerance:b.window_of_tolerance||"within",raw_biomarkers:b}); } catch {}
+}
+
+async function getEmotionalTrend(supabase, userId) {
+  if (!userId) return "";
+  try {
+    const {data} = await supabase.from("emotional_signals").select("hopelessness,anxiety_load,resilience,window_of_tolerance,recorded_at").eq("user_id",userId).order("recorded_at",{ascending:false}).limit(8);
+    if (!data || data.length < 2) return "";
+    const avg = (arr,k) => arr.reduce((s,r)=>s+(r[k]||0),0)/arr.length;
+    const recent = data.slice(0,3), prior = data.slice(3);
+    const hopeDelta = avg(recent,"hopelessness") - avg(prior,"hopelessness");
+    const anxietyDelta = avg(recent,"anxiety_load") - avg(prior,"anxiety_load");
+    const resilienceDelta = avg(recent,"resilience") - avg(prior,"resilience");
+    const win = recent[0]?.window_of_tolerance||"within";
+    let t = "\n[EMOTIONAL TREND — last 8 sessions]:";
+    if (hopeDelta > 0.15) t += " Hopelessness RISING — watch for CSD.";
+    if (hopeDelta < -0.15) t += " Hopelessness DECREASING — acknowledge progress.";
+    if (anxietyDelta > 0.15) t += " Anxiety ESCALATING — consider window intervention.";
+    if (resilienceDelta > 0.1) t += " Resilience BUILDING — reinforce.";
+    t += ` Current window: ${win}.`;
+    if (win==="hyperarousal") t += " Regulate before processing — somatic grounding first.";
+    if (win==="hypoarousal") t += " Activate gently — movement or breath first.";
+    if (win==="collapsed") t += " COLLAPSED window — safety and stabilization only. No trauma processing.";
+    return t + "\n";
+  } catch { return ""; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AGENT 09 — PREDICTIVE INTELLIGENCE (L77-L90)
+// ═══════════════════════════════════════════════════════════════
+async function runPredictiveAnalysis(supabase, userId, b) {
+  if (!userId) return "";
+  try {
+    const {data:signals} = await supabase.from("emotional_signals").select("hopelessness,anxiety_load,resilience,manic_energy,dissociation,recorded_at").eq("user_id",userId).order("recorded_at",{ascending:false}).limit(14);
+    if (!signals || signals.length < 3) return "";
+    const hopeScores = signals.map(s=>s.hopelessness||0);
+    const last3 = hopeScores.slice(0,3);
+    const csdWarning = last3.every(s=>s>0.25) && last3[0]>last3[1] && last3[1]>last3[2];
+    const resScores = signals.slice(0,6).map(s=>s.resilience||0);
+    const resAvg = resScores.reduce((a,b)=>a+b,0)/resScores.length;
+    const stallDetected = resAvg < 0.1 && signals.length >= 5;
+    const daysSinceLast = (Date.now() - new Date(signals[0].recorded_at).getTime()) / 86400000;
+    const streakBreak = daysSinceLast > 3;
+    const escalationScore = (b.hopelessness||0)*0.4 + (b.anxiety_load||0)*0.3 + (b.manic_energy||0)*0.2 + (b.dissociation||0)*0.1;
+    let intervention = "continue_current";
+    if (csdWarning) intervention = "crisis_protocol";
+    else if (escalationScore > 0.5) intervention = "deepen_support";
+    else if (stallDetected) intervention = "change_approach";
+    else if (streakBreak) intervention = "re_engagement";
+    supabase.from("predictive_signals").insert({user_id:userId,stall_detected:stallDetected,streak_break:streakBreak,escalation_score:escalationScore,csd_warning:csdWarning,recommended_intervention:intervention,signal_data:{days_since_last:daysSinceLast,hope_trend:last3,resilience_avg:resAvg}}).then(()=>{}).catch(()=>{});
+    let p = "\n[PREDICTIVE SIGNAL — Agent 09]:";
+    if (csdWarning) p += " CSD WARNING: hopelessness trending up across 3+ sessions. Use presence not psychoeducation.";
+    if (stallDetected) p += " Therapeutic stall — try a different modality or reframe the arc.";
+    if (streakBreak) p += ` User returned after ${Math.round(daysSinceLast)} days — warm welcome, no guilt.`;
+    if (escalationScore > 0.5) p += ` Escalation score ${escalationScore.toFixed(2)} — slow down, one thing at a time.`;
+    return p + "\n";
+  } catch { return ""; }
+}
+
 // AGENT 06 — TRANSFORMATION: Arc state
 // ═══════════════════════════════════════════════════════════════
 async function getArcContext(userId: string): Promise<string> {
@@ -664,11 +752,13 @@ serve(async (req) => {
     const lookupNeeds = detectLookupNeeds(userText);
 
     // ═══ PARALLEL FAN-OUT — All agents fire simultaneously ═══
+    const currentBiomarkers = detectEmotionalBiomarkers(userText); // Agent 10 sync
     const [
       safetyResult,
       memoryContext,
       commitmentContext,
       arcContext,
+      emotionalTrend,
       [practitioners, products],
       [pubmedContext, fdaContext, rxnormContext],
     ] = await Promise.all([
@@ -676,6 +766,7 @@ serve(async (req) => {
       retrieveMemory(user_id || "", userText),                                // Agent 03
       retrieveCommitments(user_id || ""),                                     // Agent 06
       getArcContext(user_id || ""),                                           // Agent 06
+      getEmotionalTrend(supabase, user_id || ""),                              // Agent 10
       (lookupNeeds.practitioners || lookupNeeds.products)                     // Agent 05
         ? Promise.all([
             lookupNeeds.practitioners ? searchPractitioners(lookupNeeds.query, lookupNeeds.searchOptions) : Promise.resolve(null),
@@ -697,6 +788,9 @@ serve(async (req) => {
     if (memoryContext) contextData += memoryContext;
     if (commitmentContext) contextData += commitmentContext;
     if (arcContext) contextData += arcContext;
+    if (emotionalTrend) contextData += emotionalTrend;
+    const predictiveContext = await runPredictiveAnalysis(supabase, user_id || "", currentBiomarkers);
+    if (predictiveContext) contextData += predictiveContext;
     if (pubmedContext) contextData += pubmedContext;
     if (fdaContext) contextData += fdaContext;
     if (rxnormContext) contextData += rxnormContext;
@@ -789,6 +883,7 @@ serve(async (req) => {
               // Fire-and-forget memory write — never blocks user
               if (user_id && fullResponse.length > 50) {
                 writeSessionMemory(user_id, recentMessages, fullResponse).catch(() => {});
+                writeEmotionalSignal(supabase, user_id, body.session || "anon", currentBiomarkers).catch(() => {});
               }
               controller.enqueue(new TextEncoder().encode("data: [DONE]\n\n"));
               continue;
