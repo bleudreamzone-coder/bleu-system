@@ -734,7 +734,7 @@ serve(async (req) => {
       .filter(Boolean).join("\n\n");
 
     const selectedModel = isCrisis ? "gpt-4o" : getModel(mode as string);
-    const maxTokens = isCrisis ? 400 : (selectedModel === "gpt-4o-mini" ? 500 : 800);
+    const maxTokens = isCrisis ? 400 : (selectedModel === "gpt-4o-mini" ? 350 : 500);
     const recentMessages = messages.slice(-16);
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
