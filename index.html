@@ -1941,6 +1941,8 @@ button[type="submit"],
     <div style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.12);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="go('directory')"><div style="font-size:20px;margin-bottom:4px">⚕️</div><div style="font-size:10px;color:#4ecdc4;font-weight:600">My Healers</div></div>
     <div style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.12);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="go('therapy')"><div style="font-size:20px;margin-bottom:4px">💚</div><div style="font-size:10px;color:#d4af37;font-weight:600">Therapy</div></div>
   </div>
+    <div id="pp-protocol-card" class="pp-anim" style="margin-bottom:6px"></div>
+
   <div class="pp-sect pp-anim">Life Dimensions <span class="pp-act" onclick="go('dashboard')">Full Dashboard →</span></div>
   <div class="pp-life-grid pp-anim">
     <div class="pp-life-item" onclick="goAsk('alvai','How can I improve my sleep quality?')"><div class="pp-li-icon">🌙</div><div class="pp-li-name">Sleep</div><div class="pp-li-val">—</div></div>
@@ -3180,7 +3182,7 @@ function siErr(m){const e=document.getElementById('si-error');e.textContent=m;e.
 function hSiErr(){document.getElementById('si-error').style.display='none'}
 function sMsg(m){const e=document.getElementById('auth-msg');e.textContent=m;e.style.display='block';setTimeout(()=>e.style.display='none',5000)}
 function showAuth(){document.getElementById('auth-screen').style.display='block';document.getElementById('profile-screen').style.display='none'}
-async function showProfile(){document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
+async function showProfile(){document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});setTimeout(checkPendingProtocol,400);;updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
 async function loadSessions(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('id,title,mode,created_at').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(10);const el=document.getElementById('session-list');if(!data||!data.length){el.innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Talk to Alvai to see history here.</div>';return}el.innerHTML=data.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center">💚</div><div><div style="color:#e8d5b0;font-size:0.85rem">'+(c.title||'Session')+'</div><div style="color:#8fa4b0;font-size:0.7rem">'+new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+(c.mode||'general')+'</div></div></div>').join('')}
 async function saveConvo(tab,msgs){if(!sbClient||!currentUser||!msgs.length)return;const mode=tab==='home'?'alvai':tab;const title=(msgs.find(m=>m.role==='user')?.content||'Session').slice(0,60);try{if(currentConvoIds[tab]){await sbClient.from('conversations').update({messages:msgs,updated_at:new Date().toISOString()}).eq('id',currentConvoIds[tab])}else{const{data}=await sbClient.from('conversations').insert({user_id:currentUser.id,mode,title,messages:msgs}).select('id').single();if(data)currentConvoIds[tab]=data.id}}catch(e){console.warn('saveConvo failed',e)}}
 function togGoal(el){el.classList.toggle('active');if(!sbClient||!currentUser)return;const g=[...document.querySelectorAll('.gc.active')].map(c=>c.dataset.g);sbClient.from('profiles').update({wellness_goals:g}).eq('id',currentUser.id)}
@@ -3695,6 +3697,9 @@ function initPassport() {
   renderPaths();
   renderHealthData();
   loadSessions();
+  renderProtocolCard();
+  checkRetentionTriggers();
+  checkPendingProtocol();
   // Restore focus chips
   let focuses = [];
   try { focuses = JSON.parse(localStorage.getItem('bleu_focuses') || '[]'); } catch(e) {}
@@ -4653,6 +4658,240 @@ const RUFUS_JOURNEYS = {
 
 };
 
+// ═══════════════════════════════════════════════════════
+// PASSPORT PRESCRIPTION CARD + RETENTION ENGINE
+// ═══════════════════════════════════════════════════════
+
+function getActiveProtocol() {
+  try {
+    const raw = localStorage.getItem('bleu_protocol');
+    if (!raw) return null;
+    const p = JSON.parse(raw);
+    const start = new Date(p.startDate);
+    const daysPassed = (Date.now() - start.getTime()) / 86400000;
+    if (daysPassed > p.durationDays + 7) return null;
+    return p;
+  } catch(e) { return null; }
+}
+
+function saveProtocol(data) {
+  if (!currentUser) {
+    const pn = data.name || 'Your Protocol';
+    const items = (Array.isArray(data.items) ? data.items : []).slice(0,3).join(' · ') || 'Supplement stack + movement + timeline';
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    const ov = document.createElement('div');
+    ov.id = 'pp-save-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+    ov.innerHTML = '<div style="background:linear-gradient(135deg,#0e1820,#12202e);border:1px solid rgba(78,205,196,0.3);border-radius:20px;padding:28px 24px;max-width:400px;width:100%;text-align:center">'
+      + '<div style="font-size:9px;letter-spacing:4px;color:#4ecdc4;margin-bottom:14px">✦ YOUR PROTOCOL IS READY</div>'
+      + '<div style="font-family:Georgia,serif;font-size:18px;color:#e8d5b0;margin-bottom:6px">' + pn + '</div>'
+      + '<div style="font-size:11px;color:#8fa4b0;margin-bottom:18px">' + items + '</div>'
+      + '<div style="background:rgba(78,205,196,0.05);border:1px solid rgba(78,205,196,0.1);border-radius:10px;padding:14px;margin-bottom:20px;text-align:left;font-size:12px;color:#c8d8e0;line-height:1.9">'
+      + '<div>📅 Day-by-day tracking — Alvai checks in automatically</div>'
+      + '<div>🔥 Streak counter builds accountability</div>'
+      + '<div>🔄 Replenishment alert before you run out</div>'
+      + '<div>💬 Alvai remembers your progress</div></div>'
+      + '<button onclick="localStorage.setItem(\'bleu_pending_protocol\',\'' + encoded + '\');document.getElementById(\'pp-save-overlay\').remove();go(\'passport\')" style="width:100%;padding:13px;background:linear-gradient(135deg,#4ecdc4,#3ab8b0);color:#0a1628;border:none;border-radius:12px;font-weight:700;font-size:13px;cursor:pointer;margin-bottom:8px">Save My Protocol — Create Passport \u2192</button>'
+      + '<button onclick="document.getElementById(\'pp-save-overlay\').remove();_saveProtocolLocal(JSON.parse(decodeURIComponent(escape(atob(\'' + encoded + '\')))))" style="width:100%;padding:9px;background:transparent;color:#8fa4b0;border:1px solid rgba(255,255,255,0.07);border-radius:10px;font-size:11px;cursor:pointer">Continue without an account</button></div>';
+    document.body.appendChild(ov);
+    return;
+  }
+  _saveProtocolLocal(data);
+}
+
+function _saveProtocolLocal(data) {
+  const todayStr = new Date().toISOString().slice(0,10);
+  const protocol = {
+    name: data.name,
+    pathway: data.pathway || 'general',
+    items: Array.isArray(data.items) ? data.items : [data.items],
+    durationDays: data.durationDays || 21,
+    startDate: todayStr,
+    checkins: [todayStr],
+    milestones: {}
+  };
+  localStorage.setItem('bleu_protocol', JSON.stringify(protocol));
+  localStorage.removeItem('bleu_pending_protocol');
+  const btn = document.activeElement;
+  if (btn) { btn.textContent = '\u2713 Saved!'; btn.style.background = 'rgba(78,205,196,0.2)'; }
+  setTimeout(() => { go('passport'); setTimeout(renderProtocolCard, 150); }, 400);
+}
+
+function checkInProtocol() {
+  const p = getActiveProtocol();
+  if (!p) return;
+  const todayStr = new Date().toISOString().slice(0,10);
+  if (!p.checkins) p.checkins = [];
+  if (!p.checkins.includes(todayStr)) p.checkins.push(todayStr);
+  localStorage.setItem('bleu_protocol', JSON.stringify(p));
+  renderProtocolCard();
+}
+
+function calcStreak(checkins) {
+  if (!checkins || !checkins.length) return 0;
+  const sorted = [...checkins].sort().reverse();
+  let streak = 0;
+  let check = new Date(); check.setHours(0,0,0,0);
+  for (const d of sorted) {
+    const checkStr = check.toISOString().slice(0,10);
+    if (d === checkStr) { streak++; check.setDate(check.getDate()-1); }
+    else if (streak === 0) { check.setDate(check.getDate()-1); if (d===check.toISOString().slice(0,10)){streak++;check.setDate(check.getDate()-1);}else break; }
+    else break;
+  }
+  return streak;
+}
+
+function renderProtocolCard() {
+  const el = document.getElementById('pp-protocol-card');
+  if (!el) return;
+  const p = getActiveProtocol();
+  if (!p) { el.innerHTML = ''; return; }
+  const start = new Date(p.startDate); start.setHours(0,0,0,0);
+  const now = new Date(); now.setHours(0,0,0,0);
+  const dayNum = Math.max(1, Math.floor((now - start) / 86400000) + 1);
+  const day = Math.min(dayNum, p.durationDays);
+  const pct = Math.round((day / p.durationDays) * 100);
+  const checkins = p.checkins || [];
+  const todayStr = new Date().toISOString().slice(0,10);
+  const checkedIn = checkins.includes(todayStr);
+  const streak = calcStreak(checkins);
+  const complete = day >= p.durationDays;
+  const ms = p.milestones || {};
+  const itemsHtml = (p.items||[]).map(item =>
+    '<div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#c8d8e0;padding:4px 0">'
+    + '<span style="color:' + (checkedIn ? '#4ecdc4' : 'rgba(255,255,255,0.2)') + ';font-size:15px;flex-shrink:0">' + (checkedIn ? '\u2713' : '\u25ef') + '</span>'
+    + '<span>' + item + '</span></div>'
+  ).join('');
+  const actionBtn = checkedIn
+    ? '<div style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);border-radius:20px;padding:7px 14px;font-size:11px;color:#4ecdc4;font-weight:600">\u2713 Checked in</div>'
+    : '<button onclick="checkInProtocol()" style="background:linear-gradient(135deg,#4ecdc4,#3ab8b0);color:#0a1628;border:none;padding:8px 16px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer">\u2713 Check In Today</button>';
+  const outcomeBtn = (day >= 7 && !ms.outcome_given)
+    ? '<button onclick="goAsk(\'passport\',\'Day ' + day + ' update on my ' + p.name.replace(/'/g,"\\'") + '. Here is what I have noticed so far: \')" style="background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.18);color:#d4af37;border-radius:20px;padding:7px 14px;font-size:11px;cursor:pointer;margin-top:8px;width:100%">\ud83d\udcca Report progress to Alvai \u2192</button>'
+    : '';
+  const askBtn = '<button onclick="goAsk(\'alvai\',\'I am on Day ' + day + ' of my ' + p.name.replace(/'/g,"\\'") + '. How is it working and what should I do today?\')" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#8fa4b0;border-radius:20px;padding:7px 14px;font-size:11px;cursor:pointer">Ask Alvai \u2192</button>';
+  el.innerHTML = '<div style="background:linear-gradient(135deg,rgba(18,40,58,0.95),rgba(28,50,68,0.95));border:1px solid rgba(78,205,196,0.22);border-radius:16px;padding:18px 18px 14px;position:relative;overflow:hidden">'
+    + '<div style="position:absolute;top:-20px;right:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(78,205,196,0.06),transparent 70%);pointer-events:none"></div>'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
+    + '<div style="font-size:9px;letter-spacing:3px;color:#4ecdc4;text-transform:uppercase">\u2756 Active Protocol</div>'
+    + '<div style="font-size:9px;color:#8fa4b0;letter-spacing:1px">' + pct + '% COMPLETE</div></div>'
+    + '<div style="font-family:Georgia,serif;font-size:15px;color:#e8d5b0;margin-bottom:10px">' + p.name + '</div>'
+    + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">'
+    + '<div style="flex:1;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:linear-gradient(90deg,#4ecdc4,#d4af37);border-radius:2px"></div></div>'
+    + '<div style="font-family:Georgia,serif;font-size:14px;color:#d4af37;font-weight:700;white-space:nowrap">Day ' + day + ' <span style="color:#8fa4b0;font-weight:400;font-size:11px">/ ' + p.durationDays + '</span></div></div>'
+    + '<div style="font-size:9px;letter-spacing:2px;color:#8fa4b0;margin-bottom:6px;text-transform:uppercase">Today\'s Stack</div>'
+    + '<div style="margin-bottom:14px">' + itemsHtml + '</div>'
+    + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'
+    + actionBtn + askBtn
+    + (streak > 1 ? '<div style="margin-left:auto;font-size:11px;color:#d4af37;white-space:nowrap">\ud83d\udd25 ' + streak + ' day streak</div>' : '')
+    + '</div>' + outcomeBtn
+    + (complete ? '<div style="margin-top:12px;text-align:center;font-size:11px;color:#d4af37;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px">\ud83c\udfaf Protocol complete \u2014 ask Alvai to review your results and build the next one.</div>' : '')
+    + '</div>';
+}
+
+function detectAndWireProtocol(text, aDiv) {
+  if (text) {
+    const lower = text.toLowerCase();
+    if ((lower.includes('day ') || lower.includes('protocol')) &&
+        (lower.includes('noticing') || lower.includes('better') || lower.includes('improved') || lower.includes('working') || lower.includes('changed'))) {
+      try {
+        const pp = JSON.parse(localStorage.getItem('bleu_protocol') || '{}');
+        if (pp.name && !(pp.milestones||{}).outcome_given) {
+          if (!pp.milestones) pp.milestones = {};
+          pp.milestones.outcome_given = new Date().toISOString().slice(0,10);
+          localStorage.setItem('bleu_protocol', JSON.stringify(pp));
+          setTimeout(renderProtocolCard, 200);
+        }
+      } catch(e) {}
+    }
+  }
+  if (!text || !text.includes('[Save Protocol')) return;
+  const m = text.match(/Your complete ([^:]+?):\s*([^—]+?)\s*—[^.]*?mapped/i)
+           || text.match(/Your complete ([^—:]+?)\s*—/i);
+  const name = m ? (m[1].replace(/protocol/i,'').trim() + ' Protocol') : 'Wellness Protocol';
+  const itemsRaw = (m && m[2]) ? m[2] : '';
+  const items = itemsRaw.split(/,\s*/).map(s=>s.trim()).filter(s=>s.length>2&&s.length<80);
+  const durMatch = text.match(/Day 1 through Day (\d+)/i) || text.match(/(\d+)[- ]day protocol/i);
+  const durationDays = durMatch ? parseInt(durMatch[1]) : 21;
+  const tl = text.toLowerCase();
+  const pathway = tl.includes('magnesium')&&tl.includes('sleep') ? 'sleep_gaba'
+    : tl.includes('cortisol')&&tl.includes('sleep') ? 'sleep_cortisol'
+    : tl.includes('anxiety') ? 'anxiety_cortisol'
+    : tl.includes('inflammation') ? 'inflammation'
+    : tl.includes('energy') ? 'energy_mitochondria'
+    : tl.includes('mood') ? 'mood'
+    : tl.includes('berberine') ? 'metabolic' : 'general';
+  _wireProtocolBtn(aDiv, name, items, durationDays, pathway);
+}
+
+function _wireProtocolBtn(aDiv, name, items, durationDays, pathway) {
+  const data = {name, items, durationDays, pathway};
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  function walk(node) {
+    if (node.nodeType === 3) {
+      if (node.textContent.includes('[Save Protocol')) {
+        const span = document.createElement('span');
+        span.innerHTML = node.textContent.replace(/\[Save Protocol[^\]]*\]/g,
+          '<button onclick="saveProtocol(JSON.parse(decodeURIComponent(escape(atob(\'' + encoded + '\')))))" style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#4ecdc4,#3ab8b0);color:#0a1628;border:none;padding:8px 18px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;margin-top:6px;vertical-align:middle">\ud83d\udcbe Save Protocol \u2192</button>');
+        node.parentNode.replaceChild(span, node);
+      }
+    } else if (node.nodeType === 1) { Array.from(node.childNodes).forEach(walk); }
+  }
+  walk(aDiv);
+}
+
+// ─── RETENTION ENGINE ────────────────────────────────────────
+
+function checkRetentionTriggers() {
+  const p = getActiveProtocol();
+  if (!p) return;
+  const now = new Date(); now.setHours(0,0,0,0);
+  const start = new Date(p.startDate); start.setHours(0,0,0,0);
+  const day = Math.max(1, Math.floor((now - start) / 86400000) + 1);
+  const ms = p.milestones || {};
+  const daysLeft = p.durationDays - day;
+  if (day >= 7 && !ms.day7) {
+    _fireRetentionMsg('Day 7 of your ' + p.name + '. How is the protocol landing? Any changes in sleep, energy, mood — even subtle. Tell me what is different.', 'day7');
+  } else if (day >= 14 && !ms.day14) {
+    _fireRetentionMsg('Halfway through your ' + p.name + ' — Day 14. Two weeks in. What has shifted? Give me the honest read and I will adjust if we need to go deeper.', 'day14');
+  } else if (daysLeft <= 3 && daysLeft > 0 && !ms.replenish) {
+    const item = (p.items||[])[0] || 'your supplement';
+    const url = _reorderUrl(p.pathway);
+    _fireRetentionMsg(p.name + ' ends in ' + daysLeft + ' day' + (daysLeft===1?'':'s') + '. ' + item + ' will be running low. Tell me how you feel — I will build the next phase.' + (url ? ' Reorder: ' + url : ''), 'replenish');
+  } else if (day >= p.durationDays && !ms.complete) {
+    _fireRetentionMsg(p.durationDays + '-day ' + p.name + ' complete. Before we close this chapter — what changed? Sleep, energy, mood, pain. The honest numbers build your next protocol.', 'complete');
+  }
+}
+
+function _reorderUrl(pathway) {
+  const m = {sleep_gaba:'https://amazon.com/s?k=magnesium+glycinate+400mg&tag=bleu-live-20',sleep_cortisol:'https://amazon.com/s?k=ashwagandha+ksm-66+600mg&tag=bleu-live-20',anxiety_cortisol:'https://iherb.com/search?kw=l-theanine+200mg&rcode=BLEU',inflammation:'https://amazon.com/s?k=nordic+naturals+omega-3&tag=bleu-live-20',energy_mitochondria:'https://iherb.com/search?kw=ubiquinol+200mg&rcode=BLEU',mood:'https://amazon.com/s?k=omega-3+high+EPA+2000mg&tag=bleu-live-20',metabolic:'https://amazon.com/s?k=berberine+hcl+1500mg&tag=bleu-live-20'};
+  return m[pathway] || 'https://amazon.com/s?k=magnesium+glycinate&tag=bleu-live-20';
+}
+
+function _fireRetentionMsg(message, milestoneKey) {
+  const raw = JSON.parse(localStorage.getItem('bleu_protocol')||'{}');
+  if (!raw.milestones) raw.milestones = {};
+  if (raw.milestones[milestoneKey]) return;
+  raw.milestones[milestoneKey] = new Date().toISOString().slice(0,10);
+  localStorage.setItem('bleu_protocol', JSON.stringify(raw));
+  const box = document.getElementById('chat-passport');
+  if (!box) return;
+  const d = document.createElement('div');
+  d.className = 'msg ai pp-anim';
+  const linked = message.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" style="color:#4ecdc4;text-decoration:none">$1</a>');
+  d.innerHTML = '<div style="background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.15);border-radius:12px;padding:14px 16px"><div style="font-size:9px;letter-spacing:3px;color:#4ecdc4;margin-bottom:8px">\u2756 ALVAI CHECK-IN</div><div style="font-size:13px;color:#e8d5b0;line-height:1.7">'+linked+'</div></div>';
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+  const inp = document.getElementById('in-passport');
+  if (inp && !inp.value) inp.placeholder = 'Tell Alvai how the protocol is working...';
+}
+
+function checkPendingProtocol() {
+  const raw = localStorage.getItem('bleu_pending_protocol');
+  if (!raw) return;
+  try { _saveProtocolLocal(JSON.parse(decodeURIComponent(escape(atob(raw))))); }
+  catch(e) { try { _saveProtocolLocal(JSON.parse(raw)); } catch(e2) {} }
+}
+
 function detectJourney(userText, alvaiText) {
   const combined = (userText + ' ' + (alvaiText || '')).toLowerCase();
   const userLower = userText.toLowerCase();
@@ -4846,12 +5085,12 @@ async function send(tab){
       const reader=res.body.getReader(),decoder=new TextDecoder();let full='',buffer=''
       aDiv.innerHTML=''
       while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split('\n');buffer=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);if(p.text||p.content){full+=(p.text||p.content);aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}}}
-      aDiv.innerHTML=fmt(full);chatHistories[tab].push({role:'assistant',content:full})
+      aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);chatHistories[tab].push({role:'assistant',content:full})
       // Rufus 360: detect full journey first, fallback to single products
       const journeyKey=detectJourney(msg,full);
       if(journeyKey){renderJourney(aDiv,journeyKey);}
       else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
-    }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);
+    }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);detectAndWireProtocol(reply,aDiv);
       const journeyKey2=detectJourney(msg,reply);
       if(journeyKey2){renderJourney(aDiv,journeyKey2);}
       else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2){const rufusIds=detectRufusProducts(msg,reply);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
