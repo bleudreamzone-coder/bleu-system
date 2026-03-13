@@ -1941,7 +1941,9 @@ button[type="submit"],
     <div style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.12);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="go('directory')"><div style="font-size:20px;margin-bottom:4px">⚕️</div><div style="font-size:10px;color:#4ecdc4;font-weight:600">My Healers</div></div>
     <div style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.12);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="go('therapy')"><div style="font-size:20px;margin-bottom:4px">💚</div><div style="font-size:10px;color:#d4af37;font-weight:600">Therapy</div></div>
   </div>
+    <div id="pp-journey-header" class="pp-anim" style="margin-bottom:6px"></div>
     <div id="pp-protocol-card" class="pp-anim" style="margin-bottom:6px"></div>
+    <div id="pp-referral-stats" class="pp-anim" style="margin-bottom:6px"></div>
 
   <div class="pp-sect pp-anim">Life Dimensions <span class="pp-act" onclick="go('dashboard')">Full Dashboard →</span></div>
   <div class="pp-life-grid pp-anim">
@@ -3700,6 +3702,10 @@ function initPassport() {
   renderProtocolCard();
   checkRetentionTriggers();
   checkPendingProtocol();
+  if(typeof checkAndShowSharePrompt==='function')checkAndShowSharePrompt();
+  if(typeof renderReferralStats==='function')renderReferralStats();
+  if(typeof renderJourneyHeader==='function')renderJourneyHeader();
+  if(typeof renderJourneyMetrics==='function')renderJourneyMetrics();
   // Restore focus chips
   let focuses = [];
   try { focuses = JSON.parse(localStorage.getItem('bleu_focuses') || '[]'); } catch(e) {}
@@ -4745,7 +4751,7 @@ function renderProtocolCard() {
   const el = document.getElementById('pp-protocol-card');
   if (!el) return;
   const p = getActiveProtocol();
-  if (!p) { el.innerHTML = ''; return; }
+  if (!p) { const _j=typeof getActiveJourney==='function'?getActiveJourney():null; el.innerHTML=_j?'':'<div style="text-align:center;padding:16px"><button onclick="showJourneySelector()" style="background:linear-gradient(135deg,rgba(78,205,196,0.15),rgba(78,205,196,0.05));border:1px solid rgba(78,205,196,0.3);color:#4ecdc4;border-radius:14px;padding:12px 20px;font-size:12px;cursor:pointer;font-weight:600">✦ Start Your Journey →</button></div>'; return; }
   const start = new Date(p.startDate); start.setHours(0,0,0,0);
   const now = new Date(); now.setHours(0,0,0,0);
   const dayNum = Math.max(1, Math.floor((now - start) / 86400000) + 1);
@@ -4784,7 +4790,7 @@ function renderProtocolCard() {
     + actionBtn + askBtn
     + (streak > 1 ? '<div style="margin-left:auto;font-size:11px;color:#d4af37;white-space:nowrap">\ud83d\udd25 ' + streak + ' day streak</div>' : '')
     + '</div>' + outcomeBtn
-    + (complete ? '<div style="margin-top:12px;text-align:center;font-size:11px;color:#d4af37;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px">\ud83c\udfaf Protocol complete \u2014 ask Alvai to review your results and build the next one.</div>' : '')
+    + (complete ? '<div style="margin-top:12px;text-align:center;font-size:11px;color:#d4af37;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px">\ud83c\udfaf Protocol complete \u2014 ask Alvai to review your results and build the next one. <button onclick=\"showSharePackage(getActiveProtocol())\" style=\"background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2);color:#4ecdc4;border-radius:10px;padding:4px 10px;font-size:10px;cursor:pointer;margin-left:6px\">Share \u2192</button></div>' : '')
     + '</div>';
 }
 
@@ -5079,6 +5085,7 @@ async function send(tab){
   const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-20),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null}
   if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
   if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
+  if(typeof getActiveJourney==='function'){const _aj=getActiveJourney();if(_aj){if(tab==='passport')body.mode=_aj.alvaiMode;body.journey_context='[ACTIVE JOURNEY: '+_aj.name+'] '+_aj.alvaiContext;}}
   try{
     const res=await fetch(ALVAI,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON},body:JSON.stringify(body)})
     if(true){
@@ -6302,6 +6309,6 @@ var p=document.getElementById('p-'+t);if(!p)return;
 p.querySelectorAll('.section-label,.section-desc,.section-title,.card,.stat-box,.feature-item,.product-card,.chat-box,.disclaimer,.cta,.mode-bar,.quick-row,.divider,.divider-gold').forEach(function(el,i){
 if(!el.classList.contains('bl-up')){tag(el,i)}})},80)}}
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+if(typeof trackReferralVisit==='function')trackReferralVisit();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();
 </script>

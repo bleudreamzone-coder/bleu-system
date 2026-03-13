@@ -42,7 +42,10 @@ const MODEL_ROUTER: Record<string, string> = {
   protocols: "gpt-4o", ecsiq: "gpt-4o",
   therapy: "gpt-4o", recovery: "gpt-4o", alvai: "gpt-4o",
 };
-function getModel(mode: string): string { return MODEL_ROUTER[mode] || "gpt-4o"; }
+const MINI_PATTERNS=[/^(hi|hey|hello|thanks|ok|okay|got it|cool|great)/i,/^(what tab|where is|how do i find)/i];
+const DEEP_PATTERNS=[/protocol|supplement|cortisol|inflammation|ashwagandha|magnesium|berberine|theanine/i,/therapy|trauma|anxiety|depression|grief|crisis/i,/lab|biomarker|hormone|testosterone|thyroid/i,/why (do|does)|how (does|do)|what causes|mechanism|research|evidence/i,/finance|debt|budget|retire/i,/build (me|my)|create (a|my)|protocol for|plan for/i];
+function classifyIntent(msg: string): "mini"|"full" { const w=msg.trim().split(/\s+/).length; if(w<=4&&!DEEP_PATTERNS.some(r=>r.test(msg)))return "mini"; if(MINI_PATTERNS.some(r=>r.test(msg))&&!DEEP_PATTERNS.some(r=>r.test(msg)))return "mini"; if(DEEP_PATTERNS.some(r=>r.test(msg)))return "full"; if(w>20)return "full"; return "mini"; }
+function getModel(mode: string, userMsg?: string): string { const af=["therapy","recovery","finance","protocols","ecsiq","vessel"]; if(af.includes(mode))return "gpt-4o"; if(userMsg)return classifyIntent(userMsg)==="full"?"gpt-4o":(MODEL_ROUTER[mode]||"gpt-4o-mini"); return MODEL_ROUTER[mode]||"gpt-4o"; }
 
 // ═══════════════════════════════════════════════════════════════
 // AGENT 01 — SAFETY SHIELD
@@ -1300,7 +1303,7 @@ serve(async (req) => {
   try {
     const body = await req.json();
     const messages = body.messages || (body.history?.length > 0 ? body.history : body.message ? [{role:"user",content:body.message}] : null);
-    const { mode, therapy_mode, recovery_mode, user_context, user_id } = body;
+    const { mode, therapy_mode, recovery_mode, user_context, user_id, journey_context } = body;
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return new Response(JSON.stringify({ error: "No messages provided" }), {
@@ -1350,6 +1353,7 @@ serve(async (req) => {
 
     // ═══ ASSEMBLE CONTEXT ═══
     let contextData = "";
+    if (journey_context) contextData += "\n\n" + journey_context;
     if (memoryContext) contextData += memoryContext;
     if (commitmentContext) contextData += commitmentContext;
     if (arcContext) contextData += arcContext;
@@ -1400,8 +1404,8 @@ serve(async (req) => {
     const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, bundleLayer, affiliateLayer, passportLayer]
       .filter(Boolean).join("\n\n");
 
-    const selectedModel = isCrisis ? "gpt-4o" : getModel(mode as string);
-    const maxTokens = isCrisis ? 400 : (selectedModel === "gpt-4o-mini" ? 350 : 500);
+    const selectedModel = isCrisis ? "gpt-4o" : getModel(mode as string, userText);
+    const maxTokens = isCrisis ? 450 : (selectedModel === "gpt-4o-mini" ? 380 : 520);
     const recentMessages = messages.slice(-16);
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
