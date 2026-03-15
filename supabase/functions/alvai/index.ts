@@ -265,6 +265,23 @@ async function searchProducts(query: string, limit = 5) {
   } catch { return null; }
 }
 
+// ═══════════════════════════════════════════════════════════════
+// AGENT 05b — MARKETPLACE PRACTITIONERS (Dr. Felicia vetted)
+// Separate from NPI directory — these are bookable, approved healers
+// ═══════════════════════════════════════════════════════════════
+async function searchMarketplacePractitioners(query: string, limit = 3) {
+  try {
+    const { data, error } = await supabase.from("marketplace_practitioners")
+      .select("practitioner_name, practitioner_email, practitioner_phone, primary_specialty, credentials_summary, experience_years, practice_description, pricing_structure, onboarding_status")
+      .eq("marketplace_approved", true)
+      .eq("dr_felicia_reviewed", true)
+      .or(`primary_specialty.ilike.%${query}%,practitioner_name.ilike.%${query}%,credentials_summary.ilike.%${query}%,practice_description.ilike.%${query}%`)
+      .limit(limit);
+    if (error) return null;
+    return data;
+  } catch { return null; }
+}
+
 function detectLookupNeeds(message: string) {
   const msg = message.toLowerCase();
   const needs: any = { practitioners: false, products: false, query: "", searchOptions: {}, needsPubMed: false, medicationDetected: null };
@@ -1323,7 +1340,7 @@ serve(async (req) => {
       commitmentContext,
       arcContext,
       emotionalTrend,
-      [practitioners, products],
+      [practitioners, products, marketplacePractitioners],
       [causalContext, fdaContext, rxnormContext],
     ] = await Promise.all([
       runSafetyClassifier(userText),                                          // Agent 01
@@ -1335,8 +1352,9 @@ serve(async (req) => {
         ? Promise.all([
             lookupNeeds.practitioners ? searchPractitioners(lookupNeeds.query, lookupNeeds.searchOptions) : Promise.resolve(null),
             lookupNeeds.products ? searchProducts(lookupNeeds.query) : Promise.resolve(null),
+            lookupNeeds.practitioners ? searchMarketplacePractitioners(lookupNeeds.query) : Promise.resolve(null),
           ])
-        : Promise.resolve([null, null]),
+        : Promise.resolve([null, null, null]),
       Promise.all([                                                            // Agent 04
         lookupNeeds.needsCausalResearch
           ? runCausalResearch(supabase, OPENAI_API_KEY!, userText, lookupNeeds.medicationDetected || "")
@@ -1379,6 +1397,20 @@ serve(async (req) => {
       contextData += "IMPORTANT: Only share these verified practitioners. Do not invent others.\n";
     } else if (lookupNeeds.practitioners) {
       contextData += "\n\n[No practitioners found. Tell user you're searching and ask them to narrow by specialty or area. Do NOT invent names.]\n";
+    }
+
+    // ═══ MARKETPLACE PRACTITIONERS — Dr. Felicia vetted, bookable ═══
+    if (marketplacePractitioners && marketplacePractitioners.length > 0) {
+      contextData += "\n\n[BLEU MARKETPLACE — DR. FELICIA REVIEWED & APPROVED (these are bookable)]:\n";
+      marketplacePractitioners.forEach((p:any, i:number) => {
+        contextData += `${i+1}. ${p.practitioner_name} — ${p.primary_specialty}`;
+        if (p.credentials_summary) contextData += ` — ${p.credentials_summary}`;
+        if (p.experience_years) contextData += ` — ${p.experience_years} years`;
+        if (p.practitioner_phone) contextData += ` — ${p.practitioner_phone}`;
+        if (p.pricing_structure?.session_fee) contextData += ` — $${p.pricing_structure.session_fee}/session`;
+        contextData += " ✓ Dr. Felicia Reviewed\n";
+      });
+      contextData += "MARKETPLACE INSTRUCTION: Surface these vetted providers first when relevant. They are bookable directly through BLEU. Do NOT invent pricing or details not shown above.\n";
     }
 
     if (products?.length > 0) {

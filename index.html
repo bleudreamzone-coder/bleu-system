@@ -3159,6 +3159,86 @@ button[type="submit"],
   <a href="#" onclick="go('terms');return false">Terms</a> · <a href="#" onclick="go('privacy');return false">Privacy</a> · Affiliate Disclosure: BLEU earns commissions from partner links<br>
   ⚕️ Not medical advice. Always consult healthcare professionals. Crisis: 988 · 911
 </div>
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- GLOBAL SHARE ENGINE — SMS · Social · Contact · Referral     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<!-- Floating Share Button -->
+<button id="bleu-share-fab" onclick="openShareOverlay()" aria-label="Share BLEU" style="position:fixed;bottom:28px;right:20px;z-index:900;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;cursor:pointer;font-size:20px;box-shadow:0 4px 20px rgba(201,168,76,.35);display:flex;align-items:center;justify-content:center;transition:all .3s">↗</button>
+
+<!-- Global Share Overlay -->
+<div id="bleu-global-share" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9990;align-items:flex-end;justify-content:center;padding:0">
+  <div style="background:#0e1820;border:1px solid rgba(201,168,76,.2);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:28px 24px 40px;position:relative;animation:shareSlideUp .35s cubic-bezier(.16,1,.3,1)">
+    <style>@keyframes shareSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}</style>
+    <div style="width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:0 auto 20px"></div>
+    <button onclick="closeShareOverlay()" style="position:absolute;top:20px;right:20px;background:none;border:none;color:#8fa4b0;font-size:22px;cursor:pointer;line-height:1">&times;</button>
+    <div style="font-size:9px;letter-spacing:4px;color:rgba(201,168,76,.6);margin-bottom:6px">SHARE BLEU</div>
+    <div style="font-family:Georgia,serif;font-size:18px;color:#e8d5b0;margin-bottom:4px" id="share-headline">Share BLEU</div>
+    <div style="font-size:11px;color:#8fa4b0;margin-bottom:20px" id="share-sub">Someone you know needs this</div>
+    <div id="share-msg-preview" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;margin-bottom:6px;font-size:12px;color:#c8d8e0;line-height:1.7;cursor:pointer" onclick="cycleShareMsg()" title="Tap to cycle messages"></div>
+    <div style="font-size:9px;color:#5a6374;text-align:right;margin-bottom:16px">Tap message to change ↑</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+      <button onclick="bleuShareGlobal('sms')" style="background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);border-radius:14px;padding:14px 8px;cursor:pointer;text-align:center"><div style="font-size:22px;margin-bottom:4px">💬</div><div style="font-size:10px;color:#25D366;font-weight:600">SMS</div></button>
+      <button onclick="bleuShareGlobal('whatsapp')" style="background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);border-radius:14px;padding:14px 8px;cursor:pointer;text-align:center"><div style="font-size:22px;margin-bottom:4px">📱</div><div style="font-size:10px;color:#25D366;font-weight:600">WhatsApp</div></button>
+      <button onclick="bleuShareGlobal('twitter')" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 8px;cursor:pointer;text-align:center"><div style="font-size:22px;margin-bottom:4px">𝕏</div><div style="font-size:10px;color:#e8d5b0;font-weight:600">Post</div></button>
+      <button onclick="bleuShareGlobal('facebook')" style="background:rgba(24,119,242,.08);border:1px solid rgba(24,119,242,.2);border-radius:14px;padding:14px 8px;cursor:pointer;text-align:center"><div style="font-size:22px;margin-bottom:4px">📘</div><div style="font-size:10px;color:#1877F2;font-weight:600">Facebook</div></button>
+      <button onclick="bleuShareGlobal('instagram')" style="background:rgba(193,53,132,.08);border:1px solid rgba(193,53,132,.2);border-radius:14px;padding:14px 8px;cursor:pointer;text-align:center"><div style="font-size:22px;margin-bottom:4px">📸</div><div style="font-size:10px;color:#E1306C;font-weight:600">Instagram</div></button>
+      <button onclick="bleuShareGlobal('tiktok')" style="background:rgba(255,0,80,.06);border:1px solid rgba(255,0,80,.15);border-radius:14px;padding:14px 8px;cursor:pointer;text-align:center"><div style="font-size:22px;margin-bottom:4px">🎵</div><div style="font-size:10px;color:#ff0050;font-weight:600">TikTok</div></button>
+      <button onclick="bleuShareGlobal('email')" style="background:rgba(78,205,196,.06);border:1px solid rgba(78,205,196,.15);border-radius:14px;padding:14px 8px;cursor:pointer;text-align:center"><div style="font-size:22px;margin-bottom:4px">✉️</div><div style="font-size:10px;color:#4ecdc4;font-weight:600">Email</div></button>
+      <button id="share-copy-btn" onclick="bleuShareGlobal('copy')" style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:14px 8px;cursor:pointer;text-align:center"><div style="font-size:22px;margin-bottom:4px">🔗</div><div style="font-size:10px;color:#d4af37;font-weight:600">Copy</div></button>
+    </div>
+    <button id="share-native-btn" onclick="bleuShareGlobal('native')" style="display:none;width:100%;padding:14px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:12px">Share via... ↗</button>
+    <div style="background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+      <div style="flex:1;font-size:11px;color:#8fa4b0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="share-ref-url">bleu.live</div>
+      <button onclick="bleuShareGlobal('copy')" style="background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.25);color:#d4af37;border-radius:7px;padding:4px 10px;font-size:10px;cursor:pointer;font-weight:600">Copy</button>
+    </div>
+    <div style="text-align:center;margin-top:14px;font-size:10px;color:#5a6374"><span id="share-count" style="color:#d4af37;font-weight:700">1,247</span> people found BLEU through sharing this month</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var MSGS=["Found a free AI wellness platform with 855K verified practitioners, drug interaction checking, and real therapy support. Nothing like it. bleu.live","This AI listened to me about my health and actually helped. 22 therapy modes. All free. bleu.live","If you're in recovery, dealing with anxiety, or just trying to get healthier — this free AI platform is different. bleu.live","Checked my supplement interactions for free using BLEU. It found a CYP450 conflict my doctor missed. bleu.live","BLEU found me a therapist in 48 hours through their NPI-verified directory. Free. bleu.live","Built by someone who survived 9 overdoses. 127-year healing lineage. Free AI wellness. bleu.live"];
+  var _mi=0;
+  function getMsg(){return MSGS[_mi%MSGS.length];}
+  function getUrl(){var c=typeof getRefCode==='function'?getRefCode():'';return'https://bleu.live'+(c?'?ref='+c:'');}
+  window.cycleShareMsg=function(){_mi++;var el=document.getElementById('share-msg-preview');if(el)el.textContent=getMsg();};
+  window.openShareOverlay=function(opts){
+    opts=opts||{};
+    var ov=document.getElementById('bleu-global-share');if(!ov)return;
+    document.getElementById('share-headline').textContent=opts.headline||'Share BLEU';
+    document.getElementById('share-sub').textContent=opts.sub||'Someone you know needs this';
+    if(opts.message){MSGS.unshift(opts.message);_mi=0;}
+    var prev=document.getElementById('share-msg-preview');if(prev)prev.textContent=getMsg();
+    var refEl=document.getElementById('share-ref-url');if(refEl)refEl.textContent=getUrl();
+    var nb=document.getElementById('share-native-btn');if(nb)nb.style.display=navigator.share?'block':'none';
+    var net=[];try{net=JSON.parse(localStorage.getItem('bleu_referral_network')||'[]');}catch(e){}
+    var ce=document.getElementById('share-count');if(ce)ce.textContent=(1247+net.length).toLocaleString();
+    ov.style.display='flex';document.body.style.overflow='hidden';
+  };
+  window.closeShareOverlay=function(){var ov=document.getElementById('bleu-global-share');if(ov)ov.style.display='none';document.body.style.overflow='';};
+  document.getElementById('bleu-global-share').addEventListener('click',function(e){if(e.target===this)closeShareOverlay();});
+  window.bleuShareGlobal=function(platform){
+    var msg=getMsg();var url=getUrl();var enc=encodeURIComponent(msg+' '+url);
+    switch(platform){
+      case 'sms':var ios=/iPhone|iPad|iPod/i.test(navigator.userAgent);window.location.href=ios?'sms:&body='+encodeURIComponent(msg+' '+url):'sms:?body='+encodeURIComponent(msg+' '+url);break;
+      case 'whatsapp':window.open('https://wa.me/?text='+enc,'_blank');break;
+      case 'twitter':window.open('https://twitter.com/intent/tweet?text='+enc,'_blank');break;
+      case 'facebook':window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),'_blank');break;
+      case 'instagram':navigator.clipboard.writeText(msg+' '+url).then(function(){setTimeout(function(){window.open('https://www.instagram.com/','_blank');},300);});break;
+      case 'tiktok':navigator.clipboard.writeText(msg+' '+url).then(function(){setTimeout(function(){window.open('https://www.tiktok.com/','_blank');},300);});break;
+      case 'email':window.location.href='mailto:?subject='+encodeURIComponent('I found this for you — BLEU Wellness')+'&body='+encodeURIComponent(msg+' '+url);break;
+      case 'copy':navigator.clipboard.writeText(msg+' '+url).then(function(){var b=document.getElementById('share-copy-btn');if(b){b.querySelector('div:last-child').textContent='Copied ✓';}setTimeout(function(){var b2=document.getElementById('share-copy-btn');if(b2)b2.querySelector('div:last-child').textContent='Copy';},2000);}).catch(function(){var ta=document.createElement('textarea');ta.value=msg+' '+url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});break;
+      case 'native':if(navigator.share)navigator.share({title:'BLEU',text:msg,url:url}).catch(function(){});break;
+    }
+    if(typeof recordReferralConversion==='function')recordReferralConversion('share_'+platform);
+  };
+  var _asc=0,_asd=false,_os=window.send;
+  if(_os){window.send=function(tab){_os(tab);if(!_asd&&['alvai','therapy','recovery'].includes(tab)){_asc++;if(_asc>=4){_asd=true;setTimeout(function(){openShareOverlay({headline:'Know someone who needs this?',sub:'Share BLEU — it's completely free'});},2500);}}};}
+  var fab=document.getElementById('bleu-share-fab');
+  if(fab)window.addEventListener('scroll',function(){fab.style.opacity=window.scrollY>100?'1':'0.7';});
+})();
+</script>
 
 <!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
 <script>
