@@ -5779,6 +5779,74 @@ updateSession();
 </div><!-- /ww-module -->
 
 <script>
+// ═══ PRE-TAX ECOSYSTEM VALUE CALCULATOR ═══
+function ptCalc(emp) {
+  emp = parseInt(emp) || 400;
+  document.getElementById('pt-emp-count').textContent = emp.toLocaleString();
+
+  // Employee-side value per employee
+  var hsa = 4150;         // avg HSA contribution value
+  var fsaOptimize = 840;  // GoodRx + Rx savings
+  var therapySaved = 780; // BetterHelp vs OOP avg
+  var section125 = 2100;  // FICA savings per employee
+  var suppSafe = 240;     // avoiding harmful interactions
+  var totalEmpPer = hsa + fsaOptimize + therapySaved + section125 + suppSafe;
+
+  // Employer-side per employee
+  var healthcareSavings = 5512;
+  var ficaEmployer = 500;
+  var productivity = 1685;
+  var retention = 3200;
+  var taxDeduct = Math.round(600 * 0.21); // BLEU cost × tax rate
+  var acaIncentive = Math.round(7200 * 0.30); // avg premium × 30%
+  var totalEmpRPer = healthcareSavings + ficaEmployer + productivity + retention + taxDeduct + acaIncentive;
+
+  var totalPer = totalEmpPer + totalEmpRPer;
+  var grandTotal = totalPer * emp;
+
+  var empRows = [
+    {label:'HSA max contribution value', val:'$'+hsa.toLocaleString(), color:'#22c55e'},
+    {label:'Rx & supplement savings', val:'$'+fsaOptimize.toLocaleString(), color:'#C8A951'},
+    {label:'Therapy (vs out-of-pocket)', val:'$'+therapySaved.toLocaleString(), color:'#a78bfa'},
+    {label:'Section 125 FICA savings', val:'$'+section125.toLocaleString(), color:'#60A5FA'},
+    {label:'Interaction harm avoided', val:'$'+suppSafe.toLocaleString(), color:'#2DD4A8'},
+    {label:'<strong style="color:#E2E8F0">Employee total/yr</strong>', val:'<strong style="color:#60A5FA">$'+totalEmpPer.toLocaleString()+'</strong>', color:'#60A5FA'},
+  ];
+
+  var emplRows = [
+    {label:'Healthcare cost reduction', val:'$'+healthcareSavings.toLocaleString(), color:'#22c55e'},
+    {label:'FICA employer savings', val:'$'+ficaEmployer.toLocaleString(), color:'#22c55e'},
+    {label:'Productivity gain', val:'$'+productivity.toLocaleString(), color:'#2DD4A8'},
+    {label:'Retention savings', val:'$'+retention.toLocaleString(), color:'#F472B6'},
+    {label:'Tax deduction (21% rate)', val:'$'+taxDeduct.toLocaleString(), color:'#C8A951'},
+    {label:'ACA wellness incentive', val:'$'+acaIncentive.toLocaleString(), color:'#C8A951'},
+    {label:'<strong style="color:#E2E8F0">Employer total/yr</strong>', val:'<strong style="color:#22c55e">$'+totalEmpRPer.toLocaleString()+'</strong>', color:'#22c55e'},
+  ];
+
+  function renderRows(id, rows) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = rows.map(function(r){
+      return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03)">'
+        +'<span style="font-size:11px;color:#8B95A5">'+r.label+'</span>'
+        +'<span style="font-size:11px;font-weight:600;color:'+r.color+'">'+r.val+'</span>'
+        +'</div>';
+    }).join('');
+  }
+
+  renderRows('pt-emp-breakdown', empRows);
+  renderRows('pt-emp-breakdown2', emplRows);
+
+  document.getElementById('pt-total').textContent = '$'+grandTotal.toLocaleString();
+  document.getElementById('pt-per-emp').textContent = '$'+totalPer.toLocaleString()+' per employee · $'+grandTotal.toLocaleString()+' total for '+emp.toLocaleString()+' employees';
+  var bleuCost = emp * 600;
+  var net = grandTotal - bleuCost;
+  document.getElementById('pt-vs-cost').textContent = 'BLEU annual cost: $'+bleuCost.toLocaleString()+' · Net value delivered: $'+net.toLocaleString();
+}
+
+// Init on load
+setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
+
 // ═══ WORKSITE WELLNESS ENGINE ═══
 (function(){
 
@@ -5923,6 +5991,278 @@ updateSession();
 
 })();
 </script>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- PRE-TAX WELLNESS INTELLIGENCE — HSA · FSA · HRA · Section 125    -->
+<!-- Total Ecosystem Value · Employer Tax Strategy · Affiliate Map      -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+
+<div id="pretax-module" style="padding:56px 0;background:linear-gradient(180deg,#0e1820,#0a0c10);border-top:1px solid rgba(201,168,76,.06)">
+  <div class="e-box">
+
+    <!-- HEADER -->
+    <div class="e-fade" style="text-align:center;margin-bottom:40px">
+      <div class="e-lbl" style="color:#22c55e;text-align:center;margin-bottom:10px">PRE-TAX WELLNESS INTELLIGENCE</div>
+      <h2 style="font-family:Georgia,serif;font-size:clamp(24px,3.5vw,40px);font-weight:300;color:#E2E8F0;margin:0 0 14px">
+        The government already pays for most of this.<br>
+        <em style="color:#C8A951">BLEU shows you exactly how much.</em>
+      </h2>
+      <p style="font-size:14px;color:#8B95A5;max-width:680px;margin:0 auto;line-height:1.9">
+        HSA · FSA · HRA · Section 125 · ICHRA · QSEHRA. Employer tax credits. ACA wellness incentives. 
+        Most organizations leave $3,000–$8,300 per employee in pre-tax wellness dollars on the table every year. 
+        BLEU maps every dollar to a qualified expense — and routes employees to the services that spend it.
+      </p>
+    </div>
+
+    <!-- BIG 4 PRE-TAX ACCOUNTS -->
+    <div class="e-fade" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:36px" class="e-g4">
+
+      <div style="background:#111827;border:1px solid rgba(34,197,94,.15);border-radius:14px;padding:22px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(rgba(34,197,94,.08),transparent);border-radius:0 14px 0 80px"></div>
+        <div style="font-size:11px;letter-spacing:3px;color:#22c55e;font-weight:700;margin-bottom:6px">HSA</div>
+        <div style="font-family:Georgia,serif;font-size:13px;color:#E2E8F0;margin-bottom:10px;line-height:1.4">Health Savings Account</div>
+        <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#22c55e;margin-bottom:4px">$8,300</div>
+        <div style="font-size:10px;color:#5A6374;margin-bottom:14px">2024 family max · rolls over forever</div>
+        <div style="font-size:11px;color:#8B95A5;line-height:1.7">Triple tax advantage: pre-tax contributions, tax-free growth, tax-free withdrawals for qualified expenses. Portable. Investable. <strong style="color:#22c55e">Never expires.</strong></div>
+        <div style="margin-top:12px;padding:8px;background:rgba(34,197,94,.06);border-radius:6px;font-size:10px;color:#22c55e;font-weight:600">BLEU routes all HSA-eligible services</div>
+      </div>
+
+      <div style="background:#111827;border:1px solid rgba(96,165,250,.15);border-radius:14px;padding:22px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(rgba(96,165,250,.08),transparent);border-radius:0 14px 0 80px"></div>
+        <div style="font-size:11px;letter-spacing:3px;color:#60A5FA;font-weight:700;margin-bottom:6px">FSA</div>
+        <div style="font-family:Georgia,serif;font-size:13px;color:#E2E8F0;margin-bottom:10px;line-height:1.4">Flexible Spending Account</div>
+        <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#60A5FA;margin-bottom:4px">$3,200</div>
+        <div style="font-size:10px;color:#5A6374;margin-bottom:14px">2024 max · use strategically</div>
+        <div style="font-size:11px;color:#8B95A5;line-height:1.7">Pre-tax dollars for qualified medical, dental, vision. CARES Act 2020 expanded eligible items to include OTC medications, feminine products, and more. <strong style="color:#60A5FA">Up to $640 rollover.</strong></div>
+        <div style="margin-top:12px;padding:8px;background:rgba(96,165,250,.06);border-radius:6px;font-size:10px;color:#60A5FA;font-weight:600">BLEU flags FSA-eligible purchases</div>
+      </div>
+
+      <div style="background:#111827;border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:22px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(rgba(201,168,76,.08),transparent);border-radius:0 14px 0 80px"></div>
+        <div style="font-size:11px;letter-spacing:3px;color:#C8A951;font-weight:700;margin-bottom:6px">HRA</div>
+        <div style="font-family:Georgia,serif;font-size:13px;color:#E2E8F0;margin-bottom:10px;line-height:1.4">Health Reimbursement Arrangement</div>
+        <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#C8A951;margin-bottom:4px">No Cap</div>
+        <div style="font-size:10px;color:#5A6374;margin-bottom:14px">Employer-funded · your design</div>
+        <div style="font-size:11px;color:#8B95A5;line-height:1.7">Employer reimburses employees for qualified medical expenses and individual insurance premiums. ICHRA and QSEHRA options let even small businesses design custom wellness benefits. <strong style="color:#C8A951">100% employer deductible.</strong></div>
+        <div style="margin-top:12px;padding:8px;background:rgba(201,168,76,.06);border-radius:6px;font-size:10px;color:#C8A951;font-weight:600">BLEU receipt tracking for HRA reimbursement</div>
+      </div>
+
+      <div style="background:#111827;border:1px solid rgba(167,139,250,.15);border-radius:14px;padding:22px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(rgba(167,139,250,.08),transparent);border-radius:0 14px 0 80px"></div>
+        <div style="font-size:11px;letter-spacing:3px;color:#a78bfa;font-weight:700;margin-bottom:6px">SECTION 125</div>
+        <div style="font-family:Georgia,serif;font-size:13px;color:#E2E8F0;margin-bottom:10px;line-height:1.4">Cafeteria Plan</div>
+        <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#a78bfa;margin-bottom:4px">$2,100</div>
+        <div style="font-size:10px;color:#5A6374;margin-bottom:14px">avg employee FICA savings/yr</div>
+        <div style="font-size:11px;color:#8B95A5;line-height:1.7">Employees redirect pre-tax dollars to benefits. Employer saves $500+ per participating employee in FICA taxes. Covers health, dental, vision, FSA, DCA. <strong style="color:#a78bfa">Win-win by law.</strong></div>
+        <div style="margin-top:12px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:10px;color:#a78bfa;font-weight:600">BLEU optimizes benefit elections annually</div>
+      </div>
+
+    </div>
+
+    <!-- TOTAL ECOSYSTEM VALUE CALCULATOR -->
+    <div class="e-fade e-crd e-glow" style="border-color:rgba(201,168,76,.2);padding:36px;margin-bottom:36px">
+      <div style="text-align:center;margin-bottom:28px">
+        <div class="e-lbl" style="color:#C8A951;text-align:center;margin-bottom:8px">TOTAL ECOSYSTEM VALUE CALCULATOR</div>
+        <h3 style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#E2E8F0;margin:0">What is BLEU actually worth — per employee, per year?</h3>
+      </div>
+
+      <!-- Employee count slider -->
+      <div style="margin-bottom:24px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:13px;color:#8B95A5">Number of employees</span>
+          <span id="pt-emp-count" style="font-size:22px;font-weight:700;color:#C8A951;font-family:Georgia,serif">400</span>
+        </div>
+        <input type="range" class="e-sld e-sld-g" min="50" max="5000" step="50" value="400" oninput="ptCalc(this.value)">
+      </div>
+
+      <!-- Value breakdown table -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px" class="e-g2">
+
+        <div>
+          <div style="font-size:9px;letter-spacing:3px;color:#60A5FA;margin-bottom:12px;font-weight:700">EMPLOYEE-SIDE VALUE</div>
+          <div id="pt-emp-breakdown" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+
+        <div>
+          <div style="font-size:9px;letter-spacing:3px;color:#22c55e;margin-bottom:12px;font-weight:700">EMPLOYER-SIDE VALUE</div>
+          <div id="pt-emp-breakdown2" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+
+      </div>
+
+      <!-- Grand total -->
+      <div style="background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(34,197,94,.04));border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:24px;text-align:center">
+        <div style="font-size:9px;letter-spacing:4px;color:rgba(201,168,76,.6);margin-bottom:8px">TOTAL ANNUAL ECOSYSTEM VALUE</div>
+        <div id="pt-total" style="font-family:Georgia,serif;font-size:clamp(36px,5vw,52px);font-weight:700;color:#C8A951">$0</div>
+        <div id="pt-per-emp" style="font-size:14px;color:#8B95A5;margin-top:6px">per employee per year</div>
+        <div id="pt-vs-cost" style="margin-top:12px;font-size:13px;color:#22c55e;font-weight:600"></div>
+      </div>
+      <div style="font-size:9px;color:#5A6374;margin-top:10px;text-align:center">Sources: IRS Publication 502, SHRM, Kaiser Family Foundation, Harvard Business Review, BLS · Pre-tax values based on 28% effective tax rate</div>
+    </div>
+
+    <!-- PRE-TAX ELIGIBLE AFFILIATE MAP -->
+    <div class="e-fade" style="margin-bottom:36px">
+      <div class="e-lbl" style="color:#C8A951;margin-bottom:6px">BLEU AFFILIATE ECOSYSTEM — PRE-TAX ELIGIBILITY MAP</div>
+      <p style="font-size:13px;color:#8B95A5;margin-bottom:20px;line-height:1.7">Every BLEU affiliate is mapped to its pre-tax account eligibility. Alvai tells employees which account to use before every purchase. This alone saves the average employee $840/year.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" class="e-g2">
+
+        <!-- Mental Health -->
+        <div style="background:#111827;border:1px solid rgba(167,139,250,.12);border-radius:12px;padding:20px">
+          <div style="font-size:9px;letter-spacing:3px;color:#a78bfa;font-weight:700;margin-bottom:12px">🧠 MENTAL HEALTH</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(167,139,250,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">BetterHelp</div><div style="font-size:10px;color:#5A6374">$65–100/wk · Online therapy</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="https://www.betterhelp.com" target="_blank" style="font-size:9px;color:#a78bfa;text-decoration:none">Enroll →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(167,139,250,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Talkspace Business</div><div style="font-size:10px;color:#5A6374">EAP-integrated · Teams</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="https://www.talkspace.com/business" target="_blank" style="font-size:9px;color:#a78bfa;text-decoration:none">Enroll →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(167,139,250,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Calm Business</div><div style="font-size:10px;color:#5A6374">Meditation · Sleep · Stress</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#C8A951">HRA eligible</div><a href="https://www.calm.com/business" target="_blank" style="font-size:9px;color:#a78bfa;text-decoration:none">Enroll →</a></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medications & Rx -->
+        <div style="background:#111827;border:1px solid rgba(201,168,76,.12);border-radius:12px;padding:20px">
+          <div style="font-size:9px;letter-spacing:3px;color:#C8A951;font-weight:700;margin-bottom:12px">💊 MEDICATIONS & Rx</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(201,168,76,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">GoodRx Business</div><div style="font-size:10px;color:#5A6374">$840/yr avg employee savings</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="https://www.goodrx.com/business" target="_blank" style="font-size:9px;color:#C8A951;text-decoration:none">Partner →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(201,168,76,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Cost Plus Drugs</div><div style="font-size:10px;color:#5A6374">Mark Cuban · 80%+ off retail</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="https://costplusdrugs.com" target="_blank" style="font-size:9px;color:#C8A951;text-decoration:none">Shop →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(201,168,76,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Amazon Pharmacy</div><div style="font-size:10px;color:#5A6374">Prime Rx · same-day delivery</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="https://pharmacy.amazon.com" target="_blank" style="font-size:9px;color:#C8A951;text-decoration:none">Shop →</a></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Supplements & Nutrition -->
+        <div style="background:#111827;border:1px solid rgba(45,212,168,.12);border-radius:12px;padding:20px">
+          <div style="font-size:9px;letter-spacing:3px;color:#2DD4A8;font-weight:700;margin-bottom:12px">🌿 SUPPLEMENTS & NUTRITION</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(45,212,168,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Thorne Enterprise</div><div style="font-size:10px;color:#5A6374">NSF certified · Dr. Felicia approved</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#60A5FA">FSA ✓ select</div><a href="https://www.thorne.com/enterprise" target="_blank" style="font-size:9px;color:#2DD4A8;text-decoration:none">Enroll →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(45,212,168,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">iHerb</div><div style="font-size:10px;color:#5A6374">30K+ products · code BLEU</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#60A5FA">FSA ✓ select</div><a href="https://iherb.com?rcode=BLEU" target="_blank" style="font-size:9px;color:#2DD4A8;text-decoration:none">Shop →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(45,212,168,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">RDN Counseling (Dr. Felicia)</div><div style="font-size:10px;color:#5A6374">Medical nutrition therapy</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="mailto:felicia@jazzbirdnola.com" style="font-size:9px;color:#2DD4A8;text-decoration:none">Book →</a></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Biometrics & Movement -->
+        <div style="background:#111827;border:1px solid rgba(96,165,250,.12);border-radius:12px;padding:20px">
+          <div style="font-size:9px;letter-spacing:3px;color:#60A5FA;font-weight:700;margin-bottom:12px">⌚ BIOMETRICS & MOVEMENT</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(96,165,250,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Oura Ring Business</div><div style="font-size:10px;color:#5A6374">HRV · sleep · readiness · $299</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#60A5FA">FSA ✓ LMN</div><a href="https://ouraring.com/business" target="_blank" style="font-size:9px;color:#60A5FA;text-decoration:none">Enroll →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(96,165,250,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">ClassPass Corporate</div><div style="font-size:10px;color:#5A6374">Fitness · studio access</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#C8A951">HRA eligible</div><a href="https://www.classpass.com/corporate-wellness" target="_blank" style="font-size:9px;color:#60A5FA;text-decoration:none">Enroll →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(96,165,250,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Amazon Wellness</div><div style="font-size:10px;color:#5A6374">HSA store · tag: bleu-live-20</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="https://www.amazon.com/hsa-fsa-eligible/s?k=hsa+fsa+eligible&tag=bleu-live-20" target="_blank" style="font-size:9px;color:#60A5FA;text-decoration:none">Shop →</a></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial Wellness -->
+        <div style="background:#111827;border:1px solid rgba(34,197,94,.12);border-radius:12px;padding:20px">
+          <div style="font-size:9px;letter-spacing:3px;color:#22c55e;font-weight:700;margin-bottom:12px">💰 FINANCIAL WELLNESS</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(34,197,94,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Credit Karma</div><div style="font-size:10px;color:#5A6374">Credit · debt · tax tools</div></div>
+              <div style="text-align:right"><div style="font-size:10px;color:#5A6374">Free benefit</div><a href="https://www.creditkarma.com" target="_blank" style="font-size:9px;color:#22c55e;text-decoration:none">Access →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(34,197,94,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">YNAB Teams</div><div style="font-size:10px;color:#5A6374">Budgeting · HSA/FSA planning</div></div>
+              <div style="text-align:right"><div style="font-size:10px;color:#5A6374">EAP eligible</div><a href="https://www.ynab.com/business" target="_blank" style="font-size:9px;color:#22c55e;text-decoration:none">Enroll →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(34,197,94,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">HSA Optimization</div><div style="font-size:10px;color:#5A6374">Alvai-guided benefit elections</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">Saves $2,100/yr</div><a href="#" onclick="go('finance');return false" style="font-size:9px;color:#22c55e;text-decoration:none">Open →</a></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recovery & Specialty -->
+        <div style="background:#111827;border:1px solid rgba(244,114,182,.12);border-radius:12px;padding:20px">
+          <div style="font-size:9px;letter-spacing:3px;color:#F472B6;font-weight:700;margin-bottom:12px">🔥 RECOVERY & SPECIALTY</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(244,114,182,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Smoking Cessation Program</div><div style="font-size:10px;color:#5A6374">$400–800 · Chantix, patches, coaching</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="#" onclick="go('recovery');return false" style="font-size:9px;color:#F472B6;text-decoration:none">Start →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(244,114,182,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">CPAP / Sleep Devices</div><div style="font-size:10px;color:#5A6374">$500–3,000 · sleep apnea tx</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="#" onclick="go('sleep');return false" style="font-size:9px;color:#F472B6;text-decoration:none">Info →</a></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(244,114,182,.04);border-radius:8px">
+              <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Weight Management (medical)</div><div style="font-size:10px;color:#5A6374">$200–500/mo with dx · GLP-1 adjacent</div></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="#" onclick="go('vessel');return false" style="font-size:9px;color:#F472B6;text-decoration:none">Check →</a></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EMPLOYER TAX STRATEGY PANEL -->
+    <div class="e-fade" style="background:linear-gradient(135deg,rgba(34,197,94,.04),rgba(201,168,76,.03));border:1px solid rgba(34,197,94,.15);border-radius:16px;padding:32px;margin-bottom:36px">
+      <div class="e-lbl" style="color:#22c55e;margin-bottom:10px">EMPLOYER TAX STRATEGY</div>
+      <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:300;color:#E2E8F0;margin:0 0 20px">The government subsidizes your wellness program. <em style="color:#22c55e">Here's how much.</em></h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px" class="e-g3">
+        <div style="padding:20px;background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.1);border-radius:10px">
+          <div style="font-size:9px;letter-spacing:3px;color:#22c55e;margin-bottom:8px;font-weight:700">100% DEDUCTIBLE</div>
+          <div style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#22c55e;margin-bottom:6px">BLEU Contract</div>
+          <div style="font-size:12px;color:#8B95A5;line-height:1.7">Your entire BLEU deployment cost is a deductible business expense under IRC Section 162. A $240K contract at 21% corporate tax rate = $50,400 tax savings.</div>
+        </div>
+        <div style="padding:20px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1);border-radius:10px">
+          <div style="font-size:9px;letter-spacing:3px;color:#C8A951;margin-bottom:8px;font-weight:700">ACA WELLNESS INCENTIVE</div>
+          <div style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#C8A951;margin-bottom:6px">30% Premium</div>
+          <div style="font-size:12px;color:#8B95A5;line-height:1.7">ACA allows employers to offer up to 30% of premium cost as a wellness incentive (50% for tobacco cessation). For a 400-person company = $216,000/yr in incentive budget.</div>
+        </div>
+        <div style="padding:20px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1);border-radius:10px">
+          <div style="font-size:9px;letter-spacing:3px;color:#a78bfa;margin-bottom:8px;font-weight:700">SECTION 125 FICA</div>
+          <div style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#a78bfa;margin-bottom:6px">$200K/yr</div>
+          <div style="font-size:12px;color:#8B95A5;line-height:1.7">400 employees × $500 avg employer FICA savings through Section 125 cafeteria plan = $200,000 in annual payroll tax reduction. Year one. Every year.</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:16px;background:rgba(34,197,94,.04);border-radius:8px;text-align:center">
+        <div style="font-size:10px;color:#22c55e;letter-spacing:3px;font-weight:700;margin-bottom:4px">HOTEL MONTELEONE SCENARIO — 400 EMPLOYEES</div>
+        <div style="font-size:14px;color:#E2E8F0">BLEU contract: $240K · Tax deduction: $50K · FICA savings: $200K · ACA incentive budget: $216K</div>
+        <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#22c55e;margin-top:6px">Net effective cost: <span style="text-decoration:line-through;color:#5A6374;font-size:16px">$240K</span> → $0 after tax strategy</div>
+      </div>
+    </div>
+
+    <!-- ALVAI KNOWS WHAT ACCOUNTS TO USE -->
+    <div class="e-fade" style="background:#111827;border:1px solid rgba(201,168,76,.12);border-radius:14px;padding:28px;text-align:center">
+      <div style="font-size:40px;margin-bottom:14px">✦</div>
+      <div class="e-lbl" style="color:#C8A951;text-align:center;margin-bottom:8px">ALVAI KNOWS WHICH ACCOUNT TO USE</div>
+      <div style="font-family:Georgia,serif;font-size:18px;color:#E2E8F0;margin-bottom:12px;max-width:600px;margin-left:auto;margin-right:auto">Before recommending any service, Alvai tells the employee exactly which pre-tax account covers it — and routes them directly to the qualifying purchase.</div>
+      <div style="font-size:13px;color:#8B95A5;max-width:580px;margin:0 auto 20px;line-height:1.8">"Your therapy sessions with BetterHelp are HSA and FSA eligible. If you have funds in your FSA, use those first — they expire December 31st. Your HSA rolls over indefinitely. Want me to help you optimize your remaining balance?"</div>
+      <button onclick="ask('alvai','I want to understand which of my wellness expenses are HSA or FSA eligible and how to maximize my pre-tax benefits this year.')" style="padding:14px 36px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px">ASK ALVAI ABOUT MY PRE-TAX BENEFITS →</button>
+    </div>
+
+  </div>
+</div>
 
 <!-- ═══ NOLA HQ ═══ -->
 <div style="padding:44px 0">
