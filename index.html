@@ -5546,6 +5546,384 @@ updateSession();
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- WORKSITE WELLNESS MODULE — Employee Portal + Admin Portal   -->
+<!-- Hotel Monteleone pilot · 400 employees · $240K/yr           -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<!-- PORTAL SWITCHER HEADER -->
+<div id="ww-module" style="padding:48px 0;background:linear-gradient(180deg,#0a0e18,#0e1820);border-top:1px solid rgba(201,168,76,.08)">
+  <div class="e-box">
+    <div class="e-fade" style="text-align:center;margin-bottom:32px">
+      <div class="e-lbl" style="color:#C8A951;text-align:center;margin-bottom:10px">WORKSITE WELLNESS OPERATING SYSTEM</div>
+      <h2 style="font-family:Georgia,serif;font-size:clamp(24px,3.5vw,36px);font-weight:300;color:#E2E8F0;margin:0 0 12px">One platform. <em style="color:#C8A951">Two portals. Every employee covered.</em></h2>
+      <p style="font-size:14px;color:#8B95A5;max-width:620px;margin:0 auto 24px;line-height:1.8">BLEU deploys inside your organization as a complete wellness operating system. Employees get private AI wellness support. Administrators get population dashboards, ROI tracking, and outcome reporting — all from a single interface.</p>
+      <!-- Portal switcher tabs -->
+      <div style="display:inline-flex;background:#111827;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:4px;gap:4px">
+        <button id="ww-btn-emp" onclick="wwSwitch('employee')" style="padding:10px 28px;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:1px;border:none;cursor:pointer;transition:all .3s;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;font-family:inherit">👤 EMPLOYEE</button>
+        <button id="ww-btn-adm" onclick="wwSwitch('admin')" style="padding:10px 28px;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:1px;border:none;cursor:pointer;transition:all .3s;background:transparent;color:#5A6374;font-family:inherit">🏢 ADMIN</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════ -->
+    <!-- EMPLOYEE PORTAL                    -->
+    <!-- ══════════════════════════════════ -->
+    <div id="ww-employee" style="animation:shareSlideUp .4s ease">
+
+      <!-- Employee welcome bar -->
+      <div style="background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);border-radius:14px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#b8943c);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👤</div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:11px;letter-spacing:3px;color:rgba(201,168,76,.6);margin-bottom:3px">EMPLOYEE WELLNESS PASSPORT</div>
+          <div style="font-family:Georgia,serif;font-size:17px;color:#E2E8F0">Your private wellness portal — <em style="color:#C8A951">not visible to your employer</em></div>
+        </div>
+        <button onclick="go('passport')" style="padding:10px 20px;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.08));border:1px solid rgba(201,168,76,.3);border-radius:8px;color:#C8A951;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px">ACTIVATE PASSPORT →</button>
+      </div>
+
+      <!-- 6 employee feature cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px" class="e-g3">
+
+        <div class="e-crd e-fade" onclick="go('alvai')" style="cursor:pointer;border-color:rgba(201,168,76,.15)" onmouseover="this.style.borderColor='rgba(201,168,76,.4)'" onmouseout="this.style.borderColor='rgba(201,168,76,.15)'">
+          <div style="font-size:28px;margin-bottom:10px">✦</div>
+          <div style="font-size:11px;letter-spacing:2px;color:#C8A951;font-weight:700;margin-bottom:6px">ALVAI WELLNESS AI</div>
+          <div style="font-size:12px;color:#8B95A5;line-height:1.7">Your private AI wellness advisor. 22 therapeutic modes. Drug interactions, mental health support, recovery, sleep, nutrition — completely confidential.</div>
+          <div style="margin-top:12px;font-size:10px;color:#C8A951;font-weight:600">Open Alvai →</div>
+        </div>
+
+        <div class="e-crd e-fade" onclick="go('directory')" style="cursor:pointer;border-color:rgba(45,212,168,.12)" onmouseover="this.style.borderColor='rgba(45,212,168,.35)'" onmouseout="this.style.borderColor='rgba(45,212,168,.12)'">
+          <div style="font-size:28px;margin-bottom:10px">🩺</div>
+          <div style="font-size:11px;letter-spacing:2px;color:#2DD4A8;font-weight:700;margin-bottom:6px">FIND A PROVIDER</div>
+          <div style="font-size:12px;color:#8B95A5;line-height:1.7">855K+ NPI-verified practitioners. Therapists, physicians, dietitians, recovery specialists. Verified credentials. Real availability.</div>
+          <div style="margin-top:12px;font-size:10px;color:#2DD4A8;font-weight:600">Browse Directory →</div>
+        </div>
+
+        <div class="e-crd e-fade" onclick="go('therapy')" style="cursor:pointer;border-color:rgba(167,139,250,.12)" onmouseover="this.style.borderColor='rgba(167,139,250,.35)'" onmouseout="this.style.borderColor='rgba(167,139,250,.12)'">
+          <div style="font-size:28px;margin-bottom:10px">🧠</div>
+          <div style="font-size:11px;letter-spacing:2px;color:#a78bfa;font-weight:700;margin-bottom:6px">MENTAL HEALTH</div>
+          <div style="font-size:12px;color:#8B95A5;line-height:1.7">Stress, anxiety, burnout, grief. AI-guided therapy support available 24/7. Human practitioners one click away. Crisis line always visible.</div>
+          <div style="margin-top:12px;font-size:10px;color:#a78bfa;font-weight:600">Open Therapy →</div>
+        </div>
+
+        <div class="e-crd e-fade" onclick="go('vessel')" style="cursor:pointer;border-color:rgba(96,165,250,.12)" onmouseover="this.style.borderColor='rgba(96,165,250,.35)'" onmouseout="this.style.borderColor='rgba(96,165,250,.12)'">
+          <div style="font-size:28px;margin-bottom:10px">💊</div>
+          <div style="font-size:11px;letter-spacing:2px;color:#60A5FA;font-weight:700;margin-bottom:6px">MEDICATION SAFETY</div>
+          <div style="font-size:12px;color:#8B95A5;line-height:1.7">CYP450 drug interaction checker. Supplement safety. GoodRx price lookup. Cost Plus Drugs. FDA-sourced. Private and instant.</div>
+          <div style="margin-top:12px;font-size:10px;color:#60A5FA;font-weight:600">Check Interactions →</div>
+        </div>
+
+        <div class="e-crd e-fade" onclick="go('finance')" style="cursor:pointer;border-color:rgba(34,197,94,.12)" onmouseover="this.style.borderColor='rgba(34,197,94,.35)'" onmouseout="this.style.borderColor='rgba(34,197,94,.12)'">
+          <div style="font-size:28px;margin-bottom:10px">💰</div>
+          <div style="font-size:11px;letter-spacing:2px;color:#22c55e;font-weight:700;margin-bottom:6px">FINANCIAL WELLNESS</div>
+          <div style="font-size:12px;color:#8B95A5;line-height:1.7">Financial stress is the #1 driver of poor health outcomes. Credit building, debt tools, HSA guidance, benefits optimization — all in one place.</div>
+          <div style="margin-top:12px;font-size:10px;color:#22c55e;font-weight:600">Open Finance →</div>
+        </div>
+
+        <div class="e-crd e-fade" onclick="go('recovery')" style="cursor:pointer;border-color:rgba(244,114,182,.12)" onmouseover="this.style.borderColor='rgba(244,114,182,.35)'" onmouseout="this.style.borderColor='rgba(244,114,182,.12)'">
+          <div style="font-size:28px;margin-bottom:10px">🔥</div>
+          <div style="font-size:11px;letter-spacing:2px;color:#F472B6;font-weight:700;margin-bottom:6px">RECOVERY SUPPORT</div>
+          <div style="font-size:12px;color:#8B95A5;line-height:1.7">7 recovery modes. 12-step, SMART, harm reduction, sobriety tracking. Naloxone locator. Anonymous. No stigma. Built by someone who survived it.</div>
+          <div style="margin-top:12px;font-size:10px;color:#F472B6;font-weight:600">Open Recovery →</div>
+        </div>
+
+      </div>
+
+      <!-- Curriculum Chapters - accordion -->
+      <div class="e-fade" style="background:#111827;border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;margin-bottom:24px">
+        <div style="padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.04)">
+          <div style="font-size:9px;letter-spacing:4px;color:rgba(201,168,76,.5);margin-bottom:4px">WORKSITE WELLNESS CURRICULUM</div>
+          <div style="font-family:Georgia,serif;font-size:16px;color:#E2E8F0">12 evidence-based modules. Built for your team.</div>
+        </div>
+        <div id="ww-curriculum-list"></div>
+      </div>
+
+      <!-- Quick stats from curriculum -->
+      <div class="e-fade" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px" class="e-g4">
+        <div style="text-align:center;padding:18px 10px;background:#111827;border:1px solid rgba(201,168,76,.1);border-radius:10px">
+          <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#C8A951">$90B+</div>
+          <div style="font-size:9px;color:#5A6374;letter-spacing:2px;margin-top:5px">ANNUAL WELLNESS SPEND</div>
+        </div>
+        <div style="text-align:center;padding:18px 10px;background:#111827;border:1px solid rgba(45,212,168,.1);border-radius:10px">
+          <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#2DD4A8">21%</div>
+          <div style="font-size:9px;color:#5A6374;letter-spacing:2px;margin-top:5px">HEALTHCARE COST REDUCTION</div>
+        </div>
+        <div style="text-align:center;padding:18px 10px;background:#111827;border:1px solid rgba(96,165,250,.1);border-radius:10px">
+          <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#60A5FA">89%</div>
+          <div style="font-size:9px;color:#5A6374;letter-spacing:2px;margin-top:5px">EMPLOYEE SATISFACTION</div>
+        </div>
+        <div style="text-align:center;padding:18px 10px;background:#111827;border:1px solid rgba(244,114,182,.1);border-radius:10px">
+          <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#F472B6">68%</div>
+          <div style="font-size:9px;color:#5A6374;letter-spacing:2px;margin-top:5px">REDUCED ABSENTEEISM</div>
+        </div>
+      </div>
+
+    </div><!-- /ww-employee -->
+
+    <!-- ══════════════════════════════════ -->
+    <!-- ADMIN PORTAL                       -->
+    <!-- ══════════════════════════════════ -->
+    <div id="ww-admin" style="display:none;animation:shareSlideUp .4s ease">
+
+      <!-- Admin header -->
+      <div style="background:rgba(96,165,250,.04);border:1px solid rgba(96,165,250,.12);border-radius:14px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🏢</div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:11px;letter-spacing:3px;color:rgba(96,165,250,.6);margin-bottom:3px">ADMINISTRATOR DASHBOARD</div>
+          <div style="font-family:Georgia,serif;font-size:17px;color:#E2E8F0">Population health intelligence — <em style="color:#60A5FA">zero individual data visible</em></div>
+        </div>
+        <div style="padding:8px 16px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:8px;font-size:11px;color:#22c55e;font-weight:700">● HIPAA COMPLIANT</div>
+      </div>
+
+      <!-- Admin KPI row — live / mock data -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px" class="e-g4">
+        <div style="padding:20px;background:#111827;border:1px solid rgba(201,168,76,.12);border-radius:10px;text-align:center">
+          <div style="font-size:9px;letter-spacing:2px;color:#C8A951;margin-bottom:6px">ENROLLMENT RATE</div>
+          <div id="ww-kpi-enroll" style="font-family:Georgia,serif;font-size:30px;font-weight:700;color:#C8A951">—</div>
+          <div style="font-size:10px;color:#5A6374;margin-top:4px">of eligible employees</div>
+        </div>
+        <div style="padding:20px;background:#111827;border:1px solid rgba(45,212,168,.12);border-radius:10px;text-align:center">
+          <div style="font-size:9px;letter-spacing:2px;color:#2DD4A8;margin-bottom:6px">SESSIONS THIS MONTH</div>
+          <div id="ww-kpi-sess" style="font-family:Georgia,serif;font-size:30px;font-weight:700;color:#2DD4A8">—</div>
+          <div style="font-size:10px;color:#5A6374;margin-top:4px">Alvai + practitioner</div>
+        </div>
+        <div style="padding:20px;background:#111827;border:1px solid rgba(96,165,250,.12);border-radius:10px;text-align:center">
+          <div style="font-size:9px;letter-spacing:2px;color:#60A5FA;margin-bottom:6px">TOP CONCERN</div>
+          <div id="ww-kpi-top" style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#60A5FA">—</div>
+          <div style="font-size:10px;color:#5A6374;margin-top:4px">Aggregate signal</div>
+        </div>
+        <div style="padding:20px;background:#111827;border:1px solid rgba(34,197,94,.12);border-radius:10px;text-align:center">
+          <div style="font-size:9px;letter-spacing:2px;color:#22c55e;margin-bottom:6px">EST. MONTHLY SAVINGS</div>
+          <div id="ww-kpi-save" style="font-family:Georgia,serif;font-size:30px;font-weight:700;color:#22c55e">—</div>
+          <div style="font-size:10px;color:#5A6374;margin-top:4px">vs. baseline costs</div>
+        </div>
+      </div>
+
+      <!-- Admin tools grid -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px" class="e-g2">
+
+        <!-- Population Health Map -->
+        <div class="e-crd" style="border-color:rgba(96,165,250,.12)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <span style="font-size:22px">🗺️</span>
+            <div>
+              <div style="font-size:11px;letter-spacing:2px;color:#60A5FA;font-weight:700">POPULATION HEALTH MAP</div>
+              <div style="font-size:11px;color:#5A6374">Aggregate wellness signals by department</div>
+            </div>
+          </div>
+          <div style="background:#0a0e18;border-radius:8px;padding:16px">
+            <div id="ww-dept-bars"></div>
+          </div>
+          <div style="font-size:9px;color:#5A6374;margin-top:10px">* Individual data never visible. Aggregated groups of 10+ only.</div>
+        </div>
+
+        <!-- ROI Report -->
+        <div class="e-crd" style="border-color:rgba(201,168,76,.12)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <span style="font-size:22px">📊</span>
+            <div>
+              <div style="font-size:11px;letter-spacing:2px;color:#C8A951;font-weight:700">ROI REPORT</div>
+              <div style="font-size:11px;color:#5A6374">Ready for leadership presentation</div>
+            </div>
+          </div>
+          <div id="ww-roi-breakdown" style="background:#0a0e18;border-radius:8px;padding:16px"></div>
+          <button onclick="openShareOverlay({headline:'Share this ROI Report',sub:'Send to leadership or board'})" style="width:100%;margin-top:12px;padding:10px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:8px;color:#C8A951;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px">↗ SHARE WITH LEADERSHIP</button>
+        </div>
+
+        <!-- Program Engagement -->
+        <div class="e-crd" style="border-color:rgba(45,212,168,.12)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <span style="font-size:22px">📈</span>
+            <div>
+              <div style="font-size:11px;letter-spacing:2px;color:#2DD4A8;font-weight:700">PROGRAM ENGAGEMENT</div>
+              <div style="font-size:11px;color:#5A6374">Module completion by category</div>
+            </div>
+          </div>
+          <div id="ww-engage-bars" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+
+        <!-- Contract Builder -->
+        <div class="e-crd" style="border-color:rgba(244,114,182,.12)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <span style="font-size:22px">📋</span>
+            <div>
+              <div style="font-size:11px;letter-spacing:2px;color:#F472B6;font-weight:700">CONTRACT BUILDER</div>
+              <div style="font-size:11px;color:#5A6374">Price your BLEU deployment</div>
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:12px;color:#8B95A5">Employees</span>
+              <span id="ww-contract-emp" style="font-size:14px;font-weight:700;color:#F472B6">400</span>
+            </div>
+            <input type="range" class="e-sld" min="50" max="5000" step="50" value="400" style="background:rgba(244,114,182,.15)" oninput="wwContract(this.value)" id="ww-contract-slider">
+          </div>
+          <div id="ww-contract-breakdown" style="background:#0a0e18;border-radius:8px;padding:14px"></div>
+          <button onclick="ask('enterprise','We have '+document.getElementById('ww-contract-emp').textContent+' employees. What does a BLEU deployment look like for us?')" style="width:100%;margin-top:12px;padding:10px;background:linear-gradient(135deg,rgba(244,114,182,.15),rgba(244,114,182,.06));border:1px solid rgba(244,114,182,.25);border-radius:8px;color:#F472B6;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px">ASK ALVAI TO SCOPE THIS →</button>
+        </div>
+
+      </div>
+
+      <!-- Admin contact CTA -->
+      <div class="e-fade e-glow" style="padding:28px;background:linear-gradient(135deg,rgba(96,165,250,.04),rgba(201,168,76,.03));border:1px solid rgba(96,165,250,.15);border-radius:14px;text-align:center">
+        <div style="font-size:9px;letter-spacing:4px;color:rgba(96,165,250,.6);margin-bottom:8px">READY TO DEPLOY</div>
+        <div style="font-family:Georgia,serif;font-size:20px;color:#E2E8F0;margin-bottom:8px">Schedule your organization demo.</div>
+        <div style="font-size:13px;color:#8B95A5;margin-bottom:20px">Dr. Felicia Stoler leads every enterprise onboarding. DCN · MS · RDN · FACSM · FAND · Dipl ACLM</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <a href="mailto:felicia@jazzbirdnola.com?subject=BLEU Enterprise Demo Request" style="padding:12px 28px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;letter-spacing:1px">EMAIL DR. FELICIA →</a>
+          <button onclick="ask('enterprise','I want to schedule an enterprise demo for my organization.')" style="padding:12px 28px;background:transparent;border:1px solid rgba(201,168,76,.3);color:#C8A951;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px">ASK ALVAI →</button>
+        </div>
+      </div>
+
+    </div><!-- /ww-admin -->
+
+  </div><!-- /e-box -->
+</div><!-- /ww-module -->
+
+<script>
+// ═══ WORKSITE WELLNESS ENGINE ═══
+(function(){
+
+  var CURRICULUM = [
+    {icon:'🔄', title:'The Philosophy Shift', sub:'From perks to infrastructure', desc:'Why the old wellness model fails and what changes when health becomes operating infrastructure. The $90B industry that produces 7% participation.'},
+    {icon:'📱', title:'The Digital Wellness Stack', sub:'Technology that actually works', desc:'BLEU Passport, Alvai AI, drug interaction checking, provider directory, sleep intelligence, environmental monitoring — all in one ecosystem.'},
+    {icon:'🧠', title:'Mental Health in the Workplace', sub:'Removing stigma, not just symptoms', desc:'22 AI therapeutic modes available 24/7. Burnout, anxiety, grief, PTSD, addiction — addressed with clinical precision and zero judgment.'},
+    {icon:'💊', title:'Medication Safety & Costs', sub:'CYP450 · GoodRx · Cost Plus', desc:'Drug-drug and drug-supplement interactions. Prescription cost optimization. FDA-sourced data. Employees saving an average of $840/yr on medications.'},
+    {icon:'🍽️', title:'Nutrition & Metabolic Health', sub:'Evidence-based, not trend-based', desc:'RDN-designed protocols. Anti-inflammatory frameworks. Supplement safety. Grocery delivery integration. Dr. Felicia-verified at every step.'},
+    {icon:'😴', title:'Sleep as Performance', sub:'The recovery multiplier', desc:'Sleep staging, chronotype optimization, supplement protocols, CBT-i techniques. Poor sleep costs US employers $411B annually.'},
+    {icon:'🏃', title:'Movement Medicine', sub:'Beyond the gym stipend', desc:'ClassPass integration. BLEU movement protocols. Strength, mobility, recovery. Evidence-based prescriptions matched to individual capacity.'},
+    {icon:'💰', title:'Financial Stress & Wellness', sub:'The hidden health crisis', desc:'Financial stress drives 70% of presenteeism. Credit building, debt tools, HSA optimization, benefits navigation — all inside BLEU Finance.'},
+    {icon:'🔥', title:'Recovery & Addiction', sub:'Zero stigma. Real support.', desc:'7 recovery pathways. SMART Recovery, 12-step, harm reduction. Naloxone locator. Built by someone with 9 overdose survivals and 28 years in recovery.'},
+    {icon:'🤝', title:'Social Medicine', sub:'Connection as clinical protocol', desc:'Loneliness is as harmful as smoking 15 cigarettes/day. BLEU Community facilitates structured peer connection and belonging within organizations.'},
+    {icon:'📅', title:'The 12-Month Wellness Calendar', sub:'Seasonal programming that sustains', desc:'January: Intention. February: Heart Health. March: Stress. April: Movement. Monthly themes, Alvai-guided campaigns, trackable outcomes.'},
+    {icon:'📊', title:'Measuring What Matters', sub:'ROI that holds up in a board meeting', desc:'Healthcare cost trajectory. Absenteeism rates. Productivity index. Retention delta. Every metric sourced from federal datasets and traceable.'},
+  ];
+
+  var ENGAGE = [
+    {label:'Mental Health',pct:78,color:'#a78bfa'},
+    {label:'Medication Safety',pct:65,color:'#60A5FA'},
+    {label:'Nutrition',pct:71,color:'#2DD4A8'},
+    {label:'Sleep',pct:83,color:'#C8A951'},
+    {label:'Financial Wellness',pct:59,color:'#22c55e'},
+    {label:'Movement',pct:67,color:'#F472B6'},
+  ];
+
+  var DEPTS = [
+    {dept:'Operations',score:72,color:'#2DD4A8'},
+    {dept:'Front Desk',score:61,color:'#60A5FA'},
+    {dept:'Food & Bev',score:68,color:'#a78bfa'},
+    {dept:'Management',score:79,color:'#C8A951'},
+    {dept:'Housekeeping',score:55,color:'#F472B6'},
+  ];
+
+  // Render curriculum accordion
+  var cl = document.getElementById('ww-curriculum-list');
+  if(cl){
+    CURRICULUM.forEach(function(c,i){
+      var row = document.createElement('div');
+      row.style.cssText = 'border-bottom:1px solid rgba(255,255,255,.04);transition:all .2s;cursor:pointer';
+      row.innerHTML = '<div style="display:flex;align-items:center;gap:12px;padding:14px 22px" onclick="this.parentElement.querySelector('.ww-ch-body').style.display=this.parentElement.querySelector('.ww-ch-body').style.display==='none'?'block':'none'">'
+        +'<span style="font-size:18px;flex-shrink:0">'+c.icon+'</span>'
+        +'<div style="flex:1"><div style="font-size:12px;font-weight:700;color:#E2E8F0">'+c.title+'</div><div style="font-size:10px;color:#5A6374;margin-top:2px">'+c.sub+'</div></div>'
+        +'<div style="font-size:9px;letter-spacing:2px;color:rgba(201,168,76,.4);font-weight:700">MODULE '+(i+1<10?'0'+(i+1):i+1)+'</div>'
+        +'<div style="color:#5A6374;font-size:14px;margin-left:6px">›</div>'
+        +'</div>'
+        +'<div class="ww-ch-body" style="display:none;padding:0 22px 16px 52px;font-size:12px;color:#8B95A5;line-height:1.7">'+c.desc+'</div>';
+      cl.appendChild(row);
+    });
+  }
+
+  // Render engagement bars
+  var eb = document.getElementById('ww-engage-bars');
+  if(eb){
+    ENGAGE.forEach(function(e){
+      eb.innerHTML += '<div style="margin-bottom:2px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8B95A5">'+e.label+'</span><span style="font-size:11px;font-weight:700;color:'+e.color+'">'+e.pct+'%</span></div><div style="height:6px;background:rgba(255,255,255,.04);border-radius:3px"><div style="height:6px;border-radius:3px;background:'+e.color+';width:'+e.pct+'%;transition:width 1s ease"></div></div></div>';
+    });
+  }
+
+  // Render dept bars
+  var db = document.getElementById('ww-dept-bars');
+  if(db){
+    DEPTS.forEach(function(d){
+      db.innerHTML += '<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:#8B95A5">'+d.dept+'</span><span style="font-size:11px;font-weight:700;color:'+d.color+'">'+d.score+'/100</span></div><div style="height:7px;background:rgba(255,255,255,.04);border-radius:4px"><div style="height:7px;border-radius:4px;background:'+d.color+';width:'+d.score+'%;transition:width 1.2s ease"></div></div></div>';
+    });
+  }
+
+  // Admin KPIs — simulate connected data
+  function setKPIs(emp){
+    var e = emp||400;
+    var enrolled = Math.round(e*0.67);
+    document.getElementById('ww-kpi-enroll').textContent = '67%';
+    document.getElementById('ww-kpi-sess').textContent = (enrolled*4.2).toFixed(0);
+    document.getElementById('ww-kpi-top').textContent = 'Mental Health';
+    document.getElementById('ww-kpi-save').textContent = '$'+Math.round(e*459/12).toLocaleString();
+  }
+  setKPIs(400);
+
+  // ROI breakdown
+  function renderROI(emp){
+    var e = emp||400;
+    var hc = Math.round(e*5512);
+    var pr = Math.round(e*1685);
+    var ret = Math.round(e*3200);
+    var total = hc+pr+ret;
+    var cost = Math.round(e*600);
+    var net = total-cost;
+    var roi = document.getElementById('ww-roi-breakdown');
+    if(roi) roi.innerHTML = [
+      {label:'Healthcare savings',val:'$'+hc.toLocaleString(),color:'#2DD4A8'},
+      {label:'Productivity gain',val:'$'+pr.toLocaleString(),color:'#a78bfa'},
+      {label:'Retention savings',val:'$'+ret.toLocaleString(),color:'#F472B6'},
+      {label:'BLEU annual cost',val:'-$'+cost.toLocaleString(),color:'#5A6374'},
+      {label:'NET ROI',val:'$'+net.toLocaleString(),color:'#C8A951'},
+    ].map(function(r){
+      return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">'
+        +'<span style="font-size:11px;color:#8B95A5">'+r.label+'</span>'
+        +'<span style="font-size:12px;font-weight:700;color:'+r.color+'">'+r.val+'</span>'
+        +'</div>';
+    }).join('');
+  }
+  renderROI(400);
+
+  // Contract builder
+  window.wwContract = function(v){
+    v = parseInt(v);
+    document.getElementById('ww-contract-emp').textContent = v.toLocaleString();
+    var tier = v<100?'Starter':v<500?'Growth':v<2000?'Scale':'Enterprise';
+    var ppm = v<100?49:v<500?39:v<2000?29:19;
+    var annual = v*ppm*12;
+    var savings = Math.round(v*5512);
+    var roi = ((savings-annual)/annual*100).toFixed(0);
+    var cb = document.getElementById('ww-contract-breakdown');
+    if(cb) cb.innerHTML = ''
+      +'<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8B95A5">Tier</span><span style="font-size:12px;font-weight:700;color:#F472B6">'+tier+'</span></div>'
+      +'<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8B95A5">Per employee/mo</span><span style="font-size:12px;font-weight:700;color:#E2E8F0">$'+ppm+'</span></div>'
+      +'<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;color:#8B95A5">Annual contract</span><span style="font-size:12px;font-weight:700;color:#E2E8F0">$'+annual.toLocaleString()+'</span></div>'
+      +'<div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)"><span style="font-size:11px;color:#8B95A5">Est. savings</span><span style="font-size:12px;font-weight:700;color:#22c55e">$'+savings.toLocaleString()+'</span></div>'
+      +'<div style="text-align:center;margin-top:10px;font-size:11px;color:#C8A951;font-weight:700">ROI: '+roi+'% return on investment</div>';
+    setKPIs(v);
+    renderROI(v);
+  };
+  wwContract(400);
+
+  // Portal switcher
+  window.wwSwitch = function(portal){
+    var empPanel = document.getElementById('ww-employee');
+    var admPanel = document.getElementById('ww-admin');
+    var empBtn = document.getElementById('ww-btn-emp');
+    var admBtn = document.getElementById('ww-btn-adm');
+    if(portal==='employee'){
+      empPanel.style.display='block'; admPanel.style.display='none';
+      empBtn.style.background='linear-gradient(135deg,#C9A84C,#b8943c)'; empBtn.style.color='#0a1628';
+      admBtn.style.background='transparent'; admBtn.style.color='#5A6374';
+    } else {
+      empPanel.style.display='none'; admPanel.style.display='block';
+      admBtn.style.background='linear-gradient(135deg,#3b82f6,#1d4ed8)'; admBtn.style.color='#fff';
+      empBtn.style.background='transparent'; empBtn.style.color='#5A6374';
+    }
+  };
+
+})();
+</script>
+
 <!-- ═══ NOLA HQ ═══ -->
 <div style="padding:44px 0">
   <div class="e-box">
