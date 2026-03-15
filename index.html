@@ -2768,202 +2768,574 @@ button[type="submit"],
 
 <!-- ═══════════════════════ ECSIQ ═══════════════════════ -->
 <div class="panel" id="p-ecsiq">
-  <div class="section-label">CANNABIS INTELLIGENCE</div>
-  <h1 class="hero-title">🌿 <span class="accent">ECSIQ</span></h1>
-  <p class="hero-sub">Cannabis intelligence with clinical precision. Whether you\'re exploring cannabis for wellness, managing it alongside medications, or using it as harm reduction — BLEU has the data. Strain matching. Drug interactions. Dosage guidance. Legal navigation.</p>
 
-  <div class="section-label" style="margin-top:24px">WHAT DO YOU NEED?</div>
-  <div class="quick-row">
-    <span class="quick-btn" onclick="ask('ecsiq','Best cannabis strain for sleep - indica recommendations')">😴 Sleep Strains</span>
-    <span class="quick-btn" onclick="ask('ecsiq','Best strain for anxiety without paranoia')">🧠 Anxiety Relief</span>
-    <span class="quick-btn" onclick="ask('ecsiq','Is CBD safe with my blood pressure medication lisinopril')">⚠️ Drug Interactions</span>
-    <span class="quick-btn" onclick="ask('ecsiq','What dose of CBD should I start with for first time')">📏 Dosage Guide</span>
-    <span class="quick-btn" onclick="ask('ecsiq','Difference between indica sativa hybrid and what to choose')">🌱 Strain Types 101</span>
-    <span class="quick-btn" onclick="ask('ecsiq','Cannabis for chronic pain vs opioids - what does research say')">💊 Cannabis vs Pharma</span>
-    <span class="quick-btn" onclick="ask('ecsiq','How to get a medical marijuana card in Louisiana')">🏥 Medical Card</span>
-    <span class="quick-btn" onclick="ask('ecsiq','Best method - smoking vs edibles vs tincture vs vape')">💨 Methods Compared</span>
-  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('ecsiq','Show me cannabis strains matched to my goals')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127807;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">529+ Strains</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('ecsiq','Check my medications for cannabis interactions')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128138;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">302K Interactions</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('ecsiq','Teach me about cannabis terpenes and what each does')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#129514;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">25 Terpenes</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('ecsiq','Start my ECS Quiz')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129504;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">ECS Quiz</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('ecsiq','Match me to a cannabis strain based on my goals and medication profile')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127807;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Match me a strain</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">BEMS scoring. Goals, body, meds, preferences analyzed.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('ecsiq','Run a full 5-layer safety check on cannabis with my current medications')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128138;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Safety check</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">CYP450 + UGT + Transporter + Pharmacodynamic + Route.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('ecsiq','I have never tried cannabis. Guide me from absolute zero')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128218;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Beginner guide</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Never tried cannabis? Start here. Zero shame.</div></div></div><div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">POPULAR STRAINS</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me about Blue Dream strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#4ecdc4;font-weight:600;font-size:13px">Blue Dream</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 94</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Sativa-Hybrid &#8226; Myrcene</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me about Granddaddy Purple strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#d4af37;font-weight:600;font-size:13px">Granddaddy Purple</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 82</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Indica &#8226; Myrcene</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me about ACDC strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#4ecdc4;font-weight:600;font-size:13px">ACDC</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 96</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">CBD Dominant &#8226; Myrcene + Pinene</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me about Jack Herer strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#d4af37;font-weight:600;font-size:13px">Jack Herer</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 88</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Sativa &#8226; Terpinolene</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me about Charlotte\'s Web strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#4ecdc4;font-weight:600;font-size:13px">Charlotte\'s Web</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 91</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">CBD &#8226; Myrcene + Caryophyllene</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me about Harlequin strain including BEMS score terpenes effects and safety')"><div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#d4af37;font-weight:600;font-size:13px">Harlequin</span><span style="color:#d4af37;font-size:11px;background:rgba(212,175,55,0.1);padding:2px 8px;border-radius:8px">BEMS 85</span></div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">CBD-Rich 2:1 &#8226; Myrcene + Pinene</div></div></div><div style="text-align:center;margin-top:12px;color:#8fa4b0;font-size:10px;font-weight:300">Data: PubMed, FDA, DDInter 2.0, Cannlytics. Not medical advice.</div></div></div>
+<style>
+.eq-lbl{font-size:9px;letter-spacing:4px;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+.eq-h{font-family:Georgia,serif;font-size:clamp(20px,3vw,32px);font-weight:300;color:#E2E8F0;line-height:1.2;margin:0 0 12px}
+.eq-card{background:#0d1910;border:1px solid rgba(78,205,140,.1);border-radius:14px;padding:18px;transition:all .3s;cursor:pointer}
+.eq-card:hover{border-color:rgba(78,205,140,.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.eq-tab{padding:9px 16px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:1px;border:none;cursor:pointer;font-family:inherit;transition:all .25s;background:transparent;color:#5A6374;border:1px solid transparent}
+.eq-tab.on{background:rgba(78,205,140,.12);color:#4ecd8c;border-color:rgba(78,205,140,.25)}
+.eq-sec{display:none;max-width:920px;margin:0 auto;padding:0 20px 40px}
+.eq-sec.on{display:block}
+.eq-pill{display:inline-block;padding:4px 10px;border-radius:12px;font-size:9px;font-weight:700;letter-spacing:1px}
+.bud-says{background:#0d1910;border-left:3px solid #4ecd8c;border-radius:0 10px 10px 0;padding:14px 18px;font-size:13px;color:#c8d8e0;line-height:1.8;font-style:italic;margin:16px 0}
+@media(max-width:768px){.eq-g3{grid-template-columns:1fr!important}.eq-g2{grid-template-columns:1fr!important}.eq-g4{grid-template-columns:1fr 1fr!important}}
+</style>
 
-  <div class="chat-box"><div class="chat-messages" id="chat-ecsiq"></div><div class="chat-input-row"><input autocomplete="off" id="in-ecsiq" placeholder="What strain helps with anxiety? Check my drug interactions..." onkeydown="if(event.key==='Enter')send('ecsiq')"><button onclick="send('ecsiq')">Ask ECS</button></div></div>
+<!-- ════ HERO ════ -->
+<div style="padding:40px 0 28px;background:radial-gradient(ellipse at 25% 35%,rgba(78,205,140,.08),transparent 55%),radial-gradient(ellipse at 75% 65%,rgba(212,175,55,.05),transparent 50%)">
+  <div style="max-width:920px;margin:0 auto;padding:0 20px">
+    <div class="eq-lbl" style="color:#4ecd8c">ENDOCANNABINOID INTELLIGENCE · PATENT PENDING · DR. FELICIA STOLER MEDICAL OVERSIGHT</div>
+    <h1 class="eq-h" style="font-size:clamp(26px,4vw,42px)">🌿 <span style="color:#4ecd8c">ECSIQ</span> — Cannabis Intelligence<br><em style="color:#d4af37">with clinical precision.</em></h1>
+    <p style="font-size:14px;color:#8B95A5;line-height:1.9;max-width:720px;margin:0 0 20px">529 strains. 302K drug interactions. 25 terpenes. 15 cannabinoids. 6 ECS types. 5 safety layers. The only cannabis platform built on federal pharmacology, peer-reviewed citations, and 28 years of clinical wisdom.</p>
 
-  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
-<div class="divider"></div>
-  <div class="section-label">ECSIQ INTELLIGENCE AREAS</div>
-  <div class="feature-grid">
-    <div class="feature-item"><div class="feature-icon">🧬</div><div class="feature-text"><h4>Strain Database</h4><p>10K+ strains. Terpene profiles. Cannabinoid content. Effects. Medical applications. Matched to your needs.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">⚠️</div><div class="feature-text"><h4>Drug Interaction Checker</h4><p>Cannabis + your medications. CYP450 enzyme pathways. Severity ratings. What to adjust.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">📏</div><div class="feature-text"><h4>Dosage Guide</h4><p>Personalized by experience, weight, effect desired, and method. Start low, go slow.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">⚖️</div><div class="feature-text"><h4>Legal Navigator</h4><p>State-by-state status. Medical card process. Travel guidance. Know before you go.</p></div></div>
-  </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+      <span class="eq-pill" style="background:rgba(78,205,140,.08);border:1px solid rgba(78,205,140,.2);color:#4ecd8c">529 Strains</span>
+      <span class="eq-pill" style="background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37">302K Interactions</span>
+      <span class="eq-pill" style="background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4">25 Terpenes</span>
+      <span class="eq-pill" style="background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa">6 ECS Types</span>
+      <span class="eq-pill" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#F472B6">5-Layer Safety</span>
+      <span class="eq-pill" style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#22c55e">BEMS Engine</span>
+      <span class="eq-pill" style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);color:#60A5FA">51 Partners</span>
+      <span class="eq-pill" style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);color:#C8A951">PubMed Cited</span>
+    </div>
 
-  
-  <!-- TERPENE SCIENCE CARDS -->
-  <div style="background:rgba(25,50,68,0.4);border:1px solid rgba(78,205,196,0.12);border-radius:18px;padding:24px;margin:24px 0">
-    <div style="color:rgba(78,205,196,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px">TERPENE INTELLIGENCE</div>
-    <div style="color:#e8d5b0;font-size:18px;font-weight:600;margin-bottom:8px;font-family:'Cormorant Garamond',serif">The Chemistry Behind the Effect</div>
-    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:16px;font-weight:300">Terpenes are why two strains with identical THC % feel completely different. This is the science most dispensaries never teach you.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="terpene-grid">
-      <div style="background:rgba(28,45,58,0.7);border:1px solid rgba(78,205,196,0.1);border-radius:12px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me everything about Myrcene terpene - effects, strains, synergy, dosage')">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="color:#4ecdc4;font-weight:700;font-size:13px">Myrcene</span><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 7px;border-radius:6px">Most Common</span></div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;font-weight:300">Earthy, musky. Sedating, muscle relaxant. Enhances THC absorption. Found in mango, hops, lemongrass.</div>
-        <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap"><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Sleep</span><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Pain</span><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Relax</span></div>
+    <!-- BUD CARD -->
+    <div style="background:linear-gradient(135deg,rgba(78,205,140,.07),rgba(212,175,55,.03));border:1px solid rgba(78,205,140,.2);border-radius:16px;padding:20px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:0">
+      <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#4ecd8c,#2a7a50);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🌿</div>
+      <div style="flex:1;min-width:180px">
+        <div class="eq-lbl" style="color:rgba(78,205,140,.5)">BUD · CANNABIS PHARMACOLOGIST · HARM REDUCTION FIRST</div>
+        <div style="font-family:Georgia,serif;font-size:14px;color:#E2E8F0;line-height:1.6">Warm. Precise. A trusted friend with deep pharmacological expertise. Bud checks your medications <em style="color:#4ecd8c">before</em> recommending anything. Commerce follows care. Always.</div>
       </div>
-      <div style="background:rgba(28,45,58,0.7);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me everything about Caryophyllene terpene - effects, strains, synergy, dosage')">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="color:#d4af37;font-weight:700;font-size:13px">Caryophyllene</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 7px;border-radius:6px">CB2 Agonist</span></div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;font-weight:300">Spicy, peppery. Only terpene that activates cannabinoid receptors directly. Anti-inflammatory, anti-anxiety.</div>
-        <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap"><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Inflammation</span><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Anxiety</span></div>
-      </div>
-      <div style="background:rgba(28,45,58,0.7);border:1px solid rgba(154,205,50,0.1);border-radius:12px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me everything about Limonene terpene - effects, strains, synergy, dosage')">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="color:#9acd32;font-weight:700;font-size:13px">Limonene</span><span style="background:rgba(154,205,50,0.1);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:6px">Mood Lift</span></div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;font-weight:300">Citrus, bright. Elevates mood, reduces stress, antifungal. Found in citrus rinds. Strong antidepressant profile.</div>
-        <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap"><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Depression</span><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Stress</span></div>
-      </div>
-      <div style="background:rgba(28,45,58,0.7);border:1px solid rgba(78,205,196,0.1);border-radius:12px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me everything about Pinene terpene - effects, strains, synergy, dosage')">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="color:#4ecdc4;font-weight:700;font-size:13px">Pinene</span><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 7px;border-radius:6px">Memory</span></div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;font-weight:300">Pine, fresh. Bronchodilator, anti-inflammatory, improves memory. Counteracts THC short-term memory effects.</div>
-        <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap"><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Focus</span><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Breathing</span></div>
-      </div>
-      <div style="background:rgba(28,45,58,0.7);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me everything about Linalool terpene - effects, strains, synergy, dosage')">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="color:#d4af37;font-weight:700;font-size:13px">Linalool</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 7px;border-radius:6px">Lavender</span></div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;font-weight:300">Floral, lavender. Calming, anticonvulsant, antidepressant. Also found in lavender. Strong anti-anxiety profile.</div>
-        <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap"><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Anxiety</span><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Seizure</span></div>
-      </div>
-      <div style="background:rgba(28,45,58,0.7);border:1px solid rgba(154,205,50,0.1);border-radius:12px;padding:14px;cursor:pointer" onclick="ask('ecsiq','Tell me everything about Terpinolene terpene - effects, strains, synergy, dosage')">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="color:#9acd32;font-weight:700;font-size:13px">Terpinolene</span><span style="background:rgba(154,205,50,0.1);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:6px">Energize</span></div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;font-weight:300">Piney, floral, herby. Uplifting, antioxidant, antibacterial. Rare — found in Jack Herer, Ghost Train Haze.</div>
-        <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap"><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Energy</span><span style="background:rgba(25,50,68,0.6);color:#8fa4b0;font-size:10px;padding:2px 6px;border-radius:4px">Creative</span></div>
-      </div>
+      <button onclick="ask('ecsiq','Hi Bud — I want to explore cannabis for wellness. Walk me through what you need to know to help me safely.')" style="padding:12px 22px;background:linear-gradient(135deg,rgba(78,205,140,.2),rgba(78,205,140,.08));border:1px solid rgba(78,205,140,.3);border-radius:10px;color:#4ecd8c;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0">TALK TO BUD →</button>
     </div>
   </div>
-
-  <!-- CONSUMPTION METHOD GUIDE -->
-  <div style="background:rgba(28,45,58,0.5);border:1px solid rgba(212,175,55,0.12);border-radius:18px;padding:24px;margin:24px 0">
-    <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px">METHOD INTELLIGENCE</div>
-    <div style="color:#e8d5b0;font-size:18px;font-weight:600;margin-bottom:8px;font-family:'Cormorant Garamond',serif">How You Use It Changes Everything</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ask('ecsiq','Complete guide to cannabis edibles - onset, dosing, duration, tips for beginners')">
-        <div style="font-size:24px;margin-bottom:8px">🍪</div>
-        <div style="color:#4ecdc4;font-weight:600;font-size:12px">Edibles</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:6px;line-height:1.5">30–120 min onset · 4–8 hrs · Liver converts to 11-OH-THC (2–3x potency)</div>
-      </div>
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ask('ecsiq','Complete guide to cannabis tinctures - sublingual dosing, onset, how to use')">
-        <div style="font-size:24px;margin-bottom:8px">💧</div>
-        <div style="color:#d4af37;font-weight:600;font-size:12px">Tinctures</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:6px;line-height:1.5">15–45 min sublingual · 2–4 hrs · Precise dosing · Best for medical</div>
-      </div>
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.1);border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ask('ecsiq','Complete guide to cannabis vaporizing - temps, onset, lung health, vs smoking')">
-        <div style="font-size:24px;margin-bottom:8px">💨</div>
-        <div style="color:#9acd32;font-weight:600;font-size:12px">Vaporizing</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:6px;line-height:1.5">2–10 min onset · 1–3 hrs · 95% less toxins than smoking · Temp matters</div>
-      </div>
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ask('ecsiq','Complete guide to cannabis topicals - CBD creams balms patches how they work')">
-        <div style="font-size:24px;margin-bottom:8px">🧴</div>
-        <div style="color:#4ecdc4;font-weight:600;font-size:12px">Topicals</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:6px;line-height:1.5">Local effect only · No high · Anti-inflammatory · Best for joint/muscle pain</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- AFFILIATE: CHARLOTTE'S WEB PRODUCT LINE -->
-  <div style="background:linear-gradient(135deg,rgba(154,205,50,0.06),rgba(25,50,68,0.6));border:1px solid rgba(154,205,50,0.2);border-radius:18px;padding:24px;margin:24px 0">
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
-      <div style="width:48px;height:48px;border-radius:14px;background:rgba(154,205,50,0.15);display:flex;align-items:center;justify-content:center;font-size:24px">🌿</div>
-      <div>
-        <div style="color:#9acd32;font-weight:700;font-size:18px">Charlotte's Web</div>
-        <div style="color:#8fa4b0;font-size:12px">The most trusted name in hemp CBD — clinical-grade, third-party tested</div>
-      </div>
-    </div>
-    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:18px;font-weight:300">Charlotte's Web was built for Charlotte Figi, whose story changed cannabis law in America. Every product is whole-plant hemp extract with naturally occurring CBD, CBG, CBC, terpenes, and flavonoids — the full entourage effect, no THC.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.12);border-radius:14px;padding:16px">
-        <div style="color:#9acd32;font-weight:600;font-size:14px;margin-bottom:6px">Daily Wellness Oil</div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;margin-bottom:10px;font-weight:300">Original formula. 50mg CBD per serving. Whole-plant extract. The one that started it all — consistent, reliable, clinical.</div>
-        <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">50mg/serving</span>
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">3rd-party tested</span>
-        </div>
-        <a href="https://www.charlottesweb.com/all-charlottes-web-hemp-cbd-supplements/cbd-oils" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#9acd32,#6b8f23);border-radius:8px;padding:9px;text-align:center;color:#0a1628;font-weight:700;font-size:12px;text-decoration:none">Shop CBD Oils →</a>
-      </div>
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.12);border-radius:14px;padding:16px">
-        <div style="color:#9acd32;font-weight:600;font-size:14px;margin-bottom:6px">Sleep Gummies</div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;margin-bottom:10px;font-weight:300">CBD + melatonin + lemon balm. Designed for sleep onset AND quality. No next-day grogginess. Non-habit forming.</div>
-        <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">10mg CBD</span>
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">3mg melatonin</span>
-        </div>
-        <a href="https://www.charlottesweb.com/all-charlottes-web-hemp-cbd-supplements/cbd-gummies" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#9acd32,#6b8f23);border-radius:8px;padding:9px;text-align:center;color:#0a1628;font-weight:700;font-size:12px;text-decoration:none">Shop Sleep Gummies →</a>
-      </div>
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.12);border-radius:14px;padding:16px">
-        <div style="color:#9acd32;font-weight:600;font-size:14px;margin-bottom:6px">Recovery Balm</div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;margin-bottom:10px;font-weight:300">Targeted CBD + arnica + ginger. For muscle soreness, joint pain, post-workout recovery. No systemic absorption.</div>
-        <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">Topical</span>
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">THC-free</span>
-        </div>
-        <a href="https://www.charlottesweb.com/all-charlottes-web-hemp-cbd-supplements/cbd-topicals-and-lotions" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#9acd32,#6b8f23);border-radius:8px;padding:9px;text-align:center;color:#0a1628;font-weight:700;font-size:12px;text-decoration:none">Shop Topicals →</a>
-      </div>
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.12);border-radius:14px;padding:16px">
-        <div style="color:#9acd32;font-weight:600;font-size:14px;margin-bottom:6px">Calm Gummies</div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;margin-bottom:10px;font-weight:300">CBD + lemon balm for stress and anxiety. Daytime formula — no sedation. Clinically studied lemon balm extract.</div>
-        <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">10mg CBD</span>
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">Lemon balm</span>
-        </div>
-        <a href="https://www.charlottesweb.com/all-charlottes-web-hemp-cbd-supplements/cbd-gummies" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#9acd32,#6b8f23);border-radius:8px;padding:9px;text-align:center;color:#0a1628;font-weight:700;font-size:12px;text-decoration:none">Shop Calm Gummies →</a>
-      </div>
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.12);border-radius:14px;padding:16px">
-        <div style="color:#9acd32;font-weight:600;font-size:14px;margin-bottom:6px">Pet CBD Oil</div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;margin-bottom:10px;font-weight:300">Hemp CBD for dogs and cats. Calming, mobility support, wellness. Chicken and bacon flavor. Vet formulated.</div>
-        <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">Vet formulated</span>
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">THC-free</span>
-        </div>
-        <a href="https://www.charlottesweb.com/all-charlottes-web-hemp-cbd-supplements/cbd-for-dogs" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#9acd32,#6b8f23);border-radius:8px;padding:9px;text-align:center;color:#0a1628;font-weight:700;font-size:12px;text-decoration:none">Shop Pet CBD →</a>
-      </div>
-      <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.12);border-radius:14px;padding:16px">
-        <div style="color:#9acd32;font-weight:600;font-size:14px;margin-bottom:6px">Starter Bundle</div>
-        <div style="color:#8fa4b0;font-size:11px;line-height:1.6;margin-bottom:10px;font-weight:300">Best value for new users. Oil + gummies + guide. 30-day supply. The complete introduction to whole-plant CBD.</div>
-        <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">Best value</span>
-          <span style="background:rgba(154,205,50,0.08);color:#9acd32;font-size:9px;padding:2px 7px;border-radius:5px">30-day supply</span>
-        </div>
-        <a href="https://www.charlottesweb.com/bundles" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#9acd32,#6b8f23);border-radius:8px;padding:9px;text-align:center;color:#0a1628;font-weight:700;font-size:12px;text-decoration:none">Shop Bundles →</a>
-      </div>
-    </div>
-    <div style="text-align:center;color:rgba(212,175,55,0.4);font-size:10px;margin-top:4px">💛 Affiliate — funds this free platform</div>
-  </div>
-
-  <!-- DRUG INTERACTION QUICK CHECKER -->
-  <div style="background:rgba(25,50,68,0.4);border:1px solid rgba(212,175,55,0.15);border-radius:18px;padding:24px;margin:24px 0">
-    <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px">⚠️ INTERACTION CHECKER</div>
-    <div style="color:#e8d5b0;font-size:18px;font-weight:600;margin-bottom:8px;font-family:'Cormorant Garamond',serif">Cannabis + Your Medications</div>
-    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:14px;font-weight:300">Cannabis is metabolized through the CYP450 enzyme system — the same pathway as 60% of prescription drugs. Enter your medications to check for interactions.</p>
-    <div style="display:flex;gap:10px;margin-bottom:10px">
-      <input id="ecsiq-meds" placeholder="Enter medications (e.g. lisinopril, sertraline, warfarin)..." style="flex:1;background:rgba(25,50,68,0.8);border:1px solid rgba(212,175,55,0.2);border-radius:10px;padding:10px 14px;color:#e8d5b0;font-size:13px;outline:none">
-      <button onclick="checkCannabisInteraction()" style="background:linear-gradient(135deg,#d4af37,#b8962e);border:none;border-radius:10px;padding:10px 20px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">Check →</button>
-    </div>
-    <div id="ecsiq-interaction-result"></div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
-      <div style="background:rgba(78,205,196,0.06);border-radius:8px;padding:10px;cursor:pointer" onclick="document.getElementById('ecsiq-meds').value='warfarin';checkCannabisInteraction()">
-        <div style="color:#4ecdc4;font-size:11px;font-weight:600">Warfarin</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:2px">Blood thinner interaction</div>
-      </div>
-      <div style="background:rgba(212,175,55,0.06);border-radius:8px;padding:10px;cursor:pointer" onclick="document.getElementById('ecsiq-meds').value='sertraline';checkCannabisInteraction()">
-        <div style="color:#d4af37;font-size:11px;font-weight:600">Sertraline (Zoloft)</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:2px">SSRI + cannabis</div>
-      </div>
-      <div style="background:rgba(154,205,50,0.06);border-radius:8px;padding:10px;cursor:pointer" onclick="document.getElementById('ecsiq-meds').value='lisinopril';checkCannabisInteraction()">
-        <div style="color:#9acd32;font-size:11px;font-weight:600">Lisinopril</div>
-        <div style="color:#8fa4b0;font-size:10px;margin-top:2px">Blood pressure + cannabis</div>
-      </div>
-    </div>
-  </div>
-
-<div class="disclaimer">🌿 Cannabis legality varies by state. BLEU provides information — always verify local laws. Drug interaction information is for education, not prescription. Consult your doctor when combining cannabis with medications.</div>
 </div>
 
-<!-- ═══════════════════════ TERMS ═══════════════════════ -->
-<!-- SLEEP -->
+<!-- ════ NAV ════ -->
+<div style="background:#090e12;border-top:1px solid rgba(78,205,140,.06);border-bottom:1px solid rgba(78,205,140,.06);padding:10px 20px;overflow-x:auto;white-space:nowrap;scrollbar-width:none;-ms-overflow-style:none">
+  <div style="display:inline-flex;gap:6px">
+    <button class="eq-tab on" onclick="eqNav(this,'eq-goals')">🎯 Goals</button>
+    <button class="eq-tab" onclick="eqNav(this,'eq-safety')">🛡️ 5-Layer Safety</button>
+    <button class="eq-tab" onclick="eqNav(this,'eq-strains')">🌿 BEMS Strains</button>
+    <button class="eq-tab" onclick="eqNav(this,'eq-terpenes')">🧬 Terpenes</button>
+    <button class="eq-tab" onclick="eqNav(this,'eq-ecs-types')">🧠 ECS Types</button>
+    <button class="eq-tab" onclick="eqNav(this,'eq-cannabinoids')">💊 Cannabinoids</button>
+    <button class="eq-tab" onclick="eqNav(this,'eq-dosing')">📏 Dosing</button>
+    <button class="eq-tab" onclick="eqNav(this,'eq-commerce')">🛒 Shop</button>
+    <button class="eq-tab" onclick="eqNav(this,'eq-research')">📚 Research</button>
+    <button class="eq-tab" onclick="eqNav(this,'eq-session')">📓 My Sessions</button>
+  </div>
+</div>
+
+<!-- ════ CHAT — always present ════ -->
+<div style="max-width:920px;margin:0 auto;padding:20px 20px 0">
+  <div class="chat-box"><div class="chat-messages" id="chat-ecsiq"></div>
+    <div class="chat-input-row">
+      <input autocomplete="off" id="in-ecsiq" placeholder="Match me a strain · Check my drug interactions · What ECS type am I · First-time guide..." onkeydown="if(event.key==='Enter')send('ecsiq')">
+      <button onclick="send('ecsiq')">Ask Bud</button>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0">
+    <span class="quick-btn" onclick="ask('ecsiq','Match me the best strain for anxiety with SSRIs — run safety check first.')">🧠 Anxiety + SSRI</span>
+    <span class="quick-btn" onclick="ask('ecsiq','Best indica for sleep — BEMS score 85+ only. Include terpene profiles.')">😴 Sleep Strains</span>
+    <span class="quick-btn" onclick="ask('ecsiq','Run full 5-layer safety check: CYP450, UGT, transporters, pharmacodynamic, route modifier.')">🛡️ 5-Layer Check</span>
+    <span class="quick-btn" onclick="ask('ecsiq','What ECS type am I? Run the 7-question IQ Passport quiz.')">🧬 My ECS Type</span>
+    <span class="quick-btn" onclick="ask('ecsiq','I have never tried cannabis. Guide me from absolute zero. No shame.')">🌱 First Timer</span>
+    <span class="quick-btn" onclick="ask('ecsiq','Cannabis vs opioids for chronic pain — PMID citations, mechanisms, safety.')">💊 vs Pharma</span>
+    <span class="quick-btn" onclick="ask('ecsiq','Explain retrograde signaling and clinical endocannabinoid deficiency (CECD) — Russo 2016.')">🔬 ECS Science</span>
+    <span class="quick-btn" onclick="ask('ecsiq','How do I get a medical marijuana card in Louisiana? What conditions qualify?')">🏥 Medical Card LA</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: GOALS                       -->
+<!-- ════════════════════════════════════ -->
+<div id="eq-goals" class="eq-sec on">
+  <div class="eq-lbl" style="color:#4ecd8c;margin-top:32px">WHAT IS YOUR WELLNESS GOAL?</div>
+  <h2 class="eq-h">Tell Bud. He builds your protocol from there.</h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px" class="eq-g3">
+    <div class="eq-card" onclick="ask('ecsiq','Match me to the best strains and products for SLEEP. Include BEMS scores, terpene profiles, and safe dosing for a beginner.')"><div style="font-size:30px;margin-bottom:8px">😴</div><div style="font-size:13px;font-weight:700;color:#4ecd8c;margin-bottom:4px">Sleep</div><div style="font-size:11px;color:#8B95A5;line-height:1.6">CBN + myrcene. Indica dominance. Circadian targeting. 2-AG pathway optimization.</div><div style="margin-top:10px;font-size:9px;color:rgba(78,205,140,.5);letter-spacing:2px">TOP STRAINS: GDP · WEDDING CAKE · ZKITTLEZ</div></div>
+    <div class="eq-card" onclick="ask('ecsiq','Match me to cannabis options for ANXIETY. Check SSRI and common anxiety med interactions via 5-layer safety first.')"><div style="font-size:30px;margin-bottom:8px">🧠</div><div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:4px">Anxiety</div><div style="font-size:11px;color:#8B95A5;line-height:1.6">CBD dominant. 5-HT1A pathway. Calm without paranoia. Zuardi 2017: 40–60% reduction.</div><div style="margin-top:10px;font-size:9px;color:rgba(167,139,250,.5);letter-spacing:2px">TOP STRAINS: ACDC · HARLEQUIN · CANNATONIC</div></div>
+    <div class="eq-card" onclick="ask('ecsiq','Cannabis for chronic PAIN management. Compare mechanisms vs opioids. Include CB1/CB2 pathway, terpene anti-inflammatory data.')"><div style="font-size:30px;margin-bottom:8px">🔥</div><div style="font-size:13px;font-weight:700;color:#F472B6;margin-bottom:4px">Pain</div><div style="font-size:11px;color:#8B95A5;line-height:1.6">CB2 anti-inflammatory. Caryophyllene + CB2. Neuropathic + chronic. Research-grade.</div><div style="margin-top:10px;font-size:9px;color:rgba(244,114,182,.5);letter-spacing:2px">TOP STRAINS: BLUE DREAM · HARLEQUIN · CRITICAL MASS</div></div>
+    <div class="eq-card" onclick="ask('ecsiq','Best strains for FOCUS and creative flow — THCV, sativa dominant, low paranoia risk. BEMS scores included.')"><div style="font-size:30px;margin-bottom:8px">⚡</div><div style="font-size:13px;font-weight:700;color:#d4af37;margin-bottom:4px">Focus</div><div style="font-size:11px;color:#8B95A5;line-height:1.6">THCV + terpinolene. Sativa-forward. Dopamine upregulation. No ceiling effect.</div><div style="margin-top:10px;font-size:9px;color:rgba(212,175,55,.5);letter-spacing:2px">TOP STRAINS: JACK HERER · DURBAN POISON · GREEN CRACK</div></div>
+    <div class="eq-card" onclick="ask('ecsiq','Cannabis for MOOD support — anandamide, serotonin, dopamine pathways. Not a replacement for medication. Cite PMID.')"><div style="font-size:30px;margin-bottom:8px">☀️</div><div style="font-size:13px;font-weight:700;color:#60A5FA;margin-bottom:4px">Mood</div><div style="font-size:11px;color:#8B95A5;line-height:1.6">Anandamide support. FAAH inhibition via CBD. Serotonergic modulation. Limonene.</div><div style="margin-top:10px;font-size:9px;color:rgba(96,165,250,.5);letter-spacing:2px">TOP STRAINS: BLUE DREAM · PINEAPPLE EXPRESS · LEMON HAZE</div></div>
+    <div class="eq-card" onclick="ask('ecsiq','Cannabis in RECOVERY — harm reduction approach. CBD for craving reduction. Safe use alongside sobriety goals. Zero judgment.')"><div style="font-size:30px;margin-bottom:8px">🌅</div><div style="font-size:13px;font-weight:700;color:#2DD4A8;margin-bottom:4px">Recovery</div><div style="font-size:11px;color:#8B95A5;line-height:1.6">CBD harm reduction. Opioid withdrawal support. Built by someone who survived 9 overdoses.</div><div style="margin-top:10px;font-size:9px;color:rgba(45,212,168,.5);letter-spacing:2px">TOP: ACDC · CHARLOTTE'S WEB · REMEDY</div></div>
+    <div class="eq-card" onclick="ask('ecsiq','Cannabis for SOCIAL ease — reducing social anxiety without sedation. Low-dose THC protocol. Oxytocin pathway.')"><div style="font-size:30px;margin-bottom:8px">🤝</div><div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:4px">Social</div><div style="font-size:11px;color:#8B95A5;line-height:1.6">Low-dose THC 2.5mg. Ocimene + linalool. Oxytocin facilitation. Social ease protocol.</div><div style="margin-top:10px;font-size:9px;color:rgba(34,197,94,.5);letter-spacing:2px">TOP STRAINS: SOUR DIESEL · MIMOSA · STRAWBERRY COUGH</div></div>
+    <div class="eq-card" onclick="ask('ecsiq','Cannabis for APPETITE stimulation and nausea. Chemo support. CB1-mediated hunger. FDA-adjacent evidence.')"><div style="font-size:30px;margin-bottom:8px">🍽️</div><div style="font-size:13px;font-weight:700;color:#F472B6;margin-bottom:4px">Appetite</div><div style="font-size:11px;color:#8B95A5;line-height:1.6">CB1 ghrelin pathway. Nausea relief via 5-HT3 antagonism. Chemo support evidence.</div><div style="margin-top:10px;font-size:9px;color:rgba(244,114,182,.5);letter-spacing:2px">TOP STRAINS: OG KUSH · GIRL SCOUT COOKIES · PURPLE URKLE</div></div>
+    <div class="eq-card" onclick="ask('ecsiq','Cannabis for INTIMACY — sensory enhancement, anxiety reduction, tactile amplification. Low-dose protocol.')"><div style="font-size:30px;margin-bottom:8px">💜</div><div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:4px">Intimacy</div><div style="font-size:11px;color:#8B95A5;line-height:1.6">Tactile enhancement. CB1 sensory amplification. Linalool + limonene. Dose: 2.5–5mg.</div><div style="margin-top:10px;font-size:9px;color:rgba(167,139,250,.5);letter-spacing:2px">TOP STRAINS: WEDDING CAKE · MIMOSA · GRANDDADDY PURPLE</div></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: 5-LAYER SAFETY              -->
+<!-- ════════════════════════════════════ -->
+<div id="eq-safety" class="eq-sec">
+  <div class="eq-lbl" style="color:#F472B6;margin-top:32px">5-LAYER SAFETY SENTINEL — 302,516 INTERACTIONS</div>
+  <h2 class="eq-h">Bud checks your medications <em style="color:#4ecd8c">before recommending anything.</em></h2>
+  <p style="font-size:13px;color:#8B95A5;margin-bottom:24px;line-height:1.8">CYP450 metabolism · UGT glucuronidation · Transporter proteins · Pharmacodynamic overlap · Route-of-administration modifier. Not a lookup table — a clinical analysis engine with 16 patent claims filed.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px" class="eq-g2">
+    <div style="background:#0d1910;border:1px solid rgba(244,114,182,.18);border-radius:12px;padding:20px;cursor:pointer" onclick="ask('ecsiq','Explain Layer 1: CYP450 metabolism — how CBD inhibits CYP2C19 and CYP3A4. Which medications does this affect? Cite Nasrin 2021 PMID 34172568.')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:32px;height:32px;border-radius:7px;background:rgba(244,114,182,.12);display:flex;align-items:center;justify-content:center;font-weight:700;color:#F472B6;font-size:12px;flex-shrink:0">L1</div><div><div style="font-size:12px;font-weight:700;color:#F472B6">CYP450 Metabolism</div><div style="font-size:10px;color:#5A6374">Primary interaction layer</div></div></div>
+      <div style="font-size:12px;color:#8B95A5;line-height:1.7">CBD potently inhibits CYP2C19 and CYP3A4. THC inhibits CYP1A2. Affects warfarin, SSRIs, benzos, statins, blood pressure meds. <strong style="color:#E2E8F0">Nasrin 2021</strong> (PMID: 34172568). Most dangerous and most common layer.</div>
+      <div style="margin-top:10px;padding:6px 10px;background:rgba(244,114,182,.06);border-radius:6px;font-size:10px;color:#F472B6;font-weight:600">⚠ Highest-frequency drug conflicts</div>
+    </div>
+    <div style="background:#0d1910;border:1px solid rgba(96,165,250,.18);border-radius:12px;padding:20px;cursor:pointer" onclick="ask('ecsiq','Explain Layer 2: UGT enzyme inhibition by cannabinoids. Anderson 2019. Which medications use UGT1A9 and UGT2B7?')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:32px;height:32px;border-radius:7px;background:rgba(96,165,250,.12);display:flex;align-items:center;justify-content:center;font-weight:700;color:#60A5FA;font-size:12px;flex-shrink:0">L2</div><div><div style="font-size:12px;font-weight:700;color:#60A5FA">UGT Enzymes</div><div style="font-size:10px;color:#5A6374">Glucuronidation pathway</div></div></div>
+      <div style="font-size:12px;color:#8B95A5;line-height:1.7">Cannabinoids inhibit UGT1A9 and UGT2B7 — enzymes metabolizing morphine, lorazepam, and NSAIDs. <strong style="color:#E2E8F0">Anderson 2019.</strong> Missed by every standard drug checker. BLEU catches it.</div>
+      <div style="margin-top:10px;padding:6px 10px;background:rgba(96,165,250,.06);border-radius:6px;font-size:10px;color:#60A5FA;font-weight:600">⚠ Opioid + benzo amplification</div>
+    </div>
+    <div style="background:#0d1910;border:1px solid rgba(45,212,168,.18);border-radius:12px;padding:20px;cursor:pointer" onclick="ask('ecsiq','Explain Layer 3: P-glycoprotein and BCRP transporter inhibition by CBD. Which drugs are P-gp substrates? Cardiac and cancer meds.')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:32px;height:32px;border-radius:7px;background:rgba(45,212,168,.12);display:flex;align-items:center;justify-content:center;font-weight:700;color:#2DD4A8;font-size:12px;flex-shrink:0">L3</div><div><div style="font-size:12px;font-weight:700;color:#2DD4A8">Transporter Proteins</div><div style="font-size:10px;color:#5A6374">P-gp · BCRP · MRP efflux</div></div></div>
+      <div style="font-size:12px;color:#8B95A5;line-height:1.7">CBD inhibits P-glycoprotein and BCRP efflux pumps. Affects blood-brain barrier penetration. Digoxin, cyclosporine, some oncology agents are P-gp substrates. Blood level changes can be dangerous.</div>
+      <div style="margin-top:10px;padding:6px 10px;background:rgba(45,212,168,.06);border-radius:6px;font-size:10px;color:#2DD4A8;font-weight:600">⚠ Cardiac + oncology alerts</div>
+    </div>
+    <div style="background:#0d1910;border:1px solid rgba(201,168,76,.18);border-radius:12px;padding:20px;cursor:pointer" onclick="ask('ecsiq','Explain Layer 4: Pharmacodynamic overlaps between cannabis and psychiatric medications. Additive serotonin. CNS depression. Antipsychotic CB1 sensitivity.')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:32px;height:32px;border-radius:7px;background:rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;font-weight:700;color:#C8A951;font-size:12px;flex-shrink:0">L4</div><div><div style="font-size:12px;font-weight:700;color:#C8A951">Pharmacodynamic</div><div style="font-size:10px;color:#5A6374">Receptor-level overlap</div></div></div>
+      <div style="font-size:12px;color:#8B95A5;line-height:1.7">Cannabis + SSRIs both activate 5-HT1A. Additive for anxiety goals but requires dose management. CNS depressants compound sedation. Antipsychotics alter CB1 receptor sensitivity profiles.</div>
+      <div style="margin-top:10px;padding:6px 10px;background:rgba(201,168,76,.06);border-radius:6px;font-size:10px;color:#C8A951;font-weight:600">⚠ Psych med synergy + risk map</div>
+    </div>
+  </div>
+
+  <!-- L5 Route Modifier -->
+  <div style="background:#0d1910;border:1px solid rgba(78,205,140,.18);border-radius:12px;padding:20px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:32px;height:32px;border-radius:7px;background:rgba(78,205,140,.12);display:flex;align-items:center;justify-content:center;font-weight:700;color:#4ecd8c;font-size:12px;flex-shrink:0">L5</div><div><div style="font-size:12px;font-weight:700;color:#4ecd8c">Route-of-Administration Modifier</div><div style="font-size:10px;color:#5A6374">How you consume changes the interaction profile entirely</div></div></div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px" class="eq-g4" style="grid-template-columns:repeat(5,1fr)!important">
+      <div style="text-align:center;padding:10px 6px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.1);border-radius:8px"><div style="font-size:18px;margin-bottom:3px">💨</div><div style="font-size:10px;color:#4ecd8c;font-weight:700">Inhaled</div><div style="font-size:9px;color:#5A6374;margin-top:2px">Fast onset · 90min · bypasses first-pass CYP</div></div>
+      <div style="text-align:center;padding:10px 6px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.1);border-radius:8px"><div style="font-size:18px;margin-bottom:3px">💧</div><div style="font-size:10px;color:#d4af37;font-weight:700">Sublingual</div><div style="font-size:9px;color:#5A6374;margin-top:2px">15min · reduced CYP · preferred</div></div>
+      <div style="text-align:center;padding:10px 6px;background:rgba(244,114,182,.06);border:1px solid rgba(244,114,182,.15);border-radius:8px"><div style="font-size:18px;margin-bottom:3px">🍬</div><div style="font-size:10px;color:#F472B6;font-weight:700">Edible</div><div style="font-size:9px;color:#5A6374;margin-top:2px">90min · 11-OH-THC · HIGHEST interaction risk</div></div>
+      <div style="text-align:center;padding:10px 6px;background:rgba(96,165,250,.04);border:1px solid rgba(96,165,250,.1);border-radius:8px"><div style="font-size:18px;margin-bottom:3px">💊</div><div style="font-size:10px;color:#60A5FA;font-weight:700">Capsule</div><div style="font-size:9px;color:#5A6374;margin-top:2px">Full CYP exposure · predictable</div></div>
+      <div style="text-align:center;padding:10px 6px;background:rgba(45,212,168,.04);border:1px solid rgba(45,212,168,.1);border-radius:8px"><div style="font-size:18px;margin-bottom:3px">🧴</div><div style="font-size:10px;color:#2DD4A8;font-weight:700">Topical</div><div style="font-size:9px;color:#5A6374;margin-top:2px">Minimal systemic absorption · safest</div></div>
+    </div>
+  </div>
+
+  <div class="bud-says">"I check all five layers simultaneously before I suggest anything. Most apps run one lookup. We run a clinical engine. Tell me what you take — I'll tell you what's safe, what needs dose adjustment, and what to avoid entirely."<br><span style="font-size:10px;color:#5A6374;font-style:normal">— Bud · CYP450, UGT, P-gp, PD, Route · Cite: Nasrin 2021 · Anderson 2019 · Bansal 2024</span></div>
+
+  <button onclick="ask('ecsiq','Run my full 5-layer safety check. CYP450, UGT, transporters, pharmacodynamic, route modifier. Ask me my medications and route first.')" style="width:100%;padding:14px;background:linear-gradient(135deg,rgba(244,114,182,.15),rgba(244,114,182,.06));border:1px solid rgba(244,114,182,.25);border-radius:10px;color:#F472B6;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px">🛡️ RUN MY PERSONAL 5-LAYER SAFETY CHECK →</button>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: BEMS STRAINS                -->
+<!-- ════════════════════════════════════ -->
+<div id="eq-strains" class="eq-sec">
+  <div class="eq-lbl" style="color:#d4af37;margin-top:32px">BEMS ENGINE — BIO-EFFICACY MATCH SCORE</div>
+  <h2 class="eq-h">529 strains. Every one scored across 6 dimensions.</h2>
+  <div style="background:#0d1910;border:1px solid rgba(212,175,55,.15);border-radius:12px;padding:16px 20px;margin-bottom:20px">
+    <div class="eq-lbl" style="color:rgba(212,175,55,.5);margin-bottom:8px">BEMS FORMULA v2</div>
+    <div style="font-size:12px;color:#4ecd8c;font-family:monospace;line-height:2;overflow-x:auto;white-space:nowrap">BEMS = (0.25 × effect_match) + (0.20 × terpene_receptor) + (0.15 × ecs_type_align) + (0.20 × safety_score) + (0.10 × thc_cbd_ratio) + (0.10 × community_outcome)</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px" class="eq-g3">
+      <div style="font-size:10px;color:#8B95A5"><strong style="color:#d4af37">25%</strong> Effect match — cosine similarity to your goals</div>
+      <div style="font-size:10px;color:#8B95A5"><strong style="color:#4ecdc4">20%</strong> Terpene–receptor alignment matrix</div>
+      <div style="font-size:10px;color:#8B95A5"><strong style="color:#a78bfa">15%</strong> ECS type alignment (your biology)</div>
+      <div style="font-size:10px;color:#8B95A5"><strong style="color:#F472B6">20%</strong> Safety score — inverse of interaction severity</div>
+      <div style="font-size:10px;color:#8B95A5"><strong style="color:#60A5FA">10%</strong> THC:CBD ratio vs your tolerance level</div>
+      <div style="font-size:10px;color:#8B95A5"><strong style="color:#22c55e">10%</strong> Community outcomes from same ECS type</div>
+    </div>
+    <div style="margin-top:10px;font-size:10px;color:#5A6374">Compute time: &lt;200ms for all 529 strains. $0.00 AI cost — pure algorithmic code.</div>
+  </div>
+
+  <!-- Score legend -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">
+    <span class="eq-pill" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#22c55e">90–100 Elite</span>
+    <span class="eq-pill" style="background:rgba(78,205,140,.08);border:1px solid rgba(78,205,140,.2);color:#4ecd8c">80–89 Strong</span>
+    <span class="eq-pill" style="background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37">70–79 Good</span>
+    <span class="eq-pill" style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);color:#60A5FA">60–69 Moderate</span>
+    <span class="eq-pill" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#F472B6">&lt;60 Caution</span>
+  </div>
+
+  <div id="eq-strain-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px" class="eq-g3"></div>
+
+  <button onclick="ask('ecsiq','Run BEMS engine for my goals. Ask me my goal, ECS type, tolerance, and medications. Return top 5 with BEMS scores, terpenes, and mechanism explanations.')" style="width:100%;padding:14px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.2);border-radius:10px;color:#d4af37;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px">🌿 GET MY PERSONALIZED BEMS MATCHES →</button>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: TERPENES                    -->
+<!-- ════════════════════════════════════ -->
+<div id="eq-terpenes" class="eq-sec">
+  <div class="eq-lbl" style="color:#4ecdc4;margin-top:32px">TERPENE INTELLIGENCE — 25 COMPOUNDS MAPPED</div>
+  <h2 class="eq-h">The entourage effect, <em style="color:#4ecdc4">decoded.</em></h2>
+  <p style="font-size:13px;color:#8B95A5;margin-bottom:20px;line-height:1.8">Terpenes modulate CB1 receptor activity, cross the blood-brain barrier, and synergize with cannabinoids to produce strain-specific effects. <strong style="color:#E2E8F0">Russo 2011</strong> — the entourage effect. This is the science behind the smell.</p>
+  <div id="eq-terpene-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px" class="eq-g3"></div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: 6 ECS TYPES                 -->
+<!-- ════════════════════════════════════ -->
+<div id="eq-ecs-types" class="eq-sec">
+  <div class="eq-lbl" style="color:#a78bfa;margin-top:32px">IQ PASSPORT — 6 ECS PERSONALITY TYPES</div>
+  <h2 class="eq-h">Your endocannabinoid system is <em style="color:#a78bfa">biologically unique.</em></h2>
+  <p style="font-size:13px;color:#8B95A5;margin-bottom:20px;line-height:1.8">6 ECS types derived from receptor density patterns, anandamide production, and stress-response signatures. Bud identifies your type in a 7-question conversation. Unlocks personalized strain matching, dosing, and protocol design forever.</p>
+  <div id="eq-ecs-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px" class="eq-g3"></div>
+  <div style="background:#0d1910;border:1px solid rgba(167,139,250,.2);border-radius:12px;padding:22px;text-align:center">
+    <div style="font-size:13px;color:#8B95A5;margin-bottom:14px">Bud identifies your ECS type in 7 questions. Takes 3 minutes. Changes everything.</div>
+    <button onclick="ask('ecsiq','Start my ECS IQ Passport quiz. I want to discover my ECS type, dominant receptor, CB1 score, and get personalized strain matches.')" style="padding:12px 28px;background:linear-gradient(135deg,rgba(167,139,250,.2),rgba(167,139,250,.08));border:1px solid rgba(167,139,250,.3);border-radius:10px;color:#a78bfa;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px">🧬 START MY ECS IQ PASSPORT QUIZ →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: CANNABINOIDS               -->
+<!-- ════════════════════════════════════ -->
+<div id="eq-cannabinoids" class="eq-sec">
+  <div class="eq-lbl" style="color:#22c55e;margin-top:32px">CANNABINOID DATABASE — 15 COMPOUNDS</div>
+  <h2 class="eq-h">THC is one molecule. <em style="color:#22c55e">There are 14 more worth knowing.</em></h2>
+  <div id="eq-cannabinoid-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px" class="eq-g3"></div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: DOSING GUIDE                -->
+<!-- ════════════════════════════════════ -->
+<div id="eq-dosing" class="eq-sec">
+  <div class="eq-lbl" style="color:#60A5FA;margin-top:32px">TOLERANCE-ADJUSTED DOSING PROTOCOL</div>
+  <h2 class="eq-h">Start low. Go slow. <em style="color:#60A5FA">Bud always starts here.</em></h2>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px" class="eq-g4" style="grid-template-columns:repeat(5,1fr)!important">
+    <div style="background:#0d1910;border:1px solid rgba(78,205,140,.15);border-radius:12px;padding:16px;text-align:center"><div style="font-size:9px;letter-spacing:2px;color:#4ecd8c;font-weight:700;margin-bottom:8px">NAIVE</div><div style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:#4ecd8c">2.5mg</div><div style="font-size:10px;color:#5A6374;margin-top:4px">THC max · First time ever</div></div>
+    <div style="background:#0d1910;border:1px solid rgba(212,175,55,.15);border-radius:12px;padding:16px;text-align:center"><div style="font-size:9px;letter-spacing:2px;color:#d4af37;font-weight:700;margin-bottom:8px">LOW</div><div style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:#d4af37">5mg</div><div style="font-size:10px;color:#5A6374;margin-top:4px">THC · Occasional user</div></div>
+    <div style="background:#0d1910;border:1px solid rgba(96,165,250,.15);border-radius:12px;padding:16px;text-align:center"><div style="font-size:9px;letter-spacing:2px;color:#60A5FA;font-weight:700;margin-bottom:8px">MODERATE</div><div style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:#60A5FA">10mg</div><div style="font-size:10px;color:#5A6374;margin-top:4px">THC · Regular user</div></div>
+    <div style="background:#0d1910;border:1px solid rgba(167,139,250,.15);border-radius:12px;padding:16px;text-align:center"><div style="font-size:9px;letter-spacing:2px;color:#a78bfa;font-weight:700;margin-bottom:8px">HIGH</div><div style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:#a78bfa">20mg</div><div style="font-size:10px;color:#5A6374;margin-top:4px">THC · Daily user</div></div>
+    <div style="background:#0d1910;border:1px solid rgba(244,114,182,.15);border-radius:12px;padding:16px;text-align:center"><div style="font-size:9px;letter-spacing:2px;color:#F472B6;font-weight:700;margin-bottom:8px">MEDICAL</div><div style="font-family:Georgia,serif;font-size:26px;font-weight:700;color:#F472B6">50mg+</div><div style="font-size:10px;color:#5A6374;margin-top:4px">CBD · Medical protocol</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" class="eq-g2">
+    <div style="background:#0d1910;border:1px solid rgba(78,205,140,.12);border-radius:12px;padding:18px">
+      <div class="eq-lbl" style="color:#4ecd8c;margin-bottom:10px">ONSET BY ROUTE</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:#8B95A5">💨 Inhaled</span><span style="color:#4ecd8c;font-weight:700">2–10 min · 2–3 hr duration</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:#8B95A5">💧 Sublingual</span><span style="color:#d4af37;font-weight:700">15–45 min · 4–6 hr duration</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:#8B95A5">🍬 Edible</span><span style="color:#F472B6;font-weight:700">30–90 min · 6–8 hr duration</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:#8B95A5">💊 Capsule</span><span style="color:#60A5FA;font-weight:700">45–120 min · 6–8 hr duration</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:#8B95A5">🧴 Topical</span><span style="color:#2DD4A8;font-weight:700">15–45 min · local only · 2–4 hr</span></div>
+      </div>
+    </div>
+    <div style="background:#0d1910;border:1px solid rgba(244,114,182,.12);border-radius:12px;padding:18px">
+      <div class="eq-lbl" style="color:#F472B6;margin-bottom:10px">GOLDEN RULES</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:#8B95A5;line-height:1.6">
+        <div>🌿 <strong style="color:#E2E8F0">Start with CBD-dominant</strong> strains if on any medication</div>
+        <div>⏱️ <strong style="color:#E2E8F0">Wait full onset time</strong> before redosing — edibles bite back</div>
+        <div>🧠 <strong style="color:#E2E8F0">Empty stomach</strong> amplifies effects up to 3× for edibles</div>
+        <div>💤 <strong style="color:#E2E8F0">Evening protocol</strong> recommended for first-timers</div>
+        <div>🛡️ <strong style="color:#E2E8F0">Run safety check first</strong> if you take any prescription meds</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: COMMERCE                    -->
+<!-- ════════════════════════════════════ -->
+<div id="eq-commerce" class="eq-sec">
+  <div class="eq-lbl" style="color:#22c55e;margin-top:32px">TRUSTED PARTNERS — 51 VETTED AFFILIATES</div>
+  <h2 class="eq-h">Bud recommends. <em style="color:#22c55e">BLEU earns. You save.</em></h2>
+  <p style="font-size:13px;color:#8B95A5;margin-bottom:6px;line-height:1.8">Every partner is vetted for third-party testing, clean ingredients, and compliance. <strong style="color:#E2E8F0">Affiliate disclosure: CannaIQ earns a small commission through partner links.</strong> Commerce follows care — Bud runs safety check first, always.</p>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;margin-top:20px" class="eq-g2">
+
+    <div style="background:#0d1910;border:1px solid rgba(78,205,140,.15);border-radius:14px;padding:20px">
+      <div class="eq-lbl" style="color:#4ecd8c;margin-bottom:12px">🌿 CBD · HEMP PRODUCTS</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="https://www.cwhemp.com" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.1);border-radius:10px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,140,.4)'" onmouseout="this.style.borderColor='rgba(78,205,140,.1)'">
+          <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Charlotte's Web</div><div style="font-size:10px;color:#5A6374">Full-spectrum · NSF certified · Ships all 50 states</div></div>
+          <div style="text-align:right"><div style="font-size:10px;color:#4ecd8c;font-weight:700">Trust 94</div><div style="font-size:9px;color:#5A6374">Partner →</div></div>
+        </a>
+        <a href="https://www.lazarusnaturals.com" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.1);border-radius:10px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,140,.4)'" onmouseout="this.style.borderColor='rgba(78,205,140,.1)'">
+          <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Lazarus Naturals</div><div style="font-size:10px;color:#5A6374">40% off veterans/disabled · High-potency</div></div>
+          <div style="text-align:right"><div style="font-size:10px;color:#4ecd8c;font-weight:700">Trust 91</div><div style="font-size:9px;color:#5A6374">Partner →</div></div>
+        </a>
+        <a href="https://www.extractlabs.com" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.1);border-radius:10px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,140,.4)'" onmouseout="this.style.borderColor='rgba(78,205,140,.1)'">
+          <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Extract Labs</div><div style="font-size:10px;color:#5A6374">US-grown · cGMP · Full COA available</div></div>
+          <div style="text-align:right"><div style="font-size:10px;color:#4ecd8c;font-weight:700">Trust 89</div><div style="font-size:9px;color:#5A6374">Partner →</div></div>
+        </a>
+        <a href="https://iherb.com?rcode=BLEU" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.1);border-radius:10px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,140,.4)'" onmouseout="this.style.borderColor='rgba(78,205,140,.1)'">
+          <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">iHerb <span style="color:#4ecd8c">code BLEU</span></div><div style="font-size:10px;color:#5A6374">30,000+ products · CBD + hemp + adaptogens</div></div>
+          <div style="text-align:right"><div style="font-size:10px;color:#d4af37;font-weight:700">Code BLEU</div><div style="font-size:9px;color:#5A6374">Shop →</div></div>
+        </a>
+      </div>
+    </div>
+
+    <div style="background:#0d1910;border:1px solid rgba(167,139,250,.15);border-radius:14px;padding:20px">
+      <div class="eq-lbl" style="color:#a78bfa;margin-bottom:12px">🏥 MEDICAL CANNABIS ACCESS</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="https://www.nuggmd.com" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1);border-radius:10px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='rgba(167,139,250,.4)'" onmouseout="this.style.borderColor='rgba(167,139,250,.1)'">
+          <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">NuggMD</div><div style="font-size:10px;color:#5A6374">Medical card · $99 · Online physician · 20 states</div></div>
+          <div style="text-align:right"><div style="font-size:10px;color:#a78bfa;font-weight:700">Get Card</div><div style="font-size:9px;color:#5A6374">Partner →</div></div>
+        </a>
+        <a href="https://dutchie.com" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1);border-radius:10px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='rgba(167,139,250,.4)'" onmouseout="this.style.borderColor='rgba(167,139,250,.1)'">
+          <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Dutchie</div><div style="font-size:10px;color:#5A6374">Dispensary delivery · Legal markets · Real-time</div></div>
+          <div style="text-align:right"><div style="font-size:10px;color:#a78bfa;font-weight:700">Order Now</div><div style="font-size:9px;color:#5A6374">Partner →</div></div>
+        </a>
+        <a href="https://www.leafly.com" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1);border-radius:10px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='rgba(167,139,250,.4)'" onmouseout="this.style.borderColor='rgba(167,139,250,.1)'">
+          <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Leafly</div><div style="font-size:10px;color:#5A6374">Strain reviews · Dispensary finder · USA</div></div>
+          <div style="text-align:right"><div style="font-size:10px;color:#a78bfa;font-weight:700">Browse</div><div style="font-size:9px;color:#5A6374">Partner →</div></div>
+        </a>
+        <a href="https://www.ilgm.com" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1);border-radius:10px;text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor='rgba(167,139,250,.4)'" onmouseout="this.style.borderColor='rgba(167,139,250,.1)'">
+          <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">ILGM</div><div style="font-size:10px;color:#5A6374">Seeds · Home grow · Germination guarantee</div></div>
+          <div style="text-align:right"><div style="font-size:10px;color:#a78bfa;font-weight:700">Seeds</div><div style="font-size:9px;color:#5A6374">Partner →</div></div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+  <button onclick="ask('ecsiq','I want product recommendations. Run safety check first, then show me the best options for my goal from our vetted partners with prices and trust scores.')" style="width:100%;padding:14px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:10px;color:#22c55e;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px">🛒 GET PERSONALIZED PRODUCT RECOMMENDATIONS →</button>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: RESEARCH                    -->
+<!-- ════════════════════════════════════ -->
+<div id="eq-research" class="eq-sec">
+  <div class="eq-lbl" style="color:#60A5FA;margin-top:32px">PEER-REVIEWED RESEARCH DATABASE</div>
+  <h2 class="eq-h">Every claim has a source. <em style="color:#60A5FA">Every citation has a PMID.</em></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px" class="eq-g2" id="eq-research-list"></div>
+  <div class="bud-says">"I never say 'treats', 'cures', or 'prevents.' I say 'research suggests', 'users report', 'evidence indicates.' If I cite a claim, there's a PMID behind it. Dr. Felicia Stoler holds us to that standard. So do I."<br><span style="font-size:10px;color:#5A6374;font-style:normal">— Bud · Educational content only · Not medical advice · Always consult your physician</span></div>
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- SECTION: SESSION LOG                 -->
+<!-- ════════════════════════════════════ -->
+<div id="eq-session" class="eq-sec">
+  <div class="eq-lbl" style="color:#d4af37;margin-top:32px">MY CANNABIS SESSIONS</div>
+  <h2 class="eq-h">Track what works. <em style="color:#d4af37">Build your personal protocol.</em></h2>
+  <div style="background:#0d1910;border:1px solid rgba(212,175,55,.15);border-radius:14px;padding:24px;margin-bottom:20px">
+    <div class="eq-lbl" style="color:rgba(212,175,55,.5);margin-bottom:16px">LOG A SESSION</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px" class="eq-g2">
+      <div><div style="font-size:11px;color:#8B95A5;margin-bottom:5px">Strain</div><input id="eq-sess-strain" placeholder="e.g. Blue Dream" style="width:100%;padding:10px 12px;background:#0a1628;border:1px solid rgba(255,255,255,.06);border-radius:8px;color:#E2E8F0;font-size:13px;font-family:inherit;box-sizing:border-box"></div>
+      <div><div style="font-size:11px;color:#8B95A5;margin-bottom:5px">Method</div><select id="eq-sess-method" style="width:100%;padding:10px 12px;background:#0a1628;border:1px solid rgba(255,255,255,.06);border-radius:8px;color:#E2E8F0;font-size:13px;font-family:inherit;box-sizing:border-box"><option value="">Select method</option><option>Inhaled</option><option>Sublingual</option><option>Edible</option><option>Capsule</option><option>Topical</option></select></div>
+      <div><div style="font-size:11px;color:#8B95A5;margin-bottom:5px">Dose (mg)</div><input id="eq-sess-dose" type="number" placeholder="e.g. 5" style="width:100%;padding:10px 12px;background:#0a1628;border:1px solid rgba(255,255,255,.06);border-radius:8px;color:#E2E8F0;font-size:13px;font-family:inherit;box-sizing:border-box"></div>
+      <div><div style="font-size:11px;color:#8B95A5;margin-bottom:5px">Goal</div><select id="eq-sess-goal" style="width:100%;padding:10px 12px;background:#0a1628;border:1px solid rgba(255,255,255,.06);border-radius:8px;color:#E2E8F0;font-size:13px;font-family:inherit;box-sizing:border-box"><option value="">Select goal</option><option>Sleep</option><option>Anxiety</option><option>Pain</option><option>Focus</option><option>Mood</option><option>Recovery</option><option>Social</option><option>Appetite</option><option>Intimacy</option></select></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px" class="eq-g2">
+      <div><div style="font-size:11px;color:#8B95A5;margin-bottom:5px">Mood Before (1–10)</div><input id="eq-sess-mood-b" type="number" min="1" max="10" placeholder="5" style="width:100%;padding:10px 12px;background:#0a1628;border:1px solid rgba(255,255,255,.06);border-radius:8px;color:#E2E8F0;font-size:13px;font-family:inherit;box-sizing:border-box"></div>
+      <div><div style="font-size:11px;color:#8B95A5;margin-bottom:5px">Mood After (1–10)</div><input id="eq-sess-mood-a" type="number" min="1" max="10" placeholder="7" style="width:100%;padding:10px 12px;background:#0a1628;border:1px solid rgba(255,255,255,.06);border-radius:8px;color:#E2E8F0;font-size:13px;font-family:inherit;box-sizing:border-box"></div>
+    </div>
+    <div style="margin-bottom:14px"><div style="font-size:11px;color:#8B95A5;margin-bottom:5px">Notes</div><textarea id="eq-sess-notes" placeholder="How did it feel? What worked? What would you change?" style="width:100%;padding:10px 12px;background:#0a1628;border:1px solid rgba(255,255,255,.06);border-radius:8px;color:#E2E8F0;font-size:13px;font-family:inherit;box-sizing:border-box;height:70px;resize:none"></textarea></div>
+    <button onclick="eqLogSession()" style="padding:12px 28px;background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(212,175,55,.08));border:1px solid rgba(212,175,55,.3);border-radius:8px;color:#d4af37;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px">LOG SESSION →</button>
+  </div>
+  <div id="eq-sessions-display"></div>
+</div>
+
+<!-- ════ FOOTER DISCLAIMER ════ -->
+<div style="max-width:920px;margin:0 auto;padding:20px 20px 30px">
+  <div style="padding:12px 16px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:8px;font-size:10px;color:#5A6374;line-height:1.7;text-align:center">
+    ⚕️ ECSIQ provides educational content only. Not medical advice. Always consult a licensed healthcare provider before making any wellness decisions, especially if you take prescription medications. Cannabis laws vary by state — know your local regulations. Data sources: PubMed, FDA, DDInter 2.0, Cannlytics, WHO. Medical oversight: Dr. Felicia Stoler, DCN · MS · RDN · FACSM · FAND · Dipl ACLM.
+  </div>
+</div>
+
+<!-- ════ ECSIQ JAVASCRIPT ENGINE ════ -->
+<script>
+(function(){
+
+// ── Navigation ──
+window.eqNav = function(btn, secId){
+  document.querySelectorAll('.eq-tab').forEach(function(b){b.classList.remove('on');});
+  document.querySelectorAll('.eq-sec').forEach(function(s){s.classList.remove('on');});
+  btn.classList.add('on');
+  var sec = document.getElementById(secId);
+  if(sec){ sec.classList.add('on'); }
+};
+
+// ── Strain Data ──
+var STRAINS = [
+  {name:'ACDC',type:'Hybrid CBD',thc:'1–6%',cbd:'14–20%',bems:96,goal:'Anxiety · Pain',terpenes:'Myrcene · Pinene · Caryophyllene',note:'20:1 CBD:THC. Safe with SSRIs. 5-HT1A pathway.',color:'#22c55e'},
+  {name:"Charlotte's Web",type:'CBD Hemp',thc:'<0.3%',cbd:'17–20%',bems:95,goal:'Anxiety · Recovery · General',terpenes:'Myrcene · Caryophyllene · Linalool',note:'The strain that changed federal law. Pioneer CBD.',color:'#22c55e'},
+  {name:'Harlequin',type:'Sativa CBD',thc:'5–10%',cbd:'10–16%',bems:92,goal:'Anxiety · Pain · Daytime',terpenes:'Myrcene · Pinene · Caryophyllene',note:'5:2 CBD:THC. Enough THC for CB1 engagement without anxiety.',color:'#4ecd8c'},
+  {name:'Blue Dream',type:'Sativa Hybrid',thc:'17–24%',cbd:'0.1–0.2%',bems:94,goal:'Pain · Mood · Focus',terpenes:'Myrcene · Caryophyllene · Pinene',note:'Balanced full-body. Gentle cerebral. Most-reviewed strain.',color:'#4ecd8c'},
+  {name:'Jack Herer',type:'Sativa',thc:'18–23%',cbd:'0.1%',bems:88,goal:'Focus · Mood · Social',terpenes:'Terpinolene · Pinene · Ocimene',note:'Named for cannabis activist. Clear-headed energetic high.',color:'#d4af37'},
+  {name:'Granddaddy Purple',type:'Indica',thc:'17–23%',cbd:'0.1%',bems:82,goal:'Sleep · Pain · Stress',terpenes:'Myrcene · Caryophyllene · Pinene',note:'Deep body relaxation. Bedtime protocol. Muscle tension.',color:'#a78bfa'},
+  {name:'Cannatonic',type:'Hybrid CBD',thc:'5–7%',cbd:'6–17%',bems:89,goal:'Anxiety · Pain · Muscle',terpenes:'Myrcene · Pinene · Caryophyllene',note:'1:1 CBD:THC ratio. Balanced clinical profile.',color:'#4ecd8c'},
+  {name:'Remedy',type:'Indica CBD',thc:'<1%',cbd:'14–18%',bems:87,goal:'Pain · Recovery · Beginners',terpenes:'Myrcene · Caryophyllene · Humulene',note:'Zero psychoactive effect. Medical-grade hemp.',color:'#22c55e'},
+  {name:'Sour Diesel',type:'Sativa',thc:'20–25%',cbd:'0.1%',bems:83,goal:'Focus · Social · Mood',terpenes:'Caryophyllene · Limonene · Myrcene',note:'Energizing pungent fuel. Fast-acting cerebral.',color:'#d4af37'},
+  {name:'OG Kush',type:'Hybrid',thc:'20–25%',cbd:'0.3%',bems:85,goal:'Pain · Stress · Appetite',terpenes:'Myrcene · Limonene · Caryophyllene',note:'West Coast classic. Euphoric full-body. Hunger driver.',color:'#d4af37'},
+  {name:'Pineapple Express',type:'Sativa Hybrid',thc:'18–23%',cbd:'0.1%',bems:81,goal:'Mood · Social · Daytime',terpenes:'Terpinolene · Caryophyllene · Ocimene',note:'Tropical aroma. Energetic creative uplift.',color:'#d4af37'},
+  {name:'Wedding Cake',type:'Indica Hybrid',thc:'22–28%',cbd:'0.1%',bems:80,goal:'Sleep · Intimacy · Stress',terpenes:'Caryophyllene · Limonene · Myrcene',note:'Rich terpene profile. High THC — not for beginners.',color:'#60A5FA'},
+];
+
+// Render strain grid
+var sg = document.getElementById('eq-strain-grid');
+if(sg){
+  STRAINS.forEach(function(s){
+    var scoreColor = s.bems>=90?'#22c55e':s.bems>=80?'#4ecd8c':s.bems>=70?'#d4af37':'#60A5FA';
+    var div = document.createElement('div');
+    div.className='eq-card';
+    div.style.borderColor='rgba(78,205,140,.1)';
+    div.onclick=function(){ask('ecsiq','Tell me everything about '+s.name+': BEMS score breakdown, terpene receptor mechanisms, safety profile, dosing, and who it is best for.');};
+    div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">'
+      +'<div><div style="font-size:13px;font-weight:700;color:#E2E8F0">'+s.name+'</div><div style="font-size:10px;color:#5A6374;margin-top:2px">'+s.type+'</div></div>'
+      +'<div style="text-align:right"><div style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:'+scoreColor+'">'+s.bems+'</div><div style="font-size:8px;color:#5A6374;letter-spacing:1px">BEMS</div></div>'
+      +'</div>'
+      +'<div style="font-size:10px;color:#5A6374;margin-bottom:6px">THC: '+s.thc+' · CBD: '+s.cbd+'</div>'
+      +'<div style="font-size:10px;color:#8B95A5;margin-bottom:6px;line-height:1.5">'+s.note+'</div>'
+      +'<div style="font-size:9px;color:rgba(78,205,196,.6);font-style:italic">'+s.terpenes+'</div>'
+      +'<div style="margin-top:8px;padding:4px 8px;background:rgba(78,205,140,.06);border-radius:4px;font-size:9px;color:#4ecd8c;font-weight:600">'+s.goal+'</div>';
+    sg.appendChild(div);
+  });
+}
+
+// ── Terpene Data ──
+var TERPENES = [
+  {name:'Myrcene',emoji:'🌿',aroma:'Earthy · Musk · Herbal',receptors:'CB1 · GABA-A',effects:'Sedation · Pain relief · Muscle relaxant',strains:'GDP · Blue Dream · OG Kush',color:'#4ecd8c'},
+  {name:'Caryophyllene',emoji:'🌶️',aroma:'Spicy · Pepper · Woody',receptors:'CB2 (direct agonist)',effects:'Anti-inflammatory · Anxiety · Addiction support',strains:'OG Kush · Sour Diesel · GSC',color:'#d4af37'},
+  {name:'Limonene',emoji:'🍋',aroma:'Citrus · Lemon · Fresh',receptors:'5-HT1A · Adenosine A2A',effects:'Mood elevation · Anxiety reduction · Immune',strains:'Pineapple Express · Lemon Haze · Jack',color:'#d4af37'},
+  {name:'Pinene',emoji:'🌲',aroma:'Pine · Fresh · Sharp',receptors:'Acetylcholinesterase inhibitor',effects:'Focus · Memory · Airway dilation · Alertness',strains:'Jack Herer · ACDC · Pineapple Express',color:'#4ecdc4'},
+  {name:'Linalool',emoji:'💜',aroma:'Lavender · Floral · Sweet',receptors:'GABA-A · Glutamate · 5-HT3',effects:'Sedation · Anxiolytic · Anticonvulsant',strains:'Amnesia Haze · Lavender Kush · Zkittlez',color:'#a78bfa'},
+  {name:'Terpinolene',emoji:'⚡',aroma:'Fresh · Pine · Floral · Herbaceous',receptors:'Dopamine D2 modulation',effects:'Energizing · Antioxidant · Slight sedation',strains:'Jack Herer · Durban Poison · Ghost Train',color:'#60A5FA'},
+  {name:'Ocimene',emoji:'🌸',aroma:'Sweet · Herbal · Woody',receptors:'Antiviral · Anti-inflammatory pathways',effects:'Uplifting · Social · Decongestant',strains:'Strawberry Cough · Sour Diesel · Clementine',color:'#F472B6'},
+  {name:'Humulene',emoji:'🍺',aroma:'Hops · Earthy · Woody',receptors:'CB1 · CB2 (weak)',effects:'Anti-inflammatory · Appetite suppressant',strains:'Sour Diesel · White Widow · Headband',color:'#2DD4A8'},
+];
+
+var tg = document.getElementById('eq-terpene-grid');
+if(tg){
+  TERPENES.forEach(function(t){
+    var div = document.createElement('div');
+    div.style.cssText='background:#0d1910;border:1px solid rgba(78,205,140,.1);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s';
+    div.onmouseover=function(){this.style.borderColor='rgba(78,205,140,.35)';};
+    div.onmouseout=function(){this.style.borderColor='rgba(78,205,140,.1)';};
+    div.onclick=function(){ask('ecsiq','Tell me everything about the terpene '+t.name+': receptor mechanism, synergy with cannabinoids, therapeutic effects, top strains, and clinical evidence.');};
+    div.innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+      +'<span style="font-size:20px">'+t.emoji+'</span>'
+      +'<div><div style="font-size:13px;font-weight:700;color:'+t.color+'">'+t.name+'</div>'
+      +'<div style="font-size:10px;color:#5A6374">'+t.aroma+'</div></div></div>'
+      +'<div style="font-size:10px;color:#8B95A5;line-height:1.6;margin-bottom:6px">'+t.effects+'</div>'
+      +'<div style="font-size:9px;color:rgba(78,205,196,.5)">Receptor: '+t.receptors+'</div>'
+      +'<div style="font-size:9px;color:#5A6374;margin-top:3px">Strains: '+t.strains+'</div>';
+    tg.appendChild(div);
+  });
+}
+
+// ── ECS Types ──
+var ECS_TYPES = [
+  {type:'Night Owl',emoji:'🦉',cb1:82,description:'Elevated CB1 receptor density. Anandamide deficiency at night. Your ECS is optimized for evening regulation.',strains:'GDP · Wedding Cake · Remedy · Zkittlez',protocol:'CBN 5mg + Indica 2h before bed. Myrcene dominant.',color:'#a78bfa'},
+  {type:'Zen Master',emoji:'🧘',cb1:71,description:'Balanced CB1/CB2 expression. High 5-HT1A sensitivity. You process stress well but anxiety accumulates.',strains:'ACDC · Harlequin · Cannatonic · Charlotte\'s Web',protocol:'CBD dominant 20mg daytime. Linalool + limonene.',color:'#4ecd8c'},
+  {type:'Warrior',emoji:'⚔️',cb1:65,description:'High CB2 density. Low CB1 tolerance. Strong anti-inflammatory response. Physical pain primary concern.',strains:'ACDC · Critical Mass · Harlequin · Blue Dream',protocol:'CBD 25mg + caryophyllene. Topical for localized pain.',color:'#F472B6'},
+  {type:'Creative',emoji:'🎨',cb1:77,description:'Elevated CB1 in prefrontal cortex. THCV responder. Creativity and divergent thinking naturally enhanced.',strains:'Jack Herer · Durban Poison · Green Crack · Sour D',protocol:'Low-dose THC 5mg sativa AM. Terpinolene + pinene.',color:'#d4af37'},
+  {type:'Explorer',emoji:'🌍',cb1:73,description:'Moderate CB1/CB2 balance. Highly responsive to novel compounds. Entourage effect amplified in your system.',strains:'Blue Dream · Pineapple Express · OG Kush · Mimosa',protocol:'Full-spectrum 1:1 hybrid. Varied terpene stacking.',color:'#60A5FA'},
+  {type:'Healer',emoji:'💚',cb1:68,description:'Dominant CB2 expression. Immune-modulating ECS. Your body uses cannabis primarily for systemic restoration.',strains:'Charlotte\'s Web · Remedy · ACDC · Harlequin',protocol:'High-CBD 30mg+ daily. Caryophyllene + humulene.',color:'#22c55e'},
+];
+
+var eg = document.getElementById('eq-ecs-grid');
+if(eg){
+  ECS_TYPES.forEach(function(e){
+    var div = document.createElement('div');
+    div.style.cssText='background:#0d1910;border:1px solid rgba(78,205,140,.1);border-radius:14px;padding:18px;cursor:pointer;transition:all .3s';
+    div.onmouseover=function(){this.style.borderColor=e.color;this.style.transform='translateY(-2px)';};
+    div.onmouseout=function(){this.style.borderColor='rgba(78,205,140,.1)';this.style.transform='';};
+    div.onclick=function(){ask('ecsiq','I think I might be a '+e.type+' ECS type. Confirm this with your quiz and give me my full protocol: strains, dosing, terpenes, and timing.');};
+    div.innerHTML='<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'
+      +'<span style="font-size:28px">'+e.emoji+'</span>'
+      +'<div><div style="font-size:14px;font-weight:700;color:'+e.color+'">'+e.type+'</div>'
+      +'<div style="font-size:10px;color:#5A6374">CB1 Index: '+e.cb1+'/100</div></div></div>'
+      +'<div style="font-size:11px;color:#8B95A5;line-height:1.6;margin-bottom:8px">'+e.description+'</div>'
+      +'<div style="font-size:9px;color:rgba(78,205,196,.5);margin-bottom:4px">Best strains: '+e.strains+'</div>'
+      +'<div style="font-size:9px;color:rgba(212,175,55,.6)">Protocol: '+e.protocol+'</div>';
+    eg.appendChild(div);
+  });
+}
+
+// ── Cannabinoids ──
+var CANNABINOIDS = [
+  {name:'THC',full:'Δ9-Tetrahydrocannabinol',receptor:'CB1 (full agonist)',effect:'Euphoria · Pain · Appetite · Nausea',note:'Psychoactive. Dose-sensitive. Tolerance builds.',color:'#d4af37'},
+  {name:'CBD',full:'Cannabidiol',receptor:'5-HT1A · TRPV1 · FAAH inhibitor',effect:'Anxiety · Inflammation · Neuroprotection',note:'Non-psychoactive. Safe with most medications at low doses.',color:'#4ecd8c'},
+  {name:'CBN',full:'Cannabinol',receptor:'CB1 (weak) · CB2',effect:'Sleep · Sedation · Pain',note:'Oxidized THC. Highly sedating. Best for sleep protocols.',color:'#a78bfa'},
+  {name:'CBG',full:'Cannabigerol',receptor:'CB1 · CB2 · α2-adrenoceptor',effect:'Neuroprotection · IBS · Glaucoma',note:'Mother cannabinoid. Anti-inflammatory. Neuroprotective.',color:'#2DD4A8'},
+  {name:'THCV',full:'Tetrahydrocannabivarin',receptor:'CB1 antagonist (low dose)',effect:'Focus · Appetite suppression · PTSD',note:'Non-psychoactive at low doses. Energizing. Rare.',color:'#60A5FA'},
+  {name:'CBC',full:'Cannabichromene',receptor:'TRPA1 · TRPV1 · CB2',effect:'Antidepressant · Neurogenesis · Acne',note:'Entourage synergy. Promotes neurogenesis in vitro.',color:'#F472B6'},
+  {name:'CBDV',full:'Cannabidivarin',receptor:'TRPV1 · TRPA1',effect:'Epilepsy · Autism · Nausea',note:'FDA studying for autism spectrum. GW Pharma pipeline.',color:'#22c55e'},
+  {name:'THCA',full:'Tetrahydrocannabinolic Acid',receptor:'PPARγ · TRPA1',effect:'Anti-inflammatory · Nausea · Neuroprotection',note:'Non-psychoactive raw form. Decarboxylates to THC.',color:'#d4af37'},
+  {name:'CBDA',full:'Cannabidiolic Acid',receptor:'5-HT1A · COX-2',effect:'Nausea · Anxiety · Inflammation',note:'Raw CBD precursor. More potent 5-HT1A agonist than CBD.',color:'#4ecd8c'},
+  {name:'Delta-8',full:'Δ8-Tetrahydrocannabinol',receptor:'CB1 (partial agonist)',effect:'Mild euphoria · Nausea · Appetite',note:'~50% potency of Delta-9. FDA warns on synthetic versions.',color:'#60A5FA'},
+  {name:'CBL',full:'Cannabicyclol',receptor:'Weak CB1 · CB2',effect:'Anti-inflammatory (under research)',note:'Degradation product. Minimal research. Entourage potential.',color:'#5A6374'},
+  {name:'CBE',full:'Cannabielsoin',receptor:'Unknown',effect:'Under research',note:'Metabolite of CBD. Rare. Preclinical only.',color:'#5A6374'},
+];
+
+var cg = document.getElementById('eq-cannabinoid-grid');
+if(cg){
+  CANNABINOIDS.forEach(function(c){
+    var div = document.createElement('div');
+    div.style.cssText='background:#0d1910;border:1px solid rgba(78,205,140,.08);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s';
+    div.onmouseover=function(){this.style.borderColor=c.color;};
+    div.onmouseout=function(){this.style.borderColor='rgba(78,205,140,.08)';};
+    div.onclick=function(){ask('ecsiq','Tell me everything about '+c.name+' ('+c.full+'): receptor mechanisms, therapeutic applications, safety considerations, and research evidence with PMIDs.');};
+    div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
+      +'<div style="font-size:14px;font-weight:700;color:'+c.color+'">'+c.name+'</div>'
+      +'<div style="font-size:9px;color:#5A6374;padding:2px 7px;background:rgba(255,255,255,.03);border-radius:4px">'+c.receptor.split('·')[0].trim()+'</div>'
+      +'</div>'
+      +'<div style="font-size:10px;color:#5A6374;margin-bottom:5px">'+c.full+'</div>'
+      +'<div style="font-size:11px;color:#8B95A5;line-height:1.5;margin-bottom:5px">'+c.effect+'</div>'
+      +'<div style="font-size:10px;color:rgba(78,205,140,.5);line-height:1.4">'+c.note+'</div>';
+    cg.appendChild(div);
+  });
+}
+
+// ── Research Citations ──
+var RESEARCH = [
+  {title:'CBD Anxiety Reduction 40–60%',author:'Zuardi et al. 2017',pmid:'26341731',detail:'CBD at 40–600mg shows significant anxiety reduction in GAD, SAD, PTSD, OCD, and panic disorder. 5-HT1A agonism primary mechanism.',color:'#a78bfa'},
+  {title:'CYP450 Cannabinoid Inhibition',author:'Nasrin et al. 2021',pmid:'34172568',detail:'CBD potently inhibits CYP2C19 and CYP3A4. THC inhibits CYP1A2. Critical for patients on warfarin, SSRIs, benzos, statins.',color:'#F472B6'},
+  {title:'Clinical Endocannabinoid Deficiency',author:'Russo 2016',pmid:'27768887',detail:'CECD theory: insufficient endocannabinoid tone underlies migraine, fibromyalgia, IBS, and other treatment-resistant conditions.',color:'#4ecd8c'},
+  {title:'UGT Enzyme Inhibition',author:'Anderson et al. 2019',pmid:'31399967',detail:'Cannabinoids inhibit UGT1A9 and UGT2B7. Affects morphine, lorazepam, NSAID metabolism. Missed by standard drug checkers.',color:'#60A5FA'},
+  {title:'Entourage Effect — Terpene Synergy',author:'Russo 2011',pmid:'21749363',detail:'Terpenes modulate cannabinoid receptor activity. Phytocannabinoid-terpenoid synergy outperforms isolated compounds.',color:'#d4af37'},
+  {title:'CB2 Anti-Inflammatory Pathway',author:'Pacher & Mechoulam 2011',pmid:'21079038',detail:'CB2 activation by cannabinoids suppresses cytokine production and inflammatory cell migration. Pain and autoimmune applications.',color:'#2DD4A8'},
+  {title:'CBD Neuroprotection — Antioxidant',author:'Hampson et al. 1998',pmid:'9653176',detail:'CBD and THC are potent antioxidants — more powerful than α-tocopherol and ascorbate. Patent held by US DHHS.',color:'#22c55e'},
+  {title:'Retrograde Signaling — ECS Volume Control',author:'Wilson & Nicoll 2002',pmid:'12167873',detail:'Endocannabinoids travel backwards across synapses, suppressing presynaptic neurotransmitter release. Pain and anxiety modulation.',color:'#4ecdc4'},
+];
+
+var rl = document.getElementById('eq-research-list');
+if(rl){
+  RESEARCH.forEach(function(r){
+    var div = document.createElement('div');
+    div.style.cssText='background:#0d1910;border:1px solid rgba(96,165,250,.1);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s';
+    div.onmouseover=function(){this.style.borderColor=r.color;};
+    div.onmouseout=function(){this.style.borderColor='rgba(96,165,250,.1)';};
+    div.onclick=function(){ask('ecsiq','Explain the research: '+r.title+' by '+r.author+' PMID '+r.pmid+'. What are the key findings and clinical implications?');};
+    div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">'
+      +'<div style="font-size:12px;font-weight:700;color:'+r.color+';flex:1;padding-right:10px">'+r.title+'</div>'
+      +'<div style="padding:3px 8px;background:rgba(96,165,250,.08);border-radius:4px;font-size:9px;color:#60A5FA;font-weight:700;white-space:nowrap">PMID: '+r.pmid+'</div>'
+      +'</div>'
+      +'<div style="font-size:10px;color:#5A6374;margin-bottom:6px">'+r.author+'</div>'
+      +'<div style="font-size:11px;color:#8B95A5;line-height:1.6">'+r.detail+'</div>';
+    rl.appendChild(div);
+  });
+}
+
+// ── Session Logger ──
+window.eqLogSession = function(){
+  var strain = document.getElementById('eq-sess-strain').value;
+  var method = document.getElementById('eq-sess-method').value;
+  var dose = document.getElementById('eq-sess-dose').value;
+  var goal = document.getElementById('eq-sess-goal').value;
+  var moodB = document.getElementById('eq-sess-mood-b').value;
+  var moodA = document.getElementById('eq-sess-mood-a').value;
+  var notes = document.getElementById('eq-sess-notes').value;
+  if(!strain){alert('Enter a strain name');return;}
+  var sessions = JSON.parse(localStorage.getItem('bleu_cannabis_sessions')||'[]');
+  sessions.unshift({strain:strain,method:method,dose:dose,goal:goal,moodBefore:moodB,moodAfter:moodA,notes:notes,date:new Date().toLocaleDateString()});
+  localStorage.setItem('bleu_cannabis_sessions',JSON.stringify(sessions.slice(0,50)));
+  document.getElementById('eq-sess-strain').value='';
+  document.getElementById('eq-sess-notes').value='';
+  renderSessions();
+  ask('ecsiq','I just logged a session with '+strain+' ('+method+', '+dose+'mg) for '+goal+'. Mood before: '+moodB+'/10, after: '+moodA+'/10. Notes: '+notes+'. What does this tell you about my protocol?');
+};
+
+function renderSessions(){
+  var sessions = JSON.parse(localStorage.getItem('bleu_cannabis_sessions')||'[]');
+  var el = document.getElementById('eq-sessions-display');
+  if(!el||!sessions.length){if(el)el.innerHTML='<div style="text-align:center;padding:20px;font-size:12px;color:#5A6374">No sessions logged yet. Track your first session above.</div>';return;}
+  el.innerHTML='<div class="eq-lbl" style="color:rgba(212,175,55,.5);margin-bottom:12px">RECENT SESSIONS</div>'
+    +sessions.slice(0,10).map(function(s){
+      var delta = s.moodAfter && s.moodBefore ? (parseInt(s.moodAfter)-parseInt(s.moodBefore)) : null;
+      var dColor = delta>0?'#22c55e':delta<0?'#F472B6':'#5A6374';
+      return '<div style="background:#0d1910;border:1px solid rgba(212,175,55,.08);border-radius:10px;padding:14px;margin-bottom:8px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
+        +'<div style="font-size:13px;font-weight:700;color:#E2E8F0">'+s.strain+'</div>'
+        +'<div style="font-size:10px;color:#5A6374">'+s.date+'</div></div>'
+        +'<div style="font-size:11px;color:#8B95A5">'+[s.method,s.dose?s.dose+'mg':'',s.goal].filter(Boolean).join(' · ')+'</div>'
+        +(delta!==null?'<div style="font-size:11px;color:'+dColor+';margin-top:4px">Mood: '+s.moodBefore+' → '+s.moodAfter+' ('+(delta>0?'+':'')+delta+')</div>':'')
+        +(s.notes?'<div style="font-size:11px;color:#5A6374;margin-top:4px;font-style:italic">'+s.notes+'</div>':'')
+        +'</div>';
+    }).join('');
+}
+renderSessions();
+
+})();
+</script>
+
+
 <div class="panel" id="p-sleep">
   <div class="section-label">SLEEP INTELLIGENCE</div>
   <h1 class="hero-title">&#128164; <span class="accent">Sleep</span></h1>
