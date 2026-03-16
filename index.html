@@ -1781,413 +1781,328 @@ id="in-vessel" placeholder="What supplements should I take? What interacts with 
 
 <!-- ═══════════════════════ MAP ═══════════════════════ -->
 <div class="panel" id="p-map">
-
 <style>
-#bleu-map{height:420px;border-radius:14px;overflow:hidden;border:1px solid rgba(45,138,158,.2);position:relative;z-index:0}
-.map-layer-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid rgba(45,138,158,.2);background:rgba(8,14,26,.85);cursor:pointer;font-size:11px;color:#7B8DA6;transition:all .2s;font-family:'DM Sans',sans-serif}
-.map-layer-btn.on{background:rgba(45,138,158,.15);border-color:#2D8A9E;color:#2DD4A8}
-.map-layer-btn:hover{border-color:#2D8A9E;color:#E8E0D0}
-.city-score-ring{width:64px;height:64px;position:relative;display:inline-flex;align-items:center;justify-content:center}
-.city-score-ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg)}
-.city-score-val{font-size:18px;font-weight:600;color:#C9A84C;position:relative;z-index:1}
-.crisis-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;flex-shrink:0}
-.env-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px}
-.env-fill{height:100%;border-radius:3px;transition:width .8s ease}
-.map-intel-card{background:rgba(8,14,26,.92);border:1px solid rgba(45,138,158,.15);border-radius:12px;padding:14px;margin-bottom:10px}
-.zip-input{background:rgba(8,14,26,.8);border:1px solid rgba(45,138,158,.3);border-radius:8px;padding:8px 12px;color:#E8E0D0;font-size:13px;width:120px;font-family:'DM Sans',sans-serif;outline:none}
-.zip-input:focus{border-color:#2D8A9E}
-@keyframes pulseNode{0%,100%{r:5;opacity:.8}50%{r:8;opacity:1}}
-.city-enterprise-card{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(45,138,158,.06));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:20px;margin-top:16px}
+#map-wrap{max-width:1100px;margin:0 auto}
+.map-hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.mhc{background:#0d1829;border:1px solid rgba(45,138,158,.12);border-radius:12px;padding:14px;text-align:center}
+.mhc-val{font-size:26px;font-weight:600;line-height:1;margin-bottom:4px}
+.mhc-lbl{font-size:10px;color:#7B8DA6;text-transform:uppercase;letter-spacing:1px}
+.map-search-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.map-input{flex:1;min-width:200px;background:rgba(8,14,26,.9);border:1px solid rgba(45,138,158,.3);border-radius:10px;padding:12px 16px;color:#E8E0D0;font-size:14px;font-family:"DM Sans",sans-serif;outline:none}
+.map-input:focus{border-color:#2D8A9E}
+.map-btn{padding:12px 18px;border-radius:10px;border:1px solid rgba(45,138,158,.3);background:rgba(45,138,158,.12);color:#2DD4A8;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;white-space:nowrap;transition:all .2s}
+.map-btn:hover,.map-btn.on{background:rgba(45,138,158,.25);border-color:#2D8A9E}
+.map-btn.gold{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.1);color:#C9A84C}
+.map-btn.gold:hover{background:rgba(201,168,76,.2);border-color:#C9A84C}
+.map-quick{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.map-qbtn{padding:7px 14px;border-radius:20px;border:1px solid rgba(45,138,158,.15);background:transparent;cursor:pointer;font-size:11px;color:#7B8DA6;font-family:"DM Sans",sans-serif;transition:all .2s;white-space:nowrap}
+.map-qbtn:hover{border-color:#2D8A9E;color:#2DD4A8}
+.map-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.map-intel{background:#0d1829;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px}
+.map-intel-head{font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+.map-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.map-row:last-child{border-bottom:none}
+.map-bar-wrap{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:3px;overflow:hidden}
+.map-bar{height:100%;border-radius:2px;transition:width 1s ease}
+.map-crisis-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-right:7px}
+.map-gmap{width:100%;height:380px;border-radius:14px;overflow:hidden;border:1px solid rgba(45,138,158,.2);margin-bottom:16px;background:#0a0c10}
+.map-gmap iframe{width:100%;height:100%;border:none;display:block}
+.layer-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.lbtn{padding:6px 14px;border-radius:20px;border:1px solid rgba(45,138,158,.2);background:transparent;cursor:pointer;font-size:11px;color:#7B8DA6;font-family:"DM Sans",sans-serif;transition:all .2s;white-space:nowrap}
+.lbtn.on{background:rgba(45,138,158,.15);border-color:#2D8A9E;color:#2DD4A8}
+.lbtn:hover{border-color:#2D8A9E}
+.crisis-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.cgcard{background:#0d1829;border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.05)}
+.cgcard:hover{transform:translateY(-2px);border-color:rgba(45,138,158,.3)}
+.cgnum{font-size:22px;font-weight:700;line-height:1;opacity:.2}
+.cglab{font-size:9px;color:#7B8DA6;line-height:1.3;margin-top:4px}
+.ent-card{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(45,138,158,.04));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:20px;margin-bottom:16px}
+.ent-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+.ent-stat{background:rgba(8,14,26,.5);border-radius:8px;padding:12px;text-align:center}
+.ent-val{font-size:22px;font-weight:600;color:#C9A84C;line-height:1}
+.ent-lbl{font-size:10px;color:#7B8DA6;margin-top:3px}
+.zip-result{background:#0d1829;border:1px solid rgba(45,138,158,.15);border-radius:12px;padding:14px;margin-bottom:12px;display:none}
+.map-section{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,.5);margin:20px 0 12px;display:flex;align-items:center;gap:10px}
+.map-section::after{content:"";flex:1;height:1px;background:rgba(201,168,76,.1)}
+@keyframes pulseCity{0%,100%{opacity:.6}50%{opacity:1}}
+.city-pulse{animation:pulseCity 2s infinite}
 </style>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-
+<div id="map-wrap">
 <div class="section-label">CITY INTELLIGENCE</div>
-<h1 class="hero-title"><span class="teal">The Living Map</span></h1>
-<p class="hero-sub" style="max-width:640px;margin:0 auto 20px">Your zip code predicts your health better than your genetic code. BLEU maps the full healing infrastructure of any city — practitioners, recovery, environment, crisis hotspots, social determinants — and shows exactly where the gaps are.</p>
+<h1 class="hero-title" style="margin-bottom:6px">The <span class="teal">Living Map</span></h1>
+<p style="color:#7B8DA6;font-size:13px;text-align:center;margin:0 auto 20px;max-width:580px">Your zip code predicts your health better than your genetic code. BLEU maps the full healing infrastructure of any city -- practitioners, recovery resources, environmental health, and social determinants.</p>
 
-<!-- Layer controls -->
-<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px">
-  <button class="map-layer-btn on" id="btn-practitioners" onclick="toggleLayer('practitioners',this)">&#9673; Practitioners</button>
-  <button class="map-layer-btn on" id="btn-recovery" onclick="toggleLayer('recovery',this)">&#10084; Recovery</button>
-  <button class="map-layer-btn" id="btn-environment" onclick="toggleLayer('environment',this)">&#127807; Environment</button>
-  <button class="map-layer-btn" id="btn-crises" onclick="toggleLayer('crises',this)">&#9888; Crisis Hotspots</button>
-  <button class="map-layer-btn" id="btn-social" onclick="toggleLayer('social',this)">&#127968; Social Determinants</button>
+<!-- Hero stats -->
+<div class="map-hero-grid">
+  <div class="mhc"><div class="mhc-val" style="color:#C9A84C">855K+</div><div class="mhc-lbl">NPI Practitioners</div></div>
+  <div class="mhc"><div class="mhc-val" style="color:#a32d2d">100</div><div class="mhc-lbl">Crises Mapped</div></div>
+  <div class="mhc"><div class="mhc-val" style="color:#1d9e75">23:1</div><div class="mhc-lbl">City ROI Documented</div></div>
+  <div class="mhc"><div class="mhc-val" style="color:#2DD4A8">222</div><div class="mhc-lbl">Target Cities</div></div>
 </div>
 
-<!-- Main Map -->
-<div id="bleu-map"></div>
-
-<!-- Zip search -->
-<div style="display:flex;align-items:center;gap:10px;margin:14px 0;flex-wrap:wrap">
-  <input class="zip-input" id="zip-search" placeholder="Enter ZIP code" maxlength="5" onkeydown="if(event.key==='Enter')searchZip()"/>
-  <button class="map-layer-btn on" onclick="searchZip()">Search Healing Radius</button>
-  <button class="map-layer-btn" onclick="locateMe()">Use My Location</button>
-  <span id="zip-result" style="font-size:12px;color:#2DD4A8"></span>
+<!-- Search -->
+<div class="map-search-row">
+  <input class="map-input" id="map-city-input" placeholder="Enter city, ZIP code, or neighborhood..."/>
+  <button class="map-btn" id="map-search-btn">Search Healing Map</button>
+  <button class="map-btn gold" onclick="mapLocate()">Use My Location</button>
 </div>
 
-<!-- 3-column intel grid -->
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
+<!-- Quick searches -->
+<div class="map-section">FIND IN YOUR CITY</div>
+<div class="map-quick" id="map-quick-btns"></div>
 
+<!-- Layer toggles -->
+<div class="map-section">MAP LAYERS</div>
+<div class="layer-btns" id="map-layers"></div>
+
+<!-- Google Maps embed -- New Orleans -->
+<div class="map-gmap" id="map-gmap-wrap">
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d55430.17!2d-90.07150!3d29.95110!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8620a454b2118265%3A0xdb065be85e2d2662!2sNew%20Orleans%2C%20LA!5e0!3m2!1sen!2sus!4v1710600000000!5m2!1sen!2sus"
+    width="100%" height="380" style="border:0" allowfullscreen="" loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+</div>
+
+<!-- Intelligence panels -->
+<div class="map-section">CITY INTELLIGENCE</div>
+<div class="map-cols">
   <!-- City Health Score -->
-  <div class="map-intel-card">
-    <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C9A84C;margin-bottom:10px">City Health Score</div>
-    <div style="display:flex;align-items:center;gap:12px">
-      <div class="city-score-ring">
-        <svg width="64" height="64" viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(201,168,76,.1)" stroke-width="5"/>
-          <circle cx="32" cy="32" r="26" fill="none" stroke="#C9A84C" stroke-width="5" stroke-dasharray="163.4" stroke-dashoffset="98" stroke-linecap="round" id="city-score-circle"/>
-        </svg>
-        <span class="city-score-val" id="city-score-val">40</span>
-      </div>
-      <div>
-        <div style="font-size:13px;font-weight:600;color:#E8E0D0" id="city-name">New Orleans</div>
-        <div style="font-size:11px;color:#7B8DA6;margin-top:2px">#50 in US health rankings</div>
-        <div style="font-size:11px;color:#a32d2d;margin-top:2px">Louisiana ranked last</div>
-      </div>
+  <div class="map-intel">
+    <div class="map-intel-head" style="color:#C9A84C">NEW ORLEANS HEALTH SCORE</div>
+    <div style="text-align:center;padding:10px 0 14px">
+      <div style="font-size:48px;font-weight:700;color:#C9A84C;line-height:1">40</div>
+      <div style="font-size:11px;color:#7B8DA6;margin-top:4px">out of 100 -- Louisiana ranked #50</div>
     </div>
-    <div style="margin-top:10px;font-size:11px;color:#7B8DA6">
-      <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>Practitioner density</span><span style="color:#2DD4A8">6.2/1K</span></div>
-      <div class="env-bar"><div class="env-fill" style="width:42%;background:#2DD4A8"></div></div>
-      <div style="display:flex;justify-content:space-between;margin:6px 0 3px"><span>Food access</span><span style="color:#a32d2d">31%</span></div>
-      <div class="env-bar"><div class="env-fill" style="width:31%;background:#a32d2d"></div></div>
-      <div style="display:flex;justify-content:space-between;margin:6px 0 3px"><span>Recovery infrastructure</span><span style="color:#ba7517">58%</span></div>
-      <div class="env-bar"><div class="env-fill" style="width:58%;background:#ba7517"></div></div>
-    </div>
+    <div class="map-row"><span style="color:#7B8DA6">Practitioner density</span><span style="color:#2DD4A8">6.2/1K</span></div>
+    <div class="map-bar-wrap"><div class="map-bar" style="width:62%;background:#2DD4A8"></div></div>
+    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Food access</span><span style="color:#a32d2d">31%</span></div>
+    <div class="map-bar-wrap"><div class="map-bar" style="width:31%;background:#a32d2d"></div></div>
+    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Mental health coverage</span><span style="color:#ba7517">46%</span></div>
+    <div class="map-bar-wrap"><div class="map-bar" style="width:46%;background:#ba7517"></div></div>
+    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Recovery infrastructure</span><span style="color:#ba7517">58%</span></div>
+    <div class="map-bar-wrap"><div class="map-bar" style="width:58%;background:#ba7517"></div></div>
+    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Financial wellness</span><span style="color:#a32d2d">28%</span></div>
+    <div class="map-bar-wrap"><div class="map-bar" style="width:28%;background:#a32d2d"></div></div>
+    <button class="map-btn" style="width:100%;margin-top:12px;font-size:11px" onclick="ask('map','Give me a full health infrastructure report on New Orleans -- all crises, all gaps, and the BLEU intervention for each one')">Full City Report</button>
   </div>
 
-  <!-- Environmental Intelligence -->
-  <div class="map-intel-card">
-    <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#2D8A9E;margin-bottom:10px">Environmental Health</div>
-    <div id="env-data">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <span style="font-size:12px;color:#7B8DA6">Air Quality (AQI)</span>
-        <span style="font-size:13px;font-weight:600;color:#1d9e75" id="aqi-val">47</span>
-      </div>
-      <div class="env-bar" style="margin-bottom:10px"><div class="env-fill" style="width:47%;background:#1d9e75" id="aqi-bar"></div></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <span style="font-size:12px;color:#7B8DA6">UV Index</span>
-        <span style="font-size:13px;font-weight:600;color:#ba7517" id="uv-val">7</span>
-      </div>
-      <div class="env-bar" style="margin-bottom:10px"><div class="env-fill" style="width:70%;background:#ba7517" id="uv-bar"></div></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <span style="font-size:12px;color:#7B8DA6">Pollen</span>
-        <span style="font-size:13px;font-weight:600;color:#a32d2d" id="pollen-val">High</span>
-      </div>
-      <div class="env-bar"><div class="env-fill" style="width:82%;background:#a32d2d" id="pollen-bar"></div></div>
-    </div>
-    <div style="margin-top:10px;font-size:10px;color:#4A5B73">Powered by Meersens API · Live data</div>
+  <!-- Environmental Intel -->
+  <div class="map-intel">
+    <div class="map-intel-head" style="color:#2D8A9E">ENVIRONMENTAL HEALTH</div>
+    <div class="map-row"><span style="color:#7B8DA6">Air Quality (AQI)</span><span style="color:#1d9e75;font-weight:600">47 -- Good</span></div>
+    <div class="map-bar-wrap"><div class="map-bar" style="width:47%;background:#1d9e75"></div></div>
+    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">UV Index</span><span style="color:#ba7517;font-weight:600">7 -- High</span></div>
+    <div class="map-bar-wrap"><div class="map-bar" style="width:70%;background:#ba7517"></div></div>
+    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Pollen Level</span><span style="color:#a32d2d;font-weight:600">High</span></div>
+    <div class="map-bar-wrap"><div class="map-bar" style="width:82%;background:#a32d2d"></div></div>
+    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Humidity</span><span style="color:#ba7517;font-weight:600">78%</span></div>
+    <div class="map-bar-wrap"><div class="map-bar" style="width:78%;background:#ba7517"></div></div>
+    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Heat Index Risk</span><span style="color:#a32d2d;font-weight:600">Elevated</span></div>
+    <div class="map-bar-wrap"><div class="map-bar" style="width:72%;background:#a32d2d"></div></div>
+    <div style="margin-top:12px;font-size:10px;color:#4A5B73;text-align:center">Powered by Meersens API -- Live data</div>
+    <button class="map-btn" style="width:100%;margin-top:8px;font-size:11px" onclick="ask('map','What are the environmental health risks in New Orleans today and how do I protect myself?')">Full Environmental Report</button>
   </div>
 
-  <!-- Crisis Hotspots -->
-  <div class="map-intel-card">
-    <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#a32d2d;margin-bottom:10px">Active Crisis Signals</div>
-    <div style="font-size:11px;color:#7B8DA6;line-height:1.9">
-      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#a32d2d"></span>Child poverty 26% (2x national)</div>
-      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#a32d2d"></span>Male suicide 4x female rate</div>
-      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#ba7517"></span>49% 3rd grade literacy</div>
-      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#ba7517"></span>Mental health desert: 54% untreated</div>
-      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#185fa5"></span>855K practitioners in BLEU directory</div>
-      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#1d9e75"></span>BLEU infrastructure: deployed</div>
-    </div>
-    <div style="margin-top:10px">
-      <button class="map-layer-btn on" style="font-size:10px;padding:4px 10px" onclick="ask('map','Show me the top 5 health crises in New Orleans and what BLEU can do about each one')">Deploy BLEU Response</button>
-    </div>
+  <!-- Crisis Signals -->
+  <div class="map-intel">
+    <div class="map-intel-head" style="color:#a32d2d">ACTIVE CRISIS SIGNALS</div>
+    <div id="crisis-signals"></div>
+    <button class="map-btn" style="width:100%;margin-top:12px;font-size:11px;border-color:rgba(163,45,45,.3);color:#a32d2d;background:rgba(163,45,45,.08)" onclick="ask('map','Show me the top health crises in New Orleans and what BLEU can do about each one with specific interventions and ROI')">Deploy BLEU Response</button>
   </div>
-
 </div>
 
-<!-- Quick queries -->
-<div style="margin:16px 0 8px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,.5)">FIND IN YOUR CITY</div>
-<div class="quick-row" style="flex-wrap:wrap">
-  <span class="quick-btn" onclick="mapSearch('practitioners')">&#9673; Practitioners</span>
-  <span class="quick-btn" onclick="mapSearch('yoga')">&#129536; Yoga Studios</span>
-  <span class="quick-btn" onclick="mapSearch('recovery')">&#10084; Recovery</span>
-  <span class="quick-btn" onclick="mapSearch('food')">&#127807; Health Food</span>
-  <span class="quick-btn" onclick="mapSearch('mental_health')">&#129504; Mental Health</span>
-  <span class="quick-btn" onclick="mapSearch('fitness')">&#128170; Fitness</span>
-  <span class="quick-btn" onclick="mapSearch('dispensary')">&#127807; Cannabis</span>
-  <span class="quick-btn" onclick="mapSearch('pharmacy')">&#128138; Pharmacy</span>
-</div>
+<!-- Social determinants -->
+<div class="map-section">SOCIAL DETERMINANTS BY ZIP</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px" id="zip-grid"></div>
 
-<!-- 100 Crises Map Layer -->
-<div style="margin:20px 0 8px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(45,138,158,.5)">100 CRISES DEPLOYMENT MAP</div>
-<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px" id="crises-grid">
-</div>
+<!-- 100 Crises Grid -->
+<div class="map-section">100 CRISES DEPLOYMENT MAP</div>
+<div class="crisis-grid" id="crisis-grid"></div>
 
-<!-- Alvai Map Chat -->
-<div class="chat-box" id="map-chat" style="min-height:80px;margin-bottom:16px"></div>
+<!-- Alvai map chat -->
+<div class="map-section">ASK THE MAP</div>
+<div class="chat-box" id="map-chat" style="min-height:60px;margin-bottom:10px"></div>
 <div style="display:flex;gap:8px">
-  <input class="zip-input" style="flex:1;width:auto" id="map-input" placeholder="Ask about any location, city, or health infrastructure..." onkeydown="if(event.key==='Enter')mapAsk()"/>
-  <button class="map-layer-btn on" onclick="mapAsk()">Ask Alvai</button>
+  <input class="map-input" id="map-ask-input" placeholder="Ask about any location, health infrastructure, crisis, or city..."/>
+  <button class="map-btn" id="map-ask-btn">Ask Alvai</button>
 </div>
 
-<!-- Enterprise City Pitch -->
-<div class="city-enterprise-card">
-  <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C9A84C;margin-bottom:8px">Enterprise City Intelligence</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center">
-    <div>
-      <div style="font-size:16px;font-weight:600;color:#E8E0D0;margin-bottom:6px">Deploy BLEU in Your City</div>
-      <div style="font-size:12px;color:#7B8DA6;line-height:1.7">The New Orleans proof of concept scales to 222 cities. Every city gets a real-time health intelligence dashboard, social determinants map, practitioner directory, and crisis intervention infrastructure.</div>
-      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-size:10px;padding:3px 8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:4px;color:#C9A84C">$1.8M/yr deployment</span>
-        <span style="font-size:10px;padding:3px 8px;background:rgba(45,138,158,.1);border:1px solid rgba(45,138,158,.2);border-radius:4px;color:#2DD4A8">23:1 ROI documented</span>
-        <span style="font-size:10px;padding:3px 8px;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.2);border-radius:4px;color:#1d9e75">500K city = $42M benefit</span>
-      </div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:32px;font-weight:600;color:#C9A84C;line-height:1">222</div>
-      <div style="font-size:11px;color:#7B8DA6;margin-bottom:12px">target cities</div>
-      <button class="map-layer-btn on" style="font-size:11px" onclick="ask('enterprise','Tell me about the BLEU city partnership model and the 23:1 ROI for a city of 500,000 people')">City Partnership Brief</button>
-    </div>
+<!-- Enterprise pitch -->
+<div class="map-section">ENTERPRISE CITY INTELLIGENCE</div>
+<div class="ent-card">
+  <div style="font-size:9px;letter-spacing:3px;color:#C9A84C;margin-bottom:8px">DEPLOY BLEU IN YOUR CITY</div>
+  <div style="font-size:17px;font-weight:600;color:#E8E0D0;margin-bottom:6px">The 222-City Model Starts in New Orleans</div>
+  <div style="font-size:12px;color:#7B8DA6;line-height:1.7">Every city gets real-time health intelligence, social determinants mapping, 855K practitioner directory, and crisis intervention infrastructure. The New Orleans proof of concept is the template.</div>
+  <div class="ent-grid">
+    <div class="ent-stat"><div class="ent-val">$1.8M</div><div class="ent-lbl">Annual deployment cost</div></div>
+    <div class="ent-stat"><div class="ent-val">23:1</div><div class="ent-lbl">Documented ROI</div></div>
+    <div class="ent-stat"><div class="ent-val">$42M</div><div class="ent-lbl">Annual benefit / 500K city</div></div>
   </div>
+  <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+    <button class="map-btn gold" onclick="ask('enterprise','Tell me about the BLEU city partnership model -- the 23:1 ROI, the $42M annual benefit, and how New Orleans becomes the proof of concept for 222 cities')">City Partnership Brief</button>
+    <button class="map-btn" onclick="ask('map','What would a full BLEU deployment look like for a city of 500,000 people -- infrastructure, cost, timeline, and expected outcomes')">500K City Deployment</button>
+    <button class="map-btn" onclick="ask('enterprise','Tell me about the Hotel Monteleone worksite wellness contract -- 400 employees, $240K potential, and how it becomes the template for enterprise')">Hotel Monteleone Model</button>
+  </div>
+</div>
+
 </div>
 
 <script>
-(function(){
+document.addEventListener("DOMContentLoaded",function(){
 
-var mapInst = null;
-var layers = {practitioners:null, recovery:null, environment:null, crises:null, social:null};
-var layerState = {practitioners:true, recovery:true, environment:false, crises:false, social:false};
-
-// New Orleans coordinates
-var NOLA = [29.9511, -90.0715];
-
-function initMap(){
-  if(mapInst) return;
-  mapInst = L.map('bleu-map', {
-    center: NOLA,
-    zoom: 12,
-    zoomControl: true,
-    attributionControl: false
-  });
-
-  // Dark tile layer
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: ''
-  }).addTo(mapInst);
-  
-  // Dark overlay to match BLEU theme
-  var darkOverlay = L.rectangle([[-90,-180],[90,180]], {
-    fillColor: '#080E1A',
-    fillOpacity: 0.55,
-    color: 'transparent',
-    weight: 0,
-    interactive: false
-  }).addTo(mapInst);
-
-  // Practitioner cluster points (NPI data - New Orleans area)
-  var practitionerData = [
-    {lat:29.9499,lng:-90.0701,name:'Tulane Medical Center',type:'Hospital',count:485},
-    {lat:29.9400,lng:-90.0800,name:'Ochsner Health',type:'Health System',count:320},
-    {lat:29.9630,lng:-90.0570,name:'LSU Health Sciences',type:'Academic Medical',count:280},
-    {lat:29.9200,lng:-90.0900,name:'Touro Infirmary',type:'Hospital',count:195},
-    {lat:29.9700,lng:-90.0400,name:'Mid-City Wellness Cluster',type:'Practitioners',count:142},
-    {lat:29.9350,lng:-90.1200,name:'Uptown Health District',type:'Practitioners',count:167},
-    {lat:29.9800,lng:-90.0600,name:'Lakeview Medical',type:'Clinic',count:89},
-    {lat:29.9100,lng:-90.0500,name:'Bywater Healing Arts',type:'Integrative',count:54},
-    {lat:29.9550,lng:-90.0950,name:'Garden District Wellness',type:'Practitioners',count:78},
-    {lat:29.9430,lng:-90.0610,name:'French Quarter Health',type:'Clinic',count:43}
-  ];
-
-  var practLayer = L.layerGroup();
-  practitionerData.forEach(function(p){
-    var radius = Math.sqrt(p.count) * 1.5;
-    var circle = L.circle([p.lat,p.lng], {
-      radius: radius * 15,
-      fillColor: '#2DD4A8',
-      fillOpacity: 0.25,
-      color: '#2D8A9E',
-      weight: 1.5
-    });
-    circle.bindPopup('<div style="background:#0C1829;color:#E8E0D0;padding:10px;border-radius:8px;min-width:160px"><div style="color:#2DD4A8;font-weight:600;font-size:13px">'+p.name+'</div><div style="color:#7B8DA6;font-size:11px;margin-top:4px">'+p.type+' &bull; '+p.count+' practitioners</div></div>',{className:'bleu-popup'});
-    practLayer.addLayer(circle);
-  });
-  layers.practitioners = practLayer;
-  practLayer.addTo(mapInst);
-
-  // Recovery infrastructure
-  var recoveryData = [
-    {lat:29.9510,lng:-90.0810,name:'NOLA Recovery Center',type:'Treatment'},
-    {lat:29.9300,lng:-90.0700,name:'Odyssey House Louisiana',type:'Residential'},
-    {lat:29.9650,lng:-90.0550,name:'AA Meeting - Mid-City',type:'AA/NA'},
-    {lat:29.9450,lng:-90.1100,name:'Bridge House',type:'Residential'},
-    {lat:29.9200,lng:-90.0600,name:'Catholic Charities Recovery',type:'Outpatient'},
-    {lat:29.9750,lng:-90.0700,name:'NA Meeting - Lakeview',type:'AA/NA'},
-    {lat:29.9380,lng:-90.0450,name:'Tulane Behavioral Health',type:'Outpatient'}
-  ];
-
-  var recLayer = L.layerGroup();
-  recoveryData.forEach(function(r){
-    var marker = L.circleMarker([r.lat,r.lng], {
-      radius: 8,
-      fillColor: r.type==='AA/NA' ? '#C9A84C' : '#a32d2d',
-      fillOpacity: 0.8,
-      color: '#fff',
-      weight: 1.5
-    });
-    marker.bindPopup('<div style="background:#0C1829;color:#E8E0D0;padding:10px;border-radius:8px"><div style="color:#C9A84C;font-weight:600;font-size:13px">'+r.name+'</div><div style="color:#7B8DA6;font-size:11px;margin-top:4px">'+r.type+'</div></div>',{className:'bleu-popup'});
-    recLayer.addLayer(marker);
-  });
-  layers.recovery = recLayer;
-  recLayer.addTo(mapInst);
-
-  // Social determinants heatmap-style overlay
-  var socialLayer = L.layerGroup();
-  var povertyZones = [
-    {lat:29.9630,lng:-90.1100,label:'High poverty zone',score:26,color:'#a32d2d'},
-    {lat:29.9200,lng:-90.0800,label:'Food desert',score:18,color:'#a32d2d'},
-    {lat:29.9480,lng:-90.0400,label:'Low literacy zone',score:34,color:'#ba7517'},
-    {lat:29.9750,lng:-90.0900,label:'Healthcare desert',score:12,color:'#a32d2d'},
-    {lat:29.9350,lng:-90.1300,label:'Moderate access',score:55,color:'#ba7517'}
-  ];
-  povertyZones.forEach(function(z){
-    var rect = L.rectangle([[z.lat-0.02,z.lng-0.025],[z.lat+0.02,z.lng+0.025]], {
-      fillColor: z.color,
-      fillOpacity: 0.15,
-      color: z.color,
-      weight: 1,
-      dashArray: '4 4'
-    });
-    rect.bindPopup('<div style="background:#0C1829;color:#E8E0D0;padding:10px;border-radius:8px"><div style="font-weight:600;color:#a32d2d">'+z.label+'</div><div style="color:#7B8DA6;font-size:11px;margin-top:4px">Access score: '+z.score+'%</div></div>',{className:'bleu-popup'});
-    socialLayer.addLayer(rect);
-  });
-  layers.social = socialLayer;
-
-  // Crisis hotspots
-  var crisisLayer = L.layerGroup();
-  var crisisPoints = [
-    {lat:29.9530,lng:-90.0780,label:'Mental health crisis cluster',severity:'critical'},
-    {lat:29.9250,lng:-90.0680,label:'Youth trauma hotspot',severity:'critical'},
-    {lat:29.9680,lng:-90.1050,label:'Opioid crisis concentration',severity:'high'},
-    {lat:29.9400,lng:-90.0900,label:'Burnout workplace cluster',severity:'high'},
-    {lat:29.9600,lng:-90.0450,label:'Chronic pain unserved',severity:'moderate'}
-  ];
-  crisisPoints.forEach(function(c){
-    var color = c.severity==='critical' ? '#a32d2d' : c.severity==='high' ? '#ba7517' : '#185fa5';
-    var pulse = L.circleMarker([c.lat,c.lng], {
-      radius: 12,
-      fillColor: color,
-      fillOpacity: 0.3,
-      color: color,
-      weight: 2
-    });
-    pulse.bindPopup('<div style="background:#0C1829;color:#E8E0D0;padding:10px;border-radius:8px"><div style="color:'+color+';font-weight:600">'+c.label+'</div><div style="color:#7B8DA6;font-size:11px;margin-top:4px">Severity: '+c.severity+'</div></div>',{className:'bleu-popup'});
-    crisisLayer.addLayer(pulse);
-  });
-  layers.crises = crisisLayer;
-}
-
-function toggleLayer(name, btn){
-  if(!mapInst) initMap();
-  layerState[name] = !layerState[name];
-  btn.classList.toggle('on', layerState[name]);
-  if(layerState[name]){
-    if(layers[name]) mapInst.addLayer(layers[name]);
-  } else {
-    if(layers[name]) mapInst.removeLayer(layers[name]);
-  }
-}
-
-function searchZip(){
-  var zip = document.getElementById('zip-search').value.trim();
-  if(zip.length !== 5) return;
-  document.getElementById('zip-result').textContent = 'Searching ' + zip + '...';
-  ask('map', 'What health infrastructure exists in ZIP code ' + zip + '? Show practitioners, recovery resources, and any health deserts.');
-  document.getElementById('zip-result').textContent = 'See Alvai response below';
-}
-
-function locateMe(){
-  if(!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(function(pos){
-    if(!mapInst) initMap();
-    mapInst.setView([pos.coords.latitude, pos.coords.longitude], 13);
-    L.marker([pos.coords.latitude, pos.coords.longitude]).addTo(mapInst)
-      .bindPopup('<div style="background:#0C1829;color:#2DD4A8;padding:8px;border-radius:6px">Your location</div>').openPopup();
-    ask('map', 'What health infrastructure is near my location at coordinates ' + pos.coords.latitude.toFixed(4) + ', ' + pos.coords.longitude.toFixed(4) + '?');
-  });
-}
-
-var mapSearchQueries = {
-  practitioners: 'Show me all NPI-verified practitioners in New Orleans with phone numbers and addresses',
-  yoga: 'yoga studios and meditation centers in New Orleans',
-  recovery: 'AA meetings NA meetings and addiction treatment centers in New Orleans',
-  food: 'health food stores organic markets and nutrition resources in New Orleans',
-  mental_health: 'mental health clinics therapists and psychiatrists in New Orleans',
-  fitness: 'gyms fitness centers and personal trainers in New Orleans',
-  dispensary: 'licensed cannabis dispensaries and CBD stores in New Orleans',
-  pharmacy: 'pharmacies and Cost Plus Drug locations in New Orleans'
-};
-
-function mapSearch(type){
-  var q = mapSearchQueries[type] || type;
-  ask('map', q);
-  if(!mapInst) initMap();
-}
-
-function mapAsk(){
-  var inp = document.getElementById('map-input');
-  var val = inp.value.trim();
-  if(!val) return;
-  ask('map', val);
-  inp.value = '';
-}
-
-// 100 crises grid
-var crisisCategories = [
-  {label:'Mental Health', count:10, color:'#a32d2d'},
-  {label:'Chronic Disease', count:10, color:'#ba7517'},
-  {label:'Addiction', count:10, color:'#7055a8'},
-  {label:'Youth Crises', count:10, color:'#185fa5'},
-  {label:'Aging', count:10, color:'#2D8A9E'},
-  {label:'Economic Health', count:10, color:'#C9A84C'},
-  {label:'Environment', count:10, color:'#1d9e75'},
-  {label:'Healthcare System', count:10, color:'#a32d2d'},
-  {label:"Women's Health", count:10, color:'#F472B6'},
-  {label:'Emerging Global', count:10, color:'#2DD4A8'}
+var QUICK=[
+  {label:"Practitioners",q:"Show me all NPI-verified practitioners in New Orleans with phone numbers and specialties"},
+  {label:"Mental Health Clinics",q:"Mental health clinics therapists and psychiatrists in New Orleans"},
+  {label:"Recovery Centers",q:"Addiction treatment centers and recovery resources in New Orleans"},
+  {label:"AA and NA Meetings",q:"AA meetings NA meetings and 12-step programs in New Orleans"},
+  {label:"Yoga Studios",q:"Yoga studios and meditation centers in New Orleans"},
+  {label:"Health Food",q:"Health food stores organic markets and nutrition resources in New Orleans"},
+  {label:"Gyms and Fitness",q:"Gyms fitness centers and personal trainers in New Orleans"},
+  {label:"Cannabis Dispensaries",q:"Licensed cannabis dispensaries and CBD stores in New Orleans"},
+  {label:"Pharmacies",q:"Pharmacies Cost Plus Drug locations and GoodRx partners in New Orleans"},
+  {label:"Hospitals",q:"Hospitals and emergency care centers in New Orleans"},
+  {label:"Acupuncture",q:"Acupuncture and integrative medicine clinics in New Orleans"},
+  {label:"Crisis Resources",q:"Crisis intervention hotlines mental health emergency resources in New Orleans"}
 ];
 
-var grid = document.getElementById('crises-grid');
-if(grid){
-  crisisCategories.forEach(function(cat){
-    var card = document.createElement('div');
-    card.style.cssText = 'background:rgba(8,14,26,.8);border:1px solid '+cat.color.replace(')',',0.25)')+';border-radius:10px;padding:10px;cursor:pointer;transition:all .2s;text-align:center';
-    card.innerHTML = '<div style="font-size:18px;font-weight:700;color:'+cat.color+'">'+cat.count+'</div><div style="font-size:10px;color:#7B8DA6;line-height:1.3;margin-top:4px">'+cat.label+'</div>';
-    card.onmouseover = function(){this.style.borderColor=cat.color;this.style.background='rgba(8,14,26,.95)'};
-    card.onmouseout = function(){this.style.borderColor=cat.color.replace(')',',0.25)');this.style.background='rgba(8,14,26,.8)'};
-    card.onclick = function(){ask('map','Tell me about the '+cat.label+' crises BLEU addresses and what the intervention looks like in practice')};
-    grid.appendChild(card);
+var LAYERS=[
+  {label:"Practitioners",on:true,color:"#2DD4A8"},
+  {label:"Recovery",on:true,color:"#C9A84C"},
+  {label:"Mental Health",on:false,color:"#a32d2d"},
+  {label:"Environment",on:false,color:"#1d9e75"},
+  {label:"Social Determinants",on:false,color:"#7055a8"},
+  {label:"Crisis Hotspots",on:false,color:"#F472B6"},
+  {label:"Food Access",on:false,color:"#ba7517"},
+  {label:"Enterprise Zones",on:false,color:"#185fa5"}
+];
+
+var CRISES=[
+  {n:"01-10",l:"Mental Health",c:"#a32d2d"},
+  {n:"11-20",l:"Chronic Disease",c:"#ba7517"},
+  {n:"21-30",l:"Addiction",c:"#7055a8"},
+  {n:"31-40",l:"Youth Crises",c:"#185fa5"},
+  {n:"41-50",l:"Aging",c:"#2D8A9E"},
+  {n:"51-60",l:"Economic",c:"#C9A84C"},
+  {n:"61-70",l:"Environment",c:"#1d9e75"},
+  {n:"71-80",l:"Healthcare System",c:"#a32d2d"},
+  {n:"81-90",l:"Womens Health",c:"#F472B6"},
+  {n:"91-100",l:"Emerging Global",c:"#2DD4A8"}
+];
+
+var SIGNALS=[
+  {label:"Child poverty 26% -- 2x national avg",sev:"critical",color:"#a32d2d"},
+  {label:"Male suicide 4x female rate untreated",sev:"critical",color:"#a32d2d"},
+  {label:"49% 3rd grade literacy -- failing threshold",sev:"critical",color:"#a32d2d"},
+  {label:"54% with mental illness -- zero treatment",sev:"high",color:"#ba7517"},
+  {label:"Food desert covers 40% of low-income zip",sev:"high",color:"#ba7517"},
+  {label:"Opioid crisis -- 3x national overdose rate",sev:"high",color:"#ba7517"},
+  {label:"BLEU infrastructure -- deployed and ready",sev:"active",color:"#1d9e75"}
+];
+
+var ZIPS=[
+  {zip:"70112",name:"Central City",score:28,color:"#a32d2d",label:"Healthcare desert"},
+  {zip:"70115",name:"Uptown",score:72,color:"#1d9e75",label:"High access"},
+  {zip:"70116",name:"Treme",score:34,color:"#a32d2d",label:"Food desert"},
+  {zip:"70117",name:"Bywater",score:58,color:"#ba7517",label:"Moderate access"},
+  {zip:"70119",name:"Mid-City",score:65,color:"#ba7517",label:"Growing"},
+  {zip:"70122",name:"Gentilly",score:44,color:"#ba7517",label:"Underserved"},
+  {zip:"70124",name:"Lakeview",score:78,color:"#1d9e75",label:"High access"},
+  {zip:"70125",name:"Carrollton",score:52,color:"#ba7517",label:"Mixed access"}
+];
+
+// Quick buttons
+var qWrap=document.getElementById("map-quick-btns");
+if(qWrap){QUICK.forEach(function(q){
+  var b=document.createElement("button");b.className="map-qbtn";b.textContent=q.label;
+  b.addEventListener("click",function(){ask("map",q.q);});
+  qWrap.appendChild(b);
+});}
+
+// Layer buttons
+var lWrap=document.getElementById("map-layers");
+if(lWrap){LAYERS.forEach(function(l){
+  var b=document.createElement("button");
+  b.className="lbtn"+(l.on?" on":"");
+  b.style.setProperty("--lc",l.color);
+  b.textContent=l.label;
+  if(l.on)b.style.borderColor=l.color;
+  b.addEventListener("click",function(){
+    b.classList.toggle("on");
+    var isOn=b.classList.contains("on");
+    b.style.borderColor=isOn?l.color:"rgba(45,138,158,.2)";
+    ask("map","Show me "+l.label+" resources in New Orleans on the map");
   });
-}
+  lWrap.appendChild(b);
+});}
 
-// Init map on tab open
-var origGo = window.go;
-if(origGo){
-  window.go = function(tab){
-    origGo(tab);
-    if(tab==='map'){
-      setTimeout(function(){
-        if(!mapInst) initMap();
-        else mapInst.invalidateSize();
-      }, 300);
-    }
-  };
-}
+// Crisis grid
+var cg=document.getElementById("crisis-grid");
+if(cg){CRISES.forEach(function(c){
+  var d=document.createElement("div");d.className="cgcard";
+  d.innerHTML="<div class='cgnum' style='color:"+c.c+"'>"+c.n+"</div><div class='cglab'>"+c.l+"</div>";
+  d.style.borderColor="rgba(255,255,255,.05)";
+  d.addEventListener("mouseover",function(){d.style.borderColor=c.c+"55";});
+  d.addEventListener("mouseout",function(){d.style.borderColor="rgba(255,255,255,.05)";});
+  d.addEventListener("click",function(){ask("map","Tell me about the "+c.l+" crises that BLEU addresses and the specific interventions deployed in New Orleans");});
+  cg.appendChild(d);
+});}
 
-// Also init if already on map tab
-setTimeout(function(){
-  var panel = document.getElementById('p-map');
-  if(panel && panel.classList.contains('active')) initMap();
-}, 500);
+// Crisis signals
+var cs=document.getElementById("crisis-signals");
+if(cs){SIGNALS.forEach(function(s){
+  var d=document.createElement("div");
+  d.style.cssText="display:flex;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px;";
+  var dot=document.createElement("div");dot.className="map-crisis-dot";dot.style.background=s.color;
+  var txt=document.createElement("span");txt.style.color=s.sev==="active"?"#1d9e75":"#7B8DA6";txt.textContent=s.label;
+  d.appendChild(dot);d.appendChild(txt);cs.appendChild(d);
+});}
 
-// Stream responses into map chat
-var _origSend = window.sendToAlvai || window.ask;
+// ZIP grid
+var zg=document.getElementById("zip-grid");
+if(zg){ZIPS.forEach(function(z){
+  var d=document.createElement("div");
+  d.style.cssText="background:#0d1829;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s";
+  d.innerHTML="<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:6px'><span style='font-size:12px;font-weight:600;color:#E8E0D0'>"+z.zip+"</span><span style='font-size:11px;font-weight:600;color:"+z.color+"'>"+z.score+"/100</span></div><div style='font-size:11px;color:#7B8DA6;margin-bottom:6px'>"+z.name+"</div><div style='height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden'><div style='height:100%;width:"+z.score+"%;background:"+z.color+";border-radius:2px'></div></div><div style='font-size:10px;color:"+z.color+";margin-top:4px'>"+z.label+"</div>";
+  d.addEventListener("mouseover",function(){d.style.borderColor=z.color+"55";d.style.transform="translateY(-1px)";});
+  d.addEventListener("mouseout",function(){d.style.borderColor="rgba(255,255,255,.06)";d.style.transform="";});
+  d.addEventListener("click",function(){ask("map","What health infrastructure exists in ZIP code "+z.zip+" in "+z.name+" New Orleans? Show practitioners, recovery resources, and what BLEU can deploy there.");});
+  zg.appendChild(d);
+});}
 
-})();
+// Search
+var srchBtn=document.getElementById("map-search-btn");
+if(srchBtn)srchBtn.addEventListener("click",function(){
+  var v=document.getElementById("map-city-input").value.trim();
+  if(v)ask("map","Show me the health infrastructure in "+v+" -- practitioners, recovery resources, mental health clinics, food access, and any health deserts. Give me a full city health report.");
+});
+var inp=document.getElementById("map-city-input");
+if(inp)inp.addEventListener("keydown",function(e){if(e.key==="Enter"){srchBtn.click();}});
+
+// Ask btn
+var askBtn=document.getElementById("map-ask-btn");
+if(askBtn)askBtn.addEventListener("click",function(){
+  var v=document.getElementById("map-ask-input").value.trim();
+  if(v){ask("map",v);document.getElementById("map-ask-input").value="";}
+});
+var askInp=document.getElementById("map-ask-input");
+if(askInp)askInp.addEventListener("keydown",function(e){
+  if(e.key==="Enter"){askBtn.click();}
+});
+
+// Locate
+window.mapLocate=function(){
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var lat=pos.coords.latitude.toFixed(4);
+    var lng=pos.coords.longitude.toFixed(4);
+    ask("map","What health infrastructure is near my location at "+lat+", "+lng+"? Show practitioners, recovery resources, and any nearby health deserts or crisis hotspots.");
+  });
+};
+
+});
 </script>
-
 </div>
 
 <div class="panel" id="p-protocols">
