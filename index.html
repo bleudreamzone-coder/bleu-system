@@ -2354,7 +2354,7 @@ var fi=0;
   setTimeout(feed,3800);
 })();
 
-/*  CANVAS MAP  */
+/*  CANVAS MAP - FIXED SIZE, NO OFFSETWIDTH DEPENDENCY  */
 var canvas=document.getElementById("city-canvas");
 var tip=document.getElementById("map-tip");
 var selIdx=-1;
@@ -2362,123 +2362,19 @@ var animTick=0;
 var ctx=null;
 var W=900,H=480;
 
-function initCanvas(){
+function startMap(){
   if(!canvas)return;
-  var stage=document.getElementById("map-stage");
-  if(!stage)return;
-  W=stage.offsetWidth||900;
   canvas.width=W;
   canvas.height=H;
-  canvas.style.height=H+"px";
+  canvas.style.width="100%";
+  canvas.style.height="auto";
   ctx=canvas.getContext("2d");
+  if(!ctx)return;
   draw();
 }
 
-function hexToRgb(r,g,b,a){return "rgba("+r+","+g+","+b+","+(a||1)+")";}
-
-function draw(){
-  if(!ctx)return;
-  animTick+=0.02;
-  ctx.clearRect(0,0,W,H);
-
-  /* Background gradient */
-  var bg=ctx.createRadialGradient(W*.48,H*.52,0,W*.48,H*.52,W*.6);
-  bg.addColorStop(0,"#071828");bg.addColorStop(1,"#030810");
-  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
-
-  /* Grid */
-  ctx.strokeStyle="rgba(45,138,158,0.04)";ctx.lineWidth=1;
-  for(var gx=0;gx<W;gx+=50){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
-  for(var gy=0;gy<H;gy+=50){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
-
-  /* Lake Pontchartrain */
-  ctx.fillStyle="rgba(7,24,40,0.9)";
-  ctx.strokeStyle="rgba(13,36,64,0.8)";ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.ellipse(W*.5,20,W*.48,30,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-  ctx.fillStyle="rgba(26,74,122,0.5)";ctx.font="11px DM Sans,sans-serif";ctx.textAlign="center";
-  ctx.fillText("Lake Pontchartrain",W*.5,24);
-
-  /* Mississippi River */
-  ctx.strokeStyle="rgba(10,30,56,0.9)";ctx.lineWidth=36;ctx.lineCap="round";
-  ctx.beginPath();ctx.moveTo(5,H*.92);ctx.bezierCurveTo(W*.17,H*.86,W*.52,H*.77,W*.71,H*.71);ctx.bezierCurveTo(W*.84,H*.68,W*.93,H*.66,W,H*.65);ctx.stroke();
-  ctx.strokeStyle="rgba(7,24,48,0.5)";ctx.lineWidth=18;ctx.stroke();
-  ctx.strokeStyle="rgba(26,74,122,0.35)";ctx.lineWidth=1;
-  ctx.save();ctx.translate(W*.38,H*.85);ctx.rotate(-0.1);
-  ctx.fillStyle="rgba(26,74,122,0.45)";ctx.font="10px DM Sans,sans-serif";ctx.fillText("Mississippi River",0,0);
-  ctx.restore();
-
-  /* Data flows */
-  var flows=[[.38,.5,.36,.36],[.36,.36,.47,.18],[.27,.55,.17,.52],[.38,.5,.27,.55]];
-  flows.forEach(function(f,i){
-    var t2=animTick+i*.7;
-    var alpha=0.1+0.08*Math.sin(t2);
-    ctx.strokeStyle="rgba(45,138,158,"+alpha+")";ctx.lineWidth=1.5;
-    ctx.setLineDash([5,4]);ctx.lineDashOffset=-t2*15;
-    ctx.beginPath();
-    var mx=(f[0]+f[2])/2*W;var my=((f[1]+f[3])/2-.06)*H;
-    ctx.moveTo(f[0]*W,f[1]*H);ctx.quadraticCurveTo(mx,my,f[2]*W,f[3]*H);
-    ctx.stroke();ctx.setLineDash([]);
-  });
-
-  /* Zones */
-  ZONES.forEach(function(z,i){
-    var px=z.x*W,py=z.y*H,pw=z.w*W,ph=z.h*H;
-    var isHov=(i===selIdx);
-    var alpha=isHov?.45:.18;
-    var stroke=isHov?1:0.6;
-
-    /* Fill */
-    ctx.fillStyle=hexToRgb(z.r,z.g,z.b,alpha);
-    ctx.strokeStyle=hexToRgb(z.r,z.g,z.b,stroke);
-    ctx.lineWidth=isHov?2.5:1.5;
-    roundRect(ctx,px,py,pw,ph,10);
-    ctx.fill();ctx.stroke();
-
-    /* Score */
-    ctx.fillStyle=hexToRgb(z.r,z.g,z.b,1);
-    ctx.font="bold 16px DM Sans,sans-serif";ctx.textAlign="center";
-    ctx.fillText(z.sc,px+pw/2,py+ph/2+2);
-
-    /* Name */
-    ctx.fillStyle="rgba(200,192,176,0.75)";
-    ctx.font="9px DM Sans,sans-serif";
-    ctx.fillText(z.n,px+pw/2,py+ph/2+16);
-
-    /* Breathing practitioner dot */
-    var pulse=1+0.3*Math.sin(animTick*1.8+i*.5);
-    var dr=isHov?6:5;
-    ctx.fillStyle="rgba(45,212,168,0.9)";
-    ctx.shadowColor="#2DD4A8";ctx.shadowBlur=8*pulse;
-    ctx.beginPath();ctx.arc(px+pw-8,py+10,dr*pulse*.6+2,0,Math.PI*2);ctx.fill();
-    ctx.shadowBlur=0;
-
-    /* Crisis pulse for critical */
-    if(z.sc<40){
-      var cr=(animTick*.4+i*.3)%1;
-      ctx.strokeStyle="rgba(180,50,50,"+(1-cr)*.6+")";
-      ctx.lineWidth=1.8;
-      ctx.beginPath();ctx.arc(px+pw/2,py+ph/2,10+cr*28,0,Math.PI*2);ctx.stroke();
-    }
-  });
-
-  /* Hotel Monteleone gold pin */
-  var px=.36*W,py=.51*H;
-  var pulse2=1+0.25*Math.sin(animTick*2.2);
-  ctx.fillStyle="#C9A84C";ctx.shadowColor="#C9A84C";ctx.shadowBlur=12*pulse2;
-  ctx.beginPath();ctx.arc(px,py,7,0,Math.PI*2);ctx.fill();
-  ctx.shadowBlur=0;
-  ctx.fillStyle="rgba(201,168,76,0.85)";ctx.font="bold 8px DM Sans,sans-serif";ctx.textAlign="left";
-  ctx.fillText("Hotel Monteleone",px+10,py+3);
-
-  requestAnimationFrame(draw);
-}
-
-function roundRect(ctx,x,y,w,h,r){
-  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
-  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
-  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
-  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
-}
+/* Start immediately - canvas is in DOM when script runs */
+startMap();
 
 /* Click/hover */
 function getZone(mx,my){
@@ -2629,17 +2525,7 @@ window.mLoc=function(){if(!navigator.geolocation)return;navigator.geolocation.ge
 /* Canvas only inits when map tab is visible */
 
 /* Re-init when tab becomes active */
-/* Poll until map panel is visible, then init canvas */
-(function poll(){
-  if(ctx)return;
-  var stage=document.getElementById("map-stage");
-  if(stage&&stage.offsetWidth>0){
-    W=stage.offsetWidth;
-    initCanvas();
-  }else{
-    setTimeout(poll,200);
-  }
-})();
+/* canvas started immediately via startMap() */
 
 })();
 </script>
