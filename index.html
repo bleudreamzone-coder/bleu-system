@@ -667,7 +667,7 @@ button[type="submit"],
         </div>
         <div style="background:rgba(78,205,140,.06);border:1px solid rgba(78,205,140,.15);border-radius:10px;padding:10px 18px;text-align:center;min-width:100px">
           <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#4ecd8c;animation:hcountUp .6s 1.2s both">FREE</div>
-          <div style="font-size:9px;color:#8b95a5;letter-spacing:2px;margin-top:2px">TO START</div>
+          <div style="font-size:9px;color:#8b95a5;letter-spacing:2px;margin-top:2px">PIONEER — 12 MONTHS</div>
         </div>
       </div>
 
@@ -3185,6 +3185,17 @@ if(lb)lb.addEventListener("click",function(){
 .pp-anim{animation:ppSlideUp 0.5s cubic-bezier(.16,1,.3,1) backwards}
 .pp-anim:nth-child(1){animation-delay:0.05s}.pp-anim:nth-child(2){animation-delay:0.1s}.pp-anim:nth-child(3){animation-delay:0.15s}.pp-anim:nth-child(4){animation-delay:0.2s}.pp-anim:nth-child(5){animation-delay:0.25s}.pp-anim:nth-child(6){animation-delay:0.3s}
 </style>
+<div style="background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(29,158,117,.06));border:1px solid rgba(201,168,76,.25);border-radius:14px;padding:20px 24px;margin-bottom:20px;text-align:center">
+  <div style="font-size:9px;letter-spacing:4px;color:rgba(201,168,76,.7);text-transform:uppercase;margin-bottom:8px">&#127941; FOUNDING PIONEER PROGRAM</div>
+  <div style="font-family:Georgia,serif;font-size:20px;font-weight:300;color:#E8E0D0;margin-bottom:8px">Your Citizen Passport is <span style="color:#1d9e75;font-weight:400">free for 12 months.</span></div>
+  <div style="font-size:12px;color:#7B8DA6;line-height:1.7;max-width:560px;margin:0 auto">You are a founding Pioneer of the BLEU longevity ecosystem. Full Passport access, unlimited Alvai sessions, every tab, every tool. No credit card. No catch. The platform earns from practitioners, employers, and affiliates &mdash; not from the people it serves.</div>
+  <div style="margin-top:14px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
+    <div style="font-size:10px;padding:4px 14px;border-radius:20px;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,119,.25);color:#1d9e75">Free for 12 months</div>
+    <div style="font-size:10px;padding:4px 14px;border-radius:20px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);color:#C9A84C">Pioneer status permanent</div>
+    <div style="font-size:10px;padding:4px 14px;border-radius:20px;background:rgba(45,212,168,.06);border:1px solid rgba(45,212,168,.15);color:#2DD4A8">Unlimited access</div>
+  </div>
+</div>
+
 
 <!-- AUTH SCREEN -->
 <div id="auth-screen" style="padding:20px;max-width:420px;margin:0 auto">
@@ -3259,7 +3270,7 @@ if(lb)lb.addEventListener("click",function(){
         <span style="font-size:11px;color:#4ecdc4">✓ Alvai memory</span>
       </div>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <button id="stripe-upgrade-btn" onclick="startStripeCheckout()" style="padding:12px 28px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.5px">Become a Citizen — $9.99/mo</button>
+        <button id="stripe-upgrade-btn" onclick="startStripeCheckout()" style="padding:12px 28px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.5px">Become a Pioneer Citizen — Free</button>
         <span style="font-size:10px;color:#5A6374">Cancel anytime · Secure via Stripe</span>
       </div>
     </div>
@@ -9006,42 +9017,37 @@ async function loadStripe() {
 async function startStripeCheckout() {
   if (!currentUser) { go('passport'); return; }
   const btn = document.getElementById('stripe-upgrade-btn');
-  if (btn) { btn.textContent = 'Preparing checkout...'; btn.disabled = true; }
-
+  if (btn) { btn.textContent = 'Activating your Pioneer access...'; btn.disabled = true; }
   try {
-    const stripe = await loadStripe();
-
-    // Create checkout session via Supabase edge function
-    const res = await fetch(SB + '/functions/v1/stripe-checkout', {
-      method: 'POST',
+    var SB = window.BLEU_CONFIG.SUPABASE_URL;
+    var KEY = window.BLEU_CONFIG.SUPABASE_ANON;
+    var pioneer_until = new Date();
+    pioneer_until.setMonth(pioneer_until.getMonth() + 12);
+    await fetch(SB + '/rest/v1/profiles?id=eq.' + currentUser.id, {
+      method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + ANON,
+        'apikey': KEY, 'Authorization': 'Bearer ' + KEY,
+        'Content-Type': 'application/json', 'Prefer': 'return=minimal'
       },
       body: JSON.stringify({
-        user_id: currentUser.id,
-        email: currentUser.email,
-        price_id: 'price_1TBPtAK4cATmIFboFVb9m0QN',
-        success_url: window.location.origin + '?citizen=1',
-        cancel_url: window.location.href,
-      }),
+        citizenship_status: 'citizen',
+        citizen_tier: 'pioneer',
+        citizen_since: new Date().toISOString(),
+        pioneer_until: pioneer_until.toISOString(),
+        pioneer_fee_waived: true
+      })
     });
-
-    if (!res.ok) throw new Error('Checkout session failed');
-    const { session_id, checkout_url } = await res.json();
-
-    if (checkout_url) {
-      window.location.href = checkout_url;
-    } else if (session_id) {
-      await stripe.redirectToCheckout({ sessionId: session_id });
-    } else {
-      throw new Error('No checkout URL returned');
+    if (btn) {
+      btn.textContent = 'Welcome, Pioneer Citizen';
+      btn.style.background = '#1d9e75';
+      btn.style.borderColor = '#1d9e75';
     }
-  } catch (err) {
-    console.error('Stripe error:', err);
-    // Fallback: mark as citizen directly for demo/testing
-    if (btn) { btn.textContent = 'Processing...'; }
-    await activateCitizen();
+    if (window.upsertProfile) upsertProfile();
+    if (window.animateRing) animateRing();
+    if (window.updateStreak) updateStreak();
+  } catch(e) {
+    console.error('Pioneer grant error:', e);
+    if (btn) { btn.textContent = 'Try again'; btn.disabled = false; }
   }
 }
 
@@ -9064,7 +9070,7 @@ async function activateCitizen() {
     document.getElementById('pp-citizen-card').style.display = 'none';
     document.getElementById('pp-citizen-active').style.display = 'block';
     // Track affiliate transaction
-    recordAffiliateTransaction('stripe', 'citizen_upgrade', 9.99);
+    recordAffiliateTransaction('pioneer', 'citizen_pioneer_free', 0);
   } catch (e) {
     console.error('Citizen activation error:', e);
   }
