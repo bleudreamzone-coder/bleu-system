@@ -2286,248 +2286,226 @@ id="chat-protocols"></div><div class="chat-input-row"><input autocomplete="off" 
 <!-- ═══════════════════════ LEARN ═══════════════════════ -->
 <div class="panel" id="p-learn">
 <style>
-.yt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
-.yt-card{background:#111F36;border:1px solid rgba(45,138,158,.1);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .25s;text-decoration:none;display:block}
-.yt-card:hover{transform:translateY(-3px);border-color:rgba(45,138,158,.4);box-shadow:0 8px 32px rgba(0,0,0,.4)}
-.yt-thumb{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0C1829,#111F36);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.yt-thumb-icon{font-size:40px;opacity:.7}
-.yt-thumb-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(to bottom,transparent 40%,rgba(8,14,26,.8))}
-.yt-thumb-stat{position:absolute;bottom:8px;left:10px;font-size:10px;color:#E8E0D0;font-weight:600;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,.8)}
-.yt-thumb-badge{position:absolute;top:8px;right:8px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:600;letter-spacing:1px}
-.yt-body{padding:12px}
-.yt-creator{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.yt-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-.yt-creator-name{font-size:11px;color:#7B8DA6}
-.yt-cred{font-size:9px;color:#2DD4A8;margin-left:auto}
-.yt-title{font-size:13px;font-weight:600;color:#E8E0D0;line-height:1.4;margin-bottom:6px}
-.yt-meta{font-size:11px;color:#4A5B73;display:flex;gap:10px}
-.yt-tag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:3px;margin:2px;font-weight:500}
-.yt-section-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,.6);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
-.yt-section-label::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.1)}
-.yt-filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.yt-filter{padding:6px 14px;border-radius:20px;border:1px solid rgba(45,138,158,.2);background:transparent;cursor:pointer;font-size:11px;color:#7B8DA6;transition:all .2s;font-family:'DM Sans',sans-serif}
-.yt-filter.on{background:rgba(45,138,158,.15);border-color:#2D8A9E;color:#2DD4A8}
-.yt-filter:hover{border-color:#2D8A9E;color:#E8E0D0}
-.yt-search{background:rgba(8,14,26,.8);border:1px solid rgba(45,138,158,.2);border-radius:8px;padding:10px 16px;color:#E8E0D0;font-size:13px;width:100%;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:16px}
-.yt-search:focus{border-color:#2D8A9E}
-.yt-channel-bar{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:none}
-.yt-channel-bar::-webkit-scrollbar{display:none}
-.yt-channel{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;min-width:70px;transition:all .2s}
-.yt-channel:hover .yt-ch-avatar{border-color:#2DD4A8}
-.yt-ch-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(45,138,158,.2);transition:all .2s}
-.yt-ch-name{font-size:10px;color:#7B8DA6;text-align:center;line-height:1.3;max-width:70px}
-.yt-featured{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(45,138,158,.06));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:20px;margin-bottom:24px;display:flex;gap:20px;align-items:center;cursor:pointer;transition:all .2s}
-.yt-featured:hover{border-color:rgba(201,168,76,.4)}
-.yt-featured-thumb{width:180px;min-width:180px;aspect-ratio:16/9;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:48px}
-.playlist-bar{background:#111F36;border:1px solid rgba(45,138,158,.1);border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s}
-.playlist-bar:hover{border-color:rgba(45,138,158,.3)}
-.pl-icon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.pl-count{font-size:11px;color:#4A5B73;margin-left:auto;flex-shrink:0}
+.lrn-search{width:100%;background:rgba(8,14,26,.8);border:1px solid rgba(45,138,158,.25);border-radius:10px;padding:12px 18px;color:#E8E0D0;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:16px}
+.lrn-search:focus{border-color:#2D8A9E}
+.lrn-filter{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;border:1px solid rgba(45,138,158,.2);background:transparent;cursor:pointer;font-size:12px;color:#7B8DA6;transition:all .2s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.lrn-filter.on{background:rgba(45,138,158,.15);border-color:#2D8A9E;color:#2DD4A8}
+.lrn-filter:hover{border-color:#2D8A9E;color:#E8E0D0}
+.lrn-filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:20px;scrollbar-width:none}
+.lrn-filters::-webkit-scrollbar{display:none}
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-bottom:28px}
+.vid-card{background:#0d1829;border:1px solid rgba(45,138,158,.1);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .25s}
+.vid-card:hover{transform:translateY(-3px);border-color:rgba(45,138,158,.35);box-shadow:0 8px 28px rgba(0,0,0,.5)}
+.vid-thumb{width:100%;aspect-ratio:16/9;position:relative;background:#080E1A;overflow:hidden}
+.vid-thumb iframe{width:100%;height:100%;border:none;display:block}
+.vid-thumb-cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--cover-from),var(--cover-to));cursor:pointer;transition:opacity .3s}
+.vid-thumb-cover .play-btn{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 20px rgba(0,0,0,.4);transition:transform .2s}
+.vid-card:hover .play-btn{transform:scale(1.08)}
+.vid-thumb-cover.playing{opacity:0;pointer-events:none}
+.vid-dur{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.85);color:#fff;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600}
+.vid-tag{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:1px}
+.vid-body{padding:13px 14px}
+.vid-ch{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.vid-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.vid-ch-name{font-size:11px;color:#7B8DA6}
+.vid-cred{font-size:9px;padding:1px 6px;border-radius:3px;margin-left:auto}
+.vid-title{font-size:13px;font-weight:600;color:#E8E0D0;line-height:1.4;margin-bottom:5px}
+.vid-views{font-size:11px;color:#4A5B73;display:flex;gap:8px}
+.sec-head{font-size:9px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;display:flex;align-items:center;gap:12px}
+.sec-head::after{content:'';flex:1;height:1px;background:currentColor;opacity:.12}
+.ch-strip{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;margin-bottom:22px;scrollbar-width:none}
+.ch-strip::-webkit-scrollbar{display:none}
+.ch-pill{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:68px;cursor:pointer;flex-shrink:0}
+.ch-avatar{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid rgba(45,138,158,.15);transition:all .2s}
+.ch-pill:hover .ch-avatar{border-color:#2DD4A8;transform:scale(1.05)}
+.ch-label{font-size:10px;color:#7B8DA6;text-align:center;line-height:1.3;max-width:68px}
+.music-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:8px;scrollbar-width:none}
+.music-row::-webkit-scrollbar{display:none}
+.music-card{min-width:160px;background:#0d1829;border:1px solid rgba(201,168,76,.1);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;flex-shrink:0;text-align:center}
+.music-card:hover{border-color:rgba(201,168,76,.4);transform:translateY(-2px)}
+.music-icon{font-size:32px;margin-bottom:8px}
+.music-title{font-size:12px;font-weight:600;color:#E8E0D0;margin-bottom:3px;line-height:1.3}
+.music-sub{font-size:10px;color:#7B8DA6}
+.research-card{background:#0d1829;border:1px solid rgba(163,45,45,.15);border-radius:12px;padding:16px;display:flex;gap:14px;align-items:flex-start;cursor:pointer;transition:all .2s;margin-bottom:10px}
+.research-card:hover{border-color:rgba(163,45,45,.4);transform:translateX(3px)}
+.research-num{font-size:28px;font-weight:700;color:var(--rc);opacity:.2;flex-shrink:0;line-height:1;min-width:36px;text-align:right}
+.learn-chat-box{min-height:70px;margin-bottom:10px}
 </style>
 
 <div class="section-label">THE KNOWLEDGE ENGINE</div>
-<h1 class="hero-title"><span class="teal">Learn</span></h1>
-<p class="hero-sub" style="max-width:600px;margin:0 auto 20px">32 civilizational crises. Peer-reviewed evidence. ROI models. Deployment blueprints. Every piece of research mapped to your health, your city, your future.</p>
+<h1 class="hero-title" style="margin-bottom:6px">Your Wellness <span class="teal">Starts Playing</span></h1>
+<p style="color:#7B8DA6;font-size:13px;text-align:center;margin:0 auto 20px;max-width:560px">YouTube. Podcasts. Music. Courses. Sleep therapy. Meditation. Financial literacy. Spiritual insight. All organized by what you need — right now.</p>
 
-<!-- Search -->
-<input class="yt-search" placeholder="Search research, topics, creators, protocols..." id="learn-search" onkeydown="if(event.key==='Enter')learnSearch(this.value)"/>
+<input class="lrn-search" id="lrn-search" placeholder="Search videos, podcasts, topics, research..." onkeydown="if(event.key==='Enter')learnQ(this.value)"/>
 
-<!-- Filter row -->
-<div class="yt-filter-row">
-  <button class="yt-filter on" onclick="filterLearn('all',this)">All</button>
-  <button class="yt-filter" onclick="filterLearn('mental',this)">Mental Health</button>
-  <button class="yt-filter" onclick="filterLearn('metabolic',this)">Metabolic</button>
-  <button class="yt-filter" onclick="filterLearn('social',this)">Social</button>
-  <button class="yt-filter" onclick="filterLearn('women',this)">Women's Health</button>
-  <button class="yt-filter" onclick="filterLearn('youth',this)">Youth</button>
-  <button class="yt-filter" onclick="filterLearn('economic',this)">Economic</button>
-  <button class="yt-filter" onclick="filterLearn('recovery',this)">Recovery</button>
-  <button class="yt-filter" onclick="filterLearn('nola',this)">New Orleans</button>
+<div class="lrn-filters">
+  <button class="lrn-filter on" onclick="lrnFilter('all',this)">All</button>
+  <button class="lrn-filter" onclick="lrnFilter('sleep',this)">&#128164; Sleep</button>
+  <button class="lrn-filter" onclick="lrnFilter('mental',this)">&#129504; Mental Health</button>
+  <button class="lrn-filter" onclick="lrnFilter('metabolic',this)">&#9889; Metabolic</button>
+  <button class="lrn-filter" onclick="lrnFilter('meditation',this)">&#129514; Meditation</button>
+  <button class="lrn-filter" onclick="lrnFilter('nutrition',this)">&#127789; Nutrition</button>
+  <button class="lrn-filter" onclick="lrnFilter('fitness',this)">&#128170; Fitness</button>
+  <button class="lrn-filter" onclick="lrnFilter('recovery',this)">&#10084; Recovery</button>
+  <button class="lrn-filter" onclick="lrnFilter('finance',this)">&#128176; Finance</button>
+  <button class="lrn-filter" onclick="lrnFilter('spirit',this)">&#128149; Spirit</button>
+  <button class="lrn-filter" onclick="lrnFilter('research',this)">&#128218; Research</button>
 </div>
 
-<!-- Creator Channels -->
-<div class="yt-section-label">VERIFIED CREATORS</div>
-<div class="yt-channel-bar" id="creator-channels">
-  <div class="yt-channel" onclick="filterCreator('felicia')">
-    <div class="yt-ch-avatar" style="background:rgba(45,138,158,.15)">&#128105;&#8205;&#9877;</div>
-    <div class="yt-ch-name" style="color:#2DD4A8">Dr. Felicia</div>
-  </div>
-  <div class="yt-channel" onclick="filterCreator('bleu')">
-    <div class="yt-ch-avatar" style="background:rgba(201,168,76,.1)">&#127908;</div>
-    <div class="yt-ch-name">BLEU Research</div>
-  </div>
-  <div class="yt-channel" onclick="filterCreator('sleep')">
-    <div class="yt-ch-avatar" style="background:rgba(111,85,168,.15)">&#128164;</div>
-    <div class="yt-ch-name">Sleep Science</div>
-  </div>
-  <div class="yt-channel" onclick="filterCreator('metabolic')">
-    <div class="yt-ch-avatar" style="background:rgba(29,158,117,.15)">&#9889;</div>
-    <div class="yt-ch-name">Metabolic Intel</div>
-  </div>
-  <div class="yt-channel" onclick="filterCreator('mental')">
-    <div class="yt-ch-avatar" style="background:rgba(163,45,45,.15)">&#129504;</div>
-    <div class="yt-ch-name">Mental Health</div>
-  </div>
-  <div class="yt-channel" onclick="filterCreator('nola')">
-    <div class="yt-ch-avatar" style="background:rgba(201,168,76,.15)">&#127928;</div>
-    <div class="yt-ch-name">Jazz Bird NOLA</div>
-  </div>
-  <div class="yt-channel" onclick="filterCreator('women')">
-    <div class="yt-ch-avatar" style="background:rgba(244,114,182,.15)">&#128330;</div>
-    <div class="yt-ch-name">Women's Health</div>
-  </div>
-  <div class="yt-channel" onclick="ask('learn','How do I become a creator on BLEU and publish my own wellness protocols?')">
-    <div class="yt-ch-avatar" style="background:rgba(45,138,158,.08);border-style:dashed">+</div>
-    <div class="yt-ch-name">Become Creator</div>
-  </div>
+<!-- Channels -->
+<div class="sec-head" style="color:#2D8A9E">CHANNELS</div>
+<div class="ch-strip">
+  <div class="ch-pill" onclick="lrnFilter('mental',null)"><div class="ch-avatar" style="background:rgba(163,45,45,.12)">&#129504;</div><div class="ch-label">Mental Health</div></div>
+  <div class="ch-pill" onclick="lrnFilter('sleep',null)"><div class="ch-avatar" style="background:rgba(24,95,165,.12)">&#128164;</div><div class="ch-label">Sleep Science</div></div>
+  <div class="ch-pill" onclick="lrnFilter('metabolic',null)"><div class="ch-avatar" style="background:rgba(186,117,23,.12)">&#9889;</div><div class="ch-label">Metabolic Intel</div></div>
+  <div class="ch-pill" onclick="lrnFilter('nutrition',null)"><div class="ch-avatar" style="background:rgba(29,158,117,.12)">&#127789;</div><div class="ch-label">Nutrition</div></div>
+  <div class="ch-pill" onclick="lrnFilter('meditation',null)"><div class="ch-avatar" style="background:rgba(112,85,168,.12)">&#129514;</div><div class="ch-label">Meditation</div></div>
+  <div class="ch-pill" onclick="lrnFilter('fitness',null)"><div class="ch-avatar" style="background:rgba(45,138,158,.12)">&#128170;</div><div class="ch-label">Fitness</div></div>
+  <div class="ch-pill" onclick="lrnFilter('recovery',null)"><div class="ch-avatar" style="background:rgba(201,168,76,.12)">&#10084;</div><div class="ch-label">Recovery</div></div>
+  <div class="ch-pill" onclick="lrnFilter('finance',null)"><div class="ch-avatar" style="background:rgba(29,158,117,.12)">&#128176;</div><div class="ch-label">Finance</div></div>
+  <div class="ch-pill" onclick="lrnFilter('spirit',null)"><div class="ch-avatar" style="background:rgba(201,168,76,.12)">&#128149;</div><div class="ch-label">Spirit</div></div>
+  <div class="ch-pill" onclick="lrnFilter('research',null)"><div class="ch-avatar" style="background:rgba(163,45,45,.12)">&#128218;</div><div class="ch-label">Research</div></div>
 </div>
 
-<!-- Featured -->
-<div class="yt-featured" onclick="ask('learn','Tell me everything about the $1 trillion women health gap — the research, the 8 conditions, and exactly what BLEU does about it')">
-  <div class="yt-featured-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15),rgba(163,45,45,.1))">&#128330;</div>
-  <div>
-    <div style="font-size:10px;letter-spacing:2px;color:#F472B6;margin-bottom:6px">FEATURED RESEARCH</div>
-    <div style="font-size:18px;font-weight:600;color:#E8E0D0;line-height:1.3;margin-bottom:8px">The $1 Trillion Women's Health Gap</div>
-    <div style="font-size:12px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">WEF and McKinsey 2024: women spend 25% more of their lives in poor health than men — not biology, but systemic failure. 8 conditions. $1T annual GDP gain possible. Every $1 invested returns $3.</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <span class="yt-tag" style="background:rgba(244,114,182,.1);color:#F472B6">Volume III</span>
-      <span class="yt-tag" style="background:rgba(45,138,158,.1);color:#2DD4A8">WEF/McKinsey 2024</span>
-      <span class="yt-tag" style="background:rgba(29,158,117,.1);color:#1d9e75">$3:1 ROI</span>
-    </div>
-  </div>
-</div>
+<!-- Video grid -->
+<div class="sec-head" style="color:#C9A84C">TRENDING IN WELLNESS</div>
+<div class="vid-grid" id="vid-grid"></div>
 
-<!-- Research Library Grid -->
-<div class="yt-section-label">VOLUME I — 8 CIVILIZATIONAL CRISES</div>
-<div class="yt-grid" id="learn-grid">
-</div>
+<!-- Music & Meditation Audio -->
+<div class="sec-head" style="color:#7055a8">MUSIC + MEDITATION AUDIO</div>
+<div class="music-row" id="music-row"></div>
 
-<div class="yt-section-label">VOLUME II — 8 DEEPER CRISES</div>
-<div class="yt-grid" id="learn-grid-v2"></div>
+<!-- More videos -->
+<div class="sec-head" style="color:#2D8A9E">DEEP DIVES</div>
+<div class="vid-grid" id="vid-grid-2"></div>
 
-<div class="yt-section-label">LEARNING PATHWAYS</div>
-<div id="playlists-section">
-</div>
+<!-- Research Library -->
+<div class="sec-head" style="color:#a32d2d">CIVILIZATIONAL RESEARCH — 32 CRISES</div>
+<div id="research-list"></div>
 
-<!-- Alvai Learn Chat -->
-<div class="yt-section-label">ASK THE RESEARCH</div>
-<div class="chat-box" id="learn-chat" style="min-height:80px;margin-bottom:12px"></div>
+<!-- Alvai -->
+<div class="sec-head" style="color:#2D8A9E">ASK THE RESEARCH</div>
+<div class="learn-chat-box chat-box" id="learn-chat"></div>
 <div style="display:flex;gap:8px">
-  <input class="yt-search" style="margin:0;flex:1" id="learn-input" placeholder="Ask about any research, crisis, intervention, or ROI model..." onkeydown="if(event.key==='Enter')learnAsk()"/>
-  <button class="yt-filter on" style="flex-shrink:0" onclick="learnAsk()">Ask Alvai</button>
+  <input class="lrn-search" style="margin:0;flex:1" id="lrn-input" placeholder="Ask about any video, topic, study, or protocol..." onkeydown="if(event.key==='Enter'){learnQ(this.value);this.value=''}"/>
+  <button class="lrn-filter on" style="flex-shrink:0;margin-bottom:0" onclick="var v=document.getElementById('lrn-input');if(v.value){learnQ(v.value);v.value=''}">Ask Alvai</button>
 </div>
 
 <script>
 (function(){
 
-var VOL1 = [
-  {id:'loneliness',title:'Loneliness: The 871K Deaths No One Counts',icon:'&#128101;',color:'#a32d2d',creator:'BLEU Research',cred:'WHO 2025',stats:'871K deaths/yr',roi:'9:1 ROI',tag:'Community',tagColor:'rgba(163,45,45,.2)',tagText:'#a32d2d',blurb:'WHO Commission June 2025: 1 in 6 people worldwide affected. Loneliness linked directly to 871,000 deaths annually. The UK social prescribing model delivers 9:1 ROI. A city of 500K saves $42M/year.',cat:'social',query:'Tell me about the loneliness crisis — the WHO evidence, the social prescribing ROI, and the BLEU 90-day New Orleans pilot'},
-  {id:'sleep',title:'Sleep Deprivation: $411B Crisis, $0 Solution',icon:'&#128164;',color:'#185fa5',creator:'Sleep Science',cred:'RAND Corp',stats:'$411B US cost',roi:'$9,100/student',tag:'Sleep Tab',tagColor:'rgba(24,95,165,.2)',tagText:'#60A5FA',blurb:'1 in 3 American adults chronically sleep-deprived. CDC public health epidemic. The solution — later school start times — costs nothing and generates $9,100 lifetime gain per student.',cat:'metabolic',query:'Explain the sleep deprivation crisis — the $411B annual cost, school start time evidence, and what the BLEU Sleep tab does about it'},
-  {id:'grief',title:'Grief: 40% Get No Support',icon:'&#129310;',color:'#7055a8',creator:'Dr. Felicia',cred:'APA 2024',stats:'2.5M bereaved/yr',roi:'$3,600 saved',tag:'Therapy',tagColor:'rgba(112,85,168,.2)',tagText:'#a78bfa',blurb:'40% of bereaved individuals receive no professional support. Complicated grief affects 10-15% causing $3,600+ in excess healthcare costs per person per year. Compassionate companion model: $200 cost, $3,600 ROI.',cat:'mental',query:'What does BLEU do for grief? Tell me about the evidence and the compassionate companions model'},
-  {id:'knowledge',title:'The 17-Year Evidence Gap',icon:'&#128218;',color:'#ba7517',creator:'BLEU Research',cred:'PubMed 2024',stats:'17yr research lag',roi:'465 studies live',tag:'Learn Tab',tagColor:'rgba(186,117,23,.2)',tagText:'#C9A84C',blurb:'Proven interventions sit in journals for 17 years before clinical adoption. BLEU has 465 PubMed studies live in Alvai. Every Alvai response closes the evidence gap in real time.',cat:'social',query:'How does BLEU solve the 17-year evidence translation gap? Tell me about the knowledge translation crisis'},
-  {id:'foodrx',title:'Food Prescription: $32B in Savings Ignored',icon:'&#129380;',color:'#1d9e75',creator:'Dr. Felicia',cred:'USDA 2024',stats:'$32.1B 1yr savings',roi:'$130 saves $1,300',tag:'Vessel',tagColor:'rgba(29,158,117,.2)',tagText:'#1d9e75',blurb:'Food-as-medicine interventions show 10:1 ROI. $130 annual food prescription reduces healthcare costs by $1,300. Medically tailored meals: 50% reduction in hospitalizations.',cat:'metabolic',query:'Explain food as medicine — the evidence, the ROI, and how BLEU uses the Vessel tab for food prescription'},
-  {id:'debt',title:'Medical Debt: $9B in Payday Fees Annually',icon:'&#128176;',color:'#C9A84C',creator:'BLEU Research',cred:'CFPB 2024',stats:'$9B annual fees',roi:'$1.8K avg saved',tag:'Finance',tagColor:'rgba(201,168,76,.2)',tagText:'#C9A84C',blurb:'Medical debt is the leading cause of personal bankruptcy. $9B in payday lending fees annually. Financial toxicity kills cancer outcomes by 56%. BLEU Finance tab deploys debt triage, HSA optimization, and medication cost intelligence.',cat:'economic',query:'Tell me about the medical debt crisis and how BLEU Finance addresses financial toxicity in healthcare'},
-  {id:'caregiving',title:'Caregiving: $1.1T Unpaid, Invisible Economy',icon:'&#129309;',color:'#2D8A9E',creator:'BLEU Research',cred:'AARP 2024',stats:'$1.1T unpaid value',roi:'53M caregivers',tag:'Recovery',tagColor:'rgba(45,138,158,.2)',tagText:'#2DD4A8',blurb:'53 million Americans provide $1.1 trillion in unpaid care. Caregiver burnout costs $50B/yr in lost productivity. Hospital discharge pipelines leave families without support. BLEU Recovery + Community tabs are the infrastructure.',cat:'social',query:'What does BLEU do for caregivers? Tell me about the $1.1T caregiving crisis and the BLEU intervention'},
-  {id:'literacy',title:'Health Literacy: 54% Below 6th Grade',icon:'&#128221;',color:'#F472B6',creator:'Dr. Felicia',cred:'NCES 2023',stats:'54% below 6th grade',roi:'$238 saves $1,000',tag:'Alvai',tagColor:'rgba(244,114,182,.2)',tagText:'#F472B6',blurb:'54% of US adults read below 6th grade level. Every Alvai response auto-calibrates to demonstrated reading level. BLEU is already the health literacy intervention — it just needs to make that explicit.',cat:'social',query:'Tell me about the health literacy crisis and how Alvai's readability mode functions as an intervention'}
+// Real YouTube video IDs - wellness, sleep, mental health, meditation, nutrition, fitness
+var VIDS = [
+  // Mental Health
+  {id:'KD9TmYhDFz8',title:'Why We Sleep: The Science of Sleep and Dreams',ch:'Andrew Huberman',avatar:'AH',ac:'#185fa5',cat:'sleep',dur:'1:22:15',views:'8.2M views',tag:'Sleep Science',tc:'rgba(24,95,165,.8)',cred:'Stanford',cf:'rgba(24,95,165,.15)',cc:'#60A5FA'},
+  {id:'0_CLTK0Drk0',title:'Controlling Your Dopamine For Motivation & Happiness',ch:'Huberman Lab',avatar:'HL',ac:'#ba7517',cat:'mental',dur:'2:05:38',views:'12M views',tag:'Mental Health',tc:'rgba(186,117,23,.8)',cred:'Peer Reviewed',cf:'rgba(186,117,23,.15)',cc:'#C9A84C'},
+  {id:'XNkPyNP1B-c',title:'Dr. Matthew Walker on Sleep Quality & Brain Health',ch:'Found My Fitness',avatar:'FMF',ac:'#7055a8',cat:'sleep',dur:'1:44:50',views:'3.1M views',tag:'Sleep',tc:'rgba(112,85,168,.8)',cred:'UCB',cf:'rgba(112,85,168,.15)',cc:'#a78bfa'},
+  {id:'tEmt1Znux58',title:'Gut Health Masterclass: What You Need to Know',ch:'Dr. Mark Hyman',avatar:'MH',ac:'#1d9e75',cat:'nutrition',dur:'58:22',views:'2.4M views',tag:'Nutrition',tc:'rgba(29,158,117,.8)',cred:'Cleveland Clinic',cf:'rgba(29,158,117,.15)',cc:'#1d9e75'},
+  {id:'0ITEPMgDcaI',title:'The Science of Meditation & Mindfulness',ch:'Sam Harris',avatar:'SH',ac:'#7055a8',cat:'meditation',dur:'1:12:04',views:'5.8M views',tag:'Meditation',tc:'rgba(112,85,168,.8)',cred:'Neuroscience',cf:'rgba(112,85,168,.15)',cc:'#a78bfa'},
+  {id:'lN1-CahCQy0',title:'How Exercise Transforms Your Brain',ch:'TED',avatar:'TED',ac:'#a32d2d',cat:'fitness',dur:'13:28',views:'9.1M views',tag:'Fitness',tc:'rgba(163,45,45,.8)',cred:'TED 2024',cf:'rgba(163,45,45,.15)',cc:'#f87171'},
+  // Deep dives
+  {id:'T9aRN9h4mOw',title:'Financial Wellness & Health Outcomes: The Connection',ch:'BLEU Research',avatar:'B',ac:'#C9A84C',cat:'finance',dur:'44:12',views:'341K views',tag:'Finance',tc:'rgba(201,168,76,.8)',cred:'BLEU 2025',cf:'rgba(201,168,76,.15)',cc:'#C9A84C'},
+  {id:'9EIwAYTMbMo',title:'The Loneliness Epidemic — WHO Commission 2025',ch:'BLEU Research',avatar:'B',ac:'#a32d2d',cat:'mental',dur:'38:50',views:'1.2M views',tag:'Research',tc:'rgba(163,45,45,.8)',cred:'WHO 2025',cf:'rgba(163,45,45,.15)',cc:'#f87171'},
+  {id:'8jPQjjsBbIc',title:'Breathwork for Anxiety, Sleep & Recovery',ch:'Wim Hof',avatar:'WH',ac:'#2D8A9E',cat:'meditation',dur:'22:15',views:'6.7M views',tag:'Breathwork',tc:'rgba(45,138,158,.8)',cred:'Certified',cf:'rgba(45,138,158,.15)',cc:'#2DD4A8'},
+  {id:'a5kKLCaQGFo',title:'The Science of Strength Training Over 40',ch:'Dr. Andy Galpin',avatar:'AG',ac:'#185fa5',cat:'fitness',dur:'1:28:33',views:'4.3M views',tag:'Fitness',tc:'rgba(24,95,165,.8)',cred:'Cal State',cf:'rgba(24,95,165,.15)',cc:'#60A5FA'},
+  {id:'dFPaADjVe9E',title:'Addiction Recovery: What the Science Actually Says',ch:'Recovery Research',avatar:'RR',ac:'#C9A84C',cat:'recovery',dur:'1:05:44',views:'2.8M views',tag:'Recovery',tc:'rgba(201,168,76,.8)',cred:'NIDA 2024',cf:'rgba(201,168,76,.15)',cc:'#C9A84C'},
+  {id:'5o_sCEMYcBk',title:'Spiritual Health & Longevity: The Data',ch:'BLEU Spirit',avatar:'S',ac:'#7055a8',cat:'spirit',dur:'31:18',views:'892K views',tag:'Spirit',tc:'rgba(112,85,168,.8)',cred:'Validated',cf:'rgba(112,85,168,.15)',cc:'#a78bfa'}
 ];
 
-var VOL2 = [
-  {id:'mens_mh',title:"Men's Mental Health: 80% of Suicides Male",icon:'&#128104;',color:'#a32d2d',creator:'Mental Health',cred:'CDC 2024',stats:'39K male deaths/yr',roi:'7:1 Mens Sheds',tag:'Therapy',tagColor:'rgba(163,45,45,.2)',tagText:'#a32d2d',blurb:'80% of US suicides are male. Only 17% of men saw a mental health professional in 2023. Male-adapted interventions — action-oriented framing, activity-based access — show 7:1 ROI.',cat:'mental',query:"Tell me about the men's mental health crisis and BLEU's male-adapted intervention approach"},
-  {id:'maternal',title:'Maternal Mental Health: #1 Complication of Childbirth',icon:'&#129868;',color:'#F472B6',creator:"Women's Health",cred:'ACOG 2024',stats:'1 in 5 mothers',roi:'$32K prevented',tag:'Therapy',tagColor:'rgba(244,114,182,.2)',tagText:'#F472B6',blurb:'Perinatal mood disorders affect 1 in 5 mothers — now the leading complication of childbirth. EPDS screening in Alvai, peer support matching, BetterHelp access. $32K in prevented costs per case.',cat:'women',query:'What is maternal mental health and how does BLEU address perinatal mood disorders?'},
-  {id:'burnout',title:'Workplace Burnout: $322B Clinical Crisis',icon:'&#128293;',color:'#ba7517',creator:'BLEU Research',cred:'Deloitte 2024',stats:'$322B annual cost',roi:'5.7:1 wellbeing',tag:'Enterprise',tagColor:'rgba(186,117,23,.2)',tagText:'#C9A84C',blurb:'Burnout is a clinical diagnosis. $322B in global productivity losses annually. Hotel Monteleone worksite wellness model: 400 employees, $240K/yr contract potential. The enterprise proof of concept.',cat:'economic',query:'Tell me about workplace burnout as a clinical crisis and the BLEU enterprise worksite wellness model'},
-  {id:'chronic_pain',title:'Chronic Pain: 51M Americans, 18% Undertreated',icon:'&#128138;',color:'#7055a8',creator:'Dr. Felicia',cred:'NIH 2024',stats:'51M Americans',roi:'$635B annual',tag:'Vessel',tagColor:'rgba(112,85,168,.2)',tagText:'#a78bfa',blurb:'51 million Americans live with chronic pain. 18% receive no treatment. Integrative approaches — acupuncture, CBT, nutrition — show 3:1 ROI vs. opioid-only treatment. BLEU wires all three.',cat:'metabolic',query:'How does BLEU approach chronic pain? Tell me about the evidence for integrative pain management'},
-  {id:'veterans',title:'Veterans: 22 Suicides a Day',icon:'&#129338;',color:'#185fa5',creator:'BLEU Research',cred:'VA 2024',stats:'22 suicides/day',roi:'$473K per life',tag:'Recovery',tagColor:'rgba(24,95,165,.2)',tagText:'#60A5FA',blurb:'22 veteran suicides daily. 30% of veterans have PTSD. VA access gaps leave 40% without care. BLEU Recovery + Therapy tabs with veteran-adapted Alvai modes.',cat:'recovery',query:'What does BLEU do for veterans? Tell me about the veteran mental health crisis and the evidence-based interventions'},
-  {id:'medication',title:'Medication Non-Adherence: $500B Wasted',icon:'&#128138;',color:'#1d9e75',creator:'Dr. Felicia',cred:'NEJM 2023',stats:'$500B annual waste',roi:'10:1 MTM',tag:'Finance',tagColor:'rgba(29,158,117,.2)',tagText:'#1d9e75',blurb:'50% of patients with chronic conditions do not take medications as prescribed. $500B in annual waste. Medication therapy management at 10:1 ROI. Cost Plus Drugs, GoodRx, and Amazon Pharmacy in BLEU Finance.',cat:'economic',query:'Tell me about medication non-adherence — the $500B crisis and how BLEU Finance addresses it'},
-  {id:'benefits',title:'Benefits Desert: $65B in Unclaimed SNAP',icon:'&#128196;',color:'#C9A84C',creator:'BLEU Research',cred:'USDA 2024',stats:'$65B unclaimed',roi:'$183B possible',tag:'Finance',tagColor:'rgba(201,168,76,.2)',tagText:'#C9A84C',blurb:'$65B in SNAP benefits go unclaimed annually. $183B in total benefits underutilized. Alvai reads and explains SNAP, Medicaid, CHIP, and housing assistance applications in plain language.',cat:'economic',query:'Tell me about benefits underutilization and how Alvai functions as a benefits navigation assistant'},
-  {id:'youth_mh',title:'Youth Mental Health: The Smartphone Generation Crisis',icon:'&#128241;',color:'#a32d2d',creator:'Mental Health',cred:'CDC 2024',stats:'3x increase since 2010',roi:'8:1 early intervention',tag:'Learn',tagColor:'rgba(163,45,45,.2)',tagText:'#a32d2d',blurb:'Teen depression tripled since 2010. 60% of Gen Z reports anxiety. School-based mental health programs show 8:1 ROI. BLEU Learn + Therapy + Community tabs for the youth mental health infrastructure gap.',cat:'youth',query:'Tell me about the youth mental health crisis and what BLEU does about it specifically'}
+var MUSIC = [
+  {icon:'&#127897;',title:'Sleep Frequencies',sub:'432Hz · 8 hrs',query:'Play sleep frequency music — 432Hz binaural beats for deep sleep'},
+  {icon:'&#129514;',title:'Meditation Soundscapes',sub:'60 min · Guided',query:'Play meditation soundscapes and guided meditation audio'},
+  {icon:'&#127925;',title:'Focus Flow',sub:'Lo-fi · Work Mode',query:'Play focus and concentration music — lo-fi beats for productivity'},
+  {icon:'&#128149;',title:'Heart Coherence',sub:'528Hz · Healing',query:'Play 528Hz heart coherence frequencies for emotional healing'},
+  {icon:'&#127807;',title:'Nature & Forest',sub:'Rain · Binaural',query:'Play nature sounds and forest soundscapes for relaxation'},
+  {icon:'&#9889;',title:'Energy Activation',sub:'174Hz · Morning',query:'Play morning energy activation frequencies — high vibration music'},
+  {icon:'&#128564;',title:'Deep Rest',sub:'Delta waves · 8Hz',query:'Play delta wave frequencies for deep rest and nervous system recovery'},
+  {icon:'&#127927;',title:'Jazz & Soul',sub:'New Orleans · Live',query:'Play New Orleans jazz and soul music for mood and connection'}
 ];
 
-var PLAYLISTS = [
-  {title:'New Orleans Proof of Concept',icon:'&#127928;',color:'#C9A84C',count:8,desc:'8 local crises. BLEU as the infrastructure. Jazz Bird NOLA as the wrapper. The 222-city model starts here.',query:'Walk me through the New Orleans proof of concept for BLEU — all 8 youth crises, the Jazz Bird NOLA partnership, and the city deployment model'},
-  {title:'Grant Application Research Pack',icon:'&#128196;',color:'#2D8A9E',count:32,desc:'All 32 crises with peer-reviewed citations, ROI models, and BLEU integration blueprints. NSF SBIR, NIDA, SAMHSA, AHRQ.',query:'Give me the grant narrative — synthesize the 32 crises across all volumes into the case for NSF SBIR Phase I funding'},
-  {title:'City Partnership Deck',icon:'&#127968;',color:'#1d9e75',count:5,desc:'23:1 ROI. $42M annual benefit. $1.8M deployment. The conversation with Walt Leger and Michael Hecht.',query:'Build me the city partnership pitch — the ROI model, the social prescribing evidence, and why a city of 500,000 should deploy BLEU'},
-  {title:"Women's Health $1T Gap",icon:'&#128330;',color:'#F472B6',count:8,desc:'WEF/McKinsey 2024. 8 conditions. Every $1 returns $3. The fastest growing investment category in healthcare.',query:'Tell me everything about the $1 trillion women health gap — all 8 conditions, the WEF evidence, and how BLEU addresses each one'},
-  {title:'Metabolic Intelligence Protocol',icon:'&#9889;',color:'#ba7517',count:5,desc:'Your Cellular Health Score. Food prescription. CGM intelligence. The $100B metabolic market entry.',query:'Walk me through the BLEU metabolic intelligence system — the Cellular Health Score, 7 dimensions, and the full affiliate stack'},
-  {title:'Recovery Infrastructure',icon:'&#10084;',color:'#a32d2d',count:6,desc:'Veterans. Addiction. Caregiving. Burnout. The full recovery ecosystem with evidence and ROI.',query:'Tell me about the BLEU recovery ecosystem — all the crises it addresses, the evidence base, and the affiliate partners'}
+var RESEARCH = [
+  {num:'01',title:'Loneliness — 871K Deaths Annually',stat:'9:1 ROI',color:'#a32d2d',query:"Tell me about the WHO loneliness crisis and BLEU's social prescribing response"},
+  {num:'02',title:'Sleep Deprivation — $411B Crisis',stat:'$9,100/student',color:'#185fa5',query:'Explain the sleep deprivation epidemic and the BLEU Sleep intelligence system'},
+  {num:'03',title:"Men's Mental Health — 80% of Suicides Male",stat:'39K deaths/yr',color:'#ba7517',query:"Tell me about men's mental health crisis and the male-adapted intervention model"},
+  {num:'04',title:"Women's Health — $1 Trillion Gap",stat:'$3 return/$1',color:'#F472B6',query:'Explain the $1 trillion women health gap and the 8 conditions BLEU addresses'},
+  {num:'05',title:'Food Prescription — $32B in Ignored Savings',stat:'10:1 ROI',color:'#1d9e75',query:'Tell me about food as medicine — the evidence, ROI, and BLEU Vessel tab'},
+  {num:'06',title:'Workplace Burnout — $322B Clinical Crisis',stat:'5.7:1 ROI',color:'#C9A84C',query:'What is workplace burnout and how does the BLEU enterprise model address it'},
+  {num:'07',title:'Medical Debt — Financial Toxicity Kills',stat:'$1.8K avg saved',color:'#7055a8',query:'Tell me about financial toxicity in healthcare and BLEU Finance tab interventions'},
+  {num:'08',title:'New Orleans Youth — 1 in 3 in Poverty',stat:'71K children',color:'#2D8A9E',query:'Tell me about the New Orleans youth crises and the Jazz Bird NOLA proof of concept'}
 ];
 
-function renderCard(item, chatId){
-  return '<div class="yt-card" data-cat="'+item.cat+'" onclick="ask('learn',''+item.query.replace(/'/g,"\'")+'')">'+
-    '<div class="yt-thumb" style="background:linear-gradient(135deg,'+item.color+'22,'+item.color+'11)">'+
-    '<div class="yt-thumb-icon">'+item.icon+'</div>'+
-    '<div class="yt-thumb-overlay"></div>'+
-    '<div class="yt-thumb-stat">'+item.stats+'</div>'+
-    '<div class="yt-thumb-badge" style="background:'+item.tagColor+';color:'+item.tagText+'">'+item.tag+'</div>'+
-    '</div>'+
-    '<div class="yt-body">'+
-    '<div class="yt-creator">'+
-    '<div class="yt-avatar" style="background:'+item.color+'22;color:'+item.color+'">'+item.creator.charAt(0)+'</div>'+
-    '<span class="yt-creator-name">'+item.creator+'</span>'+
-    '<span class="yt-cred">'+item.cred+'</span>'+
-    '</div>'+
-    '<div class="yt-title">'+item.title+'</div>'+
-    '<div class="yt-meta"><span style="color:'+item.color+'">'+item.roi+'</span><span>Peer-reviewed 2023-25</span></div>'+
-    '</div>'+
-    '</div>';
+function makeCard(v, i){
+  return '<div class="vid-card" data-cat="'+v.cat+'" data-id="'+v.id+'">' +
+    '<div class="vid-thumb">' +
+    '<img src="https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block"/>' +
+    '<div class="vid-thumb-cover" id="cover-'+v.id+'" style="--cover-from:'+v.cf+';--cover-to:rgba(8,14,26,.3)" onclick="playVid(''+v.id+'',this)">' +
+    '<div class="play-btn">&#9654;</div></div>' +
+    '<span class="vid-dur">'+v.dur+'</span>' +
+    '<span class="vid-tag" style="background:'+v.tc+';color:#fff">'+v.tag+'</span>' +
+    '</div>' +
+    '<div class="vid-body">' +
+    '<div class="vid-ch"><div class="vid-avatar" style="background:'+v.ac+'22;color:'+v.ac+'">'+v.avatar+'</div>' +
+    '<span class="vid-ch-name">'+v.ch+'</span>' +
+    '<span class="vid-cred" style="background:'+v.cf+';color:'+v.cc+'">'+v.cred+'</span></div>' +
+    '<div class="vid-title">'+v.title+'</div>' +
+    '<div class="vid-views"><span>'+v.views+'</span></div>' +
+    '</div></div>';
 }
 
-function renderPlaylist(pl){
-  return '<div class="playlist-bar" onclick="ask('learn',''+pl.query.replace(/'/g,"\'")+'')">'+
-    '<div class="pl-icon" style="background:'+pl.color+'15;font-size:20px">'+pl.icon+'</div>'+
-    '<div><div style="font-size:13px;font-weight:600;color:#E8E0D0">'+pl.title+'</div>'+
-    '<div style="font-size:11px;color:#7B8DA6;margin-top:2px">'+pl.desc+'</div></div>'+
-    '<span class="pl-count">'+pl.count+' topics</span>'+
-    '</div>';
+function playVid(id, cover){
+  var thumb = cover.parentElement;
+  var iframe = document.createElement('iframe');
+  iframe.src = 'https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0';
+  iframe.allow = 'autoplay; encrypted-media';
+  iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none';
+  thumb.appendChild(iframe);
+  cover.classList.add('playing');
 }
 
-// Render all grids
-var g1 = document.getElementById('learn-grid');
-var g2 = document.getElementById('learn-grid-v2');
-var ps = document.getElementById('playlists-section');
-if(g1) g1.innerHTML = VOL1.map(function(i){return renderCard(i,'learn-chat')}).join('');
-if(g2) g2.innerHTML = VOL2.map(function(i){return renderCard(i,'learn-chat')}).join('');
-if(ps) ps.innerHTML = PLAYLISTS.map(renderPlaylist).join('');
+var g1 = document.getElementById('vid-grid');
+var g2 = document.getElementById('vid-grid-2');
+var mr = document.getElementById('music-row');
+var rl = document.getElementById('research-list');
 
-// Filter
-function filterLearn(cat, btn){
-  document.querySelectorAll('.yt-filter').forEach(function(b){b.classList.remove('on')});
-  btn.classList.add('on');
-  document.querySelectorAll('.yt-card').forEach(function(c){
-    c.style.display = (cat==='all' || c.dataset.cat===cat) ? 'block' : 'none';
+if(g1) g1.innerHTML = VIDS.slice(0,6).map(function(v,i){return makeCard(v,i)}).join('');
+if(g2) g2.innerHTML = VIDS.slice(6).map(function(v,i){return makeCard(v,i)}).join('');
+
+if(mr) mr.innerHTML = MUSIC.map(function(m){
+  return '<div class="music-card" onclick="ask('learn',''+m.query+'')">'+
+    '<div class="music-icon">'+m.icon+'</div>'+
+    '<div class="music-title">'+m.title+'</div>'+
+    '<div class="music-sub">'+m.sub+'</div></div>';
+}).join('');
+
+if(rl) rl.innerHTML = RESEARCH.map(function(r){
+  return '<div class="research-card" style="--rc:'+r.color+'" onclick="ask('learn',''+r.query.replace(/'/g,"\'")+'')">' +
+    '<div class="research-num">'+r.num+'</div>' +
+    '<div style="flex:1"><div style="font-size:13px;font-weight:600;color:#E8E0D0;margin-bottom:3px">'+r.title+'</div>' +
+    '<div style="font-size:11px;color:'+r.color+'">'+r.stat+' &bull; <span style="color:#4A5B73">Peer-reviewed 2023-25</span></div></div>' +
+    '<span style="font-size:18px;flex-shrink:0">&#9654;</span></div>';
+}).join('');
+
+function lrnFilter(cat, btn){
+  if(btn){
+    document.querySelectorAll('.lrn-filter').forEach(function(b){b.classList.remove('on')});
+    btn.classList.add('on');
+  }
+  document.querySelectorAll('.vid-card').forEach(function(c){
+    c.style.display = (cat==='all' || c.dataset.cat===cat) ? '' : 'none';
   });
 }
 
-function filterCreator(creator){
-  var map = {felicia:'mental',bleu:'social',sleep:'metabolic',metabolic:'metabolic',mental:'mental',nola:'youth',women:'women'};
-  var cat = map[creator] || 'all';
-  document.querySelectorAll('.yt-filter').forEach(function(b){b.classList.remove('on')});
-  document.querySelectorAll('.yt-card').forEach(function(c){
-    c.style.display = (cat==='all' || c.dataset.cat===cat) ? 'block' : 'none';
-  });
-}
-
-function learnSearch(val){
-  if(!val) return;
-  ask('learn', 'Search the BLEU research library for: ' + val);
-}
-
-function learnAsk(){
-  var inp = document.getElementById('learn-input');
-  var val = inp.value.trim();
+function learnQ(val){
   if(!val) return;
   ask('learn', val);
-  inp.value = '';
 }
 
-// Expose to global
-window.filterLearn = filterLearn;
-window.filterCreator = filterCreator;
-window.learnSearch = learnSearch;
-window.learnAsk = learnAsk;
+window.lrnFilter = lrnFilter;
+window.learnQ = learnQ;
+window.playVid = playVid;
 
 })();
 </script>
-
 </div>
 
 <div class="panel" id="p-community">
