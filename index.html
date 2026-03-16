@@ -696,18 +696,21 @@ button[type="submit"],
   <script>
   (function(){
     var lines = [
-      "I cannot sleep and I do not know why.",
-      "I need someone to talk to.",
-      "I am 3 days sober and I am scared.",
-      "I hurt everywhere and I am tired of it.",
-      "I do not know where to start.",
-      "I want to feel like myself again.",
-      "My zip code should not determine my lifespan.",
-      "I am tired of living 17 years behind the science.",
-      "There has to be a better way to age.",
+      "I cannot sleep and I don't know why.",
+      "My doctor has 7 minutes for me. That's not enough.",
+      "I've been managing this alone for too long.",
+      "My zip code shouldn't determine how long I live.",
+      "I'm 3 days sober and I am scared.",
+      "I hurt everywhere. I'm tired of it.",
+      "I need someone who treats the whole person.",
+      "My finances are making me physically sick.",
       "I want to understand what is actually happening in my body.",
-      "I need someone who treats the whole person, not just the symptom."
-    ];
+      "I'm a caregiver and nobody is taking care of me.",
+      "I've tried everything. I need something different.",
+      "I want to feel like myself again.",
+      "There has to be a better way to age.",
+      "I don't know where to start. That's okay. Start here."
+    ]
     var el = document.getElementById("hw-type");
     if(!el) return;
     var li = 0, ci = 0, deleting = false;
@@ -1321,7 +1324,7 @@ button[type="submit"],
         <div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Ask anything about your data — Alvai knows your full history</div>
       </div>
     </div>
-  <p class="hero-sub">Every tab feeds this one. Your biological age trajectory — driven by sleep, community, finance, therapy, nutrition, ECS, and recovery — visible as a single living picture. Goldberger proved health is complexity. This is where you watch yours grow.</p>
+  <p class="hero-sub">Your body is generating signals right now. Sleep quality. Stress load. Community connection. Financial pressure. Each one is moving your biological age in a direction. BLEU Dashboard is where those signals converge — your personal health command center, updated by every tab you use. Ary Goldberger at Harvard proved that health is not stability. It is complexity. This is where you watch your complexity grow.</p>
 
   <!-- BLEU HEALTH INDEX -->
   <div style="margin:24px 0 28px;background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(45,138,158,.04));border:1px solid rgba(201,168,76,.18);border-radius:18px;padding:24px 28px">
@@ -1545,7 +1548,7 @@ id="chat-dashboard"></div><div class="chat-input-row"><input autocomplete="off" 
   <div style="padding:32px 20px 0;max-width:880px;margin:0 auto;text-align:center">
   <div style="font-size:9px;letter-spacing:4px;color:rgba(34,197,94,.5);text-transform:uppercase;margin-bottom:10px">MOLECULAR NUTRITION INTELLIGENCE</div>
   <h1 style="font-family:Georgia,serif;font-size:clamp(26px,4vw,40px);font-weight:300;color:#e2e8f0;margin:0 0 14px;line-height:1.2">Food is not fuel.<br><em style="color:#22c55e">It is molecular medicine.</em></h1>
-  <p style="font-size:14px;color:#8b95a5;line-height:1.9;max-width:680px;margin:0 auto 20px">Mitochondrial dysfunction is the common pathway in every disease of aging. Mitochondria respond to hormesis — small calibrated stressors that activate Nrf2, AMPK, and SIRT1, the three master regulators of cellular resilience. Phytochemicals in real food are hormetic signals: polyphenols, sulforaphane, resveratrol activate the same genetic programs as caloric restriction and exercise. The genome was shaped by adversity and requires calibrated adversity to remain optimised. Food prescription delivers 10:1 ROI. A $130 annual protocol reduces healthcare costs by $1,300. Medically tailored meals cut hospitalizations by 50%. Every supplement here is USP-certified, peer-reviewed, and screened by Dr. Felicia Stoler, DCN, RDN. What you put in your body either activates the resilience programs or silences them.</p>
+  <p style="font-size:14px;color:#8b95a5;line-height:1.9;max-width:680px;margin:0 auto 20px">What you eat tells your cells what to do. Broccoli activates gene pathways that protect your mitochondria. Ultra-processed food suppresses the same pathways. This is not nutritional philosophy. It is molecular biology. BLEU Vessel connects you to verified supplements, food prescriptions, and practitioners who understand that the grocery store is a pharmacy, if you know how to read it.</p>
 </div>
 <div class="section-label">FOOD IS MOLECULAR MEDICINE</div>
   <h1 class="hero-title">💊 <span class="accent">The Vessel</span></h1>
@@ -2008,36 +2011,44 @@ id="in-vessel" placeholder="What supplements should I take? What interacts with 
 <!-- ═══════════════════════ MAP ═══════════════════════ -->
 <div class="panel" id="p-map">
 <style>
-.mu{max-width:1160px;margin:0 auto;font-family:"DM Sans",sans-serif}
-.mstat-r{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.mu{max-width:1160px;margin:0 auto}
+.mstat-r{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 .mstat{background:#0a111e;border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:14px;text-align:center;cursor:pointer;transition:all .22s}
-.mstat:hover{border-color:rgba(201,168,76,.5);transform:translateY(-2px)}
+.mstat:hover{border-color:rgba(201,168,76,.4);transform:translateY(-2px)}
 .msv{font-size:26px;font-weight:800;line-height:1;margin-bottom:3px}
 .msl{font-size:9px;color:#7B8DA6;letter-spacing:1.5px;text-transform:uppercase}
-.mvtabs{display:flex;gap:4px;margin-bottom:14px}
+.mvtabs{display:flex;gap:4px;margin-bottom:12px}
 .mvbtn{flex:1;padding:11px;border-radius:10px;border:1px solid rgba(45,138,158,.18);background:transparent;color:#7B8DA6;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;transition:all .2s}
 .mvbtn.on{background:rgba(45,138,158,.16);border-color:#2D8A9E;color:#2DD4A8}
-.mcanv{background:linear-gradient(160deg,#040810,#071020 60%,#04090f);border:1px solid rgba(45,138,158,.14);border-radius:18px;overflow:hidden;margin-bottom:14px}
+.mcanv-wrap{background:linear-gradient(160deg,#040810,#071020 60%,#04090f);border:1px solid rgba(45,138,158,.14);border-radius:18px;overflow:hidden;margin-bottom:14px}
 .mtickbar{display:flex;align-items:center;border-bottom:1px solid rgba(45,138,158,.1);overflow-x:auto;scrollbar-width:none}
 .mtick{display:flex;align-items:center;gap:7px;padding:9px 16px;border-right:1px solid rgba(45,138,158,.1);flex-shrink:0}
 .mtv{font-size:14px;font-weight:700}
 .mtl{font-size:9px;color:#7B8DA6;margin-top:1px}
-.mfilt{display:flex;gap:7px;padding:9px 14px;border-bottom:1px solid rgba(45,138,158,.08);flex-wrap:wrap;align-items:center}
-.mfb{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:transparent;cursor:pointer;font-size:10px;color:#7B8DA6;font-family:"DM Sans",sans-serif;transition:all .2s}
-.mfb:hover{background:rgba(45,138,158,.1);border-color:rgba(45,138,158,.4);color:#2DD4A8}
-.mfbd{width:6px;height:6px;border-radius:50%}
-.map-wrap{position:relative}
-#city-canvas{display:block;width:100%;cursor:crosshair}
-.map-tip{position:absolute;top:12px;left:12px;background:rgba(3,7,16,.96);border:1px solid rgba(45,138,158,.5);border-radius:9px;padding:10px 13px;font-size:11px;pointer-events:none;opacity:0;transition:opacity .15s;max-width:220px;z-index:20;line-height:1.5}
-.map-tip.v{opacity:1}
-.nhd{background:rgba(6,12,22,.95);border:1px solid rgba(45,138,158,.2);border-radius:14px;padding:16px;margin:0 14px 14px;display:none}
+#nola-map{position:relative;width:100%;padding-bottom:53%;overflow:hidden;background:linear-gradient(175deg,#04090f 0%,#071020 40%,#050c18 100%);min-height:300px}
+.lake{position:absolute;top:0;left:10%;right:10%;height:9%;background:rgba(10,25,60,.9);border-radius:0 0 60% 60%;display:flex;align-items:center;justify-content:center}
+.lake span{font-size:9px;color:rgba(45,138,158,.6);letter-spacing:1px}
+.river{position:absolute;bottom:0;left:0;right:0;height:13%;background:rgba(6,18,48,.95);clip-path:ellipse(60% 100% at 40% 100%)}
+.zone{position:absolute;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px solid;transition:all .25s;user-select:none}
+.zone:hover{transform:scale(1.07);z-index:10}
+.zone-score{font-size:clamp(12px,1.8vw,18px);font-weight:800;line-height:1}
+.zone-name{font-size:clamp(6px,.9vw,9px);opacity:.85;text-align:center;line-height:1.2;margin-top:1px}
+.zone-dot{position:absolute;top:5px;right:5px;width:5px;height:5px;border-radius:50%;background:#2DD4A8;animation:zdot 2.2s ease-in-out infinite}
+.zone-ring{position:absolute;inset:-6px;border-radius:14px;border:1.5px solid rgba(200,30,30,.4);animation:zring 2s ease-out infinite;pointer-events:none}
+@keyframes zdot{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+@keyframes zring{0%{opacity:.6;transform:scale(1)}100%{opacity:0;transform:scale(1.35)}}
+.hotel-pin{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:20;cursor:pointer}
+.hotel-dot{width:11px;height:11px;border-radius:50%;background:#C9A84C;box-shadow:0 0 10px #C9A84C;animation:hpin 2.4s ease-in-out infinite}
+.hotel-lbl{font-size:7px;color:#C9A84C;white-space:nowrap;margin-top:2px;background:rgba(4,8,16,.85);padding:2px 5px;border-radius:3px;border:1px solid rgba(201,168,76,.3)}
+@keyframes hpin{0%,100%{box-shadow:0 0 8px #C9A84C}50%{box-shadow:0 0 22px #C9A84C,0 0 44px rgba(201,168,76,.25)}}
+.nhd{background:rgba(6,12,22,.95);border:1px solid rgba(45,138,158,.2);border-radius:14px;padding:16px;margin:0 0 14px;display:none}
 .nhd.on{display:block}
-.nhd-inner{display:grid;grid-template-columns:auto 1fr;gap:16px}
+.nhd-inner{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
 .nhd-sv{font-size:48px;font-weight:900;line-height:1}
 .nhd-prog{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;margin:8px 0}
 .nhd-pf{height:100%;border-radius:2px;transition:width 1.5s ease}
 .nhd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
-.nhd-cell{background:rgba(4,8,16,.8);border-radius:8px;padding:8px;text-align:center;border:1px solid rgba(255,255,255,.05)}
+.nhd-cell{background:rgba(4,8,16,.8);border-radius:8px;padding:8px;text-align:center}
 .nhd-cv{font-size:16px;font-weight:700}
 .nhd-cl{font-size:9px;color:#7B8DA6;margin-top:2px;text-transform:uppercase}
 .nhd-crisis{background:rgba(163,45,45,.07);border:1px solid rgba(163,45,45,.18);border-radius:8px;padding:10px;font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px}
@@ -2045,115 +2056,140 @@ id="in-vessel" placeholder="What supplements should I take? What interacts with 
 .nhd-btn{padding:8px 14px;border-radius:8px;border:1px solid rgba(45,138,158,.2);background:transparent;color:#2DD4A8;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:11px;transition:all .2s}
 .nhd-btn:hover{background:rgba(45,138,158,.1)}
 .nhd-btn.gld{border-color:rgba(201,168,76,.25);color:#C9A84C}
-.prac-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 14px 14px}
+.prac-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .pcard{background:#0a1628;border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:14px;transition:all .25s;cursor:pointer}
 .pcard:hover{border-color:rgba(45,138,158,.4);transform:translateY(-2px)}
-.pcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
 .pname{font-size:13px;font-weight:700;color:#E8E0D0;margin-bottom:2px}
-.ptype{font-size:10px;color:#7B8DA6}
-.pbadges{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px}
-.pbadge{font-size:9px;padding:2px 8px;border-radius:10px;font-weight:600;background:rgba(45,138,158,.1);color:#2DD4A8;border:1px solid rgba(45,138,158,.2)}
-.prev{font-size:9px;padding:2px 7px;border-radius:3px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.2);margin-bottom:7px;display:inline-block}
-.pcta{width:100%;padding:9px 0;border-radius:9px;border:none;font-size:11px;font-family:"DM Sans",sans-serif;font-weight:600;cursor:pointer;color:#fff}
-.intel-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:0 14px 14px}
+.ptype{font-size:10px;color:#7B8DA6;margin-bottom:7px}
+.pbadge{font-size:9px;padding:2px 8px;border-radius:10px;font-weight:600;background:rgba(45,138,158,.1);color:#2DD4A8;border:1px solid rgba(45,138,158,.2);margin:2px 2px 0 0;display:inline-block}
+.prev{font-size:9px;padding:2px 7px;border-radius:3px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.2);margin:6px 0;display:inline-block}
+.pcta{width:100%;padding:9px 0;border-radius:9px;border:none;font-size:11px;font-family:"DM Sans",sans-serif;font-weight:600;cursor:pointer;color:#fff;margin-top:7px}
+.intel-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
 .iblk{background:rgba(6,12,22,.8);border:1px solid rgba(255,255,255,.06);border-radius:11px;padding:12px}
 .ibh{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:8px}
 .ibr{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
 .ibr:last-child{border-bottom:none}
 .ibbar{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:2px;overflow:hidden}
 .ibbarf{height:100%;border-radius:2px;transition:width 1.6s ease}
-.ifeed{font-size:10px;color:#7B8DA6;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:6px;line-height:1.4}
-.ifeed:last-child{border-bottom:none}
+.ifeed-item{font-size:10px;color:#7B8DA6;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:6px;line-height:1.4}
+.ifeed-item:last-child{border-bottom:none}
 .ifd{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:3px}
-.roi-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 14px 14px}
+.roi-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .roi-c{background:linear-gradient(135deg,rgba(201,168,76,.05),rgba(45,138,158,.04));border:1px solid rgba(201,168,76,.16);border-radius:11px;padding:14px;text-align:center}
 .roi-v{font-size:22px;font-weight:800;color:#C9A84C;line-height:1;margin-bottom:3px}
 .roi-l{font-size:9px;color:#7B8DA6}
-.crv{display:none;padding:14px}
+.crv{display:none;padding:4px 0}
 .cff{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
 .cf{padding:6px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.09);background:transparent;cursor:pointer;font-size:11px;color:#7B8DA6;font-family:"DM Sans",sans-serif;transition:all .2s}
 .cf.on,.cf:hover{background:rgba(45,138,158,.1);border-color:#2D8A9E;color:#2DD4A8}
 .cmg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.cmc{background:rgba(8,14,26,.85);border-radius:10px;padding:12px 10px;cursor:pointer;transition:all .22s;position:relative;border-left:3px solid transparent}
+.cmc{background:rgba(8,14,26,.85);border-radius:10px;padding:12px 10px;cursor:pointer;transition:all .22s;border-left:3px solid transparent}
 .cmc:hover{transform:translateY(-3px)}
-.cmcd{position:absolute;top:8px;right:8px;width:6px;height:6px;border-radius:50%}
-.cmcn{font-size:18px;font-weight:800;line-height:1;opacity:.18;margin-bottom:3px}
 .cmct{font-size:11px;font-weight:700;color:#E8E0D0;line-height:1.3;margin-bottom:3px}
 .cmcs{font-size:10px;color:#7B8DA6;margin-bottom:3px}
-.cmctb{font-size:9px;padding:2px 6px;border-radius:3px;display:inline-block;font-weight:600;letter-spacing:.4px}
-.chat-area{padding:8px 14px;min-height:40px}
-.qrow{display:flex;gap:6px;padding:7px 14px;border-top:1px solid rgba(45,138,158,.07);flex-wrap:wrap}
+.cmctb{font-size:9px;padding:2px 6px;border-radius:3px;display:inline-block;font-weight:600}
+.qrow{display:flex;gap:6px;padding:7px 0;flex-wrap:wrap}
 .qb{padding:5px 11px;border-radius:15px;border:1px solid rgba(45,138,158,.12);background:transparent;cursor:pointer;font-size:10px;color:#7B8DA6;font-family:"DM Sans",sans-serif;transition:all .2s;white-space:nowrap}
 .qb:hover{border-color:#2D8A9E;color:#2DD4A8}
-.askrow{display:flex;gap:8px;padding:10px 14px}
+.askrow{display:flex;gap:8px;margin-top:8px}
 .aski{flex:1;background:rgba(6,12,22,.9);border:1px solid rgba(45,138,158,.22);border-radius:10px;padding:11px 16px;color:#E8E0D0;font-size:13px;font-family:"DM Sans",sans-serif;outline:none}
 .aski:focus{border-color:#2D8A9E}
-.askb{padding:11px 20px;border-radius:10px;border:none;background:rgba(45,138,158,.18);color:#2DD4A8;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:600;transition:all .2s;white-space:nowrap}
+.askb{padding:11px 20px;border-radius:10px;border:none;background:rgba(45,138,158,.18);color:#2DD4A8;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:600;transition:all .2s}
 .askb:hover{background:rgba(45,138,158,.3)}
-.askloc{padding:11px 14px;border-radius:10px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.07);color:#C9A84C;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:11px;white-space:nowrap}
+.askloc{padding:11px 14px;border-radius:10px;border:1px solid rgba(201,168,76,.2);background:rgba(201,168,76,.07);color:#C9A84C;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:11px}
 .ent-card{background:linear-gradient(135deg,rgba(201,168,76,.05),rgba(45,138,158,.03));border:1px solid rgba(201,168,76,.16);border-radius:16px;padding:20px;margin-top:14px}
 .ent-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
 .es{background:rgba(6,12,22,.5);border-radius:8px;padding:11px;text-align:center}
 .esv{font-size:20px;font-weight:700;color:#C9A84C;line-height:1}
 .esl{font-size:9px;color:#7B8DA6;margin-top:3px}
 .ebtns{display:flex;gap:8px;flex-wrap:wrap}
-.eb{padding:9px 14px;border-radius:8px;font-size:11px;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s}
-.eb.g{border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.08);color:#C9A84C}
-.eb.g:hover{background:rgba(201,168,76,.18)}
-.eb.t{border:1px solid rgba(45,138,158,.25);background:rgba(45,138,158,.08);color:#2DD4A8}
-.eb.t:hover{background:rgba(45,138,158,.18)}
+.eb{padding:9px 14px;border-radius:8px;font-size:11px;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s;border:1px solid}
+.eb.g{border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.08);color:#C9A84C}
+.eb.t{border-color:rgba(45,138,158,.25);background:rgba(45,138,158,.08);color:#2DD4A8}
 @keyframes ldp{0%,100%{opacity:.7}50%{opacity:1}}
 .ld{animation:ldp 1.5s infinite;display:inline-block;width:7px;height:7px;border-radius:50%;vertical-align:middle}
-@media(max-width:768px){.prac-grid,.intel-strip,.roi-strip,.ent-g{grid-template-columns:1fr}.mstat-r{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.prac-grid,.intel-strip,.roi-strip,.ent-g,.mstat-r{grid-template-columns:1fr 1fr}.cmg{grid-template-columns:1fr 1fr}}
 </style>
 
 <div class="mu">
 <div class="section-label">CITY INTELLIGENCE SYSTEM</div>
-<h1 class="hero-title" style="margin-bottom:4px">Find. Navigate. <span class="teal">Heal.</span></h1>
-<p style="color:#7B8DA6;font-size:13px;text-align:center;margin:0 auto 16px;max-width:600px">Real intelligence built on 855K NPI practitioners, peer-reviewed crisis data, and live environmental feeds. Click any neighborhood to unlock its health intelligence.</p>
+<h1 class="hero-title" style="margin-bottom:4px">New Orleans. Every neighborhood.<br><span class="teal">Every practitioner. Real time.</span></h1>
+<p style="color:#7B8DA6;font-size:13px;text-align:center;margin:0 auto 16px;max-width:600px;line-height:1.8">Click any neighborhood to unlock its full health picture. Who is there. What is missing. What BLEU is doing about it.</p>
 
 <div class="mstat-r">
   <div class="mstat" onclick="ask('map','Tell me about the 855K NPI-verified practitioners in BLEU')"><div class="msv" style="color:#C9A84C" id="msp1">855K+</div><div class="msl">Practitioners Live</div></div>
-  <div class="mstat" onclick="ask('map','Tell me about the 32 crises BLEU maps')"><div class="msv" style="color:#a32d2d">32</div><div class="msl">Crises Mapped</div></div>
-  <div class="mstat" onclick="ask('map','Explain the 23:1 ROI of BLEU city deployment')"><div class="msv" style="color:#1d9e75">23:1</div><div class="msl">City ROI</div></div>
-  <div class="mstat" onclick="ask('enterprise','Tell me about the 222-city expansion')"><div class="msv" style="color:#2DD4A8">222</div><div class="msl">Target Cities</div></div>
+  <div class="mstat" onclick="ask('map','What are the 32 crises BLEU maps and addresses')"><div class="msv" style="color:#a32d2d">32</div><div class="msl">Crises Mapped</div></div>
+  <div class="mstat" onclick="ask('enterprise','Explain the 23:1 ROI of the BLEU city deployment model')"><div class="msv" style="color:#1d9e75">23:1</div><div class="msl">City ROI</div></div>
+  <div class="mstat" onclick="ask('enterprise','Tell me about the 222-city BLEU expansion plan')"><div class="msv" style="color:#2DD4A8">222</div><div class="msl">Cities Mapped</div></div>
 </div>
 
 <div class="mvtabs">
   <button class="mvbtn on" id="mb1" onclick="mV('city')">City Health Intelligence</button>
-  <button class="mvbtn" id="mb2" onclick="mV('crisis')">32 Crises Deployment Matrix</button>
+  <button class="mvbtn" id="mb2" onclick="mV('crisis')">32 Crises Matrix</button>
 </div>
 
-<div class="mcanv">
+<div class="mcanv-wrap">
   <div class="mtickbar">
-    <div class="mtick"><span class="ld" style="background:#1d9e75;box-shadow:0 0 5px #1d9e75"></span><div><div class="mtv" style="color:#1d9e75" id="mtp">Loading...</div><div class="mtl">practitioners</div></div></div>
-    <div class="mtick"><div><div class="mtv" style="color:#2DD4A8">New Orleans</div><div class="mtl">proof of concept</div></div></div>
+    <div class="mtick"><span class="ld" style="background:#1d9e75;box-shadow:0 0 5px #1d9e75"></span><div><div class="mtv" style="color:#1d9e75" id="mtp">855K+</div><div class="mtl">practitioners</div></div></div>
+    <div class="mtick"><div><div class="mtv" style="color:#2DD4A8">New Orleans</div><div class="mtl">HQ</div></div></div>
     <div class="mtick"><div><div class="mtv" style="color:#1d9e75">AQI 47</div><div class="mtl">Good today</div></div></div>
     <div class="mtick"><div><div class="mtv" style="color:#ba7517">UV 7</div><div class="mtl">High today</div></div></div>
     <div class="mtick"><div><div class="mtv" style="color:#C9A84C" id="mtc">0</div><div class="mtl">Citizens</div></div></div>
+    <div class="mtick" style="margin-left:auto"><div style="font-size:9px;color:#4A5B73;padding:0 4px">Click any zone</div></div>
   </div>
-  <div class="mfilt" id="mfilt"><span style="font-size:9px;color:#4A5B73;letter-spacing:1.5px;text-transform:uppercase;margin-right:4px">SHOW</span></div>
 
   <div id="vc">
-    <div class="map-wrap">
-      <canvas id="city-canvas" width="900" height="480"></canvas>
-      <div class="map-tip" id="map-tip"></div>
+    <div id="nola-map">
+      <div class="lake"><span>Lake Pontchartrain</span></div>
+      <div class="river"></div>
+      <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 900 480" preserveAspectRatio="none">
+        <line x1="288" y1="240" x2="324" y2="173" stroke="rgba(45,138,158,.12)" stroke-dasharray="5 4" stroke-width="1">
+          <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="2.5s" repeatCount="indefinite"/>
+        </line>
+        <line x1="324" y1="173" x2="450" y2="156" stroke="rgba(45,138,158,.09)" stroke-dasharray="5 4" stroke-width="1">
+          <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="3.2s" repeatCount="indefinite"/>
+        </line>
+        <line x1="288" y1="240" x2="200" y2="252" stroke="rgba(45,138,158,.1)" stroke-dasharray="5 4" stroke-width="1">
+          <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="2.8s" repeatCount="indefinite"/>
+        </line>
+      </svg>
+      <div id="zone-container"></div>
+      <div class="hotel-pin" style="left:36%;top:51%" onclick="ask('enterprise','Hotel Monteleone worksite wellness — 400 employees, the BLEU proof of concept')">
+        <div class="hotel-dot"></div>
+        <div class="hotel-lbl">Hotel Monteleone</div>
+      </div>
     </div>
+
+    <div style="display:flex;gap:12px;align-items:center;padding:8px 14px;border-top:1px solid rgba(255,255,255,.04);flex-wrap:wrap">
+      <div style="font-size:9px;color:#4A5B73">HEALTH SCORE</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#1d9e75"><div style="width:10px;height:10px;border-radius:3px;background:rgba(29,158,117,.4)"></div>70+ Good Access</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#ba7517"><div style="width:10px;height:10px;border-radius:3px;background:rgba(186,117,23,.4)"></div>50-69 Moderate</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#a32d2d"><div style="width:10px;height:10px;border-radius:3px;background:rgba(163,45,45,.4)"></div>Under 50 Critical</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:9px;color:#2DD4A8;margin-left:auto"><span class="ld" style="background:#2DD4A8;box-shadow:0 0 4px #2DD4A8"></span>Live practitioners</div>
+    </div>
+
     <div class="nhd" id="nhd"></div>
-    <div style="padding:14px 14px 4px;display:flex;align-items:center;justify-content:space-between">
-      <div style="font-size:9px;letter-spacing:2px;color:#C9A84C;display:flex;align-items:center;gap:8px"><span class="ld" style="background:#1d9e75;box-shadow:0 0 4px #1d9e75"></span>VERIFIED PRACTITIONERS</div>
+
+    <div style="padding:8px 14px 4px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:9px;letter-spacing:2px;color:#C9A84C">MATCHED PRACTITIONERS</div>
       <div style="font-size:9px;color:#4A5B73">From 855K NPI database</div>
     </div>
-    <div class="prac-grid" id="prac-grid"></div>
-    <div class="roi-strip">
+    <div class="prac-grid" id="prac-grid" style="padding:0 14px"></div>
+
+    <div class="roi-strip" style="padding:0 14px">
       <div class="roi-c"><div class="roi-v" id="roi-p">855K+</div><div class="roi-l">Practitioners in BLEU</div></div>
-      <div class="roi-c"><div class="roi-v">$1.8M</div><div class="roi-l">Annual deployment cost</div></div>
+      <div class="roi-c"><div class="roi-v">$1.8M</div><div class="roi-l">Annual city deployment</div></div>
       <div class="roi-c"><div class="roi-v">23:1</div><div class="roi-l">ROI documented</div></div>
     </div>
-    <div class="intel-strip">
+
+    <div class="intel-strip" style="padding:0 14px">
       <div class="iblk">
         <div class="ibh" style="color:#C9A84C">CITY HEALTH SCORE</div>
-        <div style="text-align:center;padding:6px 0 10px"><div style="font-size:40px;font-weight:800;color:#C9A84C;line-height:1">40</div><div style="font-size:10px;color:#7B8DA6;margin-top:3px">New Orleans / 100</div><div style="font-size:9px;color:#a32d2d;margin-top:2px">Louisiana ranked #50 nationally</div></div>
+        <div style="text-align:center;padding:6px 0 10px">
+          <div style="font-size:40px;font-weight:800;color:#C9A84C;line-height:1">40</div>
+          <div style="font-size:10px;color:#7B8DA6;margin-top:3px">New Orleans / 100</div>
+          <div style="font-size:9px;color:#a32d2d;margin-top:2px">Louisiana #50 nationally</div>
+        </div>
         <div class="ibr"><span style="color:#7B8DA6">Practitioners/1K</span><span style="color:#2DD4A8;font-weight:600">6.2</span></div>
         <div class="ibbar"><div class="ibbarf" style="width:62%;background:#2DD4A8"></div></div>
         <div class="ibr" style="margin-top:5px"><span style="color:#7B8DA6">Food access</span><span style="color:#a32d2d;font-weight:600">31%</span></div>
@@ -2162,8 +2198,8 @@ id="in-vessel" placeholder="What supplements should I take? What interacts with 
         <div class="ibbar"><div class="ibbarf" style="width:46%;background:#ba7517"></div></div>
       </div>
       <div class="iblk">
-        <div class="ibh" style="color:#2D8A9E">ENVIRONMENT</div>
-        <div class="ibr"><span style="color:#7B8DA6">Air Quality (AQI)</span><span style="color:#1d9e75;font-weight:600">47 Good</span></div>
+        <div class="ibh" style="color:#2D8A9E">ENVIRONMENT TODAY</div>
+        <div class="ibr"><span style="color:#7B8DA6">Air Quality</span><span style="color:#1d9e75;font-weight:600">47 Good</span></div>
         <div class="ibbar"><div class="ibbarf" style="width:47%;background:#1d9e75"></div></div>
         <div class="ibr" style="margin-top:5px"><span style="color:#7B8DA6">UV Index</span><span style="color:#ba7517;font-weight:600">7 High</span></div>
         <div class="ibbar"><div class="ibbarf" style="width:70%;background:#ba7517"></div></div>
@@ -2180,324 +2216,280 @@ id="in-vessel" placeholder="What supplements should I take? What interacts with 
   </div>
 
   <div class="crv" id="vcc">
-    <div style="text-align:center;font-size:11px;color:#7B8DA6;padding:4px 0 10px">32 peer-reviewed crises. All mapped to BLEU tabs.</div>
+    <div style="text-align:center;font-size:11px;color:#7B8DA6;padding:4px 0 12px">32 peer-reviewed crises mapped to BLEU. Click any to ask Alvai.</div>
     <div class="cff" id="cff"></div>
     <div class="cmg" id="cmg"></div>
   </div>
 
-  <div class="chat-area chat-box" id="map-chat"></div>
-  <div class="qrow" id="qrow"></div>
-  <div class="askrow">
-    <input class="aski" id="aski" placeholder="Ask about any city, neighborhood, ZIP, practitioner, or crisis..."/>
+  <div class="chat-box chat-area" id="map-chat" style="padding:8px 14px;min-height:40px"></div>
+  <div class="qrow" style="padding:0 14px" id="qrow"></div>
+  <div class="askrow" style="padding:0 14px 14px">
+    <input class="aski" id="aski" placeholder="Ask about any neighborhood, practitioner, or crisis..."/>
     <button class="askb" id="askb">Ask Alvai</button>
     <button class="askloc" onclick="mLoc()">My Location</button>
   </div>
 </div>
 
 <div class="ent-card">
-  <div style="font-size:10px;letter-spacing:2px;color:#C9A84C;margin-bottom:6px">THE 222-CITY PROOF OF CONCEPT</div>
+  <div style="font-size:10px;letter-spacing:2px;color:#C9A84C;margin-bottom:6px">THE 222-CITY MODEL</div>
   <div style="font-size:17px;font-weight:600;color:#E8E0D0;margin-bottom:5px">Deploy BLEU in Your City</div>
-  <div style="font-size:12px;color:#7B8DA6;line-height:1.7">New Orleans is the template. 855K+ practitioners, real-time health intelligence, 32 crisis blueprints. Data loads in. Intelligence flows out.</div>
+  <div style="font-size:12px;color:#7B8DA6;line-height:1.7">New Orleans is the proof. Every city gets the same infrastructure. Practitioners, crisis blueprints, environmental data. The city pays nothing. The city earns everything.</div>
   <div class="ent-g">
     <div class="es"><div class="esv">$1.8M</div><div class="esl">Annual deployment</div></div>
     <div class="es"><div class="esv">23:1</div><div class="esl">Documented ROI</div></div>
-    <div class="es"><div class="esv">$42M</div><div class="esl">Annual benefit / 500K city</div></div>
+    <div class="es"><div class="esv">$42M</div><div class="esl">Annual benefit / 500K pop.</div></div>
   </div>
   <div class="ebtns">
-    <button class="eb g" onclick="ask('enterprise','Tell me about the BLEU 222-city model')">City Partnership Brief</button>
-    <button class="eb t" onclick="ask('enterprise','Hotel Monteleone worksite wellness model')">Hotel Monteleone Model</button>
+    <button class="eb g" onclick="ask('enterprise','BLEU 222-city partnership model')">City Partnership Brief</button>
+    <button class="eb t" onclick="ask('enterprise','Hotel Monteleone worksite wellness proof of concept')">Hotel Monteleone Proof</button>
   </div>
 </div>
 </div>
-
 <script>
 (function(){
-var SBU="https://sqyzboesdpdussiwqpzk.supabase.co";
-var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw";
-
+var SBU="https://sqyzboesdpdussiwqpzk.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw";
 var ZONES=[
-  {id:"cbd",n:"CBD",zip:"70130",sc:62,r:255,g:165,b:50,p:89,rec:18,m:24,f:5,x:.32,y:.44,w:.17,h:.22,cr:"Burnout hotspot. 12,000 daily workers, zero worksite wellness. Hotel Monteleone proof of concept.",q:"Health intelligence for CBD New Orleans ZIP 70130"},
-  {id:"fq",n:"French Quarter",zip:"70116",sc:55,r:255,g:165,b:50,p:43,rec:12,m:8,f:3,x:.5,y:.42,w:.15,h:.21,cr:"Tourist health strain plus flood risk. Residential care severely limited.",q:"Health infrastructure in the French Quarter New Orleans"},
-  {id:"treme",n:"Treme",zip:"70116",sc:34,r:180,g:50,b:50,p:31,rec:6,m:4,f:1,x:.5,y:.24,w:.14,h:.19,cr:"Food desert. Historic poverty. Mental health infrastructure absent.",q:"Health crises in Treme New Orleans"},
-  {id:"7th",n:"7th Ward",zip:"70117",sc:38,r:180,g:50,b:50,p:28,rec:5,m:3,f:2,x:.64,y:.23,w:.13,h:.19,cr:"Healthcare desert. Nearest hospital over 4 miles away.",q:"Health challenges in the 7th Ward New Orleans"},
-  {id:"bywater",n:"Bywater",zip:"70117",sc:58,r:255,g:165,b:50,p:54,rec:14,m:11,f:4,x:.64,y:.43,w:.13,h:.21,cr:"Mental health gap. Gentrification displacement stress.",q:"Health infrastructure in Bywater New Orleans"},
-  {id:"9th",n:"9th Ward",zip:"70117",sc:24,r:200,g:30,b:30,p:19,rec:4,m:2,f:1,x:.72,y:.62,w:.14,h:.22,cr:"CRITICAL. Healthcare desert. 1 in 3 children in poverty.",q:"Health crises in the 9th Ward New Orleans"},
-  {id:"gd",n:"Garden District",zip:"70115",sc:78,r:29,g:158,b:117,p:167,rec:22,m:34,f:9,x:.21,y:.47,w:.14,h:.22,cr:"Highest access in city. Model neighborhood for BLEU expansion.",q:"Health infrastructure in Garden District New Orleans"},
-  {id:"uptown",n:"Uptown",zip:"70115",sc:74,r:29,g:158,b:117,p:145,rec:19,m:28,f:8,x:.1,y:.46,w:.13,h:.22,cr:"Strong access base. Senior care gaps remain.",q:"Health resources in Uptown New Orleans"},
-  {id:"mid",n:"Mid-City",zip:"70119",sc:65,r:255,g:165,b:50,p:98,rec:21,m:18,f:6,x:.29,y:.27,w:.19,h:.19,cr:"Growing infrastructure. East side still underserved.",q:"Health infrastructure in Mid-City New Orleans"},
-  {id:"lakeview",n:"Lakeview",zip:"70124",sc:79,r:29,g:158,b:117,p:89,rec:16,m:20,f:7,x:.35,y:.11,w:.24,h:.17,cr:"High access. Expansion model for 222-city BLEU scaling.",q:"Health infrastructure in Lakeview New Orleans"},
-  {id:"gentilly",n:"Gentilly",zip:"70122",sc:44,r:255,g:165,b:50,p:62,rec:9,m:8,f:3,x:.69,y:.12,w:.14,h:.17,cr:"Post-Katrina recovery incomplete.",q:"Health access in Gentilly New Orleans"},
-  {id:"cc",n:"Central City",zip:"70112",sc:28,r:200,g:30,b:30,p:22,rec:5,m:3,f:1,x:.14,y:.62,w:.14,h:.22,cr:"CRITICAL. 44% child poverty. Food desert. Zero mental health infrastructure.",q:"Health crises in Central City New Orleans"}
+  {id:"cbd",n:"CBD",zip:"70130",sc:62,r:255,g:165,b:50,p:89,rec:18,m:24,f:5,left:"32%",top:"44%",w:"17%",h:"22%",cr:"Burnout hotspot. 12,000 daily workers. Hotel Monteleone is the proof of concept.",q:"Health intelligence for CBD New Orleans 70130"},
+  {id:"fq",n:"French Quarter",zip:"70116",sc:55,r:255,g:165,b:50,p:43,rec:12,m:8,f:3,left:"50%",top:"42%",w:"15%",h:"21%",cr:"Tourist strain on top of residential care gap.",q:"Health infrastructure in the French Quarter New Orleans"},
+  {id:"treme",n:"Treme",zip:"70116",sc:34,r:200,g:50,b:50,p:31,rec:6,m:4,f:1,left:"50%",top:"24%",w:"14%",h:"19%",cr:"Food desert. Poverty. Mental health infrastructure nearly absent.",q:"Health crises in Treme New Orleans"},
+  {id:"7th",n:"7th Ward",zip:"70117",sc:38,r:200,g:50,b:50,p:28,rec:5,m:3,f:2,left:"64%",top:"23%",w:"13%",h:"19%",cr:"Healthcare desert. Nearest hospital over 4 miles.",q:"7th Ward New Orleans health access"},
+  {id:"bywater",n:"Bywater",zip:"70117",sc:58,r:255,g:165,b:50,p:54,rec:14,m:11,f:4,left:"64%",top:"43%",w:"13%",h:"21%",cr:"Mental health gap. Gentrification displacement stress.",q:"Bywater New Orleans health infrastructure"},
+  {id:"9th",n:"9th Ward",zip:"70117",sc:24,r:200,g:30,b:30,p:19,rec:4,m:2,f:1,left:"72%",top:"62%",w:"14%",h:"22%",cr:"CRITICAL. 1 in 3 children in poverty. BLEU deploys here first.",q:"9th Ward New Orleans crisis and BLEU response"},
+  {id:"gd",n:"Garden District",zip:"70115",sc:78,r:29,g:158,b:117,p:167,rec:22,m:34,f:9,left:"21%",top:"47%",w:"14%",h:"22%",cr:"Highest access in the city. Model for BLEU expansion.",q:"Garden District New Orleans health infrastructure model"},
+  {id:"uptown",n:"Uptown",zip:"70115",sc:74,r:29,g:158,b:117,p:145,rec:19,m:28,f:8,left:"10%",top:"46%",w:"13%",h:"22%",cr:"Strong base. Senior care gaps remain.",q:"Uptown New Orleans health resources"},
+  {id:"mid",n:"Mid-City",zip:"70119",sc:65,r:255,g:165,b:50,p:98,rec:21,m:18,f:6,left:"29%",top:"27%",w:"19%",h:"19%",cr:"Growing infrastructure. Key BLEU Community node.",q:"Mid-City New Orleans health infrastructure"},
+  {id:"lakeview",n:"Lakeview",zip:"70124",sc:79,r:29,g:158,b:117,p:89,rec:16,m:20,f:7,left:"35%",top:"11%",w:"24%",h:"17%",cr:"High access. National rollout model.",q:"Lakeview New Orleans health infrastructure"},
+  {id:"gentilly",n:"Gentilly",zip:"70122",sc:44,r:255,g:165,b:50,p:62,rec:9,m:8,f:3,left:"69%",top:"12%",w:"14%",h:"17%",cr:"Post-Katrina recovery still incomplete.",q:"Gentilly New Orleans health access"},
+  {id:"cc",n:"Central City",zip:"70112",sc:28,r:200,g:30,b:30,p:22,rec:5,m:3,f:1,left:"14%",top:"62%",w:"14%",h:"22%",cr:"CRITICAL. 44% child poverty. Zero mental health infrastructure.",q:"Central City New Orleans crisis and BLEU deployment"}
 ];
-
 var PRACS=[
-  {n:"Tulane Medical Center",t:"Hospital System",d:"1.2 mi",match:94,badge:["BLEU Verified","NPI Active","Accepting"],cc:"#2DD4A8",rev:"Primary Care Circuit",q:"Tulane Medical Center New Orleans and how BLEU routes qualified patients"},
-  {n:"LCMC Mental Health",t:"Mental Health Clinic",d:"0.8 mi",match:91,badge:["BLEU Verified","Telehealth"],cc:"#7055a8",rev:"Brightside CPA $50-150",q:"LCMC Mental Health New Orleans telehealth options"},
-  {n:"BetterHelp",t:"Mental Health Platform",d:"Available now",match:93,badge:["Telehealth","Affiliate"],cc:"#1d9e75",rev:"BetterHelp CPA $100-200",q:"How BLEU routes users to BetterHelp"},
-  {n:"Brightside Health",t:"Psychiatry + Therapy",d:"Available now",match:95,badge:["Telehealth","CPA Partner"],cc:"#a32d2d",rev:"Brightside CPA $50-150",q:"Brightside Health and BLEU routing"},
+  {n:"Tulane Medical Center",t:"Hospital System",d:"1.2 mi",match:94,badge:["BLEU Verified","NPI Active"],cc:"#2DD4A8",rev:"Primary Care Circuit",q:"Tulane Medical Center and BLEU practitioner matching"},
+  {n:"LCMC Mental Health",t:"Mental Health",d:"0.8 mi",match:91,badge:["BLEU Verified","Telehealth"],cc:"#7055a8",rev:"Brightside CPA $50-150",q:"LCMC Mental Health telehealth options"},
+  {n:"BetterHelp",t:"Mental Health Platform",d:"Available now",match:93,badge:["Telehealth","Affiliate"],cc:"#1d9e75",rev:"BetterHelp CPA $100-200",q:"BetterHelp and BLEU mental health routing"},
+  {n:"Brightside Health",t:"Psychiatry + Therapy",d:"Available now",match:95,badge:["Telehealth","CPA"],cc:"#a32d2d",rev:"Brightside CPA $50-150",q:"Brightside Health and BLEU psychiatric routing"},
   {n:"Children's Hospital NOLA",t:"Pediatric Care",d:"2.1 mi",match:88,badge:["BLEU Verified","Youth"],cc:"#185fa5",rev:"Youth Health Circuit",q:"Pediatric care in New Orleans"},
-  {n:"Lakeview Physical Therapy",t:"Physical Therapy",d:"3.4 mi",match:82,badge:["NPI Active"],cc:"#C9A84C",rev:"Recovery Circuit",q:"Physical therapy in New Orleans Lakeview"}
+  {n:"Lakeview Physical Therapy",t:"Physical Therapy",d:"3.4 mi",match:82,badge:["NPI Active"],cc:"#C9A84C",rev:"Recovery Circuit",q:"Physical therapy in New Orleans BLEU"}
 ];
-
 var CRISES=[
-  {n:"01",t:"Loneliness",s:"871K deaths/yr",c:"#a32d2d",tab:"Community",dep:"deployed",cat:"mental",q:"WHO loneliness crisis and BLEU social prescribing"},
-  {n:"02",t:"Sleep Deprivation",s:"$411B US cost",c:"#185fa5",tab:"Sleep",dep:"deployed",cat:"metabolic",q:"Sleep deprivation epidemic and BLEU Sleep Intelligence"},
+  {n:"01",t:"Loneliness",s:"871K deaths/yr",c:"#a32d2d",tab:"Community",dep:"deployed",cat:"mental",q:"WHO loneliness epidemic and BLEU Community"},
+  {n:"02",t:"Sleep Deprivation",s:"$411B US cost",c:"#185fa5",tab:"Sleep",dep:"deployed",cat:"metabolic",q:"Sleep deprivation and BLEU Sleep Intelligence"},
   {n:"03",t:"Grief",s:"40% untreated",c:"#7055a8",tab:"Therapy",dep:"deployed",cat:"mental",q:"Grief crisis and BLEU Therapy"},
-  {n:"04",t:"Evidence Gap",s:"17yr lag",c:"#ba7517",tab:"Learn",dep:"deployed",cat:"system",q:"17-year evidence gap and BLEU"},
+  {n:"04",t:"Evidence Gap",s:"17yr lag",c:"#ba7517",tab:"Learn",dep:"deployed",cat:"system",q:"17-year evidence gap and BLEU Learn"},
   {n:"05",t:"Food Prescription",s:"$32B ignored",c:"#1d9e75",tab:"Vessel",dep:"deployed",cat:"metabolic",q:"Food as medicine and BLEU Vessel"},
   {n:"06",t:"Medical Debt",s:"$9B fees/yr",c:"#C9A84C",tab:"Finance",dep:"deployed",cat:"economic",q:"Medical debt and BLEU Finance"},
   {n:"07",t:"Caregiving",s:"$1.1T unpaid",c:"#2D8A9E",tab:"Recovery",dep:"deployed",cat:"social",q:"Caregiving crisis and BLEU Recovery"},
-  {n:"08",t:"Health Literacy",s:"54% below 6th grade",c:"#F472B6",tab:"Alvai",dep:"deployed",cat:"system",q:"Health literacy and Alvai"},
-  {n:"09",t:"Mens Mental Health",s:"80% suicides male",c:"#a32d2d",tab:"Therapy",dep:"deployed",cat:"mental",q:"Mens mental health and BLEU"},
-  {n:"10",t:"Maternal MH",s:"1 in 5 mothers",c:"#F472B6",tab:"Therapy",dep:"partial",cat:"women",q:"Maternal mental health and BLEU"},
+  {n:"08",t:"Health Literacy",s:"54% below 6th grade",c:"#F472B6",tab:"Alvai",dep:"deployed",cat:"system",q:"Health literacy and Alvai intelligence"},
+  {n:"09",t:"Mens Mental Health",s:"80% suicides male",c:"#a32d2d",tab:"Therapy",dep:"deployed",cat:"mental",q:"Mens mental health and BLEU Therapy"},
+  {n:"10",t:"Maternal MH",s:"1 in 5 mothers",c:"#F472B6",tab:"Therapy",dep:"partial",cat:"women",q:"Maternal mental health and BLEU Therapy"},
   {n:"11",t:"Medication Adherence",s:"$500B wasted",c:"#1d9e75",tab:"Finance",dep:"deployed",cat:"economic",q:"Medication adherence and BLEU Finance"},
-  {n:"12",t:"Veterans Crisis",s:"22 suicides/day",c:"#185fa5",tab:"Recovery",dep:"partial",cat:"mental",q:"Veterans crisis and BLEU"},
+  {n:"12",t:"Veterans Crisis",s:"22 suicides/day",c:"#185fa5",tab:"Recovery",dep:"partial",cat:"mental",q:"Veterans crisis and BLEU Recovery"},
   {n:"13",t:"Workplace Burnout",s:"$322B clinical",c:"#C9A84C",tab:"Enterprise",dep:"deployed",cat:"economic",q:"Workplace burnout and BLEU enterprise"},
   {n:"14",t:"Chronic Pain",s:"51M Americans",c:"#7055a8",tab:"Vessel",dep:"partial",cat:"metabolic",q:"Chronic pain and BLEU Vessel"},
   {n:"15",t:"Benefits Desert",s:"$65B unclaimed",c:"#ba7517",tab:"Finance",dep:"deployed",cat:"economic",q:"Benefits navigation and Alvai"},
-  {n:"16",t:"Youth Mental Health",s:"3x since 2010",c:"#a32d2d",tab:"Therapy",dep:"partial",cat:"youth",q:"Youth mental health and BLEU"},
+  {n:"16",t:"Youth Mental Health",s:"3x since 2010",c:"#a32d2d",tab:"Therapy",dep:"partial",cat:"youth",q:"Youth mental health and BLEU Therapy"},
   {n:"17",t:"Endometriosis",s:"10yr delay",c:"#F472B6",tab:"ECSIQ",dep:"partial",cat:"women",q:"Endometriosis and BLEU ECSIQ"},
   {n:"18",t:"Menopause Gap",s:"$150B market",c:"#F472B6",tab:"Vessel",dep:"planned",cat:"women",q:"Menopause and BLEU Vessel"},
   {n:"19",t:"PCOS",s:"1 in 10 women",c:"#F472B6",tab:"Vessel",dep:"planned",cat:"women",q:"PCOS and BLEU"},
-  {n:"20",t:"Domestic Violence",s:"1 in 4 women",c:"#a32d2d",tab:"Recovery",dep:"partial",cat:"women",q:"Domestic violence and BLEU Recovery"},
-  {n:"21",t:"Child Poverty NOLA",s:"26% -- 2x national",c:"#a32d2d",tab:"Community",dep:"deployed",cat:"youth",q:"Child poverty in New Orleans"},
-  {n:"22",t:"Youth Literacy",s:"49% 3rd grade fail",c:"#185fa5",tab:"Learn",dep:"deployed",cat:"youth",q:"Youth literacy in New Orleans"},
-  {n:"23",t:"Youth Trauma",s:"36% high ACE",c:"#7055a8",tab:"Therapy",dep:"partial",cat:"youth",q:"Childhood trauma in New Orleans"},
-  {n:"24",t:"Food Security NOLA",s:"22% food insecure",c:"#1d9e75",tab:"Finance",dep:"deployed",cat:"youth",q:"Food insecurity in New Orleans"},
-  {n:"25",t:"Summer Learning",s:"3mo loss/yr",c:"#ba7517",tab:"Learn",dep:"partial",cat:"youth",q:"Summer learning loss in New Orleans"},
+  {n:"20",t:"Domestic Violence",s:"1 in 4 women",c:"#a32d2d",tab:"Recovery",dep:"partial",cat:"women",q:"Domestic violence support and BLEU"},
+  {n:"21",t:"Child Poverty NOLA",s:"26% of children",c:"#a32d2d",tab:"Community",dep:"deployed",cat:"youth",q:"Child poverty in New Orleans and BLEU"},
+  {n:"22",t:"Youth Literacy",s:"49% 3rd grade fail",c:"#185fa5",tab:"Learn",dep:"deployed",cat:"youth",q:"Youth literacy gap and BLEU Learn"},
+  {n:"23",t:"Youth Trauma",s:"36% high ACE",c:"#7055a8",tab:"Therapy",dep:"partial",cat:"youth",q:"Childhood trauma New Orleans and BLEU"},
+  {n:"24",t:"Food Security NOLA",s:"22% food insecure",c:"#1d9e75",tab:"Finance",dep:"deployed",cat:"youth",q:"Food insecurity New Orleans and BLEU"},
+  {n:"25",t:"Summer Learning",s:"3mo loss/yr",c:"#ba7517",tab:"Learn",dep:"partial",cat:"youth",q:"Summer learning loss and BLEU Learn"},
   {n:"26",t:"Elder Isolation",s:"28% over 65 alone",c:"#2D8A9E",tab:"Community",dep:"partial",cat:"aging",q:"Elder isolation and BLEU Community"},
-  {n:"27",t:"Dementia Crisis",s:"6.7M Americans",c:"#7055a8",tab:"Vessel",dep:"planned",cat:"aging",q:"Dementia and BLEU cognitive health"},
-  {n:"28",t:"Polypharmacy",s:"40% over 65 on 5+",c:"#ba7517",tab:"Finance",dep:"deployed",cat:"aging",q:"Polypharmacy and BLEU Finance"},
-  {n:"29",t:"OCD Undertreated",s:"14yr to diagnosis",c:"#a32d2d",tab:"Therapy",dep:"partial",cat:"mental",q:"OCD and BLEU Therapy"},
+  {n:"27",t:"Dementia Crisis",s:"6.7M Americans",c:"#7055a8",tab:"Vessel",dep:"planned",cat:"aging",q:"Dementia prevention and BLEU"},
+  {n:"28",t:"Polypharmacy",s:"40% over 65 on 5+",c:"#ba7517",tab:"Finance",dep:"deployed",cat:"aging",q:"Polypharmacy and BLEU drug screening"},
+  {n:"29",t:"OCD Undertreated",s:"14yr to diagnosis",c:"#a32d2d",tab:"Therapy",dep:"partial",cat:"mental",q:"OCD treatment gap and BLEU Therapy"},
   {n:"30",t:"Eating Disorders",s:"$4.6B annual",c:"#F472B6",tab:"Therapy",dep:"partial",cat:"mental",q:"Eating disorders and BLEU Therapy"},
-  {n:"31",t:"Financial Anxiety",s:"77% stressed",c:"#C9A84C",tab:"Finance",dep:"deployed",cat:"economic",q:"Financial anxiety and BLEU Finance"},
-  {n:"32",t:"Cannabis Safety",s:"3.6M daily users",c:"#1d9e75",tab:"ECSIQ",dep:"deployed",cat:"metabolic",q:"Cannabis safety and BLEU ECSIQ"}
+  {n:"31",t:"Financial Anxiety",s:"77% stressed",c:"#C9A84C",tab:"Finance",dep:"deployed",cat:"economic",q:"Financial anxiety and BLEU Finance Intelligence"},
+  {n:"32",t:"Cannabis Safety",s:"3.6M daily users",c:"#1d9e75",tab:"ECSIQ",dep:"deployed",cat:"metabolic",q:"Cannabis safety and BLEU ECSIQ screening"}
 ];
-
 var FEED=[
   {c:"#2DD4A8",t:"855K+ NPI practitioners verified in real-time"},
   {c:"#a32d2d",t:"9th Ward CRITICAL -- healthcare desert, BLEU deploying"},
-  {c:"#ba7517",t:"UV Index 7 -- elevated exposure risk today"},
+  {c:"#ba7517",t:"UV Index 7 -- elevated risk today"},
   {c:"#F472B6",t:"Maternal MH: 1 in 5 mothers -- Therapy tab active"},
   {c:"#C9A84C",t:"Hotel Monteleone: worksite wellness proof of concept"},
   {c:"#1d9e75",t:"AQI 47 -- good air quality in New Orleans today"},
   {c:"#2D8A9E",t:"Jazz Bird NOLA 501c3 -- 222-city model active"},
-  {c:"#7055a8",t:"32 crises documented -- peer-reviewed 2023-2025"},
-  {c:"#C9A84C",t:"$42M annual city benefit -- social prescribing documented"},
+  {c:"#7055a8",t:"32 crises mapped -- peer-reviewed evidence"},
+  {c:"#C9A84C",t:"$42M annual city benefit -- documented ROI"},
   {c:"#a32d2d",t:"Central City: 44% child poverty -- BLEU Community active"}
 ];
 
-/* LIVE DATA */
-fetch(SBU+"/rest/v1/practitioners?select=count",{headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Prefer":"count=exact"}}).then(function(r){var ct=r.headers.get("content-range");if(ct){var n=ct.split("/")[1];if(n&&n!=="*"&&parseInt(n)>0){var fmt=parseInt(n)>=1000?(Math.floor(parseInt(n)/1000))+"K+":n;["mtp","msp1","roi-p"].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=fmt;});}}}).catch(function(){});
+/* Live Supabase data */
+fetch(SBU+"/rest/v1/practitioners?select=count",{headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Prefer":"count=exact"}}).then(function(r){var ct=r.headers.get("content-range");if(ct){var n=ct.split("/")[1];if(n&&n!=="*"&&parseInt(n)>0){var fmt=parseInt(n)>=1000?Math.floor(parseInt(n)/1000)+"K+":n;["mtp","msp1","roi-p"].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=fmt;});}}}).catch(function(){});
 fetch(SBU+"/rest/v1/profiles?citizenship_status=eq.citizen&select=count",{headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Prefer":"count=exact"}}).then(function(r){var ct=r.headers.get("content-range");if(ct){var n=ct.split("/")[1];if(n&&n!=="*"){var el=document.getElementById("mtc");if(el)el.textContent=parseInt(n)||"0";}}}).catch(function(){});
 
-/* VIEW TOGGLE */
+/* Build zones as HTML divs -- NO CANVAS */
+var zc=document.getElementById("zone-container");
+if(zc){
+  ZONES.forEach(function(z,i){
+    var sc=z.sc>=70?"#1d9e75":z.sc>=50?"#ba7517":"#a32d2d";
+    var div=document.createElement("div");
+    div.className="zone";
+    div.id="zone-"+z.id;
+    div.style.left=z.left;div.style.top=z.top;div.style.width=z.w;div.style.height=z.h;
+    div.style.background="rgba("+z.r+","+z.g+","+z.b+",.18)";
+    div.style.borderColor="rgba("+z.r+","+z.g+","+z.b+",.55)";
+    var dot=document.createElement("div");dot.className="zone-dot";
+    var score=document.createElement("div");score.className="zone-score";
+    score.style.color="rgba("+z.r+","+z.g+","+z.b+",1)";score.textContent=z.sc;
+    var name=document.createElement("div");name.className="zone-name";
+    name.style.color="rgba("+z.r+","+z.g+","+z.b+",.85)";name.textContent=z.n;
+    div.appendChild(dot);
+    if(z.sc<40){var ring=document.createElement("div");ring.className="zone-ring";div.appendChild(ring);}
+    div.appendChild(score);div.appendChild(name);
+    div.addEventListener("click",function(){mZone(i);});
+    div.addEventListener("mouseenter",function(){div.style.background="rgba("+z.r+","+z.g+","+z.b+",.38)";});
+    div.addEventListener("mouseleave",function(){div.style.background="rgba("+z.r+","+z.g+","+z.b+",.18)";});
+    zc.appendChild(div);
+  });
+}
+
+/* Zone click handler */
+window.mZone=function(i){
+  var z=ZONES[i];
+  var sc=z.sc>=70?"#1d9e75":z.sc>=50?"#ba7517":"#a32d2d";
+  var lb=z.sc>=70?"Good Access":z.sc>=50?"Moderate Access":"Healthcare Desert";
+  document.querySelectorAll(".zone").forEach(function(el){el.style.boxShadow="";el.classList.remove("sel");});
+  var sel=document.getElementById("zone-"+z.id);
+  if(sel){sel.classList.add("sel");sel.style.boxShadow="0 0 20px rgba("+z.r+","+z.g+","+z.b+",.5)";}
+  var el=document.getElementById("nhd");
+  if(!el)return;
+  el.className="nhd on";
+  el.innerHTML="<div class='nhd-inner'><div style='text-align:center;min-width:80px'><div class='nhd-sv' style='color:"+sc+"'>"+z.sc+"</div><div style='font-size:11px;font-weight:600;color:"+sc+";margin-top:2px'>"+lb+"</div><div style='font-size:9px;color:#7B8DA6'>out of 100</div></div><div><div style='font-size:18px;font-weight:700;color:#E8E0D0;margin-bottom:2px'>"+z.n+"</div><div style='font-size:11px;color:#7B8DA6;margin-bottom:8px'>ZIP "+z.zip+"</div><div class='nhd-prog'><div class='nhd-pf' style='width:"+z.sc+"%;background:"+sc+"'></div></div><div class='nhd-grid'><div class='nhd-cell'><div class='nhd-cv' style='color:#2DD4A8'>"+z.p+"</div><div class='nhd-cl'>Practitioners</div></div><div class='nhd-cell'><div class='nhd-cv' style='color:#C9A84C'>"+z.rec+"</div><div class='nhd-cl'>Recovery</div></div><div class='nhd-cell'><div class='nhd-cv' style='color:#a32d2d'>"+z.m+"</div><div class='nhd-cl'>Mental Health</div></div><div class='nhd-cell'><div class='nhd-cv' style='color:#1d9e75'>"+z.f+"</div><div class='nhd-cl'>Food Access</div></div></div><div class='nhd-crisis'>"+z.cr+"</div><div class='nhd-btns'><button class='nhd-btn' onclick=\"ask('map','"+z.q.replace(/'/g,"\\'")+\"')\">Full Report</button><button class='nhd-btn' onclick=\"ask('map','Find practitioners near ZIP "+z.zip+"')\">Find Practitioners</button><button class='nhd-btn' onclick=\"ask('map','Top 3 health crises in "+z.n+" New Orleans')\">Crisis Analysis</button><button class='nhd-btn gld' onclick=\"ask('enterprise','BLEU enterprise model for "+z.n+"')\">Enterprise Brief</button></div></div></div>";
+  ask("map",z.q);
+};
+
+/* View toggle */
 window.mV=function(v){
   var vc=document.getElementById("vc"),vcc=document.getElementById("vcc");
-  var b1=document.getElementById("mb1"),b2=document.getElementById("mb2");
   if(vc)vc.style.display=v==="city"?"block":"none";
   if(vcc)vcc.style.display=v==="crisis"?"block":"none";
-  if(b1)b1.classList.toggle("on",v==="city");
-  if(b2)b2.classList.toggle("on",v==="crisis");
+  document.getElementById("mb1").classList.toggle("on",v==="city");
+  document.getElementById("mb2").classList.toggle("on",v==="crisis");
 };
 
-/* FILTERS */
-var fl=document.getElementById("mfilt");
-if(fl){[{l:"Practitioners",c:"#2DD4A8"},{l:"Recovery",c:"#C9A84C"},{l:"Mental Health",c:"#a32d2d"},{l:"Telehealth",c:"#7055a8"},{l:"Food Access",c:"#1d9e75"},{l:"Environment",c:"#2D8A9E"}].forEach(function(ly){var b=document.createElement("button");b.className="mfb";var d=document.createElement("div");d.className="mfbd";d.style.background=ly.c;b.appendChild(d);b.appendChild(document.createTextNode(ly.l));b.addEventListener("click",function(){b.classList.toggle("on");ask("map","Show me "+ly.l+" resources for New Orleans");});fl.appendChild(b);});}
-
-/* LIVE FEED */
-var fi=0;
-(function feed(){var fd=document.getElementById("mifeed");if(!fd)return;var item=FEED[fi%FEED.length];fi++;var d=document.createElement("div");d.className="ifeed";var dot=document.createElement("div");dot.className="ifd";dot.style.background=item.c;dot.style.boxShadow="0 0 4px "+item.c;var t=document.createElement("span");t.textContent=item.t;d.appendChild(dot);d.appendChild(t);fd.insertBefore(d,fd.firstChild);if(fd.children.length>8)fd.removeChild(fd.lastChild);setTimeout(feed,3800);})();
-
-/* CANVAS MAP */
-var canvas=document.getElementById("city-canvas");
-var tip=document.getElementById("map-tip");
-var selIdx=-1;
-var tick=0;
-var ctx=null;
-var W=900,H=480;
-var raf=null;
-
-function draw(){
-  if(!ctx){ctx=canvas.getContext("2d");if(!ctx)return;}
-  tick+=0.02;
-  ctx.clearRect(0,0,W,H);
-
-  /* bg */
-  var bg=ctx.createRadialGradient(W*.48,H*.52,0,W*.48,H*.52,W*.6);
-  bg.addColorStop(0,"#071828");bg.addColorStop(1,"#030810");
-  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
-
-  /* grid */
-  ctx.strokeStyle="rgba(45,138,158,0.04)";ctx.lineWidth=1;
-  for(var gx=0;gx<W;gx+=50){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
-  for(var gy=0;gy<H;gy+=50){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
-
-  /* lake */
-  ctx.fillStyle="rgba(7,24,40,.9)";ctx.strokeStyle="rgba(13,36,64,.7)";ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.ellipse(W*.5,20,W*.48,28,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-  ctx.fillStyle="rgba(26,74,122,.5)";ctx.font="11px DM Sans,sans-serif";ctx.textAlign="center";
-  ctx.fillText("Lake Pontchartrain",W*.5,24);
-
-  /* river */
-  ctx.strokeStyle="rgba(10,30,56,.9)";ctx.lineWidth=34;ctx.lineCap="round";
-  ctx.beginPath();ctx.moveTo(5,H*.92);ctx.bezierCurveTo(W*.17,H*.86,W*.52,H*.77,W*.71,H*.71);ctx.bezierCurveTo(W*.84,H*.68,W*.93,H*.66,W,H*.65);ctx.stroke();
-  ctx.fillStyle="rgba(26,74,122,.4)";ctx.font="10px DM Sans,sans-serif";
-  ctx.save();ctx.translate(W*.38,H*.85);ctx.rotate(-0.1);ctx.fillText("Mississippi River",0,0);ctx.restore();
-
-  /* data flows */
-  [[.38,.5,.36,.36],[.36,.36,.47,.18],[.27,.55,.17,.52],[.38,.5,.27,.55]].forEach(function(f,i){
-    var a=tick*15+i*9;
-    ctx.strokeStyle="rgba(45,138,158,0.12)";ctx.lineWidth=1.5;
-    ctx.setLineDash([5,4]);ctx.lineDashOffset=-a;
-    ctx.beginPath();var mx=(f[0]+f[2])/2*W,my=((f[1]+f[3])/2-.06)*H;
-    ctx.moveTo(f[0]*W,f[1]*H);ctx.quadraticCurveTo(mx,my,f[2]*W,f[3]*H);
-    ctx.stroke();ctx.setLineDash([]);
+/* Crisis matrix */
+var cffEl=document.getElementById("cff");
+if(cffEl){
+  ["All","Mental","Metabolic","Women","Youth","Economic","Aging","System"].forEach(function(f,i){
+    var b=document.createElement("button");b.className="cf"+(i===0?" on":"");b.textContent=f;
+    b.addEventListener("click",function(){
+      document.querySelectorAll(".cf").forEach(function(x){x.classList.remove("on");});
+      b.classList.add("on");
+      document.querySelectorAll(".cmc").forEach(function(c){
+        c.style.display=(f==="All"||c.dataset.cat===f.toLowerCase())?"":"none";
+      });
+    });
+    cffEl.appendChild(b);
   });
-
-  /* zones */
-  ZONES.forEach(function(z,i){
-    var px=z.x*W,py=z.y*H,pw=z.w*W,ph=z.h*H;
-    var hot=(i===selIdx);
-    var alpha=hot?.45:.18;
-
-    ctx.fillStyle="rgba("+z.r+","+z.g+","+z.b+","+alpha+")";
-    ctx.strokeStyle="rgba("+z.r+","+z.g+","+z.b+","+(hot?1:.55)+")";
-    ctx.lineWidth=hot?2.5:1.5;
-    ctx.beginPath();ctx.roundRect(px,py,pw,ph,10);ctx.fill();ctx.stroke();
-
-    ctx.fillStyle="rgba("+z.r+","+z.g+","+z.b+",1)";
-    ctx.font="bold 16px DM Sans,sans-serif";ctx.textAlign="center";
-    ctx.fillText(z.sc,px+pw/2,py+ph/2+2);
-
-    ctx.fillStyle="rgba(200,192,176,.75)";ctx.font="9px DM Sans,sans-serif";
-    ctx.fillText(z.n,px+pw/2,py+ph/2+16);
-
-    /* prac dot */
-    var pulse=1+0.3*Math.sin(tick*1.8+i*.5);
-    ctx.fillStyle="rgba(45,212,168,.9)";ctx.shadowColor="#2DD4A8";ctx.shadowBlur=7*pulse;
-    ctx.beginPath();ctx.arc(px+pw-8,py+10,3.5+pulse*.8,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-
-    /* crisis ring */
-    if(z.sc<40){var cr=(tick*.4+i*.3)%1;ctx.strokeStyle="rgba(180,50,50,"+(1-cr)*.6+")";ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(px+pw/2,py+ph/2,10+cr*26,0,Math.PI*2);ctx.stroke();}
+}
+var cmgEl=document.getElementById("cmg");
+if(cmgEl){
+  CRISES.forEach(function(c){
+    var d=document.createElement("div");d.className="cmc";d.dataset.cat=c.cat;d.style.borderLeftColor=c.c;
+    var dot=document.createElement("div");
+    dot.style.cssText="width:6px;height:6px;border-radius:50%;float:right;margin-top:2px;background:"+(c.dep==="deployed"?"#1d9e75":c.dep==="partial"?"#ba7517":"#185fa5");
+    var ti=document.createElement("div");ti.className="cmct";ti.textContent=c.t;
+    var st=document.createElement("div");st.className="cmcs";st.textContent=c.s;
+    var tb=document.createElement("div");tb.className="cmctb";
+    tb.style.cssText="background:"+c.c+"22;color:"+c.c;tb.textContent=c.tab;
+    d.appendChild(dot);d.appendChild(ti);d.appendChild(st);d.appendChild(tb);
+    d.addEventListener("click",function(){ask("map",c.q);});
+    d.addEventListener("mouseover",function(){d.style.background=c.c+"10";});
+    d.addEventListener("mouseout",function(){d.style.background="";});
+    cmgEl.appendChild(d);
   });
-
-  /* hotel pin */
-  var pulse2=1+0.25*Math.sin(tick*2.2);
-  ctx.fillStyle="#C9A84C";ctx.shadowColor="#C9A84C";ctx.shadowBlur=12*pulse2;
-  ctx.beginPath();ctx.arc(.36*W,.51*H,7,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-  ctx.fillStyle="rgba(201,168,76,.85)";ctx.font="bold 8px DM Sans,sans-serif";ctx.textAlign="left";
-  ctx.fillText("Hotel Monteleone",.36*W+10,.51*H+3);
-
-  raf=requestAnimationFrame(draw);
 }
 
-/* Start drawing - canvas.width/height already set in HTML attribute */
-canvas.width=W;canvas.height=H;
-canvas.style.width="100%";canvas.style.height="auto";
-draw();
-
-/* Expose for go() hook */
-window._bleuMapRestart=function(){
-  if(raf)cancelAnimationFrame(raf);
-  ctx=null;
-  canvas.width=W;canvas.height=H;
-  draw();
-};
-
-/* Click/hover */
-canvas.addEventListener("mousemove",function(e){
-  var rect=canvas.getBoundingClientRect();
-  var sx=W/rect.width,sy=H/rect.height;
-  var mx=(e.clientX-rect.left)*sx,my=(e.clientY-rect.top)*sy;
-  var found=-1;
-  ZONES.forEach(function(z,i){var px=z.x*W,py=z.y*H,pw=z.w*W,ph=z.h*H;if(mx>=px&&mx<=px+pw&&my>=py&&my<=py+ph)found=i;});
-  canvas.style.cursor=found>=0?"pointer":"crosshair";
-  if(tip){if(found>=0){var z=ZONES[found];var sc=z.sc>=70?"#1d9e75":z.sc>=50?"#ba7517":"#a32d2d";tip.innerHTML="<b style='color:rgba("+z.r+","+z.g+","+z.b+",1)'>"+z.n+"</b><br><span style='color:#7B8DA6'>Score: <b style='color:"+sc+"'>"+z.sc+"/100</b> &bull; "+z.p+" practitioners</span>";tip.classList.add("v");}else{tip.classList.remove("v");}}
-});
-canvas.addEventListener("mouseleave",function(){if(tip)tip.classList.remove("v");});
-canvas.addEventListener("click",function(e){
-  var rect=canvas.getBoundingClientRect();
-  var sx=W/rect.width,sy=H/rect.height;
-  var mx=(e.clientX-rect.left)*sx,my=(e.clientY-rect.top)*sy;
-  var found=-1;
-  ZONES.forEach(function(z,i){var px=z.x*W,py=z.y*H,pw=z.w*W,ph=z.h*H;if(mx>=px&&mx<=px+pw&&my>=py&&my<=py+ph)found=i;});
-  if(found<0)return;
-  selIdx=found;var z=ZONES[found];
-  var sc=z.sc>=70?"#1d9e75":z.sc>=50?"#ba7517":"#a32d2d";
-  var lb=z.sc>=70?"High Access":z.sc>=50?"Moderate Access":"Healthcare Desert";
-  var el=document.getElementById("nhd");if(!el)return;
-  el.className="nhd on";
-  el.innerHTML="<div class='nhd-inner'><div style='text-align:center;min-width:80px'><div class='nhd-sv' style='color:"+sc+"'>"+z.sc+"</div><div style='font-size:11px;font-weight:600;color:"+sc+";margin-top:2px'>"+lb+"</div><div style='font-size:9px;color:#7B8DA6'>out of 100</div></div><div><div style='font-size:18px;font-weight:700;color:#E8E0D0;margin-bottom:2px'>"+z.n+"</div><div style='font-size:11px;color:#7B8DA6;margin-bottom:8px'>ZIP "+z.zip+" &bull; BLEU Health Assessment</div><div class='nhd-prog'><div class='nhd-pf' style='width:"+z.sc+"%;background:"+sc+"'></div></div><div class='nhd-grid'><div class='nhd-cell'><div class='nhd-cv' style='color:#2DD4A8'>"+z.p+"</div><div class='nhd-cl'>Practitioners</div></div><div class='nhd-cell'><div class='nhd-cv' style='color:#C9A84C'>"+z.rec+"</div><div class='nhd-cl'>Recovery</div></div><div class='nhd-cell'><div class='nhd-cv' style='color:#a32d2d'>"+z.m+"</div><div class='nhd-cl'>Mental Health</div></div><div class='nhd-cell'><div class='nhd-cv' style='color:#1d9e75'>"+z.f+"</div><div class='nhd-cl'>Food Access</div></div></div><div class='nhd-crisis'>"+z.cr+"</div><div class='nhd-btns'><button class='nhd-btn' onclick="ask('map','"+z.q+"')">Full Report</button><button class='nhd-btn' onclick="ask('map','Find practitioners near ZIP "+z.zip+"')">Find Practitioners</button><button class='nhd-btn' onclick="ask('map','Top 3 crises in "+z.n+" New Orleans')">Crisis Analysis</button><button class='nhd-btn gld' onclick="ask('enterprise','BLEU enterprise model for "+z.n+"')">Enterprise Brief</button></div></div></div>";
-  ask("map",z.q);
-});
-
-/* PRACTITIONER CARDS */
+/* Practitioner cards with BLEU match rings */
 function makeRing(score,color){
   var size=44,r=18,circ=2*Math.PI*r,dash=(score/100)*circ;
-  var div=document.createElement("div");div.style.cssText="position:relative;width:44px;height:44px;flex-shrink:0";
-  var svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.setAttribute("width",size);svg.setAttribute("height",size);svg.setAttribute("viewBox","0 0 "+size+" "+size);svg.style.transform="rotate(-90deg)";
-  var bg=document.createElementNS("http://www.w3.org/2000/svg","circle");bg.setAttribute("cx","22");bg.setAttribute("cy","22");bg.setAttribute("r","18");bg.setAttribute("fill","none");bg.setAttribute("stroke","rgba(255,255,255,.06)");bg.setAttribute("stroke-width","3");
-  var fg=document.createElementNS("http://www.w3.org/2000/svg","circle");fg.setAttribute("cx","22");fg.setAttribute("cy","22");fg.setAttribute("r","18");fg.setAttribute("fill","none");fg.setAttribute("stroke",color);fg.setAttribute("stroke-width","3");fg.setAttribute("stroke-dasharray",circ);fg.setAttribute("stroke-dashoffset",circ-dash);fg.setAttribute("stroke-linecap","round");
+  var wrap=document.createElement("div");
+  wrap.style.cssText="position:relative;width:44px;height:44px;flex-shrink:0";
+  var svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  svg.setAttribute("width","44");svg.setAttribute("height","44");
+  svg.setAttribute("viewBox","0 0 44 44");svg.style.transform="rotate(-90deg)";
+  var bg=document.createElementNS("http://www.w3.org/2000/svg","circle");
+  bg.setAttribute("cx","22");bg.setAttribute("cy","22");bg.setAttribute("r","18");
+  bg.setAttribute("fill","none");bg.setAttribute("stroke","rgba(255,255,255,.06)");bg.setAttribute("stroke-width","3");
+  var fg=document.createElementNS("http://www.w3.org/2000/svg","circle");
+  fg.setAttribute("cx","22");fg.setAttribute("cy","22");fg.setAttribute("r","18");
+  fg.setAttribute("fill","none");fg.setAttribute("stroke",color);fg.setAttribute("stroke-width","3");
+  fg.setAttribute("stroke-dasharray",circ.toString());fg.setAttribute("stroke-dashoffset",(circ-dash).toString());
+  fg.setAttribute("stroke-linecap","round");
   svg.appendChild(bg);svg.appendChild(fg);
-  var num=document.createElement("div");num.style.cssText="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:"+color;num.textContent=score;
-  div.appendChild(svg);div.appendChild(num);return div;
+  var num=document.createElement("div");
+  num.style.cssText="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:"+color;
+  num.textContent=score;
+  wrap.appendChild(svg);wrap.appendChild(num);
+  return wrap;
+}
+var pg=document.getElementById("prac-grid");
+if(pg){
+  PRACS.forEach(function(p){
+    var mc=p.match>=90?"#2DD4A8":p.match>=80?"#ba7517":"#a32d2d";
+    var card=document.createElement("div");card.className="pcard";
+    var top=document.createElement("div");
+    top.style.cssText="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px";
+    var left=document.createElement("div");left.style.flex="1";
+    left.innerHTML="<div class='pname'>"+p.n+"</div><div class='ptype'>"+p.t+" &bull; "+p.d+"</div>";
+    var right=document.createElement("div");
+    right.style.cssText="display:flex;flex-direction:column;align-items:center;margin-left:8px";
+    right.appendChild(makeRing(p.match,mc));
+    var ml=document.createElement("div");
+    ml.style.cssText="font-size:7px;color:#7B8DA6;letter-spacing:1px;margin-top:2px";ml.textContent="MATCH";
+    right.appendChild(ml);
+    top.appendChild(left);top.appendChild(right);
+    var bd=document.createElement("div");bd.style.marginBottom="5px";
+    p.badge.forEach(function(b){var s=document.createElement("span");s.className="pbadge";s.textContent=b;bd.appendChild(s);});
+    var rv=document.createElement("div");rv.className="prev";rv.textContent=p.rev;
+    var cta=document.createElement("button");cta.className="pcta";cta.style.background=p.cc;
+    cta.textContent="Connect";
+    cta.addEventListener("click",function(e){e.stopPropagation();ask("map",p.q);});
+    card.appendChild(top);card.appendChild(bd);card.appendChild(rv);card.appendChild(cta);
+    card.addEventListener("click",function(){ask("map",p.q);});
+    pg.appendChild(card);
+  });
 }
 
-var pg=document.getElementById("prac-grid");
-if(pg){PRACS.forEach(function(p){
-  var card=document.createElement("div");card.className="pcard";
-  var top=document.createElement("div");top.className="pcard-top";
-  var left=document.createElement("div");
-  var nm=document.createElement("div");nm.className="pname";nm.textContent=p.n;
-  var tp=document.createElement("div");tp.className="ptype";tp.textContent=p.t+" - "+p.d;
-  left.appendChild(nm);left.appendChild(tp);
-  var right=document.createElement("div");
-  var ring=makeRing(p.match,p.match>=90?"#2DD4A8":p.match>=80?"#ba7517":"#a32d2d");
-  var sl=document.createElement("div");sl.style.cssText="font-size:7px;color:#7B8DA6;text-align:center;letter-spacing:1px;margin-top:2px";sl.textContent="BLEU MATCH";
-  right.appendChild(ring);right.appendChild(sl);
-  top.appendChild(left);top.appendChild(right);
-  var badges=document.createElement("div");badges.className="pbadges";
-  p.badge.forEach(function(b){var sp=document.createElement("span");sp.className="pbadge";sp.textContent=b;badges.appendChild(sp);});
-  var rev=document.createElement("div");rev.className="prev";rev.textContent=p.rev;
-  var cta=document.createElement("button");cta.className="pcta";cta.style.background=p.cc;cta.textContent="Connect";
-  cta.addEventListener("click",function(e){e.stopPropagation();ask("map",p.q);});
-  card.appendChild(top);card.appendChild(badges);card.appendChild(rev);card.appendChild(cta);
-  card.addEventListener("click",function(){ask("map",p.q);});
-  pg.appendChild(card);
-});}
-
-/* CRISIS MATRIX */
-var cffEl=document.getElementById("cff");
-if(cffEl){["All","Mental","Metabolic","Women","Youth","Economic","Aging","System"].forEach(function(f,i){
-  var b=document.createElement("button");b.className="cf"+(i===0?" on":"");b.textContent=f;
-  b.addEventListener("click",function(){document.querySelectorAll(".cf").forEach(function(x){x.classList.remove("on");});b.classList.add("on");var cat=f.toLowerCase();document.querySelectorAll(".cmc").forEach(function(c){c.style.display=(f==="All"||c.dataset.cat.indexOf(cat.slice(0,4))>-1)?"":"none";});});
-  cffEl.appendChild(b);
-});}
-var cmgEl=document.getElementById("cmg");
-if(cmgEl){CRISES.forEach(function(c){
-  var d=document.createElement("div");d.className="cmc";d.dataset.cat=c.cat;d.style.borderLeftColor=c.c;
-  var dot=document.createElement("div");dot.className="cmcd";dot.style.background=c.dep==="deployed"?"#1d9e75":c.dep==="partial"?"#ba7517":"#185fa5";
-  var n=document.createElement("div");n.className="cmcn";n.style.color=c.c;n.textContent=c.n;
-  var ti=document.createElement("div");ti.className="cmct";ti.textContent=c.t;
-  var st=document.createElement("div");st.className="cmcs";st.textContent=c.s;
-  var tb=document.createElement("div");tb.className="cmctb";tb.style.background=c.c+"22";tb.style.color=c.c;tb.textContent=c.tab;
-  d.appendChild(dot);d.appendChild(n);d.appendChild(ti);d.appendChild(st);d.appendChild(tb);
-  d.addEventListener("click",function(){ask("map",c.q);});
-  d.addEventListener("mouseover",function(){d.style.background=c.c+"10";});
-  d.addEventListener("mouseout",function(){d.style.background="";});
-  cmgEl.appendChild(d);
-});}
-
-/* QUICK STRIP */
+/* Quick searches */
 var qr=document.getElementById("qrow");
-if(qr){["Find Practitioners","Recovery Centers","Mental Health Clinics","AA and NA Meetings","Yoga Studios","Health Food","Gyms","Hospitals","Telehealth","Crisis Resources"].forEach(function(q){var b=document.createElement("button");b.className="qb";b.textContent=q;b.addEventListener("click",function(){ask("map",q+" in New Orleans");});qr.appendChild(b);});}
+if(qr){
+  ["Recovery Centers","Mental Health","AA and NA","Yoga Studios","Healthy Food","Hospitals","Telehealth Now","Crisis Help"].forEach(function(q){
+    var b=document.createElement("button");b.className="qb";b.textContent=q;
+    b.addEventListener("click",function(){ask("map",q+" in New Orleans");});
+    qr.appendChild(b);
+  });
+}
 
-/* ASK BAR */
+/* Ask bar */
 var ab=document.getElementById("askb"),ai=document.getElementById("aski");
-if(ab)ab.addEventListener("click",function(){var v=ai.value.trim();if(v){ask("map",v);ai.value="";}});
-if(ai)ai.addEventListener("keydown",function(e){if(e.key==="Enter")ab.click();});
-window.mLoc=function(){if(!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(function(pos){ask("map","Health infrastructure near "+pos.coords.latitude.toFixed(4)+", "+pos.coords.longitude.toFixed(4));});};
+if(ab)ab.addEventListener("click",function(){var v=ai?ai.value.trim():"";if(v){ask("map",v);if(ai)ai.value="";}});
+if(ai)ai.addEventListener("keydown",function(e){if(e.key==="Enter"&&ab)ab.click();});
+window.mLoc=function(){
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(function(pos){
+    ask("map","Health resources near "+pos.coords.latitude.toFixed(4)+","+pos.coords.longitude.toFixed(4));
+  });
+};
+
+/* Live feed */
+var fi=0;
+(function feed(){
+  var fd=document.getElementById("mifeed");if(!fd)return;
+  var item=FEED[fi%FEED.length];fi++;
+  var d=document.createElement("div");d.className="ifeed-item";
+  var dot=document.createElement("div");dot.className="ifd";
+  dot.style.cssText="background:"+item.c+";box-shadow:0 0 4px "+item.c;
+  var t=document.createElement("span");t.textContent=item.t;
+  d.appendChild(dot);d.appendChild(t);
+  fd.insertBefore(d,fd.firstChild);
+  if(fd.children.length>8)fd.removeChild(fd.lastChild);
+  setTimeout(feed,3800);
+})();
 
 })();
 </script>
@@ -2506,7 +2498,7 @@ window.mLoc=function(){if(!navigator.geolocation)return;navigator.geolocation.ge
 <div class="panel" id="p-protocols">
   <div class="section-label">PROTOCOLS BUILT ON PEER-REVIEWED EVIDENCE</div>
   <h1 class="hero-title"> <span class="accent">Protocols</span></h1>
-  <p class="hero-sub">Aaron Antonovsky studied Holocaust survivors who remained healthy decades after liberation. He found three components present in every one: comprehensibility (the world makes sense), manageability (you have the resources to cope), and meaningfulness (life is worth engaging with). He called this salutogenesis &mdash; the science of what creates health, not what causes disease. Medicine never asks this question. BLEU asks it in every interaction. Every protocol here addresses all three simultaneously: evidence that makes the world comprehensible, tools that make challenges manageable, and connection to purpose that makes the work meaningful. Not a to-do list. A salutogenic transformation system.</p>
+  <p class="hero-sub">Aaron Antonovsky studied Holocaust survivors who remained healthy for decades after liberation. He found three things every healthy survivor had: the world made sense to them, they had resources to cope, and life felt worth engaging with. He called this salutogenesis — the science of staying well. BLEU Protocols are built on this foundation. Not a checklist. A living prescription, built from peer-reviewed evidence, adapted to what you are actually going through.</p>
 
   <div class="card" style="border-color:rgba(199,91,57,.2);background:linear-gradient(135deg,rgba(199,91,57,.06),var(--card))">
     <span class="badge badge-ember" style="margin-bottom:10px">FLAGSHIP PROGRAM</span>
@@ -2902,7 +2894,7 @@ if(lb)lb.addEventListener("click",function(){
 <h1 class="hero-title" style="margin-bottom:10px">Connection is not comfort.<br><span class="teal">It is genomic medicine.</span></h1>
 
     <h1 style="font-family:Georgia,serif;font-size:clamp(26px,5vw,40px);font-weight:300;color:#e8d5b0;margin:0 0 10px">💫 Community</h1>
-    <p style="font-size:13px;color:#8b95a5;max-width:600px;margin:0 auto;line-height:1.9">Steven Cole spent 17 years at UCLA proving loneliness changes the expression of 102 genes simultaneously — upregulating 53 inflammatory genes while downregulating 49 antiviral genes. The finding that changes everything: this is driven by felt isolation, not objective isolation. A person surrounded by people but feeling unseen shows full CTRA activation. A person physically alone but deeply connected shows CTRA reversal. Social connection also activates telomerase — the enzyme that maintains chromosomal integrity, suppressed 14-26% in isolation. The WHO Commission documented 871,000 annual deaths from loneliness in June 2025. BLEU Community is not a social feature. It is a genomic intervention. Every connection reverses 102 gene expression changes.</p>
+    <p style="font-size:13px;color:#8b95a5;max-width:600px;margin:0 auto;line-height:1.9">Steven Cole at UCLA spent 17 years proving something that should change how every city thinks about public health: loneliness rewrites 102 of your genes. Not metaphorically. Literally. The people you know, and whether they truly know you, changes what your DNA does tonight while you sleep. BLEU Community is not a social network. It is a genomic intervention. Every genuine connection on this platform is a biological event.</p>
     <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(78,205,196,.3),transparent);margin:20px auto;max-width:280px"></div>
   </div>
 
@@ -3120,6 +3112,7 @@ if(lb)lb.addEventListener("click",function(){
 </style>
 <div class="section-label">YOUR LONGEVITY PASSPORT</div>
 <h1 class="hero-title" style="margin-bottom:10px">Your health identity.<br><span class="teal">Pioneer Citizen — always free.</span></h1>
+<p class="hero-sub" style="max-width:600px;margin:0 auto 20px">Your Citizen Passport holds your health history, your preferences, your practitioners, your protocol. It is how BLEU recognises you, not as a data point, but as a person with a specific health story that deserves a specific response. Pioneer Citizens get everything. Always free. The platform earns from the ecosystem. Never from the people it serves.</p>
 
 <div style="background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(29,158,117,.06));border:1px solid rgba(201,168,76,.25);border-radius:14px;padding:20px 24px;margin-bottom:20px;text-align:center">
   <div style="font-size:9px;letter-spacing:4px;color:rgba(201,168,76,.7);text-transform:uppercase;margin-bottom:8px">&#127941; FOUNDING PIONEER PROGRAM</div>
@@ -3371,7 +3364,7 @@ if(lb)lb.addEventListener("click",function(){
 <div class="panel" id="p-therapy">
   <div class="section-label">EVIDENCE-BASED THERAPEUTIC INTELLIGENCE</div>
   <h1 class="hero-title"> <span class="teal">Therapy</span> — <span class="accent">12 Modes</span></h1>
-  <p class="hero-sub">Cognitive Behavioral Therapy produces measurable changes in NF-&#954;B pathway activation — the master inflammatory transcription factor — within 8-12 weeks. Trauma resolution rewrites epigenetic marks on stress-response genes. This is not a chatbot pretending. This is Alvai-powered therapeutic intelligence using real clinical frameworks — CBT, DBT, somatic, motivational interviewing, guided journaling, crisis support, couples, grief, trauma, and more. Connected to 485,476 practitioners for when you\'re ready for a real person.</p>
+  <p class="hero-sub">Therapy changes your brain. Not as a metaphor. Eight weeks of CBT produces measurable changes in the inflammatory pathways that drive heart disease, cancer, and early aging. Trauma resolution rewrites epigenetic markers. Grief that goes unprocessed does not disappear. It becomes cortisol, inflammation, and biological age. BLEU Therapy connects you to evidence-based care, AI-supported sessions, and practitioners who treat the whole person.</p>
 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:880px;margin:16px auto 0;padding:0 20px">
   <div style="background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.12);border-radius:10px;padding:12px;text-align:center">
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#f97316">8-12wk</div>
@@ -3583,7 +3576,7 @@ id="chat-therapy"></div><div class="chat-input-row"><input autocomplete="off" id
 <h1 class="hero-title" style="margin-bottom:10px">Money is not just a resource.<br><span style="color:#d4af37">It is a vital sign.</span></h1>
 
     <h1 style="font-family:Georgia,serif;font-size:clamp(28px,5vw,44px);font-weight:300;color:#e8d5b0;margin:0 0 10px">💰 Finance</h1>
-    <p style="font-size:13px;color:#8b95a5;max-width:640px;margin:0 auto;line-height:1.9">67% of Americans name money as their primary stressor. Financial stress chronically elevates cortisol — the same molecule that, sustained over always free, reduces hippocampal volume, suppresses immunity, and drives insulin resistance. Medical debt is now the leading cause of personal bankruptcy, and financial toxicity reduces cancer survival by 56%. Every physician who ever told you to reduce stress but never asked about your bank account missed the actual diagnosis. BLEU Finance is cortisol medicine. It treats the root cause.</p>
+    <p style="font-size:13px;color:#8b95a5;max-width:640px;margin:0 auto;line-height:1.9">67% of Americans say money is their biggest source of stress. What that means biologically: chronic financial anxiety floods your body with cortisol. Sustained cortisol is linked to worse cancer outcomes, faster cellular aging, and immune suppression. Money stress is not just uncomfortable. It is physically damaging. BLEU Finance does not give you financial advice. It gives you clarity, navigation, and the benefits you are already owed but have not claimed.</p>
     <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.3),transparent);margin:20px auto;max-width:280px"></div>
   </div>
 
@@ -4050,7 +4043,7 @@ id="chat-finance"></div><div class="chat-input-row"><input autocomplete="off" id
 <div class="panel" id="p-recovery">
   <div class="section-label">RECOVERY AS MOLECULAR RESTORATION</div>
   <h1 class="hero-title"> <span class="accent">Recovery</span></h1>
-  <p class="hero-sub">Addiction is not a moral failure. It is a molecular one — allostatic load overwhelming the prefrontal cortex, dopamine dysregulation, and cortisol flooding the HPA axis until the only relief is the substance. This was not built in a boardroom. It was built by someone who survived 9 overdoses and overcame 31 felonies. Who treated 30,000 patients. Who knows what the first 72 hours feel like, what Day 30 feels like, what Year 5 feels like. This meets you where you are — with dignity, privacy, and real tools.</p>
+  <p class="hero-sub">Recovery is not willpower. It never was. Addiction is the brain's dopamine system doing exactly what it was designed to do — seek relief from overwhelming stress. BLEU Recovery doesn't judge. It understands the neuroscience, the trauma, the isolation, and the shame that precede every relapse. Whether you are 3 hours sober or 3 years sober or just thinking about it — you are in the right place. This was not built in a boardroom. It was built by someone who survived 9 overdoses and overcame 31 felonies. Who treated 30,000 patients. Who knows what the first 72 hours feel like, what Day 30 feels like, what Year 5 feels like. This meets you where you are — with dignity, privacy, and real tools.</p>
 
   <div class="section-label" style="margin-top:24px">CHOOSE YOUR MODE</div>
   <div class="mode-bar" id="recovery-modes">
@@ -4773,7 +4766,7 @@ renderSessions();
 <div class="panel" id="p-sleep">
   <div class="section-label">MOLECULAR SLEEP INTELLIGENCE</div>
   <h1 class="hero-title"> <span class="accent">Sleep</span></h1>
-  <p class="hero-sub">Sleep is not rest. It is molecular repair. Every hour of optimized sleep reduces 8-OHdG oxidative DNA damage, activates glymphatic clearance of Alzheimer's precursors, and initiates the cellular restoration that no supplement can replicate. This is the most anabolic, neuroprotective process your body runs. Every hour of lost sleep costs you cellular repair, memory consolidation, hormone production, and lifespan. BLEU treats sleep as medicine.</p>
+  <p class="hero-sub">You already know sleep matters. What you might not know is what happens when you don't get it. One bad night raises Alzheimer's-linked proteins in your brain. A week of poor sleep rewrites 700 genes. Chronic short sleep costs you roughly 1.7 biological years per decade. BLEU Sleep gives you the science, the tools, and the practitioners who understand that fixing your sleep fixes almost everything else.</p>
 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:880px;margin:16px auto 0;padding:0 20px">
   <div style="background:rgba(78,205,196,.05);border:1px solid rgba(78,205,196,.12);border-radius:10px;padding:12px;text-align:center">
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#4ecdc4">47%</div>
@@ -8746,7 +8739,7 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
 <h1 class="hero-title" style="margin-bottom:10px">Purpose extends life by<br><span style="color:#C9A84C">23%.</span> That is not philosophy.</h1>
 
     <h1 style="font-family:Georgia,serif;font-size:clamp(26px,5vw,42px);font-weight:300;color:#e8d5b0;margin:0 0 10px">Spirit</h1>
-    <p style="font-size:13px;color:#8b95a5;max-width:580px;margin:0 auto;line-height:1.9">Viktor Frankl survived four concentration camps, including Auschwitz, and emerged with a single scientific conclusion: meaning is not a luxury. It is a survival mechanism. Purpose reduces all-cause mortality by 23%. Ikigai — the Japanese concept of a reason to rise — is associated with a 7.5-year longevity extension in the Blue Zones. Spiritual engagement activates the parasympathetic nervous system, reduces inflammatory biomarkers, and measurably increases telomerase activity. The soul is not separate from the body. It is encoded in it. BLEU Spirit is not a meditation app. It is the tab that treats meaning as medicine — the only intervention that addresses all three of Antonovsky’s salutogenic components simultaneously.</p>
+    <p style="font-size:13px;color:#8b95a5;max-width:580px;margin:0 auto;line-height:1.9">Viktor Frankl survived Auschwitz. When researchers later studied his work and the Blue Zones data together, they found the same thing: people with a reason to get up in the morning live longer. Not slightly longer. Significantly longer. Purpose reduces all-cause mortality by 23%. Ikigai — your reason for being — activates telomerase, the enzyme that maintains your chromosomes. BLEU Spirit is where you find your thread. Purpose reduces all-cause mortality by 23%. Ikigai — the Japanese concept of a reason to rise — is associated with a 7.5-year longevity extension in the Blue Zones. Spiritual engagement activates the parasympathetic nervous system, reduces inflammatory biomarkers, and measurably increases telomerase activity. The soul is not separate from the body. It is encoded in it. BLEU Spirit is not a meditation app. It is the tab that treats meaning as medicine — the only intervention that addresses all three of Antonovsky’s salutogenic components simultaneously.</p>
     <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent);margin:24px auto;max-width:320px"></div>
   </div>
 
