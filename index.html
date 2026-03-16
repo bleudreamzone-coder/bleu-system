@@ -585,6 +585,36 @@ button[type="submit"],
 }
 </style>
 
+
+<style id="bleu-visibility-override">
+/* BLEU VISIBILITY OVERRIDE — All panels always show their content */
+.panel.active .reveal,
+.panel.active .bl-up,
+.panel.active .h-rise,
+.panel.active .h-left,
+.panel.active .h-pop,
+.panel.active .e-fade,
+.panel.active .s-fade,
+.panel.active .divider,
+.panel.active [class*="fade"],
+.panel.active [class*="rise"],
+.panel.active [class*="pop"] {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+/* Also override at document level for safety */
+.bl-up { opacity: 1 !important; transform: none !important; }
+.h-rise { opacity: 1 !important; transform: none !important; }
+.h-left { opacity: 1 !important; transform: none !important; }
+.h-pop { opacity: 1 !important; transform: none !important; }
+.e-fade { opacity: 1 !important; transform: none !important; }
+.e-fade.e-vis { opacity: 1 !important; transform: none !important; }
+.s-fade { opacity: 1 !important; transform: none !important; }
+.divider { opacity: 1 !important; }
+.reveal { opacity: 1 !important; transform: none !important; }
+.reveal.visible { opacity: 1 !important; transform: none !important; }
+</style>
 </head>
 <body>
 
@@ -8236,12 +8266,7 @@ el.textContent=(n>=1000?v.toLocaleString():v)+suf;
 if(p<1)requestAnimationFrame(tick);else el.textContent=orig})(st)}})},{threshold:0.3});
 cio.observe(el)});
 // Tab switch = re-trigger reveals on other panels
-var og=window.go;if(og){window.go=function(t){og(t);setTimeout(function(){
-var p=document.getElementById('p-'+t);if(!p)return;
-p.querySelectorAll('.section-label,.section-desc,.section-title,.card,.stat-box,.feature-item,.product-card,.chat-box,.disclaimer,.cta,.mode-bar,.quick-row,.divider,.divider-gold').forEach(function(el,i){
-if(!el.classList.contains('bl-up')){el.classList.add('bl-up');el.classList.add('bl-in');el.style.opacity='1';el.style.transform='none';}
-else{el.classList.add('bl-in');el.style.opacity='1';el.style.transform='none';}
-})},50)}}
+var og=window.go;if(og){window.go=function(t){og(t);}}
 }
 if(typeof trackReferralVisit==='function')trackReferralVisit();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 })();
