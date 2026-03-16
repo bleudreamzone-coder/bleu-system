@@ -1782,324 +1782,452 @@ id="in-vessel" placeholder="What supplements should I take? What interacts with 
 <!-- ═══════════════════════ MAP ═══════════════════════ -->
 <div class="panel" id="p-map">
 <style>
-#map-wrap{max-width:1100px;margin:0 auto}
-.map-hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
-.mhc{background:#0d1829;border:1px solid rgba(45,138,158,.12);border-radius:12px;padding:14px;text-align:center}
-.mhc-val{font-size:26px;font-weight:600;line-height:1;margin-bottom:4px}
-.mhc-lbl{font-size:10px;color:#7B8DA6;text-transform:uppercase;letter-spacing:1px}
-.map-search-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.map-input{flex:1;min-width:200px;background:rgba(8,14,26,.9);border:1px solid rgba(45,138,158,.3);border-radius:10px;padding:12px 16px;color:#E8E0D0;font-size:14px;font-family:"DM Sans",sans-serif;outline:none}
-.map-input:focus{border-color:#2D8A9E}
-.map-btn{padding:12px 18px;border-radius:10px;border:1px solid rgba(45,138,158,.3);background:rgba(45,138,158,.12);color:#2DD4A8;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;white-space:nowrap;transition:all .2s}
-.map-btn:hover,.map-btn.on{background:rgba(45,138,158,.25);border-color:#2D8A9E}
-.map-btn.gold{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.1);color:#C9A84C}
-.map-btn.gold:hover{background:rgba(201,168,76,.2);border-color:#C9A84C}
-.map-quick{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
-.map-qbtn{padding:7px 14px;border-radius:20px;border:1px solid rgba(45,138,158,.15);background:transparent;cursor:pointer;font-size:11px;color:#7B8DA6;font-family:"DM Sans",sans-serif;transition:all .2s;white-space:nowrap}
-.map-qbtn:hover{border-color:#2D8A9E;color:#2DD4A8}
-.map-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
-.map-intel{background:#0d1829;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px}
-.map-intel-head{font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;font-weight:600}
-.map-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
-.map-row:last-child{border-bottom:none}
-.map-bar-wrap{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:3px;overflow:hidden}
-.map-bar{height:100%;border-radius:2px;transition:width 1s ease}
-.map-crisis-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-right:7px}
-.map-gmap{width:100%;height:380px;border-radius:14px;overflow:hidden;border:1px solid rgba(45,138,158,.2);margin-bottom:16px;background:#0a0c10}
-.map-gmap iframe{width:100%;height:100%;border:none;display:block}
-.layer-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.lbtn{padding:6px 14px;border-radius:20px;border:1px solid rgba(45,138,158,.2);background:transparent;cursor:pointer;font-size:11px;color:#7B8DA6;font-family:"DM Sans",sans-serif;transition:all .2s;white-space:nowrap}
-.lbtn.on{background:rgba(45,138,158,.15);border-color:#2D8A9E;color:#2DD4A8}
-.lbtn:hover{border-color:#2D8A9E}
-.crisis-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
-.cgcard{background:#0d1829;border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.05)}
-.cgcard:hover{transform:translateY(-2px);border-color:rgba(45,138,158,.3)}
-.cgnum{font-size:22px;font-weight:700;line-height:1;opacity:.2}
-.cglab{font-size:9px;color:#7B8DA6;line-height:1.3;margin-top:4px}
-.ent-card{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(45,138,158,.04));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:20px;margin-bottom:16px}
-.ent-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
-.ent-stat{background:rgba(8,14,26,.5);border-radius:8px;padding:12px;text-align:center}
-.ent-val{font-size:22px;font-weight:600;color:#C9A84C;line-height:1}
-.ent-lbl{font-size:10px;color:#7B8DA6;margin-top:3px}
-.zip-result{background:#0d1829;border:1px solid rgba(45,138,158,.15);border-radius:12px;padding:14px;margin-bottom:12px;display:none}
-.map-section{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,.5);margin:20px 0 12px;display:flex;align-items:center;gap:10px}
-.map-section::after{content:"";flex:1;height:1px;background:rgba(201,168,76,.1)}
-@keyframes pulseCity{0%,100%{opacity:.6}50%{opacity:1}}
-.city-pulse{animation:pulseCity 2s infinite}
+#mpw{max-width:1100px;margin:0 auto}
+.mh4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.mhs{background:#0d1829;border:1px solid rgba(45,138,158,.12);border-radius:12px;padding:14px;text-align:center;transition:all .3s;cursor:pointer}
+.mhs:hover{border-color:rgba(45,138,158,.4);transform:translateY(-2px)}
+.mhv{font-size:28px;font-weight:700;line-height:1;margin-bottom:4px}
+.mhl{font-size:10px;color:#7B8DA6;letter-spacing:1px;text-transform:uppercase}
+.map-main{display:grid;grid-template-columns:1fr 340px;gap:14px;margin-bottom:16px}
+.map-viz{position:relative;background:#0a0e1a;border:1px solid rgba(45,138,158,.2);border-radius:14px;overflow:hidden;min-height:460px}
+.map-svg-wrap{width:100%;height:100%;position:relative}
+#city-svg{width:100%;height:460px}
+.map-overlay-btns{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:6px;z-index:10}
+.mob{padding:6px 12px;border-radius:8px;border:1px solid rgba(45,138,158,.3);background:rgba(8,14,26,.85);cursor:pointer;font-size:11px;color:#7B8DA6;font-family:"DM Sans",sans-serif;transition:all .2s;backdrop-filter:blur(4px)}
+.mob.on{background:rgba(45,138,158,.2);color:#2DD4A8;border-color:#2D8A9E}
+.mob:hover{color:#E8E0D0;border-color:#2D8A9E}
+.map-legend{position:absolute;bottom:12px;left:12px;background:rgba(8,14,26,.88);border:1px solid rgba(45,138,158,.2);border-radius:8px;padding:10px 12px;font-size:10px;color:#7B8DA6;backdrop-filter:blur(4px)}
+.legend-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.legend-row:last-child{margin-bottom:0}
+.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.map-side{display:flex;flex-direction:column;gap:10px}
+.mcard{background:#0d1829;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;flex-shrink:0}
+.mcard-head{font-size:9px;letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.mrow{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.mrow:last-child{border-bottom:none}
+.mbar-w{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:2px;overflow:hidden}
+.mbar{height:100%;border-radius:2px;transition:width 1.2s ease}
+.nh-name{font-size:13px;font-weight:600;color:#E8E0D0;margin-bottom:2px}
+.nh-score{font-size:28px;font-weight:700;line-height:1}
+.nh-label{font-size:11px;color:#7B8DA6;margin-top:2px}
+.nh-btns{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.nh-btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(45,138,158,.2);background:transparent;color:#2DD4A8;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:11px;text-align:left;transition:all .2s}
+.nh-btn:hover{background:rgba(45,138,158,.12);border-color:#2D8A9E}
+.quick-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.qb{padding:7px 14px;border-radius:20px;border:1px solid rgba(45,138,158,.15);background:transparent;cursor:pointer;font-size:11px;color:#7B8DA6;font-family:"DM Sans",sans-serif;transition:all .2s;white-space:nowrap}
+.qb:hover{border-color:#2D8A9E;color:#2DD4A8}
+.msec{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,.5);margin:18px 0 10px;display:flex;align-items:center;gap:10px}
+.msec::after{content:"";flex:1;height:1px;background:rgba(201,168,76,.1)}
+.cgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.ccard{background:#0d1829;border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s}
+.ccard:hover{transform:translateY(-2px)}
+.cnum{font-size:20px;font-weight:700;line-height:1;opacity:.2}
+.clab{font-size:9px;color:#7B8DA6;line-height:1.3;margin-top:3px}
+.ent-c{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(45,138,158,.04));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:18px;margin-bottom:14px}
+.ent-s{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.es{background:rgba(8,14,26,.5);border-radius:8px;padding:12px;text-align:center}
+.ev{font-size:22px;font-weight:700;color:#C9A84C;line-height:1}
+.el{font-size:10px;color:#7B8DA6;margin-top:3px}
+.ent-btns{display:flex;gap:8px;flex-wrap:wrap}
+.ebtn{padding:9px 14px;border-radius:8px;font-size:11px;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .2s}
+.ebtn.gold{border:1px solid rgba(201,168,76,.3);background:rgba(201,168,76,.1);color:#C9A84C}
+.ebtn.gold:hover{background:rgba(201,168,76,.2)}
+.ebtn.teal{border:1px solid rgba(45,138,158,.3);background:rgba(45,138,158,.1);color:#2DD4A8}
+.ebtn.teal:hover{background:rgba(45,138,158,.2)}
+.ask-row{display:flex;gap:8px}
+.ask-i{flex:1;background:rgba(8,14,26,.9);border:1px solid rgba(45,138,158,.25);border-radius:10px;padding:11px 15px;color:#E8E0D0;font-size:13px;font-family:"DM Sans",sans-serif;outline:none}
+.ask-i:focus{border-color:#2D8A9E}
+.ask-b{padding:11px 18px;border-radius:10px;border:1px solid rgba(45,138,158,.3);background:rgba(45,138,158,.15);color:#2DD4A8;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;transition:all .2s}
+.ask-b:hover{background:rgba(45,138,158,.25)}
+@keyframes breathe{0%,100%{opacity:.7;r:6}50%{opacity:1;r:9}}
+@keyframes pulse-ring{0%{r:12;opacity:.4}100%{r:24;opacity:0}}
+@keyframes glow-path{0%,100%{stroke-opacity:.3}50%{stroke-opacity:.7}}
 </style>
 
-<div id="map-wrap">
+<div id="mpw">
 <div class="section-label">CITY INTELLIGENCE</div>
 <h1 class="hero-title" style="margin-bottom:6px">The <span class="teal">Living Map</span></h1>
-<p style="color:#7B8DA6;font-size:13px;text-align:center;margin:0 auto 20px;max-width:580px">Your zip code predicts your health better than your genetic code. BLEU maps the full healing infrastructure of any city -- practitioners, recovery resources, environmental health, and social determinants.</p>
+<p style="color:#7B8DA6;font-size:13px;text-align:center;margin:0 auto 18px;max-width:580px">Your zip code predicts your health better than your genetic code. Click any neighborhood to see its health intelligence. Toggle layers to reveal crises, practitioners, and infrastructure gaps.</p>
 
-<!-- Hero stats -->
-<div class="map-hero-grid">
-  <div class="mhc"><div class="mhc-val" style="color:#C9A84C">855K+</div><div class="mhc-lbl">NPI Practitioners</div></div>
-  <div class="mhc"><div class="mhc-val" style="color:#a32d2d">100</div><div class="mhc-lbl">Crises Mapped</div></div>
-  <div class="mhc"><div class="mhc-val" style="color:#1d9e75">23:1</div><div class="mhc-lbl">City ROI Documented</div></div>
-  <div class="mhc"><div class="mhc-val" style="color:#2DD4A8">222</div><div class="mhc-lbl">Target Cities</div></div>
+<div class="mh4">
+  <div class="mhs" onclick="ask('map','Tell me about all 855,000 NPI-verified practitioners in BLEU and how to find one near me')"><div class="mhv" style="color:#C9A84C" id="prac-count">855K+</div><div class="mhl">NPI Practitioners</div></div>
+  <div class="mhs" onclick="ask('map','Tell me about the 100 health crises BLEU maps and the most urgent ones in New Orleans')"><div class="mhv" style="color:#a32d2d">100</div><div class="mhl">Crises Mapped</div></div>
+  <div class="mhs" onclick="ask('map','Explain the 23:1 ROI of the BLEU city deployment model and the $42M annual benefit for a city of 500,000')"><div class="mhv" style="color:#1d9e75">23:1</div><div class="mhl">City ROI</div></div>
+  <div class="mhs" onclick="ask('map','Tell me about the 222-city expansion model starting with New Orleans as the proof of concept')"><div class="mhv" style="color:#2DD4A8">222</div><div class="mhl">Target Cities</div></div>
 </div>
 
-<!-- Search -->
-<div class="map-search-row">
-  <input class="map-input" id="map-city-input" placeholder="Enter city, ZIP code, or neighborhood..."/>
-  <button class="map-btn" id="map-search-btn">Search Healing Map</button>
-  <button class="map-btn gold" onclick="mapLocate()">Use My Location</button>
+<!-- Main map area -->
+<div class="map-main">
+  <!-- Interactive SVG Map -->
+  <div class="map-viz">
+    <div class="map-overlay-btns" id="layer-btns"></div>
+    <svg id="city-svg" viewBox="0 0 580 460" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow-f"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <radialGradient id="bg-grad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#0C1829"/>
+          <stop offset="100%" stop-color="#080E1A"/>
+        </radialGradient>
+      </defs>
+      <!-- Background -->
+      <rect width="580" height="460" fill="url(#bg-grad)"/>
+      <!-- River (Mississippi) -->
+      <path d="M 20 380 Q 80 360 140 340 Q 200 320 260 290 Q 320 260 380 230 Q 440 200 500 180 Q 540 165 570 155" fill="none" stroke="#1a3a5c" stroke-width="28" opacity="0.6"/>
+      <path d="M 20 380 Q 80 360 140 340 Q 200 320 260 290 Q 320 260 380 230 Q 440 200 500 180 Q 540 165 570 155" fill="none" stroke="#0d2440" stroke-width="22"/>
+      <text x="200" y="355" fill="#1a4a7a" font-size="10" opacity="0.6" transform="rotate(-15, 200, 355)">Mississippi River</text>
+      <!-- Neighborhoods -->
+      <g id="neighborhoods"></g>
+      <!-- Practitioner nodes -->
+      <g id="prac-nodes"></g>
+      <!-- Crisis pulse rings -->
+      <g id="crisis-rings"></g>
+      <!-- Labels -->
+      <g id="map-labels"></g>
+    </svg>
+    <div class="map-legend" id="map-legend">
+      <div style="font-size:9px;letter-spacing:2px;color:#C9A84C;margin-bottom:6px">LEGEND</div>
+      <div class="legend-row"><div class="ldot" style="background:#2DD4A8"></div><span>Practitioners</span></div>
+      <div class="legend-row"><div class="ldot" style="background:#a32d2d"></div><span>Crisis Hotspot</span></div>
+      <div class="legend-row"><div class="ldot" style="background:#C9A84C"></div><span>Recovery</span></div>
+      <div class="legend-row"><div class="ldot" style="background:#7055a8"></div><span>Mental Health</span></div>
+    </div>
+  </div>
+
+  <!-- Intelligence side panel -->
+  <div class="map-side">
+    <!-- Selected neighborhood -->
+    <div class="mcard" id="nh-panel">
+      <div class="mcard-head" style="color:#C9A84C">SELECT A NEIGHBORHOOD</div>
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:13px;color:#7B8DA6;margin-bottom:8px">Click any neighborhood<br>on the map to see its<br>health intelligence</div>
+        <div style="font-size:32px;opacity:.3">&#9654;</div>
+      </div>
+    </div>
+
+    <!-- Environmental -->
+    <div class="mcard">
+      <div class="mcard-head" style="color:#2D8A9E">ENVIRONMENTAL HEALTH</div>
+      <div class="mrow"><span style="color:#7B8DA6">Air Quality (AQI)</span><span style="color:#1d9e75;font-weight:600">47 Good</span></div>
+      <div class="mbar-w"><div class="mbar" style="width:47%;background:#1d9e75"></div></div>
+      <div class="mrow" style="margin-top:6px"><span style="color:#7B8DA6">UV Index</span><span style="color:#ba7517;font-weight:600">7 High</span></div>
+      <div class="mbar-w"><div class="mbar" style="width:70%;background:#ba7517"></div></div>
+      <div class="mrow" style="margin-top:6px"><span style="color:#7B8DA6">Pollen</span><span style="color:#a32d2d;font-weight:600">High</span></div>
+      <div class="mbar-w"><div class="mbar" style="width:82%;background:#a32d2d"></div></div>
+      <div class="mrow" style="margin-top:6px"><span style="color:#7B8DA6">Humidity</span><span style="color:#ba7517;font-weight:600">78%</span></div>
+      <div class="mbar-w"><div class="mbar" style="width:78%;background:#ba7517"></div></div>
+      <div style="font-size:9px;color:#4A5B73;text-align:center;margin-top:8px">Meersens API - Live data</div>
+    </div>
+
+    <!-- Crisis signals -->
+    <div class="mcard">
+      <div class="mcard-head" style="color:#a32d2d">ACTIVE CRISIS SIGNALS</div>
+      <div id="crisis-sigs"></div>
+    </div>
+  </div>
 </div>
 
 <!-- Quick searches -->
-<div class="map-section">FIND IN YOUR CITY</div>
-<div class="map-quick" id="map-quick-btns"></div>
+<div class="msec">FIND IN YOUR CITY</div>
+<div class="quick-row" id="qrow"></div>
 
-<!-- Layer toggles -->
-<div class="map-section">MAP LAYERS</div>
-<div class="layer-btns" id="map-layers"></div>
+<!-- 100 crises -->
+<div class="msec">100 CRISES DEPLOYMENT MAP</div>
+<div class="cgrid" id="cgrid"></div>
 
-<!-- Google Maps embed -- New Orleans -->
-<div class="map-gmap" id="map-gmap-wrap">
-  <iframe
-    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d55430.17!2d-90.07150!3d29.95110!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8620a454b2118265%3A0xdb065be85e2d2662!2sNew%20Orleans%2C%20LA!5e0!3m2!1sen!2sus!4v1710600000000!5m2!1sen!2sus"
-    width="100%" height="380" style="border:0" allowfullscreen="" loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade">
-  </iframe>
-</div>
-
-<!-- Intelligence panels -->
-<div class="map-section">CITY INTELLIGENCE</div>
-<div class="map-cols">
-  <!-- City Health Score -->
-  <div class="map-intel">
-    <div class="map-intel-head" style="color:#C9A84C">NEW ORLEANS HEALTH SCORE</div>
-    <div style="text-align:center;padding:10px 0 14px">
-      <div style="font-size:48px;font-weight:700;color:#C9A84C;line-height:1">40</div>
-      <div style="font-size:11px;color:#7B8DA6;margin-top:4px">out of 100 -- Louisiana ranked #50</div>
-    </div>
-    <div class="map-row"><span style="color:#7B8DA6">Practitioner density</span><span style="color:#2DD4A8">6.2/1K</span></div>
-    <div class="map-bar-wrap"><div class="map-bar" style="width:62%;background:#2DD4A8"></div></div>
-    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Food access</span><span style="color:#a32d2d">31%</span></div>
-    <div class="map-bar-wrap"><div class="map-bar" style="width:31%;background:#a32d2d"></div></div>
-    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Mental health coverage</span><span style="color:#ba7517">46%</span></div>
-    <div class="map-bar-wrap"><div class="map-bar" style="width:46%;background:#ba7517"></div></div>
-    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Recovery infrastructure</span><span style="color:#ba7517">58%</span></div>
-    <div class="map-bar-wrap"><div class="map-bar" style="width:58%;background:#ba7517"></div></div>
-    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Financial wellness</span><span style="color:#a32d2d">28%</span></div>
-    <div class="map-bar-wrap"><div class="map-bar" style="width:28%;background:#a32d2d"></div></div>
-    <button class="map-btn" style="width:100%;margin-top:12px;font-size:11px" onclick="ask('map','Give me a full health infrastructure report on New Orleans -- all crises, all gaps, and the BLEU intervention for each one')">Full City Report</button>
-  </div>
-
-  <!-- Environmental Intel -->
-  <div class="map-intel">
-    <div class="map-intel-head" style="color:#2D8A9E">ENVIRONMENTAL HEALTH</div>
-    <div class="map-row"><span style="color:#7B8DA6">Air Quality (AQI)</span><span style="color:#1d9e75;font-weight:600">47 -- Good</span></div>
-    <div class="map-bar-wrap"><div class="map-bar" style="width:47%;background:#1d9e75"></div></div>
-    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">UV Index</span><span style="color:#ba7517;font-weight:600">7 -- High</span></div>
-    <div class="map-bar-wrap"><div class="map-bar" style="width:70%;background:#ba7517"></div></div>
-    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Pollen Level</span><span style="color:#a32d2d;font-weight:600">High</span></div>
-    <div class="map-bar-wrap"><div class="map-bar" style="width:82%;background:#a32d2d"></div></div>
-    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Humidity</span><span style="color:#ba7517;font-weight:600">78%</span></div>
-    <div class="map-bar-wrap"><div class="map-bar" style="width:78%;background:#ba7517"></div></div>
-    <div class="map-row" style="margin-top:8px"><span style="color:#7B8DA6">Heat Index Risk</span><span style="color:#a32d2d;font-weight:600">Elevated</span></div>
-    <div class="map-bar-wrap"><div class="map-bar" style="width:72%;background:#a32d2d"></div></div>
-    <div style="margin-top:12px;font-size:10px;color:#4A5B73;text-align:center">Powered by Meersens API -- Live data</div>
-    <button class="map-btn" style="width:100%;margin-top:8px;font-size:11px" onclick="ask('map','What are the environmental health risks in New Orleans today and how do I protect myself?')">Full Environmental Report</button>
-  </div>
-
-  <!-- Crisis Signals -->
-  <div class="map-intel">
-    <div class="map-intel-head" style="color:#a32d2d">ACTIVE CRISIS SIGNALS</div>
-    <div id="crisis-signals"></div>
-    <button class="map-btn" style="width:100%;margin-top:12px;font-size:11px;border-color:rgba(163,45,45,.3);color:#a32d2d;background:rgba(163,45,45,.08)" onclick="ask('map','Show me the top health crises in New Orleans and what BLEU can do about each one with specific interventions and ROI')">Deploy BLEU Response</button>
-  </div>
-</div>
-
-<!-- Social determinants -->
-<div class="map-section">SOCIAL DETERMINANTS BY ZIP</div>
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px" id="zip-grid"></div>
-
-<!-- 100 Crises Grid -->
-<div class="map-section">100 CRISES DEPLOYMENT MAP</div>
-<div class="crisis-grid" id="crisis-grid"></div>
-
-<!-- Alvai map chat -->
-<div class="map-section">ASK THE MAP</div>
+<!-- Alvai -->
+<div class="msec">ASK THE MAP</div>
 <div class="chat-box" id="map-chat" style="min-height:60px;margin-bottom:10px"></div>
-<div style="display:flex;gap:8px">
-  <input class="map-input" id="map-ask-input" placeholder="Ask about any location, health infrastructure, crisis, or city..."/>
-  <button class="map-btn" id="map-ask-btn">Ask Alvai</button>
+<div class="ask-row">
+  <input class="ask-i" id="map-ai" placeholder="Ask about any city, ZIP, health infrastructure, or crisis..."/>
+  <button class="ask-b" id="map-ab">Ask Alvai</button>
 </div>
 
-<!-- Enterprise pitch -->
-<div class="map-section">ENTERPRISE CITY INTELLIGENCE</div>
-<div class="ent-card">
-  <div style="font-size:9px;letter-spacing:3px;color:#C9A84C;margin-bottom:8px">DEPLOY BLEU IN YOUR CITY</div>
-  <div style="font-size:17px;font-weight:600;color:#E8E0D0;margin-bottom:6px">The 222-City Model Starts in New Orleans</div>
-  <div style="font-size:12px;color:#7B8DA6;line-height:1.7">Every city gets real-time health intelligence, social determinants mapping, 855K practitioner directory, and crisis intervention infrastructure. The New Orleans proof of concept is the template.</div>
-  <div class="ent-grid">
-    <div class="ent-stat"><div class="ent-val">$1.8M</div><div class="ent-lbl">Annual deployment cost</div></div>
-    <div class="ent-stat"><div class="ent-val">23:1</div><div class="ent-lbl">Documented ROI</div></div>
-    <div class="ent-stat"><div class="ent-val">$42M</div><div class="ent-lbl">Annual benefit / 500K city</div></div>
+<!-- Enterprise -->
+<div class="msec">ENTERPRISE CITY MODEL</div>
+<div class="ent-c">
+  <div style="font-size:10px;letter-spacing:2px;color:#C9A84C;margin-bottom:6px">THE 222-CITY PROOF OF CONCEPT</div>
+  <div style="font-size:17px;font-weight:600;color:#E8E0D0;margin-bottom:6px">Deploy BLEU in Your City</div>
+  <div style="font-size:12px;color:#7B8DA6;line-height:1.7">Every city gets real-time health intelligence, 855K practitioner directory, social determinants mapping, and crisis intervention infrastructure. New Orleans is the model.</div>
+  <div class="ent-s">
+    <div class="es"><div class="ev">$1.8M</div><div class="el">Annual deployment</div></div>
+    <div class="es"><div class="ev">23:1</div><div class="el">Documented ROI</div></div>
+    <div class="es"><div class="ev">$42M</div><div class="el">Benefit / 500K city</div></div>
   </div>
-  <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
-    <button class="map-btn gold" onclick="ask('enterprise','Tell me about the BLEU city partnership model -- the 23:1 ROI, the $42M annual benefit, and how New Orleans becomes the proof of concept for 222 cities')">City Partnership Brief</button>
-    <button class="map-btn" onclick="ask('map','What would a full BLEU deployment look like for a city of 500,000 people -- infrastructure, cost, timeline, and expected outcomes')">500K City Deployment</button>
-    <button class="map-btn" onclick="ask('enterprise','Tell me about the Hotel Monteleone worksite wellness contract -- 400 employees, $240K potential, and how it becomes the template for enterprise')">Hotel Monteleone Model</button>
+  <div class="ent-btns">
+    <button class="ebtn gold" onclick="ask('enterprise','Tell me about the BLEU 222-city model -- the 23:1 ROI, the $42M annual benefit for 500K cities, and the New Orleans proof of concept')">City Partnership Brief</button>
+    <button class="ebtn teal" onclick="ask('map','Walk me through what a full BLEU deployment looks like for a new city -- infrastructure, timeline, cost, and expected health outcomes')">Deployment Plan</button>
+    <button class="ebtn teal" onclick="ask('enterprise','Tell me about the Hotel Monteleone worksite wellness contract -- 400 employees and how it scales to enterprise')">Worksite Model</button>
   </div>
 </div>
-
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded",function(){
 
-var QUICK=[
-  {label:"Practitioners",q:"Show me all NPI-verified practitioners in New Orleans with phone numbers and specialties"},
-  {label:"Mental Health Clinics",q:"Mental health clinics therapists and psychiatrists in New Orleans"},
-  {label:"Recovery Centers",q:"Addiction treatment centers and recovery resources in New Orleans"},
-  {label:"AA and NA Meetings",q:"AA meetings NA meetings and 12-step programs in New Orleans"},
-  {label:"Yoga Studios",q:"Yoga studios and meditation centers in New Orleans"},
-  {label:"Health Food",q:"Health food stores organic markets and nutrition resources in New Orleans"},
-  {label:"Gyms and Fitness",q:"Gyms fitness centers and personal trainers in New Orleans"},
-  {label:"Cannabis Dispensaries",q:"Licensed cannabis dispensaries and CBD stores in New Orleans"},
-  {label:"Pharmacies",q:"Pharmacies Cost Plus Drug locations and GoodRx partners in New Orleans"},
-  {label:"Hospitals",q:"Hospitals and emergency care centers in New Orleans"},
-  {label:"Acupuncture",q:"Acupuncture and integrative medicine clinics in New Orleans"},
-  {label:"Crisis Resources",q:"Crisis intervention hotlines mental health emergency resources in New Orleans"}
+var NEIGHBORHOODS=[
+  {id:"french-quarter",name:"French Quarter",x:340,y:290,w:80,h:60,score:55,color:"#ba7517",prac:43,crisis:"Flood risk + tourist health strain",zip:"70116",q:"What health infrastructure exists in the French Quarter New Orleans ZIP 70116 -- practitioners, crisis resources, and health gaps?"},
+  {id:"cbd",name:"CBD",x:260,y:260,w:80,h:60,score:62,color:"#ba7517",prac:89,crisis:"Burnout hotspot",zip:"70130",q:"What is the health intelligence for the New Orleans CBD ZIP 70130 -- practitioners, worksite wellness, and infrastructure?"},
+  {id:"trem",name:"Trem",x:340,y:220,w:80,h:60,score:34,color:"#a32d2d",prac:31,crisis:"Food desert + poverty concentration",zip:"70116",q:"Tell me about health crises in the Trem neighborhood New Orleans -- poverty, food access, and mental health gaps"},
+  {id:"seventh-ward",name:"7th Ward",x:410,y:200,w:90,h:60,score:38,color:"#a32d2d",prac:28,crisis:"Healthcare desert",zip:"70117",q:"What are the health challenges in the 7th Ward New Orleans and how does BLEU address them?"},
+  {id:"bywater",name:"Bywater",x:420,y:270,w:80,h:55,score:58,color:"#ba7517",prac:54,crisis:"Mental health gap",zip:"70117",q:"Tell me about health infrastructure in Bywater New Orleans ZIP 70117"},
+  {id:"garden-district",name:"Garden District",x:160,y:230,w:100,h:60,score:78,color:"#1d9e75",prac:167,crisis:"Strong access",zip:"70115",q:"What health infrastructure exists in the Garden District New Orleans ZIP 70115?"},
+  {id:"uptown",name:"Uptown",x:100,y:200,w:100,h:70,score:74,color:"#1d9e75",prac:145,crisis:"Good access",zip:"70115",q:"Tell me about health resources in Uptown New Orleans ZIP 70115"},
+  {id:"mid-city",name:"Mid-City",x:200,y:140,w:100,h:70,score:65,color:"#ba7517",prac:98,crisis:"Growing infrastructure",zip:"70119",q:"What health infrastructure exists in Mid-City New Orleans ZIP 70119?"},
+  {id:"gentilly",name:"Gentilly",x:350,y:130,w:100,h:70,score:44,color:"#ba7517",prac:62,crisis:"Underserved area",zip:"70122",q:"Tell me about health access in Gentilly New Orleans ZIP 70122"},
+  {id:"lakeview",name:"Lakeview",x:230,y:60,w:100,h:70,score:79,color:"#1d9e75",prac:89,crisis:"High access",zip:"70124",q:"What health infrastructure is in Lakeview New Orleans ZIP 70124?"},
+  {id:"ninth-ward",name:"9th Ward",x:460,y:310,w:90,h:70,score:24,color:"#a32d2d",prac:19,crisis:"Critical healthcare desert",zip:"70117",q:"Tell me about the health crises in the 9th Ward New Orleans -- the most underserved neighborhood and how BLEU deploys there"},
+  {id:"central-city",name:"Central City",x:150,y:300,w:90,h:60,score:28,color:"#a32d2d",prac:22,crisis:"Poverty + health desert",zip:"70112",q:"What are the health crises in Central City New Orleans ZIP 70112 and what does BLEU do?"}
 ];
 
-var LAYERS=[
-  {label:"Practitioners",on:true,color:"#2DD4A8"},
-  {label:"Recovery",on:true,color:"#C9A84C"},
-  {label:"Mental Health",on:false,color:"#a32d2d"},
-  {label:"Environment",on:false,color:"#1d9e75"},
-  {label:"Social Determinants",on:false,color:"#7055a8"},
-  {label:"Crisis Hotspots",on:false,color:"#F472B6"},
-  {label:"Food Access",on:false,color:"#ba7517"},
-  {label:"Enterprise Zones",on:false,color:"#185fa5"}
+var LAYERS_DEF=[
+  {id:"practitioners",label:"Practitioners",on:true,color:"#2DD4A8"},
+  {id:"recovery",label:"Recovery",on:true,color:"#C9A84C"},
+  {id:"mental",label:"Mental Health",on:false,color:"#a32d2d"},
+  {id:"food",label:"Food Access",on:false,color:"#1d9e75"},
+  {id:"crisis",label:"Crisis Rings",on:true,color:"#F472B6"}
 ];
 
-var CRISES=[
+var QUICK_SEARCHES=[
+  "Find Practitioners Near Me","Recovery Centers","AA and NA Meetings","Mental Health Clinics",
+  "Yoga Studios","Health Food Stores","Gyms and Fitness","Cannabis Dispensaries",
+  "Pharmacies","Hospitals","Acupuncture","Crisis Resources"
+];
+
+var CRISIS_CATS=[
   {n:"01-10",l:"Mental Health",c:"#a32d2d"},
   {n:"11-20",l:"Chronic Disease",c:"#ba7517"},
   {n:"21-30",l:"Addiction",c:"#7055a8"},
-  {n:"31-40",l:"Youth Crises",c:"#185fa5"},
+  {n:"31-40",l:"Youth",c:"#185fa5"},
   {n:"41-50",l:"Aging",c:"#2D8A9E"},
   {n:"51-60",l:"Economic",c:"#C9A84C"},
   {n:"61-70",l:"Environment",c:"#1d9e75"},
-  {n:"71-80",l:"Healthcare System",c:"#a32d2d"},
-  {n:"81-90",l:"Womens Health",c:"#F472B6"},
-  {n:"91-100",l:"Emerging Global",c:"#2DD4A8"}
+  {n:"71-80",l:"Healthcare",c:"#a32d2d"},
+  {n:"81-90",l:"Womens",c:"#F472B6"},
+  {n:"91-100",l:"Global",c:"#2DD4A8"}
 ];
 
 var SIGNALS=[
-  {label:"Child poverty 26% -- 2x national avg",sev:"critical",color:"#a32d2d"},
-  {label:"Male suicide 4x female rate untreated",sev:"critical",color:"#a32d2d"},
-  {label:"49% 3rd grade literacy -- failing threshold",sev:"critical",color:"#a32d2d"},
-  {label:"54% with mental illness -- zero treatment",sev:"high",color:"#ba7517"},
-  {label:"Food desert covers 40% of low-income zip",sev:"high",color:"#ba7517"},
-  {label:"Opioid crisis -- 3x national overdose rate",sev:"high",color:"#ba7517"},
-  {label:"BLEU infrastructure -- deployed and ready",sev:"active",color:"#1d9e75"}
+  {t:"Child poverty 26% -- 2x national",c:"#a32d2d"},
+  {t:"Male suicide 4x female -- undertreated",c:"#a32d2d"},
+  {t:"49% 3rd grade literacy -- critical",c:"#a32d2d"},
+  {t:"54% mental illness -- zero treatment",c:"#ba7517"},
+  {t:"Food desert -- 40% low-income ZIP",c:"#ba7517"},
+  {t:"BLEU deployed -- infrastructure ready",c:"#1d9e75"}
 ];
 
-var ZIPS=[
-  {zip:"70112",name:"Central City",score:28,color:"#a32d2d",label:"Healthcare desert"},
-  {zip:"70115",name:"Uptown",score:72,color:"#1d9e75",label:"High access"},
-  {zip:"70116",name:"Treme",score:34,color:"#a32d2d",label:"Food desert"},
-  {zip:"70117",name:"Bywater",score:58,color:"#ba7517",label:"Moderate access"},
-  {zip:"70119",name:"Mid-City",score:65,color:"#ba7517",label:"Growing"},
-  {zip:"70122",name:"Gentilly",score:44,color:"#ba7517",label:"Underserved"},
-  {zip:"70124",name:"Lakeview",score:78,color:"#1d9e75",label:"High access"},
-  {zip:"70125",name:"Carrollton",score:52,color:"#ba7517",label:"Mixed access"}
-];
+var layerState={practitioners:true,recovery:true,mental:false,food:false,crisis:true};
+var selectedNH=null;
 
-// Quick buttons
-var qWrap=document.getElementById("map-quick-btns");
-if(qWrap){QUICK.forEach(function(q){
-  var b=document.createElement("button");b.className="map-qbtn";b.textContent=q.label;
-  b.addEventListener("click",function(){ask("map",q.q);});
-  qWrap.appendChild(b);
-});}
+// Build SVG neighborhoods
+var nhGroup=document.getElementById("neighborhoods");
+var labelGroup=document.getElementById("map-labels");
+var pracGroup=document.getElementById("prac-nodes");
+var crisisGroup=document.getElementById("crisis-rings");
+var svg=document.getElementById("city-svg");
+
+NEIGHBORHOODS.forEach(function(nh){
+  var ns="http://www.w3.org/2000/svg";
+  // Neighborhood rect
+  var rect=document.createElementNS(ns,"rect");
+  rect.setAttribute("x",nh.x);rect.setAttribute("y",nh.y);
+  rect.setAttribute("width",nh.w);rect.setAttribute("height",nh.h);
+  rect.setAttribute("rx","8");
+  rect.setAttribute("fill",nh.color+"22");
+  rect.setAttribute("stroke",nh.color);
+  rect.setAttribute("stroke-width","1.5");
+  rect.setAttribute("stroke-opacity","0.5");
+  rect.setAttribute("cursor","pointer");
+  rect.setAttribute("class","nh-rect");
+  rect.dataset.id=nh.id;
+  rect.style.transition="all 0.2s";
+
+  // Score label
+  var score=document.createElementNS(ns,"text");
+  score.setAttribute("x",nh.x+nh.w/2);score.setAttribute("y",nh.y+nh.h/2-6);
+  score.setAttribute("text-anchor","middle");score.setAttribute("dominant-baseline","middle");
+  score.setAttribute("fill",nh.color);score.setAttribute("font-size","14");
+  score.setAttribute("font-weight","700");score.setAttribute("pointer-events","none");
+  score.textContent=nh.score;
+
+  // Name label
+  var name=document.createElementNS(ns,"text");
+  name.setAttribute("x",nh.x+nh.w/2);name.setAttribute("y",nh.y+nh.h/2+10);
+  name.setAttribute("text-anchor","middle");name.setAttribute("dominant-baseline","middle");
+  name.setAttribute("fill","#E8E0D0");name.setAttribute("font-size","9");
+  name.setAttribute("pointer-events","none");name.setAttribute("opacity","0.8");
+  name.textContent=nh.name;
+
+  // Click handler
+  rect.addEventListener("click",function(){selectNH(nh);});
+  rect.addEventListener("mouseover",function(){
+    rect.setAttribute("fill",nh.color+"44");
+    rect.setAttribute("stroke-opacity","1");
+  });
+  rect.addEventListener("mouseout",function(){
+    if(!selectedNH||selectedNH.id!==nh.id){
+      rect.setAttribute("fill",nh.color+"22");
+      rect.setAttribute("stroke-opacity","0.5");
+    }
+  });
+
+  nhGroup.appendChild(rect);
+  labelGroup.appendChild(score);
+  labelGroup.appendChild(name);
+
+  // Practitioner node (breathing dot)
+  if(layerState.practitioners){
+    var cx=nh.x+nh.w*0.75;var cy=nh.y+12;
+    var ring=document.createElementNS(ns,"circle");
+    ring.setAttribute("cx",cx);ring.setAttribute("cy",cy);ring.setAttribute("r","10");
+    ring.setAttribute("fill","none");ring.setAttribute("stroke","#2DD4A8");
+    ring.setAttribute("stroke-width","1");ring.setAttribute("opacity","0");
+    ring.setAttribute("class","prac-ring");
+    var anim=document.createElementNS(ns,"animate");
+    anim.setAttribute("attributeName","r");anim.setAttribute("from","6");anim.setAttribute("to","18");
+    anim.setAttribute("dur","2s");anim.setAttribute("repeatCount","indefinite");
+    anim.setAttribute("begin",(Math.random()*2)+"s");
+    var animO=document.createElementNS(ns,"animate");
+    animO.setAttribute("attributeName","opacity");animO.setAttribute("from","0.5");animO.setAttribute("to","0");
+    animO.setAttribute("dur","2s");animO.setAttribute("repeatCount","indefinite");
+    animO.setAttribute("begin",(Math.random()*2)+"s");
+    ring.appendChild(anim);ring.appendChild(animO);
+
+    var dot=document.createElementNS(ns,"circle");
+    dot.setAttribute("cx",cx);dot.setAttribute("cy",cy);dot.setAttribute("r","5");
+    dot.setAttribute("fill","#2DD4A8");dot.setAttribute("filter","url(#glow-f)");
+    dot.setAttribute("class","prac-dot");
+    var dotAnim=document.createElementNS(ns,"animate");
+    dotAnim.setAttribute("attributeName","r");dotAnim.setAttribute("values","4;6;4");
+    dotAnim.setAttribute("dur","2.5s");dotAnim.setAttribute("repeatCount","indefinite");
+    dotAnim.setAttribute("begin",(Math.random()*2)+"s");
+    dot.appendChild(dotAnim);
+
+    pracGroup.appendChild(ring);pracGroup.appendChild(dot);
+  }
+
+  // Crisis ring for low-score areas
+  if(nh.score < 40 && layerState.crisis){
+    var crx=nh.x+nh.w/2;var cry=nh.y+nh.h/2;
+    for(var ri=0;ri<2;ri++){
+      var cr=document.createElementNS(ns,"circle");
+      cr.setAttribute("cx",crx);cr.setAttribute("cy",cry);cr.setAttribute("r","8");
+      cr.setAttribute("fill","none");cr.setAttribute("stroke","#a32d2d");
+      cr.setAttribute("stroke-width","1.5");cr.setAttribute("opacity","0");
+      var ra=document.createElementNS(ns,"animate");
+      ra.setAttribute("attributeName","r");ra.setAttribute("from","8");ra.setAttribute("to","40");
+      ra.setAttribute("dur","3s");ra.setAttribute("repeatCount","indefinite");
+      ra.setAttribute("begin",(ri*1.5)+"s");
+      var oa=document.createElementNS(ns,"animate");
+      oa.setAttribute("attributeName","opacity");oa.setAttribute("from","0.6");oa.setAttribute("to","0");
+      oa.setAttribute("dur","3s");oa.setAttribute("repeatCount","indefinite");
+      oa.setAttribute("begin",(ri*1.5)+"s");
+      cr.appendChild(ra);cr.appendChild(oa);
+      crisisGroup.appendChild(cr);
+    }
+  }
+});
+
+function selectNH(nh){
+  selectedNH=nh;
+  // Reset all rects
+  document.querySelectorAll(".nh-rect").forEach(function(r){
+    var nhd=NEIGHBORHOODS.find(function(n){return n.id===r.dataset.id;});
+    if(nhd){r.setAttribute("fill",nhd.color+"22");r.setAttribute("stroke-opacity","0.5");}
+  });
+  // Highlight selected
+  var selRect=document.querySelector(".nh-rect[data-id='"+nh.id+"']");
+  if(selRect){selRect.setAttribute("fill",nh.color+"55");selRect.setAttribute("stroke-opacity","1");}
+  // Update panel
+  var scoreColor=nh.score>=70?"#1d9e75":nh.score>=50?"#ba7517":"#a32d2d";
+  var label=nh.score>=70?"High Access":nh.score>=50?"Moderate Access":"Healthcare Desert";
+  document.getElementById("nh-panel").innerHTML=
+    '<div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:10px">NEIGHBORHOOD INTEL</div>'+
+    '<div class="nh-name">'+nh.name+'</div>'+
+    '<div style="display:flex;align-items:center;gap:10px;margin:8px 0">'+
+    '<div class="nh-score" style="color:'+scoreColor+'">'+nh.score+'</div>'+
+    '<div><div style="font-size:11px;color:'+scoreColor+'">'+label+'</div>'+
+    '<div style="font-size:10px;color:#4A5B73">out of 100</div></div></div>'+
+    '<div style="font-size:11px;color:#7B8DA6;margin-bottom:4px">ZIP: '+nh.zip+' &bull; '+nh.prac+' practitioners</div>'+
+    '<div style="font-size:11px;color:#a32d2d;margin-bottom:10px;line-height:1.4">'+nh.crisis+'</div>'+
+    '<div style="height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin-bottom:12px">'+
+    '<div style="height:100%;width:'+nh.score+'%;background:'+scoreColor+';border-radius:2px;transition:width 1s ease"></div></div>'+
+    '<div class="nh-btns">'+
+    '<button class="nh-btn" onclick="ask(\'map\',\''+nh.q+'\')">Full Health Report</button>'+
+    '<button class="nh-btn" onclick="ask(\'map\',\'Find practitioners near '+nh.zip+' in '+nh.name+' New Orleans with phone numbers and specialties\')">Find Practitioners</button>'+
+    '<button class="nh-btn" onclick="ask(\'map\',\'What are the top 3 health crises in '+nh.name+' ZIP '+nh.zip+' and what BLEU interventions are deployed there?\')">Crisis Analysis</button>'+
+    '</div>';
+}
 
 // Layer buttons
-var lWrap=document.getElementById("map-layers");
-if(lWrap){LAYERS.forEach(function(l){
+var lbWrap=document.getElementById("layer-btns");
+LAYERS_DEF.forEach(function(l){
   var b=document.createElement("button");
-  b.className="lbtn"+(l.on?" on":"");
-  b.style.setProperty("--lc",l.color);
+  b.className="mob"+(l.on?" on":"");
   b.textContent=l.label;
-  if(l.on)b.style.borderColor=l.color;
+  b.style.borderLeftColor=l.on?l.color:"transparent";
+  b.style.borderLeftWidth="3px";
   b.addEventListener("click",function(){
-    b.classList.toggle("on");
-    var isOn=b.classList.contains("on");
-    b.style.borderColor=isOn?l.color:"rgba(45,138,158,.2)";
-    ask("map","Show me "+l.label+" resources in New Orleans on the map");
+    layerState[l.id]=!layerState[l.id];
+    b.classList.toggle("on",layerState[l.id]);
+    b.style.borderLeftColor=layerState[l.id]?l.color:"transparent";
+    var dots=document.querySelectorAll(".prac-dot,.prac-ring");
+    dots.forEach(function(d){d.style.display=layerState.practitioners?"":"none";});
+    ask("map","Show me "+l.label+" resources on the New Orleans health intelligence map");
   });
-  lWrap.appendChild(b);
-});}
-
-// Crisis grid
-var cg=document.getElementById("crisis-grid");
-if(cg){CRISES.forEach(function(c){
-  var d=document.createElement("div");d.className="cgcard";
-  d.innerHTML="<div class='cgnum' style='color:"+c.c+"'>"+c.n+"</div><div class='cglab'>"+c.l+"</div>";
-  d.style.borderColor="rgba(255,255,255,.05)";
-  d.addEventListener("mouseover",function(){d.style.borderColor=c.c+"55";});
-  d.addEventListener("mouseout",function(){d.style.borderColor="rgba(255,255,255,.05)";});
-  d.addEventListener("click",function(){ask("map","Tell me about the "+c.l+" crises that BLEU addresses and the specific interventions deployed in New Orleans");});
-  cg.appendChild(d);
-});}
+  lbWrap.appendChild(b);
+});
 
 // Crisis signals
-var cs=document.getElementById("crisis-signals");
-if(cs){SIGNALS.forEach(function(s){
+var csSig=document.getElementById("crisis-sigs");
+SIGNALS.forEach(function(s){
   var d=document.createElement("div");
-  d.style.cssText="display:flex;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px;";
-  var dot=document.createElement("div");dot.className="map-crisis-dot";dot.style.background=s.color;
-  var txt=document.createElement("span");txt.style.color=s.sev==="active"?"#1d9e75":"#7B8DA6";txt.textContent=s.label;
-  d.appendChild(dot);d.appendChild(txt);cs.appendChild(d);
-});}
-
-// ZIP grid
-var zg=document.getElementById("zip-grid");
-if(zg){ZIPS.forEach(function(z){
-  var d=document.createElement("div");
-  d.style.cssText="background:#0d1829;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s";
-  d.innerHTML="<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:6px'><span style='font-size:12px;font-weight:600;color:#E8E0D0'>"+z.zip+"</span><span style='font-size:11px;font-weight:600;color:"+z.color+"'>"+z.score+"/100</span></div><div style='font-size:11px;color:#7B8DA6;margin-bottom:6px'>"+z.name+"</div><div style='height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden'><div style='height:100%;width:"+z.score+"%;background:"+z.color+";border-radius:2px'></div></div><div style='font-size:10px;color:"+z.color+";margin-top:4px'>"+z.label+"</div>";
-  d.addEventListener("mouseover",function(){d.style.borderColor=z.color+"55";d.style.transform="translateY(-1px)";});
-  d.addEventListener("mouseout",function(){d.style.borderColor="rgba(255,255,255,.06)";d.style.transform="";});
-  d.addEventListener("click",function(){ask("map","What health infrastructure exists in ZIP code "+z.zip+" in "+z.name+" New Orleans? Show practitioners, recovery resources, and what BLEU can deploy there.");});
-  zg.appendChild(d);
-});}
-
-// Search
-var srchBtn=document.getElementById("map-search-btn");
-if(srchBtn)srchBtn.addEventListener("click",function(){
-  var v=document.getElementById("map-city-input").value.trim();
-  if(v)ask("map","Show me the health infrastructure in "+v+" -- practitioners, recovery resources, mental health clinics, food access, and any health deserts. Give me a full city health report.");
-});
-var inp=document.getElementById("map-city-input");
-if(inp)inp.addEventListener("keydown",function(e){if(e.key==="Enter"){srchBtn.click();}});
-
-// Ask btn
-var askBtn=document.getElementById("map-ask-btn");
-if(askBtn)askBtn.addEventListener("click",function(){
-  var v=document.getElementById("map-ask-input").value.trim();
-  if(v){ask("map",v);document.getElementById("map-ask-input").value="";}
-});
-var askInp=document.getElementById("map-ask-input");
-if(askInp)askInp.addEventListener("keydown",function(e){
-  if(e.key==="Enter"){askBtn.click();}
+  d.style.cssText="display:flex;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px;gap:7px";
+  var dot=document.createElement("div");
+  dot.style.cssText="width:7px;height:7px;border-radius:50%;background:"+s.c+";flex-shrink:0";
+  var t=document.createElement("span");t.style.color="#7B8DA6";t.textContent=s.t;
+  d.appendChild(dot);d.appendChild(t);csSig.appendChild(d);
 });
 
-// Locate
-window.mapLocate=function(){
-  if(!navigator.geolocation)return;
-  navigator.geolocation.getCurrentPosition(function(pos){
-    var lat=pos.coords.latitude.toFixed(4);
-    var lng=pos.coords.longitude.toFixed(4);
-    ask("map","What health infrastructure is near my location at "+lat+", "+lng+"? Show practitioners, recovery resources, and any nearby health deserts or crisis hotspots.");
+// Quick searches
+var qr=document.getElementById("qrow");
+QUICK_SEARCHES.forEach(function(q){
+  var b=document.createElement("button");b.className="qb";b.textContent=q;
+  b.addEventListener("click",function(){
+    ask("map",q+" in New Orleans -- give me specific locations, addresses, and how to connect with them");
   });
-};
+  qr.appendChild(b);
+});
+
+// Crisis categories
+var cg=document.getElementById("cgrid");
+CRISIS_CATS.forEach(function(c){
+  var d=document.createElement("div");d.className="ccard";
+  d.innerHTML="<div class='cnum' style='color:"+c.c+"'>"+c.n+"</div><div class='clab'>"+c.l+"</div>";
+  d.addEventListener("mouseover",function(){d.style.borderColor=c.c+"55";d.style.transform="translateY(-2px)";});
+  d.addEventListener("mouseout",function(){d.style.borderColor="rgba(255,255,255,.05)";d.style.transform="";});
+  d.addEventListener("click",function(){
+    ask("map","Tell me about the "+c.l+" crises in BLEU -- the evidence, the New Orleans impact, and the deployed interventions");
+  });
+  cg.appendChild(d);
+});
+
+// Ask Alvai
+var ab=document.getElementById("map-ab");
+var ai=document.getElementById("map-ai");
+if(ab)ab.addEventListener("click",function(){
+  var v=ai.value.trim();if(v){ask("map",v);ai.value="";}
+});
+if(ai)ai.addEventListener("keydown",function(e){if(e.key==="Enter")ab.click();});
+
+// Animate hero counter
+var pv=document.getElementById("prac-count");
+if(pv){
+  var count=0;var target=855;
+  var timer=setInterval(function(){
+    count+=15;if(count>=target){count=target;clearInterval(timer);}
+    pv.textContent=count+"K+";
+  },20);
+}
 
 });
 </script>
