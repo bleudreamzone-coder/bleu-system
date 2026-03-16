@@ -2217,10 +2217,10 @@ id="in-vessel" placeholder="What supplements should I take? What interacts with 
   </div>
 </div>
 
-<div class="chat-box chat-area" id="map-chat" style="min-height:40px;margin-bottom:8px"></div>
+<div class="chat-box chat-area" id="chat-map" style="min-height:40px;margin-bottom:8px"></div>
 <div class="ci-qs" id="ci-qs"></div>
 <div class="ci-ask">
-  <input class="ci-ask-input" id="ci-ai" placeholder="Ask about any neighborhood, practitioner, crisis, or city..."/>
+  <input class="ci-ask-input" id="in-map" placeholder="Ask about any neighborhood, practitioner, crisis, or city..."/>
   <button class="ci-ask-btn" id="ci-ab">Ask Alvai</button>
   <button class="ci-loc-btn" onclick="ciLoc()">My Location</button>
 </div>
@@ -2404,9 +2404,9 @@ var qs=document.getElementById("ci-qs");
 if(qs){["Recovery Centers","Mental Health","AA and NA","Yoga Studios","Healthy Food","Hospitals","Telehealth Now","Crisis Help","Chronic Pain","Grief Support"].forEach(function(q){var b=document.createElement("button");b.className="ci-q";b.textContent=q;b.addEventListener("click",function(){ask("map",q+" in New Orleans");});qs.appendChild(b);});}
 
 /* ASK BAR */
-var ab=document.getElementById("ci-ab"),ai=document.getElementById("ci-ai");
-if(ab)ab.addEventListener("click",function(){var v=ai?ai.value.trim():"";if(v){ask("map",v);if(ai)ai.value="";}});
-if(ai)ai.addEventListener("keydown",function(e){if(e.key==="Enter"&&ab)ab.click();});
+var ab=document.getElementById("ci-ab"),ai=document.getElementById("in-map");
+if(ab)ab.addEventListener("click",function(){send("map");});
+if(ai)ai.addEventListener("keydown",function(e){if(e.key==="Enter")send("map");});
 window.ciLoc=function(){if(!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(function(pos){ask("map","Health resources near me at "+pos.coords.latitude.toFixed(4)+","+pos.coords.longitude.toFixed(4));});};
 
 /* LIVE FEED */
