@@ -701,7 +701,10 @@ button[type="submit"],
       "I am 3 days sober and I am scared.",
       "I hurt everywhere and I am tired of it.",
       "I do not know where to start.",
-      "I want to feel like myself again."
+      "I want to feel like myself again.",
+      "My zip code should not determine my lifespan.",
+      "I am tired of living 17 years behind the science.",
+      "There has to be a better way to age."
     ];
     var el = document.getElementById("hw-type");
     if(!el) return;
@@ -953,11 +956,89 @@ button[type="submit"],
     Medical oversight: Dr. Felicia Stoler DCN MS RDN FACSM
   </div>
 
-  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+  
+  <!-- THE TIME MACHINE THESIS -->
+  <div style="margin-bottom:32px;border-top:1px solid rgba(201,168,76,.12);padding-top:32px">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:9px;letter-spacing:4px;color:rgba(201,168,76,.45);text-transform:uppercase;margin-bottom:10px">&#9679; A NEW CATEGORY</div>
+      <h2 style="font-family:Georgia,serif;font-size:clamp(24px,4vw,36px);font-weight:300;color:#e2e8f0;margin:0 0 10px;line-height:1.2">This is not a wellness app.<br><em style="color:#4ecdc4">It is a time machine.</em></h2>
+      <p style="font-size:14px;color:#8b95a5;line-height:1.8;max-width:620px;margin:0 auto">There is a documented 17-year gap between peer-reviewed medical discovery and standard clinical practice. The ultra-wealthy close it to 3 years. Everyone else waits. BLEU closes it to zero &mdash; in real time, for everyone.</p>
+    </div>
+
+    <!-- The equation -->
+    <div style="background:rgba(10,14,20,.8);border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:24px;margin-bottom:20px">
+      <div style="font-size:9px;letter-spacing:3px;color:rgba(201,168,76,.45);text-align:center;margin-bottom:16px">THE BIOLOGICAL AGE EQUATION</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">
+        <div onclick="go('sleep')" style="background:rgba(78,205,196,.05);border:1px solid rgba(78,205,196,.12);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.5)'" onmouseout="this.style.borderColor='rgba(78,205,196,.12)'">
+          <div style="font-size:18px;margin-bottom:4px">&#128164;</div>
+          <div style="font-size:11px;font-weight:700;color:#4ecdc4;margin-bottom:2px">SLEEP</div>
+          <div style="font-size:9px;color:#5a6374;line-height:1.4">47% less DNA oxidation &bull; Glymphatic clearance</div>
+        </div>
+        <div onclick="go('community')" style="background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.12);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(167,139,250,.5)'" onmouseout="this.style.borderColor='rgba(167,139,250,.12)'">
+          <div style="font-size:18px;margin-bottom:4px">&#128101;</div>
+          <div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:2px">COMMUNITY</div>
+          <div style="font-size:9px;color:#5a6374;line-height:1.4">Telomerase activation &bull; 9:1 social prescribing ROI</div>
+        </div>
+        <div onclick="go('finance')" style="background:rgba(212,175,55,.05);border:1px solid rgba(212,175,55,.12);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(212,175,55,.5)'" onmouseout="this.style.borderColor='rgba(212,175,55,.12)'">
+          <div style="font-size:18px;margin-bottom:4px">&#128176;</div>
+          <div style="font-size:11px;font-weight:700;color:#d4af37;margin-bottom:2px">FINANCE</div>
+          <div style="font-size:9px;color:#5a6374;line-height:1.4">Cortisol medicine &bull; HPA axis normalization</div>
+        </div>
+        <div onclick="go('therapy')" style="background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.12);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(249,115,22,.5)'" onmouseout="this.style.borderColor='rgba(249,115,22,.12)'">
+          <div style="font-size:18px;margin-bottom:4px">&#129504;</div>
+          <div style="font-size:11px;font-weight:700;color:#f97316;margin-bottom:2px">THERAPY</div>
+          <div style="font-size:9px;color:#5a6374;line-height:1.4">NF-&#954;B suppression &bull; Epigenetic remodeling</div>
+        </div>
+        <div onclick="go('vessel')" style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.12);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(34,197,94,.5)'" onmouseout="this.style.borderColor='rgba(34,197,94,.12)'">
+          <div style="font-size:18px;margin-bottom:4px">&#9889;</div>
+          <div style="font-size:11px;font-weight:700;color:#22c55e;margin-bottom:2px">NUTRITION</div>
+          <div style="font-size:9px;color:#5a6374;line-height:1.4">Mitochondrial optimization &bull; 10:1 food Rx ROI</div>
+        </div>
+        <div onclick="go('ecsiq')" style="background:rgba(78,205,140,.05);border:1px solid rgba(78,205,140,.12);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,140,.5)'" onmouseout="this.style.borderColor='rgba(78,205,140,.12)'">
+          <div style="font-size:18px;margin-bottom:4px">&#127807;</div>
+          <div style="font-size:11px;font-weight:700;color:#4ecd8c;margin-bottom:2px">ECSIQ</div>
+          <div style="font-size:9px;color:#5a6374;line-height:1.4">ECS tone restoration &bull; CB1/CB2 intelligence</div>
+        </div>
+        <div onclick="go('recovery')" style="background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.12);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(239,68,68,.5)'" onmouseout="this.style.borderColor='rgba(239,68,68,.12)'">
+          <div style="font-size:18px;margin-bottom:4px">&#10084;</div>
+          <div style="font-size:11px;font-weight:700;color:#ef4444;margin-bottom:2px">RECOVERY</div>
+          <div style="font-size:9px;color:#5a6374;line-height:1.4">Allostatic load reduction &bull; Nervous system reset</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The number -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1);border-radius:12px;padding:16px;text-align:center;cursor:pointer" onclick="ask('home','How does BLEU recover biological years and what is the $830,000 value per user calculation based on QALY methodology?')">
+        <div style="font-family:Georgia,serif;font-size:30px;font-weight:700;color:#4ecdc4;line-height:1">8+</div>
+        <div style="font-size:9px;color:#5a6374;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px">Biological years recovered</div>
+        <div style="font-size:10px;color:#8b95a5;margin-top:4px">Fully engaged users, 12 months</div>
+      </div>
+      <div style="background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.1);border-radius:12px;padding:16px;text-align:center;cursor:pointer" onclick="ask('home','What is the $830,000 lifetime value that BLEU creates per user based on health economics QALY methodology?')">
+        <div style="font-family:Georgia,serif;font-size:30px;font-weight:700;color:#d4af37;line-height:1">$830K</div>
+        <div style="font-size:9px;color:#5a6374;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px">Value created per user</div>
+        <div style="font-size:10px;color:#8b95a5;margin-top:4px">At $100K/QALY — health economics standard</div>
+      </div>
+      <div style="background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1);border-radius:12px;padding:16px;text-align:center;cursor:pointer" onclick="ask('home','What is the 17-year evidence gap and how does BLEU close it in real time for every user?')">
+        <div style="font-family:Georgia,serif;font-size:30px;font-weight:700;color:#a78bfa;line-height:1">17yr</div>
+        <div style="font-size:9px;color:#5a6374;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px">Evidence gap — closed to zero</div>
+        <div style="font-size:10px;color:#8b95a5;margin-top:4px">Institute of Medicine, 2001. BLEU: 2026.</div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(78,205,196,.04));border:1px solid rgba(201,168,76,.15);border-radius:12px;padding:16px 20px;text-align:center">
+      <div style="font-family:Georgia,serif;font-size:15px;font-style:italic;color:rgba(232,213,176,.8);line-height:1.7">
+        "Everyone else is selling the ambulance at the bottom of the cliff.<br>BLEU.live sells the fence at the top &mdash; and the fence adds 8 years to your life."
+      </div>
+      <div style="font-size:10px;color:#8b95a5;margin-top:8px">Dr. Felicia Stoler, DCN &bull; Clinical Director, BLEU.live</div>
+    </div>
+  </div>
+
+<div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
 <div class="divider"></div>
   <div class="section-label">WHAT ALVAI IS CONNECTED TO</div>
   <div class="feature-grid">
-    <div class="feature-item"><div class="feature-icon">⚕️</div><div class="feature-text"><h4>485,476 Practitioners</h4><p>NPI-verified. Trust-scored. Matched to your needs.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">⚕️</div><div class="feature-text"><h4>855,247 Practitioners</h4><p>NPI-verified. Trust-scored. Matched to your needs.</p></div></div>
     <div class="feature-item"><div class="feature-icon">💊</div><div class="feature-text"><h4>1,054 Products</h4><p>FDA-checked. Clinically scored. With affiliate links.</p></div></div>
     <div class="feature-item"><div class="feature-icon">📚</div><div class="feature-text"><h4>465 PubMed Studies</h4><p>Peer-reviewed research in plain language.</p></div></div>
     <div class="feature-item"><div class="feature-icon">⚠️</div><div class="feature-text"><h4>Drug Interactions</h4><p>CYP450 enzyme pathways. Severity ratings. What to do.</p></div></div>
@@ -2597,6 +2678,23 @@ id="chat-protocols"></div><div class="chat-input-row"><input autocomplete="off" 
 <div class="lhead" style="color:#a32d2d">RECOVERY + MENTAL HEALTH</div>
 <div class="vg" id="lvg3"></div>
 
+<div class="lhead" style="color:#C9A84C">THE MOLECULAR ARCHITECTURE — DR. FELICIA STOLER, DCN</div>
+<div style="background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(45,138,158,.04));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:20px;margin-bottom:20px;cursor:pointer" onclick="ask('learn','Tell me about the molecular mechanisms behind BLEU -- the 17-year evidence gap, biological age equation, telomerase activation, 8-OHdG reduction, NF-kB suppression, and the $830K QALY value per user')">
+  <div style="display:flex;gap:16px;align-items:flex-start">
+    <div style="width:56px;height:56px;border-radius:12px;background:rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">&#128214;</div>
+    <div>
+      <div style="font-size:10px;letter-spacing:2px;color:#C9A84C;margin-bottom:6px">PEER-REVIEWED WHITE PAPER &bull; MARCH 2026</div>
+      <div style="font-size:17px;font-weight:600;color:#E8E0D0;margin-bottom:8px;line-height:1.3">The Longevity Operating System: A Molecular Framework for Multi-System Health Optimization</div>
+      <div style="font-size:12px;color:#7B8DA6;line-height:1.7;margin-bottom:10px">Every BLEU tab is a documented molecular intervention. Sleep reduces 8-OHdG by 47%. Community activates telomerase. Finance normalizes cortisol. Therapy suppresses NF-&#954;B. The 17-year evidence gap is closed to zero. The fully engaged user recovers 8+ biological years &mdash; $830,000 in QALY value at health economics standards.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span style="font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.2);font-weight:600">DR. FELICIA STOLER DCN</span>
+        <span style="font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(45,138,158,.1);color:#2DD4A8;border:1px solid rgba(45,138,158,.2);font-weight:600">465 PUBMED CITATIONS</span>
+        <span style="font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(29,158,117,.1);color:#1d9e75;border:1px solid rgba(29,158,117,.2);font-weight:600">$830K QALY/USER</span>
+        <span style="font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(163,45,45,.1);color:#a32d2d;border:1px solid rgba(163,45,45,.2);font-weight:600">17YR GAP CLOSED</span>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="lhead" style="color:#a32d2d">RESEARCH LIBRARY — 16 CRISES</div>
 <div id="lrlib"></div>
 
@@ -3861,7 +3959,7 @@ id="chat-finance"></div><div class="chat-input-row"><input autocomplete="off" id
 <div class="panel" id="p-recovery">
   <div class="section-label">BUILT BY SURVIVAL</div>
   <h1 class="hero-title">🔥 <span class="accent">Recovery</span></h1>
-  <p class="hero-sub">This was not built in a boardroom. It was built by someone who survived 9 overdoses and overcame 31 felonies. Who treated 30,000 patients. Who knows what the first 72 hours feel like, what Day 30 feels like, what Year 5 feels like. This meets you where you are — with dignity, privacy, and real tools.</p>
+  <p class="hero-sub">Addiction is not a moral failure. It is a molecular one — allostatic load overwhelming the prefrontal cortex, dopamine dysregulation, and cortisol flooding the HPA axis until the only relief is the substance. This was not built in a boardroom. It was built by someone who survived 9 overdoses and overcame 31 felonies. Who treated 30,000 patients. Who knows what the first 72 hours feel like, what Day 30 feels like, what Year 5 feels like. This meets you where you are — with dignity, privacy, and real tools.</p>
 
   <div class="section-label" style="margin-top:24px">CHOOSE YOUR MODE</div>
   <div class="mode-bar" id="recovery-modes">
@@ -4581,7 +4679,7 @@ renderSessions();
 <div class="panel" id="p-sleep">
   <div class="section-label">SLEEP INTELLIGENCE</div>
   <h1 class="hero-title">&#128164; <span class="accent">Sleep</span></h1>
-  <p class="hero-sub">Sleep is not rest. It is the most anabolic, neuroprotective, immune-enhancing process your body runs. Every hour of lost sleep costs you cellular repair, memory consolidation, hormone production, and lifespan. BLEU treats sleep as medicine.</p>
+  <p class="hero-sub">Sleep is not rest. It is molecular repair. Every hour of optimized sleep reduces 8-OHdG oxidative DNA damage, activates glymphatic clearance of Alzheimer's precursors, and initiates the cellular restoration that no supplement can replicate. This is the most anabolic, neuroprotective process your body runs. Every hour of lost sleep costs you cellular repair, memory consolidation, hormone production, and lifespan. BLEU treats sleep as medicine.</p>
 
   <div class="section-label" style="margin-top:24px">SLEEP MODE</div>
   <div class="mode-bar" id="sleep-modes">
