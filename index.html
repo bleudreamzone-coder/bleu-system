@@ -591,22 +591,22 @@ button[type="submit"],
 <!-- ═══════════════════════ NAV ═══════════════════════ -->
 <nav class="nav" id="nav">
   <div class="nav-logo" onclick="go('home')">BLEU</div>
-  <div class="nav-tab active" onclick="go('home')">Home</div>
-  <div class="nav-tab" onclick="go('alvai')">Alvai ✦</div>
-  <div class="nav-tab" onclick="go('dashboard')">Dashboard</div>
-  <div class="nav-tab" onclick="go('directory')">Directory</div>
-  <div class="nav-tab" onclick="go('vessel')">Vessel</div>
-  <div class="nav-tab" onclick="go('map')">Map</div>
-  <div class="nav-tab" onclick="go('learn')">Learn</div>
-  <div class="nav-tab" onclick="go('community')">Community</div>
-  <div class="nav-tab" onclick="go('passport')">Passport</div>
-  <div class="nav-tab t2" onclick="go('therapy')">Therapy</div>
-  <div class="nav-tab t2" onclick="go('finance')">Finance</div>
-  <div class="nav-tab t3" onclick="go('recovery')">Recovery</div>
-  <div class="nav-tab t3" onclick="go('ecsiq')">🌿 ECSIQ</div>
-  <div class="nav-tab t3" onclick="go('sleep')">💤 Sleep</div>
-  <div class="nav-tab t3" onclick="go('enterprise')">Enterprise</div>
-  <div class="nav-tab t3" onclick="go('spirit')">🕊 Spirit</div>
+  <div data-tab="home" class="nav-tab active" onclick="go('home')">Home</div>
+  <div data-tab="alvai" class="nav-tab" onclick="go('alvai')">Alvai ✦</div>
+  <div data-tab="dashboard" class="nav-tab" onclick="go('dashboard')">Dashboard</div>
+  <div data-tab="directory" class="nav-tab" onclick="go('directory')">Directory</div>
+  <div data-tab="vessel" class="nav-tab" onclick="go('vessel')">Vessel</div>
+  <div data-tab="map" class="nav-tab" onclick="go('map')">Map</div>
+  <div data-tab="learn" class="nav-tab" onclick="go('learn')">Learn</div>
+  <div data-tab="community" class="nav-tab" onclick="go('community')">Community</div>
+  <div data-tab="passport" class="nav-tab" onclick="go('passport')">Passport</div>
+  <div data-tab="therapy" class="nav-tab t2" onclick="go('therapy')">Therapy</div>
+  <div data-tab="finance" class="nav-tab t2" onclick="go('finance')">Finance</div>
+  <div data-tab="recovery" class="nav-tab t3" onclick="go('recovery')">Recovery</div>
+  <div data-tab="ecsiq" class="nav-tab t3" onclick="go('ecsiq')">🌿 ECSIQ</div>
+  <div data-tab="sleep" class="nav-tab t3" onclick="go('sleep')">💤 Sleep</div>
+  <div data-tab="enterprise" class="nav-tab t3" onclick="go('enterprise')">Enterprise</div>
+  <div data-tab="spirit" class="nav-tab t3" onclick="go('spirit')">🕊 Spirit</div>
 </nav>
 
 <!-- ═══════════════════════ HOME ═══════════════════════ -->
@@ -5347,9 +5347,14 @@ function go(tab){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'))
   const panel=document.getElementById('p-'+tab)
   if(panel)panel.classList.add('active')
-  document.querySelectorAll('.nav-tab').forEach(t=>{if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("go('"+tab+"')"))t.classList.add('active')})
+  var activeTab=document.querySelector('.nav-tab[data-tab="'+tab+'"]');
+  if(activeTab)activeTab.classList.add('active')
   window.scrollTo({top:0,behavior:'smooth'})
   if(tab==='passport'){setTimeout(initPassport,80)}
+  if(tab==='enterprise'){setTimeout(function(){if(typeof initAll==='function')initAll();},200)}
+  if(tab==='sleep'||tab==='spirit'){setTimeout(function(){
+    document.querySelectorAll('#p-'+tab+' .s-fade, #p-'+tab+' [style*="opacity:0"]').forEach(function(el){el.style.opacity='1';el.style.transform='none';});
+  },100);}
   setTimeout(()=>{document.querySelectorAll('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('visible')})},100)
 }
 
