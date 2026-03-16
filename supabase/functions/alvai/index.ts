@@ -286,7 +286,7 @@ function detectLookupNeeds(message: string) {
   const msg = message.toLowerCase();
   const needs: any = { practitioners: false, products: false, query: "", searchOptions: {}, needsPubMed: false, medicationDetected: null };
   const practitionerWords = ["therapist","doctor","practitioner","counselor","psychologist","psychiatrist","provider","specialist","nurse","dietitian","nutritionist","find me","refer","recommend a","who can help","someone to talk to","mental health professional","treatment center","rehab","clinic","in person","in-person","near me","close to me","cbd area","uptown","garden district","mid-city","french quarter","marigny","bywater","metairie","in new orleans","in nola"];
-  const productWords = ["supplement","vitamin","product","melatonin","magnesium","ashwagandha","cbd","theanine","probiotic","omega","what should i take","natural remedy","trust score"];
+  const productWords = ["function health","insidetracker","oura ring","cgm","levels","biological age","biomarker","metabolic score","supplement","vitamin","product","melatonin","magnesium","ashwagandha","cbd","theanine","probiotic","omega","what should i take","natural remedy","trust score"];
   if (practitionerWords.some(w => msg.includes(w))) {
     needs.practitioners = true;
     if (msg.includes("new orleans")||msg.includes("nola")) { needs.searchOptions.state="LA"; needs.searchOptions.zipPrefix="701"; }
@@ -930,13 +930,13 @@ Connect dots between tabs explicitly — Therapy connects to Vessel. Make that v
 // ═══════════════════════════════════════════════════════════════
 const AFFILIATE_MAP: Record<string, {name:string;why:string;link:string;price?:string;label?:string}[]> = {
   sleep:[{name:"Magnesium Glycinate 400mg",why:"The GABA-A pathway agonist that most people are deficient in. Glycinate crosses the blood-brain barrier. Take 1 hour before bed. Not oxide — that's a laxative.",link:"https://amazon.com/s?k=magnesium+glycinate+400mg&tag=bleu-live-20",price:"~$15",label:"Amazon"}],
-  anxiety:[{name:"Ashwagandha KSM-66",why:"KSM-66 has 22 clinical trials specifically. Reduces cortisol 30% in 60 days. Run 6-week cycles.",link:"https://amazon.com/s?k=ashwagandha+ksm-66&tag=bleu-live-20",price:"~$22",label:"Amazon"},{name:"L-Theanine 200mg",why:"Crosses the blood-brain barrier in 30 minutes. Raises alpha wave activity — same brain state as eyes-closed meditation.",link:"https://iherb.com/search?kw=l-theanine+200mg&rcode=BLEU",price:"~$13",label:"iHerb"}],
+  anxiety:[{name:"Ashwagandha KSM-66",why:"KSM-66 has 22 clinical trials specifically. Reduces cortisol 30% in 60 days. Run 6-week cycles.",link:"https://amazon.com/s?k=ashwagandha+ksm-66&tag=bleu-live-20",price:"~$22",label:"Amazon"},{name:"L-Theanine 200mg",why:"Crosses the blood-brain barrier in 30 minutes. Raises alpha wave activity — same brain state as eyes-closed meditation.",link:"https://fullscript.com/plans/bleuplatform/search?kw=l-theanine+200mg&",price:"~$13",label:"Fullscript"}],
   inflammation:[{name:"Omega-3 2000mg EPA/DHA",why:"EPA is the anti-inflammatory. 2:1 EPA:DHA. Nordic Naturals and Carlson are third-party tested for oxidation.",link:"https://amazon.com/s?k=nordic+naturals+omega-3&tag=bleu-live-20",price:"~$28",label:"Amazon"}],
-  energy:[{name:"Vitamin D3+K2 5000IU",why:"42% of Americans deficient. D3 is the energy and immune version. K2 routes calcium to bones. Take with fat.",link:"https://amazon.com/s?k=vitamin+d3+k2+5000iu&tag=bleu-live-20",price:"~$17",label:"Amazon"},{name:"CoQ10 Ubiquinol 200mg",why:"Mitochondrial fuel. Ubiquinol is 8x more bioavailable than ubiquinone. Critical if on statins.",link:"https://iherb.com/search?kw=ubiquinol+200mg&rcode=BLEU",price:"~$32",label:"iHerb"}],
+  energy:[{name:"Vitamin D3+K2 5000IU",why:"42% of Americans deficient. D3 is the energy and immune version. K2 routes calcium to bones. Take with fat.",link:"https://amazon.com/s?k=vitamin+d3+k2+5000iu&tag=bleu-live-20",price:"~$17",label:"Amazon"},{name:"CoQ10 Ubiquinol 200mg",why:"Mitochondrial fuel. Ubiquinol is 8x more bioavailable than ubiquinone. Critical if on statins.",link:"https://fullscript.com/plans/bleuplatform/search?kw=ubiquinol+200mg&",price:"~$32",label:"Fullscript"}],
   therapy:[{name:"BetterHelp",why:"Licensed therapists matched within 48 hours. $60-100/week. CBT, DBT, trauma, grief, couples. Nationwide licensing.",link:"https://betterhelp.com/bleu",price:"from $60/wk",label:"BetterHelp"},{name:"Talkspace",why:"Text your therapist anytime — good for 3am thoughts. Licensed nationwide. More flexible than in-person.",link:"https://talkspace.com",price:"from $69/wk",label:"Talkspace"}],
   prescription:[{name:"GoodRx",why:"Free. No insurance needed. Up to 80% off. Show it at the pharmacy counter before they ring anything up.",link:"https://goodrx.com",price:"Free",label:"GoodRx"},{name:"Cost Plus Drugs",why:"Manufacturing cost + 15% + $3 pharmacist fee. Metformin $5. Statins $3.",link:"https://costplusdrugs.com",price:"At-cost",label:"Cost Plus"}],
   fitness:[{name:"ClassPass",why:"One membership — gyms, yoga, pilates, cycling, swimming, boxing. Hundreds of studios. No long-term contract.",link:"https://classpass.com",price:"from $19/mo",label:"ClassPass"}],
-  cannabis:[{name:"iHerb CBD",why:"Third-party tested hemp-derived CBD. iHerb vets every brand — no pesticides, accurate labeling. Code BLEU for 5% off.",link:"https://iherb.com/search?kw=cbd&rcode=BLEU",price:"varies",label:"iHerb"}],
+  cannabis:[{name:"Fullscript CBD",why:"Third-party tested hemp-derived CBD. Fullscript vets every brand — no pesticides, accurate labeling. Code BLEU for 5% off.",link:"https://fullscript.com/plans/bleuplatform/search?kw=cbd&",price:"varies",label:"Fullscript"}],
   weight:[{name:"Berberine HCl 1200mg",why:"Natural GLP-1 sensitizer. Reduces fasting glucose comparably to Metformin in multiple RCTs. $20/month.",link:"https://amazon.com/s?k=berberine+1200mg&tag=bleu-live-20",price:"~$20/mo",label:"Amazon"},{name:"Hims GLP-1",why:"Telehealth prescriber for semaglutide and tirzepatide. Bloodwork required first. 95% qualify.",link:"https://forhims.com/weight-loss",price:"from $199/mo",label:"Hims"}],
   bloodwork:[{name:"Function Health",why:"100+ biomarkers annually — hormones, metabolic panel, thyroid, inflammation, nutrients. $499/yr.",link:"https://functionhealth.com",price:"$499/yr",label:"Function Health"},{name:"LabCorp OnDemand",why:"Order your own labs without a doctor's order. Results to your phone.",link:"https://ondemand.labcorp.com",price:"varies",label:"LabCorp"}],
   media:[{name:"Audible",why:"Start with the wellness trinity: Why We Sleep (Walker), The Body Keeps the Score (van der Kolk), Atomic Habits (Clear).",link:"https://audible.com?source_code=BLEU",price:"$14.95/mo",label:"Audible"},{name:"Brain.fm",why:"Neuroscience-designed music for focus, deep work, and sleep. Built with actual neural research.",link:"https://brain.fm",price:"$6.99/mo",label:"Brain.fm"}],
@@ -953,7 +953,7 @@ const AFFILIATE_MAP: Record<string, {name:string;why:string;link:string;price?:s
 
 
 // ═══════════════════════════════════════════════════════════════════════════
-// PROTOCOL BUNDLE CART — Zero-click Amazon + iHerb pre-built carts
+// PROTOCOL BUNDLE CART — Zero-click Amazon + Fullscript pre-built carts
 // One URL per protocol — user lands at checkout with everything already in it
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -969,7 +969,7 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Sleep Restoration Protocol",
     items: ["Magnesium Glycinate 400mg", "L-Theanine 200mg", "Insight Timer (free)"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00M9D42HM&Quantity.1=1&ASIN.2=B001DZKHGA&Quantity.2=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://iherb.com/search?kw=magnesium+glycinate+l-theanine&rcode=BLEU",
+    iherb_cart: "https://fullscript.com/plans/bleuplatform/search?kw=magnesium+glycinate+l-theanine&",
     duration: "21 days",
     est_cost: "~$28/mo",
   },
@@ -977,7 +977,7 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Cortisol Sleep Protocol",
     items: ["Ashwagandha KSM-66 600mg", "Phosphatidylserine 200mg", "Magnesium Glycinate 400mg"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00M9D42HM&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://iherb.com/search?kw=ashwagandha+ksm66+phosphatidylserine&rcode=BLEU",
+    iherb_cart: "https://fullscript.com/plans/bleuplatform/search?kw=ashwagandha+ksm66+phosphatidylserine&",
     duration: "42 days",
     est_cost: "~$45/mo",
   },
@@ -985,7 +985,7 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Anxiety Relief Protocol",
     items: ["L-Theanine 200mg", "Ashwagandha KSM-66 300mg", "Magnesium Glycinate 300mg"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B001DZKHGA&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://iherb.com/search?kw=l-theanine+ashwagandha+magnesium&rcode=BLEU",
+    iherb_cart: "https://fullscript.com/plans/bleuplatform/search?kw=l-theanine+ashwagandha+magnesium&",
     duration: "30 days",
     est_cost: "~$35/mo",
   },
@@ -993,7 +993,7 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Anti-Inflammation Protocol",
     items: ["Omega-3 EPA/DHA 2000mg", "Curcumin Phytosome 500mg", "Vitamin D3+K2 5000IU"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B002CQU564&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://iherb.com/search?kw=omega3+curcumin+phytosome+vitamin+d3&rcode=BLEU",
+    iherb_cart: "https://fullscript.com/plans/bleuplatform/search?kw=omega3+curcumin+phytosome+vitamin+d3&",
     duration: "60 days",
     est_cost: "~$55/mo",
   },
@@ -1001,7 +1001,7 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Energy + Focus Protocol",
     items: ["CoQ10 Ubiquinol 200mg", "Vitamin D3+K2 5000IU", "Vitamin B-Complex"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00I5JV0AC&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://iherb.com/search?kw=ubiquinol+200mg+vitamin+d3+b-complex&rcode=BLEU",
+    iherb_cart: "https://fullscript.com/plans/bleuplatform/search?kw=ubiquinol+200mg+vitamin+d3+b-complex&",
     duration: "30 days",
     est_cost: "~$42/mo",
   },
@@ -1009,7 +1009,7 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Mood + Mental Health Protocol",
     items: ["Omega-3 EPA-dominant 2000mg", "Vitamin D3 5000IU", "Magnesium Glycinate 400mg"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B002CQU564&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://iherb.com/search?kw=omega3+epa+vitamin+d3+magnesium+glycinate&rcode=BLEU",
+    iherb_cart: "https://fullscript.com/plans/bleuplatform/search?kw=omega3+epa+vitamin+d3+magnesium+glycinate&",
     duration: "60 days",
     est_cost: "~$40/mo",
   },
@@ -1017,7 +1017,7 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Metabolic Reset Protocol",
     items: ["Berberine HCl 1500mg", "Chromium Picolinate 400mcg", "Omega-3 2000mg"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B07BG2CNKD&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://iherb.com/search?kw=berberine+chromium+omega3&rcode=BLEU",
+    iherb_cart: "https://fullscript.com/plans/bleuplatform/search?kw=berberine+chromium+omega3&",
     duration: "90 days",
     est_cost: "~$38/mo",
   },
@@ -1125,8 +1125,8 @@ const PRESCRIPTION_MAP: Record<string, {
     timing: "5 hours before your desired sleep time. If you want to sleep at 11pm, take at 6pm.",
     mechanism: "This is chronobiological phase shifting, not sedation. Melatonin at low dose advances the circadian phase. High-dose melatonin at bedtime is a pharmaceutical myth that became a habit.",
     duration: "3-week protocol. If you're not shifting within 10 days, the pattern is behavioral not hormonal.",
-    link: "https://iherb.com/search?kw=melatonin+0.5mg&rcode=BLEU",
-    label: "iHerb", price: "~$8/mo",
+    link: "https://fullscript.com/plans/bleuplatform/search?kw=melatonin+0.5mg&",
+    label: "Fullscript", price: "~$8/mo",
     nutrition: "No screens after 9pm — blue light suppresses melatonin onset regardless of supplement dose.",
     movement: "Morning sunlight in the eyes within 30 minutes of waking. This is the most powerful free circadian anchor that exists.",
   },
@@ -1136,8 +1136,8 @@ const PRESCRIPTION_MAP: Record<string, {
     timing: "L-Theanine: 30 minutes before the stressor. Ashwagandha: with dinner daily.",
     mechanism: "Theanine raises alpha wave activity — the same brain state as eyes-closed meditation — within 30 minutes of dosing. Ashwagandha works on the HPA axis over 4-6 weeks to lower the baseline cortisol level that makes everything feel harder.",
     duration: "Theanine: indefinite as needed. Ashwagandha: 12-week cycles with 2-week breaks.",
-    link: "https://iherb.com/search?kw=l-theanine+200mg&rcode=BLEU",
-    label: "iHerb", price: "~$13/mo",
+    link: "https://fullscript.com/plans/bleuplatform/search?kw=l-theanine+200mg&",
+    label: "Fullscript", price: "~$13/mo",
     therapy: "Somatic therapy or EMDR if the anxiety pattern has a trauma root. CBT if it is primarily cognitive. The distinction matters — CBT on an unresolved trauma response often fails.",
     movement: "Zone 2 cardio only — HIIT raises cortisol short-term and can worsen anxiety in the first 6 weeks.",
   },
@@ -1168,8 +1168,8 @@ const PRESCRIPTION_MAP: Record<string, {
     timing: "All three with breakfast and fat. D3 and CoQ10 are fat-soluble — absorption is significantly reduced without dietary fat.",
     mechanism: "Ubiquinol is the active, reduced form of CoQ10 — 8x more bioavailable than ubiquinone. It is the electron carrier in the mitochondrial ATP production chain. D3 deficiency (>40% of population) directly impairs mitochondrial function. K2 routes the calcium that D3 mobilizes to bone instead of arteries.",
     duration: "Ongoing. Check D3 levels (25-OH vitamin D) at 90 days — target 50-70 ng/mL.",
-    link: "https://iherb.com/search?kw=ubiquinol+200mg&rcode=BLEU",
-    label: "iHerb", price: "~$38/mo combined",
+    link: "https://fullscript.com/plans/bleuplatform/search?kw=ubiquinol+200mg&",
+    label: "Fullscript", price: "~$38/mo combined",
   },
   energy_statin: {
     rx: "CoQ10 Ubiquinol 400mg — this is specifically urgent if you are on a statin",
@@ -1198,8 +1198,8 @@ const PRESCRIPTION_MAP: Record<string, {
     timing: "Probiotic with first meal. L-Glutamine on an empty stomach — mixes easily in water.",
     mechanism: "L-glutamine is the primary fuel for enterocytes — the intestinal wall cells. It repairs intestinal permeability (leaky gut) that drives systemic inflammation. Spore-based probiotics survive stomach acid, which most capsule probiotics don't.",
     duration: "L-glutamine: 8-week repair protocol. Probiotic: ongoing.",
-    link: "https://iherb.com/search?kw=spore+probiotic+50+billion&rcode=BLEU",
-    label: "iHerb", price: "~$35/mo",
+    link: "https://fullscript.com/plans/bleuplatform/search?kw=spore+probiotic+50+billion&",
+    label: "Fullscript", price: "~$35/mo",
     nutrition: "Add fermented foods daily — kimchi, sauerkraut, kefir. These feed the probiotic strains you are supplementing.",
   },
   metabolic: {
@@ -1314,6 +1314,24 @@ const corsHeaders = {
 // ═══════════════════════════════════════════════════════════════
 // MAIN HANDLER — AGENT 07: ORCHESTRATOR
 // ═══════════════════════════════════════════════════════════════
+// BLEU COMMERCE LAYER
+// SUPPLEMENT AFFILIATES (priority order — NO iHerb, NEVER mention iHerb):
+// 1. Fullscript (fullscript.com/plans/bleuplatform) — practitioner-grade catalog, 10-15% referral
+// 2. Thorne (thorne.com) — NSF Certified for Sport, Dr. Felicia approved, 15-20%
+// 3. Pure Encapsulations (pureencapsulations.com) — hypoallergenic, no fillers, 10-15%
+// 4. Vitacost (vitacost.com) — direct pricing, 8-12%
+// 5. Amazon (amazon.com?tag=bleu-live-20) — HSA-eligible products, 4-8%
+// METABOLIC AFFILIATES:
+// Function Health (functionhealth.com) — 100+ biomarkers, $499/yr, 15-20%
+// InsideTracker (insidetracker.com) — biological age, 15-20%
+// Oura Ring (ouraring.com) — HRV + sleep, 10-15%
+// Levels CGM (levelshealth.com) — continuous glucose monitoring, 10-15%
+// CLINICAL TELEHEALTH (Agent 10 emotional gate required):
+// Brightside Health (brightside.com) — depression/anxiety, $50-150 CPA
+// Done (donefirst.com) — ADHD, $100-200 CPA
+// Cerebral (cerebral.com) — psychiatry, $65-100 CPA
+// BLEU COMMERCE LAYER
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
