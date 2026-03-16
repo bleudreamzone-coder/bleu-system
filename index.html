@@ -2403,31 +2403,17 @@ window.mLoc=function(){if(!navigator.geolocation)return;navigator.geolocation.ge
 /* Canvas only inits when map tab is visible */
 
 /* Re-init when tab becomes active */
-var _origGo=window.go;
-window.go=function(tab){
-  if(_origGo)_origGo(tab);
-  if(tab==="map"){
-    setTimeout(function(){
-      var st=document.getElementById("map-stage");
-      if(st&&st.offsetWidth>0){
-        W=st.offsetWidth;
-        if(!ctx){initCanvas();}
-        else{
-          canvas.width=W;
-          canvas.height=H;
-        }
-      }
-    },80);
+/* Poll until map panel is visible, then init canvas */
+(function poll(){
+  if(ctx)return;
+  var stage=document.getElementById("map-stage");
+  if(stage&&stage.offsetWidth>0){
+    W=stage.offsetWidth;
+    initCanvas();
+  }else{
+    setTimeout(poll,200);
   }
-};
-/* Also catch if map is the default tab on load */
-setTimeout(function(){
-  var panel=document.getElementById("p-map");
-  if(panel&&(panel.classList.contains("active")||panel.style.display==="block")){
-    var st=document.getElementById("map-stage");
-    if(st&&st.offsetWidth>0&&!ctx){W=st.offsetWidth;initCanvas();}
-  }
-},200);
+})();
 
 })();
 </script>
