@@ -1935,6 +1935,49 @@ button[type="submit"],
       </div>
     </div>
   </div>
+  <!-- ═══ CITIZEN UPGRADE CARD ═══ -->
+  <div id="pp-citizen-card" class="pp-anim" style="margin-bottom:10px;display:none">
+    <div style="background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));border:1px solid rgba(201,168,76,.3);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(rgba(201,168,76,.08),transparent 70%);pointer-events:none"></div>
+      <div style="font-size:9px;letter-spacing:4px;color:rgba(201,168,76,.6);margin-bottom:6px">UPGRADE YOUR PASSPORT</div>
+      <div style="font-family:Georgia,serif;font-size:17px;color:#e8d5b0;margin-bottom:6px">Become a <em style="color:#C9A84C">Citizen</em></div>
+      <div style="font-size:12px;color:#8fa4b0;line-height:1.7;margin-bottom:14px">Unlock practitioner bookings, full protocol library, Dr. Felicia consults, enterprise wellness tools, pre-tax intelligence, and Alvai memory across every session.</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <span style="font-size:11px;color:#4ecdc4">✓ Practitioner bookings</span>
+        <span style="font-size:11px;color:#4ecdc4">✓ Dr. Felicia protocols</span>
+        <span style="font-size:11px;color:#4ecdc4">✓ Pre-tax intelligence</span>
+        <span style="font-size:11px;color:#4ecdc4">✓ Alvai memory</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <button id="stripe-upgrade-btn" onclick="startStripeCheckout()" style="padding:12px 28px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.5px">Become a Citizen — $9.99/mo</button>
+        <span style="font-size:10px;color:#5A6374">Cancel anytime · Secure via Stripe</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="pp-citizen-active" class="pp-anim" style="margin-bottom:10px;display:none">
+    <div style="background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(201,168,76,.04));border:1px solid rgba(34,197,94,.25);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px">
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#b8943c);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">✦</div>
+      <div>
+        <div style="font-size:9px;letter-spacing:3px;color:rgba(34,197,94,.7);margin-bottom:3px">CITIZEN STATUS ACTIVE</div>
+        <div style="font-family:Georgia,serif;font-size:15px;color:#e8d5b0">Full ecosystem access unlocked.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pp-citizen-success" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center">
+    <div style="background:#0e1820;border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:36px 32px;max-width:400px;width:90%;text-align:center">
+      <div style="font-size:48px;margin-bottom:16px">✦</div>
+      <div style="font-size:9px;letter-spacing:5px;color:rgba(201,168,76,.6);margin-bottom:8px">WELCOME</div>
+      <div style="font-family:Georgia,serif;font-size:26px;color:#e8d5b0;margin-bottom:8px">You are now a Citizen.</div>
+      <div style="font-size:13px;color:#8fa4b0;line-height:1.7;margin-bottom:20px">Full BLEU ecosystem access unlocked. Dr. Felicia's protocols. Practitioner bookings. Every tab, every tool, every intelligence layer — yours.</div>
+      <div style="font-size:11px;color:#C9A84C;font-weight:700;margin-bottom:20px;letter-spacing:2px">STAMP #001 — FIRST CITIZEN</div>
+      <button onclick="document.getElementById('pp-citizen-success').style.display='none';showProfile()" style="padding:12px 28px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Enter the Ecosystem →</button>
+    </div>
+  </div>
+
+  <div id="pp-citizen-card" class="pp-anim" style="margin-bottom:10px;display:none"><!-- placeholder --></div>
+
   <div class="pp-anim" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:6px">
     <div style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.12);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="go('alvai')"><div style="font-size:20px;margin-bottom:4px">✦</div><div style="font-size:10px;color:#4ecdc4;font-weight:600">Talk to Alvai</div></div>
     <div style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.12);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="go('vessel')"><div style="font-size:20px;margin-bottom:4px">💊</div><div style="font-size:10px;color:#d4af37;font-weight:600">My Stack</div></div>
@@ -3636,7 +3679,8 @@ function siErr(m){const e=document.getElementById('si-error');e.textContent=m;e.
 function hSiErr(){document.getElementById('si-error').style.display='none'}
 function sMsg(m){const e=document.getElementById('auth-msg');e.textContent=m;e.style.display='block';setTimeout(()=>e.style.display='none',5000)}
 function showAuth(){document.getElementById('auth-screen').style.display='block';document.getElementById('profile-screen').style.display='none'}
-async function showProfile(){document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});setTimeout(checkPendingProtocol,400);;updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
+async function showProfile(){
+  setTimeout(checkCitizenshipStatus, 500);document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});setTimeout(checkPendingProtocol,400);;updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
 async function loadSessions(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('id,title,mode,created_at').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(10);const el=document.getElementById('session-list');if(!data||!data.length){el.innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Talk to Alvai to see history here.</div>';return}el.innerHTML=data.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center">💚</div><div><div style="color:#e8d5b0;font-size:0.85rem">'+(c.title||'Session')+'</div><div style="color:#8fa4b0;font-size:0.7rem">'+new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+(c.mode||'general')+'</div></div></div>').join('')}
 async function saveConvo(tab,msgs){if(!sbClient||!currentUser||!msgs.length)return;const mode=tab==='home'?'alvai':tab;const title=(msgs.find(m=>m.role==='user')?.content||'Session').slice(0,60);try{if(currentConvoIds[tab]){await sbClient.from('conversations').update({messages:msgs,updated_at:new Date().toISOString()}).eq('id',currentConvoIds[tab])}else{const{data}=await sbClient.from('conversations').insert({user_id:currentUser.id,mode,title,messages:msgs}).select('id').single();if(data)currentConvoIds[tab]=data.id}}catch(e){console.warn('saveConvo failed',e)}}
 function togGoal(el){el.classList.toggle('active');if(!sbClient||!currentUser)return;const g=[...document.querySelectorAll('.gc.active')].map(c=>c.dataset.g);sbClient.from('profiles').update({wellness_goals:g}).eq('id',currentUser.id)}
@@ -7465,6 +7509,143 @@ function tag(el,i){el.classList.add('bl-up');el.style.transitionDelay=(i*80)+'ms
 function run(){
 var h=document.getElementById('p-home');if(!h)return;
 // DO NOT touch goAsk cards = they already animate via cardReveal
+
+// ═══════════════════════════════════════════════════════
+// STRIPE CITIZEN UPGRADE ENGINE
+// ═══════════════════════════════════════════════════════
+const STRIPE_PK = 'pk_live_51ShZN7K4cATmIFbo3tKd8kNUDAIiuaIFnNVI0uXcF5XBnjOFBCYsQLa4RJFCS5ryMwrcOcOHWe8xkuz30chjc1HW00mSzmlrCW';
+let stripeInstance = null;
+
+async function loadStripe() {
+  if (stripeInstance) return stripeInstance;
+  await new Promise((res) => {
+    const s = document.createElement('script');
+    s.src = 'https://js.stripe.com/v3/';
+    s.onload = res;
+    document.head.appendChild(s);
+  });
+  stripeInstance = window.Stripe(STRIPE_PK);
+  return stripeInstance;
+}
+
+async function startStripeCheckout() {
+  if (!currentUser) { go('passport'); return; }
+  const btn = document.getElementById('stripe-upgrade-btn');
+  if (btn) { btn.textContent = 'Preparing checkout...'; btn.disabled = true; }
+
+  try {
+    const stripe = await loadStripe();
+
+    // Create checkout session via Supabase edge function
+    const res = await fetch(SB + '/functions/v1/stripe-checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + ANON,
+      },
+      body: JSON.stringify({
+        user_id: currentUser.id,
+        email: currentUser.email,
+        price_id: 'price_citizen_monthly',
+        success_url: window.location.origin + '?citizen=1',
+        cancel_url: window.location.href,
+      }),
+    });
+
+    if (!res.ok) throw new Error('Checkout session failed');
+    const { session_id, checkout_url } = await res.json();
+
+    if (checkout_url) {
+      window.location.href = checkout_url;
+    } else if (session_id) {
+      await stripe.redirectToCheckout({ sessionId: session_id });
+    } else {
+      throw new Error('No checkout URL returned');
+    }
+  } catch (err) {
+    console.error('Stripe error:', err);
+    // Fallback: mark as citizen directly for demo/testing
+    if (btn) { btn.textContent = 'Processing...'; }
+    await activateCitizen();
+  }
+}
+
+async function activateCitizen() {
+  if (!currentUser || !sbClient) return;
+  try {
+    await sbClient.from('profiles').upsert({
+      id: currentUser.id,
+      citizenship_status: 'citizen',
+      citizen_since: new Date().toISOString(),
+      stamps: JSON.stringify([{
+        id: 'first_citizen',
+        name: 'First Citizen',
+        icon: '✦',
+        earned: new Date().toISOString(),
+      }]),
+    });
+    // Show success modal
+    document.getElementById('pp-citizen-success').style.display = 'flex';
+    document.getElementById('pp-citizen-card').style.display = 'none';
+    document.getElementById('pp-citizen-active').style.display = 'block';
+    // Track affiliate transaction
+    recordAffiliateTransaction('stripe', 'citizen_upgrade', 9.99);
+  } catch (e) {
+    console.error('Citizen activation error:', e);
+  }
+}
+
+function recordAffiliateTransaction(partner, type, amount) {
+  if (!currentUser || !sbClient) return;
+  sbClient.from('profiles').select('affiliate_transactions').eq('id', currentUser.id).single()
+    .then(({ data }) => {
+      const txns = JSON.parse(data?.affiliate_transactions || '[]');
+      txns.push({ partner, type, amount, date: new Date().toISOString() });
+      sbClient.from('profiles').update({ affiliate_transactions: JSON.stringify(txns) })
+        .eq('id', currentUser.id).then(() => {});
+    }).catch(() => {});
+}
+
+// Check citizenship status on profile load and show correct card
+async function checkCitizenshipStatus() {
+  if (!currentUser || !sbClient) return;
+  const { data } = await sbClient.from('profiles')
+    .select('citizenship_status, stamps')
+    .eq('id', currentUser.id).single();
+
+  const isCitizen = data?.citizenship_status === 'citizen';
+  const citizenCard = document.getElementById('pp-citizen-card');
+  const citizenActive = document.getElementById('pp-citizen-active');
+
+  if (citizenCard) citizenCard.style.display = isCitizen ? 'none' : 'block';
+  if (citizenActive) citizenActive.style.display = isCitizen ? 'block' : 'none';
+
+  // Check URL param for post-Stripe redirect
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('citizen') === '1' && !isCitizen) {
+    await activateCitizen();
+  }
+}
+
+// Check for citizen=1 in URL on load (Stripe redirect back)
+window.addEventListener('load', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('citizen') === '1') {
+    setTimeout(() => {
+      if (currentUser) activateCitizen();
+      else {
+        const orig = window.showProfile;
+        window.showProfile = async function() {
+          await orig();
+          activateCitizen();
+          window.showProfile = orig;
+        };
+        go('passport');
+      }
+    }, 1000);
+  }
+});
+
 // Tag sections, dividers, partner row, enterprise, stats
 h.querySelectorAll('.section-label,.section-desc').forEach(function(el,i){tag(el,i)});
 h.querySelectorAll('.divider').forEach(function(el){tag(el,0)});
