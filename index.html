@@ -4784,12 +4784,9 @@ function go(tab){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'))
   const panel=document.getElementById('p-'+tab)
   if(panel)panel.classList.add('active')
-  const navTabs=document.querySelectorAll('.nav-tab')
-  const idx=tabs.indexOf(tab)
-  if(idx>=0&&idx<navTabs.length)navTabs[idx].classList.add('active')
+  document.querySelectorAll('.nav-tab').forEach(t=>{if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("go('"+tab+"')"))t.classList.add('active')})
   window.scrollTo({top:0,behavior:'smooth'})
   if(tab==='passport'){setTimeout(initPassport,80)}
-  // Trigger reveals
   setTimeout(()=>{document.querySelectorAll('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('visible')})},100)
 }
 
