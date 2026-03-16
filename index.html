@@ -2286,277 +2286,268 @@ id="chat-protocols"></div><div class="chat-input-row"><input autocomplete="off" 
 <!-- ═══════════════════════ LEARN ═══════════════════════ -->
 <div class="panel" id="p-learn">
 <style>
-#learn-wrap{max-width:1100px;margin:0 auto}
-.lsearch{width:100%;background:rgba(8,14,26,.9);border:1px solid rgba(45,138,158,.3);border-radius:10px;padding:13px 18px;color:#E8E0D0;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;box-sizing:border-box;margin-bottom:14px}
-.lsearch:focus{border-color:#2D8A9E}
-.lfilters{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:18px;scrollbar-width:none;-ms-overflow-style:none}
-.lfilters::-webkit-scrollbar{display:none}
-.lfbtn{padding:6px 14px;border-radius:20px;border:1px solid rgba(45,138,158,.2);background:transparent;cursor:pointer;font-size:11px;color:#7B8DA6;transition:all .2s;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
-.lfbtn.on{background:rgba(45,138,158,.15);border-color:#2D8A9E;color:#2DD4A8}
-.lfbtn:hover{border-color:#2D8A9E;color:#E8E0D0}
-.lsec{font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:20px 0 12px;display:flex;align-items:center;gap:10px;color:#4A5B73}
-.lsec::after{content:'';flex:1;height:1px;background:currentColor;opacity:.3}
-.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:8px}
-.vcard{background:#0d1829;border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .22s;display:flex;flex-direction:column}
-.vcard:hover{transform:translateY(-3px);border-color:rgba(45,138,158,.4);box-shadow:0 8px 24px rgba(0,0,0,.5)}
-.vthumb{width:100%;aspect-ratio:16/9;position:relative;background:#080E1A;flex-shrink:0;overflow:hidden}
-.vthumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
-.vcard:hover .vthumb img{transform:scale(1.03)}
-.voverlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(8,14,26,.7));display:flex;align-items:center;justify-content:center}
-.vplay{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;font-size:16px;transition:transform .2s;box-shadow:0 2px 16px rgba(0,0,0,.4)}
-.vcard:hover .vplay{transform:scale(1.1)}
-.vdur{position:absolute;bottom:6px;right:8px;background:rgba(0,0,0,.82);color:#fff;font-size:9px;padding:2px 5px;border-radius:3px;font-weight:600;letter-spacing:.5px}
-.vtag{position:absolute;top:7px;left:7px;font-size:9px;font-weight:700;letter-spacing:.8px;padding:2px 7px;border-radius:3px}
-.vbody{padding:11px 12px;flex:1;display:flex;flex-direction:column;gap:5px}
-.vch{display:flex;align-items:center;gap:7px}
+.lw{max-width:1100px;margin:0 auto}
+.ls{width:100%;background:rgba(8,14,26,.9);border:1px solid rgba(45,138,158,.3);border-radius:10px;padding:12px 16px;color:#E8E0D0;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;box-sizing:border-box;margin-bottom:14px}
+.ls:focus{border-color:#2D8A9E}
+.lfrow{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:18px;scrollbar-width:none}
+.lfrow::-webkit-scrollbar{display:none}
+.lf{padding:6px 14px;border-radius:20px;border:1px solid rgba(45,138,158,.2);background:transparent;cursor:pointer;font-size:11px;color:#7B8DA6;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;transition:all .2s}
+.lf.on,.lf:hover{background:rgba(45,138,158,.15);border-color:#2D8A9E;color:#2DD4A8}
+.lhead{font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:20px 0 12px;display:flex;align-items:center;gap:10px}
+.lhead::after{content:'';flex:1;height:1px;background:currentColor;opacity:.15}
+.vg{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;margin-bottom:10px}
+.vc{background:#0d1829;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden;transition:all .22s}
+.vc:hover{transform:translateY(-2px);border-color:rgba(45,138,158,.35);box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.vt{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;cursor:pointer}
+.vt img{width:100%;height:100%;object-fit:cover;display:block}
+.vt-ov{position:absolute;inset:0;background:rgba(8,14,26,.3);display:flex;align-items:center;justify-content:center;transition:opacity .2s}
+.vt:hover .vt-ov{background:rgba(8,14,26,.15)}
+.vbtn{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;box-shadow:0 2px 12px rgba(0,0,0,.4)}
+.vdur{position:absolute;bottom:6px;right:8px;background:rgba(0,0,0,.85);color:#fff;font-size:9px;padding:2px 5px;border-radius:3px;font-weight:600}
+.vtag{position:absolute;top:7px;left:7px;font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 7px;border-radius:3px}
+.vb{padding:11px 12px}
+.vch{display:flex;align-items:center;gap:7px;margin-bottom:5px}
 .vav{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
-.vchn{font-size:10px;color:#7B8DA6;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.vcred{font-size:9px;padding:1px 5px;border-radius:2px;flex-shrink:0}
-.vtitle{font-size:12px;font-weight:600;color:#E8E0D0;line-height:1.4}
-.vmeta{font-size:10px;color:#4A5B73}
-.vplaying{position:absolute;inset:0}
-.vplaying iframe{width:100%;height:100%;border:none;display:block}
-.cstrip{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:none}
-.cstrip::-webkit-scrollbar{display:none}
-.chpill{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:60px;cursor:pointer;flex-shrink:0;transition:transform .2s}
-.chpill:hover{transform:translateY(-2px)}
-.chavatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(45,138,158,.15);transition:border-color .2s}
-.chpill:hover .chavatar{border-color:#2DD4A8}
-.chname{font-size:9px;color:#7B8DA6;text-align:center;line-height:1.3;max-width:60px}
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:10px}
-.pcard{background:#0d1829;border:1px solid rgba(201,168,76,.1);border-radius:12px;padding:16px 14px;cursor:pointer;transition:all .2s;text-align:center}
-.pcard:hover{border-color:rgba(201,168,76,.4);transform:translateY(-2px)}
-.picon{font-size:30px;margin-bottom:8px}
-.ptitle{font-size:12px;font-weight:600;color:#E8E0D0;margin-bottom:3px;line-height:1.3}
-.psub{font-size:10px;color:#7B8DA6}
-.rrow{background:#0d1829;border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:13px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s;margin-bottom:7px}
-.rrow:hover{border-color:rgba(45,138,158,.3);transform:translateX(3px)}
-.rnum{font-size:24px;font-weight:700;opacity:.2;line-height:1;flex-shrink:0;min-width:32px;text-align:right}
-.lchat{min-height:60px;margin-bottom:10px}
-.lask{display:flex;gap:8px}
+.vcn{font-size:10px;color:#7B8DA6;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vcr{font-size:9px;padding:1px 5px;border-radius:2px;flex-shrink:0}
+.vti{font-size:12px;font-weight:600;color:#E8E0D0;line-height:1.4;margin-bottom:3px}
+.vv{font-size:10px;color:#4A5B73}
+.vif{position:absolute;inset:0}
+.vif iframe{width:100%;height:100%;border:none}
+.mrow{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.mrow::-webkit-scrollbar{display:none}
+.mc{min-width:150px;background:#0d1829;border:1px solid rgba(201,168,76,.1);border-radius:12px;padding:14px;cursor:pointer;text-align:center;flex-shrink:0;transition:all .2s}
+.mc:hover{border-color:rgba(201,168,76,.4);transform:translateY(-2px)}
+.chbar{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:18px;scrollbar-width:none}
+.chbar::-webkit-scrollbar{display:none}
+.chp{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:58px;cursor:pointer;flex-shrink:0;transition:transform .2s}
+.chp:hover{transform:translateY(-2px)}
+.cha{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(45,138,158,.15);transition:border-color .2s}
+.chp:hover .cha{border-color:#2DD4A8}
+.chn{font-size:9px;color:#7B8DA6;text-align:center;max-width:58px;line-height:1.3}
+.rr{background:#0d1829;border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s;margin-bottom:7px}
+.rr:hover{border-color:rgba(45,138,158,.3);transform:translateX(3px)}
+.rn{font-size:22px;font-weight:700;opacity:.18;line-height:1;min-width:30px;text-align:right;flex-shrink:0}
+.lask{display:flex;gap:8px;margin-top:10px}
 .lask input{flex:1;background:rgba(8,14,26,.8);border:1px solid rgba(45,138,158,.2);border-radius:8px;padding:10px 14px;color:#E8E0D0;font-size:13px;font-family:'DM Sans',sans-serif;outline:none}
 .lask input:focus{border-color:#2D8A9E}
-.lask button{padding:10px 16px;border-radius:8px;border:1px solid #2D8A9E;background:rgba(45,138,158,.15);color:#2DD4A8;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;white-space:nowrap}
-.lask button:hover{background:rgba(45,138,158,.25)}
-.featured-banner{background:linear-gradient(135deg,rgba(244,114,182,.08),rgba(163,45,45,.05));border:1px solid rgba(244,114,182,.2);border-radius:14px;padding:18px 20px;display:flex;gap:16px;align-items:center;margin-bottom:20px;cursor:pointer;transition:all .2s}
-.featured-banner:hover{border-color:rgba(244,114,182,.4)}
-.fb-icon{font-size:44px;flex-shrink:0}
-.sp-embed{width:100%;border-radius:12px;overflow:hidden;margin-bottom:6px}
+.lask button{padding:10px 16px;border-radius:8px;border:1px solid #2D8A9E;background:rgba(45,138,158,.15);color:#2DD4A8;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px}
 </style>
 
-<div id="learn-wrap">
+<div class="lw">
 <div class="section-label">THE KNOWLEDGE ENGINE</div>
 <h1 class="hero-title" style="margin-bottom:6px">Your Wellness <span class="teal">Starts Playing</span></h1>
-<p style="color:#7B8DA6;font-size:13px;text-align:center;margin:0 auto 20px;max-width:560px">YouTube. Spotify. Podcasts. Courses. Meditation. Sleep therapy. Financial literacy. All organized by what you need — right now. Scroll, watch, listen, learn.</p>
+<p style="color:#7B8DA6;font-size:13px;text-align:center;margin:0 auto 20px;max-width:560px">YouTube. Podcasts. Music. Courses. Meditation. Sleep therapy. All organized by what you need right now. Scroll, watch, listen, learn.</p>
 
-<input class="lsearch" id="lsearch" placeholder="Search videos, podcasts, topics, research, protocols..." onkeydown="if(event.key==='Enter'){learnQ(this.value)}"/>
+<input class="ls" id="lsrch" placeholder="Search videos, podcasts, topics, research..." onkeydown="if(event.key==='Enter')ask('learn',this.value)"/>
 
-<div class="lfilters">
-  <button class="lfbtn on" onclick="lf('all',this)">All</button>
-  <button class="lfbtn" onclick="lf('sleep',this)">&#128164; Sleep</button>
-  <button class="lfbtn" onclick="lf('mental',this)">&#129504; Mental Health</button>
-  <button class="lfbtn" onclick="lf('meditation',this)">&#129514; Meditation</button>
-  <button class="lfbtn" onclick="lf('nutrition',this)">&#127789; Nutrition</button>
-  <button class="lfbtn" onclick="lf('fitness',this)">&#128170; Fitness</button>
-  <button class="lfbtn" onclick="lf('recovery',this)">&#10084; Recovery</button>
-  <button class="lfbtn" onclick="lf('finance',this)">&#128176; Finance</button>
-  <button class="lfbtn" onclick="lf('spirit',this)">&#127800; Spirit</button>
-  <button class="lfbtn" onclick="lf('research',this)">&#128218; Research</button>
+<div class="lfrow">
+  <button class="lf on" onclick="lfilt('all',this)">All</button>
+  <button class="lf" onclick="lfilt('sleep',this)">Sleep</button>
+  <button class="lf" onclick="lfilt('mental',this)">Mental Health</button>
+  <button class="lf" onclick="lfilt('meditation',this)">Meditation</button>
+  <button class="lf" onclick="lfilt('nutrition',this)">Nutrition</button>
+  <button class="lf" onclick="lfilt('fitness',this)">Fitness</button>
+  <button class="lf" onclick="lfilt('recovery',this)">Recovery</button>
+  <button class="lf" onclick="lfilt('finance',this)">Finance</button>
+  <button class="lf" onclick="lfilt('spirit',this)">Spirit</button>
 </div>
 
-<!-- Featured -->
-<div class="featured-banner" onclick="ask('learn','Tell me about the $1 trillion women health gap — the WEF evidence, the 8 conditions, and exactly what BLEU does')">
-  <div class="fb-icon">&#128330;</div>
-  <div>
-    <div style="font-size:10px;letter-spacing:2px;color:#F472B6;margin-bottom:4px">FEATURED RESEARCH</div>
-    <div style="font-size:16px;font-weight:600;color:#E8E0D0;margin-bottom:5px">The $1 Trillion Women's Health Gap</div>
-    <div style="font-size:12px;color:#7B8DA6;line-height:1.6">WEF &amp; McKinsey 2024 &bull; 8 conditions &bull; $3 return per $1 invested &bull; 75M DALYs avoidable annually</div>
-  </div>
-</div>
+<div class="lhead" style="color:#2D8A9E">CHANNELS</div>
+<div class="chbar" id="lchbar"></div>
 
-<!-- Channels -->
-<div class="lsec" style="color:#2D8A9E">CHANNELS</div>
-<div class="cstrip" id="cstrip"></div>
+<div class="lhead" style="color:#C9A84C">TRENDING IN WELLNESS</div>
+<div class="vg" id="lvg1"></div>
 
-<!-- Video grid 1 -->
-<div class="lsec" style="color:#C9A84C">TRENDING IN WELLNESS</div>
-<div class="vgrid" id="vg1"></div>
+<div class="lhead" style="color:#7055a8">MUSIC + MEDITATION</div>
+<div class="mrow" id="lmrow"></div>
 
-<!-- Spotify embeds -->
-<div class="lsec" style="color:#1d9e75">PODCASTS &amp; SPOTIFY</div>
-<iframe class="sp-embed" style="border-radius:12px" src="https://open.spotify.com/embed/show/79CkJF3UJTHFV8Dse3Oy0a?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-<iframe class="sp-embed" style="border-radius:12px" src="https://open.spotify.com/embed/show/5Hjkm5QzCQUGgKiWrQFRCP?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<div class="lhead" style="color:#2D8A9E">DEEP DIVES</div>
+<div class="vg" id="lvg2"></div>
 
-<!-- Music & Audio -->
-<div class="lsec" style="color:#7055a8">MUSIC + MEDITATION AUDIO</div>
-<div class="pgrid" id="pgrid"></div>
+<div class="lhead" style="color:#a32d2d">RECOVERY + MENTAL HEALTH</div>
+<div class="vg" id="lvg3"></div>
 
-<!-- Video grid 2 -->
-<div class="lsec" style="color:#2D8A9E">DEEP DIVES</div>
-<div class="vgrid" id="vg2"></div>
+<div class="lhead" style="color:#a32d2d">RESEARCH LIBRARY — 16 CRISES</div>
+<div id="lrlib"></div>
 
-<!-- Video grid 3 -->
-<div class="lsec" style="color:#a32d2d">MENTAL HEALTH &amp; RECOVERY</div>
-<div class="vgrid" id="vg3"></div>
-
-<!-- Research library -->
-<div class="lsec" style="color:#a32d2d">32 CIVILIZATIONAL CRISES — RESEARCH LIBRARY</div>
-<div id="rlib"></div>
-
-<!-- Alvai -->
-<div class="lsec" style="color:#2D8A9E">ASK THE RESEARCH</div>
-<div class="lchat chat-box" id="learn-chat"></div>
+<div class="lhead" style="color:#2D8A9E">ASK THE RESEARCH</div>
+<div class="chat-box" id="learn-chat" style="min-height:60px;margin-bottom:10px"></div>
 <div class="lask">
-  <input id="linput" placeholder="Ask about any video, crisis, study, protocol, or intervention..."/>
-  <button onclick="var v=document.getElementById('linput');if(v.value.trim()){learnQ(v.value.trim());v.value=''}">Ask Alvai</button>
+  <input id="lainput" placeholder="Ask about any video, crisis, protocol or intervention..."/>
+  <button id="lasbtn">Ask Alvai</button>
 </div>
 </div>
 
 <script>
 (function(){
-
-var CHANNELS = [
-  {icon:'&#129504;',label:'Mental Health',cat:'mental',bg:'rgba(163,45,45,.12)'},
-  {icon:'&#128164;',label:'Sleep Science',cat:'sleep',bg:'rgba(24,95,165,.12)'},
-  {icon:'&#9889;',label:'Metabolic',cat:'metabolic',bg:'rgba(186,117,23,.12)'},
-  {icon:'&#127789;',label:'Nutrition',cat:'nutrition',bg:'rgba(29,158,117,.12)'},
-  {icon:'&#129514;',label:'Meditation',cat:'meditation',bg:'rgba(112,85,168,.12)'},
-  {icon:'&#128170;',label:'Fitness',cat:'fitness',bg:'rgba(45,138,158,.12)'},
-  {icon:'&#10084;',label:'Recovery',cat:'recovery',bg:'rgba(201,168,76,.12)'},
-  {icon:'&#128176;',label:'Finance',cat:'finance',bg:'rgba(29,158,117,.12)'},
-  {icon:'&#127800;',label:'Spirit',cat:'spirit',bg:'rgba(201,168,76,.12)'},
-  {icon:'&#128218;',label:'Research',cat:'research',bg:'rgba(163,45,45,.12)'},
+var V1=[
+  {id:"KD9TmYhDFz8",t:"Master Your Sleep & Wake Up Refreshed",ch:"Huberman Lab",av:"HL",ac:"#185fa5",cat:"sleep",dur:"1:22:15",views:"8.2M",tag:"Sleep",tc:"rgba(24,95,165,.85)",cf:"rgba(24,95,165,.15)",cc:"#60A5FA",cr:"Stanford"},
+  {id:"0_CLTK0Drk0",t:"Controlling Dopamine For Motivation & Focus",ch:"Huberman Lab",av:"HL",ac:"#ba7517",cat:"mental",dur:"2:05:38",views:"12.1M",tag:"Dopamine",tc:"rgba(186,117,23,.85)",cf:"rgba(186,117,23,.15)",cc:"#C9A84C",cr:"Neuroscience"},
+  {id:"tEmt1Znux58",t:"Gut Health -- The Key to Mental & Physical Health",ch:"Dr Mark Hyman",av:"MH",ac:"#1d9e75",cat:"nutrition",dur:"58:22",views:"2.4M",tag:"Nutrition",tc:"rgba(29,158,117,.85)",cf:"rgba(29,158,117,.15)",cc:"#1d9e75",cr:"Cleveland"},
+  {id:"0ITEPMgDcaI",t:"The Science of Mindfulness Meditation",ch:"Sam Harris",av:"SH",ac:"#7055a8",cat:"meditation",dur:"1:12:04",views:"5.8M",tag:"Meditation",tc:"rgba(112,85,168,.85)",cf:"rgba(112,85,168,.15)",cc:"#a78bfa",cr:"Neuroscience"},
+  {id:"lN1-CahCQy0",t:"How Exercise Reshapes Your Brain",ch:"TED",av:"TED",ac:"#a32d2d",cat:"fitness",dur:"13:28",views:"9.1M",tag:"Fitness",tc:"rgba(163,45,45,.85)",cf:"rgba(163,45,45,.15)",cc:"#f87171",cr:"TED 2024"},
+  {id:"XNkPyNP1B-c",t:"Why Sleep Is Your Superpower",ch:"Matthew Walker",av:"MW",ac:"#185fa5",cat:"sleep",dur:"19:18",views:"14M",tag:"Sleep",tc:"rgba(24,95,165,.85)",cf:"rgba(24,95,165,.15)",cc:"#60A5FA",cr:"UC Berkeley"}
+];
+var V2=[
+  {id:"GQlzvMkFGYA",t:"How Your Breath Controls Your Mind",ch:"TED",av:"TED",ac:"#2D8A9E",cat:"meditation",dur:"15:12",views:"4.2M",tag:"Breathwork",tc:"rgba(45,138,158,.85)",cf:"rgba(45,138,158,.15)",cc:"#2DD4A8",cr:"TED"},
+  {id:"oBu-pQG6sTY",t:"20 Min Morning Yoga Full Body Flow",ch:"Yoga With Adriene",av:"YA",ac:"#1d9e75",cat:"fitness",dur:"20:04",views:"11M",tag:"Yoga",tc:"rgba(29,158,117,.85)",cf:"rgba(29,158,117,.15)",cc:"#1d9e75",cr:"Certified"},
+  {id:"8jPQjjsBbIc",t:"Breathing Techniques for Stress & Anxiety",ch:"Wim Hof",av:"WH",ac:"#2D8A9E",cat:"meditation",dur:"22:15",views:"6.7M",tag:"Breathwork",tc:"rgba(45,138,158,.85)",cf:"rgba(45,138,158,.15)",cc:"#2DD4A8",cr:"Certified"},
+  {id:"inpok4MKVLM",t:"10 Min Guided Meditation for Beginners",ch:"Great Meditation",av:"GM",ac:"#7055a8",cat:"meditation",dur:"10:11",views:"8.9M",tag:"Guided",tc:"rgba(112,85,168,.85)",cf:"rgba(112,85,168,.15)",cc:"#a78bfa",cr:"Guided"},
+  {id:"mherJbWTWlg",t:"Optimal Protocols for Muscle Growth",ch:"Huberman Lab",av:"HL",ac:"#ba7517",cat:"fitness",dur:"1:53:04",views:"7.2M",tag:"Strength",tc:"rgba(186,117,23,.85)",cf:"rgba(186,117,23,.15)",cc:"#C9A84C",cr:"Stanford"},
+  {id:"xmzmApuFELY",t:"How to Improve Your Focus with Science",ch:"Huberman Lab",av:"HL",ac:"#2D8A9E",cat:"mental",dur:"1:36:42",views:"5.6M",tag:"Focus",tc:"rgba(45,138,158,.85)",cf:"rgba(45,138,158,.15)",cc:"#2DD4A8",cr:"Stanford"}
+];
+var V3=[
+  {id:"1ZYbU82uhe8",t:"Deep Sleep Music -- Calm Healing Frequencies",ch:"Soothing Relaxation",av:"SR",ac:"#185fa5",cat:"sleep",dur:"8:00:00",views:"42M",tag:"432Hz",tc:"rgba(24,95,165,.85)",cf:"rgba(24,95,165,.15)",cc:"#60A5FA",cr:"Healing"},
+  {id:"dFPaADjVe9E",t:"Addiction Recovery: What Science Says",ch:"TED",av:"TED",ac:"#C9A84C",cat:"recovery",dur:"14:35",views:"2.8M",tag:"Recovery",tc:"rgba(201,168,76,.85)",cf:"rgba(201,168,76,.15)",cc:"#C9A84C",cr:"TED 2024"},
+  {id:"5o_sCEMYcBk",t:"Spiritual Health & Purpose in Modern Life",ch:"BLEU Spirit",av:"B",ac:"#7055a8",cat:"spirit",dur:"31:18",views:"892K",tag:"Spirit",tc:"rgba(112,85,168,.85)",cf:"rgba(112,85,168,.15)",cc:"#a78bfa",cr:"BLEU"},
+  {id:"QmOF0csBqBO",t:"Nutrients for Brain Health & Cognition",ch:"Huberman Lab",av:"HL",ac:"#1d9e75",cat:"nutrition",dur:"1:12:44",views:"3.4M",tag:"Brain",tc:"rgba(29,158,117,.85)",cf:"rgba(29,158,117,.15)",cc:"#1d9e75",cr:"Stanford"},
+  {id:"T9aRN9h4mOw",t:"Financial Wellness & Health Outcomes",ch:"BLEU Finance",av:"B",ac:"#C9A84C",cat:"finance",dur:"44:12",views:"341K",tag:"Finance",tc:"rgba(201,168,76,.85)",cf:"rgba(201,168,76,.15)",cc:"#C9A84C",cr:"BLEU"},
+  {id:"a5kKLCaQGFo",t:"Strength Training for Longevity Over 40",ch:"Andy Galpin",av:"AG",ac:"#185fa5",cat:"fitness",dur:"1:28:33",views:"4.3M",tag:"Longevity",tc:"rgba(24,95,165,.85)",cf:"rgba(24,95,165,.15)",cc:"#60A5FA",cr:"Cal State"}
+];
+var MUSIC=[
+  {icon:"",t:"Sleep Frequencies",sub:"432Hz - 8hrs",q:"Find the best 432Hz sleep frequency music for deep sleep"},
+  {icon:"",t:"Morning Meditation",sub:"15min guided",q:"Find a 15 minute guided morning meditation"},
+  {icon:"",t:"Focus Flow",sub:"Lo-fi - work mode",q:"Find lo-fi music and focus soundscapes for deep work"},
+  {icon:"",t:"Heart Coherence",sub:"528Hz healing",q:"Find 528Hz heart coherence music for emotional healing"},
+  {icon:"",t:"Nature Sounds",sub:"Rain and forest",q:"Find nature soundscapes rain forest and ocean for relaxation"},
+  {icon:"",t:"Jazz and Soul",sub:"New Orleans live",q:"Play New Orleans jazz and soul music for healing"},
+  {icon:"",t:"Delta Wave Sleep",sub:"Deep rest 0.5-4Hz",q:"Find delta wave frequencies for deep nervous system recovery"},
+  {icon:"",t:"Energy Activation",sub:"174Hz morning",q:"Find high energy morning frequencies for activation and motivation"}
+];
+var RESEARCH=[
+  {n:"01",t:"Loneliness -- 871K Deaths Annually",s:"9:1 social prescribing ROI",c:"#a32d2d",q:"Tell me about the WHO loneliness crisis and the BLEU social prescribing model"},
+  {n:"02",t:"Sleep Deprivation -- $411B Crisis",s:"$9,100 lifetime gain per student",c:"#185fa5",q:"Explain the sleep deprivation epidemic and the BLEU Sleep intelligence system"},
+  {n:"03",t:"Mens Mental Health -- 80 Percent of Suicides Male",s:"54% receive zero treatment",c:"#ba7517",q:"Tell me about mens mental health crisis and the male-adapted intervention model"},
+  {n:"04",t:"Womens Health -- $1 Trillion Gap",s:"$3 return per $1 invested",c:"#F472B6",q:"Explain the 1 trillion dollar womens health gap and the 8 conditions BLEU addresses"},
+  {n:"05",t:"Food Prescription -- $32B Ignored Savings",s:"10:1 ROI documented",c:"#1d9e75",q:"Tell me about food as medicine -- the evidence, the ROI, and BLEU Vessel tab"},
+  {n:"06",t:"Workplace Burnout -- $322B Clinical Crisis",s:"5.7:1 ROI",c:"#C9A84C",q:"What is workplace burnout and how does BLEU enterprise worksite wellness address it"},
+  {n:"07",t:"Medical Debt -- Financial Toxicity Kills",s:"56% worse cancer outcomes",c:"#7055a8",q:"Tell me about financial toxicity in healthcare and BLEU Finance tab interventions"},
+  {n:"08",t:"New Orleans Youth -- 1 in 3 in Poverty",s:"Jazz Bird NOLA proof of concept",c:"#2D8A9E",q:"Tell me about New Orleans youth crises and the Jazz Bird NOLA 501c3 proof of concept"},
+  {n:"09",t:"Grief -- 40 Percent Get Zero Support",s:"$3,600 excess cost per case",c:"#7055a8",q:"Tell me about the grief crisis and the BLEU Therapy compassionate companion model"},
+  {n:"10",t:"Medication Non-Adherence -- $500B Wasted",s:"10:1 MTM ROI",c:"#1d9e75",q:"Explain medication non-adherence and how BLEU Finance wires Cost Plus Drugs and GoodRx"},
+  {n:"11",t:"Chronic Pain -- 51M Undertreated Americans",s:"3:1 integrative ROI",c:"#a32d2d",q:"Tell me about the chronic pain crisis and BLEU integrative pain management approach"},
+  {n:"12",t:"Veterans -- 22 Suicides a Day",s:"40% without VA access",c:"#185fa5",q:"What does BLEU do for veterans and the 22 daily suicides crisis"},
+  {n:"13",t:"Maternal Mental Health -- #1 Childbirth Complication",s:"1 in 5 mothers affected",c:"#F472B6",q:"Explain maternal mental health and how BLEU Therapy supports perinatal care"},
+  {n:"14",t:"Caregiver Burnout -- $1.1 Trillion Unpaid Economy",s:"53M caregivers zero support",c:"#2D8A9E",q:"Tell me about caregiver burnout and the unpaid care economy and BLEU Recovery"},
+  {n:"15",t:"Health Literacy -- 54 Percent Below 6th Grade",s:"Alvai auto-calibrates reading level",c:"#C9A84C",q:"Tell me about health literacy and how Alvai functions as a real-time literacy intervention"},
+  {n:"16",t:"Benefits Desert -- $65B Unclaimed",s:"$183B total underutilized annually",c:"#ba7517",q:"Tell me about benefits underutilization and how Alvai navigates SNAP Medicaid and CHIP"}
+];
+var CHANNELS=[
+  {icon:"",l:"Mental Health",cat:"mental",bg:"rgba(163,45,45,.12)"},
+  {icon:"",l:"Sleep Science",cat:"sleep",bg:"rgba(24,95,165,.12)"},
+  {icon:"",l:"Metabolic",cat:"metabolic",bg:"rgba(186,117,23,.12)"},
+  {icon:"",l:"Nutrition",cat:"nutrition",bg:"rgba(29,158,117,.12)"},
+  {icon:"",l:"Meditation",cat:"meditation",bg:"rgba(112,85,168,.12)"},
+  {icon:"",l:"Fitness",cat:"fitness",bg:"rgba(45,138,158,.12)"},
+  {icon:"",l:"Recovery",cat:"recovery",bg:"rgba(201,168,76,.12)"},
+  {icon:"$",l:"Finance",cat:"finance",bg:"rgba(29,158,117,.12)"},
+  {icon:"",l:"Spirit",cat:"spirit",bg:"rgba(201,168,76,.12)"},
+  {icon:"*",l:"Research",cat:"research",bg:"rgba(163,45,45,.12)"}
 ];
 
-var VIDS1 = [
-  {id:'KD9TmYhDFz8',t:'Master Your Sleep & Be More Alert When Awake',ch:'Huberman Lab',av:'HL',ac:'#185fa5',cat:'sleep',dur:'1:22:15',views:'8.2M views',tag:'Sleep',tc:'rgba(24,95,165,.85)',cf:'rgba(24,95,165,.15)',cc:'#60A5FA',cred:'Stanford'},
-  {id:'0_CLTK0Drk0',t:'Controlling Dopamine For Motivation, Focus & Satisfaction',ch:'Huberman Lab',av:'HL',ac:'#ba7517',cat:'mental',dur:'2:05:38',views:'12.1M views',tag:'Dopamine',tc:'rgba(186,117,23,.85)',cf:'rgba(186,117,23,.15)',cc:'#C9A84C',cred:'Neuroscience'},
-  {id:'tEmt1Znux58',t:'Gut Health — The Key to Your Mental & Physical Health',ch:'Dr. Mark Hyman',av:'MH',ac:'#1d9e75',cat:'nutrition',dur:'58:22',views:'2.4M views',tag:'Nutrition',tc:'rgba(29,158,117,.85)',cf:'rgba(29,158,117,.15)',cc:'#1d9e75',cred:'Cleveland Clinic'},
-  {id:'0ITEPMgDcaI',t:'The Science of Mindfulness Meditation',ch:'Sam Harris',av:'SH',ac:'#7055a8',cat:'meditation',dur:'1:12:04',views:'5.8M views',tag:'Meditation',tc:'rgba(112,85,168,.85)',cf:'rgba(112,85,168,.15)',cc:'#a78bfa',cred:'Neuroscience'},
-  {id:'lN1-CahCQy0',t:'How Exercise Reshapes Your Brain',ch:'TED',av:'TED',ac:'#a32d2d',cat:'fitness',dur:'13:28',views:'9.1M views',tag:'Fitness',tc:'rgba(163,45,45,.85)',cf:'rgba(163,45,45,.15)',cc:'#f87171',cred:'TED 2024'},
-  {id:'XNkPyNP1B-c',t:'Dr. Matthew Walker: The Science of Sleep',ch:'Found My Fitness',av:'FMF',ac:'#185fa5',cat:'sleep',dur:'1:44:50',views:'3.1M views',tag:'Sleep',tc:'rgba(24,95,165,.85)',cf:'rgba(24,95,165,.15)',cc:'#60A5FA',cred:'UC Berkeley'},
-];
-
-var VIDS2 = [
-  {id:'GQlzvMkFGYA',t:'How Your Breath Controls Your Mind & Body',ch:'TED',av:'TED',ac:'#2D8A9E',cat:'meditation',dur:'15:12',views:'4.2M views',tag:'Breathwork',tc:'rgba(45,138,158,.85)',cf:'rgba(45,138,158,.15)',cc:'#2DD4A8',cred:'TED 2024'},
-  {id:'oBu-pQG6sTY',t:'20 Minute Morning Yoga — Full Body Flow',ch:'Yoga With Adriene',av:'YA',ac:'#1d9e75',cat:'fitness',dur:'20:04',views:'11M views',tag:'Yoga',tc:'rgba(29,158,117,.85)',cf:'rgba(29,158,117,.15)',cc:'#1d9e75',cred:'Certified RYT'},
-  {id:'8jPQjjsBbIc',t:'Breathing Techniques to Reduce Stress & Anxiety',ch:'Wim Hof',av:'WH',ac:'#2D8A9E',cat:'meditation',dur:'22:15',views:'6.7M views',tag:'Breathwork',tc:'rgba(45,138,158,.85)',cf:'rgba(45,138,158,.15)',cc:'#2DD4A8',cred:'Certified'},
-  {id:'inpok4MKVLM',t:'10-Minute Guided Meditation for Beginners',ch:'Great Meditation',av:'GM',ac:'#7055a8',cat:'meditation',dur:'10:11',views:'8.9M views',tag:'Meditation',tc:'rgba(112,85,168,.85)',cf:'rgba(112,85,168,.15)',cc:'#a78bfa',cred:'Guided'},
-  {id:'a5kKLCaQGFo',t:'The Science of Strength Training for Longevity',ch:'Dr. Andy Galpin',av:'AG',ac:'#185fa5',cat:'fitness',dur:'1:28:33',views:'4.3M views',tag:'Strength',tc:'rgba(24,95,165,.85)',cf:'rgba(24,95,165,.15)',cc:'#60A5FA',cred:'Cal State'},
-  {id:'mherJbWTWlg',t:'Optimal Protocols for Muscle Growth',ch:'Huberman Lab',av:'HL',ac:'#ba7517',cat:'fitness',dur:'1:53:04',views:'7.2M views',tag:'Fitness',tc:'rgba(186,117,23,.85)',cf:'rgba(186,117,23,.15)',cc:'#C9A84C',cred:'Stanford'},
-];
-
-var VIDS3 = [
-  {id:'1ZYbU82uhe8',t:'Deep Sleep Music — Calm Healing Frequencies',ch:'Soothing Relaxation',av:'SR',ac:'#185fa5',cat:'sleep',dur:'8:00:00',views:'42M views',tag:'Sleep Music',tc:'rgba(24,95,165,.85)',cf:'rgba(24,95,165,.15)',cc:'#60A5FA',cred:'432Hz'},
-  {id:'dFPaADjVe9E',t:'Recovery & Addiction: What Science Actually Says',ch:'TED',av:'TED',ac:'#C9A84C',cat:'recovery',dur:'14:35',views:'2.8M views',tag:'Recovery',tc:'rgba(201,168,76,.85)',cf:'rgba(201,168,76,.15)',cc:'#C9A84C',cred:'TED 2024'},
-  {id:'xmzmApuFELY',t:'How to Improve Your Focus: Science-Based Tools',ch:'Huberman Lab',av:'HL',ac:'#2D8A9E',cat:'mental',dur:'1:36:42',views:'5.6M views',tag:'Focus',tc:'rgba(45,138,158,.85)',cf:'rgba(45,138,158,.15)',cc:'#2DD4A8',cred:'Stanford'},
-  {id:'5o_sCEMYcBk',t:'Spiritual Health & Purpose in Modern Life',ch:'BLEU Spirit',av:'B',ac:'#7055a8',cat:'spirit',dur:'31:18',views:'892K views',tag:'Spirit',tc:'rgba(112,85,168,.85)',cf:'rgba(112,85,168,.15)',cc:'#a78bfa',cred:'BLEU 2025'},
-  {id:'QmOF0csBqBO',t:'Nutrients for Brain Health & Cognitive Function',ch:'Huberman Lab',av:'HL',ac:'#1d9e75',cat:'nutrition',dur:'1:12:44',views:'3.4M views',tag:'Brain Health',tc:'rgba(29,158,117,.85)',cf:'rgba(29,158,117,.15)',cc:'#1d9e75',cred:'Stanford'},
-  {id:'T9aRN9h4mOw',t:'Financial Wellness & Health Outcomes',ch:'BLEU Finance',av:'B',ac:'#C9A84C',cat:'finance',dur:'44:12',views:'341K views',tag:'Finance',tc:'rgba(201,168,76,.85)',cf:'rgba(201,168,76,.15)',cc:'#C9A84C',cred:'BLEU 2025'},
-];
-
-var MUSIC = [
-  {icon:'&#127897;',t:'Sleep Frequencies',sub:'432Hz · 8 hrs deep sleep',q:'Find me the best sleep frequency music and binaural beats for deep sleep restoration'},
-  {icon:'&#129514;',t:'Morning Meditation',sub:'15 min · guided breath',q:'Find me a 15-minute guided morning meditation for clarity and intention setting'},
-  {icon:'&#127880;',t:'Focus Flow',sub:'Lo-fi · no lyrics',q:'Find me the best lo-fi music and focus soundscapes for deep concentration and flow state'},
-  {icon:'&#128149;',t:'Heart Coherence',sub:'528Hz · emotional healing',q:'Find me 528Hz heart coherence music for emotional healing and nervous system regulation'},
-  {icon:'&#127807;',t:'Nature Soundscapes',sub:'Rain · forest · ocean',q:'Find me nature soundscapes — rain, forest, ocean — for relaxation and sleep'},
-  {icon:'&#127928;',t:'New Orleans Jazz',sub:'Live soul · healing',q:'Play New Orleans jazz and soul music — the healing power of music from the birthplace of jazz'},
-  {icon:'&#128564;',t:'Delta Wave Sleep',sub:'0.5-4Hz · deep rest',q:'Find the best delta wave frequencies for deep sleep and nervous system recovery'},
-  {icon:'&#9889;',t:'Energy Activation',sub:'174Hz · morning rise',q:'Find me high-energy morning music for activation, motivation and momentum'},
-];
-
-var RESEARCH = [
-  {n:'01',t:'Loneliness — 871K Deaths/Year',s:'9:1 social prescribing ROI',c:'#a32d2d',cat:'research',q:'Tell me about the WHO loneliness crisis, the UK social prescribing model, and the BLEU 90-day New Orleans pilot'},
-  {n:'02',t:'Sleep Deprivation — $411B Crisis',s:'$9,100 lifetime gain/student',c:'#185fa5',cat:'sleep',q:'Explain the sleep deprivation epidemic — the $411B cost, school start time evidence, and BLEU Sleep intelligence'},
-  {n:'03',t:"Men's Mental Health — 80% of Suicides Male",s:'54% receive zero treatment',c:'#ba7517',cat:'mental',q:"Tell me about men's mental health crisis — the 39K annual deaths, the treatment gap, and BLEU male-adapted interventions"},
-  {n:'04',t:"Women's Health — $1 Trillion Gap",s:'$3 return per $1 invested',c:'#F472B6',cat:'research',q:"Explain the $1T women's health gap — WEF McKinsey 2024, the 8 conditions, and how BLEU addresses each one"},
-  {n:'05',t:'Food Prescription — $32B Ignored',s:'10:1 ROI documented',c:'#1d9e75',cat:'nutrition',q:'Tell me about food as medicine — the evidence, the 10:1 ROI, and how BLEU Vessel tab deploys food prescription'},
-  {n:'06',t:'Workplace Burnout — $322B Clinical Crisis',s:'5.7:1 ROI',c:'#C9A84C',cat:'mental',q:'What is workplace burnout and how does the BLEU enterprise worksite wellness model address it with documented ROI'},
-  {n:'07',t:'Medical Debt — Financial Toxicity Kills',s:'56% worse cancer outcomes',c:'#7055a8',cat:'finance',q:'Tell me about financial toxicity in healthcare and the BLEU Finance tab tools for debt triage and cost navigation'},
-  {n:'08',t:'New Orleans Youth — 1 in 3 in Poverty',s:'Jazz Bird NOLA proof of concept',c:'#2D8A9E',cat:'research',q:'Tell me about the New Orleans youth crises — the data, the Jazz Bird NOLA 501c3, and how BLEU is the proof of concept'},
-  {n:'09',t:'Grief — 40% Get Zero Support',s:'$3,600 excess cost per case',c:'#7055a8',cat:'mental',q:'Tell me about the grief crisis and the BLEU Therapy tab compassionate companion model'},
-  {n:'10',t:'Medication Non-Adherence — $500B Wasted',s:'10:1 MTM ROI',c:'#1d9e75',cat:'finance',q:'Explain the medication non-adherence crisis and how BLEU Finance wires Cost Plus Drugs, GoodRx, and Amazon Pharmacy'},
-  {n:'11',t:'Chronic Pain — 51M Undertreated Americans',s:'3:1 integrative ROI',c:'#a32d2d',cat:'recovery',q:'Tell me about the chronic pain crisis and how BLEU integrates acupuncture, CBT, and nutrition as the solution'},
-  {n:'12',t:'Veterans — 22 Suicides a Day',s:'40% without VA access',c:'#185fa5',cat:'recovery',q:'What does BLEU do for veterans? Tell me about the 22 daily suicides and the veteran-adapted intervention model'},
-  {n:'13',t:'Maternal Mental Health — #1 Childbirth Complication',s:'1 in 5 mothers affected',c:'#F472B6',cat:'research',q:'Explain maternal mental health — the scale, the EPDS screening, and how BLEU Therapy supports perinatal care'},
-  {n:'14',t:"Caregiver Burnout — $1.1T Unpaid Economy",s:'53M caregivers, 0 support',c:'#2D8A9E',cat:'recovery',q:'Tell me about caregiver burnout and the $1.1T unpaid care economy — what BLEU Recovery does about it'},
-  {n:'15',t:'Health Literacy — 54% Below 6th Grade',s:'Alvai auto-calibrates level',c:'#C9A84C',cat:'research',q:'Tell me about health literacy and how Alvai functions as a real-time health literacy intervention'},
-  {n:'16',t:'Benefits Desert — $65B Unclaimed',s:'$183B total underutilized',c:'#ba7517',cat:'finance',q:'Tell me about benefits underutilization and how Alvai navigates SNAP, Medicaid, CHIP for users'},
-];
-
-function card(v){
-  return '<div class="vcard" data-cat="'+v.cat+'">' +
-    '<div class="vthumb">' +
-    '<img src="https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg" alt="'+v.t+'" loading="lazy"/>' +
-    '<div class="voverlay"><div class="vplay" onclick="pv(''+v.id+'',event)">&#9654;</div></div>' +
-    '<span class="vdur">'+v.dur+'</span>' +
-    '<span class="vtag" style="background:'+v.tc+';color:#fff">'+v.tag+'</span>' +
-    '</div>' +
-    '<div class="vbody">' +
-    '<div class="vch"><div class="vav" style="background:'+v.ac+'22;color:'+v.ac+'">'+v.av+'</div>' +
-    '<span class="vchn">'+v.ch+'</span>' +
-    '<span class="vcred" style="background:'+v.cf+';color:'+v.cc+'">'+v.cred+'</span></div>' +
-    '<div class="vtitle">'+v.t+'</div>' +
-    '<div class="vmeta">'+v.views+'</div>' +
-    '</div></div>';
+function mkCard(v){
+  var d=document.createElement("div");
+  d.className="vc";d.dataset.cat=v.cat;
+  var thumbDiv=document.createElement("div");thumbDiv.className="vt";
+  var img=document.createElement("img");
+  img.src="https://img.youtube.com/vi/"+v.id+"/mqdefault.jpg";
+  img.alt=v.t;img.loading="lazy";
+  var ov=document.createElement("div");ov.className="vt-ov";
+  var btn=document.createElement("div");btn.className="vbtn";btn.textContent="";
+  var dur=document.createElement("span");dur.className="vdur";dur.textContent=v.dur;
+  var tag=document.createElement("span");tag.className="vtag";
+  tag.style.background=v.tc;tag.style.color="#fff";tag.textContent=v.tag;
+  ov.appendChild(btn);thumbDiv.appendChild(img);thumbDiv.appendChild(ov);
+  thumbDiv.appendChild(dur);thumbDiv.appendChild(tag);
+  thumbDiv.addEventListener("click",function(){
+    var existing=thumbDiv.querySelector(".vif");
+    if(existing){existing.remove();return;}
+    var wrap=document.createElement("div");wrap.className="vif";
+    var ifr=document.createElement("iframe");
+    ifr.src="https://www.youtube.com/embed/"+v.id+"?autoplay=1&rel=0";
+    ifr.allow="autoplay;encrypted-media";ifr.allowFullscreen=true;
+    wrap.appendChild(ifr);thumbDiv.appendChild(wrap);
+  });
+  var body=document.createElement("div");body.className="vb";
+  var ch=document.createElement("div");ch.className="vch";
+  var av=document.createElement("div");av.className="vav";
+  av.style.background=v.ac+"22";av.style.color=v.ac;av.textContent=v.av;
+  var cn=document.createElement("span");cn.className="vcn";cn.textContent=v.ch;
+  var cr=document.createElement("span");cr.className="vcr";
+  cr.style.background=v.cf;cr.style.color=v.cc;cr.textContent=v.cr;
+  ch.appendChild(av);ch.appendChild(cn);ch.appendChild(cr);
+  var ti=document.createElement("div");ti.className="vti";ti.textContent=v.t;
+  var vv=document.createElement("div");vv.className="vv";vv.textContent=v.views+" views";
+  body.appendChild(ch);body.appendChild(ti);body.appendChild(vv);
+  d.appendChild(thumbDiv);d.appendChild(body);
+  return d;
 }
 
-function pv(id, e){
-  e.stopPropagation();
-  var thumb = e.target.closest('.vthumb');
-  var old = thumb.querySelector('.vplaying');
-  if(old){old.remove();return;}
-  var d = document.createElement('div');
-  d.className = 'vplaying';
-  d.innerHTML = '<iframe src="https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0" allow="autoplay;encrypted-media" allowfullscreen></iframe>';
-  thumb.appendChild(d);
+function fillGrid(id,arr){
+  var g=document.getElementById(id);
+  if(!g)return;
+  arr.forEach(function(v){g.appendChild(mkCard(v));});
 }
 
-var g1=document.getElementById('vg1');
-var g2=document.getElementById('vg2');
-var g3=document.getElementById('vg3');
-var pg=document.getElementById('pgrid');
-var rl=document.getElementById('rlib');
-var cs=document.getElementById('cstrip');
-
-if(g1)g1.innerHTML=VIDS1.map(card).join('');
-if(g2)g2.innerHTML=VIDS2.map(card).join('');
-if(g3)g3.innerHTML=VIDS3.map(card).join('');
-
-if(pg)pg.innerHTML=MUSIC.map(function(m){
-  return '<div class="pcard" onclick="ask('learn',''+m.q.replace(/'/g,"\'")+'')">'+
-    '<div class="picon">'+m.icon+'</div>'+
-    '<div class="ptitle">'+m.t+'</div>'+
-    '<div class="psub">'+m.sub+'</div></div>';
-}).join('');
-
-if(rl)rl.innerHTML=RESEARCH.map(function(r){
-  return '<div class="rrow" data-cat="'+r.cat+'" onclick="ask('learn',''+r.q.replace(/'/g,"\'")+'')">'+
-    '<div class="rnum" style="color:'+r.c+'">'+r.n+'</div>'+
-    '<div style="flex:1"><div style="font-size:13px;font-weight:600;color:#E8E0D0;margin-bottom:2px">'+r.t+'</div>'+
-    '<div style="font-size:11px;color:'+r.c+'">'+r.s+'</div></div>'+
-    '<span style="color:#4A5B73;font-size:16px">&#9654;</span></div>';
-}).join('');
-
-if(cs)cs.innerHTML=CHANNELS.map(function(c){
-  return '<div class="chpill" onclick="lf(''+c.cat+'',null)">'+
-    '<div class="chavatar" style="background:'+c.bg+'">'+c.icon+'</div>'+
-    '<div class="chname">'+c.label+'</div></div>';
-}).join('');
-
-function lf(cat,btn){
-  if(btn){document.querySelectorAll('.lfbtn').forEach(function(b){b.classList.remove('on')});btn.classList.add('on');}
-  document.querySelectorAll('.vcard,.rrow').forEach(function(c){
-    c.style.display=(cat==='all'||c.dataset.cat===cat)?'':'none';
+function fillMusic(id,arr){
+  var g=document.getElementById(id);if(!g)return;
+  arr.forEach(function(m){
+    var d=document.createElement("div");d.className="mc";
+    var ico=document.createElement("div");ico.style.cssText="font-size:28px;margin-bottom:8px";ico.textContent=m.icon;
+    var ti=document.createElement("div");ti.style.cssText="font-size:12px;font-weight:600;color:#E8E0D0;margin-bottom:3px;line-height:1.3";ti.textContent=m.t;
+    var sb=document.createElement("div");sb.style.cssText="font-size:10px;color:#7B8DA6";sb.textContent=m.sub;
+    d.appendChild(ico);d.appendChild(ti);d.appendChild(sb);
+    d.addEventListener("click",function(){ask("learn",m.q);});
+    g.appendChild(d);
   });
 }
 
-function learnQ(val){if(val.trim())ask('learn',val.trim());}
+function fillResearch(id,arr){
+  var g=document.getElementById(id);if(!g)return;
+  arr.forEach(function(r){
+    var d=document.createElement("div");d.className="rr";d.dataset.cat="research";
+    var n=document.createElement("div");n.className="rn";n.style.color=r.c;n.textContent=r.n;
+    var info=document.createElement("div");info.style.flex="1";
+    var ti=document.createElement("div");ti.style.cssText="font-size:13px;font-weight:600;color:#E8E0D0;margin-bottom:2px";ti.textContent=r.t;
+    var st=document.createElement("div");st.style.cssText="font-size:11px;color:"+r.c;st.textContent=r.s;
+    var arr2=document.createElement("span");arr2.style.cssText="color:#4A5B73;font-size:16px;flex-shrink:0";arr2.textContent="";
+    info.appendChild(ti);info.appendChild(st);
+    d.appendChild(n);d.appendChild(info);d.appendChild(arr2);
+    d.addEventListener("click",function(){ask("learn",r.q);});
+    g.appendChild(d);
+  });
+}
 
-window.lf=lf;
-window.learnQ=learnQ;
-window.pv=pv;
+function fillChannels(id,arr){
+  var g=document.getElementById(id);if(!g)return;
+  arr.forEach(function(c){
+    var d=document.createElement("div");d.className="chp";
+    var av=document.createElement("div");av.className="cha";av.style.background=c.bg;
+    av.style.fontSize="20px";av.textContent=c.icon;
+    var nm=document.createElement("div");nm.className="chn";nm.textContent=c.l;
+    d.appendChild(av);d.appendChild(nm);
+    d.addEventListener("click",function(){lfilt(c.cat,null);});
+    g.appendChild(d);
+  });
+}
+
+fillGrid("lvg1",V1);fillGrid("lvg2",V2);fillGrid("lvg3",V3);
+fillMusic("lmrow",MUSIC);fillResearch("lrlib",RESEARCH);fillChannels("lchbar",CHANNELS);
+
+function lfilt(cat,btn){
+  if(btn){document.querySelectorAll(".lf").forEach(function(b){b.classList.remove("on");});btn.classList.add("on");}
+  document.querySelectorAll(".vc,.rr").forEach(function(c){
+    c.style.display=(cat==="all"||c.dataset.cat===cat)?"":"none";
+  });
+}
+window.lfilt=lfilt;
+
+var lb=document.getElementById("lasbtn");
+if(lb)lb.addEventListener("click",function(){
+  var inp=document.getElementById("lainput");
+  if(inp&&inp.value.trim()){ask("learn",inp.value.trim());inp.value="";}
+});
 
 })();
 </script>
