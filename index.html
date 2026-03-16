@@ -1781,187 +1781,406 @@ id="in-vessel" placeholder="What supplements should I take? What interacts with 
 
 <!-- ═══════════════════════ MAP ═══════════════════════ -->
 <div class="panel" id="p-map">
-  <div class="section-label">THE LIVING MAP</div>
-  <h1 class="hero-title">🗺️ <span class="teal">8,606 Locations</span></h1>
-  <p class="hero-sub">Your zip code predicts your health better than your genetic code. BLEU maps the infrastructure that makes healing possible — practitioners, gyms, studios, health food stores, treatment centers, AA meetings, dispensaries — all validated, all in one view.</p>
 
-  <div class="quick-row">
-    <span class="quick-btn" onclick="ask('map','yoga studios in New Orleans')">🧘 Yoga Studios</span>
-    <span class="quick-btn" onclick="ask('map','health food stores in New Orleans')">🥗 Health Food</span>
-    <span class="quick-btn" onclick="ask('map','gyms and fitness centers in New Orleans')">💪 Gyms</span>
-    <span class="quick-btn" onclick="ask('map','meditation centers near me')">🧘 Meditation</span>
-    <span class="quick-btn" onclick="ask('map','AA and NA meetings in New Orleans')">🔥 Recovery Meetings</span>
-    <span class="quick-btn" onclick="ask('map','acupuncture clinics in New Orleans')">🪡 Acupuncture</span>
-    <span class="quick-btn" onclick="ask('map','dispensaries in New Orleans')">🌿 Dispensaries</span>
-    <span class="quick-btn" onclick="ask('map','mental health clinics in New Orleans')">🧠 Mental Health</span>
-  <div style="margin:16px 0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('map','Show me practitioners near me in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#129658;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Practitioners</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('map','Show pharmacies and dispensaries near me')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#128137;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Pharmacies</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('map','Show recovery meetings near me in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:18px">&#128154;</div><div style="color:#4ecdc4;font-weight:500;font-size:11px;margin-top:4px">Recovery</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('map','Show gyms yoga and fitness near me in New Orleans')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:18px">&#127939;</div><div style="color:#d4af37;font-weight:500;font-size:11px;margin-top:4px">Fitness</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about City Park in New Orleans')"><div style="color:#4ecdc4;font-weight:600;font-size:13px">City Park</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">1,300 acres. Trails, meditation, ancient oaks. Free.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about Crescent Park in New Orleans')"><div style="color:#d4af37;font-weight:600;font-size:13px">Crescent Park</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Riverfront 1.4mi. Sunrise yoga. Bywater.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about Ochsner Health in New Orleans')"><div style="color:#4ecdc4;font-weight:600;font-size:13px">Ochsner Health</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">All specialties. NPI verified. Major system.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about Palmer Park Yoga in New Orleans')"><div style="color:#d4af37;font-weight:600;font-size:13px">Palmer Park Yoga</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Free Saturday 9am. Community. All levels.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about NOLA Cannabis Co in New Orleans')"><div style="color:#4ecdc4;font-weight:600;font-size:13px">NOLA Cannabis Co</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Licensed dispensary. Full menus. Budtender guidance.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:14px;cursor:pointer" onclick="ask('map','Tell me about Tulane Behavioral in New Orleans')"><div style="color:#d4af37;font-weight:600;font-size:13px">Tulane Behavioral</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;font-weight:300">Psychiatry + counseling. Insurance accepted.</div></div></div></div></div>
-
-  <div class="chat-box"><div class="chat-messages" id="chat-map"></div><div class="chat-input-row"><input autocomplete="off" id="in-map" placeholder="Find wellness near me — gyms, parks, clinics, pharmacies..." onkeydown="if(event.key==='Enter')send('map')"><button onclick="send('map')">Explore</button></div></div>
-
-  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
-<div class="divider"></div>
-  <div class="section-label">BLEU CITIES NETWORK</div>
-  <style>
-.wow-card{position:relative;border-radius:12px;padding:24px;cursor:pointer;transition:all .4s cubic-bezier(.16,1,.3,1);overflow:hidden;background:rgba(20,26,40,.8);border:1px solid rgba(255,255,255,.06)}
-.wow-card:hover{transform:translateY(-4px);border-color:rgba(200,169,81,.25);box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.wow-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);opacity:0;transition:opacity .3s}
-.wow-card:hover::before{opacity:1}
-.wow-card .card-title{font-size:17px;font-weight:600;margin-bottom:8px;transition:color .3s}
-.wow-card:hover .card-title{color:var(--accent)}
-.wow-card .card-desc{font-size:13px;color:var(--dim);line-height:1.7}
-.wow-card .card-expand{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.16,1,.3,1);opacity:0}
-.wow-card.open .card-expand{max-height:600px;opacity:1;transition:max-height .5s cubic-bezier(.16,1,.3,1),opacity .4s .1s}
-.wow-card .card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
-.wow-card .card-tag{font-size:10px;padding:3px 8px;border-radius:3px;font-weight:600;letter-spacing:.3px}
-.wow-card .card-icon{font-size:28px;margin-bottom:10px;display:block;transition:transform .3s}
-.wow-card:hover .card-icon{transform:scale(1.15)}
-.wow-card .expand-hint{font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:8px;transition:color .3s}
-.wow-card:hover .expand-hint{color:var(--accent)}
-@keyframes cardIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.wow-card{animation:cardIn .6s cubic-bezier(.16,1,.3,1) backwards}
-.wow-card:nth-child(1){animation-delay:.05s}.wow-card:nth-child(2){animation-delay:.1s}.wow-card:nth-child(3){animation-delay:.15s}
-.wow-card:nth-child(4){animation-delay:.2s}.wow-card:nth-child(5){animation-delay:.25s}.wow-card:nth-child(6){animation-delay:.3s}
-.wow-card:nth-child(7){animation-delay:.35s}.wow-card:nth-child(8){animation-delay:.4s}.wow-card:nth-child(9){animation-delay:.45s}
+<style>
+#bleu-map{height:420px;border-radius:14px;overflow:hidden;border:1px solid rgba(45,138,158,.2);position:relative;z-index:0}
+.map-layer-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid rgba(45,138,158,.2);background:rgba(8,14,26,.85);cursor:pointer;font-size:11px;color:#7B8DA6;transition:all .2s;font-family:'DM Sans',sans-serif}
+.map-layer-btn.on{background:rgba(45,138,158,.15);border-color:#2D8A9E;color:#2DD4A8}
+.map-layer-btn:hover{border-color:#2D8A9E;color:#E8E0D0}
+.city-score-ring{width:64px;height:64px;position:relative;display:inline-flex;align-items:center;justify-content:center}
+.city-score-ring svg{position:absolute;top:0;left:0;transform:rotate(-90deg)}
+.city-score-val{font-size:18px;font-weight:600;color:#C9A84C;position:relative;z-index:1}
+.crisis-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;flex-shrink:0}
+.env-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px}
+.env-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.map-intel-card{background:rgba(8,14,26,.92);border:1px solid rgba(45,138,158,.15);border-radius:12px;padding:14px;margin-bottom:10px}
+.zip-input{background:rgba(8,14,26,.8);border:1px solid rgba(45,138,158,.3);border-radius:8px;padding:8px 12px;color:#E8E0D0;font-size:13px;width:120px;font-family:'DM Sans',sans-serif;outline:none}
+.zip-input:focus{border-color:#2D8A9E}
+@keyframes pulseNode{0%,100%{r:5;opacity:.8}50%{r:8;opacity:1}}
+.city-enterprise-card{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(45,138,158,.06));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:20px;margin-top:16px}
 </style>
 
-<div class="card-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px" id="home-wow-grid">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
-  <div class="wow-card" style="--accent:#FB923C" onclick="this.classList.toggle('open')">
-    <span class="card-icon">🌙</span>
-    <div class="card-title" style="color:#FB923C">I Can't Sleep</div>
-    <div class="card-desc">Magnesium glycinate, ashwagandha, L-theanine — exact doses, brands, prices. Plus sleep hygiene protocols that actually work. Not generic advice. A real plan.</div>
-    <div class="card-tags"><span class="card-tag" style="background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.2);color:#FB923C">Protocols · Products · Science · Safety — Connected</span></div>
-    <div class="card-expand" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(251,146,60,.1)">
-      <div style="font-size:12px;color:var(--dim);line-height:1.8">
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">What Alvai builds for you:</strong> A personalized sleep stack with exact products from Thorne, Nordic Naturals, or NOW Foods — checked against your medications for interactions via our FDA adverse event database.</div>
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">The science:</strong> Magnesium glycinate (400mg) improves sleep latency by 17 minutes. L-theanine (200mg) increases alpha brain waves. Ashwagandha (600mg KSM-66) reduces cortisol 30%.</div>
-        <div><strong style="color:var(--cream)">Connected to:</strong> Supplement Safety Engine · Vessel Products · Practitioner Directory · Protocols</div>
+<div class="section-label">CITY INTELLIGENCE</div>
+<h1 class="hero-title"><span class="teal">The Living Map</span></h1>
+<p class="hero-sub" style="max-width:640px;margin:0 auto 20px">Your zip code predicts your health better than your genetic code. BLEU maps the full healing infrastructure of any city — practitioners, recovery, environment, crisis hotspots, social determinants — and shows exactly where the gaps are.</p>
+
+<!-- Layer controls -->
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px">
+  <button class="map-layer-btn on" id="btn-practitioners" onclick="toggleLayer('practitioners',this)">&#9673; Practitioners</button>
+  <button class="map-layer-btn on" id="btn-recovery" onclick="toggleLayer('recovery',this)">&#10084; Recovery</button>
+  <button class="map-layer-btn" id="btn-environment" onclick="toggleLayer('environment',this)">&#127807; Environment</button>
+  <button class="map-layer-btn" id="btn-crises" onclick="toggleLayer('crises',this)">&#9888; Crisis Hotspots</button>
+  <button class="map-layer-btn" id="btn-social" onclick="toggleLayer('social',this)">&#127968; Social Determinants</button>
+</div>
+
+<!-- Main Map -->
+<div id="bleu-map"></div>
+
+<!-- Zip search -->
+<div style="display:flex;align-items:center;gap:10px;margin:14px 0;flex-wrap:wrap">
+  <input class="zip-input" id="zip-search" placeholder="Enter ZIP code" maxlength="5" onkeydown="if(event.key==='Enter')searchZip()"/>
+  <button class="map-layer-btn on" onclick="searchZip()">Search Healing Radius</button>
+  <button class="map-layer-btn" onclick="locateMe()">Use My Location</button>
+  <span id="zip-result" style="font-size:12px;color:#2DD4A8"></span>
+</div>
+
+<!-- 3-column intel grid -->
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
+
+  <!-- City Health Score -->
+  <div class="map-intel-card">
+    <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C9A84C;margin-bottom:10px">City Health Score</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="city-score-ring">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(201,168,76,.1)" stroke-width="5"/>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#C9A84C" stroke-width="5" stroke-dasharray="163.4" stroke-dashoffset="98" stroke-linecap="round" id="city-score-circle"/>
+        </svg>
+        <span class="city-score-val" id="city-score-val">40</span>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#E8E0D0" id="city-name">New Orleans</div>
+        <div style="font-size:11px;color:#7B8DA6;margin-top:2px">#50 in US health rankings</div>
+        <div style="font-size:11px;color:#a32d2d;margin-top:2px">Louisiana ranked last</div>
       </div>
     </div>
-    <div class="expand-hint">TAP TO EXPLORE →</div>
+    <div style="margin-top:10px;font-size:11px;color:#7B8DA6">
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>Practitioner density</span><span style="color:#2DD4A8">6.2/1K</span></div>
+      <div class="env-bar"><div class="env-fill" style="width:42%;background:#2DD4A8"></div></div>
+      <div style="display:flex;justify-content:space-between;margin:6px 0 3px"><span>Food access</span><span style="color:#a32d2d">31%</span></div>
+      <div class="env-bar"><div class="env-fill" style="width:31%;background:#a32d2d"></div></div>
+      <div style="display:flex;justify-content:space-between;margin:6px 0 3px"><span>Recovery infrastructure</span><span style="color:#ba7517">58%</span></div>
+      <div class="env-bar"><div class="env-fill" style="width:58%;background:#ba7517"></div></div>
+    </div>
   </div>
 
-  <div class="wow-card" style="--accent:#F472B6;border-color:rgba(244,114,182,.15)" onclick="this.classList.toggle('open')">
-    <span class="card-icon">🧠</span>
-    <div class="card-title" style="color:#F472B6">Find Me a Therapist</div>
-    <div class="card-desc">485,476 NPI-verified practitioners. Local in your city with phone numbers and addresses. Plus BetterHelp from $60/week. Plus free crisis lines. Every price point, every time.</div>
-    <div class="card-tags"><span class="card-tag" style="background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.2);color:#F472B6">Local + Virtual + Free</span></div>
-    <div class="card-expand" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(244,114,182,.1)">
-      <div style="font-size:12px;color:var(--dim);line-height:1.8">
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">How it works:</strong> Tell Alvai what hurts — anxiety, trauma, grief, relationship issues — and get matched to NPI-verified therapists in your area. Filter by insurance, specialty, sliding scale.</div>
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">Three tiers:</strong> Local in-person (Directory) → Virtual therapy (BetterHelp $60/wk) → Free crisis support (988, 741741, SAMHSA). No one falls through the cracks.</div>
-        <div><strong style="color:var(--cream)">Connected to:</strong> Directory · Therapy (22 AI modes) · Recovery Support · Crisis Resources</div>
+  <!-- Environmental Intelligence -->
+  <div class="map-intel-card">
+    <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#2D8A9E;margin-bottom:10px">Environmental Health</div>
+    <div id="env-data">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;color:#7B8DA6">Air Quality (AQI)</span>
+        <span style="font-size:13px;font-weight:600;color:#1d9e75" id="aqi-val">47</span>
       </div>
-    </div>
-    <div class="expand-hint">TAP TO EXPLORE →</div>
-  </div>
-
-  <div class="wow-card" style="--accent:#FB923C" onclick="this.classList.toggle('open')">
-    <span class="card-icon">💊</span>
-    <div class="card-title" style="color:#FB923C">Build My Supplement Stack</div>
-    <div class="card-desc">Thorne, Nordic Naturals, NOW Foods — clinically dosed, 5-layer safety engine. Every recommendation comes with the mechanism, the brand, and the price. No guessing.</div>
-    <div class="card-tags"><span class="card-tag" style="background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.2);color:#FB923C">Thorne + Amazon + Safety Engine</span></div>
-    <div class="card-expand" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(251,146,60,.1)">
-      <div style="font-size:12px;color:var(--dim);line-height:1.8">
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">5-Layer Safety:</strong> 1) FDA adverse event check 2) Drug interaction screening 3) Dose validation 4) Brand quality verification 5) Contraindication review. Products earn their place — they don\'t buy it.</div>
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">Real products:</strong> Thorne Magnesium Bisglycinate ($25), Nordic Naturals Ultimate Omega ($28), NOW Ashwagandha ($14). Every link goes to the actual product with affiliate transparency.</div>
-        <div><strong style="color:var(--cream)">Connected to:</strong> Vessel · Supplement Safety · Alvai Protocols · Drug Interaction Checker</div>
+      <div class="env-bar" style="margin-bottom:10px"><div class="env-fill" style="width:47%;background:#1d9e75" id="aqi-bar"></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;color:#7B8DA6">UV Index</span>
+        <span style="font-size:13px;font-weight:600;color:#ba7517" id="uv-val">7</span>
       </div>
-    </div>
-    <div class="expand-hint">TAP TO EXPLORE →</div>
-  </div>
-
-  <div class="wow-card" style="--accent:var(--teal)" onclick="this.classList.toggle('open')">
-    <span class="card-icon">🌿</span>
-    <div class="card-title" style="color:var(--teal)">ECS Intelligence</div>
-    <div class="card-desc">28 years of plant intelligence. 127-year healing lineage. ECSIQ protocols matched to conditions. Terpene profiles. Drug interactions checked. Beginner to expert. No judgment.</div>
-    <div class="card-tags"><span class="card-tag" style="background:rgba(45,212,168,.12);border:1px solid rgba(45,212,168,.2);color:var(--teal)">ECSIQ + Evidence-Based + ECS</span></div>
-    <div class="card-expand" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,212,168,.1)">
-      <div style="font-size:12px;color:var(--dim);line-height:1.8">
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">ECSIQ System:</strong> Your endocannabinoid system intelligence quotient. Protocols matched to conditions — sleep, pain, anxiety, inflammation. Terpene profiles. Delivery methods compared. Drug interactions checked against CYP450 pathways.</div>
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">The lineage:</strong> 127 years of healing knowledge. 28 years of direct experience. 30,000+ patients consulted. Distilled into an AI system that doesn\'t judge — it guides.</div>
-        <div><strong style="color:var(--cream)">Connected to:</strong> 🌿 ECSIQ Tab · Drug Interactions · Practitioner Directory · Protocols</div>
+      <div class="env-bar" style="margin-bottom:10px"><div class="env-fill" style="width:70%;background:#ba7517" id="uv-bar"></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;color:#7B8DA6">Pollen</span>
+        <span style="font-size:13px;font-weight:600;color:#a32d2d" id="pollen-val">High</span>
       </div>
+      <div class="env-bar"><div class="env-fill" style="width:82%;background:#a32d2d" id="pollen-bar"></div></div>
     </div>
-    <div class="expand-hint">TAP TO EXPLORE →</div>
+    <div style="margin-top:10px;font-size:10px;color:#4A5B73">Powered by Meersens API · Live data</div>
   </div>
 
-  <div class="wow-card" style="--accent:var(--teal);border-color:rgba(45,212,168,.15)" onclick="this.classList.toggle('open')">
-    <span class="card-icon">💚</span>
-    <div class="card-title" style="color:var(--teal)">I Need to Talk to Someone</div>
-    <div class="card-desc">CBT, DBT, somatic, motivational, journaling, crisis. AI-guided therapy that meets you where you are. Not a replacement for a therapist — a bridge until you find one. Or alongside one.</div>
-    <div class="card-tags"><span class="card-tag" style="background:rgba(45,212,168,.12);border:1px solid rgba(45,212,168,.2);color:var(--teal)">Free + 988 + BetterHelp</span></div>
-    <div class="card-expand" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,212,168,.1)">
-      <div style="font-size:12px;color:var(--dim);line-height:1.8">
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">22 therapeutic modes:</strong> CBT, DBT, somatic experiencing, motivational interviewing, journaling, crisis support, couples, grief, trauma, psychoeducation, life coaching, career counseling — plus 7 specialized recovery modes and ECS Intelligence.</div>
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">Available now:</strong> No waitlist. No appointment. No insurance needed. 24/7. Powered by Claude AI with medical oversight from Dr. Felicia Stoler.</div>
-        <div><strong style="color:var(--cream)">Connected to:</strong> Therapy Tab · Recovery · Crisis Lines (988) · Practitioner Directory</div>
-      </div>
+  <!-- Crisis Hotspots -->
+  <div class="map-intel-card">
+    <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#a32d2d;margin-bottom:10px">Active Crisis Signals</div>
+    <div style="font-size:11px;color:#7B8DA6;line-height:1.9">
+      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#a32d2d"></span>Child poverty 26% (2x national)</div>
+      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#a32d2d"></span>Male suicide 4x female rate</div>
+      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#ba7517"></span>49% 3rd grade literacy</div>
+      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#ba7517"></span>Mental health desert: 54% untreated</div>
+      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#185fa5"></span>855K practitioners in BLEU directory</div>
+      <div style="display:flex;align-items:center"><span class="crisis-dot" style="background:#1d9e75"></span>BLEU infrastructure: deployed</div>
     </div>
-    <div class="expand-hint">TAP TO EXPLORE →</div>
-  </div>
-
-  <div class="wow-card" style="--accent:#E74C3C" onclick="this.classList.toggle('open')">
-    <span class="card-icon">🩺</span>
-    <div class="card-title" style="color:#E74C3C">Find a Doctor Near Me</div>
-    <div class="card-desc">Back pain, migraines, skin, hormones, fertility, pediatrics — say what hurts and we match you. Chiropractors, specialists, physical therapists. Real addresses, real phone numbers.</div>
-    <div class="card-tags"><span class="card-tag" style="background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.2);color:#E74C3C">485,476 NPI Practitioners</span></div>
-    <div class="card-expand" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(231,76,60,.1)">
-      <div style="font-size:12px;color:var(--dim);line-height:1.8">
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">NPI-verified:</strong> Every practitioner checked against the National Provider Identifier registry. Not Yelp reviews. Federal verification. Credentials confirmed. License active.</div>
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">Specialties:</strong> Primary care, dermatology, orthopedics, endocrinology, pediatrics, OB/GYN, neurology, psychiatry, chiropractic, physical therapy, acupuncture, naturopathic — and more.</div>
-        <div><strong style="color:var(--cream)">Connected to:</strong> Directory · Map · Alvai (describe symptoms, get matched) · Protocols</div>
-      </div>
+    <div style="margin-top:10px">
+      <button class="map-layer-btn on" style="font-size:10px;padding:4px 10px" onclick="ask('map','Show me the top 5 health crises in New Orleans and what BLEU can do about each one')">Deploy BLEU Response</button>
     </div>
-    <div class="expand-hint">TAP TO EXPLORE →</div>
-  </div>
-
-  <div class="wow-card" style="--accent:var(--gold)" onclick="this.classList.toggle('open')">
-    <span class="card-icon">💰</span>
-    <div class="card-title" style="color:var(--gold)">Wellness Budget</div>
-    <div class="card-desc">Insurance navigation, HSA/FSA optimization, GoodRx savings, medical bill negotiation, sliding scale options. Stop spending on what hurts you. Start investing in what heals you.</div>
-    <div class="card-tags"><span class="card-tag" style="background:rgba(200,169,81,.12);border:1px solid rgba(200,169,81,.2);color:var(--gold)">GoodRx + Cost Plus Drugs</span></div>
-    <div class="card-expand" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(200,169,81,.1)">
-      <div style="font-size:12px;color:var(--dim);line-height:1.8">
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">Save real money:</strong> GoodRx saves up to 80% on prescriptions. Mark Cuban's Cost Plus Drugs sells at cost + 15%. Medical bill negotiation can reduce hospital bills by 40-60%. BLEU connects you to all of it.</div>
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">Financial stress = health crisis:</strong> #1 cause of anxiety in America. BLEU's Finance tab covers credit health, insurance navigation, Medicaid, medical debt relief (Dollar For), and retirement planning.</div>
-        <div><strong style="color:var(--cream)">Connected to:</strong> Finance Tab · Vessel (price comparisons) · Practitioner (sliding scale filter)</div>
-      </div>
-    </div>
-    <div class="expand-hint">TAP TO EXPLORE →</div>
-  </div>
-
-  <div class="wow-card" style="--accent:var(--teal)" onclick="this.classList.toggle('open')">
-    <span class="card-icon">🛡️</span>
-    <div class="card-title" style="color:var(--teal)">Recovery Support</div>
-    <div class="card-desc">This is sacred ground. <span style='color:#4ecdc4'>Every path to recovery is valid here</span> — 12-step, SMART Recovery, MAT, harm reduction, faith-based, holistic. BLEU connects you to verified recovery practitioners, support communities, progress tracking, and crisis resources in one place. Relapse is not failure — it\'s data. Family support included. SAMHSA 1-800-662-4357. You are never alone. Our Recovery ecosystem integrates with your Passport, your practitioner from the Directory, and your protocols — so your support system actually talks to each other.</div>
-    <div class="card-tags"><span class="card-tag" style="background:rgba(45,212,168,.12);border:1px solid rgba(45,212,168,.2);color:var(--teal)">SAMHSA + AA + SMART + Free</span></div>
-    <div class="card-expand" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(45,212,168,.1)">
-      <div style="font-size:12px;color:var(--dim);line-height:1.8">
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">8 recovery modes:</strong> Early sobriety, relapse prevention, harm reduction, MAT support, family support, milestone tracking, eating disorders, and crisis companion. Every mode built with lived experience.</div>
-        <div style="margin-bottom:8px"><strong style="color:var(--cream)">All pathways honored:</strong> AA, NA, SMART Recovery, Refuge Recovery, MAT (Suboxone, Vivitrol, methadone), harm reduction. No single path. Your recovery, your way.</div>
-        <div><strong style="color:var(--cream)">Connected to:</strong> Recovery Tab · Therapy · Crisis Lines · Community · Practitioner Directory</div>
-      </div>
-    </div>
-    <div class="expand-hint">TAP TO EXPLORE →</div>
-  </div>
-
-  <div class="wow-card" style="--accent:var(--gold);border:1px solid rgba(200,169,81,.25);background:linear-gradient(135deg,rgba(200,169,81,.08),rgba(96,165,250,.04))" onclick="go('enterprise')">
-    <span class="card-icon">🏛️</span>
-    
-    <div class="card-desc">How BLEU measures, quantifies, and forecasts community health. How cities save millions. How businesses cut costs and boost productivity. How [city].bleu.live becomes infrastructure.</div>
-    <div class="card-tags">
-      <span class="card-tag" style="background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.2);color:#60A5FA">[city].bleu.live</span>
-      <span class="card-tag" style="background:rgba(200,169,81,.12);border:1px solid rgba(200,169,81,.2);color:var(--gold)">ROI</span>
-      <span class="card-tag" style="background:rgba(45,212,168,.12);border:1px solid rgba(45,212,168,.2);color:var(--teal)">Forecasting</span>
-    </div>
-    
   </div>
 
 </div>
+
+<!-- Quick queries -->
+<div style="margin:16px 0 8px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,.5)">FIND IN YOUR CITY</div>
+<div class="quick-row" style="flex-wrap:wrap">
+  <span class="quick-btn" onclick="mapSearch('practitioners')">&#9673; Practitioners</span>
+  <span class="quick-btn" onclick="mapSearch('yoga')">&#129536; Yoga Studios</span>
+  <span class="quick-btn" onclick="mapSearch('recovery')">&#10084; Recovery</span>
+  <span class="quick-btn" onclick="mapSearch('food')">&#127807; Health Food</span>
+  <span class="quick-btn" onclick="mapSearch('mental_health')">&#129504; Mental Health</span>
+  <span class="quick-btn" onclick="mapSearch('fitness')">&#128170; Fitness</span>
+  <span class="quick-btn" onclick="mapSearch('dispensary')">&#127807; Cannabis</span>
+  <span class="quick-btn" onclick="mapSearch('pharmacy')">&#128138; Pharmacy</span>
 </div>
 
-<!-- ═══════════════════════ PROTOCOLS ═══════════════════════ -->
+<!-- 100 Crises Map Layer -->
+<div style="margin:20px 0 8px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(45,138,158,.5)">100 CRISES DEPLOYMENT MAP</div>
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px" id="crises-grid">
+</div>
+
+<!-- Alvai Map Chat -->
+<div class="chat-box" id="map-chat" style="min-height:80px;margin-bottom:16px"></div>
+<div style="display:flex;gap:8px">
+  <input class="zip-input" style="flex:1;width:auto" id="map-input" placeholder="Ask about any location, city, or health infrastructure..." onkeydown="if(event.key==='Enter')mapAsk()"/>
+  <button class="map-layer-btn on" onclick="mapAsk()">Ask Alvai</button>
+</div>
+
+<!-- Enterprise City Pitch -->
+<div class="city-enterprise-card">
+  <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#C9A84C;margin-bottom:8px">Enterprise City Intelligence</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center">
+    <div>
+      <div style="font-size:16px;font-weight:600;color:#E8E0D0;margin-bottom:6px">Deploy BLEU in Your City</div>
+      <div style="font-size:12px;color:#7B8DA6;line-height:1.7">The New Orleans proof of concept scales to 222 cities. Every city gets a real-time health intelligence dashboard, social determinants map, practitioner directory, and crisis intervention infrastructure.</div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <span style="font-size:10px;padding:3px 8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:4px;color:#C9A84C">$1.8M/yr deployment</span>
+        <span style="font-size:10px;padding:3px 8px;background:rgba(45,138,158,.1);border:1px solid rgba(45,138,158,.2);border-radius:4px;color:#2DD4A8">23:1 ROI documented</span>
+        <span style="font-size:10px;padding:3px 8px;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.2);border-radius:4px;color:#1d9e75">500K city = $42M benefit</span>
+      </div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:32px;font-weight:600;color:#C9A84C;line-height:1">222</div>
+      <div style="font-size:11px;color:#7B8DA6;margin-bottom:12px">target cities</div>
+      <button class="map-layer-btn on" style="font-size:11px" onclick="ask('enterprise','Tell me about the BLEU city partnership model and the 23:1 ROI for a city of 500,000 people')">City Partnership Brief</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+
+var mapInst = null;
+var layers = {practitioners:null, recovery:null, environment:null, crises:null, social:null};
+var layerState = {practitioners:true, recovery:true, environment:false, crises:false, social:false};
+
+// New Orleans coordinates
+var NOLA = [29.9511, -90.0715];
+
+function initMap(){
+  if(mapInst) return;
+  mapInst = L.map('bleu-map', {
+    center: NOLA,
+    zoom: 12,
+    zoomControl: true,
+    attributionControl: false
+  });
+
+  // Dark tile layer
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    subdomains: 'abcd'
+  }).addTo(mapInst);
+
+  // Practitioner cluster points (NPI data - New Orleans area)
+  var practitionerData = [
+    {lat:29.9499,lng:-90.0701,name:'Tulane Medical Center',type:'Hospital',count:485},
+    {lat:29.9400,lng:-90.0800,name:'Ochsner Health',type:'Health System',count:320},
+    {lat:29.9630,lng:-90.0570,name:'LSU Health Sciences',type:'Academic Medical',count:280},
+    {lat:29.9200,lng:-90.0900,name:'Touro Infirmary',type:'Hospital',count:195},
+    {lat:29.9700,lng:-90.0400,name:'Mid-City Wellness Cluster',type:'Practitioners',count:142},
+    {lat:29.9350,lng:-90.1200,name:'Uptown Health District',type:'Practitioners',count:167},
+    {lat:29.9800,lng:-90.0600,name:'Lakeview Medical',type:'Clinic',count:89},
+    {lat:29.9100,lng:-90.0500,name:'Bywater Healing Arts',type:'Integrative',count:54},
+    {lat:29.9550,lng:-90.0950,name:'Garden District Wellness',type:'Practitioners',count:78},
+    {lat:29.9430,lng:-90.0610,name:'French Quarter Health',type:'Clinic',count:43}
+  ];
+
+  var practLayer = L.layerGroup();
+  practitionerData.forEach(function(p){
+    var radius = Math.sqrt(p.count) * 1.5;
+    var circle = L.circle([p.lat,p.lng], {
+      radius: radius * 15,
+      fillColor: '#2DD4A8',
+      fillOpacity: 0.25,
+      color: '#2D8A9E',
+      weight: 1.5
+    });
+    circle.bindPopup('<div style="background:#0C1829;color:#E8E0D0;padding:10px;border-radius:8px;min-width:160px"><div style="color:#2DD4A8;font-weight:600;font-size:13px">'+p.name+'</div><div style="color:#7B8DA6;font-size:11px;margin-top:4px">'+p.type+' &bull; '+p.count+' practitioners</div></div>',{className:'bleu-popup'});
+    practLayer.addLayer(circle);
+  });
+  layers.practitioners = practLayer;
+  practLayer.addTo(mapInst);
+
+  // Recovery infrastructure
+  var recoveryData = [
+    {lat:29.9510,lng:-90.0810,name:'NOLA Recovery Center',type:'Treatment'},
+    {lat:29.9300,lng:-90.0700,name:'Odyssey House Louisiana',type:'Residential'},
+    {lat:29.9650,lng:-90.0550,name:'AA Meeting - Mid-City',type:'AA/NA'},
+    {lat:29.9450,lng:-90.1100,name:'Bridge House',type:'Residential'},
+    {lat:29.9200,lng:-90.0600,name:'Catholic Charities Recovery',type:'Outpatient'},
+    {lat:29.9750,lng:-90.0700,name:'NA Meeting - Lakeview',type:'AA/NA'},
+    {lat:29.9380,lng:-90.0450,name:'Tulane Behavioral Health',type:'Outpatient'}
+  ];
+
+  var recLayer = L.layerGroup();
+  recoveryData.forEach(function(r){
+    var marker = L.circleMarker([r.lat,r.lng], {
+      radius: 8,
+      fillColor: r.type==='AA/NA' ? '#C9A84C' : '#a32d2d',
+      fillOpacity: 0.8,
+      color: '#fff',
+      weight: 1.5
+    });
+    marker.bindPopup('<div style="background:#0C1829;color:#E8E0D0;padding:10px;border-radius:8px"><div style="color:#C9A84C;font-weight:600;font-size:13px">'+r.name+'</div><div style="color:#7B8DA6;font-size:11px;margin-top:4px">'+r.type+'</div></div>',{className:'bleu-popup'});
+    recLayer.addLayer(marker);
+  });
+  layers.recovery = recLayer;
+  recLayer.addTo(mapInst);
+
+  // Social determinants heatmap-style overlay
+  var socialLayer = L.layerGroup();
+  var povertyZones = [
+    {lat:29.9630,lng:-90.1100,label:'High poverty zone',score:26,color:'#a32d2d'},
+    {lat:29.9200,lng:-90.0800,label:'Food desert',score:18,color:'#a32d2d'},
+    {lat:29.9480,lng:-90.0400,label:'Low literacy zone',score:34,color:'#ba7517'},
+    {lat:29.9750,lng:-90.0900,label:'Healthcare desert',score:12,color:'#a32d2d'},
+    {lat:29.9350,lng:-90.1300,label:'Moderate access',score:55,color:'#ba7517'}
+  ];
+  povertyZones.forEach(function(z){
+    var rect = L.rectangle([[z.lat-0.02,z.lng-0.025],[z.lat+0.02,z.lng+0.025]], {
+      fillColor: z.color,
+      fillOpacity: 0.15,
+      color: z.color,
+      weight: 1,
+      dashArray: '4 4'
+    });
+    rect.bindPopup('<div style="background:#0C1829;color:#E8E0D0;padding:10px;border-radius:8px"><div style="font-weight:600;color:#a32d2d">'+z.label+'</div><div style="color:#7B8DA6;font-size:11px;margin-top:4px">Access score: '+z.score+'%</div></div>',{className:'bleu-popup'});
+    socialLayer.addLayer(rect);
+  });
+  layers.social = socialLayer;
+
+  // Crisis hotspots
+  var crisisLayer = L.layerGroup();
+  var crisisPoints = [
+    {lat:29.9530,lng:-90.0780,label:'Mental health crisis cluster',severity:'critical'},
+    {lat:29.9250,lng:-90.0680,label:'Youth trauma hotspot',severity:'critical'},
+    {lat:29.9680,lng:-90.1050,label:'Opioid crisis concentration',severity:'high'},
+    {lat:29.9400,lng:-90.0900,label:'Burnout workplace cluster',severity:'high'},
+    {lat:29.9600,lng:-90.0450,label:'Chronic pain unserved',severity:'moderate'}
+  ];
+  crisisPoints.forEach(function(c){
+    var color = c.severity==='critical' ? '#a32d2d' : c.severity==='high' ? '#ba7517' : '#185fa5';
+    var pulse = L.circleMarker([c.lat,c.lng], {
+      radius: 12,
+      fillColor: color,
+      fillOpacity: 0.3,
+      color: color,
+      weight: 2
+    });
+    pulse.bindPopup('<div style="background:#0C1829;color:#E8E0D0;padding:10px;border-radius:8px"><div style="color:'+color+';font-weight:600">'+c.label+'</div><div style="color:#7B8DA6;font-size:11px;margin-top:4px">Severity: '+c.severity+'</div></div>',{className:'bleu-popup'});
+    crisisLayer.addLayer(pulse);
+  });
+  layers.crises = crisisLayer;
+}
+
+function toggleLayer(name, btn){
+  if(!mapInst) initMap();
+  layerState[name] = !layerState[name];
+  btn.classList.toggle('on', layerState[name]);
+  if(layerState[name]){
+    if(layers[name]) mapInst.addLayer(layers[name]);
+  } else {
+    if(layers[name]) mapInst.removeLayer(layers[name]);
+  }
+}
+
+function searchZip(){
+  var zip = document.getElementById('zip-search').value.trim();
+  if(zip.length !== 5) return;
+  document.getElementById('zip-result').textContent = 'Searching ' + zip + '...';
+  ask('map', 'What health infrastructure exists in ZIP code ' + zip + '? Show practitioners, recovery resources, and any health deserts.');
+  document.getElementById('zip-result').textContent = 'See Alvai response below';
+}
+
+function locateMe(){
+  if(!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(function(pos){
+    if(!mapInst) initMap();
+    mapInst.setView([pos.coords.latitude, pos.coords.longitude], 13);
+    L.marker([pos.coords.latitude, pos.coords.longitude]).addTo(mapInst)
+      .bindPopup('<div style="background:#0C1829;color:#2DD4A8;padding:8px;border-radius:6px">Your location</div>').openPopup();
+    ask('map', 'What health infrastructure is near my location at coordinates ' + pos.coords.latitude.toFixed(4) + ', ' + pos.coords.longitude.toFixed(4) + '?');
+  });
+}
+
+var mapSearchQueries = {
+  practitioners: 'Show me all NPI-verified practitioners in New Orleans with phone numbers and addresses',
+  yoga: 'yoga studios and meditation centers in New Orleans',
+  recovery: 'AA meetings NA meetings and addiction treatment centers in New Orleans',
+  food: 'health food stores organic markets and nutrition resources in New Orleans',
+  mental_health: 'mental health clinics therapists and psychiatrists in New Orleans',
+  fitness: 'gyms fitness centers and personal trainers in New Orleans',
+  dispensary: 'licensed cannabis dispensaries and CBD stores in New Orleans',
+  pharmacy: 'pharmacies and Cost Plus Drug locations in New Orleans'
+};
+
+function mapSearch(type){
+  var q = mapSearchQueries[type] || type;
+  ask('map', q);
+  if(!mapInst) initMap();
+}
+
+function mapAsk(){
+  var inp = document.getElementById('map-input');
+  var val = inp.value.trim();
+  if(!val) return;
+  ask('map', val);
+  inp.value = '';
+}
+
+// 100 crises grid
+var crisisCategories = [
+  {label:'Mental Health', count:10, color:'#a32d2d'},
+  {label:'Chronic Disease', count:10, color:'#ba7517'},
+  {label:'Addiction', count:10, color:'#7055a8'},
+  {label:'Youth Crises', count:10, color:'#185fa5'},
+  {label:'Aging', count:10, color:'#2D8A9E'},
+  {label:'Economic Health', count:10, color:'#C9A84C'},
+  {label:'Environment', count:10, color:'#1d9e75'},
+  {label:'Healthcare System', count:10, color:'#a32d2d'},
+  {label:"Women's Health", count:10, color:'#F472B6'},
+  {label:'Emerging Global', count:10, color:'#2DD4A8'}
+];
+
+var grid = document.getElementById('crises-grid');
+if(grid){
+  crisisCategories.forEach(function(cat){
+    var card = document.createElement('div');
+    card.style.cssText = 'background:rgba(8,14,26,.8);border:1px solid '+cat.color.replace(')',',0.25)')+';border-radius:10px;padding:10px;cursor:pointer;transition:all .2s;text-align:center';
+    card.innerHTML = '<div style="font-size:18px;font-weight:700;color:'+cat.color+'">'+cat.count+'</div><div style="font-size:10px;color:#7B8DA6;line-height:1.3;margin-top:4px">'+cat.label+'</div>';
+    card.onmouseover = function(){this.style.borderColor=cat.color;this.style.background='rgba(8,14,26,.95)'};
+    card.onmouseout = function(){this.style.borderColor=cat.color.replace(')',',0.25)');this.style.background='rgba(8,14,26,.8)'};
+    card.onclick = function(){ask('map','Tell me about the '+cat.label+' crises BLEU addresses and what the intervention looks like in practice')};
+    grid.appendChild(card);
+  });
+}
+
+// Init map on tab open
+var origGo = window.go;
+if(origGo){
+  window.go = function(tab){
+    origGo(tab);
+    if(tab==='map'){
+      setTimeout(function(){
+        if(!mapInst) initMap();
+        else mapInst.invalidateSize();
+      }, 150);
+    }
+  };
+}
+
+// Also init if already on map tab
+setTimeout(function(){
+  var panel = document.getElementById('p-map');
+  if(panel && panel.classList.contains('active')) initMap();
+}, 500);
+
+// Stream responses into map chat
+var _origSend = window.sendToAlvai || window.ask;
+
+})();
+</script>
+
+</div>
+
 <div class="panel" id="p-protocols">
   <div class="section-label">EVIDENCE-BASED PROGRAMS</div>
   <h1 class="hero-title">📋 <span class="accent">Protocols</span></h1>
