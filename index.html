@@ -2276,79 +2276,251 @@ id="chat-protocols"></div><div class="chat-input-row"><input autocomplete="off" 
 
 <!-- ═══════════════════════ LEARN ═══════════════════════ -->
 <div class="panel" id="p-learn">
-  <div class="section-label">THE INFINITE MEDIA ENGINE</div>
-  <h1 class="hero-title">📚 Your Wellness <span class="teal">Starts Playing</span></h1>
-  <p class="hero-sub" style="max-width:640px;margin:0 auto 8px">YouTube. Spotify. Podcasts. Courses. Sleep therapy. Meditation. Business strategy. Spiritual insight. Financial literacy. <span style="color:#4ecdc4">All aggregated. All organized. All structured</span> — by your goal, your phase, your time. Learning is the moat. Media is free leverage. The Passport turns passive content into active pathways.</p>
+<style>
+.yt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.yt-card{background:#111F36;border:1px solid rgba(45,138,158,.1);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .25s;text-decoration:none;display:block}
+.yt-card:hover{transform:translateY(-3px);border-color:rgba(45,138,158,.4);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.yt-thumb{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0C1829,#111F36);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.yt-thumb-icon{font-size:40px;opacity:.7}
+.yt-thumb-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(to bottom,transparent 40%,rgba(8,14,26,.8))}
+.yt-thumb-stat{position:absolute;bottom:8px;left:10px;font-size:10px;color:#E8E0D0;font-weight:600;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.yt-thumb-badge{position:absolute;top:8px;right:8px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:600;letter-spacing:1px}
+.yt-body{padding:12px}
+.yt-creator{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.yt-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.yt-creator-name{font-size:11px;color:#7B8DA6}
+.yt-cred{font-size:9px;color:#2DD4A8;margin-left:auto}
+.yt-title{font-size:13px;font-weight:600;color:#E8E0D0;line-height:1.4;margin-bottom:6px}
+.yt-meta{font-size:11px;color:#4A5B73;display:flex;gap:10px}
+.yt-tag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:3px;margin:2px;font-weight:500}
+.yt-section-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,.6);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+.yt-section-label::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.1)}
+.yt-filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.yt-filter{padding:6px 14px;border-radius:20px;border:1px solid rgba(45,138,158,.2);background:transparent;cursor:pointer;font-size:11px;color:#7B8DA6;transition:all .2s;font-family:'DM Sans',sans-serif}
+.yt-filter.on{background:rgba(45,138,158,.15);border-color:#2D8A9E;color:#2DD4A8}
+.yt-filter:hover{border-color:#2D8A9E;color:#E8E0D0}
+.yt-search{background:rgba(8,14,26,.8);border:1px solid rgba(45,138,158,.2);border-radius:8px;padding:10px 16px;color:#E8E0D0;font-size:13px;width:100%;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:16px}
+.yt-search:focus{border-color:#2D8A9E}
+.yt-channel-bar{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:none}
+.yt-channel-bar::-webkit-scrollbar{display:none}
+.yt-channel{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;min-width:70px;transition:all .2s}
+.yt-channel:hover .yt-ch-avatar{border-color:#2DD4A8}
+.yt-ch-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(45,138,158,.2);transition:all .2s}
+.yt-ch-name{font-size:10px;color:#7B8DA6;text-align:center;line-height:1.3;max-width:70px}
+.yt-featured{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(45,138,158,.06));border:1px solid rgba(201,168,76,.2);border-radius:14px;padding:20px;margin-bottom:24px;display:flex;gap:20px;align-items:center;cursor:pointer;transition:all .2s}
+.yt-featured:hover{border-color:rgba(201,168,76,.4)}
+.yt-featured-thumb{width:180px;min-width:180px;aspect-ratio:16/9;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:48px}
+.playlist-bar{background:#111F36;border:1px solid rgba(45,138,158,.1);border-radius:10px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s}
+.playlist-bar:hover{border-color:rgba(45,138,158,.3)}
+.pl-icon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.pl-count{font-size:11px;color:#4A5B73;margin-left:auto;flex-shrink:0}
+</style>
 
-  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0 24px">
-    <span class="quick-btn" onclick="ask('learn','Find me the best YouTube videos for sleep optimization')" style="display:inline-flex;align-items:center;gap:6px">▶️ YouTube</span>
-    <span class="quick-btn" onclick="ask('learn','Find me the best wellness podcasts on Spotify')" style="display:inline-flex;align-items:center;gap:6px">🎧 Spotify</span>
-    <span class="quick-btn" onclick="ask('learn','Best wellness podcasts for beginners')" style="display:inline-flex;align-items:center;gap:6px">🎙️ Podcasts</span>
-    <span class="quick-btn" onclick="ask('learn','Recommend free online courses for health and nutrition')" style="display:inline-flex;align-items:center;gap:6px">🎓 Courses</span>
-    <span class="quick-btn" onclick="ask('learn','Best meditation and sleep music playlists')" style="display:inline-flex;align-items:center;gap:6px">🧘 Meditation</span>
-    <span class="quick-btn" onclick="ask('learn','Best audiobooks for wellness and personal growth')" style="display:inline-flex;align-items:center;gap:6px">📖 Audiobooks</span>
-  </div>
+<div class="section-label">THE KNOWLEDGE ENGINE</div>
+<h1 class="hero-title"><span class="teal">Learn</span></h1>
+<p class="hero-sub" style="max-width:600px;margin:0 auto 20px">32 civilizational crises. Peer-reviewed evidence. ROI models. Deployment blueprints. Every piece of research mapped to your health, your city, your future.</p>
 
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 28px">
-    <div style="background:rgba(25,50,68,0.5);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;text-align:center"><div style="width:36px;height:36px;border-radius:50%;background:rgba(78,205,196,0.15);color:#4ecdc4;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;margin-bottom:10px">1</div><div style="color:#e8d5b0;font-weight:600;font-size:13px">Tell us your goal</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;line-height:1.4">Sleep better. Reduce anxiety. Learn nutrition. Build wealth. Find peace.</div></div>
-    <div style="background:rgba(28,45,58,0.5);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;text-align:center"><div style="width:36px;height:36px;border-radius:50%;background:rgba(212,175,55,0.15);color:#d4af37;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;margin-bottom:10px">2</div><div style="color:#e8d5b0;font-weight:600;font-size:13px">We curate your media</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;line-height:1.4">YouTube, Spotify, podcasts, courses — matched to your phase and time.</div></div>
-    <div style="background:rgba(25,50,68,0.5);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;text-align:center"><div style="width:36px;height:36px;border-radius:50%;background:rgba(78,205,196,0.15);color:#4ecdc4;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;margin-bottom:10px">3</div><div style="color:#e8d5b0;font-weight:600;font-size:13px">It feeds your Passport</div><div style="color:#8fa4b0;font-size:11px;margin-top:4px;line-height:1.4">What you watch, listen to, complete — all builds your wellness profile.</div></div>
-  </div>
+<!-- Search -->
+<input class="yt-search" placeholder="Search research, topics, creators, protocols..." id="learn-search" onkeydown="if(event.key==='Enter')learnSearch(this.value)"/>
 
-  <div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:0 0 14px;text-align:center">CHANNELS — ORGANIZED BY WHAT YOU NEED</div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.3s" onclick="ask('learn','Build me a sleep optimization media playlist -- YouTube videos, podcasts, guided sleep meditations')" onmouseover="this.style.borderColor='#4ecdc4';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)';this.style.transform='none'"><div style="font-size:28px;margin-bottom:10px">😴</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Sleep &amp; Recovery</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px;line-height:1.5">Sleep music · Guided rest · NSDR · Circadian science · Magnesium deep dives</div><div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap"><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 6px;border-radius:4px">▶️ 47 videos</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 6px;border-radius:4px">🎧 12 playlists</span></div></div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.3s" onclick="ask('learn','Build me an anxiety and stress relief media library -- breathing exercises, CBT podcasts, calming playlists')" onmouseover="this.style.borderColor='#d4af37';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)';this.style.transform='none'"><div style="font-size:28px;margin-bottom:10px">🧘</div><div style="color:#d4af37;font-weight:600;font-size:14px">Anxiety &amp; Stress</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px;line-height:1.5">Breathwork · CBT tools · Meditation · Vagus nerve · Nervous system reset</div><div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap"><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 6px;border-radius:4px">▶️ 63 videos</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 6px;border-radius:4px">🎙️ 8 podcasts</span></div></div>
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.3s" onclick="ask('learn','Build me a nutrition and gut health media library -- meal prep videos, microbiome podcasts, anti-inflammatory diet guides')" onmouseover="this.style.borderColor='#4ecdc4';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)';this.style.transform='none'"><div style="font-size:28px;margin-bottom:10px">🥗</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Nutrition &amp; Gut Health</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px;line-height:1.5">Meal prep · Microbiome · Anti-inflammatory · Supplements · Label reading</div><div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap"><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 6px;border-radius:4px">▶️ 85 videos</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 6px;border-radius:4px">📖 14 courses</span></div></div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.3s" onclick="ask('learn','Build me a fitness media library -- home workouts, yoga flows, walking programs, exercise for depression')" onmouseover="this.style.borderColor='#d4af37';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)';this.style.transform='none'"><div style="font-size:28px;margin-bottom:10px">🏃</div><div style="color:#d4af37;font-weight:600;font-size:14px">Movement &amp; Fitness</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px;line-height:1.5">Home workouts · Yoga · Walking · Strength · Exercise for mental health</div><div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap"><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 6px;border-radius:4px">▶️ 120+ videos</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 6px;border-radius:4px">🎧 6 playlists</span></div></div>
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.3s" onclick="ask('learn','Build me a financial literacy media library -- budgeting, credit repair, investing basics, business formation')" onmouseover="this.style.borderColor='#4ecdc4';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)';this.style.transform='none'"><div style="font-size:28px;margin-bottom:10px">💰</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Financial Wellness</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px;line-height:1.5">Budgeting · Credit · Investing · Business · Tax strategy · Estate planning</div><div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap"><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 6px;border-radius:4px">▶️ 52 videos</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 6px;border-radius:4px">🎙️ 11 podcasts</span></div></div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.3s" onclick="ask('learn','Build me a cannabis education library -- ECS science, terpenes, safe first use, drug interactions, medical research')" onmouseover="this.style.borderColor='#d4af37';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)';this.style.transform='none'"><div style="font-size:28px;margin-bottom:10px">🌿</div><div style="color:#d4af37;font-weight:600;font-size:14px">Cannabis &amp; ECS Science</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px;line-height:1.5">ECS 101 · Terpenes · Safe use · Drug interactions · Medical research</div><div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap"><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 6px;border-radius:4px">▶️ 38 videos</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 6px;border-radius:4px">📖 465 studies</span></div></div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.3s" onclick="ask('learn','Build me a spiritual wellness media library -- meditation, gratitude practices, purpose finding, spiritual growth podcasts')" onmouseover="this.style.borderColor='#4ecdc4';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)';this.style.transform='none'"><div style="font-size:28px;margin-bottom:10px">🕊️</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Spirituality &amp; Purpose</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px;line-height:1.5">Meditation · Gratitude · Purpose · Healing circles · Mindfulness</div><div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap"><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 6px;border-radius:4px">▶️ 34 videos</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 6px;border-radius:4px">🎧 22 playlists</span></div></div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.3s" onclick="ask('learn','Build me a recovery and sobriety media library -- CA sober resources, SMART recovery, addiction science, sober living')" onmouseover="this.style.borderColor='#d4af37';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)';this.style.transform='none'"><div style="font-size:28px;margin-bottom:10px">💚</div><div style="color:#d4af37;font-weight:600;font-size:14px">Recovery &amp; Sobriety</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px;line-height:1.5">CA Sober · SMART Recovery · Addiction science · Sober living · Harm reduction</div><div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap"><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 6px;border-radius:4px">▶️ 29 videos</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 6px;border-radius:4px">🎙️ 7 podcasts</span></div></div>
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.3s" onclick="ask('learn','Build me a longevity and brain health media library -- neuroplasticity, anti-aging research, cognitive performance, biohacking')" onmouseover="this.style.borderColor='#4ecdc4';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)';this.style.transform='none'"><div style="font-size:28px;margin-bottom:10px">🧠</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Brain &amp; Longevity</div><div style="color:#8fa4b0;font-size:11px;margin-top:6px;line-height:1.5">Neuroplasticity · Anti-aging · Cognitive performance · Cold exposure · Fasting</div><div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap"><span style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:9px;padding:2px 6px;border-radius:4px">▶️ 56 videos</span><span style="background:rgba(212,175,55,0.1);color:#d4af37;font-size:9px;padding:2px 6px;border-radius:4px">📖 9 courses</span></div></div>
-  </div>
-
-  <div style="color:rgba(78,205,196,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">HOW MUCH TIME DO YOU HAVE?</div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','I have 5 minutes -- give me one quick wellness win right now')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:22px">⚡</div><div style="color:#4ecdc4;font-weight:600;font-size:13px;margin-top:4px">5 min</div><div style="color:#8fa4b0;font-size:10px;margin-top:2px">Quick wins</div></div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','I have 15 minutes -- give me a focused wellness session')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:22px">🎯</div><div style="color:#d4af37;font-weight:600;font-size:13px;margin-top:4px">15 min</div><div style="color:#8fa4b0;font-size:10px;margin-top:2px">Focused session</div></div>
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','I have 30 minutes -- build me a deep-dive learning session')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:22px">📚</div><div style="color:#4ecdc4;font-weight:600;font-size:13px;margin-top:4px">30 min</div><div style="color:#8fa4b0;font-size:10px;margin-top:2px">Deep dive</div></div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="ask('learn','I have an hour or more -- build me a complete wellness education session')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:22px">🌊</div><div style="color:#d4af37;font-weight:600;font-size:13px;margin-top:4px">1 hour+</div><div style="color:#8fa4b0;font-size:10px;margin-top:2px">Full immersion</div></div>
-  </div>
-
-  <div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">POWERED BY LIVE DATA</div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-    <div style="background:rgba(25,50,68,0.4);border-radius:10px;padding:10px;text-align:center"><div style="color:#4ecdc4;font-size:11px;font-weight:600">PubMed</div><div style="color:#8fa4b0;font-size:9px">465 studies</div></div>
-    <div style="background:rgba(28,45,58,0.4);border-radius:10px;padding:10px;text-align:center"><div style="color:#d4af37;font-size:11px;font-weight:600">YouTube</div><div style="color:#8fa4b0;font-size:9px">500+ curated</div></div>
-    <div style="background:rgba(25,50,68,0.4);border-radius:10px;padding:10px;text-align:center"><div style="color:#4ecdc4;font-size:11px;font-weight:600">Spotify</div><div style="color:#8fa4b0;font-size:9px">80+ playlists</div></div>
-    <div style="background:rgba(28,45,58,0.4);border-radius:10px;padding:10px;text-align:center"><div style="color:#d4af37;font-size:11px;font-weight:600">ClinicalTrials</div><div style="color:#8fa4b0;font-size:9px">Live feed</div></div>
-  </div>
-
-  <div style="color:rgba(78,205,196,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;text-align:center">GO DEEPER WITH TRUSTED PARTNERS</div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px">
-    <div style="background:rgba(25,50,68,0.5);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="ask('learn','What MasterClass courses are best for wellness?')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="color:#4ecdc4;font-weight:600;font-size:13px">MasterClass</div><div style="color:#8fa4b0;font-size:10px;margin-top:3px">World-class wellness experts</div></div>
-    <div style="background:rgba(28,45,58,0.5);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Best Coursera courses for health and nutrition?')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="color:#d4af37;font-weight:600;font-size:13px">Coursera</div><div style="color:#8fa4b0;font-size:10px;margin-top:3px">Certified health courses</div></div>
-    <div style="background:rgba(25,50,68,0.5);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Best Audible audiobooks for wellness?')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="color:#4ecdc4;font-weight:600;font-size:13px">Audible</div><div style="color:#8fa4b0;font-size:10px;margin-top:3px">Wellness audiobooks on demand</div></div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
-    <div style="background:rgba(28,45,58,0.5);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Tell me about Calm app for sleep and meditation')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="color:#d4af37;font-weight:600;font-size:13px">Calm</div><div style="color:#8fa4b0;font-size:10px;margin-top:3px">Sleep stories &amp; breathwork</div></div>
-    <div style="background:rgba(25,50,68,0.5);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Best Skillshare classes for wellness?')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="color:#4ecdc4;font-weight:600;font-size:13px">Skillshare</div><div style="color:#8fa4b0;font-size:10px;margin-top:3px">Creative wellness skills</div></div>
-    <div style="background:rgba(28,45,58,0.5);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s" onclick="ask('learn','Best Blinkist summaries for wellness?')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="color:#d4af37;font-weight:600;font-size:13px">Blinkist</div><div style="color:#8fa4b0;font-size:10px;margin-top:3px">Key insights in 15 min</div></div>
-  </div>
-  <div style="text-align:center;margin-bottom:20px"><span style="color:rgba(143,164,176,0.5);font-size:9px;font-style:italic">Partner commissions support free access. Every recommendation is evidence-based, never pay-to-play.</span></div>
-
-  <div class="chat-box"><div class="chat-messages" id="chat-learn"></div><div class="chat-input-row"><input autocomplete="off" id="in-learn" placeholder="What do you want to learn? Sleep, nutrition, anxiety, finances, cannabis..." onkeydown="if(event.key==='Enter')send('learn')"><button onclick="send('learn')">Learn</button></div></div>
-
-  <div style="background:rgba(25,50,68,0.3);border:1px solid rgba(78,205,196,0.06);border-radius:14px;padding:18px;margin-top:20px;text-align:center"><div style="color:#e8d5b0;font-size:13px;font-weight:600;margin-bottom:6px">Everything You Learn Feeds Everything You Are</div><div style="color:#8fa4b0;font-size:11px;line-height:1.6;max-width:500px;margin:0 auto">What you watch, listen to, and complete builds your <span style="color:#4ecdc4">Passport</span>. It informs what the <span style="color:#d4af37">Directory</span> recommends. It shapes what <span style="color:#4ecdc4">ALVAI</span> knows about you. It connects to your <span style="color:#d4af37">Community</span>. No isolated tabs. Everything feeds everything.</div></div>
-
-  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">Medical Oversight: Dr. Felicia Stoler, DCN, MS, RDN, FACSM, Dipl ACLM · Patent Pending · © 2026</span></div>
+<!-- Filter row -->
+<div class="yt-filter-row">
+  <button class="yt-filter on" onclick="filterLearn('all',this)">All</button>
+  <button class="yt-filter" onclick="filterLearn('mental',this)">Mental Health</button>
+  <button class="yt-filter" onclick="filterLearn('metabolic',this)">Metabolic</button>
+  <button class="yt-filter" onclick="filterLearn('social',this)">Social</button>
+  <button class="yt-filter" onclick="filterLearn('women',this)">Women's Health</button>
+  <button class="yt-filter" onclick="filterLearn('youth',this)">Youth</button>
+  <button class="yt-filter" onclick="filterLearn('economic',this)">Economic</button>
+  <button class="yt-filter" onclick="filterLearn('recovery',this)">Recovery</button>
+  <button class="yt-filter" onclick="filterLearn('nola',this)">New Orleans</button>
 </div>
 
-<!-- ═══════════════════════ COMMUNITY ═══════════════════════ -->
+<!-- Creator Channels -->
+<div class="yt-section-label">VERIFIED CREATORS</div>
+<div class="yt-channel-bar" id="creator-channels">
+  <div class="yt-channel" onclick="filterCreator('felicia')">
+    <div class="yt-ch-avatar" style="background:rgba(45,138,158,.15)">&#128105;&#8205;&#9877;</div>
+    <div class="yt-ch-name" style="color:#2DD4A8">Dr. Felicia</div>
+  </div>
+  <div class="yt-channel" onclick="filterCreator('bleu')">
+    <div class="yt-ch-avatar" style="background:rgba(201,168,76,.1)">&#127908;</div>
+    <div class="yt-ch-name">BLEU Research</div>
+  </div>
+  <div class="yt-channel" onclick="filterCreator('sleep')">
+    <div class="yt-ch-avatar" style="background:rgba(111,85,168,.15)">&#128164;</div>
+    <div class="yt-ch-name">Sleep Science</div>
+  </div>
+  <div class="yt-channel" onclick="filterCreator('metabolic')">
+    <div class="yt-ch-avatar" style="background:rgba(29,158,117,.15)">&#9889;</div>
+    <div class="yt-ch-name">Metabolic Intel</div>
+  </div>
+  <div class="yt-channel" onclick="filterCreator('mental')">
+    <div class="yt-ch-avatar" style="background:rgba(163,45,45,.15)">&#129504;</div>
+    <div class="yt-ch-name">Mental Health</div>
+  </div>
+  <div class="yt-channel" onclick="filterCreator('nola')">
+    <div class="yt-ch-avatar" style="background:rgba(201,168,76,.15)">&#127928;</div>
+    <div class="yt-ch-name">Jazz Bird NOLA</div>
+  </div>
+  <div class="yt-channel" onclick="filterCreator('women')">
+    <div class="yt-ch-avatar" style="background:rgba(244,114,182,.15)">&#128330;</div>
+    <div class="yt-ch-name">Women's Health</div>
+  </div>
+  <div class="yt-channel" onclick="ask('learn','How do I become a creator on BLEU and publish my own wellness protocols?')">
+    <div class="yt-ch-avatar" style="background:rgba(45,138,158,.08);border-style:dashed">+</div>
+    <div class="yt-ch-name">Become Creator</div>
+  </div>
+</div>
+
+<!-- Featured -->
+<div class="yt-featured" onclick="ask('learn','Tell me everything about the $1 trillion women health gap — the research, the 8 conditions, and exactly what BLEU does about it')">
+  <div class="yt-featured-thumb" style="background:linear-gradient(135deg,rgba(244,114,182,.15),rgba(163,45,45,.1))">&#128330;</div>
+  <div>
+    <div style="font-size:10px;letter-spacing:2px;color:#F472B6;margin-bottom:6px">FEATURED RESEARCH</div>
+    <div style="font-size:18px;font-weight:600;color:#E8E0D0;line-height:1.3;margin-bottom:8px">The $1 Trillion Women's Health Gap</div>
+    <div style="font-size:12px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">WEF and McKinsey 2024: women spend 25% more of their lives in poor health than men — not biology, but systemic failure. 8 conditions. $1T annual GDP gain possible. Every $1 invested returns $3.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="yt-tag" style="background:rgba(244,114,182,.1);color:#F472B6">Volume III</span>
+      <span class="yt-tag" style="background:rgba(45,138,158,.1);color:#2DD4A8">WEF/McKinsey 2024</span>
+      <span class="yt-tag" style="background:rgba(29,158,117,.1);color:#1d9e75">$3:1 ROI</span>
+    </div>
+  </div>
+</div>
+
+<!-- Research Library Grid -->
+<div class="yt-section-label">VOLUME I — 8 CIVILIZATIONAL CRISES</div>
+<div class="yt-grid" id="learn-grid">
+</div>
+
+<div class="yt-section-label">VOLUME II — 8 DEEPER CRISES</div>
+<div class="yt-grid" id="learn-grid-v2"></div>
+
+<div class="yt-section-label">LEARNING PATHWAYS</div>
+<div id="playlists-section">
+</div>
+
+<!-- Alvai Learn Chat -->
+<div class="yt-section-label">ASK THE RESEARCH</div>
+<div class="chat-box" id="learn-chat" style="min-height:80px;margin-bottom:12px"></div>
+<div style="display:flex;gap:8px">
+  <input class="yt-search" style="margin:0;flex:1" id="learn-input" placeholder="Ask about any research, crisis, intervention, or ROI model..." onkeydown="if(event.key==='Enter')learnAsk()"/>
+  <button class="yt-filter on" style="flex-shrink:0" onclick="learnAsk()">Ask Alvai</button>
+</div>
+
+<script>
+(function(){
+
+var VOL1 = [
+  {id:'loneliness',title:'Loneliness: The 871K Deaths No One Counts',icon:'&#128101;',color:'#a32d2d',creator:'BLEU Research',cred:'WHO 2025',stats:'871K deaths/yr',roi:'9:1 ROI',tag:'Community',tagColor:'rgba(163,45,45,.2)',tagText:'#a32d2d',blurb:'WHO Commission June 2025: 1 in 6 people worldwide affected. Loneliness linked directly to 871,000 deaths annually. The UK social prescribing model delivers 9:1 ROI. A city of 500K saves $42M/year.',cat:'social',query:'Tell me about the loneliness crisis — the WHO evidence, the social prescribing ROI, and the BLEU 90-day New Orleans pilot'},
+  {id:'sleep',title:'Sleep Deprivation: $411B Crisis, $0 Solution',icon:'&#128164;',color:'#185fa5',creator:'Sleep Science',cred:'RAND Corp',stats:'$411B US cost',roi:'$9,100/student',tag:'Sleep Tab',tagColor:'rgba(24,95,165,.2)',tagText:'#60A5FA',blurb:'1 in 3 American adults chronically sleep-deprived. CDC public health epidemic. The solution — later school start times — costs nothing and generates $9,100 lifetime gain per student.',cat:'metabolic',query:'Explain the sleep deprivation crisis — the $411B annual cost, school start time evidence, and what the BLEU Sleep tab does about it'},
+  {id:'grief',title:'Grief: 40% Get No Support',icon:'&#129310;',color:'#7055a8',creator:'Dr. Felicia',cred:'APA 2024',stats:'2.5M bereaved/yr',roi:'$3,600 saved',tag:'Therapy',tagColor:'rgba(112,85,168,.2)',tagText:'#a78bfa',blurb:'40% of bereaved individuals receive no professional support. Complicated grief affects 10-15% causing $3,600+ in excess healthcare costs per person per year. Compassionate companion model: $200 cost, $3,600 ROI.',cat:'mental',query:'What does BLEU do for grief? Tell me about the evidence and the compassionate companions model'},
+  {id:'knowledge',title:'The 17-Year Evidence Gap',icon:'&#128218;',color:'#ba7517',creator:'BLEU Research',cred:'PubMed 2024',stats:'17yr research lag',roi:'465 studies live',tag:'Learn Tab',tagColor:'rgba(186,117,23,.2)',tagText:'#C9A84C',blurb:'Proven interventions sit in journals for 17 years before clinical adoption. BLEU has 465 PubMed studies live in Alvai. Every Alvai response closes the evidence gap in real time.',cat:'social',query:'How does BLEU solve the 17-year evidence translation gap? Tell me about the knowledge translation crisis'},
+  {id:'foodrx',title:'Food Prescription: $32B in Savings Ignored',icon:'&#129380;',color:'#1d9e75',creator:'Dr. Felicia',cred:'USDA 2024',stats:'$32.1B 1yr savings',roi:'$130 saves $1,300',tag:'Vessel',tagColor:'rgba(29,158,117,.2)',tagText:'#1d9e75',blurb:'Food-as-medicine interventions show 10:1 ROI. $130 annual food prescription reduces healthcare costs by $1,300. Medically tailored meals: 50% reduction in hospitalizations.',cat:'metabolic',query:'Explain food as medicine — the evidence, the ROI, and how BLEU uses the Vessel tab for food prescription'},
+  {id:'debt',title:'Medical Debt: $9B in Payday Fees Annually',icon:'&#128176;',color:'#C9A84C',creator:'BLEU Research',cred:'CFPB 2024',stats:'$9B annual fees',roi:'$1.8K avg saved',tag:'Finance',tagColor:'rgba(201,168,76,.2)',tagText:'#C9A84C',blurb:'Medical debt is the leading cause of personal bankruptcy. $9B in payday lending fees annually. Financial toxicity kills cancer outcomes by 56%. BLEU Finance tab deploys debt triage, HSA optimization, and medication cost intelligence.',cat:'economic',query:'Tell me about the medical debt crisis and how BLEU Finance addresses financial toxicity in healthcare'},
+  {id:'caregiving',title:'Caregiving: $1.1T Unpaid, Invisible Economy',icon:'&#129309;',color:'#2D8A9E',creator:'BLEU Research',cred:'AARP 2024',stats:'$1.1T unpaid value',roi:'53M caregivers',tag:'Recovery',tagColor:'rgba(45,138,158,.2)',tagText:'#2DD4A8',blurb:'53 million Americans provide $1.1 trillion in unpaid care. Caregiver burnout costs $50B/yr in lost productivity. Hospital discharge pipelines leave families without support. BLEU Recovery + Community tabs are the infrastructure.',cat:'social',query:'What does BLEU do for caregivers? Tell me about the $1.1T caregiving crisis and the BLEU intervention'},
+  {id:'literacy',title:'Health Literacy: 54% Below 6th Grade',icon:'&#128221;',color:'#F472B6',creator:'Dr. Felicia',cred:'NCES 2023',stats:'54% below 6th grade',roi:'$238 saves $1,000',tag:'Alvai',tagColor:'rgba(244,114,182,.2)',tagText:'#F472B6',blurb:'54% of US adults read below 6th grade level. Every Alvai response auto-calibrates to demonstrated reading level. BLEU is already the health literacy intervention — it just needs to make that explicit.',cat:'social',query:'Tell me about the health literacy crisis and how Alvai's readability mode functions as an intervention'}
+];
+
+var VOL2 = [
+  {id:'mens_mh',title:"Men's Mental Health: 80% of Suicides Male",icon:'&#128104;',color:'#a32d2d',creator:'Mental Health',cred:'CDC 2024',stats:'39K male deaths/yr',roi:'7:1 Mens Sheds',tag:'Therapy',tagColor:'rgba(163,45,45,.2)',tagText:'#a32d2d',blurb:'80% of US suicides are male. Only 17% of men saw a mental health professional in 2023. Male-adapted interventions — action-oriented framing, activity-based access — show 7:1 ROI.',cat:'mental',query:"Tell me about the men's mental health crisis and BLEU's male-adapted intervention approach"},
+  {id:'maternal',title:'Maternal Mental Health: #1 Complication of Childbirth',icon:'&#129868;',color:'#F472B6',creator:"Women's Health",cred:'ACOG 2024',stats:'1 in 5 mothers',roi:'$32K prevented',tag:'Therapy',tagColor:'rgba(244,114,182,.2)',tagText:'#F472B6',blurb:'Perinatal mood disorders affect 1 in 5 mothers — now the leading complication of childbirth. EPDS screening in Alvai, peer support matching, BetterHelp access. $32K in prevented costs per case.',cat:'women',query:'What is maternal mental health and how does BLEU address perinatal mood disorders?'},
+  {id:'burnout',title:'Workplace Burnout: $322B Clinical Crisis',icon:'&#128293;',color:'#ba7517',creator:'BLEU Research',cred:'Deloitte 2024',stats:'$322B annual cost',roi:'5.7:1 wellbeing',tag:'Enterprise',tagColor:'rgba(186,117,23,.2)',tagText:'#C9A84C',blurb:'Burnout is a clinical diagnosis. $322B in global productivity losses annually. Hotel Monteleone worksite wellness model: 400 employees, $240K/yr contract potential. The enterprise proof of concept.',cat:'economic',query:'Tell me about workplace burnout as a clinical crisis and the BLEU enterprise worksite wellness model'},
+  {id:'chronic_pain',title:'Chronic Pain: 51M Americans, 18% Undertreated',icon:'&#128138;',color:'#7055a8',creator:'Dr. Felicia',cred:'NIH 2024',stats:'51M Americans',roi:'$635B annual',tag:'Vessel',tagColor:'rgba(112,85,168,.2)',tagText:'#a78bfa',blurb:'51 million Americans live with chronic pain. 18% receive no treatment. Integrative approaches — acupuncture, CBT, nutrition — show 3:1 ROI vs. opioid-only treatment. BLEU wires all three.',cat:'metabolic',query:'How does BLEU approach chronic pain? Tell me about the evidence for integrative pain management'},
+  {id:'veterans',title:'Veterans: 22 Suicides a Day',icon:'&#129338;',color:'#185fa5',creator:'BLEU Research',cred:'VA 2024',stats:'22 suicides/day',roi:'$473K per life',tag:'Recovery',tagColor:'rgba(24,95,165,.2)',tagText:'#60A5FA',blurb:'22 veteran suicides daily. 30% of veterans have PTSD. VA access gaps leave 40% without care. BLEU Recovery + Therapy tabs with veteran-adapted Alvai modes.',cat:'recovery',query:'What does BLEU do for veterans? Tell me about the veteran mental health crisis and the evidence-based interventions'},
+  {id:'medication',title:'Medication Non-Adherence: $500B Wasted',icon:'&#128138;',color:'#1d9e75',creator:'Dr. Felicia',cred:'NEJM 2023',stats:'$500B annual waste',roi:'10:1 MTM',tag:'Finance',tagColor:'rgba(29,158,117,.2)',tagText:'#1d9e75',blurb:'50% of patients with chronic conditions do not take medications as prescribed. $500B in annual waste. Medication therapy management at 10:1 ROI. Cost Plus Drugs, GoodRx, and Amazon Pharmacy in BLEU Finance.',cat:'economic',query:'Tell me about medication non-adherence — the $500B crisis and how BLEU Finance addresses it'},
+  {id:'benefits',title:'Benefits Desert: $65B in Unclaimed SNAP',icon:'&#128196;',color:'#C9A84C',creator:'BLEU Research',cred:'USDA 2024',stats:'$65B unclaimed',roi:'$183B possible',tag:'Finance',tagColor:'rgba(201,168,76,.2)',tagText:'#C9A84C',blurb:'$65B in SNAP benefits go unclaimed annually. $183B in total benefits underutilized. Alvai reads and explains SNAP, Medicaid, CHIP, and housing assistance applications in plain language.',cat:'economic',query:'Tell me about benefits underutilization and how Alvai functions as a benefits navigation assistant'},
+  {id:'youth_mh',title:'Youth Mental Health: The Smartphone Generation Crisis',icon:'&#128241;',color:'#a32d2d',creator:'Mental Health',cred:'CDC 2024',stats:'3x increase since 2010',roi:'8:1 early intervention',tag:'Learn',tagColor:'rgba(163,45,45,.2)',tagText:'#a32d2d',blurb:'Teen depression tripled since 2010. 60% of Gen Z reports anxiety. School-based mental health programs show 8:1 ROI. BLEU Learn + Therapy + Community tabs for the youth mental health infrastructure gap.',cat:'youth',query:'Tell me about the youth mental health crisis and what BLEU does about it specifically'}
+];
+
+var PLAYLISTS = [
+  {title:'New Orleans Proof of Concept',icon:'&#127928;',color:'#C9A84C',count:8,desc:'8 local crises. BLEU as the infrastructure. Jazz Bird NOLA as the wrapper. The 222-city model starts here.',query:'Walk me through the New Orleans proof of concept for BLEU — all 8 youth crises, the Jazz Bird NOLA partnership, and the city deployment model'},
+  {title:'Grant Application Research Pack',icon:'&#128196;',color:'#2D8A9E',count:32,desc:'All 32 crises with peer-reviewed citations, ROI models, and BLEU integration blueprints. NSF SBIR, NIDA, SAMHSA, AHRQ.',query:'Give me the grant narrative — synthesize the 32 crises across all volumes into the case for NSF SBIR Phase I funding'},
+  {title:'City Partnership Deck',icon:'&#127968;',color:'#1d9e75',count:5,desc:'23:1 ROI. $42M annual benefit. $1.8M deployment. The conversation with Walt Leger and Michael Hecht.',query:'Build me the city partnership pitch — the ROI model, the social prescribing evidence, and why a city of 500,000 should deploy BLEU'},
+  {title:"Women's Health $1T Gap",icon:'&#128330;',color:'#F472B6',count:8,desc:'WEF/McKinsey 2024. 8 conditions. Every $1 returns $3. The fastest growing investment category in healthcare.',query:'Tell me everything about the $1 trillion women health gap — all 8 conditions, the WEF evidence, and how BLEU addresses each one'},
+  {title:'Metabolic Intelligence Protocol',icon:'&#9889;',color:'#ba7517',count:5,desc:'Your Cellular Health Score. Food prescription. CGM intelligence. The $100B metabolic market entry.',query:'Walk me through the BLEU metabolic intelligence system — the Cellular Health Score, 7 dimensions, and the full affiliate stack'},
+  {title:'Recovery Infrastructure',icon:'&#10084;',color:'#a32d2d',count:6,desc:'Veterans. Addiction. Caregiving. Burnout. The full recovery ecosystem with evidence and ROI.',query:'Tell me about the BLEU recovery ecosystem — all the crises it addresses, the evidence base, and the affiliate partners'}
+];
+
+function renderCard(item, chatId){
+  return '<div class="yt-card" data-cat="'+item.cat+'" onclick="ask('learn',''+item.query.replace(/'/g,"\'")+'')">'+
+    '<div class="yt-thumb" style="background:linear-gradient(135deg,'+item.color+'22,'+item.color+'11)">'+
+    '<div class="yt-thumb-icon">'+item.icon+'</div>'+
+    '<div class="yt-thumb-overlay"></div>'+
+    '<div class="yt-thumb-stat">'+item.stats+'</div>'+
+    '<div class="yt-thumb-badge" style="background:'+item.tagColor+';color:'+item.tagText+'">'+item.tag+'</div>'+
+    '</div>'+
+    '<div class="yt-body">'+
+    '<div class="yt-creator">'+
+    '<div class="yt-avatar" style="background:'+item.color+'22;color:'+item.color+'">'+item.creator.charAt(0)+'</div>'+
+    '<span class="yt-creator-name">'+item.creator+'</span>'+
+    '<span class="yt-cred">'+item.cred+'</span>'+
+    '</div>'+
+    '<div class="yt-title">'+item.title+'</div>'+
+    '<div class="yt-meta"><span style="color:'+item.color+'">'+item.roi+'</span><span>Peer-reviewed 2023-25</span></div>'+
+    '</div>'+
+    '</div>';
+}
+
+function renderPlaylist(pl){
+  return '<div class="playlist-bar" onclick="ask('learn',''+pl.query.replace(/'/g,"\'")+'')">'+
+    '<div class="pl-icon" style="background:'+pl.color+'15;font-size:20px">'+pl.icon+'</div>'+
+    '<div><div style="font-size:13px;font-weight:600;color:#E8E0D0">'+pl.title+'</div>'+
+    '<div style="font-size:11px;color:#7B8DA6;margin-top:2px">'+pl.desc+'</div></div>'+
+    '<span class="pl-count">'+pl.count+' topics</span>'+
+    '</div>';
+}
+
+// Render all grids
+var g1 = document.getElementById('learn-grid');
+var g2 = document.getElementById('learn-grid-v2');
+var ps = document.getElementById('playlists-section');
+if(g1) g1.innerHTML = VOL1.map(function(i){return renderCard(i,'learn-chat')}).join('');
+if(g2) g2.innerHTML = VOL2.map(function(i){return renderCard(i,'learn-chat')}).join('');
+if(ps) ps.innerHTML = PLAYLISTS.map(renderPlaylist).join('');
+
+// Filter
+function filterLearn(cat, btn){
+  document.querySelectorAll('.yt-filter').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');
+  document.querySelectorAll('.yt-card').forEach(function(c){
+    c.style.display = (cat==='all' || c.dataset.cat===cat) ? 'block' : 'none';
+  });
+}
+
+function filterCreator(creator){
+  var map = {felicia:'mental',bleu:'social',sleep:'metabolic',metabolic:'metabolic',mental:'mental',nola:'youth',women:'women'};
+  var cat = map[creator] || 'all';
+  document.querySelectorAll('.yt-filter').forEach(function(b){b.classList.remove('on')});
+  document.querySelectorAll('.yt-card').forEach(function(c){
+    c.style.display = (cat==='all' || c.dataset.cat===cat) ? 'block' : 'none';
+  });
+}
+
+function learnSearch(val){
+  if(!val) return;
+  ask('learn', 'Search the BLEU research library for: ' + val);
+}
+
+function learnAsk(){
+  var inp = document.getElementById('learn-input');
+  var val = inp.value.trim();
+  if(!val) return;
+  ask('learn', val);
+  inp.value = '';
+}
+
+// Expose to global
+window.filterLearn = filterLearn;
+window.filterCreator = filterCreator;
+window.learnSearch = learnSearch;
+window.learnAsk = learnAsk;
+
+})();
+</script>
+
+</div>
+
 <div class="panel" id="p-community">
   <style>
     @keyframes ripple{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.5);opacity:0}}
