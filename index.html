@@ -2013,7 +2013,7 @@ id="in-vessel" placeholder="What supplements should I take? What interacts with 
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",function(){
+function _mapInit(){
 
 var SB="https://sqyzboesdpdussiwqpzk.supabase.co";
 var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw";
@@ -2525,7 +2525,8 @@ window.mpLocate=function(){
   });
 };
 
-});
+}
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",_mapInit);}else{_mapInit();}
 </script>
 </div>
 
