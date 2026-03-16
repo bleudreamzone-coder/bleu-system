@@ -49,8 +49,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .nav-tab.t3.active{color:var(--ember);border-color:rgba(199,91,57,.3);background:rgba(199,91,57,.08)}
 
 /* ═══ PANELS ═══ */
-.panel{display:none;padding:80px 24px 120px;max-width:960px;margin:0 auto;min-height:100vh;position:relative;z-index:1;animation:panelIn .4s ease-out}
-.panel.active{display:block}
+.panel{display:none;padding:80px 24px 120px;max-width:960px;margin:0 auto;min-height:100vh;position:relative;z-index:1}
+.panel.active{display:block!important;opacity:1!important;visibility:visible!important}
 @keyframes panelIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
 /* ═══ TYPOGRAPHY ═══ */
@@ -198,7 +198,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .nav-tab.active::after{width:60%}.nav-tab.t2.active::after{background:var(--teal)}
 .section-label::after{animation:lineGrow 1s ease .3s both}
 @keyframes lineGrow{from{transform:scaleX(0);transform-origin:left}to{transform:scaleX(1)}}
-.panel{animation:panelIn .5s cubic-bezier(.16,1,.3,1)}
+
 [id^="in-"]:focus{box-shadow:0 0 0 2px rgba(45,138,158,.2);border-color:var(--teal)!important;transition:.3s}
 [onclick^="goAsk"]{opacity:0;animation:cardReveal .6s cubic-bezier(.16,1,.3,1) both}
 [onclick^="goAsk"]:nth-child(1){animation-delay:.1s}[onclick^="goAsk"]:nth-child(2){animation-delay:.18s}
