@@ -633,7 +633,7 @@ button[type="submit"],
 
     <div style="position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 20px;text-align:center">
 
-      <div class="hf1" style="font-size:10px;letter-spacing:4px;color:rgba(212,175,55,.45);text-transform:uppercase;margin-bottom:20px;font-weight:700">The Longevity Operating System &nbsp;&middot;&nbsp; Patent Pending</div>
+      <div class="hf1" style="font-size:10px;letter-spacing:4px;color:rgba(212,175,55,.45);text-transform:uppercase;margin-bottom:20px;font-weight:700">The Longevity Operating System &nbsp;&middot;&nbsp; Louisiana &nbsp;&middot;&nbsp; 222 Cities &nbsp;&middot;&nbsp; Patent Pending</div>
 
       <div class="hf2" style="min-height:38px;margin-bottom:18px">
         <span style="font-family:Georgia,serif;font-size:clamp(16px,2.8vw,22px);color:rgba(232,213,176,.65);font-weight:300;font-style:italic" id="hw-type"></span><span class="hcursor">|</span>
@@ -704,7 +704,9 @@ button[type="submit"],
       "I want to feel like myself again.",
       "My zip code should not determine my lifespan.",
       "I am tired of living 17 years behind the science.",
-      "There has to be a better way to age."
+      "There has to be a better way to age.",
+      "I want to understand what is actually happening in my body.",
+      "I need someone who treats the whole person, not just the symptom."
     ];
     var el = document.getElementById("hw-type");
     if(!el) return;
@@ -1317,6 +1319,70 @@ button[type="submit"],
       </div>
     </div>
   <p class="hero-sub">Your daily wellness intelligence. Shield scores, correlation insights, anomaly detection, and predictive analytics — all fed by every interaction across the BLEU ecosystem.</p>
+
+  <!-- BLEU HEALTH INDEX -->
+  <div style="margin:24px 0 28px;background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(45,138,158,.04));border:1px solid rgba(201,168,76,.18);border-radius:18px;padding:24px 28px">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:9px;letter-spacing:4px;color:rgba(201,168,76,.65);text-transform:uppercase;margin-bottom:8px">BLEU HEALTH INDEX &nbsp;&bull;&nbsp; YOUR ONE NUMBER</div>
+      <div style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:#8b95a5;max-width:540px;margin:0 auto;line-height:1.7">Apple built retention with one ring. Credit scores shaped behaviour with one number. The BHI is your single metric — across all seven molecular systems. Watch it rise.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:140px 1fr;gap:28px;align-items:center;max-width:680px;margin:0 auto">
+      <div style="text-align:center">
+        <div id="bhi-num" style="font-family:Georgia,serif;font-size:68px;font-weight:300;line-height:1;color:#C9A84C">0</div>
+        <div style="font-size:9px;letter-spacing:2px;color:#4A5B73;margin-top:4px;text-transform:uppercase">Your BHI</div>
+        <div id="bhi-tier-lbl" style="font-size:11px;color:#7B8DA6;margin-top:5px">—</div>
+      </div>
+      <div>
+        <div id="bhi-dim-bars"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(163,45,45,.1);color:#a32d2d;border:1px solid rgba(163,45,45,.18)">0–299 Critical</span>
+          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(186,117,23,.1);color:#ba7517;border:1px solid rgba(186,117,23,.18)">300–499 Developing</span>
+          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(45,138,158,.1);color:#2D8A9E;border:1px solid rgba(45,138,158,.18)">500–699 Active</span>
+          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(29,158,117,.1);color:#1d9e75;border:1px solid rgba(29,158,117,.18)">700–849 Thriving</span>
+          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.18)">850+ Apex</span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:18px">
+      <button onclick="ask('dashboard','Calculate my BLEU Health Index across all 7 systems — sleep, community, finance, therapy, nutrition, ECS, recovery. Give me my BHI score, what tier I am in, and the single highest-leverage action to raise it this week.')" style="padding:10px 22px;border-radius:10px;border:1px solid rgba(201,168,76,.28);background:rgba(201,168,76,.07);color:#C9A84C;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;transition:all .2s" onmouseover="this.style.background='rgba(201,168,76,.15)'" onmouseout="this.style.background='rgba(201,168,76,.07)'">Calculate My BHI with Alvai →</button>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var dims=[
+      {l:'Sleep',c:'#2DD4A8',score:62},
+      {l:'Community',c:'#a78bfa',score:44},
+      {l:'Finance',c:'#C9A84C',score:38},
+      {l:'Therapy',c:'#f97316',score:55},
+      {l:'Nutrition',c:'#1d9e75',score:50},
+      {l:'ECS',c:'#2D8A9E',score:30},
+      {l:'Recovery',c:'#ef4444',score:47},
+    ];
+    var bhi=Math.round(dims.reduce(function(s,d){return s+d.score;},0)/dims.length*10);
+    var numEl=document.getElementById('bhi-num');
+    if(numEl){
+      var c=0,ti=setInterval(function(){
+        c+=Math.ceil(bhi/36);if(c>=bhi){c=bhi;clearInterval(ti);}
+        numEl.textContent=c;
+        numEl.style.color=c<300?'#a32d2d':c<500?'#ba7517':c<700?'#2D8A9E':c<850?'#1d9e75':'#C9A84C';
+      },28);
+    }
+    var tl=document.getElementById('bhi-tier-lbl');
+    if(tl)tl.textContent=bhi<300?'Critical':bhi<500?'Developing':bhi<700?'Active':bhi<850?'Thriving':'Apex';
+    var bars=document.getElementById('bhi-dim-bars');
+    if(bars){
+      dims.forEach(function(d){
+        var r=document.createElement('div');r.style.marginBottom='6px';
+        r.innerHTML='<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span style="color:#7B8DA6">'+d.l+'</span><span style="color:'+d.c+';font-family:DM Mono,monospace">'+d.score+'</span></div>'
+          +'<div style="height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden"><div style="height:100%;border-radius:2px;background:'+d.c+';width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1)" data-w="'+d.score+'%"></div></div>';
+        bars.appendChild(r);
+      });
+      setTimeout(function(){bars.querySelectorAll('[data-w]').forEach(function(b){b.style.width=b.dataset.w;});},200);
+    }
+  })();
+  </script>
+
+
 
   <div class="stat-row">
     <div class="stat-box"><div class="num" style="color:var(--teal)">—</div><div class="label">BLEU Score</div></div>
@@ -8303,13 +8369,18 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
         <div><span style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#C8A951">U</span><span style="font-size:15px;color:#8B95A5;margin-left:4px">nite</span></div>
       </div>
       <p style="font-size:12px;color:#5A6374;max-width:600px;margin:0 auto;line-height:1.7;font-style:italic">
-        The Longevity Operating System. 525,965 verified records. 247 federal data sources. 15 intelligence systems.
-        Medical oversight by Dr. Felicia Stoler (DCN, MS, RDN, FACSM, FAND, Dipl ACLM). Patent Pending.
+        The Longevity Operating System &nbsp;&bull;&nbsp; 855,247 NPI-verified practitioners &nbsp;&bull;&nbsp; 50,000+ PubMed studies &nbsp;&bull;&nbsp; 222 cities &nbsp;&bull;&nbsp; Louisiana headquarters<br>
+        Medical direction: Dr. Felicia Stoler, DCN &nbsp;&bull;&nbsp; MS &nbsp;&bull;&nbsp; RDN &nbsp;&bull;&nbsp; FACSM &nbsp;&bull;&nbsp; FAND &nbsp;&bull;&nbsp; Dipl ACLM &nbsp;&bull;&nbsp; Patent Pending
       </p>
     </div>
 
     <div style="font-size:10px;color:#5A6374;text-align:center;padding:12px;border-top:1px solid rgba(255,255,255,.04)">
       Economic data: BEA, Harvard Business Review, RAND Corporation, CMS. Projections use validated federal inputs. hello@bleu.live
+    </div>
+    <div style="text-align:center;padding:20px 16px 8px;border-top:1px solid rgba(201,168,76,.08)">
+      <div style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(201,168,76,.5);line-height:1.8;max-width:640px;margin:0 auto">
+        Not guilty.<br>And then: the infrastructure of human health.<br>For everyone. Forever.
+      </div>
     </div>
   </div>
 </div>
@@ -8793,7 +8864,7 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
     <div style="font-size:52px;margin-bottom:12px">🕊</div>
     <div style="font-size:10px;letter-spacing:5px;color:rgba(201,168,76,.5);margin-bottom:10px">THE SPIRITUAL ECOSYSTEM</div>
     <h1 style="font-family:Georgia,serif;font-size:clamp(26px,5vw,42px);font-weight:300;color:#e8d5b0;margin:0 0 10px">Spirit</h1>
-    <p style="font-size:13px;color:#8b95a5;max-width:580px;margin:0 auto;line-height:1.9">Sense of purpose — ikigai, as documented in the Blue Zones — is associated with a 23% lower risk of all-cause mortality. Spiritual engagement reduces inflammatory biomarkers, activates parasympathetic tone, and through purpose-activation, measurably increases telomerase activity. The soul is not separate from the body. It is encoded in it.</p>
+    <p style="font-size:13px;color:#8b95a5;max-width:580px;margin:0 auto;line-height:1.9">Viktor Frankl survived four concentration camps, including Auschwitz, and emerged with a single scientific conclusion: meaning is not a luxury. It is a survival mechanism. Purpose reduces all-cause mortality by 23%. Ikigai — the Japanese concept of a reason to rise — is associated with a 7.5-year longevity extension in the Blue Zones. Spiritual engagement activates the parasympathetic nervous system, reduces inflammatory biomarkers, and measurably increases telomerase activity. The soul is not separate from the body. It is encoded in it. BLEU Spirit is not a meditation app. It is the tab that treats meaning as medicine — the only intervention that addresses all three of Antonovsky’s salutogenic components simultaneously.</p>
     <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent);margin:24px auto;max-width:320px"></div>
   </div>
 
