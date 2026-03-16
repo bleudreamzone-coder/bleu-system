@@ -1964,9 +1964,18 @@ function initMap(){
   });
 
   // Dark tile layer
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    subdomains: 'abcd'
+    attribution: ''
+  }).addTo(mapInst);
+  
+  // Dark overlay to match BLEU theme
+  var darkOverlay = L.rectangle([[-90,-180],[90,180]], {
+    fillColor: '#080E1A',
+    fillOpacity: 0.55,
+    color: 'transparent',
+    weight: 0,
+    interactive: false
   }).addTo(mapInst);
 
   // Practitioner cluster points (NPI data - New Orleans area)
@@ -2162,7 +2171,7 @@ if(origGo){
       setTimeout(function(){
         if(!mapInst) initMap();
         else mapInst.invalidateSize();
-      }, 150);
+      }, 300);
     }
   };
 }
