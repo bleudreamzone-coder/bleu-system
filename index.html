@@ -1647,7 +1647,7 @@ if(cg){CONNS.forEach(function(c){
       <span style="font-size:24px">💊</span>
       <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Supplements</div><div style="font-size:10px;color:#7fb285;margin-top:2px">Buy Now →</div></div>
     </a>
-    <a href="https://www.walmart.com/plus?affiliateId=bleu" target="_blank" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(78,205,196,0.1),rgba(78,205,196,0.03));border:1px solid rgba(78,205,196,0.25);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.25)'">
+    <a href="https://www.instacart.com/?utm_source=bleu&utm_medium=affiliate" target="_blank" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(78,205,196,0.1),rgba(78,205,196,0.03));border:1px solid rgba(78,205,196,0.25);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.25)'">
       <span style="font-size:24px">🛒</span>
       <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Groceries</div><div style="font-size:10px;color:#4ecdc4;margin-top:2px">Buy Now →</div></div>
     </a>
@@ -5591,6 +5591,17 @@ function addToCart(productId) {
   BLEU_CART.push({ id: productId, n: p.n, i: p.i, p: p.p, url: p.url, why: p.why.substring(0,60), addedAt: new Date().toISOString() });
   saveCart();
   showCartToast(`&#10003; ${p.n} added to your stack`);
+  // Log affiliate transaction
+  const partner = p.url.includes('amazon') ? 'amazon' :
+    p.url.includes('fullscript') ? 'fullscript' :
+    p.url.includes('betterhelp') ? 'betterhelp' :
+    p.url.includes('goodrx') ? 'goodrx' :
+    p.url.includes('classpass') ? 'classpass' :
+    p.url.includes('talkspace') ? 'talkspace' :
+    p.url.includes('costplus') ? 'costplus' :
+    p.url.includes('functionhealth') ? 'functionhealth' :
+    p.url.includes('walmart') ? 'walmart' : 'other';
+  recordAffiliateTransaction(partner, 'cart_add', 0);
 }
 
 function removeFromCart(productId) {
@@ -5650,7 +5661,7 @@ function renderAffStrip() {
     {key:'weight',label:'🔥 Berberine',url:'https://amazon.com/s?k=berberine+1200mg&tag=bleu-live-20',color:'#c9a84c'},
     {key:'therapy',label:'🧠 BetterHelp',url:'https://betterhelp.com/bleu',color:'#4ecdc4'},
     {key:'fitness',label:'🏃 ClassPass',url:'https://classpass.com',color:'#7fb285'},
-    {key:'grocery',label:'🛒 Groceries',url:'https://walmart.com/grocery',color:'#4ecdc4'},
+    {key:'grocery',label:'🛒 Groceries',url:'https://www.instacart.com/?utm_source=bleu&utm_medium=affiliate',color:'#4ecdc4'},
     {key:'recovery',label:'💊 Cost Plus Drugs',url:'https://costplusdrugs.com',color:'#a78bfa'},
     {key:'labs',label:'🔬 Lab Tests',url:'https://functionhealth.com',color:'#22c55e'},
     {key:'longevity',label:'⚗️ Fullscript',url:'https://fullscript.com/plans/bleuplatform',color:'#d4af37'},
@@ -5707,10 +5718,15 @@ function sendMyStack() {
   let delay = 0;
   amazonItems.slice(0,3).forEach(function(item) {
     setTimeout(function() { window.open(item.url, '_blank'); }, delay);
+    recordAffiliateTransaction('amazon', 'send_stack', 0);
     delay += 400;
   });
   otherItems.slice(0,2).forEach(function(item) {
     setTimeout(function() { window.open(item.url, '_blank'); }, delay);
+    const partner = item.url.includes('fullscript') ? 'fullscript' :
+      item.url.includes('betterhelp') ? 'betterhelp' :
+      item.url.includes('goodrx') ? 'goodrx' : 'other';
+    recordAffiliateTransaction(partner, 'send_stack', 0);
     delay += 400;
   });
   // Show confirmation
@@ -6017,6 +6033,87 @@ async function updateStreak() {
 }
 
 // -- IDENTITY PROTOCOL STORAGE ------------------------------------------------
+function showIdentityOnboarding() {
+  const existing = document.getElementById('bleu-onboarding-modal');
+  if (existing) return;
+  const modal = document.createElement('div');
+  modal.id = 'bleu-onboarding-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML = `
+    <div style="background:#12151c;border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:32px;max-width:420px;width:100%;position:relative">
+      <div style="font-size:10px;letter-spacing:3px;color:rgba(201,168,76,0.6);margin-bottom:8px">ALVAI · IDENTITY PROTOCOL</div>
+      <div style="font-family:Georgia,serif;font-size:22px;color:#e8d5b0;margin-bottom:8px;line-height:1.3">Something brought<br>you here today.</div>
+      <div style="font-size:13px;color:#8fa4b0;line-height:1.7;margin-bottom:20px">Not the platform. Something in you decided to move toward this. That's not small. One question before we build your protocol.</div>
+      <div id="bleu-onboard-step-1">
+        <div style="font-size:14px;color:#e8d5b0;font-weight:600;margin-bottom:12px">When you imagine your health a year from now — what's the first word that comes?</div>
+        <input id="bleu-onboard-q1" type="text" placeholder="Type one word..." style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:10px;color:#e8d5b0;font-size:14px;outline:none;box-sizing:border-box;margin-bottom:10px">
+        <button onclick="bleuOnboardNext(1)" style="width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px">Continue →</button>
+      </div>
+      <div id="bleu-onboard-step-2" style="display:none">
+        <div style="font-size:14px;color:#e8d5b0;font-weight:600;margin-bottom:12px">What's the one thing you've told yourself you'd start — but haven't?</div>
+        <input id="bleu-onboard-q2" type="text" placeholder="Be honest..." style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:10px;color:#e8d5b0;font-size:14px;outline:none;box-sizing:border-box;margin-bottom:10px">
+        <button onclick="bleuOnboardNext(2)" style="width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px">Continue →</button>
+      </div>
+      <div id="bleu-onboard-step-3" style="display:none">
+        <div style="font-size:14px;color:#e8d5b0;font-weight:600;margin-bottom:12px">What would have to be true about you — for this time to be different?</div>
+        <input id="bleu-onboard-q3" type="text" placeholder="Take a moment..." style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:10px;color:#e8d5b0;font-size:14px;outline:none;box-sizing:border-box;margin-bottom:10px">
+        <button onclick="bleuOnboardComplete()" style="width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px">Build My Protocol →</button>
+      </div>
+      <div style="text-align:center;margin-top:14px">
+        <span onclick="localStorage.setItem('bleu_proto_dismissed','1');document.getElementById('bleu-onboarding-modal').remove()" style="font-size:11px;color:#3d4458;cursor:pointer">Skip for now</span>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+function bleuOnboardNext(step) {
+  const q = document.getElementById('bleu-onboard-q' + step);
+  if (!q || !q.value.trim()) { q.style.borderColor='rgba(201,168,76,0.6)'; return; }
+  document.getElementById('bleu-onboard-step-' + step).style.display = 'none';
+  document.getElementById('bleu-onboard-step-' + (step+1)).style.display = 'block';
+}
+
+function bleuOnboardComplete() {
+  const q1 = document.getElementById('bleu-onboard-q1')?.value.trim();
+  const q2 = document.getElementById('bleu-onboard-q2')?.value.trim();
+  const q3 = document.getElementById('bleu-onboard-q3')?.value.trim();
+  if (!q1 || !q2 || !q3) return;
+  // Determine prediction model type
+  const positiveWords = ['strong','free','clear','alive','healthy','fit','energy','vibrant','powerful','better'];
+  const modelType = positiveWords.some(w => q1.toLowerCase().includes(w)) ? 'abundance' : 
+    q1.toLowerCase().includes('different') || q1.toLowerCase().includes('better') ? 'transitional' : 'scarcity';
+  // Build identity statement
+  const statement = `I am someone who moves toward ${q1}. I have carried ${q2} long enough. What makes this time different is: ${q3}.`;
+  const data = {
+    target_word: q1,
+    named_struggle: q2,
+    identity_condition: q3,
+    identity_statement: statement,
+    prediction_model_type: modelType
+  };
+  saveIdentityProtocol(data);
+  // Close modal
+  const modal = document.getElementById('bleu-onboarding-modal');
+  if (modal) {
+    modal.innerHTML = `<div style="background:#12151c;border:1px solid rgba(34,197,94,0.3);border-radius:20px;padding:40px;max-width:400px;width:100%;text-align:center">
+      <div style="font-size:32px;margin-bottom:12px">✦</div>
+      <div style="font-family:Georgia,serif;font-size:20px;color:#e8d5b0;margin-bottom:8px">Protocol saved.</div>
+      <div style="font-size:13px;color:#8fa4b0;line-height:1.7;margin-bottom:20px">${statement}</div>
+      <button onclick="document.getElementById('bleu-onboarding-modal').remove()" style="padding:12px 28px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer">Enter the Ecosystem →</button>
+    </div>`;
+    setTimeout(function() {
+      if (document.getElementById('bleu-onboarding-modal')) {
+        document.getElementById('bleu-onboarding-modal').remove();
+      }
+    }, 8000);
+  }
+  // Send to Alvai
+  setTimeout(function() {
+    goAsk('passport', 'My identity protocol: ' + statement + ' Build my first week protocol around this.');
+  }, 1000);
+}
+
 function saveIdentityProtocol(data) {
   // data: { target_word, named_struggle, identity_condition, identity_statement, prediction_model_type }
   localStorage.setItem('bleu_identity_protocol', JSON.stringify({ ...data, saved_at: new Date().toISOString() }));
@@ -6126,6 +6223,14 @@ function handleHealthFileImport(event) {
 
 function initPassport() {
   renderAffStrip();
+  // Identity Protocol onboarding — fire once for new citizens
+  setTimeout(function() {
+    const proto = getIdentityProtocol();
+    const dismissed = localStorage.getItem('bleu_proto_dismissed');
+    if (!proto && !dismissed && currentUser) {
+      showIdentityOnboarding();
+    }
+  }, 1200);
   renderCart();
   renderPaths();
   renderHealthData();
@@ -6883,6 +6988,7 @@ const RUFUS_PRODUCTS = {
   'meetup': {n:'Meetup -- Find Your People',i:'',p:'Free',u:'Local groups',r:' 4.2 . 3M',why:"Walking clubs, run crews, meditation circles, recovery support, nutrition accountability groups. Social connection reduces mortality by 50% -- same magnitude as quitting smoking. This is medicine.",sf:' Social medicine',url:'https://meetup.com',label:'Find Groups ='},
   // === WALKING / FREE FITNESS ===
   'mapmywalk': {n:'MapMyWalk -- Free Walk Tracker',i:'',p:'Free',u:'App',r:' 4.4 . 1M',why:"Track steps, routes, pace, calories. Set daily goals. 8,000 steps/day reduces all-cause mortality by 51% -- more than most supplements. The most underrated longevity intervention that exists.",sf:' Free forever',url:'https://mapmywalk.com',label:'Download Free ='},
+  'instacart': {n:'Instacart -- Grocery Delivery',i:'🛒',p:'Free delivery',u:'first order',r:'⭐ 4.7 · 2M+',why:'Fresh groceries, supplements, and health foods delivered in under 2 hours. 40,000+ store partners including Whole Foods, Sprouts, and Costco.',sf:'✓ No health interactions',url:'https://www.instacart.com/?utm_source=bleu&utm_medium=affiliate',label:'Order Groceries'},
   'walmart-plus': {n:'Walmart+ -- SNAP Grocery Delivery',i:'',p:'$13/mo',u:'Free delivery $35+',r:' 4.3 . 500K',why:"SNAP/EBT accepted online for delivery. Free delivery on $35+. Access to fresh produce, protein, whole foods -- delivered. Week 1 healthy meal plan under $60: eggs, chicken, sweet potatoes, spinach, avocados, blueberries, quinoa.",sf:' SNAP/EBT accepted',url:'https://walmart.com/plus',label:'Start Free Trial ='},
 };
 
@@ -6994,8 +7100,13 @@ const RUFUS_MAP = {
   snap:         ['walmart-plus'],
   ebt:          ['walmart-plus'],
   'food stamps':['walmart-plus'],
-  groceries:    ['walmart-plus'],
-  'grocery delivery':['walmart-plus'],
+  groceries:    ['walmart-plus','instacart'],
+  'grocery delivery':['walmart-plus','instacart'],
+  instacart:    ['instacart'],
+  'food delivery':['instacart','walmart-plus'],
+  'healthy groceries':['instacart'],
+  'meal prep':  ['instacart','walmart-plus'],
+  'fresh food': ['instacart'],
 };
 
 // Detect which products to surface based on conversation text
