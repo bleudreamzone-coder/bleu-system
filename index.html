@@ -1211,6 +1211,17 @@ button[type="submit"],
   <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(45,212,168,.3),transparent);margin:24px auto;max-width:300px"></div>
 </div>
 
+<!-- MAIN CHAT BOX -->
+  <div class="chat-box" style="margin-bottom:32px">
+    <div class="chat-messages" id="chat-alvai"></div>
+    <div class="chat-input-row">
+      <input autocomplete="off" id="in-alvai" placeholder="What hurts? What keeps you up? What do you need right now?" onkeydown="if(event.key===&apos;Enter&apos;)send(&apos;alvai&apos;)">
+      <button onclick="send(&apos;alvai&apos;)">Ask Alvai &#10024;</button>
+    </div>
+  </div>
+
+
+
 <!-- STATS -->
 <div class="av-stat-row">
   <div class="av-stat" onclick="ask('alvai','How does BLEU verify and match its 855K practitioners')">
@@ -1286,15 +1297,7 @@ button[type="submit"],
     </div>
   </div>
 
-  <!-- MAIN CHAT BOX -->
-  <div class="chat-box" style="margin-bottom:32px">
-    <div class="chat-messages" id="chat-alvai"></div>
-    <div class="chat-input-row">
-      <input autocomplete="off" id="in-alvai" placeholder="What hurts? What keeps you up? What do you need right now?" onkeydown="if(event.key===&apos;Enter&apos;)send(&apos;alvai&apos;)">
-      <button onclick="send(&apos;alvai&apos;)">Ask Alvai &#10024;</button>
-    </div>
-  </div>
-
+  
   <!-- 22 AI MODES -->
   <div style="margin-bottom:32px">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
@@ -1397,8 +1400,10 @@ button[type="submit"],
   })();
   </script>
 
-
 </div>
+
+
+
 
 <script>
 (function(){
