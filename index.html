@@ -1128,9 +1128,8 @@ button[type="submit"],
 
 <!-- ═══════════════════════ DASHBOARD ═══════════════════════ -->
 <!-- ═══════════════════════ ALVAI ═══════════════════════ -->
-<div class="panel" id="p-alvai">
-
-  <style>
+<div class="panel" <div class="panel" id="p-alvai">
+<style>
     @keyframes alvaipulse{0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}50%{box-shadow:0 0 32px 4px rgba(212,175,55,.12)}}
     @keyframes alvaifloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
     @keyframes alvaibeam{0%{opacity:0;transform:scaleX(0)}100%{opacity:1;transform:scaleX(1)}}
@@ -1141,70 +1140,139 @@ button[type="submit"],
     .alvai-stat{text-align:center;padding:16px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05)}
     .aconnect-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid;margin:3px}
   </style>
+<style>
+.av-wrap{max-width:960px;margin:0 auto}
+.av-hero{text-align:center;padding:28px 0 32px;position:relative}
+.av-orb{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,168,.3),rgba(201,168,76,.1));margin:0 auto 18px;animation:avpulse 3.5s ease-in-out infinite;position:relative;display:flex;align-items:center;justify-content:center}
+.av-orb-inner{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,168,.6),rgba(201,168,76,.3));animation:avpulse 2.2s ease-in-out infinite reverse}
+@keyframes avpulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.08);opacity:1}}
+.av-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
+.av-stat{background:#0a111e;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:all .22s}
+.av-stat:hover{border-color:rgba(45,212,168,.3);transform:translateY(-2px)}
+.av-stat-v{font-size:24px;font-weight:300;line-height:1;margin-bottom:4px;font-family:Georgia,serif}
+.av-stat-l{font-size:9px;color:#4A5B73;letter-spacing:2px;text-transform:uppercase}
+.av-modes-wrap{margin-bottom:28px}
+.av-modes-label{font-size:9px;letter-spacing:3px;color:rgba(201,168,76,.5);text-transform:uppercase;margin-bottom:14px;text-align:center}
+.av-modes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.av-mode{background:#0a111e;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 12px;cursor:pointer;transition:all .22s;text-align:center}
+.av-mode:hover{border-color:rgba(45,212,168,.4);background:rgba(45,212,168,.05);transform:translateY(-2px)}
+.av-mode-icon{font-size:18px;margin-bottom:5px}
+.av-mode-name{font-size:11px;font-weight:600;color:#E8E0D0;margin-bottom:2px}
+.av-mode-desc{font-size:9px;color:#4A5B73;line-height:1.4}
+.av-entry-label{font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.18);text-transform:uppercase;margin-bottom:12px}
+.av-prompts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.av-prompt{padding:9px 16px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid rgba(45,212,168,.18);background:rgba(45,212,168,.06);color:#4ecdc4;font-family:"DM Sans",sans-serif;transition:all .2s;white-space:nowrap}
+.av-prompt:hover{background:rgba(45,212,168,.14);border-color:rgba(45,212,168,.5)}
+.av-connected{margin-bottom:28px}
+.av-conn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.av-conn-card{background:#0a111e;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;transition:all .22s;cursor:pointer}
+.av-conn-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
+.av-conn-v{font-size:24px;font-weight:700;line-height:1;margin-bottom:4px}
+.av-conn-l{font-size:11px;font-weight:600;margin-bottom:5px}
+.av-conn-d{font-size:10px;color:#4A5B73;line-height:1.5}
+.av-quote{background:linear-gradient(135deg,rgba(201,168,76,.05),rgba(45,138,158,.04));border:1px solid rgba(201,168,76,.18);border-radius:16px;padding:24px 28px;margin-bottom:28px;text-align:center}
+.av-quote-text{font-family:Georgia,serif;font-size:16px;font-style:italic;color:rgba(232,213,176,.8);line-height:1.75;margin-bottom:10px}
+.av-quote-attr{font-size:10px;color:rgba(201,168,76,.6);letter-spacing:1px}
+.av-principle{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px}
+.av-p{background:rgba(6,12,22,.7);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:16px}
+.av-p-num{font-size:28px;font-weight:900;opacity:.12;line-height:1;margin-bottom:4px}
+.av-p-title{font-size:12px;font-weight:600;margin-bottom:5px}
+.av-p-desc{font-size:11px;color:#4A5B73;line-height:1.55}
+@media(max-width:768px){.av-modes-grid{grid-template-columns:repeat(2,1fr)}.av-conn-grid{grid-template-columns:1fr 1fr}.av-principle{grid-template-columns:1fr}.av-stat-row{grid-template-columns:1fr 1fr}}
+</style>
 
-  <!-- HEADER -->
-  <div style="text-align:center;padding:20px 0 32px;position:relative">
-    <div style="font-size:48px;margin-bottom:12px;animation:alvaifloat 4s ease-in-out infinite">&#10024;</div>
-    <div style="font-size:10px;letter-spacing:5px;color:rgba(212,175,55,.5);margin-bottom:10px">THE INTELLIGENCE LAYER</div>
-<div class="section-label">THE INTELLIGENCE LAYER</div>
-<h1 class="hero-title" style="margin-bottom:10px">The 17-year evidence gap<br><span class="teal">closed in real time.</span></h1>
-<div id="tw-alvai-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
-  <div id="tw-alvai" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
+<div class="av-wrap">
+
+<!-- HERO -->
+<div class="av-hero">
+  <div class="av-orb"><div class="av-orb-inner"></div></div>
+  <div class="section-label" style="margin-bottom:8px">MEET ALVAI</div>
+  <h1 class="hero-title" style="margin-bottom:6px">The intelligence that<br><span class="teal">works before you know you need it.</span></h1>
+  <div id="tw-alvai-wrap" style="height:26px;overflow:hidden;margin:4px 0 16px;text-align:center">
+    <div id="tw-alvai" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.4);line-height:1.6"></div>
+  </div>
+  <script>
+  (function(){
+    var el=document.getElementById("tw-alvai");if(!el)return;
+    var lines=["Ask it anything. It already knows the context.",
+    "Commerce follows care. Always. That is not a slogan. It is the architecture.",
+    "22 specialised modes. Because your situation is not generic.",
+    "When you need a human, Alvai routes to one. It knows what it is.",
+    "855,000 practitioners. Alvai knows which one is right for you specifically.",
+    "Not a chatbot. A clinical intelligence that understands what is underneath your question."];
+    var li=0,ci=0,cur="",typing=true,pause=0;
+    function tick(){if(pause>0){pause--;setTimeout(tick,30);return;}if(typing){if(ci<lines[li].length){cur+=lines[li][ci++];el.textContent=cur;setTimeout(tick,40);}else{typing=false;pause=65;setTimeout(tick,30);}}else{if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,16);}else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}}}
+    setTimeout(tick,1200);
+  })();
+  </script>
+  <p style="font-size:14px;color:#7B8DA6;line-height:1.9;max-width:600px;margin:0 auto">Alvai is the intelligence layer of BLEU. It holds 22 clinical modes, is connected to 855K+ NPI-verified practitioners, 50,000+ indexed studies, 302K+ drug interactions, and the entire BLEU ecosystem. When you ask it something, it responds the way a brilliant, unhurried clinician would -- if that clinician had read everything published in the last five years and never had a waiting room.</p>
+  <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(45,212,168,.3),transparent);margin:24px auto;max-width:300px"></div>
 </div>
-<script>
-(function(){
-  var el=document.getElementById("tw-alvai");
-  if(!el)return;
-  var lines=["Commerce follows care. Always. Every BLEU conversation starts with the person, not the product.",
-"22 specialised modes. Because a person in grief needs different intelligence than a person in early sobriety.",
-"Alvai does not answer your question and stop. It understands the question behind your question.",
-"The 17-year evidence gap. Closed. In real time. In plain language.",
-"When human care is needed, Alvai routes to humans. It knows what it is and what it is not.",
-"855,000 practitioners. Alvai knows which ones are right for you specifically."];
-  var li=0,ci=0,cur="",typing=true,pause=0;
-  function tick(){
-    if(pause>0){pause--;setTimeout(tick,30);return;}
-    if(typing){
-      if(ci<lines[li].length){cur+=lines[li][ci++];el.textContent=cur;setTimeout(tick,38);}
-      else{typing=false;pause=60;setTimeout(tick,30);}
-    }else{
-      if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,18);}
-      else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}
-    }
-  }
-  setTimeout(tick,800);
-})();
-</script>
 
-    <h1 style="font-family:Georgia,serif;font-size:clamp(28px,5vw,44px);font-weight:300;color:#e8d5b0;margin:0 0 8px;animation:alvaipulse 3s ease infinite">Alvai</h1>
-    <div style="font-size:13px;color:#8b95a5;max-width:560px;margin:0 auto;line-height:1.8">Connected to 800K+ practitioners, 1,054 products, 50,000+ studies, and every system inside BLEU. Not a chatbot. A therapeutic intelligence that actually knows what you need.</div>
-    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.3),transparent);margin:24px auto;max-width:300px;animation:alvaibeam .8s ease .3s both"></div>
+<!-- STATS -->
+<div class="av-stat-row">
+  <div class="av-stat" onclick="ask('alvai','How does BLEU verify and match its 855K practitioners')">
+    <div class="av-stat-v" style="color:#C9A84C" id="av-p">855K+</div>
+    <div class="av-stat-l">Practitioners</div>
   </div>
-
-  <!-- LIVE STAT ROW -->
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px">
-    <div class="alvai-stat">
-      <div style="font-size:22px;font-weight:300;color:#d4af37;font-family:Georgia,serif">800K+</div>
-      <div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">PRACTITIONERS</div>
-    </div>
-    <div class="alvai-stat">
-      <div style="font-size:22px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif">302K+</div>
-      <div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">INTERACTIONS</div>
-    </div>
-    <div class="alvai-stat">
-      <div style="font-size:22px;font-weight:300;color:#a78bfa;font-family:Georgia,serif">22</div>
-      <div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">AI MODES</div>
-    </div>
-    <div class="alvai-stat">
-      <div style="font-size:22px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif">FREE</div>
-      <div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">ALWAYS</div>
-    </div>
+  <div class="av-stat" onclick="ask('alvai','What drug interactions does BLEU screen for')">
+    <div class="av-stat-v" style="color:#2DD4A8">302K+</div>
+    <div class="av-stat-l">Drug Interactions</div>
   </div>
+  <div class="av-stat" onclick="ask('alvai','What are all 22 Alvai modes and what does each one do')">
+    <div class="av-stat-v" style="color:#a78bfa">22</div>
+    <div class="av-stat-l">Clinical Modes</div>
+  </div>
+  <div class="av-stat" onclick="ask('alvai','How does BLEU make money if Alvai is free')">
+    <div class="av-stat-v" style="color:#1d9e75">Free</div>
+    <div class="av-stat-l">Always</div>
+  </div>
+</div>
 
-  <!-- QUICK PROMPTS -->
-  <div style="margin-bottom:28px">
-    <div style="font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.2);margin-bottom:14px">START HERE &mdash; REAL ENTRY POINTS</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px">
+<!-- THE 3 PRINCIPLES -->
+<div class="av-principle">
+  <div class="av-p" style="border-left:3px solid rgba(45,212,168,.4)">
+    <div class="av-p-num" style="color:#2DD4A8">01</div>
+    <div class="av-p-title" style="color:#2DD4A8">Commerce follows care.</div>
+    <div class="av-p-desc">Alvai never suggests a product before it has helped you think through what you actually need. The recommendation follows the understanding. Always. This is not a policy. It is the sequence built into every conversation.</div>
+  </div>
+  <div class="av-p" style="border-left:3px solid rgba(201,168,76,.4)">
+    <div class="av-p-num" style="color:#C9A84C">02</div>
+    <div class="av-p-title" style="color:#C9A84C">Your situation is specific.</div>
+    <div class="av-p-desc">The same question -- "why can't I sleep?" -- means something different for someone in financial crisis, someone in grief, and someone in early sobriety. Alvai has 22 modes because human situations are not generic. It reads the context before it responds.</div>
+  </div>
+  <div class="av-p" style="border-left:3px solid rgba(239,68,68,.4)">
+    <div class="av-p-num" style="color:#ef4444">03</div>
+    <div class="av-p-title" style="color:#ef4444">It knows when to step back.</div>
+    <div class="av-p-desc">When Alvai detects that a human practitioner is needed -- for crisis, for clinical complexity, for things that require a real relationship -- it routes. 855K+ verified practitioners. It is not trying to replace the human. It is the bridge to the right one.</div>
+  </div>
+</div>
+
+<!-- 22 MODES -->
+<div class="av-modes-wrap">
+  <div class="av-modes-label">22 Clinical Modes -- Click Any to Activate</div>
+  <div class="av-modes-grid" id="av-modes-grid"></div>
+</div>
+
+<!-- START HERE -->
+<div style="margin-bottom:28px">
+  <div class="av-entry-label">Real entry points -- where real people start</div>
+  <div class="av-prompts" id="av-prompts"></div>
+</div>
+
+<!-- WHAT ALVAI IS CONNECTED TO -->
+<div class="av-connected">
+  <div class="section-label" style="margin-bottom:14px">WHAT ALVAI IS CONNECTED TO</div>
+  <div class="av-conn-grid" id="av-conn-grid"></div>
+</div>
+
+<!-- THE QUOTE -->
+<div class="av-quote">
+  <div class="av-quote-text">"Alvai is not a replacement for clinical care. It is what clinical care should have been from the beginning -- unhurried, deeply informed, and genuinely interested in the person asking. It arrives before the crisis. It stays through the process. It never bills by the hour."</div>
+  <div class="av-quote-attr">Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl ACLM -- Clinical Director, BLEU.live</div>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:8px">
       <span onclick="ask('alvai','I cant sleep and I feel exhausted every morning. Give me a full sleep protocol.')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4;transition:all .2s" onmouseover="this.style.background='rgba(78,205,196,.18)'" onmouseout="this.style.background='rgba(78,205,196,.08)'">&#128164; Can&apos;t Sleep</span>
       <span onclick="ask('alvai','I feel overwhelmed and anxious. I need something that actually helps right now.')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa;transition:all .2s" onmouseover="this.style.background='rgba(167,139,250,.18)'" onmouseout="this.style.background='rgba(167,139,250,.08)'">&#129504; Anxiety</span>
       <span onclick="ask('alvai','I am 3 days sober and struggling. What do I do right now?')" style="padding:8px 16px;border-radius:20px;font-size:12px;cursor:pointer;background:rgba(255,107,138,.08);border:1px solid rgba(255,107,138,.2);color:#ff6b8a;transition:all .2s" onmouseover="this.style.background='rgba(255,107,138,.18)'" onmouseout="this.style.background='rgba(255,107,138,.08)'">&#128330; Recovery</span>
@@ -1327,6 +1395,90 @@ button[type="submit"],
   })();
   </script>
 
+
+</div>
+
+<script>
+(function(){
+  var SBU="https://sqyzboesdpdussiwqpzk.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw";
+  fetch(SBU+"/rest/v1/practitioners?select=count",{headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Prefer":"count=exact"}}).then(function(r){var ct=r.headers.get("content-range");if(ct){var n=ct.split("/")[1];if(n&&n!=="*"&&parseInt(n)>0){var el=document.getElementById("av-p");if(el)el.textContent=Math.floor(parseInt(n)/1000)+"K+";}}}).catch(function(){});
+
+  var MODES=[
+    {name:"Sleep Intelligence",desc:"Protocol for tonight",color:"#185fa5",q:"I need a sleep protocol. Walk me through everything."},
+    {name:"Anxiety & Stress",desc:"Real relief, real fast",color:"#7055a8",q:"I am feeling overwhelmed with anxiety right now. Help me."},
+    {name:"Early Sobriety",desc:"Hours 1 through 90",color:"#ef4444",q:"I am in early sobriety and I need support right now."},
+    {name:"Grief Support",desc:"You are not alone",color:"#a78bfa",q:"I am grieving and I don't know how to move through it."},
+    {name:"Find a Practitioner",desc:"855K verified",color:"#2DD4A8",q:"Help me find the right practitioner for what I am going through."},
+    {name:"Drug Interactions",desc:"302K combinations",color:"#C9A84C",q:"I want to check my medications and supplements for interactions."},
+    {name:"Cannabis & ECS",desc:"Clinical precision",color:"#1d9e75",q:"Help me understand cannabis safely for my specific situation."},
+    {name:"Financial Stress",desc:"Cortisol is a molecule",color:"#ba7517",q:"My financial stress is affecting my health. Where do I start."},
+    {name:"Food as Medicine",desc:"Your plate is a protocol",color:"#22c55e",q:"Tell me what to eat tonight based on my health goals."},
+    {name:"Supplement Stack",desc:"Science, not marketing",color:"#2D8A9E",q:"Build me a supplement stack based on my goals and medications."},
+    {name:"Trauma & PTSD",desc:"Somatic first",color:"#F472B6",q:"I am dealing with trauma. I need to understand my options."},
+    {name:"Grief & Loss",desc:"CBT + somatic",color:"#7055a8",q:"I lost someone. I don't know how to process this."},
+    {name:"Recovery Relapse",desc:"Data, not shame",color:"#ef4444",q:"I relapsed. I need help understanding what happened and what to do."},
+    {name:"Chronic Pain",desc:"ECS + integrative",color:"#a32d2d",q:"I live with chronic pain. What does BLEU know that my doctors haven't told me."},
+    {name:"Maternal Health",desc:"1 in 5 mothers",color:"#F472B6",q:"I am struggling with postpartum depression or maternal mental health. Help me."},
+    {name:"Men's Mental Health",desc:"80% of suicides",color:"#185fa5",q:"I am a man and I am struggling. I don't know who to talk to."},
+    {name:"Biological Age",desc:"Add years. Now.",color:"#C9A84C",q:"What is my biological age and how do I reduce it."},
+    {name:"Benefits Navigator",desc:"$65B unclaimed",color:"#ba7517",q:"What government benefits and assistance programs am I eligible for."},
+    {name:"City Intelligence",desc:"Your neighbourhood",color:"#2D8A9E",q:"What are the health resources available in my neighbourhood."},
+    {name:"Spiritual Wellbeing",desc:"Purpose as medicine",color:"#d4af37",q:"I feel like I have lost my sense of purpose. Help me find my way back."},
+    {name:"Crisis Support",desc:"988 + beyond",color:"#ef4444",q:"I am in crisis right now. I need immediate support."},
+    {name:"General Wellness",desc:"Start anywhere",color:"#2DD4A8",q:"I want to improve my overall health. Where should I start."},
+  ];
+
+  var mg=document.getElementById("av-modes-grid");
+  if(mg){MODES.forEach(function(mo){
+    var d=document.createElement("div");d.className="av-mode";
+    d.style.borderColor="rgba(255,255,255,.06)";
+    d.innerHTML="<div class='av-mode-name' style='color:"+mo.color+"'>"+mo.name+"</div><div class='av-mode-desc'>"+mo.desc+"</div>";
+    d.addEventListener("click",function(){ask("alvai",mo.q);});
+    d.addEventListener("mouseenter",function(){d.style.borderColor=mo.color+"60";d.style.background=mo.color+"08";});
+    d.addEventListener("mouseleave",function(){d.style.borderColor="rgba(255,255,255,.06)";d.style.background="";});
+    mg.appendChild(d);
+  });}
+
+  var PROMPTS=[
+    {l:"I can't sleep",q:"I cannot sleep and I don't know why. Walk me through everything."},
+    {l:"I'm in crisis",q:"I am in crisis right now and I need immediate help."},
+    {l:"Find me a doctor",q:"Help me find the right practitioner for what I am going through."},
+    {l:"Check my meds",q:"I want to check my medications and supplements for interactions."},
+    {l:"I just relapsed",q:"I relapsed. I need help understanding what happened and what is next."},
+    {l:"I'm exhausted",q:"I am chronically exhausted and I don't know why. Help me figure this out."},
+    {l:"I'm anxious",q:"My anxiety is affecting everything. Where do I start."},
+    {l:"Build my stack",q:"Build me a supplement protocol based on my health goals."},
+    {l:"I'm grieving",q:"I am in grief and I don't know how to get through this."},
+    {l:"What do I eat",q:"Tell me what to eat tonight for my specific health situation."},
+    {l:"Financial stress",q:"My financial stress is making me physically sick. Help me."},
+    {l:"I feel lost",q:"I have lost my sense of purpose and direction. I need help finding it."},
+  ];
+  var pp=document.getElementById("av-prompts");
+  if(pp){PROMPTS.forEach(function(p){
+    var b=document.createElement("span");b.className="av-prompt";b.textContent=p.l;
+    b.addEventListener("click",function(){ask("alvai",p.q);});
+    pp.appendChild(b);
+  });}
+
+  var CONNS=[
+    {v:"855K+",l:"NPI Practitioners",d:"Verified. Trust-scored. Matched by specialty, geography, insurance, and telehealth availability.",c:"#C9A84C",q:"How does Alvai match me to a practitioner"},
+    {v:"50K+",l:"PubMed Studies",d:"Indexed across 32 crisis categories. 465 reviewed to Dr. Felicia Stoler's clinical standard.",c:"#2DD4A8",q:"How does Alvai use the 50K PubMed studies"},
+    {v:"302K+",l:"Drug Interactions",d:"CYP450 enzyme pathways. 54 substances. Severity-rated. Cannabis, supplements, prescription, OTC.",c:"#a78bfa",q:"How does Alvai check drug interactions"},
+    {v:"22",l:"Clinical Modes",d:"Therapy, recovery, sleep, cannabis, finance, grief, crisis, maternal health, men's health, longevity.",c:"#ef4444",q:"What are all 22 Alvai clinical modes"},
+    {v:"32",l:"Crisis Blueprints",d:"Peer-reviewed 2023-2025. Every crisis mapped to a BLEU tab and a practitioner pathway.",c:"#1d9e75",q:"What are the 32 crises BLEU addresses"},
+    {v:"Free",l:"Always -- For Everyone",d:"The platform earns from the ecosystem. Never from the people it serves. Citizens never pay.",c:"#2D8A9E",q:"How does BLEU make money if Alvai is free"},
+  ];
+  var cg=document.getElementById("av-conn-grid");
+  if(cg){CONNS.forEach(function(c){
+    var d=document.createElement("div");d.className="av-conn-card";
+    d.innerHTML="<div class='av-conn-v' style='color:"+c.c+"'>"+c.v+"</div><div class='av-conn-l' style='color:"+c.c+"'>"+c.l+"</div><div class='av-conn-d'>"+c.d+"</div>";
+    d.addEventListener("click",function(){ask("alvai",c.q);});
+    d.addEventListener("mouseenter",function(){d.style.borderColor=c.c+"40";});
+    d.addEventListener("mouseleave",function(){d.style.borderColor="rgba(255,255,255,.06)";});
+    cg.appendChild(d);
+  });}
+})();
+</script>
 </div>
 
 <div class="panel" id="p-dashboard">
