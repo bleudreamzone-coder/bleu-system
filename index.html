@@ -1641,6 +1641,31 @@ if(cg){CONNS.forEach(function(c){
   
 
 </div>
+  <!-- ORDER NOW GRID -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0">
+    <a href="https://fullscript.com/plans/bleuplatform" target="_blank" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(127,178,133,0.15),rgba(127,178,133,0.05));border:1px solid rgba(127,178,133,0.3);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#7fb285'" onmouseout="this.style.borderColor='rgba(127,178,133,0.3)'">
+      <span style="font-size:24px">💊</span>
+      <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Supplements</div><div style="font-size:10px;color:#7fb285;margin-top:2px">Buy Now →</div></div>
+    </a>
+    <a href="https://www.walmart.com/plus?affiliateId=bleu" target="_blank" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(78,205,196,0.1),rgba(78,205,196,0.03));border:1px solid rgba(78,205,196,0.25);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.25)'">
+      <span style="font-size:24px">🛒</span>
+      <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Groceries</div><div style="font-size:10px;color:#4ecdc4;margin-top:2px">Buy Now →</div></div>
+    </a>
+    <a href="https://www.goodrx.com" target="_blank" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(167,139,250,0.1),rgba(167,139,250,0.03));border:1px solid rgba(167,139,250,0.25);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='rgba(167,139,250,0.25)'">
+      <span style="font-size:24px">💊</span>
+      <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Prescriptions</div><div style="font-size:10px;color:#a78bfa;margin-top:2px">Buy Now →</div></div>
+    </a>
+    <a href="https://betterhelp.com/bleu" target="_blank" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(212,175,55,0.03));border:1px solid rgba(212,175,55,0.25);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.25)'">
+      <span style="font-size:24px">🧠</span>
+      <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Therapy</div><div style="font-size:10px;color:#d4af37;margin-top:2px">Buy Now →</div></div>
+    </a>
+    <a href="https://www.functionhealth.com" target="_blank" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(34,197,94,0.03));border:1px solid rgba(34,197,94,0.25);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s;grid-column:span 2" onmouseover="this.style.borderColor='#22c55e'" onmouseout="this.style.borderColor='rgba(34,197,94,0.25)'">
+      <span style="font-size:24px">🔬</span>
+      <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Lab Tests — No Referral Needed</div><div style="font-size:10px;color:#22c55e;margin-top:2px">Buy Now → 100+ biomarkers · results in 48hrs</div></div>
+    </a>
+  </div>
+  <!-- END ORDER GRID -->
+
 
 <div id="tw-vessel" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
 
@@ -5528,6 +5553,24 @@ async function showProfile(){
     }
   }, 800);document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});setTimeout(checkPendingProtocol,400);setTimeout(renderAffStrip,300);updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
 async function loadSessions(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('id,title,mode,created_at').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(10);const el=document.getElementById('session-list');if(!data||!data.length){el.innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Talk to Alvai to see history here.</div>';return}el.innerHTML=data.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center"></div><div><div style="color:#e8d5b0;font-size:0.85rem">'+(c.title||'Session')+'</div><div style="color:#8fa4b0;font-size:0.7rem">'+new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' . '+(c.mode||'general')+'</div></div></div>').join('')}
+function autoAddRecommendedProducts(responseText) {
+  if (!responseText || !RUFUS_PRODUCTS) return;
+  const text = responseText.toLowerCase().replace(/<[^>]+>/g, ' ');
+  Object.keys(RUFUS_PRODUCTS).forEach(function(key) {
+    const p = RUFUS_PRODUCTS[key];
+    if (!p || !p.n) return;
+    const nameLower = p.n.toLowerCase();
+    const keywords = nameLower.split(' ').filter(w => w.length > 4);
+    const mentioned = keywords.some(kw => text.includes(kw));
+    if (mentioned && !BLEU_CART.find(i => i.id === key)) {
+      BLEU_CART.push({ id: key, n: p.n, i: p.i||'', p: p.p||'', url: p.url, why: (p.why||'').substring(0,60), addedAt: new Date().toISOString(), auto: true });
+      try { localStorage.setItem('bleu_cart', JSON.stringify(BLEU_CART)); } catch(e) {}
+      renderCart();
+      showCartToast('✦ ' + p.n + ' added to your stack');
+    }
+  });
+}
+
 async function saveConvo(tab,msgs){if(!sbClient||!currentUser||!msgs.length)return;const mode=tab==='home'?'alvai':tab;const title=(msgs.find(m=>m.role==='user')?.content||'Session').slice(0,60);try{if(currentConvoIds[tab]){await sbClient.from('conversations').update({messages:msgs,updated_at:new Date().toISOString()}).eq('id',currentConvoIds[tab])}else{const{data}=await sbClient.from('conversations').insert({user_id:currentUser.id,mode,title,messages:msgs}).select('id').single();if(data)currentConvoIds[tab]=data.id}}catch(e){console.warn('saveConvo failed',e)}}
 function togGoal(el){el.classList.toggle('active');if(!sbClient||!currentUser)return;const g=[...document.querySelectorAll('.gc.active')].map(c=>c.dataset.g);sbClient.from('profiles').update({wellness_goals:g}).eq('id',currentUser.id)}
 // =======================================
@@ -5601,14 +5644,16 @@ function renderAffStrip() {
   const focuses = [];
   try { focuses.push(...JSON.parse(localStorage.getItem('bleu_focuses') || '[]')); } catch(e) {}
   const affiliates = [
-    {key:'sleep',label:' Magnesium',url:'https://amazon.com/s?k=magnesium+glycinate+400mg&tag=bleu-live-20',color:'#4ecdc4'},
-    {key:'anxiety',label:' Ashwagandha',url:'https://amazon.com/s?k=ashwagandha+ksm-66&tag=bleu-live-20',color:'#7fb285'},
-    {key:'energy',label:'* Vitamin D3+K2',url:'https://amazon.com/s?k=vitamin+d3+k2+5000iu&tag=bleu-live-20',color:'#d4af37'},
-    {key:'weight',label:' Berberine',url:'https://amazon.com/s?k=berberine+1200mg&tag=bleu-live-20',color:'#c9a84c'},
-    {key:'therapy',label:' BetterHelp',url:'https://betterhelp.com/bleu',color:'#4ecdc4'},
-    {key:'fitness',label:' ClassPass',url:'https://classpass.com',color:'#7fb285'},
-    {key:'recovery',label:' Cost Plus Drugs',url:'https://costplusdrugs.com',color:'#4ecdc4'},
-    {key:'longevity',label:' Function Health',url:'https://functionhealth.com',color:'#d4af37'},
+    {key:'sleep',label:'💊 Magnesium',url:'https://amazon.com/s?k=magnesium+glycinate+400mg&tag=bleu-live-20',color:'#4ecdc4'},
+    {key:'anxiety',label:'🌿 Ashwagandha',url:'https://amazon.com/s?k=ashwagandha+ksm-66&tag=bleu-live-20',color:'#7fb285'},
+    {key:'energy',label:'☀️ Vitamin D3+K2',url:'https://amazon.com/s?k=vitamin+d3+k2+5000iu&tag=bleu-live-20',color:'#d4af37'},
+    {key:'weight',label:'🔥 Berberine',url:'https://amazon.com/s?k=berberine+1200mg&tag=bleu-live-20',color:'#c9a84c'},
+    {key:'therapy',label:'🧠 BetterHelp',url:'https://betterhelp.com/bleu',color:'#4ecdc4'},
+    {key:'fitness',label:'🏃 ClassPass',url:'https://classpass.com',color:'#7fb285'},
+    {key:'grocery',label:'🛒 Groceries',url:'https://walmart.com/grocery',color:'#4ecdc4'},
+    {key:'recovery',label:'💊 Cost Plus Drugs',url:'https://costplusdrugs.com',color:'#a78bfa'},
+    {key:'labs',label:'🔬 Lab Tests',url:'https://functionhealth.com',color:'#22c55e'},
+    {key:'longevity',label:'⚗️ Fullscript',url:'https://fullscript.com/plans/bleuplatform',color:'#d4af37'},
   ];
   const sorted = [...affiliates].sort((a,b) => focuses.includes(b.key)?1:-1);
   const chips = sorted.map(a => {
@@ -5634,7 +5679,7 @@ function renderCart() {
     html += '<div style="flex:1;min-width:0"><div style="font-size:12px;color:#e8d5b0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + item.n + '</div>';
     html += '<div style="font-size:10px;color:#8fa4b0;margin-top:2px">' + (item.why||'') + '</div></div>';
     html += '<div style="text-align:right;flex-shrink:0"><div style="font-size:12px;font-weight:700;color:' + (isFree?'#22c55e':'#c9a84c') + '">' + (item.p||'') + '</div>';
-    html += '<a href="' + item.url + '" target="_blank" style="font-size:9px;color:#4ecdc4;text-decoration:none;letter-spacing:0.5px">BUY -></a></div>';
+    html += '<a href="' + item.url + '" target="_blank" style="display:inline-block;margin-top:5px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;font-size:10px;font-weight:700;padding:5px 11px;border-radius:7px;text-decoration:none;letter-spacing:0.3px">Buy Now</a></div>';
     html += '<button onclick="removeFromCart(\'' + item.id + '\')" style="position:absolute;top:6px;right:6px;background:none;border:none;color:rgba(255,255,255,0.2);font-size:14px;cursor:pointer;line-height:1;padding:2px" title="Remove">x</button>';
     html += '</div>';
   });
@@ -5644,10 +5689,37 @@ function renderCart() {
   if (totalEst > 0) {
     html += '<div style="margin-top:10px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:space-between">';
     html += '<span style="font-size:11px;color:#22c55e"> ' + totalItems + ' item' + (totalItems>1?'s':'') + ' in your stack</span>';
-    html += '<button onclick="exportCart()" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#22c55e;border-radius:8px;padding:5px 12px;font-size:10px;cursor:pointer;font-weight:600">Export Stack</button>';
+    html += '<div style="display:flex;gap:8px">';
+    html += '<button onclick="sendMyStack()" style="background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:8px;padding:7px 16px;font-size:11px;cursor:pointer;font-weight:700;letter-spacing:0.3px">Send My Stack →</button>';
+    html += '<button onclick="exportCart()" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);color:#22c55e;border-radius:8px;padding:7px 12px;font-size:10px;cursor:pointer">Save List</button>';
+    html += '</div>';
     html += '</div>';
   }
   el.innerHTML = html;
+}
+
+function sendMyStack() {
+  if (!BLEU_CART.length) return;
+  // Build Amazon multi-item search for the stack
+  const amazonItems = BLEU_CART.filter(i => i.url && i.url.includes('amazon'));
+  const otherItems = BLEU_CART.filter(i => i.url && !i.url.includes('amazon'));
+  // Open each item in new tab with small delay
+  let delay = 0;
+  amazonItems.slice(0,3).forEach(function(item) {
+    setTimeout(function() { window.open(item.url, '_blank'); }, delay);
+    delay += 400;
+  });
+  otherItems.slice(0,2).forEach(function(item) {
+    setTimeout(function() { window.open(item.url, '_blank'); }, delay);
+    delay += 400;
+  });
+  // Show confirmation
+  const el = document.getElementById('pp-cart-container');
+  const confirm = document.createElement('div');
+  confirm.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 20px rgba(201,168,76,0.4)';
+  confirm.textContent = '✓ Your stack is opening — ' + BLEU_CART.length + ' items';
+  document.body.appendChild(confirm);
+  setTimeout(function() { confirm.remove(); }, 3000);
 }
 
 function removeFromCart(id) {
@@ -7457,7 +7529,8 @@ function renderRufusCards(containerDiv, productIds) {
           <span class="rufus-card-rating">${p.r}</span>
         </div>
         <div class="rufus-card-actions">
-          <a href="${p.url}" target="_blank" class="rufus-btn-primary">${p.label}</a>
+          <a href="${p.url}" target="_blank" class="rufus-btn-primary">Buy Now</a>
+          <button onclick="addToCart('${id}');this.textContent='✓ Added';this.style.background='rgba(34,197,94,0.2)';this.style.borderColor='#22c55e';this.style.color='#22c55e'" class="rufus-btn-secondary" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:#c9a84c;border-radius:8px;padding:6px 12px;font-size:10px;cursor:pointer;font-weight:600;font-family:inherit">+ Add to Stack</button>
         </div>
       </div>`;
     wrapper.appendChild(card);
