@@ -1633,7 +1633,7 @@ button[type="submit"],
   </div>
 </div>
 
-id="chat-dashboard"></div><div class="chat-input-row"><input autocomplete="off" id="in-dashboard" placeholder="How am I doing? Show me my progress..." onkeydown="if(event.key==='Enter')send('dashboard')"><button onclick="send('dashboard')">Check In</button></div></div>
+<div id="chat-dashboard" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-dashboard" placeholder="How am I doing? Show me my progress..." onkeydown="if(event.key==='Enter')send('dashboard')"><button onclick="send('dashboard')">Check In</button></div></div></div>
 </div>
 
 <!-- ═══════════════════════ DIRECTORY ═══════════════════════ -->
@@ -2347,7 +2347,7 @@ id="chat-dashboard"></div><div class="chat-input-row"><input autocomplete="off" 
   </script>
 </div>
 
-id="in-vessel" placeholder="What supplements should I take? What interacts with my meds?" onkeydown="if(event.key==='Enter')send('vessel')"><button onclick="send('vessel')">Find Stack</button></div></div>
+<input class="chat-input" id="in-vessel" placeholder="What supplements should I take? What interacts with my meds?" onkeydown="if(event.key==='Enter')send('vessel')"><button onclick="send('vessel')">Find Stack</button></div></div>
 
   <div class="disclaimer">⚕️ Supplements are not FDA-approved to treat disease. BLEU scores reflect safety data, clinical evidence, and manufacturing quality -- not medical claims. Consult your provider before starting any supplement, especially if taking medications.</div>
   <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
@@ -2904,7 +2904,7 @@ var fi=0;
   </div>
 </div>
 
-id="chat-protocols"></div><div class="chat-input-row"><input autocomplete="off" id="in-protocols" placeholder="Build me a protocol for sleep... anxiety... energy... pain..." onkeydown="if(event.key==='Enter')send('protocols')"><button onclick="send('protocols')">Build Protocol</button></div></div>
+<div id="chat-protocols" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-protocols" placeholder="Build me a protocol for sleep... anxiety... energy... pain..." onkeydown="if(event.key==='Enter')send('protocols')"><button onclick="send('protocols')">Build Protocol</button></div></div></div>
 
 <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
 </div>
@@ -3877,7 +3877,7 @@ if(lb)lb.addEventListener("click",function(){
   </div>
 </div>
 
-id="chat-therapy"></div><div class="chat-input-row"><input autocomplete="off" id="in-therapy" placeholder="I feel anxious... I can\'t stop thinking... I need someone to talk to..." onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Share</button></div></div>
+<div id="chat-therapy" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-therapy" placeholder="I feel anxious... I can\'t stop thinking... I need someone to talk to..." onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Share</button></div></div></div>
 
   <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
 <div class="divider"></div>
@@ -4148,7 +4148,7 @@ id="chat-therapy"></div><div class="chat-input-row"><input autocomplete="off" id
   </div>
 </div>
 
-id="chat-finance"></div><div class="chat-input-row"><input autocomplete="off" id="in-finance" placeholder="Save on prescriptions · negotiate medical bills · maximize HSA · budget for wellness..." onkeydown="if(event.key==='Enter')send('finance')"><button onclick="send('finance')">Help Me</button></div></div>
+<div id="chat-finance" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-finance" placeholder="Save on prescriptions · negotiate medical bills · maximize HSA · budget for wellness..." onkeydown="if(event.key==='Enter')send('finance')"><button onclick="send('finance')">Help Me</button></div></div>
   </div>
 
   <!-- 6 CENTERS -->
@@ -4506,7 +4506,8 @@ id="chat-finance"></div><div class="chat-input-row"><input autocomplete="off" id
 
 </div>
 
-<div class="panel" id="p-recovery">
+<div class="panel" 
+</div>id="p-recovery">
   <div class="section-label">RECOVERY AS MOLECULAR RESTORATION</div>
   <h1 class="hero-title"> <span class="accent">Recovery</span></h1>
 <div id="tw-recovery-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
@@ -4588,7 +4589,7 @@ id="chat-finance"></div><div class="chat-input-row"><input autocomplete="off" id
   </div>
 </div>
 
-id="chat-recovery"></div><div class="chat-input-row"><input autocomplete="off" id="in-recovery" placeholder="You\'re not alone. What's happening right now?" onkeydown="if(event.key==='Enter')send('recovery')"><button onclick="send('recovery')">Share</button></div></div>
+<div id="chat-recovery" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-recovery" placeholder="You\'re not alone. What's happening right now?" onkeydown="if(event.key==='Enter')send('recovery')"><button onclick="send('recovery')">Share</button></div></div></div>
 
   <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
 <div class="divider"></div>
