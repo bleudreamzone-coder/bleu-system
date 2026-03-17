@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BLEU × Jazz Bird NOLA — Wellness Verified Zone · New Orleans · Free Forever</title>
+<meta name="description" content="New Orleans Wellness Verified Zone. 485K+ NPI practitioners. Alvai AI. 8 parishes. Jazz Bird NOLA 501(c)(3). Louisiana health rank #50 → #20 in 15 years.">
+<meta property="og:title" content="BLEU × Jazz Bird NOLA — Wellness Verified Zone">
+<meta property="og:description" content="Louisiana ranks #50 in health. In 15 years, we intend to reach the top 20. This is where it starts. Free. Always.">
+<meta property="og:url" content="https://neworleans.bleu.live">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BLEU × Jazz Bird NOLA">
+<meta name="twitter:description" content="485K+ practitioners. Alvai AI. Free forever. New Orleans Wellness Verified Zone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080C14;--bg2:#0D1220;--bg3:#111826;
+  --gold:#C9A84C;--gold2:#A8893E;--gold3:#F0D080;--gold4:rgba(201,168,76,.12);
+  --teal:#2EC4B6;--teal2:rgba(46,196,182,.15);
+  --rose:#E8734A;
+  --text:#EAE0CC;--muted:rgba(234,224,204,.58);--dim:rgba(234,224,204,.24);--ghost:rgba(234,224,204,.06);
+  --line:rgba(255,255,255,.07);--card:rgba(255,255,255,.035);
+  --display:'Playfair Display',Georgia,serif;
+  --serif:'EB Garamond',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+  --nav-h:60px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* STARS */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.08;transform:scale(1)}50%{opacity:.35;transform:scale(1.3)}}
+
+/* GRADIENT */
+.amb{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 10%,rgba(201,168,76,.055),transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 90%,rgba(46,196,182,.04),transparent 55%)}
+
+/* TOP GOLD LINE */
+.top-line{position:fixed;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,var(--gold) 30%,var(--gold3) 60%,var(--gold) 80%,transparent);z-index:1001;opacity:.45}
+
+/* NAV */
+nav{position:fixed;top:1px;left:0;right:0;height:var(--nav-h);z-index:1000;
+  background:rgba(8,12,20,.92);backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(201,168,76,.14);
+  display:flex;align-items:center;padding:0 28px;gap:0}
+.nav-brand{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-right:28px;text-decoration:none}
+.nb-logo{font-family:var(--display);font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--gold)}
+.nb-x{color:var(--dim);font-size:13px;margin:0 3px}
+.nb-jb{font-family:var(--display);font-size:17px;font-weight:400;font-style:italic;color:var(--text)}
+.nb-nola{font-family:var(--sans);font-size:9px;letter-spacing:.22em;color:var(--bg);background:var(--gold);border-radius:4px;padding:1px 6px;font-weight:500;text-transform:uppercase;margin-left:2px}
+.nav-links{display:flex;align-items:stretch;overflow-x:auto;scrollbar-width:none;flex:1;gap:0}
+.nav-links::-webkit-scrollbar{display:none}
+.nl{font-family:var(--sans);font-size:11.5px;font-weight:400;color:var(--dim);padding:0 13px;cursor:pointer;border:none;background:none;transition:color .25s;height:var(--nav-h);display:flex;align-items:center;border-bottom:2px solid transparent;white-space:nowrap;letter-spacing:.02em}
+.nl:hover{color:var(--text)}
+.nl.on{color:var(--gold);border-bottom-color:var(--gold)}
+.nav-cta{margin-left:auto;flex-shrink:0;font-family:var(--sans);font-size:11px;padding:7px 18px;background:var(--gold);color:var(--bg);border-radius:100px;cursor:pointer;border:none;font-weight:500;letter-spacing:.04em;transition:all .25s}
+.nav-cta:hover{background:var(--gold3);transform:translateY(-1px)}
+
+/* MAIN */
+main{padding-top:var(--nav-h)}
+
+/* SECTION BASE */
+section{position:relative;z-index:10}
+.s-inner{max-width:1100px;margin:0 auto;padding:90px 32px}
+
+/* SECTION LABELS */
+.s-label{font-family:var(--sans);font-size:9.5px;letter-spacing:.45em;text-transform:uppercase;color:var(--gold2);opacity:.75;display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.s-label-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.7}
+
+/* TYPOGRAPHY */
+.display-xl{font-family:var(--display);font-size:clamp(52px,8vw,110px);font-weight:900;line-height:.9;letter-spacing:-.03em}
+.display-lg{font-family:var(--display);font-size:clamp(36px,5vw,72px);font-weight:700;line-height:.95;letter-spacing:-.025em}
+.display-md{font-family:var(--display);font-size:clamp(26px,3.5vw,48px);font-weight:700;line-height:1.05;letter-spacing:-.02em}
+.display-sm{font-family:var(--display);font-size:clamp(20px,2.5vw,32px);font-weight:600;line-height:1.1;letter-spacing:-.015em}
+.body-serif{font-family:var(--serif);font-size:clamp(14px,1.4vw,18px);color:var(--muted);line-height:2}
+.gold-text{color:var(--gold)}
+.teal-text{color:var(--teal)}
+.rose-text{color:var(--rose)}
+
+/* PILL BADGES */
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:10.5px;padding:4px 12px;border-radius:100px;font-weight:400;letter-spacing:.04em}
+.pill-gold{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold)}
+.pill-green{background:rgba(46,196,100,.08);border:1px solid rgba(46,196,100,.3);color:#4ade80}
+.pill-dim{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--muted)}
+.pill-teal{background:rgba(46,196,182,.08);border:1px solid rgba(46,196,182,.3);color:var(--teal)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 4px #4ade80}50%{box-shadow:0 0 14px #4ade80,0 0 28px rgba(74,222,128,.2)}}
+
+/* HERO */
+#home{min-height:100vh;display:flex;align-items:center}
+.hero-inner{max-width:800px;margin:0 auto;padding:80px 32px;text-align:center}
+.hero-icon{font-size:36px;margin-bottom:24px;opacity:.7;display:block;filter:drop-shadow(0 0 18px rgba(201,168,76,.4))}
+.hero-eyebrow{font-family:var(--sans);font-size:10px;letter-spacing:.5em;text-transform:uppercase;color:var(--dim);margin-bottom:16px}
+.hero-pills{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.hero-quote{font-family:var(--serif);font-size:clamp(14px,1.6vw,18px);font-style:italic;color:var(--muted);margin-bottom:8px;line-height:1.8}
+.hero-attr{font-family:var(--sans);font-size:11px;color:var(--dim);margin-bottom:44px;letter-spacing:.04em}
+.hero-attr span{color:var(--gold)}
+.hero-title{margin-bottom:24px}
+.hero-sub{font-family:var(--sans);font-size:clamp(14px,1.5vw,17px);color:var(--muted);margin-bottom:8px;line-height:1.7}
+.hero-ital{font-family:var(--serif);font-size:clamp(14px,1.4vw,16px);font-style:italic;color:var(--gold);margin-bottom:44px}
+.hero-ctas{display:flex;justify-content:center;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:100px;font-family:var(--sans);font-size:12.5px;font-weight:500;letter-spacing:.04em;cursor:pointer;border:none;transition:all .3s;text-decoration:none}
+.btn-gold{background:var(--gold);color:var(--bg)}
+.btn-gold:hover{background:var(--gold3);transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,.3)}
+.btn-teal{background:var(--teal);color:var(--bg)}
+.btn-teal:hover{background:#3fd5c8;transform:translateY(-2px);box-shadow:0 8px 28px rgba(46,196,182,.3)}
+.btn-outline{background:none;color:var(--text);border:1px solid rgba(255,255,255,.2)}
+.btn-outline:hover{border-color:rgba(255,255,255,.4);transform:translateY(-2px)}
+
+/* SCROLL ARROW */
+.scroll-arrow{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);width:32px;height:32px;border:1px solid rgba(201,168,76,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold2);cursor:pointer;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(5px)}}
+
+/* STATS BAR */
+.stats-bar{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats-bar-inner{max-width:1100px;margin:0 auto;display:flex;padding:0 32px}
+.sbi{flex:1;padding:22px 20px;border-right:1px solid var(--line);text-align:center}
+.sbi:last-child{border-right:none}
+.sbi-n{font-family:var(--display);font-size:clamp(22px,3vw,36px);font-weight:700;color:var(--gold);line-height:1;margin-bottom:4px}
+.sbi-l{font-family:var(--sans);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;position:relative;overflow:hidden;transition:all .3s}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.1),transparent);pointer-events:none}
+.card:hover{border-color:rgba(201,168,76,.14);transform:translateY(-2px)}
+.card-p{padding:24px}
+.card-p-lg{padding:32px}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+
+/* SECTION DIVIDER */
+.sdiv{border-top:1px solid var(--line);margin:64px 0}
+
+/* TRANSFORM DISPLAY */
+.transform-box{background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(46,196,182,.04));border:1px solid rgba(201,168,76,.2);border-radius:20px;padding:52px;text-align:center}
+.tf-nums{display:flex;align-items:center;justify-content:center;gap:32px;margin-bottom:20px}
+.tf-n{font-family:var(--display);font-size:clamp(64px,10vw,120px);font-weight:900;line-height:1;letter-spacing:-.04em}
+.tf-from{color:var(--rose)}
+.tf-to{color:var(--gold)}
+.tf-arrow{font-size:36px;color:var(--dim)}
+.tf-sub{font-family:var(--sans);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+
+/* WELLNESS ZONE TIERS */
+.wz-tier{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;position:relative;overflow:hidden}
+.wz-badge{font-size:24px;margin-bottom:12px;display:block}
+.wz-name{font-family:var(--display);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.wz-sub{font-family:var(--sans);font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+.wz-desc{font-family:var(--serif);font-size:12.5px;color:var(--muted);line-height:1.85}
+.wz-tag{display:inline-block;font-family:var(--sans);font-size:9px;padding:4px 10px;border-radius:100px;margin-top:14px;letter-spacing:.1em;font-weight:500}
+.wz-active{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
+.wz-target{background:rgba(46,196,182,.08);color:var(--teal);border:1px solid rgba(46,196,182,.25)}
+.wz-vision{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid rgba(255,255,255,.08)}
+
+/* BIG STAT CARDS */
+.bsc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 18px;text-align:center}
+.bsc-n{font-family:var(--display);font-size:clamp(28px,4vw,48px);font-weight:700;color:var(--rose);line-height:1;margin-bottom:6px}
+.bsc-l{font-family:var(--sans);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+.bsc-n.green{color:var(--teal)}
+.bsc-n.gold{color:var(--gold)}
+
+/* PROBLEM CARDS */
+.prob-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;cursor:pointer;transition:all .3s}
+.prob-card:hover{border-color:rgba(201,168,76,.22);transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,.3)}
+.prob-ico{font-size:28px;margin-bottom:14px;display:block}
+.prob-title{font-family:var(--display);font-size:18px;font-weight:600;margin-bottom:8px}
+.prob-desc{font-family:var(--serif);font-size:12px;color:var(--muted);line-height:1.8}
+
+/* IMPACT TABLE */
+.impact-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.impact-table thead{background:rgba(201,168,76,.06)}
+.impact-table th{font-family:var(--sans);font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim);padding:14px 20px;text-align:left;border-bottom:1px solid var(--line)}
+.impact-table th.highlight{color:var(--gold)}
+.impact-table td{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.035);font-family:var(--sans);font-size:13.5px;color:var(--muted)}
+.impact-table tr:last-child td{border-bottom:none}
+.impact-table td.metric{color:var(--text);font-weight:400}
+.impact-table td.today{color:var(--rose);font-weight:500}
+.impact-table td.y15{color:var(--gold);font-weight:600}
+.impact-table tr:hover td{background:rgba(255,255,255,.015)}
+
+/* PARISH CARDS */
+.parish-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 18px;text-align:center;transition:all .3s;cursor:pointer}
+.parish-card:hover{border-color:rgba(201,168,76,.22);transform:translateY(-2px)}
+.parish-ico{font-size:28px;margin-bottom:10px;display:block}
+.parish-name{font-family:var(--display);font-size:17px;font-weight:600;color:var(--text);margin-bottom:6px}
+.parish-pop{font-family:var(--sans);font-size:12px;color:var(--muted)}
+.parish-rank{font-family:var(--sans);font-size:12px;color:var(--rose);margin-top:2px}
+
+/* DIR CATEGORY */
+.dir-cat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;transition:all .3s;cursor:pointer}
+.dir-cat:hover{border-color:rgba(201,168,76,.2);transform:translateY(-2px)}
+.dir-cat-ico{font-size:22px;margin-bottom:10px;display:block}
+.dir-cat-name{font-family:var(--display);font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px}
+.dir-cat-desc{font-family:var(--serif);font-size:11.5px;color:var(--muted);line-height:1.75}
+
+/* ALVAI */
+.alvai-box{background:linear-gradient(135deg,rgba(155,143,255,.06),rgba(46,196,182,.04));border:1px solid rgba(155,143,255,.2);border-radius:18px;padding:28px;position:relative;overflow:hidden}
+.alvai-greeting{margin-bottom:20px}
+.alvai-greeting-name{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--gold);margin-bottom:8px}
+.alvai-greeting-txt{font-family:var(--serif);font-size:13.5px;color:var(--text);line-height:1.8}
+.alvai-input-row{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:8px 8px 8px 20px}
+.alvai-input{flex:1;background:none;border:none;outline:none;font-family:var(--sans);font-size:13px;color:var(--text)}
+.alvai-input::placeholder{color:var(--dim)}
+.alvai-btn{background:var(--teal);color:var(--bg);border:none;border-radius:100px;padding:8px 20px;font-family:var(--sans);font-size:12px;font-weight:500;cursor:pointer;transition:all .25s;white-space:nowrap}
+.alvai-btn:hover{background:#3fd5c8}
+.alvai-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.alvai-pill{font-family:var(--sans);font-size:11px;padding:5px 14px;border-radius:100px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--muted);cursor:pointer;transition:all .25s}
+.alvai-pill:hover{border-color:rgba(201,168,76,.3);color:var(--gold)}
+.alvai-scan{position:absolute;top:50%;left:-40%;width:50%;height:1px;background:linear-gradient(90deg,transparent,rgba(155,143,255,.4),transparent);animation:alvai-sc 4.5s ease-in-out infinite}
+@keyframes alvai-sc{0%{left:-40%}100%{left:130%}}
+@keyframes alvFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes alvCursor{0%,100%{opacity:1}50%{opacity:0}}
+.alv-cursor{display:inline-block;width:2px;height:14px;background:#9B8FFF;margin-left:2px;vertical-align:text-bottom;border-radius:1px;animation:alvCursor .8s step-end infinite}
+.alv-thinking{display:flex;align-items:center;gap:8px;color:rgba(155,143,255,.6);font-size:12px;font-family:var(--sans)}
+.alv-thinking-dots span{display:inline-block;width:4px;height:4px;border-radius:50%;background:rgba(155,143,255,.5);animation:alvCursor .9s ease-in-out infinite}
+.alv-thinking-dots span:nth-child(2){animation-delay:.2s}
+.alv-thinking-dots span:nth-child(3){animation-delay:.4s}
+
+/* MOAT FLOW */
+.moat-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:22px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:16px}
+.moat-step{font-family:var(--sans);font-size:12px;padding:6px 14px;background:rgba(255,255,255,.05);border-radius:100px;color:var(--text);white-space:nowrap}
+.moat-arrow{color:var(--dim);font-size:14px}
+.moat-end{background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);color:var(--gold);padding:6px 14px;border-radius:100px;font-family:var(--sans);font-size:12px;font-weight:500}
+.moat-caption{font-family:var(--sans);font-size:13px;color:var(--muted)}
+.moat-caption strong{color:var(--text)}
+
+/* AFFIL ROW */
+.affil-row{display:flex;flex-wrap:wrap;gap:8px;padding:20px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+.affil-chip{font-family:var(--sans);font-size:11.5px;padding:6px 14px;border-radius:100px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);cursor:pointer;transition:all .25s}
+.affil-chip:hover{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.2);color:var(--gold)}
+
+/* RECOVERY PATHS */
+.rc-path{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.rc-path:last-child{border-bottom:none}
+.rc-ico{font-size:24px;flex-shrink:0;margin-top:2px}
+.rc-name{font-family:var(--display);font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px}
+.rc-desc{font-family:var(--serif);font-size:12px;color:var(--muted);line-height:1.7}
+
+/* FINANCE TOOLS */
+.fin-tool{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;transition:all .3s}
+.fin-tool:hover{border-color:rgba(201,168,76,.18);transform:translateY(-2px)}
+.fin-tool-name{font-family:var(--display);font-size:18px;font-weight:600;color:var(--text);margin-bottom:6px}
+.fin-tool-tag{font-family:var(--sans);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold2);margin-bottom:12px}
+.fin-tool-desc{font-family:var(--serif);font-size:12px;color:var(--muted);line-height:1.8}
+
+/* COMMUNITY PILLAR */
+.com-pillar{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;gap:16px;align-items:flex-start;transition:all .3s}
+.com-pillar:hover{border-color:rgba(201,168,76,.14)}
+.cp-ico{width:44px;height:44px;border-radius:12px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.16);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.cp-name{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.cp-desc{font-family:var(--serif);font-size:11.5px;color:var(--muted);line-height:1.7}
+
+/* DR STOLER */
+.stoler-box{background:linear-gradient(135deg,rgba(201,168,76,.05),rgba(255,255,255,.02));border:1px solid rgba(201,168,76,.18);border-radius:18px;padding:36px;display:flex;gap:28px;align-items:flex-start}
+.stoler-avi{width:80px;height:80px;border-radius:50%;background:rgba(201,168,76,.12);border:2px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0}
+.stoler-name{font-family:var(--display);font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px}
+.stoler-creds{font-family:var(--sans);font-size:10.5px;color:var(--gold);letter-spacing:.08em;margin-bottom:6px}
+.stoler-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.stoler-tag{font-family:var(--sans);font-size:9.5px;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--dim)}
+.stoler-quote{font-family:var(--serif);font-size:14px;font-style:italic;color:var(--muted);line-height:1.85}
+
+/* ENTERPRISE */
+.ent-box{background:linear-gradient(135deg,rgba(201,168,76,.04),rgba(46,196,182,.03));border:1px solid rgba(201,168,76,.15);border-radius:18px;padding:36px}
+
+/* CITY VALUE */
+.cv-item{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.cv-item:last-child{border-bottom:none}
+.cv-ico{width:40px;height:40px;border-radius:10px;background:rgba(201,168,76,.07);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.cv-name{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.cv-desc{font-family:var(--serif);font-size:11.5px;color:var(--muted);line-height:1.7}
+
+/* SECTION BG VARIANTS */
+.s-alt{background:var(--bg2)}
+.s-alt2{background:var(--bg3)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--line);padding:48px 32px;position:relative;z-index:10;text-align:center;background:var(--bg2)}
+.footer-brand{font-family:var(--display);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:6px}
+.footer-brand span{font-weight:400;font-style:italic;color:var(--text)}
+.footer-mission{font-family:var(--serif);font-size:14px;font-style:italic;color:var(--muted);max-width:540px;margin:0 auto 24px;line-height:1.8}
+.footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-bottom:24px}
+.footer-links a{font-family:var(--sans);font-size:11px;color:var(--dim);text-decoration:none;letter-spacing:.08em;transition:color .2s}
+.footer-links a:hover{color:var(--gold)}
+.footer-legal{font-family:var(--sans);font-size:10.5px;color:rgba(234,224,204,.2);letter-spacing:.06em;line-height:2}
+
+/* TYPEWRITER */
+.tw-cur{display:inline-block;width:2px;height:1em;background:var(--gold);margin-left:2px;vertical-align:text-bottom;animation:blink .85s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* BACK TO TOP */
+.btt{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--gold);color:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:500;opacity:0;transition:all .3s;font-size:18px;box-shadow:0 4px 18px rgba(201,168,76,.35)}
+.btt.show{opacity:1}
+.btt:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(201,168,76,.45)}
+
+/* ANIMATIONS */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .75s,transform .75s}
+.fade-in.vis{opacity:1;transform:translateY(0)}
+
+/* BARS */
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.bar-lbl{font-family:var(--sans);font-size:11px;color:var(--muted);min-width:110px}
+.bar-track{flex:1;height:2px;background:rgba(255,255,255,.05);border-radius:1px;overflow:hidden}
+.bar-fill{height:100%;border-radius:1px;background:linear-gradient(90deg,var(--gold2),var(--gold));transform:scaleX(0);transform-origin:left;transition:transform 1.4s cubic-bezier(.22,1,.36,1)}
+.vis .bar-fill{transform:scaleX(1)}
+.bar-val{font-family:var(--sans);font-size:10.5px;color:var(--gold);min-width:36px;text-align:right}
+
+@media(max-width:768px){
+  .g2,.g3,.g4,.g5{grid-template-columns:1fr}
+  .s-inner{padding:60px 20px}
+  .stats-bar-inner{flex-direction:column}
+  .sbi{border-right:none;border-bottom:1px solid var(--line)}
+  .sbi:last-child{border-bottom:none}
+  .stoler-box{flex-direction:column}
+  .tf-nums{gap:16px}
+  nav{padding:0 14px}
+  .nb-logo,.nb-jb{font-size:14px}
+  .nav-cta{display:none}
+}
+
+/* -- CINEMA CHAPTERS -- */
+.cinema-section{background:var(--bg);position:relative;z-index:10;overflow:hidden}
+.cinema-inner{max-width:740px;margin:0 auto;padding:96px 32px 80px}
+.cinema-deco{position:absolute;right:-60px;top:50%;transform:translateY(-50%);font-family:var(--display);font-size:clamp(160px,22vw,300px);font-weight:900;color:rgba(201,168,76,.022);line-height:1;pointer-events:none;letter-spacing:-.06em;user-select:none}
+.ch{margin-bottom:88px;padding-bottom:88px;border-bottom:1px solid rgba(255,255,255,.05)}
+.ch:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.ch-num{font-family:var(--sans);font-size:8px;letter-spacing:.7em;text-transform:uppercase;color:rgba(201,168,76,.4);margin-bottom:18px}
+.ch-title{font-family:var(--display);font-size:clamp(22px,3vw,36px);font-weight:700;color:var(--text);line-height:1.15;letter-spacing:-.02em;margin-bottom:24px}
+.ch-title em{color:var(--gold);font-style:normal}
+.ch-body{font-family:var(--serif);font-size:clamp(15px,1.55vw,19px);color:var(--muted);line-height:2.1;margin-bottom:0}
+.ch-body + .ch-body{margin-top:20px}
+.ch-pull{font-family:var(--display);font-size:clamp(17px,2vw,26px);font-style:italic;font-weight:600;line-height:1.45;border-left:2px solid rgba(201,168,76,.5);padding:18px 26px;margin:32px 0;color:var(--text)}
+.ch-pull.gold{color:var(--gold)}
+.ch-pull.teal{color:var(--teal)}
+.ch-stat-row{display:flex;gap:0;margin-top:36px;border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden}
+.ch-stat{flex:1;padding:18px 16px;border-right:1px solid rgba(255,255,255,.05);text-align:center}
+.ch-stat:last-child{border-right:none}
+.ch-sn{font-family:var(--display);font-size:clamp(20px,2.8vw,32px);font-weight:700;color:var(--gold);line-height:1;margin-bottom:5px}
+.ch-sl{font-family:var(--sans);font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:rgba(234,224,204,.32)}
+
+/* -- HERO CHAPTER TYPEWRITER -- */
+.hero-ch-wrap{margin-bottom:20px}
+.hero-ch-line1{font-family:var(--display);font-size:clamp(26px,4vw,52px);font-weight:700;color:var(--text);line-height:1.15;letter-spacing:-.025em;min-height:1.2em;text-align:center}
+.hero-ch-line2{font-family:var(--display);font-size:clamp(22px,3.2vw,42px);font-weight:500;font-style:italic;color:var(--gold);line-height:1.2;letter-spacing:-.018em;min-height:1.2em;text-align:center;margin-top:4px}
+.hero-ch-narr{font-family:var(--serif);font-size:clamp(13px,1.35vw,16px);color:var(--muted);max-width:580px;margin:20px auto 0;text-align:center;line-height:2;min-height:72px}
+.ch-dots{display:flex;justify-content:center;gap:8px;margin:22px 0 30px}
+.ch-dot{width:8px;height:8px;border-radius:50%;background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.28);cursor:pointer;transition:all .4s}
+.ch-dot.on{background:var(--gold);width:26px;border-radius:4px;box-shadow:0 0 10px rgba(201,168,76,.45)}
+@keyframes chFadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ch-in{animation:chFadeUp .65s ease forwards}
+
+/* CHAPTER TICKER */
+.ch-ticker{background:rgba(201,168,76,.06);border-top:1px solid rgba(201,168,76,.12);border-bottom:1px solid rgba(201,168,76,.12);overflow:hidden;white-space:nowrap;padding:10px 0}
+.ch-ticker-inner{display:inline-block;animation:tickScroll 28s linear infinite}
+@keyframes tickScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ch-tick-item{display:inline-block;padding:0 32px;font-family:var(--sans);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:rgba(201,168,76,.55)}
+.ch-tick-dot{display:inline-block;width:3px;height:3px;border-radius:50%;background:rgba(201,168,76,.3);vertical-align:middle;margin:0 8px}
+
+</style>
+</head>
+<body>
+<div class="top-line"></div>
+<div class="amb"></div>
+<div id="stars"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-brand" href="#">
+    <span class="nb-logo">BLEU</span>
+    <span class="nb-x">×</span>
+    <span class="nb-jb">Jazz Bird</span>
+    <span class="nb-nola">NOLA</span>
+  </a>
+  <div class="nav-links">
+    <button class="nl on" data-sec="home">Home</button>
+    <button class="nl" data-sec="parishes">Parishes</button>
+    <button class="nl" data-sec="directory">Directory</button>
+    <button class="nl" data-sec="vessel">Vessel</button>
+    <button class="nl" data-sec="alvai">Alvai ✦</button>
+    <button class="nl" data-sec="impact">Impact</button>
+    <button class="nl" data-sec="recovery">Recovery</button>
+    <button class="nl" data-sec="community">Community</button>
+    <button class="nl" data-sec="finance">Finance</button>
+    <button class="nl" data-sec="protocols">Protocols</button>
+    <button class="nl" data-sec="enterprise">Enterprise</button>
+    <button class="nl" data-sec="cities">Cities</button>
+  </div>
+  <button class="nav-cta" onclick="scrollTo('alvai')">Talk to Alvai →</button>
+</nav>
+
+<main>
+
+<!-- ═══ HOME ═══ -->
+<section id="home" style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative">
+  <div class="hero-inner" style="position:relative;z-index:10">
+    <span class="hero-icon">⚜</span>
+    <p class="hero-eyebrow">The Longevity Operating System · New Orleans</p>
+    <div class="hero-pills">
+      <span class="pill pill-gold">🐦 Powered by Jazz Bird NOLA</span>
+      <span class="pill pill-green"><span class="live-dot"></span>LIVE</span>
+      <span class="pill pill-dim">501(c)(3)</span>
+    </div>
+    <p class="hero-quote">"Lifestyle medicine isn't about fixing what's broken — it's about putting health within reach for everyone."</p>
+    <p class="hero-attr">— <span>Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl ACLM · Co-Founder</span></p>
+    <div class="hero-ch-wrap">
+      <div class="hero-ch-line1" id="hLine1"></div>
+      <div class="hero-ch-line2" id="hLine2"></div>
+    </div>
+    <div class="hero-ch-narr" id="hNarr"></div>
+    <div class="ch-dots" style="margin-top:18px">
+      <div class="ch-dot on" onclick="hJump(0)"></div>
+      <div class="ch-dot" onclick="hJump(1)"></div>
+      <div class="ch-dot" onclick="hJump(2)"></div>
+      <div class="ch-dot" onclick="hJump(3)"></div>
+    </div>
+    <p class="hero-sub" style="margin-top:24px">Louisiana ranks fiftieth in health. In fifteen years, we intend to reach the top twenty.</p>
+    <p class="hero-ital">This is where it starts.</p>
+    <div class="hero-ctas">
+      <button class="btn btn-gold" onclick="navTo('alvai')">Talk to Alvai — Free →</button>
+      <button class="btn btn-teal" onclick="navTo('parishes')">Welcome, New Orleans →</button>
+      <button class="btn btn-outline" onclick="navTo('cities')">3 Cities Live →</button>
+    </div>
+  </div>
+  <div class="scroll-arrow" onclick="navTo('parishes')">↓</div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="sbi"><div class="sbi-n">485,476</div><div class="sbi-l">NPI Practitioners</div></div>
+    <div class="sbi"><div class="sbi-n">8</div><div class="sbi-l">Parishes</div></div>
+    <div class="sbi"><div class="sbi-n">54</div><div class="sbi-l">Substances Tracked</div></div>
+    <div class="sbi"><div class="sbi-n">22</div><div class="sbi-l">Therapeutic Modes</div></div>
+    <div class="sbi"><div class="sbi-n">7</div><div class="sbi-l">Federal APIs Live</div></div>
+  </div>
+</div>
+
+<!-- HOME: #50→#20 -->
+<div class="s-alt" style="position:relative;z-index:10">
+  <div class="s-inner" style="padding-top:72px;padding-bottom:72px">
+    <div class="transform-box fade-in">
+      <div class="tf-nums">
+        <div><div class="tf-n tf-from">#50</div><div class="tf-sub">TODAY</div></div>
+        <div class="tf-arrow">→</div>
+        <div><div class="tf-n tf-to">#20</div><div class="tf-sub">15 YEARS</div></div>
+      </div>
+      <p class="body-serif" style="max-width:640px;margin:0 auto;text-align:center">Louisiana ranks fiftieth out of fifty states in health. That number carries weight — and it carries responsibility. BLEU × Jazz Bird is here because this city deserves better, and we know what's possible.</p>
+    </div>
+
+    <!-- WELLNESS ZONE CERTIFICATION -->
+    <div style="margin-top:72px" class="fade-in">
+      <div class="s-label"><div class="s-label-dot"></div>⚜ BLEU Wellness Zone Certification</div>
+      <h2 class="display-md" style="margin-bottom:12px">Three Tiers. Measurable Milestones. Real Accountability.</h2>
+      <p class="body-serif" style="margin-bottom:32px;max-width:560px">New Orleans is on the path to becoming the first fully certified Wellness Zone in America.</p>
+      <div class="g3">
+        <div class="wz-tier">
+          <span class="wz-badge">🥉</span>
+          <div class="wz-name">Wellness Rising</div>
+          <div class="wz-sub">Tier One · Foundation</div>
+          <p class="wz-desc">City mapped. Practitioners verified. Directory live. Alvai deployed. QR infrastructure active. The community has tools.</p>
+          <span class="wz-tag wz-active">+ New Orleans · Active</span>
+        </div>
+        <div class="wz-tier">
+          <span class="wz-badge">🥈</span>
+          <div class="wz-name">Wellness Emerging</div>
+          <div class="wz-sub">Tier Two · Momentum</div>
+          <p class="wz-desc">25%+ health indicator improvement. ER visits declining. Community circles active across all parishes. Jazz Bird chapters scaled.</p>
+          <span class="wz-tag wz-target">Target · Year 3–5</span>
+        </div>
+        <div class="wz-tier">
+          <span class="wz-badge">🏆</span>
+          <div class="wz-name">Wellness Certified</div>
+          <div class="wz-sub">Tier Three · Validated</div>
+          <p class="wz-desc">Fully validated. Sustained improvement across obesity, mental health, life expectancy, and economic vitality. Health rank top 25.</p>
+          <span class="wz-tag wz-vision">Vision · Year 7–10</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHERE LA STANDS TODAY -->
+    <div style="margin-top:72px" class="fade-in">
+      <div class="s-label"><div class="s-label-dot"></div>Where Louisiana Stands Today</div>
+      <div class="g5">
+        <div class="bsc"><div class="bsc-n">39%</div><div class="bsc-l">Adult Obesity</div></div>
+        <div class="bsc"><div class="bsc-n">16%</div><div class="bsc-l">% Smokers</div></div>
+        <div class="bsc"><div class="bsc-n">73 yr</div><div class="bsc-l">Life Expectancy</div></div>
+        <div class="bsc"><div class="bsc-n">40%</div><div class="bsc-l">Senior Inactivity</div></div>
+        <div class="bsc"><div class="bsc-n">3,379</div><div class="bsc-l">Preventable ER/100K</div></div>
+      </div>
+      <p class="body-serif" style="text-align:center;margin-top:24px;font-style:italic">"80% of health outcomes are determined by social and economic conditions — not clinical care." — WHO</p>
+    </div>
+
+    <!-- WHAT WELLNESS VERIFIED CHANGES -->
+    <div style="margin-top:64px" class="fade-in">
+      <div class="s-label"><div class="s-label-dot"></div>What Wellness Verified Changes</div>
+      <div class="g4">
+        <div class="bsc"><div class="bsc-n green">→ 28%</div><div class="bsc-l">Obesity by Year 10</div></div>
+        <div class="bsc"><div class="bsc-n green">→ 79 yr</div><div class="bsc-l">Life Expectancy</div></div>
+        <div class="bsc"><div class="bsc-n gold">42,000</div><div class="bsc-l">ER Visits Avoided</div></div>
+        <div class="bsc"><div class="bsc-n gold">$120M</div><div class="bsc-l">10-Year Savings</div></div>
+      </div>
+    </div>
+
+    <!-- AND THIS IS ALSO TRUE -->
+    <div style="margin-top:64px" class="fade-in">
+      <div class="s-label"><div class="s-label-dot"></div>✦ And This Is Also True</div>
+      <div class="g4" style="margin-bottom:16px">
+        <div class="bsc"><div class="bsc-n gold">#1</div><div class="bsc-l">Food City · World</div></div>
+        <div class="bsc"><div class="bsc-n gold">#2</div><div class="bsc-l">US Destination</div></div>
+        <div class="bsc"><div class="bsc-n gold">$10B+</div><div class="bsc-l">Annual Tourism</div></div>
+        <div class="bsc"><div class="bsc-n gold">17M</div><div class="bsc-l">Visitors/Year</div></div>
+      </div>
+      <div class="g4">
+        <div class="bsc"><div class="bsc-n green">-35%</div><div class="bsc-l">Homicide Drop '24</div></div>
+        <div class="bsc"><div class="bsc-n green">-44%</div><div class="bsc-l">Shootings Down</div></div>
+        <div class="bsc" style="font-size:24px">⚜<div class="bsc-l" style="margin-top:6px">Saints · Pelicans</div></div>
+        <div class="bsc" style="font-size:24px">🎷<div class="bsc-l" style="margin-top:6px">Birthplace of Jazz</div></div>
+      </div>
+      <p class="body-serif" style="text-align:center;margin-top:24px"><strong style="color:var(--text)">Culture, cuisine, music, soul, resilience.</strong> Now add world-class wellness infrastructure. <span style="color:var(--gold)">That's what BLEU × Jazz Bird does.</span></p>
+    </div>
+
+    <!-- JAZZ BIRD NOLA CALLOUT -->
+    <div style="margin-top:72px" class="fade-in">
+      <div class="card card-p-lg" style="border-color:rgba(201,168,76,.2);background:linear-gradient(135deg,rgba(201,168,76,.05),rgba(255,255,255,.02))">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <span style="font-size:28px">🐦</span>
+          <div>
+            <div class="display-sm" style="color:var(--gold)">Jazz Bird NOLA · Where Wellness Meets Soul</div>
+          </div>
+        </div>
+        <p class="body-serif" style="margin-bottom:20px">Named for the migration of snowbirds — with a jazz soul. The 501(c)(3) that leads community engagement, lifestyle medicine, and the quiet work of making this city so good that people stop leaving and start coming home.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span class="pill pill-gold">501(c)(3)</span>
+          <span class="pill pill-dim">Lifestyle Medicine</span>
+          <span class="pill pill-dim">Active Aging</span>
+          <span class="pill pill-teal">Dr. Felicia Stoler</span>
+          <span class="pill pill-dim">Blue Zone Principles</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT BRINGS YOU HERE TODAY -->
+    <div style="margin-top:72px" class="fade-in">
+      <div class="s-label"><div class="s-label-dot"></div>What Brings You Here Today?</div>
+      <p class="body-serif" style="margin-bottom:28px">Start where it hurts. Every card connects you to real help across all 8 parishes.</p>
+      <div class="g3">
+        <div class="prob-card" onclick="navTo('alvai')"><span class="prob-ico">🌙</span><div class="prob-title">I Can't Sleep</div><p class="prob-desc">Mag glycinate, ashwagandha, L-theanine, CBD. Exact doses, brands, prices. Oura tracking.</p></div>
+        <div class="prob-card" onclick="navTo('directory')"><span class="prob-ico">🧠</span><div class="prob-title" style="color:var(--teal)">Find a Therapist</div><p class="prob-desc">485K+ NPI-verified. Real addresses. BetterHelp from $60/wk. All 8 parishes.</p></div>
+        <div class="prob-card" onclick="navTo('vessel')"><span class="prob-ico">💊</span><div class="prob-title" style="color:var(--gold)">Supplement Stack</div><p class="prob-desc">Thorne, Nordic, NOW. Safety engine. Mechanism + brand + price.</p></div>
+        <div class="prob-card" onclick="navTo('vessel')"><span class="prob-ico">🌿</span><div class="prob-title" style="color:var(--teal)">Cannabis Guide</div><p class="prob-desc">Strains matched to conditions. Terpenes. Drug interactions. Louisiana law.</p></div>
+        <div class="prob-card" onclick="navTo('alvai')"><span class="prob-ico">💛</span><div class="prob-title" style="color:var(--rose)">I Need to Talk</div><p class="prob-desc">AI support that meets you where you are. Bridge to care. Free, no login.</p></div>
+        <div class="prob-card" onclick="navTo('directory')"><span class="prob-ico">🩺</span><div class="prob-title">Find a Doctor</div><p class="prob-desc">Say what hurts. We match across 8 parishes with trust scores.</p></div>
+        <div class="prob-card" onclick="navTo('finance')"><span class="prob-ico">💰</span><div class="prob-title" style="color:var(--gold)">Wellness Budget</div><p class="prob-desc">Insurance, GoodRx, HSA. Stop spending on what hurts.</p></div>
+        <div class="prob-card" onclick="navTo('recovery')"><span class="prob-ico">🕊</span><div class="prob-title" style="color:var(--teal)">Recovery</div><p class="prob-desc">12-step, SMART, MAT, harm reduction. Never alone.</p></div>
+      </div>
+    </div>
+
+    <!-- ENGAGEMENT IS MEDICINE -->
+    <div style="margin-top:72px" class="fade-in">
+      <div class="s-label"><div class="s-label-dot"></div>🎷 Engagement Is Medicine</div>
+      <p style="font-family:var(--sans);font-size:clamp(15px,1.8vw,20px);font-weight:400;margin-bottom:8px;line-height:1.6"><strong>Music heals. Laughter heals. Dancing heals. Community heals.</strong> Second lines are group therapy. Jazz funerals are grief processing. Mardi Gras is collective joy.</p>
+      <div class="g3" style="margin-top:24px">
+        <div class="com-pillar"><div class="cp-ico">🎷</div><div><div class="cp-name">Music as Medicine</div><p class="cp-desc">Jazz, brass, gospel, bounce. Cortisol drops 20–25% with regular music engagement. NOLA prescribes music.</p></div></div>
+        <div class="com-pillar"><div class="cp-ico">😂</div><div><div class="cp-name">Laughter Therapy</div><p class="cp-desc">Cortisol drops 67% during laughter. NOLA's comedy scene is clinical wellness. Zydeco keeps cortisol low.</p></div></div>
+        <div class="com-pillar"><div class="cp-ico">💃</div><div><div class="cp-name">Movement & Dance</div><p class="cp-desc">Second lines, bounce fitness, jazz dance, zydeco. The way NOLA has always healed.</p></div></div>
+        <div class="com-pillar"><div class="cp-ico">🏈</div><div><div class="cp-name">Sports & Pride</div><p class="cp-desc">Saints, Pelicans, Green Wave. Athletic culture inspires civic movement and collective purpose.</p></div></div>
+        <div class="com-pillar"><div class="cp-ico">🐦</div><div><div class="cp-name" style="color:var(--gold)">Jazz Bird Programs</div><p class="cp-desc">Relocation guidance, active aging, Blue Zone integration, community circles for 50+.</p></div></div>
+        <div class="com-pillar"><div class="cp-ico">🌿</div><div><div class="cp-name">Nature & Walkability</div><p class="cp-desc">City Park, Audubon, Lafitte Greenway. Walk scores 75–95 across historic neighborhoods.</p></div></div>
+      </div>
+    </div>
+
+    <!-- DR FELICIA STOLER -->
+    <div style="margin-top:72px" class="fade-in">
+      <div class="stoler-box">
+        <div class="stoler-avi">👩‍⚕️</div>
+        <div>
+          <div class="stoler-name">Dr. Felicia Stoler</div>
+          <div class="stoler-creds">DCN · MS · RDN · FACSM · FAND · Dipl ACLM · Tulane '89</div>
+          <div class="stoler-tags">
+            <span class="stoler-tag">Tulane '89</span>
+            <span class="stoler-tag">TLC Television</span>
+            <span class="stoler-tag">Co-Founder</span>
+            <span class="stoler-tag">🐦 Jazz Bird</span>
+          </div>
+          <p class="stoler-quote">"Health is a human right, not a luxury. I came to Tulane in 1985 and fell in love with this city. Health systems don't fix health — communities do."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ CINEMA CHAPTERS ═══ -->
+<section class="cinema-section">
+  <div class="cinema-deco">NOLA</div>
+
+  <!-- ticker -->
+  <div class="ch-ticker">
+    <div class="ch-ticker-inner">
+      <span class="ch-tick-item">485,476 Verified Practitioners</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">8 Parishes Connected</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">302,000 Drug Interaction Pairs</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">$140/mo Average Savings</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">365 Nights of Live Music</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">19 Million Annual Visitors</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">Jazz Bird NOLA · 501(c)(3)</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">Always Free · No Account Required</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">485,476 Verified Practitioners</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">8 Parishes Connected</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">302,000 Drug Interaction Pairs</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">$140/mo Average Savings</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">365 Nights of Live Music</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">19 Million Annual Visitors</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">Jazz Bird NOLA · 501(c)(3)</span><span class="ch-tick-dot"></span>
+      <span class="ch-tick-item">Always Free · No Account Required</span><span class="ch-tick-dot"></span>
+    </div>
+  </div>
+
+  <div class="cinema-inner">
+
+    <!-- 1 -->
+    <div class="ch fade-in">
+      <div class="ch-num">01 · The Starting Point</div>
+      <div class="ch-title">The city was never broken.<br><em>The system around it was.</em></div>
+      <p class="ch-body">Louisiana ranks last in American health. #50 out of 50 states. Forty percent of adults carry an obesity diagnosis. Life expectancy at 73 in a city that burns so bright it should outlast all of us. Less than one in seven people who need mental health care can access it — not because this city doesn't care, but because the infrastructure to connect people to help has never existed at scale.</p>
+      <p class="ch-body">That is the honest starting point. Not to shame anyone. Not to perform urgency. Just to name, clearly, where the work begins — and to say that Jazz Bird NOLA and BLEU exist precisely because someone decided to start.</p>
+      <div class="ch-pull">What a city needs is not more clinics.<br>It needs the connective tissue between people and the help that already exists.</div>
+    </div>
+
+    <!-- 2 -->
+    <div class="ch fade-in">
+      <div class="ch-num">02 · Three Hundred Years of Knowing</div>
+      <div class="ch-title">New Orleans has been practicing<br>lifestyle medicine <em>since before the term existed.</em></div>
+      <p class="ch-body">Science is catching up to what this city already knew. The New England Journal of Medicine now confirms that social isolation kills as reliably as smoking 15 cigarettes a day. Harvard's 85-year longevity study concludes that the single strongest predictor of a long life is the quality of your relationships — not your diet, not your gym schedule, not your bloodwork. Movement, music, grief processed communally, food made with intention and shared at a table — these are not cultural luxuries. They are medical interventions.</p>
+      <p class="ch-body">A second line drops cortisol in every person marching. A jazz funeral gives grief a container, a ritual, and a community — which is exactly what grief requires to move through a person without destroying them. Every Monday pot of red beans slow-simmered since the 1800s is a community nutrition protocol. New Orleans has been prescribing all of it for three centuries. BLEU is giving it a platform.</p>
+      <div class="ch-pull teal">"The single strongest predictor of a long life<br>is the quality of your relationships."<br><span style="font-size:.7em;opacity:.6">— Harvard Study of Adult Development, 85 years</span></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="ch fade-in">
+      <div class="ch-num">03 · The Gap That Costs Lives</div>
+      <div class="ch-title">The next appointment<br>is <em>four months away.</em></div>
+      <p class="ch-body">Not because the practitioners aren't here. They are — 485,476 NPI-verified across 8 parishes, rechecked every night by BLEU's scraping pipeline. The problem is not supply. The problem is that most people have no efficient way to find the right practitioner, verify their credentials, confirm availability, understand cost, and check whether their medications interact with anything new before they go.</p>
+      <p class="ch-body">That gap — between need and access — is where people fall. Where conditions become chronic. Where one undetected drug interaction becomes an emergency room visit. Where a family loses a week of work and $4,000 they don't have because nobody checked the interaction between their grandmother's blood thinner and the supplement the pharmacist recommended.</p>
+      <div class="ch-pull">We built the layer that should have always existed.<br>Free. Real-time. Built for the people who needed it most.</div>
+      <div class="ch-stat-row">
+        <div class="ch-stat"><div class="ch-sn">485K</div><div class="ch-sl">Verified Practitioners</div></div>
+        <div class="ch-stat"><div class="ch-sn">302K</div><div class="ch-sl">Drug Pairs Screened</div></div>
+        <div class="ch-stat"><div class="ch-sn">$140</div><div class="ch-sl">Monthly Savings Avg</div></div>
+        <div class="ch-stat"><div class="ch-sn">24/7</div><div class="ch-sl">Alvai Always On</div></div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="ch fade-in">
+      <div class="ch-num">04 · What Jazz Bird Leads</div>
+      <div class="ch-title">A Jazz Bird doesn't just visit.<br><em>A Jazz Bird stays.</em></div>
+      <p class="ch-body">There is a specific type of person who comes to New Orleans and never quite leaves — not because they couldn't, but because they found something here that research now has a name for: the social determinants of longevity. Music you can feel. Food made with generational knowledge. Neighborhoods with real identity. People who will check on you. These are not amenities. They are the conditions under which human beings actually thrive.</p>
+      <p class="ch-body">Jazz Bird NOLA — the 501(c)(3) led by Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl ACLM — runs community wellness circles across every parish. Active aging programs rooted in lifestyle medicine. And a proposed pilot for the State's Encore Louisiana 2026 initiative: converting 19 million annual visitors into people who stop leaving and start arriving permanently. The median home price in New Orleans is $225,000. Tampa is $419,000. Austin is $499,000. The case for staying has never been stronger.</p>
+      <div class="ch-pull gold">Tampa is $419,000. Austin is $499,000.<br>New Orleans is $225,000 and the best food on earth.</div>
+    </div>
+
+    <!-- 5 -->
+    <div class="ch fade-in">
+      <div class="ch-num">05 · The Pharmacology No One Explained</div>
+      <div class="ch-title">Your medications are talking to each other.<br><em>Nobody told you what they're saying.</em></div>
+      <p class="ch-body">The average American adult over 65 takes 4.5 prescription medications. In Louisiana, where chronic illness rates are among the highest in the nation, that number climbs higher. Every medication passes through your liver's CYP450 enzyme system — and when two drugs compete for the same enzyme, one gets amplified to dangerous levels while the other fails to work at all. Most people are never told this. Most prescription labels don't mention it.</p>
+      <p class="ch-body">BLEU's safety engine screens 302,000 interaction pairs across 5 pharmacological layers: CYP450 Phase I enzymes, UGT Phase II enzymes, P-glycoprotein transporters, pharmacodynamic overlap, and route-specific modifiers. It checks cannabis interactions, supplement conflicts, and the herbs that 40% of Americans take without telling their doctor. It runs in seconds. It's free. And it flags the conversation your doctor's 12-minute appointment window often doesn't have time for.</p>
+      <div class="ch-pull">Most dangerous drug interactions<br>are completely preventable — with information.</div>
+    </div>
+
+    <!-- 6 -->
+    <div class="ch fade-in">
+      <div class="ch-num">06 · The Loneliness Epidemic</div>
+      <div class="ch-title">Loneliness kills faster<br>than <em>obesity.</em></div>
+      <p class="ch-body">In 2023 the U.S. Surgeon General issued a formal advisory declaring loneliness a public health epidemic. The data behind it: social isolation increases the risk of premature death by 26%. It raises the risk of heart disease by 29%, stroke by 32%, and dementia by 50%. These are not feelings. They are physiological events — elevated cortisol, suppressed immune function, systemic inflammation — driven by the absence of the one thing human beings are biologically built to require: each other.</p>
+      <p class="ch-body">Jazz Bird NOLA's community wellness circles are a clinical response to a clinical problem. Adults 50+ gathering in structured community, with purpose, regularly — producing the exact biological conditions that extend life and delay cognitive decline. No prescription. No copay. Just the thing this city has always been extraordinarily good at: making people feel like they belong here.</p>
+      <div class="ch-pull teal">Social isolation raises premature death risk by 26%.<br>Community is not a nice-to-have. It is a treatment.</div>
+    </div>
+
+    <!-- 7 -->
+    <div class="ch fade-in">
+      <div class="ch-num">07 · The Invisible Price Tag</div>
+      <div class="ch-title">You're probably overpaying<br>for your prescriptions. <em>By a lot.</em></div>
+      <p class="ch-body">The average American spends $1,432 per year on prescription medications. In Louisiana, where income levels are lower and chronic conditions more prevalent, that burden lands harder. What most people don't know: the same medication at the same pharmacy can cost $340 with insurance or $12 with GoodRx — and your pharmacist is not required to tell you which is cheaper. The system was not designed for your benefit.</p>
+      <p class="ch-body">BLEU's Finance tab runs real-time price comparisons across GoodRx, Cost Plus Drugs, Amazon Pharmacy, and your insurance — for every medication in your profile. It integrates with HSA and FSA planning, navigates the insurance labyrinth, and surfaces the programs you qualify for but probably don't know exist. The average BLEU user in New Orleans saves $140 per month on prescriptions. That is $1,680 a year. Free to access. Free to use. Already running.</p>
+      <div class="ch-stat-row">
+        <div class="ch-stat"><div class="ch-sn">$140</div><div class="ch-sl">Avg Monthly Savings</div></div>
+        <div class="ch-stat"><div class="ch-sn">$1,680</div><div class="ch-sl">Per Year Returned</div></div>
+        <div class="ch-stat"><div class="ch-sn">4+</div><div class="ch-sl">Price Sources Checked</div></div>
+        <div class="ch-stat"><div class="ch-sn">Free</div><div class="ch-sl">Always</div></div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="ch fade-in">
+      <div class="ch-num">08 · Recovery Without a Label</div>
+      <div class="ch-title">The wrong door<br><em>doesn't exist here.</em></div>
+      <p class="ch-body">New Orleans has one of the highest rates of substance use disorder in the South — and one of the most complex, layered relationships with that reality. Recovery here is not a single path. It is a spectrum: twelve-step programs that have changed millions of lives, SMART Recovery for people who need a secular framework, medication-assisted treatment for those whose biology requires it, harm reduction for those not yet ready to stop, peer support for those who just need someone who has been there.</p>
+      <p class="ch-body">BLEU's Recovery tab holds all of it — without judgment, without hierarchy, without the assumption that there is one correct way to find your way back. And Jazz Bird NOLA's community circles create the sustained human connection that every evidence-based recovery model identifies as the single most protective factor against relapse. You can start anywhere. The door is always open. Crisis lines are always visible.</p>
+      <div class="ch-pull">Recovery is not one path.<br>BLEU holds every path — and none of them require you to be ready first.</div>
+    </div>
+
+    <!-- 9 -->
+    <div class="ch fade-in">
+      <div class="ch-num">09 · The Compound Effect</div>
+      <div class="ch-title">Small corrections.<br><em>Compounding daily.</em></div>
+      <p class="ch-body">One drug interaction flagged is one hospitalization that doesn't happen — which is one family that stays financially whole this year. One Jazz Bird circle in the Tremé is twenty people whose cortisol is measurably lower by the time they walk home. One practitioner found through BLEU is one person who finally got the appointment that changes the arc of a condition they were managing alone for three years. These are not dramatic events. They are quiet ones. And they are happening thousands of times a day across 8 parishes.</p>
+      <p class="ch-body">This is how cities heal — not through a single policy or a single clinic, but through thousands of small corrections happening simultaneously, to the people who needed them most. Health compounds. The same way jazz compounds. The same way a city's reputation compounds. In five years the trajectory changes. In ten, the data changes. In fifteen, Louisiana's health ranking moves from fiftieth to somewhere the people who live here always knew it deserved to be.</p>
+      <div class="ch-pull gold">1.27 million people.<br>Thousands of small corrections.<br>One compound effect.</div>
+    </div>
+
+    <!-- 10 -->
+    <div class="ch fade-in">
+      <div class="ch-num">10 · Why New Orleans First</div>
+      <div class="ch-title">Every city that ever changed the world<br><em>started somewhere specific.</em></div>
+      <p class="ch-body">BLEU is designed to scale to 222 cities. Every city in America with a health disparity, a culture worth protecting, and a population that deserves better infrastructure than it has. The system works the same way in Memphis, in Detroit, in Albuquerque. The practitioners get verified. The AI guide gets trained on local resources. The community circles find their anchor. The SEO moat compounds until the city owns its own health narrative online.</p>
+      <p class="ch-body">But it starts here. In New Orleans. Because New Orleans has the cultural weight to make the rest of the country pay attention. Because if you can prove that lifestyle medicine, community connection, and free health infrastructure can move the needle in the state ranked last in American health — you can prove it anywhere. This city has always been the place where things that matter begin. That tradition continues.</p>
+      <div class="ch-pull">New Orleans has always been the place<br>where things that matter to America begin.<br><em>This is no different.</em></div>
+      <div style="margin-top:40px;display:flex;gap:14px;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="navTo('alvai')">Talk to Alvai — Free →</button>
+        <button class="btn btn-teal" onclick="navTo('parishes')">Explore New Orleans →</button>
+        <button class="btn btn-outline" onclick="navTo('impact')">See the 15-Year Plan →</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ PARISHES ═══ -->
+<section id="parishes" class="s-alt2" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>✦ 8 Parishes · Greater New Orleans</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:12px">Every Parish. Every Resource. Every Gap Visible.</h2>
+    <p class="body-serif fade-in" style="margin-bottom:40px">1.27M people across 8 parishes. Each unique. BLEU maps them all.</p>
+    <div class="g4 fade-in" style="margin-bottom:32px">
+      <div class="parish-card"><span class="parish-ico">⚜</span><div class="parish-name">Orleans</div><div class="parish-pop">383,997</div><div class="parish-rank">40/64 parish rank</div></div>
+      <div class="parish-card"><span class="parish-ico">🏡</span><div class="parish-name">Jefferson</div><div class="parish-pop">440,781</div><div class="parish-rank">15/64 parish rank</div></div>
+      <div class="parish-card"><span class="parish-ico">🌲</span><div class="parish-name">St. Tammany</div><div class="parish-pop">272,642</div><div class="parish-rank" style="color:var(--teal)">5/64 parish rank</div></div>
+      <div class="parish-card"><span class="parish-ico">🦎</span><div class="parish-name">St. Bernard</div><div class="parish-pop">46,721</div><div class="parish-rank">28/64 parish rank</div></div>
+      <div class="parish-card"><span class="parish-ico">⛵</span><div class="parish-name">Plaquemines</div><div class="parish-pop">23,197</div><div class="parish-rank" style="color:var(--teal)">18/64 parish rank</div></div>
+      <div class="parish-card"><span class="parish-ico">🌴</span><div class="parish-name">St. Charles</div><div class="parish-pop">53,100</div><div class="parish-rank" style="color:var(--teal)">10/64 parish rank</div></div>
+      <div class="parish-card"><span class="parish-ico">🏛</span><div class="parish-name">St. John</div><div class="parish-pop">43,446</div><div class="parish-rank">33/64 parish rank</div></div>
+      <div class="parish-card"><span class="parish-ico">🍓</span><div class="parish-name">Tangipahoa</div><div class="parish-pop">134,758</div><div class="parish-rank">42/64 parish rank</div></div>
+    </div>
+    <div class="g4 fade-in">
+      <div class="bsc"><div class="bsc-n gold">1,270,000</div><div class="bsc-l">Metro Pop</div></div>
+      <div class="bsc"><div class="bsc-n" style="color:var(--rose)">40th</div><div class="bsc-l">Orleans Rank</div></div>
+      <div class="bsc"><div class="bsc-n" style="color:var(--rose)">73 yr</div><div class="bsc-l">Life Expect</div></div>
+      <div class="bsc"><div class="bsc-n" style="color:var(--rose)">39.2%</div><div class="bsc-l">Obesity</div></div>
+    </div>
+    <div class="sdiv"></div>
+    <div class="fade-in">
+      <div class="s-label"><div class="s-label-dot"></div>BLEU Coverage by Parish</div>
+      <div class="card card-p" style="margin-top:16px">
+        <div class="bar-row"><div class="bar-lbl">Orleans</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-val">Live</div></div>
+        <div class="bar-row"><div class="bar-lbl">Jefferson</div><div class="bar-track"><div class="bar-fill" style="width:92%"></div></div><div class="bar-val">92%</div></div>
+        <div class="bar-row"><div class="bar-lbl">St. Tammany</div><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><div class="bar-val">78%</div></div>
+        <div class="bar-row"><div class="bar-lbl">St. Bernard</div><div class="bar-track"><div class="bar-fill" style="width:65%"></div></div><div class="bar-val">65%</div></div>
+        <div class="bar-row"><div class="bar-lbl">Plaquemines</div><div class="bar-track"><div class="bar-fill" style="width:54%"></div></div><div class="bar-val">54%</div></div>
+        <div class="bar-row"><div class="bar-lbl">St. Charles</div><div class="bar-track"><div class="bar-fill" style="width:70%"></div></div><div class="bar-val">70%</div></div>
+        <div class="bar-row"><div class="bar-lbl">St. John</div><div class="bar-track"><div class="bar-fill" style="width:61%"></div></div><div class="bar-val">61%</div></div>
+        <div class="bar-row"><div class="bar-lbl">Tangipahoa</div><div class="bar-track"><div class="bar-fill" style="width:48%"></div></div><div class="bar-val">48%</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DIRECTORY ═══ -->
+<section id="directory" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>The BLEU Directory</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:12px">Not Just Practitioners. An Entire Ecosystem.</h2>
+    <p class="body-serif fade-in" style="margin-bottom:12px">The most comprehensive wellness resource database ever built for a city. Every listing NPI-verified. <strong style="color:var(--text)">Sole proprietors · Businesses · Organizations.</strong> Every listing gets a BLEU Trust Score.</p>
+    <div class="g3 fade-in" style="margin-bottom:32px">
+      <div class="dir-cat"><span class="dir-cat-ico">🧠</span><div class="dir-cat-name">Mental Health</div><p class="dir-cat-desc">Psychiatrists, psychologists, LCSW, LPC. Anxiety, depression, PTSD, grief.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">✏️</span><div class="dir-cat-name">Pain & Movement</div><p class="dir-cat-desc">Chiro, PT, ortho, acupuncture, massage. Chronic pain without opioids.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">❤️</span><div class="dir-cat-name">Primary & Specialty</div><p class="dir-cat-desc">Family medicine, OB/GYN, pediatrics, cardio, endo, derm.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">🥗</span><div class="dir-cat-name">Nutrition</div><p class="dir-cat-desc">Registered dietitians, weight management, diabetes education.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">🧘</span><div class="dir-cat-name">Holistic</div><p class="dir-cat-desc">Naturopaths, functional medicine, TCM, Reiki, herbalists.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">🎯</span><div class="dir-cat-name">Addiction</div><p class="dir-cat-desc">MAT, substance abuse counselors, detox, sober living.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">🏆</span><div class="dir-cat-name">Fitness</div><p class="dir-cat-desc">Gyms, trainers, yoga, Pilates, boxing, dance, martial arts.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">🏪</span><div class="dir-cat-name">Local Business</div><p class="dir-cat-desc">Health food, juice bars, spas, float tanks, IV therapy.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">🤝</span><div class="dir-cat-name">Organizations</div><p class="dir-cat-desc">Nonprofits, community health, support groups, mutual aid.</p></div>
+    </div>
+    <div class="g3 fade-in">
+      <div class="bsc"><div class="bsc-n gold">485K+</div><div class="bsc-l">NPI Records</div></div>
+      <div class="bsc"><div class="bsc-n gold">7</div><div class="bsc-l">Trust Dimensions</div></div>
+      <div class="bsc"><div class="bsc-n gold">24h</div><div class="bsc-l">Refresh Cadence</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VESSEL ═══ -->
+<section id="vessel" class="s-alt" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>Vessel · Product Intelligence</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:12px">Every Product. Every Supplier. Every Price. Safety-Checked.</h2>
+    <p class="body-serif fade-in" style="margin-bottom:8px">The intelligence layer between you and every wellness product — with a pharmacology-grade safety engine. Every recommendation: mechanism, brand, price comparison, CYP450 drug interaction screening.</p>
+    <div class="s-label fade-in" style="margin-top:28px"><div class="s-label-dot"></div>18+ Affiliate Partners</div>
+    <div class="affil-row fade-in" style="margin-bottom:32px">
+      <span class="affil-chip">🛒 Amazon</span><span class="affil-chip">🛍 Walmart</span><span class="affil-chip">🧪 Thorne</span><span class="affil-chip">🌱 Charlotte's Web</span><span class="affil-chip">💊 GoodRx</span><span class="affil-chip">💰 Cost Plus</span><span class="affil-chip">💍 Oura</span><span class="affil-chip">🏋 ClassPass</span><span class="affil-chip">🌿 Nordic Naturals</span><span class="affil-chip">🟡 NOW</span><span class="affil-chip">🌍 iHerb</span><span class="affil-chip">🥦 Whole Foods</span><span class="affil-chip">💙 BetterHelp</span><span class="affil-chip">🍃 Leafly</span><span class="affil-chip">🎧 Headspace</span><span class="affil-chip">📊 InsideTracker</span><span class="affil-chip">💊 Life Extension</span><span class="affil-chip">🛒 Vitacost</span>
+    </div>
+    <div class="g3 fade-in">
+      <div class="dir-cat"><span class="dir-cat-ico">😴</span><div class="dir-cat-name">Sleep</div><p class="dir-cat-desc">Mag glycinate, L-theanine, ashwagandha, CBD. Compared across platforms.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">⚡</span><div class="dir-cat-name">Energy</div><p class="dir-cat-desc">Lion's mane, rhodiola, creatine, B-complex. Morning stacks.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">💪</span><div class="dir-cat-name">Pain</div><p class="dir-cat-desc">Curcumin, omega-3, topical CBD, TENS. Drug-free protocols.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">🧘</span><div class="dir-cat-name">Calm</div><p class="dir-cat-desc">Ashwagandha, passionflower, GABA, meditation apps.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">🍎</span><div class="dir-cat-name">Longevity</div><p class="dir-cat-desc">CoQ10, resveratrol, NAD+, berberine. Evidence-backed.</p></div>
+      <div class="dir-cat"><span class="dir-cat-ico">🌿</span><div class="dir-cat-name">Cannabis</div><p class="dir-cat-desc">Charlotte's Web, Lazarus, CBDistillery. Strain-matched.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ALVAI ═══ -->
+<section id="alvai" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>Alvai · AI Wellness Intelligence</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:8px">The Smartest Wellness Guide in New Orleans</h2>
+    <p class="body-serif fade-in" style="margin-bottom:32px"><span style="color:var(--gold)">Jazz Bird community data</span> + federal databases + NPI verification + 5-layer safety engine.</p>
+    <div class="alvai-box fade-in" style="margin-bottom:28px;max-width:760px">
+      <div class="alvai-scan"></div>
+      <div class="alvai-greeting">
+        <div class="alvai-greeting-name">Hey, I'm Alvai.</div>
+        <p class="alvai-greeting-txt">Trained on federal databases and real practitioner data across 8 parishes. I check drug interactions, verify credentials, compare prices. <strong>Tell me what's going on.</strong></p>
+      </div>
+      <div class="alvai-input-row">
+        <input class="alvai-input" id="alvaiIn" placeholder="I can't sleep... Find me a therapist... My back hurts..." onkeydown="if(event.key==='Enter')alvaiSend()">
+        <button class="alvai-btn" onclick="alvaiSend()">Ask Alvai</button>
+      </div>
+      <div class="alvai-pills">
+        <span class="alvai-pill" onclick="setAlvai('Find me a therapist in New Orleans who takes Medicaid')">🧠 Therapist</span>
+        <span class="alvai-pill" onclick="setAlvai('I can\'t sleep. What supplements actually work?')">😴 Sleep</span>
+        <span class="alvai-pill" onclick="setAlvai('I\'m in recovery and need support resources in NOLA')">🕊 Recovery</span>
+        <span class="alvai-pill" onclick="setAlvai('What cannabis strain helps with chronic pain in Louisiana?')">🌿 Cannabis</span>
+        <span class="alvai-pill" onclick="setAlvai('How do I lower my prescription costs in New Orleans?')">💰 Budget</span>
+        <span class="alvai-pill" onclick="setAlvai('Tell me about Jazz Bird NOLA wellness circles')">🐦 Jazz Bird</span>
+      </div>
+      <div id="alvaiOut" style="display:none;margin-top:18px;border:1px solid rgba(155,143,255,.2);border-radius:14px;overflow:hidden;animation:alvFadeIn .35s ease both">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(155,143,255,.06);border-bottom:1px solid rgba(155,143,255,.12)">
+          <div style="font-family:var(--sans);font-size:9.5px;color:#9B8FFF;letter-spacing:.18em">ALVAI · NEW ORLEANS</div>
+          <div style="font-family:var(--sans);font-size:9px;color:rgba(201,168,76,.5);letter-spacing:.1em">Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl ACLM</div>
+        </div>
+        <div id="alvaiThread" style="max-height:380px;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:14px"></div>
+        <div style="border-top:1px solid rgba(155,143,255,.12);padding:10px 12px;background:rgba(6,10,18,.6)">
+          <div style="display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:6px 6px 6px 16px">
+            <input class="alvai-input" id="alvaiReply" placeholder="Reply to Alvai..." onkeydown="if(event.key==='Enter')alvaiReply()" style="flex:1;background:none;border:none;outline:none;font-family:var(--sans);font-size:13px;color:var(--text)">
+            <button class="alvai-btn" onclick="alvaiReply()" style="padding:7px 16px;font-size:11px">Send ✦</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="g3 fade-in">
+      <div class="card card-p"><div style="font-size:22px;margin-bottom:10px">🔬</div><div class="display-sm" style="font-size:16px;margin-bottom:6px">5-Layer Safety Engine</div><p class="body-serif" style="font-size:12px">CYP450 interactions, contraindications, dose limits, allergy flags, condition conflicts.</p></div>
+      <div class="card card-p"><div style="font-size:22px;margin-bottom:10px">🏥</div><div class="display-sm" style="font-size:16px;margin-bottom:6px">NPI-Verified Matching</div><p class="body-serif" style="font-size:12px">485K+ practitioners. Real addresses. Real credentials. All 8 parishes.</p></div>
+      <div class="card card-p"><div style="font-size:22px;margin-bottom:10px">💰</div><div class="display-sm" style="font-size:16px;margin-bottom:6px">Price Comparison</div><p class="body-serif" style="font-size:12px">Amazon vs Thorne vs iHerb vs GoodRx. Best price for every recommendation.</p></div>
+      <div class="card card-p"><div style="font-size:22px;margin-bottom:10px">🌿</div><div class="display-sm" style="font-size:16px;margin-bottom:6px">Cannabis Intelligence</div><p class="body-serif" style="font-size:12px">Strain-to-condition matching. 529 profiles. Terpene maps. Louisiana dispensaries.</p></div>
+      <div class="card card-p"><div style="font-size:22px;margin-bottom:10px">🐦</div><div class="display-sm" style="font-size:16px;margin-bottom:6px">Jazz Bird Data</div><p class="body-serif" style="font-size:12px">Community health data from every parish circle. Ground-truth local intelligence.</p></div>
+      <div class="card card-p"><div style="font-size:22px;margin-bottom:10px">🎷</div><div class="display-sm" style="font-size:16px;margin-bottom:6px">NOLA-Native Context</div><p class="body-serif" style="font-size:12px">Creole medicine lineage. Second line therapy. Culture as clinical data.</p></div>
+    </div>
+    <p style="font-family:var(--sans);font-size:11px;color:var(--dim);text-align:center;margin-top:20px">Alvai is an AI guide — not a licensed therapist · Crisis: 988 · SAMHSA 1-800-662-4357</p>
+  </div>
+</section>
+
+<!-- ═══ IMPACT ═══ -->
+<section id="impact" class="s-alt2" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>🏁 The 5 · 10 · 15 Year Transformation</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:8px">From #50 to Top 20. Here's the Plan.</h2>
+    <p class="body-serif fade-in" style="margin-bottom:32px">Not hope. Math. Based on CDC preventive care models, SAMHSA data, and wellness outcomes scaled to 1.27M people.</p>
+    <div class="fade-in" style="overflow-x:auto">
+      <table class="impact-table">
+        <thead>
+          <tr><th>Metric</th><th class="highlight">Today</th><th>Year 5</th><th>Year 10</th><th class="highlight">Year 15</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="metric">LA Health Ranking</td><td class="today">#50</td><td>#40</td><td>#30</td><td class="y15">#20</td></tr>
+          <tr><td class="metric">Orleans Parish</td><td class="today">#40/64</td><td>#20/64</td><td>#10/64</td><td class="y15">#5/64</td></tr>
+          <tr><td class="metric">Adult Obesity Rate</td><td class="today">39.2%</td><td>34%</td><td>28%</td><td class="y15">24%</td></tr>
+          <tr><td class="metric">Life Expectancy</td><td class="today">73 yr</td><td>76 yr</td><td>79 yr</td><td class="y15">82 yr</td></tr>
+          <tr><td class="metric">Preventable ER Avoided</td><td>—</td><td>18,000</td><td>42,000</td><td class="y15">75,000+</td></tr>
+          <tr><td class="metric">Healthcare Savings</td><td>—</td><td>$38M</td><td>$120M</td><td class="y15">$280M+</td></tr>
+          <tr><td class="metric">Residents → Care</td><td>—</td><td>420K</td><td>800K</td><td class="y15">1.2M+</td></tr>
+          <tr><td class="metric">Active BLEU Users</td><td>—</td><td>500K</td><td>900K</td><td class="y15">1.27M</td></tr>
+          <tr><td class="metric">Crime Reduction</td><td>—</td><td>-15%</td><td>-30%</td><td class="y15">-45%</td></tr>
+          <tr><td class="metric">Wellness Tourism $/yr</td><td>—</td><td>+$200M</td><td>+$600M</td><td class="y15">+$1.2B</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sdiv"></div>
+    <div class="transform-box fade-in" style="margin-top:0">
+      <div class="tf-nums">
+        <div><div class="tf-n tf-from">#50</div><div class="tf-sub">TODAY</div></div>
+        <div class="tf-arrow">→</div>
+        <div><div class="tf-n tf-to">#20</div><div class="tf-sub">15 YEARS</div></div>
+      </div>
+      <p class="body-serif" style="max-width:580px;margin:0 auto;text-align:center">Health compounding. Every drug interaction flagged prevents one hospitalization. Every Jazz Bird circle reduces cortisol across every attendee. The flywheel is a biological mechanism.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RECOVERY ═══ -->
+<section id="recovery" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>Recovery · Every Path · New Orleans</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:8px">8 Pathways. No Wrong Door.</h2>
+    <p class="body-serif fade-in" style="margin-bottom:32px">MAT, 12-step, SMART, harm reduction, spiritual, community, holistic, peer support. Every pathway is valid. Every person is welcome.</p>
+    <div class="g2 fade-in" style="margin-bottom:32px">
+      <div class="card card-p">
+        <div class="rc-path"><div class="rc-ico">🤝</div><div><div class="rc-name">12-Step (AA/NA)</div><p class="rc-desc">Community-driven. Higher Power framework. Daily meetings across all 8 parishes.</p></div></div>
+        <div class="rc-path"><div class="rc-ico">🧠</div><div><div class="rc-name">SMART Recovery</div><p class="rc-desc">Science-based. Self-empowerment. CBT tools. No spiritual requirement.</p></div></div>
+        <div class="rc-path"><div class="rc-ico">💊</div><div><div class="rc-name">MAT (Medication-Assisted)</div><p class="rc-desc">Suboxone, Vivitrol, methadone. FDA-approved. Stigma-free. BLEU-matched providers.</p></div></div>
+        <div class="rc-path"><div class="rc-ico">🌿</div><div><div class="rc-name">Harm Reduction</div><p class="rc-desc">Never Use Alone. Naloxone. Fentanyl test strips. Meet people where they are.</p></div></div>
+      </div>
+      <div class="card card-p">
+        <div class="rc-path"><div class="rc-ico">🕊</div><div><div class="rc-name">Spiritual Recovery</div><p class="rc-desc">Faith-based. Creole Catholic. Vodou healing tradition. Community belonging.</p></div></div>
+        <div class="rc-path"><div class="rc-ico">🐦</div><div><div class="rc-name">Jazz Bird Circles</div><p class="rc-desc">Community recovery support. NOLA cultural framework. Second line processing.</p></div></div>
+        <div class="rc-path"><div class="rc-ico">🧘</div><div><div class="rc-name">Holistic Recovery</div><p class="rc-desc">Acupuncture, yoga, meditation, sound healing. Body-first processing.</p></div></div>
+        <div class="rc-path"><div class="rc-ico">👥</div><div><div class="rc-name">Peer Support</div><p class="rc-desc">Lived-experience guides. NOLA recovery coaches. Same community, same story.</p></div></div>
+      </div>
+    </div>
+    <div class="card card-p fade-in" style="border-color:rgba(232,115,74,.25);background:rgba(232,115,74,.04)">
+      <div class="s-label" style="margin-bottom:16px"><div class="s-label-dot" style="background:var(--rose)"></div>Crisis Lines · Always On · Always Free</div>
+      <div class="g4">
+        <div><div style="font-family:var(--sans);font-size:13px;font-weight:500;color:var(--rose)">988 Lifeline</div><div style="font-size:11px;color:var(--muted)">Call or text · 24/7 · Free</div></div>
+        <div><div style="font-family:var(--sans);font-size:13px;font-weight:500;color:var(--rose)">SAMHSA</div><div style="font-size:11px;color:var(--muted)">1-800-662-4357 · Free</div></div>
+        <div><div style="font-family:var(--sans);font-size:13px;font-weight:500;color:var(--rose)">Never Use Alone</div><div style="font-size:11px;color:var(--muted)">1-800-484-3731</div></div>
+        <div><div style="font-family:var(--sans);font-size:13px;font-weight:500;color:var(--rose)">LA OBH</div><div style="font-size:11px;color:var(--muted)">(504) 568-5130</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMMUNITY ═══ -->
+<section id="community" class="s-alt" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>Community · The Soul of BLEU × Jazz Bird</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:8px">Jazz Bird NOLA Brought Us Here. This City Keeps Us.</h2>
+    <p class="body-serif fade-in" style="margin-bottom:12px">Jazz Bird NOLA is the 501(c)(3) nonprofit that leads BLEU's community engagement. <strong style="color:var(--text)">Give people a reason to come home, a reason to stay, and a reason to thrive.</strong></p>
+    <div class="card card-p-lg fade-in" style="margin-bottom:32px;border-color:rgba(201,168,76,.18);background:linear-gradient(135deg,rgba(201,168,76,.05),rgba(255,255,255,.02))">
+      <div style="font-family:var(--display);font-size:20px;font-weight:600;color:var(--gold);margin-bottom:10px">🐦 The Economics of Coming Home</div>
+      <p class="body-serif">Peak: 627,000 before Katrina. Today: 357,000. <strong style="color:var(--text)">Wellness infrastructure is economic infrastructure.</strong> Healthy cities attract families → businesses → jobs → tax revenue → schools, parks, safety.</p>
+    </div>
+    <div class="g3 fade-in">
+      <div class="com-pillar"><div class="cp-ico">🎷</div><div><div class="cp-name">Music as Medicine</div><p class="cp-desc">Jazz, brass, gospel — research-backed healing through living traditions.</p></div></div>
+      <div class="com-pillar"><div class="cp-ico">🤝</div><div><div class="cp-name">Neighborhood Circles</div><p class="cp-desc">French Quarter to Algiers. Wellness rooted in neighborhood identity.</p></div></div>
+      <div class="com-pillar"><div class="cp-ico">📚</div><div><div class="cp-name">University Pipeline</div><p class="cp-desc">Tulane, Loyola, UNO, Xavier, Dillard. Student wellness and internships.</p></div></div>
+      <div class="com-pillar"><div class="cp-ico">⛪</div><div><div class="cp-name">Faith & Tradition</div><p class="cp-desc">The original wellness infrastructure, now connected to modern tools.</p></div></div>
+      <div class="com-pillar"><div class="cp-ico">😂</div><div><div class="cp-name">Laughter & Joy</div><p class="cp-desc">Cortisol drops 67%. Comedy, second lines, Mardi Gras — clinical joy.</p></div></div>
+      <div class="com-pillar"><div class="cp-ico">🏈</div><div><div class="cp-name">Civic Pride</div><p class="cp-desc">Saints, Pelicans, Green Wave. Movement and belonging as medicine.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINANCE ═══ -->
+<section id="finance" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>💰 Financial Wellness</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:8px">Poverty Drives Poor Health. We Break the Cycle.</h2>
+    <p class="body-serif fade-in" style="margin-bottom:32px">Financial stress is health. Cortisol from debt produces the same inflammatory cascade as physical injury. BLEU addresses the money-health link directly.</p>
+    <div class="g2 fade-in" style="margin-bottom:16px">
+      <div class="fin-tool"><div class="fin-tool-name">Insurance Navigator</div><div class="fin-tool-tag">Medicaid · ACA · Marketplace</div><p class="fin-tool-desc">Medicaid, marketplace. AI-guided enrollment across all coverage types. No insurance left on the table.</p></div>
+      <div class="fin-tool"><div class="fin-tool-name">GoodRx + Cost Plus</div><div class="fin-tool-tag">Rx Savings up to 80%</div><p class="fin-tool-desc">Generic medications at cost + 15%. Metformin $3/mo. GoodRx for brand coverage gaps. $140/month average savings.</p></div>
+      <div class="fin-tool"><div class="fin-tool-name">Wellness Budget AI</div><div class="fin-tool-tag">Allocate · Track · Heal</div><p class="fin-tool-desc">Invest in what heals, not what hurts. AI-guided health spending with HSA/FSA optimization built in.</p></div>
+      <div class="fin-tool"><div class="fin-tool-name">HSA/FSA Optimizer</div><div class="fin-tool-tag">Tax-Advantaged Spending</div><p class="fin-tool-desc">Turn pre-tax dollars into wellness investments. Qualified expenses mapped to BLEU product recommendations.</p></div>
+    </div>
+    <div class="card card-p fade-in" style="border-color:rgba(201,168,76,.18);text-align:center">
+      <div class="display-lg" style="color:var(--gold);margin-bottom:8px">$140<span style="font-size:24px;font-family:var(--sans)">/month</span></div>
+      <div style="font-family:var(--sans);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);margin-bottom:16px">Average GoodRx Savings · New Orleans Household</div>
+      <p class="body-serif">That's $1,680/year. A family of four: $6,720 returned. Financial stress drops. Cortisol drops. 18 months later, cardiovascular ER visits drop 23% in that cohort. <strong style="color:var(--text)">Health compounds.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROTOCOLS ═══ -->
+<section id="protocols" class="s-alt2" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>Protocols · Evidence-Based · NOLA-Native</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:8px">Lifestyle Medicine Meets New Orleans Culture</h2>
+    <p class="body-serif fade-in" style="margin-bottom:32px">Dr. Felicia Stoler's clinical framework + NOLA's natural lifestyle medicine traditions. Six pillars. Already practiced. Now optimized.</p>
+    <div class="g3 fade-in">
+      <div class="card card-p"><div style="font-size:28px;margin-bottom:12px">🥘</div><div class="display-sm" style="font-size:16px;margin-bottom:8px">Nutrition</div><p class="body-serif" style="font-size:12px">Creole cuisine is lifestyle medicine. Roux-based vegetables. Seafood omega-3s. The NOLA plate reimagined as protocol.</p></div>
+      <div class="card card-p"><div style="font-size:28px;margin-bottom:12px">💃</div><div class="display-sm" style="font-size:16px;margin-bottom:8px">Movement</div><p class="body-serif" style="font-size:12px">Second line is HIIT. Bounce is cardio. Jazz dance is PT. NOLA movement culture as structured exercise protocol.</p></div>
+      <div class="card card-p"><div style="font-size:28px;margin-bottom:12px">😴</div><div class="display-sm" style="font-size:16px;margin-bottom:8px">Sleep</div><p class="body-serif" style="font-size:12px">NOLA circadian rhythm optimization. Late city culture mapped against optimal sleep architecture.</p></div>
+      <div class="card card-p"><div style="font-size:28px;margin-bottom:12px">🤝</div><div class="display-sm" style="font-size:16px;margin-bottom:8px">Social Connection</div><p class="body-serif" style="font-size:12px">Porch culture, krewe bonds, brass bands. The loneliness antidote NOLA invented before science named it.</p></div>
+      <div class="card card-p"><div style="font-size:28px;margin-bottom:12px">🧘</div><div class="display-sm" style="font-size:16px;margin-bottom:8px">Stress Management</div><p class="body-serif" style="font-size:12px"><em>Laissez les bons temps rouler.</em> Letting go is a clinical intervention. NOLA culture as cortisol management.</p></div>
+      <div class="card card-p"><div style="font-size:28px;margin-bottom:12px">⚜</div><div class="display-sm" style="font-size:16px;margin-bottom:8px">Purpose</div><p class="body-serif" style="font-size:12px">Cultural preservation as meaning-making. Every krewe, second line, and jazz funeral is purposeful community.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ENTERPRISE ═══ -->
+<section id="enterprise" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>Enterprise · City Partnerships</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:8px">An Invitation to Build Something Together</h2>
+    <div class="ent-box fade-in" style="margin-bottom:28px">
+      <p class="body-serif" style="margin-bottom:8px"><span style="color:var(--gold);font-weight:500">For New Orleans, we're offering BLEU at no cost.</span> This is our home. Jazz Bird NOLA brought us here — and this city's soul convinced us to stay.</p>
+      <div class="card card-p" style="margin-top:20px;border-color:rgba(255,255,255,.08)">
+        <div class="display-sm" style="font-size:17px;color:var(--gold);margin-bottom:12px">What BLEU Brings</div>
+        <p class="body-serif" style="font-size:12.5px">A fully deployed wellness operating system — AI guidance, 485,476 NPI-verified practitioners, drug interaction screening, recovery resources, financial tools — all free. Parish-level dashboards. Predictive analytics. SEO infrastructure making every local business visible to the world.</p>
+      </div>
+    </div>
+    <div class="card card-p-lg fade-in" style="border-color:rgba(201,168,76,.2);margin-bottom:28px;background:linear-gradient(135deg,rgba(201,168,76,.04),rgba(255,255,255,.02))">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span style="font-size:24px">🐦</span><div><div class="display-sm" style="font-size:18px;color:var(--gold)">Jazz Bird NOLA · 501(c)(3)</div><div style="font-family:var(--sans);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-top:3px">The Community Leader That Brought BLEU to New Orleans</div></div></div>
+      <p class="body-serif">A <strong style="color:var(--text)">"Jazz Bird"</strong> migrates to New Orleans for something deeper — culture, music, community, and a way of life that science proves extends your years.</p>
+      <p class="body-serif" style="margin-top:10px"><strong style="color:var(--text)">New Orleans already practices the six pillars of lifestyle medicine naturally.</strong> Movement through dance. Nutrition through world-class food. Social connection through porch culture and brass bands. Stress management through <em>laissez les bons temps rouler.</em> Purpose through cultural preservation. Sleep through a city that knows when to rest.</p>
+      <p class="body-serif" style="margin-top:10px">Peak: 627,525 before Katrina. Today: 357,767. Jazz Bird's mission: <strong style="color:var(--text)">genuine wellness infrastructure that makes this city the healthiest, most magnetic place in America.</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px">
+        <span class="pill pill-gold">501(c)(3)</span>
+        <span class="pill pill-dim">Lifestyle Medicine</span>
+        <span class="pill pill-dim">Active Aging</span>
+        <span class="pill pill-teal">Snowbird → Jazz Bird</span>
+      </div>
+    </div>
+    <div class="s-label fade-in" style="margin-top:0"><div class="s-label-dot"></div>City Value</div>
+    <div class="card card-p fade-in">
+      <div class="cv-item"><div class="cv-ico">📊</div><div><div class="cv-name">Parish Health Dashboard</div><p class="cv-desc">Real-time intelligence. See gaps. Data-driven investments. Every parish scored across 12 dimensions.</p></div></div>
+      <div class="cv-item"><div class="cv-ico">💰</div><div><div class="cv-name">Preventive Care Savings</div><p class="cv-desc">$6–12 saved per resident connected upstream. $38M projected in 5 years across 8 parishes.</p></div></div>
+      <div class="cv-item"><div class="cv-ico">🔍</div><div><div class="cv-name">SEO Economic Engine</div><p class="cv-desc">Every listing ranks on Google. Drives tourism, talent, commerce. New Orleans as the wellness destination.</p></div></div>
+      <div class="cv-item" style="border-bottom:none"><div class="cv-ico">🏠</div><div><div class="cv-name">Population Retention</div><p class="cv-desc">Wellness infrastructure makes a city worth coming home to. Reverse the post-Katrina population gap.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CITIES / THE MOAT ═══ -->
+<section id="cities" class="s-alt" style="position:relative;z-index:10">
+  <div class="s-inner">
+    <div class="s-label fade-in"><div class="s-label-dot"></div>🔍 The SEO Moat · 222 Cities</div>
+    <h2 class="display-lg fade-in" style="margin-bottom:8px">How BLEU Builds Cities Through Search Control</h2>
+    <p class="body-serif fade-in" style="margin-bottom:32px">New Orleans is the origin. The proof. The model. Every city deployment uses the same architecture — with local practitioners, neighborhood data, and cultural context. NOLA's health transformation becomes the national blueprint.</p>
+
+    <!-- MOAT FLOW -->
+    <div class="fade-in" style="margin-bottom:24px">
+      <div class="s-label"><div class="s-label-dot"></div>The Search-to-Health Flywheel</div>
+      <div class="moat-flow">
+        <div class="moat-step">SEO Traffic</div>
+        <div class="moat-arrow">→</div>
+        <div class="moat-step">Discovery</div>
+        <div class="moat-arrow">→</div>
+        <div class="moat-step">Engagement</div>
+        <div class="moat-arrow">→</div>
+        <div class="moat-step">Tourism</div>
+        <div class="moat-arrow">→</div>
+        <div class="moat-step">Migration</div>
+        <div class="moat-arrow">→</div>
+        <div class="moat-step">Commerce</div>
+        <div class="moat-arrow">→</div>
+        <div class="moat-end">$$$ + Healthier City</div>
+      </div>
+      <p class="moat-caption"><strong>Being found → engagement → tourism → migration → the tax base that funds everything.</strong></p>
+    </div>
+
+    <!-- THE MOAT ASSETS -->
+    <div class="s-label fade-in" style="margin-top:48px"><div class="s-label-dot"></div>What a Competitor Needs to Build From Scratch</div>
+    <div class="g2 fade-in">
+      <div class="card card-p">
+        <div class="rc-path"><div class="rc-ico">👥</div><div><div class="rc-name">485,476 NPI-Verified Practitioners</div><p class="rc-desc">Checked nightly. 7-dimension trust score. 18+ months of compounding data authority.</p></div></div>
+        <div class="rc-path"><div class="rc-ico">⚗️</div><div><div class="rc-name">302,000 Drug Interaction Pairs</div><p class="rc-desc">CYP450 + UGT + P-gp + 180 supplements + cannabis. 5 layers. 2 years to build.</p></div></div>
+        <div class="rc-path"><div class="rc-ico">🗺</div><div><div class="rc-name">222 City-Specific Pages</div><p class="rc-desc">Real neighborhood data. Original local health content. 4–8 hours per city. Not generated — built.</p></div></div>
+        <div class="rc-path" style="border:none"><div class="rc-ico">🤖</div><div><div class="rc-name">22 AI Therapeutic Modes</div><p class="rc-desc">Clinical framework training. Streaming delivery. Creole Medicine mode unique to NOLA. 18 months of refinement.</p></div></div>
+      </div>
+      <div class="card card-p">
+        <div class="rc-path"><div class="rc-ico">🌿</div><div><div class="rc-name">529 Cannabis Strains in VERDE</div><p class="rc-desc">Every strain pharmacology-screened before display. 25 terpene profiles. Only platform with pre-display CYP450.</p></div></div>
+        <div class="rc-path"><div class="rc-ico">🔌</div><div><div class="rc-name">7 Live Federal APIs</div><p class="rc-desc">OpenFDA, RxNorm, DailyMed, PubMed, USDA FoodData, ClinicalTrials.gov, Open Meteo. Firing in parallel.</p></div></div>
+        <div class="rc-path"><div class="rc-ico">🔍</div><div><div class="rc-name">18–24 Months SEO Authority</div><p class="rc-desc">222 cities. FAQs, schema, neighborhood data, original content. Time-released — cannot be bought.</p></div></div>
+        <div class="rc-path" style="border:none"><div class="rc-ico">⚜</div><div><div class="rc-name">127-Year Healing Lineage</div><p class="rc-desc">The cultural authority no competitor can acquire. New Orleans as the origin city of the model.</p></div></div>
+      </div>
+    </div>
+
+    <!-- 222 CITIES GRID SAMPLE -->
+    <div style="margin-top:48px" class="fade-in">
+      <div class="s-label"><div class="s-label-dot"></div>Gulf South Cluster · Active & Expanding</div>
+      <div class="g4" style="margin-bottom:16px">
+        <div class="bsc" style="border-color:rgba(201,168,76,.3)"><div class="bsc-n gold" style="font-size:20px">New Orleans</div><div class="bsc-l">LA · Origin · Active</div></div>
+        <div class="bsc"><div class="bsc-n" style="font-size:20px;color:var(--teal)">Baton Rouge</div><div class="bsc-l">LA · Deploying</div></div>
+        <div class="bsc"><div class="bsc-n" style="font-size:20px;color:var(--teal)">Houston</div><div class="bsc-l">TX · Queued</div></div>
+        <div class="bsc"><div class="bsc-n" style="font-size:20px;color:var(--dim)">Atlanta</div><div class="bsc-l">GA · Year 2</div></div>
+      </div>
+      <div class="card card-p" style="text-align:center">
+        <div class="display-lg" style="color:var(--gold);margin-bottom:8px">222 Cities</div>
+        <p class="body-serif" style="max-width:560px;margin:0 auto">Same AI. Same data. Same affiliate engine. Same free access. City-specific practitioners, neighborhoods, cultural context, and enterprise relationships. NOLA proved it works. Now it scales.</p>
+      </div>
+    </div>
+
+    <!-- SEARCH · SERVE · SUSTAIN -->
+    <div style="margin-top:48px" class="fade-in">
+      <div class="card card-p-lg" style="border-color:rgba(46,196,182,.2);background:linear-gradient(135deg,rgba(46,196,182,.04),rgba(201,168,76,.04))">
+        <div class="display-md" style="color:var(--teal);margin-bottom:16px;text-align:center">Search · Serve · Sustain</div>
+        <p class="body-serif" style="text-align:center;max-width:640px;margin:0 auto">BLEU builds the deepest, most connected health pages on the internet for 222 cities — so when anyone searches for help, BLEU is the answer. When they find it through BLEU, the affiliate revenue keeps the whole system free.</p>
+        <div class="g3" style="margin-top:28px">
+          <div style="text-align:center"><div style="font-family:var(--display);font-size:36px;font-weight:700;color:var(--teal)">Search</div><p class="body-serif" style="font-size:12px">SEO authority per city. Practitioner pages. Neighborhood data. FAQ schema. Rankings compounding daily.</p></div>
+          <div style="text-align:center"><div style="font-family:var(--display);font-size:36px;font-weight:700;color:var(--gold)">Serve</div><p class="body-serif" style="font-size:12px">Alvai answers every question. Directory connects every person. Safety engine protects every decision. Free forever.</p></div>
+          <div style="text-align:center"><div style="font-family:var(--display);font-size:36px;font-weight:700;color:var(--teal)">Sustain</div><p class="body-serif" style="font-size:12px">Affiliate revenue from trust. Enterprise contracts from proof. The business model makes the free access permanent.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFFILIATE TRANSPARENCY -->
+    <div style="margin-top:48px" class="fade-in">
+      <div class="s-label"><div class="s-label-dot"></div>Affiliate Partners · Full Transparency</div>
+      <div class="card card-p" style="border-color:rgba(201,168,76,.14);margin-bottom:12px">
+        <p class="body-serif"><strong style="color:var(--gold)">BLEU's promise:</strong> Every affiliate relationship disclosed. BLEU earns a commission when you use these links — at no cost to you. We only affiliate with services we'd use ourselves. Trust is the product.</p>
+      </div>
+      <div class="affil-row">
+        <span class="affil-chip">🛒 Amazon</span><span class="affil-chip">🛍 Walmart</span><span class="affil-chip">🧪 Thorne</span><span class="affil-chip">🌱 Charlotte's Web</span><span class="affil-chip">💊 GoodRx</span><span class="affil-chip">💰 Cost Plus</span><span class="affil-chip">💍 Oura</span><span class="affil-chip">🏋 ClassPass</span><span class="affil-chip">🌿 Nordic Naturals</span><span class="affil-chip">🟡 NOW</span><span class="affil-chip">🌍 iHerb</span><span class="affil-chip">🥦 Whole Foods</span><span class="affil-chip">💙 BetterHelp</span><span class="affil-chip">🍃 Leafly</span><span class="affil-chip">🎧 Headspace</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-brand">BLEU <span>× Jazz Bird</span></div>
+  <div style="font-family:var(--sans);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin-bottom:16px">New Orleans · Origin City · 222 Cities · Free Forever</div>
+  <p class="footer-mission">"Make longevity intelligence free, findable, and connected for every person, in every city, forever."</p>
+  <div class="footer-links">
+    <a href="#home">Home</a>
+    <a href="#parishes">Parishes</a>
+    <a href="#directory">Directory</a>
+    <a href="#vessel">Vessel</a>
+    <a href="#alvai">Alvai</a>
+    <a href="#impact">Impact</a>
+    <a href="#recovery">Recovery</a>
+    <a href="#community">Community</a>
+    <a href="#finance">Finance</a>
+    <a href="#enterprise">Enterprise</a>
+    <a href="#cities">Cities</a>
+  </div>
+  <div class="footer-legal">
+    Jazz Bird® NOLA 501(c)(3) · Patent Pending · Bleu Garner · Dr. Felicia Stoler DCN MS RDN FACSM FAND Dipl ACLM<br>
+    © 2026 BLEU.live · All affiliate relationships disclosed · Educational content only<br>
+    Drug interaction engine: Educational use only — confirm with pharmacist or physician · Crisis: 988
+  </div>
+</footer>
+</main>
+
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// --- STARS ---
+(function(){
+  var c = document.getElementById('stars');
+  for (var i = 0; i < 90; i++) {
+    var s = document.createElement('div');
+    s.className = 'star';
+    var sz = Math.random() * 1.6 + 0.4;
+    s.style.cssText = 'left:' + (Math.random()*100) + '%;top:' + (Math.random()*100) + '%;width:' + sz + 'px;height:' + sz + 'px;animation-duration:' + (Math.random()*4+2) + 's;animation-delay:-' + (Math.random()*4) + 's';
+    c.appendChild(s);
+  }
+})();
+
+// --- NAV SCROLL SPY ---
+var sections = ['home','parishes','directory','vessel','alvai','impact','recovery','community','finance','protocols','enterprise','cities'];
+function updateNav() {
+  var scrollY = window.scrollY + 80;
+  var active = sections[0];
+  sections.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && el.offsetTop <= scrollY) active = id;
+  });
+  document.querySelectorAll('.nl').forEach(function(b) {
+    b.classList.toggle('on', b.dataset.sec === active);
+  });
+  document.getElementById('btt').classList.toggle('show', window.scrollY > 400);
+}
+window.addEventListener('scroll', updateNav, {passive:true});
+document.querySelectorAll('.nl').forEach(function(b) {
+  b.addEventListener('click', function() { navTo(b.dataset.sec); });
+});
+function navTo(id) {
+  var el = document.getElementById(id);
+  if (el) window.scrollTo({top: el.offsetTop - 62, behavior:'smooth'});
+}
+
+// --- TYPEWRITER ---
+var HERO_CHS = [
+  {
+    l1: 'Louisiana is ranked last.',
+    l2: 'New Orleans is ranked priceless.',
+    n: '#50 in health. #1 food city on earth. 73 years of life expectancy -- and 365 nights of music that remind you what living actually feels like. The gap between those two facts is not a crisis. It is an open door.'
+  },
+  {
+    l1: 'A second line is group therapy.',
+    l2: 'This city has known that for three centuries.',
+    n: 'Movement. Music. Grief processed publicly, in the street, with horns. Belonging built into every krewe, every porch, every Monday pot of red beans. Lifestyle medicine -- before anyone called it that.'
+  },
+  {
+    l1: 'The next appointment is four months away.',
+    l2: 'Alvai answers in four seconds.',
+    n: '485,476 verified practitioners. A 5-layer drug safety engine. An AI guide at 2am when the clinic is closed. GoodRx returning $140 a month to families quietly overpaying. No login. No cost. No one turned away.'
+  },
+  {
+    l1: '#50 today.',
+    l2: 'The flywheel is already turning.',
+    n: 'Every interaction flagged prevents a hospitalization. Every Jazz Bird circle lowers cortisol in every person in the room. Health compounds the same way jazz does -- until it becomes larger than anyone planned.'
+  }
+];
+var hIdx=0, hTimer=null;
+function hInit(){hRun();}
+function hSetDots(i){document.querySelectorAll('.ch-dot').forEach(function(d,j){d.classList.toggle('on',j===i);});}
+function hType(elId,txt,spd,cb){
+  var el=document.getElementById(elId);if(!el)return;
+  el.style.opacity='1';el.textContent='';
+  var i=0;(function t(){el.textContent=txt.slice(0,i);i++;if(i<=txt.length)setTimeout(t,spd);else if(cb)setTimeout(cb,80);})();
+}
+function hRun(){
+  var ch=HERO_CHS[hIdx];hSetDots(hIdx);
+  ['hLine1','hLine2','hNarr'].forEach(function(id){var e=document.getElementById(id);if(e){e.style.opacity='0';e.textContent='';}});
+  setTimeout(function(){
+    hType('hLine1',ch.l1,50,function(){
+      hType('hLine2',ch.l2,44,function(){
+        var n=document.getElementById('hNarr');
+        if(n){n.textContent=ch.n;n.style.transition='opacity .8s';n.style.opacity='1';}
+        hTimer=setTimeout(function(){
+          ['hLine1','hLine2','hNarr'].forEach(function(id){var e=document.getElementById(id);if(e){e.style.transition='opacity .4s';e.style.opacity='0';}});
+          setTimeout(function(){hIdx=(hIdx+1)%HERO_CHS.length;hRun();},450);
+        },5400);
+      });
+    });
+  },300);
+}
+function hJump(i){
+  clearTimeout(hTimer);hIdx=i;
+  ['hLine1','hLine2','hNarr'].forEach(function(id){var e=document.getElementById(id);if(e){e.style.transition='opacity .3s';e.style.opacity='0';}});
+  setTimeout(function(){hRun();},360);
+}
+window.addEventListener('DOMContentLoaded',function(){hInit();});
+
+// --- FADE IN ---
+var io = new IntersectionObserver(function(en) {
+  en.forEach(function(e) {
+    if (e.isIntersecting) { e.target.classList.add('vis'); io.unobserve(e.target); }
+  });
+}, {threshold: 0.06, rootMargin: '0px 0px -30px 0px'});
+document.querySelectorAll('.fade-in').forEach(function(el, i) {
+  el.style.transitionDelay = (i % 6 * 0.06) + 's';
+  io.observe(el);
+});
+
+// --- ALVAI ---
+var AR = {
+  'Find me a therapist in New Orleans who takes Medicaid': 'I\'m searching the BLEU Directory for Medicaid-accepting therapists across all 8 parishes. Orleans Parish has 47 in-network providers, Jefferson has 39. Top trust-scored option: Community Mental Health Centers, sliding scale $0-$40. BetterHelp accepts financial aid from $40/week. Want me to filter by neighborhood or specialty?',
+  'I can\'t sleep. What supplements actually work?': 'For sleep, the evidence-backed protocol is: Magnesium glycinate (400mg, 1hr before bed) + L-theanine (200mg) + Ashwagandha KSM-66 (300mg). CYP450 check passed. Best NOLA price: Thorne Magnesium Bisglycinate $28 on iHerb. Avoid melatonin as a first resort -- it\'s a signal, not a sedative. Are you on any medications? I\'ll run a full interaction check.',
+  'I\'m in recovery and need support resources in NOLA': 'New Orleans has strong recovery infrastructure. For 12-step: Central Office NOLA has 200+ weekly meetings. For SMART Recovery: Tuesday/Thursday at Tulane Medical Center. For MAT (Buprenorphine): 34 BLEU-verified providers, including FQHC options with sliding scale. Jazz Bird NOLA also runs monthly recovery circles in the Treme -- no cost, no labels. Which pathway resonates with you?',
+  'What cannabis strain helps with chronic pain in Louisiana?': 'For chronic pain in Louisiana, VERDE recommends: Harlequin (18:1 CBD:THC) -- anti-inflammatory, non-psychoactive, available at Verilife NOLA. CYP450 status: check your other medications. Key terpenes: Beta-caryophyllene (CB2 agonist, directly anti-inflammatory) + Myrcene (sedating, muscle-relaxing). Want me to run your current medications against this strain?',
+  'How do I lower my prescription costs in New Orleans?': 'Three immediate steps: 1) GoodRx at Walgreens or CVS -- average 62% savings. 2) Mark Cuban Cost Plus Drugs -- generics at cost + 15% (metformin: $3/mo, atorvastatin: $8/mo). 3) Dollar For -- if you\'ve had a hospital bill, they negotiate it to $0 for income-qualifying residents. What medications are you taking? I\'ll look up exact prices at the 3 closest NOLA pharmacies.',
+  'Tell me about Jazz Bird NOLA wellness circles': 'Jazz Bird NOLA is our 501(c)(3) nonprofit -- free community wellness circles for adults 50+, operating in every parish. Named for the "snowbird" migration pattern with a New Orleans soul. Led by Dr. Felicia Stoler DCN MS RDN FACSM FAND Dipl ACLM. Monthly gatherings cover: lifestyle medicine, active aging, Blue Zone principles, and social connection. The Treme circle meets the first Thursday of every month. Want me to find the circle nearest to you?'
+};
+var defaultResp = 'I\'m Alvai -- trained on 485K+ NPI-verified practitioners and federal health data across 8 New Orleans parishes. I check drug interactions, compare prices, match practitioners, and answer health questions free, with no login. Ask me anything -- I\'ll find the most accurate, affordable answer for your situation in New Orleans.';
+
+// ===============================================
+// ALVAI -- REAL AI ENGINE (Supabase . NOLA Instance)
+// ===============================================
+const ALVAI_URL = 'https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai';
+const ALVAI_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw';
+var nolaHistory = [];
+
+function fmtNola(t) {
+  if (!t) return '';
+  return t
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+}
+
+function addBubble(role, text) {
+  var thread = document.getElementById('alvaiThread');
+  var div = document.createElement('div');
+  var isUser = role === 'user';
+  div.style.cssText = 'display:flex;flex-direction:column;align-items:' + (isUser ? 'flex-end' : 'flex-start');
+  var bubble = document.createElement('div');
+  bubble.style.cssText = 'max-width:85%;padding:12px 16px;border-radius:' + (isUser ? '14px 14px 4px 14px' : '14px 14px 14px 4px') + ';font-family:var(--serif);font-size:13px;line-height:1.85;' + (isUser ? 'background:rgba(46,196,182,.12);color:var(--text);border:1px solid rgba(46,196,182,.2)' : 'background:rgba(155,143,255,.08);color:var(--muted);border:1px solid rgba(155,143,255,.15)');
+  bubble.innerHTML = text;
+  div.appendChild(bubble);
+  thread.appendChild(div);
+  thread.scrollTop = thread.scrollHeight;
+  return bubble;
+}
+
+async function alvaiCall(q) {
+  var out = document.getElementById('alvaiOut');
+  out.style.display = 'block';
+  nolaHistory.push({ role: 'user', content: q });
+  addBubble('user', q);
+  var aiBubble = addBubble('ai', '<div class="alv-thinking"><span>Alvai is thinking</span><span class="alv-thinking-dots"><span></span><span></span><span></span></span></div>');
+  var body = {
+    message: q,
+    history: nolaHistory.slice(-12),
+    mode: 'alvai',
+    user_context: JSON.stringify({
+      city: 'New Orleans',
+      instance: 'neworleans.bleu.live',
+      context: 'Jazz Bird NOLA . 8 parishes . Louisiana health infrastructure . Creole medicine lineage . lifestyle medicine . Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl ACLM',
+      is_traveler: false
+    })
+  };
+  try {
+    var res = await fetch(ALVAI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ALVAI_ANON },
+      body: JSON.stringify(body)
+    });
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var full = '', buffer = '';
+    aiBubble.innerHTML = '';
+    while (true) {
+      var _r = await reader.read();
+      if (_r.done) break;
+      buffer += decoder.decode(_r.value, { stream: true });
+      var lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (!line.startsWith('data: ')) continue;
+        var d = line.slice(6).trim();
+        if (d === '[DONE]') continue;
+        try {
+          var p = JSON.parse(d);
+          if (p.text || p.content) {
+            full += (p.text || p.content);
+            aiBubble.innerHTML = '<p>' + fmtNola(full) + '</p><span class="alv-cursor"></span>';
+            document.getElementById('alvaiThread').scrollTop = 9999;
+          }
+        } catch (e) {}
+      }
+    }
+    aiBubble.innerHTML = '<p>' + fmtNola(full) + '</p>';
+    nolaHistory.push({ role: 'assistant', content: full });
+    setTimeout(function(){ var r=document.getElementById('alvaiReply'); if(r)r.focus(); }, 100);
+  } catch (e) {
+    aiBubble.innerHTML = '<em style="color:var(--dim)">Connection issue -- try again. Crisis: 988</em>';
+  }
+}
+
+async function alvaiSend() {
+  var inp = document.getElementById('alvaiIn');
+  var q = inp.value.trim();
+  if (!q) return;
+  inp.value = '';
+  navTo('alvai');
+  await alvaiCall(q);
+}
+
+async function alvaiReply() {
+  var inp = document.getElementById('alvaiReply');
+  var q = inp.value.trim();
+  if (!q) return;
+  inp.value = '';
+  await alvaiCall(q);
+}
+
+function setAlvai(q) {
+  document.getElementById('alvaiIn').value = q;
+  alvaiSend();
+  navTo('alvai');
+}
+</script>
+</body>
+</html>
