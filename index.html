@@ -598,6 +598,7 @@ button[type="submit"],
   <div data-tab="vessel" class="nav-tab" onclick="go('vessel')">Vessel</div>
   <div data-tab="map" class="nav-tab" onclick="go('map')">Map</div>
   <div data-tab="learn" class="nav-tab" onclick="go('learn')">Learn</div>
+  <div data-tab="protocols" class="nav-tab" onclick="go('protocols')">Protocols</div>
   <div data-tab="community" class="nav-tab" onclick="go('community')">Community</div>
   <div data-tab="passport" class="nav-tab" onclick="go('passport')">Passport</div>
   <div data-tab="therapy" class="nav-tab t2" onclick="go('therapy')">Therapy</div>
@@ -1125,6 +1126,7 @@ button[type="submit"],
 
   <div class="disclaimer">⚕️ Alvai is an AI wellness advisor powered by Claude, not a medical professional. For emergencies call 911. For crisis support call/text 988. Alvai does not diagnose, prescribe, or replace professional care.</div>
 </div>
+</div>
 
 <!-- ═══════════════════════ DASHBOARD ═══════════════════════ -->
 <!-- ═══════════════════════ ALVAI ═══════════════════════ -->
@@ -1479,7 +1481,7 @@ button[type="submit"],
   });}
 })();
 </script>
-</div>
+
 
 <div class="panel" id="p-dashboard">
   <div class="section-label">YOUR BIOLOGICAL AGE -- LIVE</div>
@@ -3221,7 +3223,17 @@ if(lb)lb.addEventListener("click",function(){
 
 })();
 </script>
-</div>
+
+  <div class="chat-box chat-area" id="chat-learn" style="min-height:40px;margin:16px 0 8px"></div>
+  <div style="display:flex;gap:8px;padding:0 24px 32px">
+    <input class="chat-input" id="in-learn" placeholder="Ask Alvai about this topic..."
+      style="flex:1;background:rgba(6,12,22,.9);border:1px solid rgba(45,138,158,.22);border-radius:10px;padding:11px 16px;color:#E8E0D0;font-size:13px;font-family:'DM Sans',sans-serif;outline:none"
+      onkeydown="if(event.key==='Enter')send('learn')"/>
+    <button onclick="send('learn')"
+      style="padding:11px 20px;border-radius:10px;border:none;background:rgba(45,138,158,.18);color:#2DD4A8;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600">
+      Ask Alvai
+    </button>
+  </div></div>
 
 <div class="panel" id="p-community">
   <style>
@@ -9287,7 +9299,17 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
   },500);
 })();
 </script>
-</div>
+
+  <div class="chat-box chat-area" id="chat-enterprise" style="min-height:40px;margin:16px 0 8px"></div>
+  <div style="display:flex;gap:8px;padding:0 24px 32px">
+    <input class="chat-input" id="in-enterprise" placeholder="Ask Alvai about this topic..."
+      style="flex:1;background:rgba(6,12,22,.9);border:1px solid rgba(45,138,158,.22);border-radius:10px;padding:11px 16px;color:#E8E0D0;font-size:13px;font-family:'DM Sans',sans-serif;outline:none"
+      onkeydown="if(event.key==='Enter')send('enterprise')"/>
+    <button onclick="send('enterprise')"
+      style="padding:11px 20px;border-radius:10px;border:none;background:rgba(45,138,158,.18);color:#2DD4A8;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600">
+      Ask Alvai
+    </button>
+  </div></div>
 
 <!-- ═══════════════════════ SPIRIT ═══════════════════════ -->
 <div class="panel" id="p-spirit">
@@ -9519,7 +9541,7 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
   })();
   </script>
 
-</div>
+
 <style>
 @keyframes blTk{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .bl-tk{overflow:hidden;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:24px 0}
