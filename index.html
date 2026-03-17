@@ -3467,7 +3467,7 @@ if(lb)lb.addEventListener("click",function(){
     </div>
   </div>
   <!-- ═══ CITIZEN UPGRADE CARD ═══ -->
-  <div id="pp-citizen-card" class="pp-anim" style="margin-bottom:10px;display:none">
+  <div id="pp-citizen-card" class="pp-anim" style="margin-bottom:10px;display:block">
     <div style="background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));border:1px solid rgba(201,168,76,.3);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden">
       <div style="position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(rgba(201,168,76,.08),transparent 70%);pointer-events:none"></div>
       <div style="font-size:9px;letter-spacing:4px;color:rgba(201,168,76,.6);margin-bottom:6px">UPGRADE YOUR PASSPORT</div>
@@ -3542,6 +3542,15 @@ if(lb)lb.addEventListener("click",function(){
   </div>
 
   <!-- AFFILIATE STRIP -->
+  <div class="pp-anim" style="margin-bottom:10px">
+    <div style="background:linear-gradient(135deg,rgba(127,178,133,0.12),rgba(201,168,76,0.08));border:1px solid rgba(127,178,133,0.25);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div>
+        <div style="font-size:11px;letter-spacing:2px;color:#7fb285;font-weight:700;margin-bottom:3px">PRACTITIONER-GRADE SUPPLEMENTS</div>
+        <div style="font-size:12px;color:#8fa4b0;line-height:1.5">Dr. Felicia-curated. Dispensary-quality. Ships to your door.</div>
+      </div>
+      <a href="https://fullscript.com/plans/bleuplatform" target="_blank" style="flex-shrink:0;background:linear-gradient(135deg,#7fb285,#5a9e62);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;letter-spacing:0.5px">Order Supplements →</a>
+    </div>
+  </div>
   <div id="pp-aff-strip-container" class="pp-anim" style="margin-bottom:4px"></div>
 
   <!-- WELLNESS CART -->
@@ -5517,7 +5526,7 @@ async function showProfile(){
         }
       }catch(e){}
     }
-  }, 800);document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});setTimeout(checkPendingProtocol,400);;updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
+  }, 800);document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});setTimeout(checkPendingProtocol,400);setTimeout(renderAffStrip,300);updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
 async function loadSessions(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('id,title,mode,created_at').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(10);const el=document.getElementById('session-list');if(!data||!data.length){el.innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Talk to Alvai to see history here.</div>';return}el.innerHTML=data.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center"></div><div><div style="color:#e8d5b0;font-size:0.85rem">'+(c.title||'Session')+'</div><div style="color:#8fa4b0;font-size:0.7rem">'+new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' . '+(c.mode||'general')+'</div></div></div>').join('')}
 async function saveConvo(tab,msgs){if(!sbClient||!currentUser||!msgs.length)return;const mode=tab==='home'?'alvai':tab;const title=(msgs.find(m=>m.role==='user')?.content||'Session').slice(0,60);try{if(currentConvoIds[tab]){await sbClient.from('conversations').update({messages:msgs,updated_at:new Date().toISOString()}).eq('id',currentConvoIds[tab])}else{const{data}=await sbClient.from('conversations').insert({user_id:currentUser.id,mode,title,messages:msgs}).select('id').single();if(data)currentConvoIds[tab]=data.id}}catch(e){console.warn('saveConvo failed',e)}}
 function togGoal(el){el.classList.toggle('active');if(!sbClient||!currentUser)return;const g=[...document.querySelectorAll('.gc.active')].map(c=>c.dataset.g);sbClient.from('profiles').update({wellness_goals:g}).eq('id',currentUser.id)}
@@ -5879,6 +5888,7 @@ async function upsertProfile(updates) {
     if (existing) {
       await sbClient.from('profiles').update({ updated_at: new Date().toISOString(), ...updates }).eq('id', currentUser.id);
     } else {
+      const ipData = JSON.parse(localStorage.getItem('bleu_identity_protocol') || 'null');
       await sbClient.from('profiles').insert({
         id: currentUser.id,
         email: currentUser.email,
@@ -5888,6 +5898,7 @@ async function upsertProfile(updates) {
         streak_days: 0,
         last_active: new Date().toISOString(),
         updated_at: new Date().toISOString(),
+        ...(ipData ? { identity_protocol: JSON.stringify(ipData) } : {}),
         ...updates
       });
     }
@@ -5931,6 +5942,20 @@ async function updateStreak() {
     const el = document.getElementById('stat-streak');
     if (el) el.textContent = newStreak;
   } catch(e) {}
+}
+
+// -- IDENTITY PROTOCOL STORAGE ------------------------------------------------
+function saveIdentityProtocol(data) {
+  // data: { target_word, named_struggle, identity_condition, identity_statement, prediction_model_type }
+  localStorage.setItem('bleu_identity_protocol', JSON.stringify({ ...data, saved_at: new Date().toISOString() }));
+  if (sbClient && currentUser) {
+    sbClient.from('profiles').update({ identity_protocol: JSON.stringify(data), updated_at: new Date().toISOString() })
+      .eq('id', currentUser.id).then(() => {}).catch(() => {});
+  }
+}
+
+function getIdentityProtocol() {
+  try { return JSON.parse(localStorage.getItem('bleu_identity_protocol') || 'null'); } catch(e) { return null; }
 }
 
 // -- APPLE HEALTH XML PARSER ---------------------------------------------------
@@ -6028,6 +6053,7 @@ function handleHealthFileImport(event) {
 }
 
 function initPassport() {
+  renderAffStrip();
   renderCart();
   renderPaths();
   renderHealthData();
@@ -6066,7 +6092,7 @@ function dirCard(p) {
     p.telehealth ? ' Telehealth' : '',
     p.accepting_patients ? ' Accepting' : ''
   ].filter(Boolean);
-  return `<div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:16px;cursor:pointer;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.12)'" onclick="ask('directory','Tell me about ${name.replace(/'/g,"\\'")} in ${city} and how to connect with them')">
+  return `<div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:16px;cursor:pointer;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.12)'" onclick="showPractitionerOptions('${name.replace(/'/g,"\\'")}','${city}','${p.phone||''}','${p.telehealth?'yes':'no'}')">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div style="color:#e8d5b0;font-weight:600;font-size:14px">${name}${cred}</div>
       <div style="color:${scoreColor};font-size:11px;background:rgba(0,0,0,0.2);padding:3px 10px;border-radius:10px;flex-shrink:0;margin-left:8px">${score}</div>
@@ -6099,6 +6125,39 @@ async function runDirSearch() {
   } catch(e) {
     el.innerHTML = '<div style="text-align:center;color:#8fa4b0;font-size:12px;padding:20px">Search error. Try asking Alvai below.</div>';
   }
+}
+
+// -- PRACTITIONER BOOKING MODAL -----------------------------------------------
+function showPractitionerOptions(name, city, phone, telehealth) {
+  const existing = document.getElementById('pp-practitioner-modal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'pp-practitioner-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML = `
+    <div style="background:#12151c;border:1px solid rgba(78,205,196,0.2);border-radius:18px;padding:28px;max-width:380px;width:100%;position:relative">
+      <button onclick="document.getElementById('pp-practitioner-modal').remove()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#8fa4b0;font-size:18px;cursor:pointer">✕</button>
+      <div style="font-size:11px;letter-spacing:2px;color:#4ecdc4;margin-bottom:6px">CONNECT WITH PRACTITIONER</div>
+      <div style="font-family:Georgia,serif;font-size:18px;color:#e8d5b0;margin-bottom:4px">${name}</div>
+      <div style="font-size:12px;color:#8fa4b0;margin-bottom:20px">${city}</div>
+      <div style="display:grid;gap:10px">
+        ${phone ? `<a href="tel:${phone}" style="display:flex;align-items:center;gap:12px;background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.2);border-radius:12px;padding:14px 16px;text-decoration:none;color:#e8d5b0">
+          <span style="font-size:20px">📞</span>
+          <div><div style="font-size:13px;font-weight:600">Call Now</div><div style="font-size:11px;color:#8fa4b0">${phone}</div></div>
+        </a>` : ''}
+        ${telehealth === 'yes' ? `<button onclick="ask('directory','Book a telehealth appointment with ${name.replace(/'/g,"\'")}'  );document.getElementById('pp-practitioner-modal').remove()" style="display:flex;align-items:center;gap:12px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:12px;padding:14px 16px;cursor:pointer;color:#e8d5b0;width:100%">
+          <span style="font-size:20px">💻</span>
+          <div style="text-align:left"><div style="font-size:13px;font-weight:600">Telehealth Available</div><div style="font-size:11px;color:#8fa4b0">Alvai will help you connect</div></div>
+        </button>` : ''}
+        <button onclick="ask('directory','Tell me about ${name.replace(/'/g,"\'")}'  );document.getElementById('pp-practitioner-modal').remove()" style="display:flex;align-items:center;gap:12px;background:rgba(78,205,196,0.05);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;cursor:pointer;color:#e8d5b0;width:100%">
+          <span style="font-size:20px">🤖</span>
+          <div style="text-align:left"><div style="font-size:13px;font-weight:600">Ask Alvai</div><div style="font-size:11px;color:#8fa4b0">Learn more + prepare for visit</div></div>
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', function(e) { if(e.target === modal) modal.remove(); });
 }
 
 async function initDirectory() {
@@ -9484,8 +9543,11 @@ async function startStripeCheckout() {
       btn.style.borderColor = '#1d9e75';
     }
     if (window.upsertProfile) upsertProfile();
-    if (window.animateRing) animateRing();
     if (window.updateStreak) updateStreak();
+    if (window.animateRing && sbClient && currentUser) {
+      sbClient.from('profiles').select('bleu_score').eq('id', currentUser.id).single()
+        .then(({data}) => { if(data) animateRing(Math.min(100, data.bleu_score || 0)); }).catch(()=>{});
+    }
   } catch(e) {
     console.error('Pioneer grant error:', e);
     if (btn) { btn.textContent = 'Try again'; btn.disabled = false; }
