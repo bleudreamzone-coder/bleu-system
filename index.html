@@ -1631,8 +1631,8 @@ id="chat-dashboard"></div><div class="chat-input-row"><input autocomplete="off" 
   <h1 style="font-family:Georgia,serif;font-size:clamp(26px,4vw,40px);font-weight:300;color:#e2e8f0;margin:0 0 14px;line-height:1.2">Food is not fuel.<br><em style="color:#22c55e">It is molecular medicine.</em></h1>
   <p style="font-size:14px;color:#8b95a5;line-height:1.9;max-width:680px;margin:0 auto 20px">What you eat tells your cells what to do. Broccoli activates gene pathways that protect your mitochondria. Ultra-processed food suppresses the same pathways. This is not nutritional philosophy. It is molecular biology. BLEU Vessel connects you to verified supplements, food prescriptions, and practitioners who understand that the grocery store is a pharmacy, if you know how to read it.</p>
 </div>
-<div class="section-label">FOOD IS MOLECULAR MEDICINE</div>
-  <h1 class="hero-title">💊 <span class="accent">The Vessel</span></h1>
+<div class="section-label">PRODUCTS. SERVICES. PRESCRIPTIONS. ON DEMAND.</div>
+  <h1 class="hero-title">The <span class="teal">Vessel.</span> Everything your body needs.</h1>
 <div id="tw-vessel-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
   <div id="tw-vessel" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
 </div>
@@ -1640,12 +1640,15 @@ id="chat-dashboard"></div><div class="chat-input-row"><input autocomplete="off" 
 (function(){
   var el=document.getElementById("tw-vessel");
   if(!el)return;
-  var lines=["Broccoli activates Nrf2. Nrf2 protects your mitochondria. The grocery store is a pharmacy.",
-"Ultra-processed food suppresses the exact gene pathways that protect you from cancer.",
-"Food as medicine is not a metaphor. It is a 10 to 1 documented return on investment.",
-"Your microbiome produces 95 percent of your body's serotonin. Feed it accordingly.",
-"Phytochemicals activate SIRT1, AMPK, and Nrf2. All three longevity pathways. One meal.",
-"What you eat tonight changes what your cells do tomorrow. That is not motivation. That is biology."];
+  var lines=["The Vessel is not a supplement store. It is every product your body actually needs.",
+"Supplements. Medications. Lab tests. Food prescriptions. All in one place.",
+"Every product scored against clinical evidence before it appears here.",
+"Cost Plus Drugs. GoodRx. Amazon Pharmacy. The lowest price on every medication you take.",
+"Order a lab test today. No referral. No waiting room. Results in 48 hours.",
+"The grocery store is a pharmacy. If you know how to read it.",
+"Food as medicine has a 10 to 1 documented return on investment. USDA 2024.",
+"Your microbiome produces 95 percent of your serotonin. Feed it deliberately."];
+
   var li=0,ci=0,cur="",typing=true,pause=0;
   function tick(){
     if(pause>0){pause--;setTimeout(tick,30);return;}
@@ -1661,26 +1664,26 @@ id="chat-dashboard"></div><div class="chat-input-row"><input autocomplete="off" 
 })();
 </script>
   <p style="color:#8fa4b0;font-size:15px;line-height:1.85;max-width:740px;font-weight:300;margin:14px 0 24px">
-    The wellness industry sells you hope. The Vessel sells you <span style="color:#4ecdc4">science</span>. Every product is scored against clinical studies, FDA registrations, and practitioner protocols -- then linked to the best price across our verified partners. Real products. Real links. Real savings.
+    The Vessel is the marketplace layer of your health. Supplements scored against clinical studies. Medications priced against every source that exists. Lab tests you can order today. Food prescriptions backed by peer-reviewed evidence. Telehealth when you need a human. Recovery products. Fitness. Mental health tools. Every product linked to the best verified price. Every recommendation traceable to primary literature. The wellness industry sells hope. The Vessel sells <span style="color:#4ecdc4">proof</span>.
   </p>
 
   <!-- STATS BAR -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px">
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:16px;text-align:center">
+    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:16px;text-align:center;cursor:pointer" onclick="ask('vessel','How does the BLEU 5-layer safety engine work')">
       <div style="color:#4ecdc4;font-size:22px;font-weight:600">5-Layer</div>
       <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Safety Engine</div>
     </div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:16px;text-align:center">
+    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:16px;text-align:center;cursor:pointer" onclick="ask('vessel','Tell me about the 302K drug interactions BLEU screens')">
       <div style="color:#d4af37;font-size:22px;font-weight:600">302K+</div>
-      <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Interactions Mapped</div>
+      <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Drug Interactions</div>
     </div>
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:16px;text-align:center">
-      <div style="color:#4ecdc4;font-size:22px;font-weight:600">4</div>
-      <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Vetted Partners</div>
+    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:16px;text-align:center;cursor:pointer" onclick="ask('vessel','What partners does BLEU Vessel work with')">
+      <div style="color:#4ecdc4;font-size:22px;font-weight:600">12+</div>
+      <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Verified Partners</div>
     </div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:16px;text-align:center">
+    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:16px;text-align:center;cursor:pointer" onclick="ask('vessel','How does BLEU find me the lowest medication price')">
       <div style="color:#d4af37;font-size:22px;font-weight:600">$0</div>
-      <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">To Browse</div>
+      <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Cost to Browse</div>
     </div>
   </div>
 
@@ -1688,15 +1691,94 @@ id="chat-dashboard"></div><div class="chat-input-row"><input autocomplete="off" 
   <div style="background:rgba(25,50,68,0.3);border:1px solid rgba(78,205,196,0.06);border-radius:14px;padding:16px;margin-bottom:28px;text-align:center">
     <div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px">VERIFIED PARTNERS</div>
     <div style="display:flex;justify-content:center;gap:28px;flex-wrap:wrap;align-items:center">
-      <a href="https://www.thorne.com" target="_blank" style="color:#e8d5b0;font-size:14px;font-weight:600;text-decoration:none;opacity:0.8;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.8">THORNE</a>
-      <a href="https://fullscript.com/plans/bleuplatform" target="_blank" style="color:#4ecdc4;font-size:14px;font-weight:600;text-decoration:none;opacity:0.8;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.8">FULLSCRIPT</a>
-      <a href="https://www.charlottesweb.com" target="_blank" style="color:#7ab87a;font-size:14px;font-weight:600;text-decoration:none;opacity:0.8;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.8">CHARLOTTE'S WEB</a>
-      <a href="https://www.amazon.com?tag=bleu-live-20" target="_blank" style="color:#d4af37;font-size:14px;font-weight:600;text-decoration:none;opacity:0.8;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.8">AMAZON</a>
+      <a href="https://www.thorne.com" target="_blank" style="color:#e8d5b0;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">THORNE</a>
+      <a href="https://fullscript.com/plans/bleuplatform" target="_blank" style="color:#4ecdc4;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">FULLSCRIPT</a>
+      <a href="https://www.charlottesweb.com" target="_blank" style="color:#7ab87a;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">CHARLOTTE'S WEB</a>
+      <a href="https://www.amazon.com?tag=bleu-live-20" target="_blank" style="color:#d4af37;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">AMAZON</a>
+      <a href="https://costplusdrugs.com" target="_blank" style="color:#a78bfa;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">COST PLUS DRUGS</a>
+      <a href="https://www.goodrx.com" target="_blank" style="color:#f97316;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">GOODRX</a>
+      <a href="https://www.functionhealth.com" target="_blank" style="color:#2DD4A8;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">FUNCTION HEALTH</a>
+      <a href="https://www.classpass.com" target="_blank" style="color:#F472B6;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">CLASSPASS</a>
+      <a href="https://www.mindbodyonline.com" target="_blank" style="color:#C9A84C;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">MINDBODY</a>
     </div>
-    <div style="color:rgba(212,175,55,0.4);font-size:10px;margin-top:10px">💛 Affiliate links sustain BLEU. Trust scores are never pay-to-play. Science first -- always. -- Dr. Felicia Stoler, DCN, MS, RDN, FACSM</div>
+    <div style="color:rgba(212,175,55,0.4);font-size:10px;margin-top:10px">💛 Affiliate links sustain BLEU and keep it free for Citizens. Trust scores are never pay-to-play. Every recommendation meets one standard: would Dr. Felicia Stoler stake her credentials on it? If not, it does not appear here. -- Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl ACLM</div>
   </div>
 
-  <!-- SHOP BY NEED -->
+  
+  <!-- SERVICES ON DEMAND -->
+  <div style="margin-bottom:28px">
+    <div class="section-label" style="margin-bottom:14px">SERVICES ON DEMAND</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+
+      <div style="background:#0a1628;border:1px solid rgba(45,212,168,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','I want to order a lab test -- what does BLEU recommend for a comprehensive metabolic panel')" onmouseover="this.style.borderColor='#2DD4A8'" onmouseout="this.style.borderColor='rgba(45,212,168,.15)'">
+        <div style="font-size:10px;letter-spacing:2px;color:#2DD4A8;margin-bottom:6px">LAB TESTING</div>
+        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Order Labs Today</div>
+        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">No referral. No waiting room. Comprehensive metabolic panel, hormones, inflammation markers, telomere length. Results in 48 hours.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(45,212,168,.1);color:#2DD4A8;border:1px solid rgba(45,212,168,.2)">Function Health</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(45,212,168,.1);color:#2DD4A8;border:1px solid rgba(45,212,168,.2)">InsideTracker</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(45,212,168,.1);color:#2DD4A8;border:1px solid rgba(45,212,168,.2)">Quest</span>
+        </div>
+      </div>
+
+      <div style="background:#0a1628;border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','Find me the lowest price on my medications -- I want to compare Cost Plus Drugs, GoodRx, and Amazon Pharmacy')" onmouseover="this.style.borderColor='#C9A84C'" onmouseout="this.style.borderColor='rgba(201,168,76,.15)'">
+        <div style="font-size:10px;letter-spacing:2px;color:#C9A84C;margin-bottom:6px">MEDICATIONS</div>
+        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Lowest Price on Every Rx</div>
+        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">Cost Plus Drugs. GoodRx. Amazon Pharmacy. Mark Cuban's model versus the pharmacy benefit. Alvai finds the lowest price on every medication you take.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.2)">Cost Plus Drugs</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.2)">GoodRx</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.2)">Amazon Pharmacy</span>
+        </div>
+      </div>
+
+      <div style="background:#0a1628;border:1px solid rgba(249,115,22,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','What are the best fitness and movement options available through BLEU')" onmouseover="this.style.borderColor='#f97316'" onmouseout="this.style.borderColor='rgba(249,115,22,.15)'">
+        <div style="font-size:10px;letter-spacing:2px;color:#f97316;margin-bottom:6px">MOVEMENT</div>
+        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Fitness on Demand</div>
+        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">ClassPass. Mindbody. Yoga, pilates, strength, swimming -- every modality. Your movement prescription matched to your biological age protocol.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,.1);color:#f97316;border:1px solid rgba(249,115,22,.2)">ClassPass</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,.1);color:#f97316;border:1px solid rgba(249,115,22,.2)">Mindbody</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,.1);color:#f97316;border:1px solid rgba(249,115,22,.2)">Local Studios</span>
+        </div>
+      </div>
+
+      <div style="background:#0a1628;border:1px solid rgba(112,85,168,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','What food prescription programs does BLEU recommend for my health goals')" onmouseover="this.style.borderColor='#7055a8'" onmouseout="this.style.borderColor='rgba(112,85,168,.15)'">
+        <div style="font-size:10px;letter-spacing:2px;color:#7055a8;margin-bottom:6px">FOOD PRESCRIPTION</div>
+        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Produce as Medicine</div>
+        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">Food prescription programs with documented 10:1 ROI. USDA ERS 2024. The right food for your specific metabolic profile. Not a diet. A molecular protocol.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(112,85,168,.1);color:#7055a8;border:1px solid rgba(112,85,168,.2)">10:1 ROI</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(112,85,168,.1);color:#7055a8;border:1px solid rgba(112,85,168,.2)">USDA Documented</span>
+        </div>
+      </div>
+
+      <div style="background:#0a1628;border:1px solid rgba(244,114,182,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','What mental health tools and apps does BLEU recommend')" onmouseover="this.style.borderColor='#F472B6'" onmouseout="this.style.borderColor='rgba(244,114,182,.15)'">
+        <div style="font-size:10px;letter-spacing:2px;color:#F472B6;margin-bottom:6px">MENTAL HEALTH TOOLS</div>
+        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Apps That Actually Work</div>
+        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">Not all mental health apps are equal. BLEU rates them against evidence and routes you to the ones with documented outcomes -- not the ones with the best marketing.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(244,114,182,.1);color:#F472B6;border:1px solid rgba(244,114,182,.2)">BetterHelp</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(244,114,182,.1);color:#F472B6;border:1px solid rgba(244,114,182,.2)">Talkspace</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(244,114,182,.1);color:#F472B6;border:1px solid rgba(244,114,182,.2)">Brightside</span>
+        </div>
+      </div>
+
+      <div style="background:#0a1628;border:1px solid rgba(29,158,117,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','What recovery products and devices does BLEU recommend')" onmouseover="this.style.borderColor='#1d9e75'" onmouseout="this.style.borderColor='rgba(29,158,117,.15)'">
+        <div style="font-size:10px;letter-spacing:2px;color:#1d9e75;margin-bottom:6px">RECOVERY PRODUCTS</div>
+        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Tools for Repair</div>
+        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">Oura Ring for sleep. Cold therapy for inflammation. Red light therapy for mitochondria. Percussion therapy for recovery. Every device scored against the evidence.</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(29,158,117,.1);color:#1d9e75;border:1px solid rgba(29,158,117,.2)">Oura</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(29,158,117,.1);color:#1d9e75;border:1px solid rgba(29,158,117,.2)">Cold Therapy</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(29,158,117,.1);color:#1d9e75;border:1px solid rgba(29,158,117,.2)">Red Light</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<!-- SHOP BY NEED -->
   <div class="section-label" style="margin-bottom:12px">SHOP BY WHAT YOU NEED</div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:28px">
     <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="showVesselCategory('sleep')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:22px">😴</div><div style="color:#4ecdc4;font-weight:600;font-size:11px;margin-top:6px">Sleep</div></div>
@@ -6254,7 +6336,14 @@ function showVesselCategory(cat) {
   el.innerHTML = `<div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">${labels[cat]||cat.toUpperCase()}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">${products.map(renderVesselCard).join('')}</div>`;
 }
 
-function buildStack() {
+function saveJourneyPath(key, label) {
+  if (window.currentUser && window.upsertProfile) {
+    window.upsertProfile({journey_path: key, journey_label: label});
+  }
+  ask('vessel', 'Build me a protocol for: ' + (label || key));
+}
+
+function buildStack()  {
   const goal = document.getElementById('stack-goal')?.value?.trim() || '';
   const meds = document.getElementById('stack-meds')?.value?.trim() || 'none';
   if (!goal) { alert('Enter your goal first'); return; }
