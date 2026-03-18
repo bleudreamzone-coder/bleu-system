@@ -8107,33 +8107,15 @@ async function send(tab){
 
   const passport=await getUserContext().catch(()=>null)
   const depthInfo=passport?getDepthLevel(passport.bleu_score||0):null;
-  // ORCHESTRATION BRAIN -- classifies this moment before Alvai fires
   const _userState = deriveUserState(msg, tab);
   const _orchestration = {
     lead_mode: _userState.guidance_mode,
     commercial_gate: _userState.commercial_readiness,
-    trust_stage: _userState.trust_stage,
-    emotional_load: _userState.emotional_load,
-    action_readiness: _userState.action_readiness,
-    budget_pressure: _userState.budget_pressure,
-    // Instructs Alvai on moment type -- shapes response class
     moment_type: _userState.emotional_load === 'high' ? 'stabilize_first' :
       _userState.guidance_mode === 'care' ? 'care_only' :
       _userState.action_readiness === 'high' ? 'activate' : 'guide'
   };
-  enrichedContext=passport?{
-    ...passport,
-    depth_level:depthInfo?.name,
-    depth_icon:depthInfo?.icon,
-    is_traveler:true,
-    user_state: JSON.stringify(_userState),
-    orchestration: JSON.stringify(_orchestration)
-  }:{
-    is_traveler:false,
-    tourist_session:true,
-    user_state: JSON.stringify(_userState),
-    orchestration: JSON.stringify(_orchestration)
-  };
+  enrichedContext=passport?{...passport,depth_level:depthInfo?.name,depth_icon:depthInfo?.icon,is_traveler:true,user_state:JSON.stringify(_userState),orchestration:JSON.stringify(_orchestration)}:{is_traveler:false,tourist_session:true,user_state:JSON.stringify(_userState),orchestration:JSON.stringify(_orchestration)};
   const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-20),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null}
   if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
   if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
@@ -8148,26 +8130,14 @@ async function send(tab){
       // Rufus 360: detect full journey first, fallback to single products
       const journeyKey=detectJourney(msg,full);
       if(journeyKey){renderJourney(aDiv,journeyKey);}
-      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress && !['therapy','recovery'].includes(tab)){
-        const _state=deriveUserState(msg,tab);
-        if(_state.commercial_readiness!=='none'){
-          const rufusIds=detectRufusProducts(msg,full);
-          if(rufusIds.length){if(rufusIds._keywords)aDiv._triggerKeywords=rufusIds._keywords;renderRufusCards(aDiv,rufusIds);}
-        }
-      }}}}
+      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
     }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);detectAndWireProtocol(reply,aDiv);
       const journeyKey2=detectJourney(msg,reply);
       if(journeyKey2){renderJourney(aDiv,journeyKey2);}
-      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2 && !['therapy','recovery'].includes(tab)){
-          const _state2=deriveUserState(msg,tab);
-          if(_state2.commercial_readiness!=='none'){
-            const rufusIds=detectRufusProducts(msg,reply);
-            if(rufusIds.length){if(rufusIds._keywords)aDiv._triggerKeywords=rufusIds._keywords;renderRufusCards(aDiv,rufusIds);}
-          }
-        }}}}
+      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2){const rufusIds=detectRufusProducts(msg,reply);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
       chatHistories[tab].push({role:'assistant',content:reply});
       // Add session feedback to Alvai response
-      if(!['home','therapy','recovery'].includes(tab)){
+      if(!['home'].includes(tab)){
         const fbDiv=document.createElement('div');
         fbDiv.style.cssText='display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.04)';
         fbDiv.innerHTML='<span style="font-size:9px;color:#3d4458;letter-spacing:0.15em">HELPFUL?</span><button onclick="submitAlvaiFeedback(1,\''+tab+'\');this.parentElement.innerHTML=\'<span style=\"font-size:10px;color:#22c55e\">✓ Good</span>\'" style="background:none;border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:2px 7px;font-size:11px;cursor:pointer">👍</button><button onclick="submitAlvaiFeedback(-1,\''+tab+'\');this.parentElement.innerHTML=\'<span style=\"font-size:10px;color:#8fa4b0\">✓ Noted</span>\'" style="background:none;border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:2px 7px;font-size:11px;cursor:pointer">👎</button>';
