@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="description" content="Free AI wellness intelligence. 22 therapeutic modes. 48,000 verified practitioners.">
+<meta name="description" content="BLEU is the trusted intelligence layer that helps people navigate health, place, and opportunity. Verified practitioners. AI guidance. Real outcomes.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://bleu.live">
-<meta property="og:title" content="BLEU -- AI Wellness Intelligence That Actually Listens">
+<meta property="og:title" content="BLEU — Trusted Intelligence for Health, Place &amp; Opportunity">
 <link rel="canonical" href="https://bleu.live">
 <meta name="theme-color" content="#1A6B5C">
 <meta charset="UTF-8">
@@ -5553,6 +5553,56 @@ async function showProfile(){
     }
   }, 800);document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});setTimeout(checkPendingProtocol,400);setTimeout(renderAffStrip,300);updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
 async function loadSessions(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('id,title,mode,created_at').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(10);const el=document.getElementById('session-list');if(!data||!data.length){el.innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Talk to Alvai to see history here.</div>';return}el.innerHTML=data.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center"></div><div><div style="color:#e8d5b0;font-size:0.85rem">'+(c.title||'Session')+'</div><div style="color:#8fa4b0;font-size:0.7rem">'+new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' . '+(c.mode||'general')+'</div></div></div>').join('')}
+// -- FEEDBACK LOOP -------------------------------------------------------
+function submitFeedback(productId, score, btn) {
+  // Visual feedback
+  const container = document.getElementById('rfb-' + productId);
+  if (container) {
+    container.innerHTML = score === 1
+      ? '<span style="font-size:11px;color:#22c55e;letter-spacing:0.1em">✓ NOTED — Alvai learns from this</span>'
+      : '<span style="font-size:11px;color:#8fa4b0;letter-spacing:0.1em">✓ NOTED — We will improve</span>';
+  }
+  // Log to localStorage
+  const feedback = JSON.parse(localStorage.getItem('bleu_feedback') || '[]');
+  feedback.push({ productId, score, tab: window._currentTab || 'unknown', ts: new Date().toISOString() });
+  localStorage.setItem('bleu_feedback', JSON.stringify(feedback.slice(-200)));
+  // Log to Supabase if logged in
+  if (sbClient && currentUser) {
+    sbClient.from('product_feedback').insert({
+      user_id: currentUser.id,
+      product_id: productId,
+      score,
+      tab: window._currentTab || 'unknown',
+      created_at: new Date().toISOString()
+    }).then(() => {}).catch(() => {});
+  }
+  // Update recommendation weights locally
+  const weights = JSON.parse(localStorage.getItem('bleu_rec_weights') || '{}');
+  weights[productId] = (weights[productId] || 0) + score;
+  localStorage.setItem('bleu_rec_weights', JSON.stringify(weights));
+}
+
+function submitAlvaiFeedback(score, tab) {
+  const feedback = JSON.parse(localStorage.getItem('bleu_alvai_feedback') || '[]');
+  feedback.push({ score, tab, ts: new Date().toISOString() });
+  localStorage.setItem('bleu_alvai_feedback', JSON.stringify(feedback.slice(-200)));
+  if (sbClient && currentUser) {
+    sbClient.from('session_feedback').insert({
+      user_id: currentUser.id, score, tab,
+      created_at: new Date().toISOString()
+    }).then(() => {}).catch(() => {});
+  }
+}
+
+function logRufusAction(productId, action) {
+  const actions = JSON.parse(localStorage.getItem('bleu_actions') || '[]');
+  actions.push({ productId, action, ts: new Date().toISOString() });
+  localStorage.setItem('bleu_actions', JSON.stringify(actions.slice(-500)));
+  if (sbClient && currentUser) {
+    recordAffiliateTransaction(productId, action, 0);
+  }
+}
+
 function autoAddRecommendedProducts(responseText) {
   if (!responseText || !RUFUS_PRODUCTS) return;
   const text = responseText.toLowerCase().replace(/<[^>]+>/g, ' ');
@@ -5628,7 +5678,9 @@ let _passportCache=null,_passportCacheTime=0
 async function getUserContext(){if(!sbClient||!currentUser)return null;if(_passportCache&&Date.now()-_passportCacheTime<60000)return _passportCache;try{const{data:prof}=await sbClient.from('profiles').select('wellness_goals,bleu_score,streak_days,conversations_count').eq('id',currentUser.id).single();const{data:convos}=await sbClient.from('conversations').select('mode,title,messages').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(5);const name=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';const goals=(prof?.wellness_goals||[]).join(', ')||'not yet set';const recentSessions=(convos||[]).map(c=>`${c.mode||'general'}: ${(c.title||'session').slice(0,40)}`).join(' | ')||'first session';const allMsgs=(convos||[]).flatMap(c=>(c.messages||[]).slice(-10)).map(m=>m.content||'');const medRegex=/\b(sertraline|zoloft|prozac|lexapro|effexor|wellbutrin|xanax|klonopin|adderall|ritalin|suboxone|methadone|naltrexone|lithium|seroquel|abilify|ssri|antidepressant|medication|prescription)\b/gi;const meds=[...new Set((allMsgs.join(' ').match(medRegex)||[]).map(m=>m.toLowerCase()))];const medNote=meds.length?`Medications mentioned in prior sessions: ${meds.join(', ')}. Flag CYP450 interactions before recommending supplements or cannabis.`:'';const healthData = JSON.parse(sessionStorage.getItem('bleu_health_data')||'{}');
 const healthNote = Object.keys(healthData).length ? 'Imported health data: '+Object.entries(healthData).map(([k,v])=>`${k}: ${v.insights.map(i=>i.label+': '+i.val).join(', ')}`).join(' | ') : '';
 const cartNote = BLEU_CART.length ? 'Current wellness stack ('+BLEU_CART.length+' items): '+BLEU_CART.map(i=>i.n).join(', ') : '';
-const ctx=`BLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
+    const ipRaw = JSON.parse(localStorage.getItem('bleu_identity_protocol') || 'null');
+    const ipNote = ipRaw ? `Identity: ${ipRaw.target_word || ''} | Struggle: ${ipRaw.named_struggle || ''} | Condition: ${ipRaw.identity_condition || ''} | Model: ${ipRaw.prediction_model_type || ''}` : '';
+const ctx=`BLEU OPERATING DOCTRINE: BLEU is the trusted intelligence layer that helps people navigate health, place, and opportunity. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul — human, grounded, honest.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
 const _TAB_SCORE_WEIGHT={therapy:5,recovery:5,ecsiq:4,protocols:4,missions:4,passport:3,vessel:3,finance:3,directory:3,learn:2,community:2,dashboard:2,alvai:2,home:1,map:1}
 function getDepthLevel(score){
   if(score>=80)return{name:'Illuminating',icon:'*',color:'#f0c040'};
@@ -6862,6 +6914,7 @@ function calcSleepScore() {
 }
 
 function go(tab){
+  window._currentTab = tab;
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'))
   const panel=document.getElementById('p-'+tab)
@@ -7640,8 +7693,13 @@ function renderRufusCards(containerDiv, productIds) {
           <span class="rufus-card-rating">${p.r}</span>
         </div>
         <div class="rufus-card-actions">
-          <a href="${p.url}" target="_blank" class="rufus-btn-primary">Buy Now</a>
+          <a href="${p.url}" target="_blank" class="rufus-btn-primary" onclick="logRufusAction('${id}','buy_now')">Buy Now</a>
           <button onclick="addToCart('${id}');this.textContent='✓ Added';this.style.background='rgba(34,197,94,0.2)';this.style.borderColor='#22c55e';this.style.color='#22c55e'" class="rufus-btn-secondary" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:#c9a84c;border-radius:8px;padding:6px 12px;font-size:10px;cursor:pointer;font-weight:600;font-family:inherit">+ Add to Stack</button>
+        </div>
+        <div class="rufus-feedback" id="rfb-${id}" style="display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04)">
+          <span style="font-size:10px;color:#4a5068;letter-spacing:0.1em">HELPFUL?</span>
+          <button onclick="submitFeedback('${id}',1,this)" style="background:none;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:3px 8px;font-size:12px;cursor:pointer;transition:all 0.2s" title="Yes">👍</button>
+          <button onclick="submitFeedback('${id}',-1,this)" style="background:none;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:3px 8px;font-size:12px;cursor:pointer;transition:all 0.2s" title="Not for me">👎</button>
         </div>
       </div>`;
     wrapper.appendChild(card);
@@ -7704,7 +7762,15 @@ async function send(tab){
       const journeyKey2=detectJourney(msg,reply);
       if(journeyKey2){renderJourney(aDiv,journeyKey2);}
       else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2){const rufusIds=detectRufusProducts(msg,reply);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
-      chatHistories[tab].push({role:'assistant',content:reply})}
+      chatHistories[tab].push({role:'assistant',content:reply});
+      // Add session feedback to Alvai response
+      if(!['home'].includes(tab)){
+        const fbDiv=document.createElement('div');
+        fbDiv.style.cssText='display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.04)';
+        fbDiv.innerHTML='<span style="font-size:9px;color:#3d4458;letter-spacing:0.15em">HELPFUL?</span><button onclick="submitAlvaiFeedback(1,\''+tab+'\');this.parentElement.innerHTML=\'<span style=\"font-size:10px;color:#22c55e\">✓ Good</span>\'" style="background:none;border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:2px 7px;font-size:11px;cursor:pointer">👍</button><button onclick="submitAlvaiFeedback(-1,\''+tab+'\');this.parentElement.innerHTML=\'<span style=\"font-size:10px;color:#8fa4b0\">✓ Noted</span>\'" style="background:none;border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:2px 7px;font-size:11px;cursor:pointer">👎</button>';
+        aDiv.appendChild(fbDiv);
+      }
+      }
     if(currentUser){saveConvo(tab,chatHistories[tab]).catch(()=>{});updateBleScore(tab).catch(()=>{})}
   }catch(e){aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again in a moment.</em>'}
   box.scrollTop=box.scrollHeight
