@@ -6404,7 +6404,7 @@ function renderCareTwin() {
   // Only show after enough sessions to have real data
   const actions = JSON.parse(localStorage.getItem('bleu_actions') || '[]');
   const sessions = actions.length;
-  if (sessions < 3) return; // Not enough data yet — don't show empty shells
+  if (sessions < 3) return; // Not enough data yet -- don't show empty shells
   const ipData = getIdentityProtocol ? getIdentityProtocol() : null;
   const feedback = JSON.parse(localStorage.getItem('bleu_alvai_feedback') || '[]');
   const weights = JSON.parse(localStorage.getItem('bleu_rec_weights') || '{}');
@@ -6437,7 +6437,7 @@ function renderCareTwin() {
   if (struggle) {
     layers.push({label:'Working on', val: struggle});
   }
-  // Layer 4: Response style (from weights — what they act on)
+  // Layer 4: Response style (from weights -- what they act on)
   if (topProducts.length > 0) {
     layers.push({label:'Responding to', val: topProducts.join(', ') + (suppressedProducts > 0 ? ' · ' + suppressedProducts + ' type' + (suppressedProducts > 1 ? 's' : '') + ' filtered out' : '')});
   }
@@ -6511,7 +6511,7 @@ async function fireReturnContinuity() {
       note.textContent = continuityMsg;
       passportChat.appendChild(note);
       // VISIBLE EVOLUTION: arc signal after continuity note
-      // Uses existing feedback + identity data — no new backend
+      // Uses existing feedback + identity data -- no new backend
       setTimeout(function() {
         try {
           const feedback = JSON.parse(localStorage.getItem('bleu_alvai_feedback') || '[]');
@@ -6521,7 +6521,7 @@ async function fireReturnContinuity() {
           let evolutionMsg = '';
           if (recentTotal >= 4 && recentPositive >= 3) {
             const arcWord = ipData && ipData.target_word ? ipData.target_word : 'your goal';
-            evolutionMsg = 'Your pattern is shifting toward ' + arcWord + ' — ' + recentPositive + ' of your last ' + recentTotal + ' sessions landed well.';
+            evolutionMsg = 'Your pattern is shifting toward ' + arcWord + ' -- ' + recentPositive + ' of your last ' + recentTotal + ' sessions landed well.';
           } else if (streak >= 3) {
             evolutionMsg = streak + ' days in. The system knows you better with each one.';
           } else if (ipData && ipData.named_struggle) {
