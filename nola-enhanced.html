@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Orleans — BLEU.live</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,300;1,500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#04060a;--gold:#c9a84c;--teal:#4ecdc4;--green:#22c55e;
+  --text:#f0e8d4;--muted:#6b7a96;--border:#141d2e;
+}
+html{background:var(--bg);color:var(--text);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;opacity:.02;pointer-events:none;z-index:1000;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.ambient{position:fixed;top:0;left:0;right:0;height:60vh;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 30% 0%,rgba(245,158,11,.05),transparent 60%),
+             radial-gradient(ellipse at 70% 0%,rgba(201,168,76,.07),transparent 50%);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 36px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(to bottom,rgba(4,6,10,.95),transparent);backdrop-filter:blur(12px);}
+.nav-city{font-size:9px;letter-spacing:.35em;color:var(--muted);text-transform:uppercase;}
+.nav-city span{color:var(--gold);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.12em;}
+.nav-logo span{color:var(--gold);}
+.nav-back{font-size:9px;letter-spacing:.15em;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:100px 36px 60px;text-align:center;}
+.hero-city{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,2vw,18px);
+  color:rgba(245,158,11,.5);letter-spacing:.08em;margin-bottom:16px;animation:fadeUp .7s ease both;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,9vw,110px);
+  letter-spacing:.05em;line-height:.88;animation:fadeUp .7s .08s ease both;}
+.hero-title span{color:var(--gold);}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2.2vw,22px);
+  font-style:italic;color:rgba(240,232,212,.4);margin-top:16px;line-height:1.55;
+  max-width:500px;animation:fadeUp .7s .16s ease both;}
+.one-action{margin-top:44px;animation:fadeUp .7s .24s ease both;}
+.score-btn{display:inline-flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.06));
+  border:1px solid rgba(201,168,76,.4);padding:18px 36px;border-radius:3px;
+  cursor:pointer;text-decoration:none;transition:all .25s;position:relative;overflow:hidden;}
+.score-btn:hover{border-color:var(--gold);transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(201,168,76,.1);}
+.score-btn-icon{font-size:22px;line-height:1;}
+.score-btn-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.15em;color:var(--gold);line-height:1;}
+.score-btn-sub{font-size:9px;letter-spacing:.15em;color:rgba(201,168,76,.5);text-transform:uppercase;margin-top:2px;}
+.or-text{font-size:9px;letter-spacing:.3em;color:rgba(255,255,255,.12);text-transform:uppercase;margin:18px 0;}
+.secondary-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.sec-btn{font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  padding:10px 18px;border:1px solid var(--border);color:var(--muted);
+  cursor:pointer;text-decoration:none;transition:all .2s;border-radius:2px;}
+.sec-btn:hover{border-color:rgba(255,255,255,.1);color:var(--text);}
+.score-explainer{margin-top:48px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;animation:fadeUp .7s .35s ease both;}
+.se-item{background:rgba(255,255,255,.02);border:1px solid var(--border);padding:14px 18px;text-align:center;min-width:120px;}
+.se-val{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--teal);line-height:1;}
+.se-label{font-size:8px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-top:3px;}
+.score-demo{max-width:560px;margin:0 auto 80px;padding:0 36px;}
+.score-card{background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.15);
+  padding:32px;border-top:2px solid rgba(201,168,76,.4);}
+.sc-label{font-size:8px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:20px;opacity:.6;}
+.sc-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--text);margin-bottom:20px;}
+.sc-questions{display:flex;flex-direction:column;gap:14px;}
+.sc-q{display:flex;gap:12px;align-items:flex-start;}
+.sc-q-num{font-size:9px;color:var(--gold);flex-shrink:0;font-family:'DM Mono',monospace;padding-top:2px;opacity:.5;}
+.sc-q-text{font-size:10px;color:var(--muted);line-height:1.6;margin-bottom:8px;}
+.sc-q-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.sc-chip{font-size:9px;padding:5px 10px;border:1px solid var(--border);color:var(--muted);
+  cursor:pointer;border-radius:2px;transition:all .15s;letter-spacing:.06em;}
+.sc-chip.active{border-color:rgba(201,168,76,.4);color:var(--gold);background:rgba(201,168,76,.06);}
+.sc-chip:hover{border-color:rgba(255,255,255,.1);color:var(--text);}
+.sc-start{margin-top:24px;width:100%;
+  background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);
+  color:var(--gold);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  padding:14px;cursor:pointer;transition:all .2s;font-family:'DM Mono',monospace;}
+.sc-start:hover{background:rgba(201,168,76,.18);border-color:var(--gold);}
+.city-strip{padding:60px 36px;max-width:860px;margin:0 auto;text-align:center;}
+.cs-label{font-size:9px;letter-spacing:.4em;color:rgba(245,158,11,.4);text-transform:uppercase;margin-bottom:16px;}
+.cs-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,44px);
+  font-weight:300;color:var(--text);line-height:1.4;margin-bottom:32px;}
+.cs-title em{font-style:italic;color:var(--gold);}
+.neighborhoods{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;}
+.hood{padding:18px 14px;border:1px solid var(--border);background:rgba(255,255,255,.015);
+  cursor:pointer;transition:all .2s;text-align:left;}
+.hood:hover{border-color:rgba(201,168,76,.2);background:rgba(201,168,76,.03);}
+.hood-name{font-size:10px;color:var(--text);letter-spacing:.06em;margin-bottom:4px;}
+.hood-score{font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1;}
+.hood-score.high{color:var(--green);}.hood-score.med{color:var(--gold);}
+.hood-label{font-size:8px;letter-spacing:.15em;color:var(--muted);margin-top:2px;}
+.what-happens{max-width:860px;margin:0 auto;padding:0 36px 80px;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;}
+.wh-item{padding:24px;border:1px solid var(--border);background:rgba(255,255,255,.01);}
+.wh-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:rgba(201,168,76,.12);line-height:1;margin-bottom:8px;}
+.wh-title{font-size:11px;color:var(--text);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.wh-desc{font-size:10px;color:var(--muted);line-height:1.75;letter-spacing:.04em;}
+.passport-cta{border-top:1px solid var(--border);padding:60px 36px;text-align:center;max-width:700px;margin:0 auto;}
+.pct-label{font-size:9px;letter-spacing:.4em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;}
+.pct-title{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,36px);
+  font-weight:300;color:var(--text);line-height:1.4;margin-bottom:8px;}
+.pct-title em{color:var(--gold);font-style:italic;}
+.pct-sub{font-size:10px;color:var(--muted);margin-bottom:24px;letter-spacing:.06em;line-height:1.7;}
+.pct-btn{display:inline-block;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.35);
+  color:var(--gold);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  padding:14px 32px;cursor:pointer;text-decoration:none;transition:all .2s;}
+.pct-btn:hover{background:rgba(201,168,76,.18);border-color:var(--gold);}
+footer{border-top:1px solid var(--border);padding:28px 36px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.f-left{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.12em;color:var(--gold);}
+.f-mid{font-size:8px;letter-spacing:.2em;color:rgba(255,255,255,.08);}
+.f-right{font-size:9px;color:var(--muted);text-decoration:none;letter-spacing:.12em;transition:color .2s;}
+.f-right:hover{color:var(--text);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .hero{padding:80px 20px 48px;}
+  .neighborhoods{grid-template-columns:1fr 1fr;}
+  .what-happens{grid-template-columns:1fr;padding:0 20px 60px;}
+  .city-strip{padding:60px 20px;}
+  .score-demo{padding:0 20px;}
+  .passport-cta{padding:48px 20px;}
+  footer{padding:20px;}
+}
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<nav>
+  <div class="nav-city">New Orleans <span>×</span> BLEU</div>
+  <div class="nav-logo">BLEU<span>.</span>live</div>
+  <a href="https://bleu.live" class="nav-back">← All Cities</a>
+</nav>
+<section class="hero">
+  <div class="hero-city">New Orleans, Louisiana — Personalized to You</div>
+  <h1 class="hero-title">Your City.<br><span>Your Score.</span></h1>
+  <p class="hero-sub">Three questions. Your personalized New Orleans — health, food, experience, and care — mapped to who you actually are right now.</p>
+  <div class="one-action">
+    <a href="#score" class="score-btn">
+      <div class="score-btn-icon">◎</div>
+      <div>
+        <div class="score-btn-label">Start Your .LIVE Score</div>
+        <div class="score-btn-sub">Free · 90 seconds · Personalized map</div>
+      </div>
+    </a>
+    <div style="margin-top:10px;font-size:9px;letter-spacing:.15em;color:rgba(201,168,76,.35);text-align:center">
+      or text <strong style="color:rgba(201,168,76,.6)">NOLA</strong> to <strong style="color:rgba(201,168,76,.6)">(504) 500-BLEU</strong> — Alvai responds in 60 seconds. Free. No app required.
+    </div>
+    <div class="or-text">or jump directly to</div>
+    <div class="secondary-actions">
+      <a href="https://bleu.live#directory" class="sec-btn">Find a Practitioner</a>
+      <a href="https://bleu.live#map" class="sec-btn">Explore the City</a>
+      <a href="https://bleu.live#passport" class="sec-btn">Open Passport</a>
+    </div>
+  </div>
+  <div class="score-explainer">
+    <div class="se-item"><div class="se-val">855K+</div><div class="se-label">Practitioners</div></div>
+    <div class="se-item"><div class="se-val">12</div><div class="se-label">Neighborhoods</div></div>
+    <div class="se-item"><div class="se-val">Free</div><div class="se-label">Always</div></div>
+  </div>
+</section>
+<section id="score" class="score-demo">
+  <div class="score-card">
+    <div class="sc-label">Your .LIVE Score — 90 seconds</div>
+    <div class="sc-title">Tell us where you are. We'll show you where to go.</div>
+    <div class="sc-questions">
+      <div class="sc-q">
+        <div class="sc-q-num">01</div>
+        <div>
+          <div class="sc-q-text">How are you feeling right now?</div>
+          <div class="sc-q-chips">
+            <span class="sc-chip" onclick="pick(this)">Depleted — reset me</span>
+            <span class="sc-chip" onclick="pick(this)">Good — keep flowing</span>
+            <span class="sc-chip" onclick="pick(this)">Ready — push further</span>
+            <span class="sc-chip" onclick="pick(this)">Scattered — ground me</span>
+          </div>
+          <div id="archetype-preview" style="font-size:10px;color:rgba(201,168,76,.45);font-family:'Cormorant Garamond',serif;font-style:italic;margin-top:8px;opacity:0;transition:opacity .4s;letter-spacing:.05em"></div>
+        </div>
+      </div>
+      <div class="sc-q">
+        <div class="sc-q-num">02</div>
+        <div>
+          <div class="sc-q-text">What matters most today?</div>
+          <div class="sc-q-chips">
+            <span class="sc-chip" onclick="pick(this)">My health</span>
+            <span class="sc-chip" onclick="pick(this)">Great food</span>
+            <span class="sc-chip" onclick="pick(this)">Real culture</span>
+            <span class="sc-chip" onclick="pick(this)">Connection</span>
+            <span class="sc-chip" onclick="pick(this)">Opportunity</span>
+          </div>
+        </div>
+      </div>
+      <div class="sc-q">
+        <div class="sc-q-num">03</div>
+        <div>
+          <div class="sc-q-text">Your comfort range today?</div>
+          <div class="sc-q-chips">
+            <span class="sc-chip" onclick="pick(this)">$ Keep it free</span>
+            <span class="sc-chip" onclick="pick(this)">$$ Mid range</span>
+            <span class="sc-chip" onclick="pick(this)">$$$ Go for it</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="sc-start" onclick="startScore()">Build My Map →</button>
+  </div>
+</section>
+<section class="city-strip">
+  <div class="cs-label">New Orleans Intelligence</div>
+  <h2 class="cs-title">Not a listing page.<br><em>Your version of the city.</em></h2>
+  <div class="neighborhoods">
+    <div class="hood"><div class="hood-name">French Quarter</div><div style="font-size:8px;color:rgba(255,255,255,.2);margin-top:2px;letter-spacing:.04em;line-height:1.4">The oldest neighborhood in America. Where jazz was heard first.</div><div class="hood-score high">87</div><div class="hood-label">Wellness Score</div></div>
+    <div class="hood"><div class="hood-name">Garden District</div><div style="font-size:8px;color:rgba(255,255,255,.2);margin-top:2px;letter-spacing:.04em;line-height:1.4">Antebellum grandeur. Highest practitioner density in the city.</div><div class="hood-score high">91</div><div class="hood-label">Wellness Score</div></div>
+    <div class="hood"><div class="hood-name">Mid-City</div><div style="font-size:8px;color:rgba(255,255,255,.2);margin-top:2px;letter-spacing:.04em;line-height:1.4">The center of everything. Most accessible primary care in New Orleans.</div><div class="hood-score med">74</div><div class="hood-label">Wellness Score</div></div>
+    <div class="hood"><div class="hood-name">Uptown</div><div style="font-size:8px;color:rgba(255,255,255,.2);margin-top:2px;letter-spacing:.04em;line-height:1.4">Audubon Park. Movement infrastructure. Deep community roots.</div><div class="hood-score high">83</div><div class="hood-label">Wellness Score</div></div>
+    <div class="hood"><div class="hood-name">Bywater</div><div style="font-size:8px;color:rgba(255,255,255,.2);margin-top:2px;letter-spacing:.04em;line-height:1.4">Creative edge. River adjacent. Rising. Artists built this.</div><div class="hood-score med">71</div><div class="hood-label">Wellness Score</div></div>
+    <div class="hood"><div class="hood-name">Tremé</div><div style="font-size:8px;color:rgba(255,255,255,.2);margin-top:2px;letter-spacing:.04em;line-height:1.4">Birthplace of jazz. Oldest Black neighborhood in America.</div><div class="hood-score med">78</div><div class="hood-label">Wellness Score</div></div>
+    <div class="hood"><div class="hood-name">Marigny</div><div style="font-size:8px;color:rgba(255,255,255,.2);margin-top:2px;letter-spacing:.04em;line-height:1.4">Frenchmen Street lives here. Artist quarter. Always alive.</div><div class="hood-score high">82</div><div class="hood-label">Wellness Score</div></div>
+    <div class="hood"><div class="hood-name">Lakeview</div><div style="font-size:8px;color:rgba(255,255,255,.2);margin-top:2px;letter-spacing:.04em;line-height:1.4">Rebuilt after Katrina. Resilient by definition. Strong community networks.</div><div class="hood-score high">86</div><div class="hood-label">Wellness Score</div></div>
+  </div>
+</section>
+<section class="what-happens">
+  <div class="wh-item"><div class="wh-num">01</div><div class="wh-title">Answer 3 questions</div><div class="wh-desc">Energy state, intention, budget. 90 seconds. No account required. BLEU maps to your moment.</div></div>
+  <div class="wh-item"><div class="wh-num">02</div><div class="wh-title">Your city appears</div><div class="wh-desc">Practitioners, experiences, routes — personalized to your type. The Resetter. The Flow State. The Alive One. The Builder.</div></div>
+  <div class="wh-item"><div class="wh-num">03</div><div class="wh-title">Save your Passport</div><div class="wh-desc">Save your protocol, your map, your score. This city remembers you when you return.</div></div>
+</section>
+<section class="passport-cta">
+  <div class="pct-label">The Passport</div>
+  <h2 class="pct-title">Everything disappears<br>when you close this tab.<br><em>Save your Passport.</em></h2>
+  <p class="pct-sub">Free forever for Pioneer Citizens. Your score, your map, your practitioners — remembered and waiting.</p>
+  <a href="https://bleu.live#passport" class="pct-btn">Save My Passport — Free →</a>
+</section>
+<div style="border-top:1px solid rgba(255,255,255,.05);padding:24px 36px;text-align:center;max-width:860px;margin:0 auto">
+  <div style="font-size:9px;color:rgba(255,255,255,.18);letter-spacing:.1em;line-height:2">
+    Health intelligence clinically audited by <strong style="color:rgba(255,255,255,.3)">Dr. Felicia Stoler, DCN, MS, RDN, FACSM</strong> — doctoral-level registered dietitian nutritionist, Fellow of the American College of Sports Medicine.
+  </div>
+  <div style="font-size:9px;color:rgba(201,168,76,.2);letter-spacing:.1em;margin-top:6px">
+    127 years of healing intelligence &nbsp;·&nbsp; Jazz Bird 501(c)(3) &nbsp;·&nbsp; We serve the person, not the platform.
+  </div>
+</div>
+<footer>
+  <div class="f-left">NOLA × BLEU.live</div>
+  <div class="f-mid">Guide without exploiting · Remember without trapping · Recommend without manipulating</div>
+  <a href="https://bleu.live" class="f-right">Full Platform →</a>
+</footer>
+<script>
+const ENERGY_PREVIEW = {
+  'depleted': 'The Resetter', 'reset': 'The Resetter',
+  'good': 'The Flow State', 'flow': 'The Flow State',
+  'ready': 'The Alive One', 'alive': 'The Alive One',
+  'scattered': 'The Builder', 'builder': 'The Builder'
+};
+function pick(el){
+  const chips=el.closest('.sc-q-chips').querySelectorAll('.sc-chip');
+  chips.forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  // Show archetype preview on energy chip selection (first question)
+  const isQ1 = el.closest('.sc-q')===document.querySelectorAll('.sc-q')[0];
+  const preview = document.getElementById('archetype-preview');
+  if(isQ1 && preview){
+    const txt = el.textContent.toLowerCase();
+    const match = Object.keys(ENERGY_PREVIEW).find(k=>txt.includes(k));
+    if(match){
+      preview.textContent='You might be: '+ENERGY_PREVIEW[match]+' →';
+      preview.style.opacity='1';
+    }
+  }
+}
+// ARCHETYPE LOOKUP TABLE — 60 chip combinations
+// Maps [energy, intention, budget] to archetype + neighborhoods + practitioners
+const ARCHETYPE_MAP = {
+  'depleted|health|free':    {type:'The Resetter', hood1:'Mid-City', hood2:'Gentilly', p1:'Community health worker', p2:'Integrative MD', note:'You need to stop before you can start. Both neighborhoods have free clinics and calm green space.'},
+  'depleted|health|mid':     {type:'The Resetter', hood1:'Tremé', hood2:'Mid-City', p1:'Community health worker', p2:'Naturopath', note:'Tremé has deep community health roots. Mid-City has the most accessible primary care in the city.'},
+  'depleted|health|high':    {type:'The Resetter', hood1:'Garden District', hood2:'Uptown', p1:'Integrative MD', p2:'Functional medicine', note:'These neighborhoods have the highest practitioner density. You can access specialist care quickly.'},
+  'depleted|food|free':      {type:'The Resetter', hood1:'Gentilly', hood2:'Mid-City', p1:'Community nutritionist', p2:'SNAP outreach worker', note:'Both have SNAP-accessible fresh food and community kitchens. Rest and nourishment together.'},
+  'depleted|food|mid':       {type:'The Resetter', hood1:'Tremé', hood2:'Marigny', p1:'Registered dietitian', p2:'Community health worker', note:'The cultural food traditions here are medicine. Tremé farmers market operates year-round.'},
+  'depleted|food|high':      {type:'The Resetter', hood1:'Garden District', hood2:'Uptown', p1:'Registered dietitian', p2:'Functional nutritionist', note:'Access to the city's best integrative nutrition support, close to Whole Foods and specialty markets.'},
+  'depleted|culture|free':   {type:'The Resetter', hood1:'Tremé', hood2:'Marigny', p1:'Community counselor', p2:'Arts therapist', note:'Tremé is where New Orleans music was born. Being here is itself medicine. Both neighborhoods have free events tonight.'},
+  'depleted|culture|mid':    {type:'The Resetter', hood1:'Marigny', hood2:'Bywater', p1:'Arts therapist', p2:'Community counselor', note:'The music on Frenchmen Street is free to listen to. The culture here will hold you without asking anything back.'},
+  'depleted|culture|high':   {type:'The Resetter', hood1:'Garden District', hood2:'Marigny', p1:'Wellness retreat coordinator', p2:'Arts therapist', note:'You can move between beauty and music. Both neighborhoods offer immediate relief.'},
+  'depleted|connection|free':{type:'The Resetter', hood1:'Tremé', hood2:'Gentilly', p1:'Community health worker', p2:'Peer support specialist', note:'These neighborhoods have the strongest mutual aid networks in the city. You will be seen here.'},
+  'depleted|connection|mid': {type:'The Resetter', hood1:'Tremé', hood2:'Mid-City', p1:'Peer support specialist', p2:'Community counselor', note:'Mid-City has active community organizations. Tremé has been building community for 250 years.'},
+  'depleted|connection|high':{type:'The Resetter', hood1:'Uptown', hood2:'Tremé', p1:'Therapist', p2:'Community counselor', note:'Access to licensed therapists plus the warmth of established community. Both offer real connection.'},
+  'depleted|opportunity|free':{type:'The Resetter', hood1:'Mid-City', hood2:'Gentilly', p1:'Social worker', p2:'Benefits navigator', note:'Rest is the first opportunity. Both neighborhoods have free resources and workforce development programs.'},
+  'depleted|opportunity|mid':{type:'The Resetter', hood1:'Mid-City', hood2:'Lakeview', p1:'Career counselor', p2:'Financial wellness coach', note:'Stability before growth. These neighborhoods offer both calm and access to opportunity infrastructure.'},
+  'depleted|opportunity|high':{type:'The Resetter', hood1:'Garden District', hood2:'Uptown', p1:'Financial planner', p2:'Integrative health coach', note:'From a stable foundation, opportunity compounds. Both areas have strong professional networks.'},
+
+  'good|health|free':        {type:'The Flow State', hood1:'Bywater', hood2:'Marigny', p1:'Preventive care physician', p2:'Physical therapist', note:'You are functioning well. These creative neighborhoods support staying that way — movement culture, fresh air, walkability.'},
+  'good|health|mid':         {type:'The Flow State', hood1:'Uptown', hood2:'Garden District', p1:'Sports medicine physician', p2:'Physical therapist', note:'Uptown has Audubon Park for movement. Garden District has strong preventive care options.'},
+  'good|health|high':        {type:'The Flow State', hood1:'Garden District', hood2:'Uptown', p1:'Functional medicine physician', p2:'Performance health coach', note:'You can optimize at this level. Functional medicine and performance health are concentrated here.'},
+  'good|food|free':          {type:'The Flow State', hood1:'Marigny', hood2:'Bywater', p1:'Registered dietitian', p2:'Nutritionist', note:'The farmers markets and local food culture in these neighborhoods support what you're already building.'},
+  'good|food|mid':           {type:'The Flow State', hood1:'Uptown', hood2:'Garden District', p1:'Registered dietitian', p2:'Functional nutritionist', note:'Uptown has excellent access to quality food and nutrition professionals.'},
+  'good|food|high':          {type:'The Flow State', hood1:'Garden District', hood2:'Uptown', p1:'Functional nutritionist', p2:'Longevity medicine physician', note:'Premium nutrition support. Your current state can become your new baseline.'},
+  'good|culture|free':       {type:'The Flow State', hood1:'Marigny', hood2:'Tremé', p1:'Movement instructor', p2:'Arts therapist', note:'Frenchmen Street. The Tremé parade routes. You are in the right city for this. Culture here is free and constant.'},
+  'good|culture|mid':        {type:'The Flow State', hood1:'Marigny', hood2:'Bywater', p1:'Creative wellness coach', p2:'Movement instructor', note:'Both neighborhoods are alive with culture without being overwhelming. Perfect for maintaining flow.'},
+  'good|culture|high':       {type:'The Flow State', hood1:'Garden District', hood2:'Marigny', p1:'Wellness coach', p2:'Creative therapist', note:'You can move between beauty and vitality. Both offer the richness that sustains your current state.'},
+  'good|connection|free':    {type:'The Flow State', hood1:'Tremé', hood2:'Marigny', p1:'Community organizer', p2:'Peer support specialist', note:'The social infrastructure here is deep. Your good energy will be amplified in community.'},
+  'good|connection|mid':     {type:'The Flow State', hood1:'Uptown', hood2:'Marigny', p1:'Therapist', p2:'Community counselor', note:'Active social networks and professional communities in both neighborhoods.'},
+  'good|connection|high':    {type:'The Flow State', hood1:'Garden District', hood2:'Uptown', p1:'Life coach', p2:'Therapist', note:'Strong social infrastructure and professional networks. You can deepen connections from a position of strength.'},
+  'good|opportunity|free':   {type:'The Flow State', hood1:'Mid-City', hood2:'Bywater', p1:'Career counselor', p2:'Workforce development specialist', note:'Mid-City has strong workforce development resources. Your good state is the best time to move forward.'},
+  'good|opportunity|mid':    {type:'The Flow State', hood1:'Lakeview', hood2:'Uptown', p1:'Business development advisor', p2:'Financial planner', note:'Both neighborhoods have active professional communities. Momentum compounds from stability.'},
+  'good|opportunity|high':   {type:'The Flow State', hood1:'Garden District', hood2:'Uptown', p1:'Executive coach', p2:'Financial planner', note:'You are positioned to accelerate. Both neighborhoods have the infrastructure to support serious growth.'},
+
+  'ready|health|free':       {type:'The Alive One', hood1:'Bywater', hood2:'Marigny', p1:'Community health worker', p2:'Physical therapist', note:'Your energy needs channels. Bywater's walking infrastructure and Marigny's movement culture will meet you where you are.'},
+  'ready|health|mid':        {type:'The Alive One', hood1:'Uptown', hood2:'Bywater', p1:'Sports medicine physician', p2:'Personal trainer', note:'Audubon Park, walking trails, active community. Your readiness has a place to go here.'},
+  'ready|health|high':       {type:'The Alive One', hood1:'Garden District', hood2:'Uptown', p1:'Performance coach', p2:'Functional medicine physician', note:'Peak performance support. You are ready to build something durable.'},
+  'ready|food|free':         {type:'The Alive One', hood1:'Tremé', hood2:'Marigny', p1:'Community nutritionist', p2:'Registered dietitian', note:'The food culture here is alive. You will find fuel that matches your energy.'},
+  'ready|food|mid':          {type:'The Alive One', hood1:'Marigny', hood2:'Uptown', p1:'Registered dietitian', p2:'Performance nutritionist', note:'Quality nutrition accessible at your energy level. Both neighborhoods reward being out in them.'},
+  'ready|food|high':         {type:'The Alive One', hood1:'Garden District', hood2:'Uptown', p1:'Performance nutritionist', p2:'Functional nutritionist', note:'Nutrition that builds on your readiness. You can work with the best providers here.'},
+  'ready|culture|free':      {type:'The Alive One', hood1:'Tremé', hood2:'Marigny', p1:'Community organizer', p2:'Arts therapist', note:'This is where aliveness was invented in America. Tremé, Marigny, Frenchmen Street — they are waiting for you.'},
+  'ready|culture|mid':       {type:'The Alive One', hood1:'Marigny', hood2:'Bywater', p1:'Creative wellness coach', p2:'Movement instructor', note:'Both neighborhoods reward presence. Your energy will find expression here.'},
+  'ready|culture|high':      {type:'The Alive One', hood1:'French Quarter', hood2:'Marigny', p1:'Creative director', p2:'Arts therapist', note:'The full cultural richness of New Orleans is accessible to you tonight.'},
+  'ready|connection|free':   {type:'The Alive One', hood1:'Tremé', hood2:'Marigny', p1:'Community organizer', p2:'Peer support specialist', note:'You will find your people here. Both neighborhoods have alive, active communities that welcome presence.'},
+  'ready|connection|mid':    {type:'The Alive One', hood1:'Marigny', hood2:'Uptown', p1:'Social connector', p2:'Community organizer', note:'Active social infrastructure that matches your energy. You will find depth here, not just surface.'},
+  'ready|connection|high':   {type:'The Alive One', hood1:'Garden District', hood2:'Marigny', p1:'Life coach', p2:'Community leader', note:'You can access the full social richness of the city. Both neighborhoods offer depth at different registers.'},
+  'ready|opportunity|free':  {type:'The Alive One', hood1:'Mid-City', hood2:'Bywater', p1:'Career counselor', p2:'Workforce development specialist', note:'Your readiness is your most valuable asset. Both neighborhoods have free resources to channel it.'},
+  'ready|opportunity|mid':   {type:'The Alive One', hood1:'Bywater', hood2:'Lakeview', p1:'Business development advisor', p2:'Career coach', note:'Rising neighborhoods with active opportunity infrastructure. Your energy fits here.'},
+  'ready|opportunity|high':  {type:'The Alive One', hood1:'Garden District', hood2:'Uptown', p1:'Executive coach', p2:'Venture advisor', note:'The full opportunity ecosystem of New Orleans is accessible to you. Your readiness compounds here.'},
+
+  'scattered|health|free':   {type:'The Builder', hood1:'Mid-City', hood2:'Gentilly', p1:'Primary care physician', p2:'Community health worker', note:'Grounding before growth. Both neighborhoods have accessible primary care and calm infrastructure.'},
+  'scattered|health|mid':    {type:'The Builder', hood1:'Mid-City', hood2:'Lakeview', p1:'Primary care physician', p2:'Integrative MD', note:'Stability infrastructure. You need a baseline before you can build. Both offer that clearly.'},
+  'scattered|health|high':   {type:'The Builder', hood1:'Garden District', hood2:'Uptown', p1:'Functional medicine physician', p2:'Executive health coach', note:'Comprehensive health support that matches your pace. Build the foundation that sustains the sprint.'},
+  'scattered|food|free':     {type:'The Builder', hood1:'Mid-City', hood2:'Gentilly', p1:'Community nutritionist', p2:'SNAP outreach worker', note:'Accessible, reliable nutrition. Your body needs fuel that shows up consistently, not expensively.'},
+  'scattered|food|mid':      {type:'The Builder', hood1:'Mid-City', hood2:'Uptown', p1:'Registered dietitian', p2:'Meal prep consultant', note:'Nutrition infrastructure that reduces cognitive load. You need food that runs on autopilot so you can build.'},
+  'scattered|food|high':     {type:'The Builder', hood1:'Uptown', hood2:'Garden District', p1:'Performance nutritionist', p2:'Personal chef', note:'Outsource the nutrition so it no longer takes your energy. Build from a fueled position.'},
+  'scattered|culture|free':  {type:'The Builder', hood1:'Tremé', hood2:'Marigny', p1:'Community counselor', p2:'Arts therapist', note:'Culture is grounding for Builders. Tremé and Marigny offer anchoring without asking you to slow down completely.'},
+  'scattered|culture|mid':   {type:'The Builder', hood1:'Marigny', hood2:'Bywater', p1:'Creative wellness coach', p2:'Community counselor', note:'Both neighborhoods offer creative culture that focuses scattered energy rather than dispersing it further.'},
+  'scattered|culture|high':  {type:'The Builder', hood1:'Garden District', hood2:'Marigny', p1:'Executive coach', p2:'Creative director', note:'Beauty and creativity as productivity infrastructure. Both neighborhoods give the Builder permission to also be human.'},
+  'scattered|connection|free':{type:'The Builder', hood1:'Tremé', hood2:'Mid-City', p1:'Peer support specialist', p2:'Community organizer', note:'Community that steadies rather than demands. Both neighborhoods have people who have been building things for generations.'},
+  'scattered|connection|mid':{type:'The Builder', hood1:'Uptown', hood2:'Mid-City', p1:'Business mentor', p2:'Community organizer', note:'Access to professional community and genuine neighborhood belonging. You need both kinds of connection right now.'},
+  'scattered|connection|high':{type:'The Builder', hood1:'Garden District', hood2:'Uptown', p1:'Executive coach', p2:'Mentor', note:'Access to the highest-density professional network in the city, plus real community. Both hold Builders well.'},
+  'scattered|opportunity|free':{type:'The Builder', hood1:'Mid-City', hood2:'Gentilly', p1:'Workforce development specialist', p2:'Career counselor', note:'Free opportunity infrastructure. Mid-City has SBDC, workforce programs, and community lending. Gentilly is rising. Both reward builders who show up.'},
+  'scattered|opportunity|mid':{type:'The Builder', hood1:'Mid-City', hood2:'Lakeview', p1:'Business development advisor', p2:'Career coach', note:'Grounding + opportunity. Both neighborhoods have the infrastructure Builders need to stabilize and accelerate.'},
+  'scattered|opportunity|high':{type:'The Builder', hood1:'Garden District', hood2:'Uptown', p1:'Executive coach', p2:'Venture advisor', note:'The full opportunity ecosystem. You have the ambition. These neighborhoods have the network. Together they compound.'}
+};
+
+function getChipKey() {
+  const qs = document.querySelectorAll('.sc-q');
+  const vals = [];
+  qs.forEach(q => {
+    const active = q.querySelector('.sc-chip.active');
+    if (active) {
+      const t = active.textContent.toLowerCase().trim();
+      if (t.includes('depleted')) vals.push('depleted');
+      else if (t.includes('good')) vals.push('good');
+      else if (t.includes('ready')) vals.push('ready');
+      else if (t.includes('scattered')) vals.push('scattered');
+      else if (t.includes('health')) vals.push('health');
+      else if (t.includes('food')) vals.push('food');
+      else if (t.includes('culture')) vals.push('culture');
+      else if (t.includes('connection')) vals.push('connection');
+      else if (t.includes('opportunity')) vals.push('opportunity');
+      else if (t.includes('free') || t.includes('$') && !t.includes('$$')) vals.push('free');
+      else if (t.includes('$$$') || t.includes('go for it')) vals.push('high');
+      else vals.push('mid');
+    }
+  });
+  return vals.join('|');
+}
+
+function renderArchetypeResult(result) {
+  const card = document.querySelector('.score-card');
+  if (!card) return;
+  card.innerHTML = `
+    <div style="font-size:8px;letter-spacing:.4em;text-transform:uppercase;color:rgba(201,168,76,.6);margin-bottom:16px">YOUR NEW ORLEANS</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:#c9a84c;margin-bottom:6px">
+      ${result.type}
+    </div>
+    <div style="font-size:11px;color:rgba(240,232,212,.5);margin-bottom:24px;font-style:italic;font-family:'Cormorant Garamond',serif;line-height:1.6">${result.note}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
+      <div style="background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.15);padding:14px">
+        <div style="font-size:8px;letter-spacing:.3em;color:rgba(201,168,76,.4);margin-bottom:4px">NEIGHBORHOOD 1</div>
+        <div style="font-size:14px;color:#e8e2d4;font-weight:500">${result.hood1}</div>
+      </div>
+      <div style="background:rgba(255,255,255,.02);border:1px solid rgba(201,168,76,.15);padding:14px">
+        <div style="font-size:8px;letter-spacing:.3em;color:rgba(201,168,76,.4);margin-bottom:4px">NEIGHBORHOOD 2</div>
+        <div style="font-size:14px;color:#e8e2d4;font-weight:500">${result.hood2}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px">
+      <div style="background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.15);padding:14px">
+        <div style="font-size:8px;letter-spacing:.3em;color:rgba(78,205,196,.4);margin-bottom:4px">PRACTITIONER TYPE</div>
+        <div style="font-size:13px;color:#e8e2d4">${result.p1}</div>
+      </div>
+      <div style="background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.15);padding:14px">
+        <div style="font-size:8px;letter-spacing:.3em;color:rgba(78,205,196,.4);margin-bottom:4px">ALSO CONSIDER</div>
+        <div style="font-size:13px;color:#e8e2d4">${result.p2}</div>
+      </div>
+    </div>
+    <a href="https://bleu.live#passport" style="display:block;text-align:center;
+      background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.35);
+      color:#c9a84c;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+      padding:14px;text-decoration:none;transition:all .2s;margin-bottom:12px">
+      Save Your ${result.type} Protocol — Free Forever &rarr;
+    </a>
+    <div style="text-align:center;font-size:9px;color:rgba(255,255,255,.15);letter-spacing:.1em">
+      or <span onclick="resetQuiz()" style="cursor:pointer;text-decoration:underline;color:rgba(201,168,76,.3)">start over</span>
+      &nbsp;·&nbsp; <span onclick="bleuShareArchetype('${result.type}','${result.hood1}','${result.hood2}')" style="cursor:pointer;color:rgba(201,168,76,.3);text-decoration:underline">share ↗</span>
+    </div>
+  `;
+}
+
+function resetQuiz() {
+  location.reload();
+}
+
+// BLEU SHARE ENGINE for NOLA page
+function bleuShareArchetype(archetype, hood1, hood2) {
+  const msg = 'I'm ' + archetype + ' in New Orleans. My city mapped to who I actually am right now — ' + hood1 + ' and ' + hood2 + '. Find yours.';
+  const shareData = {
+    title: archetype + ' · New Orleans · BLEU',
+    text: msg,
+    url: 'https://neworleans.bleu.live'
+  };
+  if (navigator.share) {
+    navigator.share(shareData).catch(() => {});
+  } else {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(msg + ' ' + shareData.url).then(() => {
+        bleuToastNola('Copied to clipboard — paste anywhere to share');
+      });
+    }
+  }
+}
+
+function bleuToastNola(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:rgba(20,25,38,.95);border:1px solid rgba(201,168,76,.3);color:#c9a84c;font-size:10px;letter-spacing:.1em;padding:10px 20px;border-radius:6px;z-index:9999';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+function startScore(){
+  const active=document.querySelectorAll('.sc-chip.active');
+  if(active.length<3){
+    document.querySelectorAll('.sc-q').forEach(q=>{
+      if(!q.querySelector('.sc-chip.active')){
+        q.style.opacity='.5';
+        setTimeout(()=>q.style.opacity='1',700);
+      }
+    });
+    return;
+  }
+  const btn=document.querySelector('.sc-start');
+  btn.textContent='Reading your map...';
+  btn.style.opacity='.7';
+  
+  // Get archetype from chip selections
+  const key = getChipKey();
+  const result = ARCHETYPE_MAP[key];
+  
+  setTimeout(()=>{
+    if(result){
+      renderArchetypeResult(result);
+    } else {
+      // Fallback: default result based on first chip
+      const energy = key.split('|')[0] || 'depleted';
+      const fallbacks = {
+        depleted: 'depleted|health|mid',
+        good: 'good|connection|mid',
+        ready: 'ready|culture|free',
+        scattered: 'scattered|opportunity|mid'
+      };
+      const fallbackResult = ARCHETYPE_MAP[fallbacks[energy]] || ARCHETYPE_MAP['depleted|health|mid'];
+      renderArchetypeResult(fallbackResult);
+    }
+    // Scroll to result
+    document.querySelector('.score-card').scrollIntoView({behavior:'smooth',block:'center'});
+  }, 900);
+}
+</script>
+</body>
+</html>
