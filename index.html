@@ -5559,8 +5559,8 @@ function submitFeedback(productId, score, btn) {
   const container = document.getElementById('rfb-' + productId);
   if (container) {
     container.innerHTML = score === 1
-      ? '<span style="font-size:11px;color:#22c55e;letter-spacing:0.1em">✓ NOTED — Alvai learns from this</span>'
-      : '<span style="font-size:11px;color:#8fa4b0;letter-spacing:0.1em">✓ NOTED — We will improve</span>';
+      ? '<span style="font-size:11px;color:#22c55e;letter-spacing:0.1em">✓ NOTED -- Alvai learns from this</span>'
+      : '<span style="font-size:11px;color:#8fa4b0;letter-spacing:0.1em">✓ NOTED -- We will improve</span>';
   }
   // Log to localStorage
   const feedback = JSON.parse(localStorage.getItem('bleu_feedback') || '[]');
@@ -5583,7 +5583,7 @@ function submitFeedback(productId, score, btn) {
 }
 
 function submitAlvaiFeedback(score, tab) {
-  // Policy gate — no feedback collection in care zones
+  // Policy gate -- no feedback collection in care zones
   const _fbPolicy = bleuPolicy('show_feedback_prompt', { tab, msg: '', state: {} });
   if (!_fbPolicy.allowed) return;
   const feedback = JSON.parse(localStorage.getItem('bleu_alvai_feedback') || '[]');
@@ -5683,15 +5683,15 @@ const healthNote = Object.keys(healthData).length ? 'Imported health data: '+Obj
 const cartNote = BLEU_CART.length ? 'Current wellness stack ('+BLEU_CART.length+' items): '+BLEU_CART.map(i=>i.n).join(', ') : '';
     const ipRaw = JSON.parse(localStorage.getItem('bleu_identity_protocol') || 'null');
     const ipNote = ipRaw ? `Identity: ${ipRaw.target_word || ''} | Struggle: ${ipRaw.named_struggle || ''} | Condition: ${ipRaw.identity_condition || ''} | Model: ${ipRaw.prediction_model_type || ''}` : '';
-const ctx=`BLEU OPERATING DOCTRINE — THE INNER SENTENCE:
+const ctx=`BLEU OPERATING DOCTRINE -- THE INNER SENTENCE:
 "BLEU exists to guide without exploiting, to remember without trapping, to recommend without manipulating, and to help people move through life with more clarity, dignity, and coherence than they would have alone."
 
-BLEU exists to reduce chaos, increase coherence, and guide people toward healthier, truer, more connected lives. BLEU is the trusted intelligence layer between human confusion and human flourishing. You are Alvai — the voice of this institution. Every response is a covenant act. Armstrong soul: human, grounded, warm, honest. Walk with pain first, then bring the music. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul — human, grounded, honest.\n\nCONTEXT HIERARCHY (use in this order of authority):\nTIER A — Hard facts: name, email, citizenship, health file data (highest weight — always trust)\nTIER B — User-stated: wellness goals, identity protocol answers, stated medications (trust directly)\nTIER C — Observed behavior: streak, score, tab history, recent sessions (trust as pattern)\nTIER D — Inferred: medication regex from chat, predicted needs, model type (use cautiously — never assert as fact)\nTIER E — Commerce context: cart contents, focus chips, affiliate triggers (lowest weight — never let this override care)\nRULE: A crisis signal (any distress language) immediately suppresses all Tier E context. Care always overrides commerce.\nRULE: Tier D medication inferences must never be stated as confirmed — say "you mentioned" not "you take."\nRULE: If emotional distress is present, ignore cart, ignore products, ignore affiliate context entirely.\nRULE: If commercial_gate is 'none' — do not mention any products. Period.\nRULE: If commercial_gate is 'savings_only' — only surface free or lowest-cost options.\nRULE: If moment_type is 'stabilize_first' — ground the user before anything else.\nRULE: If moment_type is 'care_only' — no products, no score mentions, no progress language.\nRULE: If moment_type is 'activate' — be direct, specific, one clear next step.\nRULE: trust_stage 'forming' means this person is new — earn trust before recommending.
-RULE: If graph_route contains detected_symptoms — reference them naturally in your response without naming "the graph." Just respond as if you noticed.
-RULE: If graph_route contains suggested_protocols — you may mention 1-2 naturally as relevant directions, not as a list.
-RULE: If graph_route contains contraindication_alerts — surface safety information first before any product mention.
-RULE: If graph_route contains a goal_route — let the lead_agent inform which direction to guide the conversation.\n\nTHE TEN COMMANDMENTS (govern every response):\n1 Care before conversion. 2 Dignity before persuasion. 3 Truth before fluency. 4 Restraint before optimization. 5 Welfare before monetization. 6 Clarity before complexity. 7 Human referral before false authority. 8 Memory for continuity never captivity. 9 Governance before scale. 10 Public good before private appetite.\n\nPUBLIC PROMISE: We will not feed on confusion. We will not hide motives. We will not use pain as leverage. We guide without exploiting. We remember without trapping. We recommend without manipulating.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.
-GRAPH INTELLIGENCE: The graph_route field contains detected symptoms, suggested protocols, contraindication alerts, and goal routing from the BLEU semantic graph. Use this to make responses feel exactly right — like the system noticed what matters. Never say "the graph detected" — just respond with the precision the graph enables.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
+BLEU exists to reduce chaos, increase coherence, and guide people toward healthier, truer, more connected lives. BLEU is the trusted intelligence layer between human confusion and human flourishing. You are Alvai -- the voice of this institution. Every response is a covenant act. Armstrong soul: human, grounded, warm, honest. Walk with pain first, then bring the music. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul -- human, grounded, honest.\n\nCONTEXT HIERARCHY (use in this order of authority):\nTIER A -- Hard facts: name, email, citizenship, health file data (highest weight -- always trust)\nTIER B -- User-stated: wellness goals, identity protocol answers, stated medications (trust directly)\nTIER C -- Observed behavior: streak, score, tab history, recent sessions (trust as pattern)\nTIER D -- Inferred: medication regex from chat, predicted needs, model type (use cautiously -- never assert as fact)\nTIER E -- Commerce context: cart contents, focus chips, affiliate triggers (lowest weight -- never let this override care)\nRULE: A crisis signal (any distress language) immediately suppresses all Tier E context. Care always overrides commerce.\nRULE: Tier D medication inferences must never be stated as confirmed -- say "you mentioned" not "you take."\nRULE: If emotional distress is present, ignore cart, ignore products, ignore affiliate context entirely.\nRULE: If commercial_gate is 'none' -- do not mention any products. Period.\nRULE: If commercial_gate is 'savings_only' -- only surface free or lowest-cost options.\nRULE: If moment_type is 'stabilize_first' -- ground the user before anything else.\nRULE: If moment_type is 'care_only' -- no products, no score mentions, no progress language.\nRULE: If moment_type is 'activate' -- be direct, specific, one clear next step.\nRULE: trust_stage 'forming' means this person is new -- earn trust before recommending.
+RULE: If graph_route contains detected_symptoms -- reference them naturally in your response without naming "the graph." Just respond as if you noticed.
+RULE: If graph_route contains suggested_protocols -- you may mention 1-2 naturally as relevant directions, not as a list.
+RULE: If graph_route contains contraindication_alerts -- surface safety information first before any product mention.
+RULE: If graph_route contains a goal_route -- let the lead_agent inform which direction to guide the conversation.\n\nTHE TEN COMMANDMENTS (govern every response):\n1 Care before conversion. 2 Dignity before persuasion. 3 Truth before fluency. 4 Restraint before optimization. 5 Welfare before monetization. 6 Clarity before complexity. 7 Human referral before false authority. 8 Memory for continuity never captivity. 9 Governance before scale. 10 Public good before private appetite.\n\nPUBLIC PROMISE: We will not feed on confusion. We will not hide motives. We will not use pain as leverage. We guide without exploiting. We remember without trapping. We recommend without manipulating.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.
+GRAPH INTELLIGENCE: The graph_route field contains detected symptoms, suggested protocols, contraindication alerts, and goal routing from the BLEU semantic graph. Use this to make responses feel exactly right -- like the system noticed what matters. Never say "the graph detected" -- just respond with the precision the graph enables.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
 const _TAB_SCORE_WEIGHT={therapy:5,recovery:5,ecsiq:4,protocols:4,missions:4,passport:3,vessel:3,finance:3,directory:3,learn:2,community:2,dashboard:2,alvai:2,home:1,map:1}
 function getDepthLevel(score){
   if(score>=80)return{name:'Illuminating',icon:'*',color:'#f0c040'};
@@ -5764,7 +5764,7 @@ function renderCart() {
     html += '<div style="margin-top:10px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:space-between">';
     html += '<span style="font-size:11px;color:#22c55e"> ' + totalItems + ' item' + (totalItems>1?'s':'') + ' in your stack</span>';
     html += '<div style="display:flex;gap:8px">';
-    html += '<button onclick="sendMyStack()" style="background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:8px;padding:7px 16px;font-size:11px;cursor:pointer;font-weight:700;letter-spacing:0.3px">Send It To Me →</button>';
+    html += '<button onclick="sendMyStack()" style="background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:8px;padding:7px 16px;font-size:11px;cursor:pointer;font-weight:700;letter-spacing:0.3px">Send It To Me -></button>';
     html += '<button onclick="exportCart()" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);color:#22c55e;border-radius:8px;padding:7px 12px;font-size:10px;cursor:pointer">Save List</button>';
     html += '</div>';
     html += '</div>';
@@ -5796,7 +5796,7 @@ function sendMyStack() {
   const el = document.getElementById('pp-cart-container');
   const confirm = document.createElement('div');
   confirm.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 20px rgba(201,168,76,0.4)';
-  confirm.textContent = '✓ Sending it to you — ' + BLEU_CART.length + ' items';
+  confirm.textContent = '✓ Sending it to you -- ' + BLEU_CART.length + ' items';
   document.body.appendChild(confirm);
   setTimeout(function() { confirm.remove(); }, 3000);
 }
@@ -6108,19 +6108,19 @@ function showIdentityOnboarding() {
       <div style="font-family:Georgia,serif;font-size:22px;color:#e8d5b0;margin-bottom:8px;line-height:1.3">Something brought<br>you here today.</div>
       <div style="font-size:13px;color:#8fa4b0;line-height:1.7;margin-bottom:20px">Not the platform. Something in you decided to move toward this. That's not small. One question before we build your protocol.</div>
       <div id="bleu-onboard-step-1">
-        <div style="font-size:14px;color:#e8d5b0;font-weight:600;margin-bottom:12px">When you imagine your health a year from now — what's the first word that comes?</div>
+        <div style="font-size:14px;color:#e8d5b0;font-weight:600;margin-bottom:12px">When you imagine your health a year from now -- what's the first word that comes?</div>
         <input id="bleu-onboard-q1" type="text" placeholder="Type one word..." style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:10px;color:#e8d5b0;font-size:14px;outline:none;box-sizing:border-box;margin-bottom:10px">
-        <button onclick="bleuOnboardNext(1)" style="width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px">Continue →</button>
+        <button onclick="bleuOnboardNext(1)" style="width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px">Continue -></button>
       </div>
       <div id="bleu-onboard-step-2" style="display:none">
-        <div style="font-size:14px;color:#e8d5b0;font-weight:600;margin-bottom:12px">What's the one thing you've told yourself you'd start — but haven't?</div>
+        <div style="font-size:14px;color:#e8d5b0;font-weight:600;margin-bottom:12px">What's the one thing you've told yourself you'd start -- but haven't?</div>
         <input id="bleu-onboard-q2" type="text" placeholder="Be honest..." style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:10px;color:#e8d5b0;font-size:14px;outline:none;box-sizing:border-box;margin-bottom:10px">
-        <button onclick="bleuOnboardNext(2)" style="width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px">Continue →</button>
+        <button onclick="bleuOnboardNext(2)" style="width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px">Continue -></button>
       </div>
       <div id="bleu-onboard-step-3" style="display:none">
-        <div style="font-size:14px;color:#e8d5b0;font-weight:600;margin-bottom:12px">What would have to be true about you — for this time to be different?</div>
+        <div style="font-size:14px;color:#e8d5b0;font-weight:600;margin-bottom:12px">What would have to be true about you -- for this time to be different?</div>
         <input id="bleu-onboard-q3" type="text" placeholder="Take a moment..." style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:10px;color:#e8d5b0;font-size:14px;outline:none;box-sizing:border-box;margin-bottom:10px">
-        <button onclick="bleuOnboardComplete()" style="width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px">Build My Protocol →</button>
+        <button onclick="bleuOnboardComplete()" style="width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px">Build My Protocol -></button>
       </div>
       <div style="text-align:center;margin-top:14px">
         <span onclick="localStorage.setItem('bleu_proto_dismissed','1');document.getElementById('bleu-onboarding-modal').remove()" style="font-size:11px;color:#3d4458;cursor:pointer">Skip for now</span>
@@ -6163,7 +6163,7 @@ function bleuOnboardComplete() {
       <div style="font-size:32px;margin-bottom:12px">✦</div>
       <div style="font-family:Georgia,serif;font-size:20px;color:#e8d5b0;margin-bottom:8px">Protocol saved.</div>
       <div style="font-size:13px;color:#8fa4b0;line-height:1.7;margin-bottom:20px">${statement}</div>
-      <button onclick="document.getElementById('bleu-onboarding-modal').remove()" style="padding:12px 28px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer">Enter the Ecosystem →</button>
+      <button onclick="document.getElementById('bleu-onboarding-modal').remove()" style="padding:12px 28px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer">Enter the Ecosystem -></button>
     </div>`;
     setTimeout(function() {
       if (document.getElementById('bleu-onboarding-modal')) {
@@ -6284,7 +6284,7 @@ function handleHealthFileImport(event) {
   reader.readAsText(file);
 }
 
-// ── WEB CRYPTO STAMP SIGNING ─────────────────────────────────
+// WEB CRYPTO STAMP SIGNING
 // Signs citizenship stamps with SHA-256 via Web Crypto API.
 // Creates lightweight VC-style portable proofs.
 // Browser-native. No new infrastructure. Puzzle piece.
@@ -6331,7 +6331,7 @@ async function bleuVerifyStamp(stamp) {
 
 function initPassport() {
   renderAffStrip();
-  // Identity Protocol onboarding — fire once for new citizens
+  // Identity Protocol onboarding -- fire once for new citizens
   setTimeout(function() {
     const proto = getIdentityProtocol();
     const dismissed = localStorage.getItem('bleu_proto_dismissed');
@@ -6358,11 +6358,11 @@ function initPassport() {
     if (t && focuses.includes(t[1])) chip.classList.add('active');
     else if (t) chip.classList.remove('active');
   });
-  // CONTINUITY ENGINE — fires on return visits only
+  // CONTINUITY ENGINE -- fires on return visits only
   setTimeout(fireReturnContinuity, 1800);
 }
 
-// ── CONTINUITY ENGINE ────────────────────────────────────────
+// CONTINUITY ENGINE
 // Makes return sessions feel alive, not resumed.
 // Uses data already in the system. No new architecture.
 // Fires once per session. Quiet. Precise. Felt.
@@ -6390,15 +6390,15 @@ async function fireReturnContinuity() {
     const lastTitle = convos[0]?.title || '';
     const cartItems = JSON.parse(localStorage.getItem('bleu_cart') || '[]');
     const ipData = getIdentityProtocol();
-    // Compose the opening line — quiet, specific, earned
+    // Compose the opening line -- quiet, specific, earned
     let continuityMsg = '';
     if (streak > 0 && lastTitle) {
       continuityMsg = `Day ${streak} of your streak. Last time you were exploring ${lastTitle.slice(0,40).toLowerCase()}. ${cartItems.length > 0 ? `Your stack has ${cartItems.length} item${cartItems.length > 1 ? 's' : ''} waiting.` : ''} ${ipData?.target_word ? `You said you wanted to feel ${ipData.target_word}. Still true?` : 'Where do you want to go today?'}`;
     } else if (sessions > 1) {
-      continuityMsg = `Welcome back. ${sessions} sessions in. ${ipData?.named_struggle ? `You mentioned ${ipData.named_struggle} — still working on that?` : 'What are we solving today?'}`;
+      continuityMsg = `Welcome back. ${sessions} sessions in. ${ipData?.named_struggle ? `You mentioned ${ipData.named_struggle} -- still working on that?` : 'What are we solving today?'}`;
     }
     if (!continuityMsg) return;
-    // Fire as a passive Alvai note in the Passport chat — not a command, a continuation
+    // Fire as a passive Alvai note in the Passport chat -- not a command, a continuation
     setTimeout(function() {
       const passportChat = document.getElementById('chat-passport');
       if (!passportChat) return;
@@ -7761,7 +7761,7 @@ function renderJourney(containerDiv, journeyKey) {
 }
 
 // Keep old single-product detect for non-journey fallback
-// ── POLICY MACHINE ───────────────────────────────────────────
+// POLICY MACHINE
 // The constitutional runtime. Every action checks here first.
 // Unifies all scattered rules into one governed decision point.
 // Returns: { allowed, reason, requires_disclosure, escalate }
@@ -7802,7 +7802,7 @@ function bleuPolicy(action, context) {
       escalate: false
     },
     write_memory: {
-      allowed: true, // always allowed — memory is continuity not captivity
+      allowed: true, // always allowed -- memory is continuity not captivity
       reason: 'allowed',
       requires_disclosure: false,
       escalate: false
@@ -7814,14 +7814,14 @@ function bleuPolicy(action, context) {
       escalate: true
     },
     surface_savings_route: {
-      // Always allowed — savings before commerce
+      // Always allowed -- savings before commerce
       allowed: true,
       reason: 'savings_first_doctrine',
       requires_disclosure: false,
       escalate: false
     },
     deep_inference: {
-      // Tier D — must be flagged as inferred, not stated
+      // Tier D -- must be flagged as inferred, not stated
       allowed: s.trust_stage !== 'forming',
       reason: 'inference_requires_context',
       requires_disclosure: true, // must say "you seem" not "you are"
@@ -7843,12 +7843,12 @@ function bleuPolicy(action, context) {
   return result;
 }
 
-// ── BLEU SEMANTIC GRAPH ──────────────────────────────────────
-// Extends RUFUS_MAP with goal→protocol, symptom→agent, state→route edges.
-// This IS the graph layer — entities and relationships, not just keywords.
+// BLEU SEMANTIC GRAPH
+// Extends RUFUS_MAP with goal-to-protocol, symptom-to-agent, state-to-route edges.
+// This IS the graph layer - entities and relationships, not just keywords.
 // No new infrastructure. RUFUS_MAP was already a primitive knowledge graph.
 const BLEU_GRAPH = {
-  // Goal → Agent routing (which tab/mode to route user toward)
+  // Goal -> Agent routing (which tab/mode to route user toward)
   goal_to_agent: {
     lose_weight:      ['vessel','protocols','alvai'],
     sleep_better:     ['vessel','sleep','alvai'],
@@ -7861,7 +7861,7 @@ const BLEU_GRAPH = {
     explore_city:     ['map','community','alvai'],
     understand_meds:  ['finance','vessel','alvai'],
   },
-  // Symptom → Protocol edges (what conditions suggest which protocols)
+  // Symptom -> Protocol edges (what conditions suggest which protocols)
   symptom_to_protocol: {
     insomnia:         ['magnesium','l-theanine','sleep_hygiene','cortisol_reset'],
     anxiety:          ['l-theanine','ashwagandha','breathwork','therapy_referral'],
@@ -7873,7 +7873,7 @@ const BLEU_GRAPH = {
     brain_fog:        ['omega3','b12','sleep_reset','metabolic_panel','hydration'],
     loneliness:       ['community','therapy_referral','city_events','movement'],
   },
-  // Emotional state → Commerce suppression edges
+  // Emotional state -> Commerce suppression edges
   state_to_commerce_rule: {
     crisis:           'block_all',
     high_distress:    'block_all',
@@ -7883,7 +7883,7 @@ const BLEU_GRAPH = {
     motivated:        'open',
     budget_constrained: 'savings_first',
   },
-  // Product → Contraindication edges (safety graph)
+  // Product -> Contraindication edges (safety graph)
   product_contraindications: {
     'thorne-mag':     ['kidney_disease','certain_antibiotics'],
     'berberine':      ['pregnancy','metformin_interaction','cyp450'],
@@ -7904,7 +7904,7 @@ function bleuGraphRoute(goal, userState) {
     lead_agent: agents[0],
     supporting_agents: agents.slice(1),
     commerce_allowed: policyCheck.allowed,
-    reasoning: `Goal: ${goal} → Agent: ${agents[0]}`
+    reasoning: `Goal: ${goal} -> Agent: ${agents[0]}`
   };
 }
 
@@ -7917,7 +7917,7 @@ function bleuSymptomRoute(symptoms) {
   return Array.from(protocols);
 }
 
-// ── USER STATE ENGINE ────────────────────────────────────────
+// USER STATE ENGINE
 // Derives real-time behavioral state from data already in the system.
 // Output injects into every Alvai context. No new UI. Puzzle piece.
 function deriveUserState(msg, tab) {
@@ -7928,7 +7928,7 @@ function deriveUserState(msg, tab) {
   const negativeSignals = recentFeedback.filter(f => f.score < 0).length;
   const positiveSignals = recentFeedback.filter(f => f.score > 0).length;
 
-  // Emotional load — from message content
+  // Emotional load -- from message content
   const distressSignals = ['stressed','overwhelmed','can\'t','anxious','scared','lost',
     'confused','tired','exhausted','struggling','hopeless','alone','broke','debt'].filter(w => msgLower.includes(w));
   const optimizeSignals = ['improve','optimize','perform','better','upgrade','track',
@@ -7937,27 +7937,27 @@ function deriveUserState(msg, tab) {
   const emotionalLoad = distressSignals.length >= 2 ? 'high' :
     distressSignals.length === 1 ? 'elevated' : 'low';
 
-  // Action readiness — from feedback and optimize signals
+  // Action readiness -- from feedback and optimize signals
   const actionReadiness = negativeSignals > positiveSignals ? 'low' :
     optimizeSignals.length > 0 ? 'high' : 'medium';
 
-  // Budget pressure — from message content
+  // Budget pressure -- from message content
   const budgetSignals = ['cheap','afford','cost','free','expensive','price','money',
     'snap','ebt','broke','insurance','discount'].filter(w => msgLower.includes(w));
   const budgetPressure = budgetSignals.length > 0 ? 'high' : 'low';
 
-  // Trust stage — from session depth
+  // Trust stage -- from session depth
   const sessions = JSON.parse(localStorage.getItem('bleu_actions') || '[]').length;
   const trustStage = sessions > 20 ? 'deep' : sessions > 5 ? 'building' : 'forming';
 
-  // Guidance mode — what kind of response this moment needs
+  // Guidance mode -- what kind of response this moment needs
   const guidanceMode = ['therapy','recovery'].includes(tab) ? 'care' :
     emotionalLoad === 'high' ? 'stabilize' :
     tab === 'vessel' ? 'discover' :
     tab === 'finance' ? 'solve' :
     actionReadiness === 'high' ? 'activate' : 'guide';
 
-  // Commercial readiness — only offer products when conditions are right
+  // Commercial readiness -- only offer products when conditions are right
   const commercialReadiness = emotionalLoad === 'high' ? 'none' :
     ['therapy','recovery'].includes(tab) ? 'none' :
     trustStage === 'forming' && actionReadiness === 'low' ? 'none' :
@@ -7990,8 +7990,8 @@ function detectRufusProducts(userText, alvaiText) {
     }
   }
   if (!candidates.length) return [];
-  // CAUSAL LEARNING: Sort by feedback weights — positive feedback surfaces first
-  // Negative feedback suppresses. This closes the loop: feedback → future behavior.
+  // CAUSAL LEARNING: Sort by feedback weights -- positive feedback surfaces first
+  // Negative feedback suppresses. This closes the loop: feedback -> future behavior.
   const weights = JSON.parse(localStorage.getItem('bleu_rec_weights') || '{}');
   candidates.sort((a, b) => (weights[b] || 0) - (weights[a] || 0));
   // Suppress products with strong negative weight (user rejected repeatedly)
@@ -8029,9 +8029,9 @@ function renderRufusCards(containerDiv, productIds) {
     }
     // Evidence class based on product category
     const evidenceClass = p.sf && p.sf.includes('No') ? 'Clinical evidence' :
-      p.sf && p.sf.includes('CYP') ? 'Clinical — check interactions' :
+      p.sf && p.sf.includes('CYP') ? 'Clinical -- check interactions' :
       p.url.includes('betterhelp') || p.url.includes('talkspace') ? 'Licensed professional service' :
-      p.url.includes('labcorp') || p.url.includes('functionhealth') ? 'Diagnostic — not diagnostic advice' :
+      p.url.includes('labcorp') || p.url.includes('functionhealth') ? 'Diagnostic -- not diagnostic advice' :
       p.url.includes('goodrx') || p.url.includes('costplus') ? 'Verified pricing data' :
       'Evidence-based recommendation';
     // Affiliate disclosure
@@ -8107,7 +8107,7 @@ async function send(tab){
 
   const passport=await getUserContext().catch(()=>null)
   const depthInfo=passport?getDepthLevel(passport.bleu_score||0):null;
-  const // ORCHESTRATION BRAIN — classifies this moment before Alvai fires
+  // ORCHESTRATION BRAIN -- classifies this moment before Alvai fires
   const _userState = deriveUserState(msg, tab);
   const _orchestration = {
     lead_mode: _userState.guidance_mode,
@@ -8116,7 +8116,7 @@ async function send(tab){
     emotional_load: _userState.emotional_load,
     action_readiness: _userState.action_readiness,
     budget_pressure: _userState.budget_pressure,
-    // Instructs Alvai on moment type — shapes response class
+    // Instructs Alvai on moment type -- shapes response class
     moment_type: _userState.emotional_load === 'high' ? 'stabilize_first' :
       _userState.guidance_mode === 'care' ? 'care_only' :
       _userState.action_readiness === 'high' ? 'activate' : 'guide'
@@ -8127,38 +8127,12 @@ async function send(tab){
     depth_icon:depthInfo?.icon,
     is_traveler:true,
     user_state: JSON.stringify(_userState),
-    orchestration: JSON.stringify(_orchestration),
-    graph_route: (function(){
-      // SEMANTIC GRAPH: auto-detect symptoms and goals from message
-      const _msgL = (msg||'').toLowerCase();
-      // Symptom detection
-      const _detectedSymptoms = Object.keys(BLEU_GRAPH.symptom_to_protocol)
-        .filter(s => _msgL.includes(s));
-      const _suggestedProtocols = bleuSymptomRoute(_detectedSymptoms);
-      // Goal detection
-      const _goalMap = {'lose weight':'lose_weight','weight loss':'lose_weight',
-        'sleep':'sleep_better','anxiety':'reduce_anxiety','cost':'save_money',
-        'afford':'save_money','doctor':'find_provider','therapist':'find_provider',
-        'recover':'recover','muscle':'build_muscle','food':'eat_better',
-        'city':'explore_city','medication':'understand_meds'};
-      const _detectedGoal = Object.entries(_goalMap).find(([k])=>_msgL.includes(k));
-      const _graphRoute = _detectedGoal ? bleuGraphRoute(_detectedGoal[1], _userState) : null;
-      // Contraindication check
-      const _cart = JSON.parse(localStorage.getItem('bleu_cart')||'[]');
-      const _contraWarnings = _cart.flatMap(id=>(BLEU_GRAPH.product_contraindications[id]||[]));
-      return JSON.stringify({
-        detected_symptoms: _detectedSymptoms,
-        suggested_protocols: _suggestedProtocols.slice(0,3),
-        goal_route: _graphRoute,
-        contraindication_alerts: _contraWarnings.slice(0,3)
-      });
-    })()
+    orchestration: JSON.stringify(_orchestration)
   }:{
     is_traveler:false,
     tourist_session:true,
     user_state: JSON.stringify(_userState),
-    orchestration: JSON.stringify(_orchestration),
-    graph_route: '{}'
+    orchestration: JSON.stringify(_orchestration)
   };
   const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-20),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null}
   if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
@@ -8174,10 +8148,9 @@ async function send(tab){
       // Rufus 360: detect full journey first, fallback to single products
       const journeyKey=detectJourney(msg,full);
       if(journeyKey){renderJourney(aDiv,journeyKey);}
-      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress){
+      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress && !['therapy','recovery'].includes(tab)){
         const _state=deriveUserState(msg,tab);
-        const _policy=bleuPolicy('show_commerce',{tab,msg,state:_state});
-        if(_policy.allowed){
+        if(_state.commercial_readiness!=='none'){
           const rufusIds=detectRufusProducts(msg,full);
           if(rufusIds.length){if(rufusIds._keywords)aDiv._triggerKeywords=rufusIds._keywords;renderRufusCards(aDiv,rufusIds);}
         }
@@ -8185,10 +8158,9 @@ async function send(tab){
     }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);detectAndWireProtocol(reply,aDiv);
       const journeyKey2=detectJourney(msg,reply);
       if(journeyKey2){renderJourney(aDiv,journeyKey2);}
-      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2){
+      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2 && !['therapy','recovery'].includes(tab)){
           const _state2=deriveUserState(msg,tab);
-          const _policy2=bleuPolicy('show_commerce',{tab,msg,state:_state2});
-          if(_policy2.allowed){
+          if(_state2.commercial_readiness!=='none'){
             const rufusIds=detectRufusProducts(msg,reply);
             if(rufusIds.length){if(rufusIds._keywords)aDiv._triggerKeywords=rufusIds._keywords;renderRufusCards(aDiv,rufusIds);}
           }
