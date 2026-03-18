@@ -5680,7 +5680,7 @@ const healthNote = Object.keys(healthData).length ? 'Imported health data: '+Obj
 const cartNote = BLEU_CART.length ? 'Current wellness stack ('+BLEU_CART.length+' items): '+BLEU_CART.map(i=>i.n).join(', ') : '';
     const ipRaw = JSON.parse(localStorage.getItem('bleu_identity_protocol') || 'null');
     const ipNote = ipRaw ? `Identity: ${ipRaw.target_word || ''} | Struggle: ${ipRaw.named_struggle || ''} | Condition: ${ipRaw.identity_condition || ''} | Model: ${ipRaw.prediction_model_type || ''}` : '';
-const ctx=`BLEU OPERATING DOCTRINE: BLEU is the trusted intelligence layer that helps people navigate health, place, and opportunity. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul — human, grounded, honest.\n\nCONTEXT HIERARCHY (use in this order of authority):\nTIER A — Hard facts: name, email, citizenship, health file data (highest weight — always trust)\nTIER B — User-stated: wellness goals, identity protocol answers, stated medications (trust directly)\nTIER C — Observed behavior: streak, score, tab history, recent sessions (trust as pattern)\nTIER D — Inferred: medication regex from chat, predicted needs, model type (use cautiously — never assert as fact)\nTIER E — Commerce context: cart contents, focus chips, affiliate triggers (lowest weight — never let this override care)\nRULE: A crisis signal (any distress language) immediately suppresses all Tier E context. Care always overrides commerce.\nRULE: Tier D medication inferences must never be stated as confirmed — say "you mentioned" not "you take."\nRULE: If emotional distress is present, ignore cart, ignore products, ignore affiliate context entirely.\nRULE: If commercial_gate is 'none' — do not mention any products. Period.\nRULE: If commercial_gate is 'savings_only' — only surface free or lowest-cost options.\nRULE: If moment_type is 'stabilize_first' — ground the user before anything else.\nRULE: If moment_type is 'care_only' — no products, no score mentions, no progress language.\nRULE: If moment_type is 'activate' — be direct, specific, one clear next step.\nRULE: trust_stage 'forming' means this person is new — earn trust before recommending.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
+const ctx=`BLEU OPERATING DOCTRINE: BLEU exists to reduce chaos, increase coherence, and guide people toward healthier, truer, more connected lives. BLEU is the trusted intelligence layer between human confusion and human flourishing. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul — human, grounded, honest.\n\nCONTEXT HIERARCHY (use in this order of authority):\nTIER A — Hard facts: name, email, citizenship, health file data (highest weight — always trust)\nTIER B — User-stated: wellness goals, identity protocol answers, stated medications (trust directly)\nTIER C — Observed behavior: streak, score, tab history, recent sessions (trust as pattern)\nTIER D — Inferred: medication regex from chat, predicted needs, model type (use cautiously — never assert as fact)\nTIER E — Commerce context: cart contents, focus chips, affiliate triggers (lowest weight — never let this override care)\nRULE: A crisis signal (any distress language) immediately suppresses all Tier E context. Care always overrides commerce.\nRULE: Tier D medication inferences must never be stated as confirmed — say "you mentioned" not "you take."\nRULE: If emotional distress is present, ignore cart, ignore products, ignore affiliate context entirely.\nRULE: If commercial_gate is 'none' — do not mention any products. Period.\nRULE: If commercial_gate is 'savings_only' — only surface free or lowest-cost options.\nRULE: If moment_type is 'stabilize_first' — ground the user before anything else.\nRULE: If moment_type is 'care_only' — no products, no score mentions, no progress language.\nRULE: If moment_type is 'activate' — be direct, specific, one clear next step.\nRULE: trust_stage 'forming' means this person is new — earn trust before recommending.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
 const _TAB_SCORE_WEIGHT={therapy:5,recovery:5,ecsiq:4,protocols:4,missions:4,passport:3,vessel:3,finance:3,directory:3,learn:2,community:2,dashboard:2,alvai:2,home:1,map:1}
 function getDepthLevel(score){
   if(score>=80)return{name:'Illuminating',icon:'*',color:'#f0c040'};
@@ -6302,6 +6302,59 @@ function initPassport() {
     if (t && focuses.includes(t[1])) chip.classList.add('active');
     else if (t) chip.classList.remove('active');
   });
+  // CONTINUITY ENGINE — fires on return visits only
+  setTimeout(fireReturnContinuity, 1800);
+}
+
+// ── CONTINUITY ENGINE ────────────────────────────────────────
+// Makes return sessions feel alive, not resumed.
+// Uses data already in the system. No new architecture.
+// Fires once per session. Quiet. Precise. Felt.
+async function fireReturnContinuity() {
+  if (!currentUser || !sbClient) return;
+  // Only fire if this is a return visit (has prior sessions)
+  const lastFired = localStorage.getItem('bleu_continuity_fired');
+  const today = new Date().toDateString();
+  if (lastFired === today) return; // Once per day max
+  try {
+    const { data: prof } = await sbClient.from('profiles')
+      .select('streak_days, bleu_score, conversations_count, wellness_goals, last_active')
+      .eq('id', currentUser.id).single();
+    if (!prof || (prof.conversations_count || 0) < 2) return; // Not a return user yet
+    const { data: convos } = await sbClient.from('conversations')
+      .select('mode, title, created_at')
+      .eq('user_id', currentUser.id)
+      .order('updated_at', { ascending: false })
+      .limit(3);
+    if (!convos || !convos.length) return;
+    // Build continuity signal
+    const streak = prof.streak_days || 0;
+    const sessions = prof.conversations_count || 0;
+    const lastMode = convos[0]?.mode || 'general';
+    const lastTitle = convos[0]?.title || '';
+    const cartItems = JSON.parse(localStorage.getItem('bleu_cart') || '[]');
+    const ipData = getIdentityProtocol();
+    // Compose the opening line — quiet, specific, earned
+    let continuityMsg = '';
+    if (streak > 0 && lastTitle) {
+      continuityMsg = `Day ${streak} of your streak. Last time you were exploring ${lastTitle.slice(0,40).toLowerCase()}. ${cartItems.length > 0 ? `Your stack has ${cartItems.length} item${cartItems.length > 1 ? 's' : ''} waiting.` : ''} ${ipData?.target_word ? `You said you wanted to feel ${ipData.target_word}. Still true?` : 'Where do you want to go today?'}`;
+    } else if (sessions > 1) {
+      continuityMsg = `Welcome back. ${sessions} sessions in. ${ipData?.named_struggle ? `You mentioned ${ipData.named_struggle} — still working on that?` : 'What are we solving today?'}`;
+    }
+    if (!continuityMsg) return;
+    // Fire as a passive Alvai note in the Passport chat — not a command, a continuation
+    setTimeout(function() {
+      const passportChat = document.getElementById('chat-passport');
+      if (!passportChat) return;
+      const note = document.createElement('div');
+      note.className = 'msg ai';
+      note.style.cssText = 'opacity:0.75;font-style:italic;font-size:0.85rem;border-left:2px solid rgba(201,168,76,0.3);padding-left:10px;';
+      note.textContent = continuityMsg;
+      passportChat.appendChild(note);
+      passportChat.scrollTop = passportChat.scrollHeight;
+      localStorage.setItem('bleu_continuity_fired', today);
+    }, 800);
+  } catch(e) {}
 }
 
 
@@ -7715,8 +7768,10 @@ function detectRufusProducts(userText, alvaiText) {
   const seen = new Set();
   const candidates = [];
   // Collect all matching candidates
+  const matchedKeywords = [];
   for (const [kw, productIds] of Object.entries(RUFUS_MAP)) {
     if (combined.includes(kw)) {
+      matchedKeywords.push(kw);
       for (const id of productIds) {
         if (!seen.has(id)) { seen.add(id); candidates.push(id); }
       }
@@ -7729,7 +7784,10 @@ function detectRufusProducts(userText, alvaiText) {
   candidates.sort((a, b) => (weights[b] || 0) - (weights[a] || 0));
   // Suppress products with strong negative weight (user rejected repeatedly)
   const filtered = candidates.filter(id => (weights[id] || 0) > -3);
-  return filtered.slice(0, 2);
+  // Attach detected keywords so trust visibility can reference them
+  const result = filtered.slice(0, 2);
+  result._keywords = matchedKeywords;
+  return result;
 }
 
 // Render Rufus product cards below a message div
@@ -7746,10 +7804,32 @@ function renderRufusCards(containerDiv, productIds) {
   safetyNote.textContent = 'Ranked by safety · evidence · usefulness · affordability';
   wrapper.appendChild(safetyNote);
   wrapper.appendChild(label);
+  // Build trust provenance for each product surfaced
+  const _detectedKeywords = (containerDiv._triggerKeywords || []);
   for (const id of productIds) {
     const p = RUFUS_PRODUCTS[id];
     if (!p) continue;
     const isSafe = p.sf && p.sf.startsWith('');
+    // Find which keyword triggered this product
+    let triggerKw = '';
+    for (const [kw, ids] of Object.entries(RUFUS_MAP)) {
+      if (ids.includes(id) && _detectedKeywords.includes(kw)) { triggerKw = kw; break; }
+    }
+    // Evidence class based on product category
+    const evidenceClass = p.sf && p.sf.includes('No') ? 'Clinical evidence' :
+      p.sf && p.sf.includes('CYP') ? 'Clinical — check interactions' :
+      p.url.includes('betterhelp') || p.url.includes('talkspace') ? 'Licensed professional service' :
+      p.url.includes('labcorp') || p.url.includes('functionhealth') ? 'Diagnostic — not diagnostic advice' :
+      p.url.includes('goodrx') || p.url.includes('costplus') ? 'Verified pricing data' :
+      'Evidence-based recommendation';
+    // Affiliate disclosure
+    const isAffiliate = p.url.includes('amazon') || p.url.includes('fullscript') ||
+      p.url.includes('betterhelp') || p.url.includes('classpass') ||
+      p.url.includes('utm_source=bleu') || p.url.includes('bleu-live-20');
+    const weights = JSON.parse(localStorage.getItem('bleu_rec_weights') || '{}');
+    const userWeight = weights[id] || 0;
+    const trustSignal = userWeight > 1 ? '✓ You rated this helpful' :
+      userWeight < -1 ? '↓ You flagged this before' : '';
     const card = document.createElement('div');
     card.className = 'rufus-card';
     card.innerHTML = `
@@ -7758,6 +7838,9 @@ function renderRufusCards(containerDiv, productIds) {
         <div class="rufus-card-name">${p.n}</div>
         <div class="rufus-card-why">${p.why}</div>
         <div class="rufus-card-safety ${isSafe?'safe':'warn'}">${p.sf||''}</div>
+        <div style="font-size:8px;color:rgba(255,255,255,0.2);margin-top:4px;line-height:1.6;letter-spacing:0.05em">
+          ${triggerKw ? `Surfaced by: <span style="color:rgba(201,168,76,0.4)">${triggerKw}</span> &nbsp;·&nbsp; ` : ''}${evidenceClass}${isAffiliate ? ' &nbsp;·&nbsp; <span style="color:rgba(255,255,255,0.15)">affiliate</span>' : ''}${trustSignal ? ` &nbsp;·&nbsp; <span style="color:rgba(34,197,94,0.5)">${trustSignal}</span>` : ''}
+        </div>
         <div class="rufus-card-meta">
           <span class="rufus-card-price">${p.p} <span style="font-size:9px;color:#8fa4b0">/ ${p.u}</span></span>
           <span class="rufus-card-rating">${p.r}</span>
@@ -7857,7 +7940,7 @@ async function send(tab){
         const _state=deriveUserState(msg,tab);
         if(_state.commercial_readiness!=='none'){
           const rufusIds=detectRufusProducts(msg,full);
-          if(rufusIds.length)renderRufusCards(aDiv,rufusIds);
+          if(rufusIds.length){if(rufusIds._keywords)aDiv._triggerKeywords=rufusIds._keywords;renderRufusCards(aDiv,rufusIds);}
         }
       }}}}
     }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);detectAndWireProtocol(reply,aDiv);
@@ -7867,7 +7950,7 @@ async function send(tab){
           const _state2=deriveUserState(msg,tab);
           if(_state2.commercial_readiness!=='none'){
             const rufusIds=detectRufusProducts(msg,reply);
-            if(rufusIds.length)renderRufusCards(aDiv,rufusIds);
+            if(rufusIds.length){if(rufusIds._keywords)aDiv._triggerKeywords=rufusIds._keywords;renderRufusCards(aDiv,rufusIds);}
           }
         }}}}
       chatHistories[tab].push({role:'assistant',content:reply});
