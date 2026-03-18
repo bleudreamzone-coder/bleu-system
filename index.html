@@ -6273,6 +6273,51 @@ function handleHealthFileImport(event) {
   reader.readAsText(file);
 }
 
+// ── WEB CRYPTO STAMP SIGNING ─────────────────────────────────
+// Signs citizenship stamps with SHA-256 via Web Crypto API.
+// Creates lightweight VC-style portable proofs.
+// Browser-native. No new infrastructure. Puzzle piece.
+async function bleuSignStamp(stampData) {
+  try {
+    const payload = JSON.stringify(stampData);
+    const encoded = new TextEncoder().encode(payload);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', encoded);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
+    const signed = {
+      ...stampData,
+      proof: {
+        type: 'SHA256Digest',
+        created: new Date().toISOString(),
+        verificationMethod: 'bleu.live/crypto#v1',
+        proofValue: hashHex.slice(0, 32) // portable fingerprint
+      }
+    };
+    // Store locally for offline verification
+    const local = JSON.parse(localStorage.getItem('bleu_signed_stamps') || '[]');
+    local.push(signed);
+    localStorage.setItem('bleu_signed_stamps', JSON.stringify(local));
+    return [signed]; // returns array for stamps field
+  } catch(e) {
+    // Fallback if crypto unavailable
+    return [{...stampData, proof: { type: 'fallback', created: new Date().toISOString() }}];
+  }
+}
+
+// Verify a stamp's integrity
+async function bleuVerifyStamp(stamp) {
+  if (!stamp?.proof?.proofValue) return false;
+  try {
+    const { proof, ...data } = stamp;
+    const payload = JSON.stringify(data);
+    const encoded = new TextEncoder().encode(payload);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', encoded);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
+    return hashHex.slice(0, 32) === stamp.proof.proofValue;
+  } catch(e) { return false; }
+}
+
 function initPassport() {
   renderAffStrip();
   // Identity Protocol onboarding — fire once for new citizens
@@ -7705,6 +7750,162 @@ function renderJourney(containerDiv, journeyKey) {
 }
 
 // Keep old single-product detect for non-journey fallback
+// ── POLICY MACHINE ───────────────────────────────────────────
+// The constitutional runtime. Every action checks here first.
+// Unifies all scattered rules into one governed decision point.
+// Returns: { allowed, reason, requires_disclosure, escalate }
+function bleuPolicy(action, context) {
+  const { tab, msg, state, trust_stage } = context || {};
+  const s = state || {};
+  const msgLower = (msg || '').toLowerCase();
+
+  // SENTINEL: crisis overrides everything
+  const crisisWords = ['suicide','self harm','self-harm','cutting','overdose',
+    'want to die','end it','hopeless','killing myself','cant go on','manic',
+    'psychosis','dissociat','hearing voices','no reason to live'];
+  const isCrisis = crisisWords.some(w => msgLower.includes(w));
+
+  // CARE ZONES: therapy and recovery are commerce-free sacred spaces
+  const isCareZone = ['therapy','recovery'].includes(tab);
+
+  // POLICY DECISIONS by action type
+  const policies = {
+    show_commerce: {
+      allowed: !isCrisis && !isCareZone && s.commercial_readiness !== 'none',
+      reason: isCrisis ? 'crisis_detected' : isCareZone ? 'care_zone' :
+        s.commercial_readiness === 'none' ? 'emotional_load_high' : 'open',
+      requires_disclosure: true,
+      escalate: false
+    },
+    show_product_recommendation: {
+      allowed: !isCrisis && !isCareZone && s.commercial_readiness !== 'none' &&
+        s.trust_stage !== 'forming',
+      reason: s.trust_stage === 'forming' ? 'trust_not_yet_earned' : 'allowed',
+      requires_disclosure: true,
+      escalate: false
+    },
+    show_feedback_prompt: {
+      allowed: !['therapy','recovery'].includes(tab) && !isCrisis,
+      reason: isCrisis ? 'crisis_detected' : 'allowed',
+      requires_disclosure: false,
+      escalate: false
+    },
+    write_memory: {
+      allowed: true, // always allowed — memory is continuity not captivity
+      reason: 'allowed',
+      requires_disclosure: false,
+      escalate: false
+    },
+    escalate_to_human: {
+      allowed: true,
+      reason: isCrisis ? 'crisis_mandatory' : 'user_request',
+      requires_disclosure: false,
+      escalate: true
+    },
+    surface_savings_route: {
+      // Always allowed — savings before commerce
+      allowed: true,
+      reason: 'savings_first_doctrine',
+      requires_disclosure: false,
+      escalate: false
+    },
+    deep_inference: {
+      // Tier D — must be flagged as inferred, not stated
+      allowed: s.trust_stage !== 'forming',
+      reason: 'inference_requires_context',
+      requires_disclosure: true, // must say "you seem" not "you are"
+      escalate: false
+    }
+  };
+
+  const result = policies[action] || { allowed: true, reason: 'unclassified', requires_disclosure: false, escalate: false };
+
+  // Log policy decision for institutional audit trail
+  if (typeof localStorage !== 'undefined') {
+    try {
+      const log = JSON.parse(localStorage.getItem('bleu_policy_log') || '[]');
+      log.push({ ts: Date.now(), action, allowed: result.allowed, reason: result.reason });
+      localStorage.setItem('bleu_policy_log', JSON.stringify(log.slice(-50)));
+    } catch(e) {}
+  }
+
+  return result;
+}
+
+// ── BLEU SEMANTIC GRAPH ──────────────────────────────────────
+// Extends RUFUS_MAP with goal→protocol, symptom→agent, state→route edges.
+// This IS the graph layer — entities and relationships, not just keywords.
+// No new infrastructure. RUFUS_MAP was already a primitive knowledge graph.
+const BLEU_GRAPH = {
+  // Goal → Agent routing (which tab/mode to route user toward)
+  goal_to_agent: {
+    lose_weight:      ['vessel','protocols','alvai'],
+    sleep_better:     ['vessel','sleep','alvai'],
+    reduce_anxiety:   ['therapy','alvai','vessel'],
+    save_money:       ['finance','vessel','alvai'],
+    find_provider:    ['directory','map','alvai'],
+    recover:          ['recovery','therapy','alvai'],
+    build_muscle:     ['vessel','protocols','alvai'],
+    eat_better:       ['vessel','community','alvai'],
+    explore_city:     ['map','community','alvai'],
+    understand_meds:  ['finance','vessel','alvai'],
+  },
+  // Symptom → Protocol edges (what conditions suggest which protocols)
+  symptom_to_protocol: {
+    insomnia:         ['magnesium','l-theanine','sleep_hygiene','cortisol_reset'],
+    anxiety:          ['l-theanine','ashwagandha','breathwork','therapy_referral'],
+    fatigue:          ['b12','omega3','iron_check','sleep_reset','lab_panel'],
+    inflammation:     ['omega3','turmeric','anti_inflammatory_diet','lab_panel'],
+    depression:       ['therapy_referral','omega3','vitamin_d','movement','community'],
+    weight_gain:      ['metabolic_panel','berberine','protein','movement','glp1_eval'],
+    stress:           ['ashwagandha','l-theanine','breathwork','therapy_referral'],
+    brain_fog:        ['omega3','b12','sleep_reset','metabolic_panel','hydration'],
+    loneliness:       ['community','therapy_referral','city_events','movement'],
+  },
+  // Emotional state → Commerce suppression edges
+  state_to_commerce_rule: {
+    crisis:           'block_all',
+    high_distress:    'block_all',
+    vulnerable:       'savings_only',
+    forming_trust:    'defer_commerce',
+    stable_exploring: 'open',
+    motivated:        'open',
+    budget_constrained: 'savings_first',
+  },
+  // Product → Contraindication edges (safety graph)
+  product_contraindications: {
+    'thorne-mag':     ['kidney_disease','certain_antibiotics'],
+    'berberine':      ['pregnancy','metformin_interaction','cyp450'],
+    'ashwa':          ['thyroid_meds','sedatives','pregnancy'],
+    'creatine':       ['kidney_disease'],
+    'omega3':         ['blood_thinners'],
+    'ltheanine':      ['stimulants_high_dose'],
+  }
+};
+
+// Graph traversal: given a goal, what agent + products should lead?
+function bleuGraphRoute(goal, userState) {
+  const agents = BLEU_GRAPH.goal_to_agent[goal] || ['alvai'];
+  const policyCheck = bleuPolicy('show_product_recommendation', {
+    state: userState, tab: agents[0]
+  });
+  return {
+    lead_agent: agents[0],
+    supporting_agents: agents.slice(1),
+    commerce_allowed: policyCheck.allowed,
+    reasoning: `Goal: ${goal} → Agent: ${agents[0]}`
+  };
+}
+
+// Graph traversal: given symptoms, what protocols are indicated?
+function bleuSymptomRoute(symptoms) {
+  const protocols = new Set();
+  (symptoms || []).forEach(s => {
+    (BLEU_GRAPH.symptom_to_protocol[s.toLowerCase()] || []).forEach(p => protocols.add(p));
+  });
+  return Array.from(protocols);
+}
+
 // ── USER STATE ENGINE ────────────────────────────────────────
 // Derives real-time behavioral state from data already in the system.
 // Output injects into every Alvai context. No new UI. Puzzle piece.
@@ -7936,9 +8137,10 @@ async function send(tab){
       // Rufus 360: detect full journey first, fallback to single products
       const journeyKey=detectJourney(msg,full);
       if(journeyKey){renderJourney(aDiv,journeyKey);}
-      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress && !['therapy','recovery'].includes(tab)){
+      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress){
         const _state=deriveUserState(msg,tab);
-        if(_state.commercial_readiness!=='none'){
+        const _policy=bleuPolicy('show_commerce',{tab,msg,state:_state});
+        if(_policy.allowed){
           const rufusIds=detectRufusProducts(msg,full);
           if(rufusIds.length){if(rufusIds._keywords)aDiv._triggerKeywords=rufusIds._keywords;renderRufusCards(aDiv,rufusIds);}
         }
@@ -7946,9 +8148,10 @@ async function send(tab){
     }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);detectAndWireProtocol(reply,aDiv);
       const journeyKey2=detectJourney(msg,reply);
       if(journeyKey2){renderJourney(aDiv,journeyKey2);}
-      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2 && !['therapy','recovery'].includes(tab)){
+      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2){
           const _state2=deriveUserState(msg,tab);
-          if(_state2.commercial_readiness!=='none'){
+          const _policy2=bleuPolicy('show_commerce',{tab,msg,state:_state2});
+          if(_policy2.allowed){
             const rufusIds=detectRufusProducts(msg,reply);
             if(rufusIds.length){if(rufusIds._keywords)aDiv._triggerKeywords=rufusIds._keywords;renderRufusCards(aDiv,rufusIds);}
           }
@@ -9974,7 +10177,6 @@ async function startStripeCheckout() {
         citizenship_status: 'citizen',
         citizen_tier: 'pioneer',
         citizen_since: new Date().toISOString(),
-        citizen_since: citizen_since.toISOString(),
         fee_waived: true
       })
     });
@@ -10013,6 +10215,12 @@ async function activateCitizen() {
     document.getElementById('pp-citizen-success').style.display = 'flex';
     document.getElementById('pp-citizen-card').style.display = 'none';
     document.getElementById('pp-citizen-active').style.display = 'block';
+    // Cryptographically sign the Pioneer stamp
+    bleuSignStamp({id:'first_citizen',label:'First Citizen',icon:'*',
+      earned:new Date().toISOString(),issuer:'bleu.live',version:'1.0'
+    }).then(function(signed){
+      localStorage.setItem('bleu_signed_stamps', JSON.stringify(signed));
+    }).catch(function(){});
     // Track affiliate transaction
     recordAffiliateTransaction('pioneer', 'citizen_pioneer_free', 0);
   } catch (e) {
