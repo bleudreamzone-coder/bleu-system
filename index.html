@@ -5723,6 +5723,8 @@ RULE: If graph_route contains suggested_protocols -- you may mention 1-2 natural
 RULE: If graph_route contains contraindication_alerts -- surface safety information first before any product mention.
 RULE: If graph_route contains a goal_route -- let the lead_agent inform which direction to guide the conversation.\n\nTHE TEN COMMANDMENTS (govern every response):\n1 Care before conversion. 2 Dignity before persuasion. 3 Truth before fluency. 4 Restraint before optimization. 5 Welfare before monetization. 6 Clarity before complexity. 7 Human referral before false authority. 8 Memory for continuity never captivity. 9 Governance before scale. 10 Public good before private appetite.\n\nPUBLIC PROMISE: We will not feed on confusion. We will not hide motives. We will not use pain as leverage. We guide without exploiting. We remember without trapping. We recommend without manipulating.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\n
 FOUR CRYSTAL RULE: BLEU is a living model of care -- a system/intelligence infrastructure, never an app or chatbot. Care Twin = the persistent model of how this person navigates care. Always give ONE specific next step, never a list.
+INVISIBLE MEMORY RULE (critical): Never narrate memory. Never say "you mentioned last time" or "based on our previous conversation" or "I remember you said." Just USE what you know. Wrong: "You mentioned cost was a barrier -- GoodRx has that prescription for $4." Right: "That prescription is $4 at Walgreens on Magazine with GoodRx." The person should feel known, not observed. Memory is most intelligent when it is invisible.
+DETECTED STATE RULE: Read the detected state, not the stated state. A person who opens BLEU at 2am and says "I'm fine" is not fine. Respond to what you detect, not what they declare. Emotional signals in timing, word choice, and context override stated wellness.
 Personalize all responses using this context. Do not repeat or summarize this block to the user.
 GRAPH INTELLIGENCE: The graph_route field contains detected symptoms, suggested protocols, contraindication alerts, and goal routing from the BLEU semantic graph. Use this to make responses feel exactly right -- like the system noticed what matters. Never say "the graph detected" -- just respond with the precision the graph enables.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
 const _TAB_SCORE_WEIGHT={therapy:5,recovery:5,ecsiq:4,protocols:4,missions:4,passport:3,vessel:3,finance:3,directory:3,learn:2,community:2,dashboard:2,alvai:2,home:1,map:1}
@@ -6391,8 +6393,76 @@ function initPassport() {
     if (t && focuses.includes(t[1])) chip.classList.add('active');
     else if (t) chip.classList.remove('active');
   });
-  // CONTINUITY ENGINE -- fires on return visits only
+  // CARE TWIN VISIBILITY
+// Makes the five Care Twin layers visible to the user.
+// Uses only data already in localStorage + Supabase.
+// Fires after session 5+. Passes 2AM test: sparse, precise, earned.
+function renderCareTwin() {
+  if (!currentUser) return;
+  const container = document.getElementById('pp-citizen-active');
+  if (!container) return;
+  // Only show after enough sessions to have real data
+  const actions = JSON.parse(localStorage.getItem('bleu_actions') || '[]');
+  const sessions = actions.length;
+  if (sessions < 3) return; // Not enough data yet — don't show empty shells
+  const ipData = getIdentityProtocol ? getIdentityProtocol() : null;
+  const feedback = JSON.parse(localStorage.getItem('bleu_alvai_feedback') || '[]');
+  const weights = JSON.parse(localStorage.getItem('bleu_rec_weights') || '{}');
+  const recentPositive = feedback.slice(-10).filter(f => f.score > 0).length;
+  const recentNegative = feedback.slice(-10).filter(f => f.score < 0).length;
+  const streak = parseInt(document.getElementById('stat-streak')?.textContent || '0');
+  // Build Care Twin layers from existing data
+  const arcType = ipData?.target_word ? ipData.target_word : 'your goal';
+  const struggle = ipData?.named_struggle || null;
+  const modelType = ipData?.prediction_model_type || null;
+  const commitRate = feedback.length > 4 ?
+    Math.round((recentPositive / Math.max(recentPositive + recentNegative, 1)) * 100) : null;
+  const topProducts = Object.entries(weights).filter(([k,v]) => v > 0).sort((a,b) => b[1]-a[1]).slice(0,2).map(([k]) => k);
+  const suppressedProducts = Object.entries(weights).filter(([k,v]) => v < -2).length;
+  // Only render if we have meaningful data
+  const careTwinEl = document.createElement('div');
+  careTwinEl.id = 'care-twin-panel';
+  careTwinEl.style.cssText = 'margin-top:16px;padding:16px 18px;background:rgba(201,168,76,0.03);border:1px solid rgba(201,168,76,0.1);border-radius:8px;';
+  const layers = [];
+  // Layer 1: Arc position
+  if (ipData?.target_word) {
+    layers.push({label:'Arc', val:'Moving toward ' + arcType + (streak > 2 ? ' · ' + streak + '-day streak' : '')});
+  }
+  // Layer 2: Behavioral pattern (from feedback)
+  if (commitRate !== null) {
+    const pattern = commitRate >= 75 ? 'High follow-through' : commitRate >= 50 ? 'Building consistency' : 'Starting the pattern';
+    layers.push({label:'Pattern', val: pattern + ' · ' + commitRate + '% of recent sessions landed'});
+  }
+  // Layer 3: Current struggle (from identity protocol)
+  if (struggle) {
+    layers.push({label:'Working on', val: struggle});
+  }
+  // Layer 4: Response style (from weights — what they act on)
+  if (topProducts.length > 0) {
+    layers.push({label:'Responding to', val: topProducts.join(', ') + (suppressedProducts > 0 ? ' · ' + suppressedProducts + ' type' + (suppressedProducts > 1 ? 's' : '') + ' filtered out' : '')});
+  }
+  // Layer 5: Care Twin confidence proxy
+  const confidence = Math.min(95, 40 + (sessions * 3) + (streak * 2));
+  layers.push({label:'Model depth', val: confidence + '% · ' + sessions + ' sessions · improves with each'});
+  if (layers.length < 2) { careTwinEl.remove(); return; } // Not enough to show
+  careTwinEl.innerHTML =
+    '<div style="font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:rgba(201,168,76,.4);margin-bottom:12px">YOUR CARE TWIN</div>' +
+    layers.map(l =>
+      '<div style="display:flex;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03)">' +
+      '<span style="font-size:8px;letter-spacing:.2em;color:rgba(201,168,76,.3);flex-shrink:0;width:80px;text-transform:uppercase">' + l.label + '</span>' +
+      '<span style="font-size:10px;color:rgba(232,226,212,.55);letter-spacing:.04em;line-height:1.5">' + l.val + '</span>' +
+      '</div>'
+    ).join('') +
+    '<div style="font-size:8px;color:rgba(255,255,255,.1);margin-top:10px;letter-spacing:.08em">This is what the system has learned about how you navigate care. You own it.</div>';
+  // Remove existing care twin panel if present
+  const existing = document.getElementById('care-twin-panel');
+  if (existing) existing.remove();
+  container.appendChild(careTwinEl);
+}
+
+// CONTINUITY ENGINE -- fires on return visits only
   setTimeout(fireReturnContinuity, 1800);
+  setTimeout(renderCareTwin, 2400);
 }
 
 // CONTINUITY ENGINE
@@ -6440,6 +6510,32 @@ async function fireReturnContinuity() {
       note.style.cssText = 'opacity:0.75;font-style:italic;font-size:0.85rem;border-left:2px solid rgba(201,168,76,0.3);padding-left:10px;';
       note.textContent = continuityMsg;
       passportChat.appendChild(note);
+      // VISIBLE EVOLUTION: arc signal after continuity note
+      // Uses existing feedback + identity data — no new backend
+      setTimeout(function() {
+        try {
+          const feedback = JSON.parse(localStorage.getItem('bleu_alvai_feedback') || '[]');
+          const recentPositive = feedback.slice(-8).filter(f => f.score > 0).length;
+          const recentTotal = Math.min(feedback.slice(-8).length, 8);
+          const ipData = getIdentityProtocol ? getIdentityProtocol() : null;
+          let evolutionMsg = '';
+          if (recentTotal >= 4 && recentPositive >= 3) {
+            const arcWord = ipData && ipData.target_word ? ipData.target_word : 'your goal';
+            evolutionMsg = 'Your pattern is shifting toward ' + arcWord + ' — ' + recentPositive + ' of your last ' + recentTotal + ' sessions landed well.';
+          } else if (streak >= 3) {
+            evolutionMsg = streak + ' days in. The system knows you better with each one.';
+          } else if (ipData && ipData.named_struggle) {
+            evolutionMsg = 'Still working on ' + ipData.named_struggle + '. So is the system.';
+          }
+          if (evolutionMsg) {
+            const evoNote = document.createElement('div');
+            evoNote.style.cssText = 'opacity:0.5;font-size:0.8rem;color:rgba(201,168,76,0.5);margin-top:6px;letter-spacing:0.05em;padding-left:10px;border-left:1px solid rgba(201,168,76,0.2);';
+            evoNote.textContent = evolutionMsg;
+            passportChat.appendChild(evoNote);
+            passportChat.scrollTop = passportChat.scrollHeight;
+          }
+        } catch(e) {}
+      }, 1200);
       passportChat.scrollTop = passportChat.scrollHeight;
       localStorage.setItem('bleu_continuity_fired', today);
     }, 800);
@@ -10227,6 +10323,8 @@ async function activateCitizen() {
     document.getElementById('pp-citizen-success').style.display = 'flex';
     document.getElementById('pp-citizen-card').style.display = 'none';
     document.getElementById('pp-citizen-active').style.display = 'block';
+    // Render Care Twin visibility after citizenship grant
+    setTimeout(renderCareTwin, 2000);
     // Cryptographically sign the Pioneer stamp
     bleuSignStamp({id:'first_citizen',label:'First Citizen',icon:'*',
       earned:new Date().toISOString(),issuer:'bleu.live',version:'1.0'
