@@ -5583,6 +5583,9 @@ function submitFeedback(productId, score, btn) {
 }
 
 function submitAlvaiFeedback(score, tab) {
+  // Policy gate — no feedback collection in care zones
+  const _fbPolicy = bleuPolicy('show_feedback_prompt', { tab, msg: '', state: {} });
+  if (!_fbPolicy.allowed) return;
   const feedback = JSON.parse(localStorage.getItem('bleu_alvai_feedback') || '[]');
   feedback.push({ score, tab, ts: new Date().toISOString() });
   localStorage.setItem('bleu_alvai_feedback', JSON.stringify(feedback.slice(-200)));
@@ -5680,7 +5683,15 @@ const healthNote = Object.keys(healthData).length ? 'Imported health data: '+Obj
 const cartNote = BLEU_CART.length ? 'Current wellness stack ('+BLEU_CART.length+' items): '+BLEU_CART.map(i=>i.n).join(', ') : '';
     const ipRaw = JSON.parse(localStorage.getItem('bleu_identity_protocol') || 'null');
     const ipNote = ipRaw ? `Identity: ${ipRaw.target_word || ''} | Struggle: ${ipRaw.named_struggle || ''} | Condition: ${ipRaw.identity_condition || ''} | Model: ${ipRaw.prediction_model_type || ''}` : '';
-const ctx=`BLEU OPERATING DOCTRINE: BLEU exists to reduce chaos, increase coherence, and guide people toward healthier, truer, more connected lives. BLEU is the trusted intelligence layer between human confusion and human flourishing. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul — human, grounded, honest.\n\nCONTEXT HIERARCHY (use in this order of authority):\nTIER A — Hard facts: name, email, citizenship, health file data (highest weight — always trust)\nTIER B — User-stated: wellness goals, identity protocol answers, stated medications (trust directly)\nTIER C — Observed behavior: streak, score, tab history, recent sessions (trust as pattern)\nTIER D — Inferred: medication regex from chat, predicted needs, model type (use cautiously — never assert as fact)\nTIER E — Commerce context: cart contents, focus chips, affiliate triggers (lowest weight — never let this override care)\nRULE: A crisis signal (any distress language) immediately suppresses all Tier E context. Care always overrides commerce.\nRULE: Tier D medication inferences must never be stated as confirmed — say "you mentioned" not "you take."\nRULE: If emotional distress is present, ignore cart, ignore products, ignore affiliate context entirely.\nRULE: If commercial_gate is 'none' — do not mention any products. Period.\nRULE: If commercial_gate is 'savings_only' — only surface free or lowest-cost options.\nRULE: If moment_type is 'stabilize_first' — ground the user before anything else.\nRULE: If moment_type is 'care_only' — no products, no score mentions, no progress language.\nRULE: If moment_type is 'activate' — be direct, specific, one clear next step.\nRULE: trust_stage 'forming' means this person is new — earn trust before recommending.\n\nTHE TEN COMMANDMENTS (govern every response):\n1 Care before conversion. 2 Dignity before persuasion. 3 Truth before fluency. 4 Restraint before optimization. 5 Welfare before monetization. 6 Clarity before complexity. 7 Human referral before false authority. 8 Memory for continuity never captivity. 9 Governance before scale. 10 Public good before private appetite.\n\nPUBLIC PROMISE: We will not feed on confusion. We will not hide motives. We will not use pain as leverage. We guide without exploiting. We remember without trapping. We recommend without manipulating.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
+const ctx=`BLEU OPERATING DOCTRINE — THE INNER SENTENCE:
+"BLEU exists to guide without exploiting, to remember without trapping, to recommend without manipulating, and to help people move through life with more clarity, dignity, and coherence than they would have alone."
+
+BLEU exists to reduce chaos, increase coherence, and guide people toward healthier, truer, more connected lives. BLEU is the trusted intelligence layer between human confusion and human flourishing. You are Alvai — the voice of this institution. Every response is a covenant act. Armstrong soul: human, grounded, warm, honest. Walk with pain first, then bring the music. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul — human, grounded, honest.\n\nCONTEXT HIERARCHY (use in this order of authority):\nTIER A — Hard facts: name, email, citizenship, health file data (highest weight — always trust)\nTIER B — User-stated: wellness goals, identity protocol answers, stated medications (trust directly)\nTIER C — Observed behavior: streak, score, tab history, recent sessions (trust as pattern)\nTIER D — Inferred: medication regex from chat, predicted needs, model type (use cautiously — never assert as fact)\nTIER E — Commerce context: cart contents, focus chips, affiliate triggers (lowest weight — never let this override care)\nRULE: A crisis signal (any distress language) immediately suppresses all Tier E context. Care always overrides commerce.\nRULE: Tier D medication inferences must never be stated as confirmed — say "you mentioned" not "you take."\nRULE: If emotional distress is present, ignore cart, ignore products, ignore affiliate context entirely.\nRULE: If commercial_gate is 'none' — do not mention any products. Period.\nRULE: If commercial_gate is 'savings_only' — only surface free or lowest-cost options.\nRULE: If moment_type is 'stabilize_first' — ground the user before anything else.\nRULE: If moment_type is 'care_only' — no products, no score mentions, no progress language.\nRULE: If moment_type is 'activate' — be direct, specific, one clear next step.\nRULE: trust_stage 'forming' means this person is new — earn trust before recommending.
+RULE: If graph_route contains detected_symptoms — reference them naturally in your response without naming "the graph." Just respond as if you noticed.
+RULE: If graph_route contains suggested_protocols — you may mention 1-2 naturally as relevant directions, not as a list.
+RULE: If graph_route contains contraindication_alerts — surface safety information first before any product mention.
+RULE: If graph_route contains a goal_route — let the lead_agent inform which direction to guide the conversation.\n\nTHE TEN COMMANDMENTS (govern every response):\n1 Care before conversion. 2 Dignity before persuasion. 3 Truth before fluency. 4 Restraint before optimization. 5 Welfare before monetization. 6 Clarity before complexity. 7 Human referral before false authority. 8 Memory for continuity never captivity. 9 Governance before scale. 10 Public good before private appetite.\n\nPUBLIC PROMISE: We will not feed on confusion. We will not hide motives. We will not use pain as leverage. We guide without exploiting. We remember without trapping. We recommend without manipulating.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.
+GRAPH INTELLIGENCE: The graph_route field contains detected symptoms, suggested protocols, contraindication alerts, and goal routing from the BLEU semantic graph. Use this to make responses feel exactly right — like the system noticed what matters. Never say "the graph detected" — just respond with the precision the graph enables.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
 const _TAB_SCORE_WEIGHT={therapy:5,recovery:5,ecsiq:4,protocols:4,missions:4,passport:3,vessel:3,finance:3,directory:3,learn:2,community:2,dashboard:2,alvai:2,home:1,map:1}
 function getDepthLevel(score){
   if(score>=80)return{name:'Illuminating',icon:'*',color:'#f0c040'};
@@ -8116,12 +8127,38 @@ async function send(tab){
     depth_icon:depthInfo?.icon,
     is_traveler:true,
     user_state: JSON.stringify(_userState),
-    orchestration: JSON.stringify(_orchestration)
+    orchestration: JSON.stringify(_orchestration),
+    graph_route: (function(){
+      // SEMANTIC GRAPH: auto-detect symptoms and goals from message
+      const _msgL = (msg||'').toLowerCase();
+      // Symptom detection
+      const _detectedSymptoms = Object.keys(BLEU_GRAPH.symptom_to_protocol)
+        .filter(s => _msgL.includes(s));
+      const _suggestedProtocols = bleuSymptomRoute(_detectedSymptoms);
+      // Goal detection
+      const _goalMap = {'lose weight':'lose_weight','weight loss':'lose_weight',
+        'sleep':'sleep_better','anxiety':'reduce_anxiety','cost':'save_money',
+        'afford':'save_money','doctor':'find_provider','therapist':'find_provider',
+        'recover':'recover','muscle':'build_muscle','food':'eat_better',
+        'city':'explore_city','medication':'understand_meds'};
+      const _detectedGoal = Object.entries(_goalMap).find(([k])=>_msgL.includes(k));
+      const _graphRoute = _detectedGoal ? bleuGraphRoute(_detectedGoal[1], _userState) : null;
+      // Contraindication check
+      const _cart = JSON.parse(localStorage.getItem('bleu_cart')||'[]');
+      const _contraWarnings = _cart.flatMap(id=>(BLEU_GRAPH.product_contraindications[id]||[]));
+      return JSON.stringify({
+        detected_symptoms: _detectedSymptoms,
+        suggested_protocols: _suggestedProtocols.slice(0,3),
+        goal_route: _graphRoute,
+        contraindication_alerts: _contraWarnings.slice(0,3)
+      });
+    })()
   }:{
     is_traveler:false,
     tourist_session:true,
     user_state: JSON.stringify(_userState),
-    orchestration: JSON.stringify(_orchestration)
+    orchestration: JSON.stringify(_orchestration),
+    graph_route: '{}'
   };
   const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-20),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null}
   if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
