@@ -13,7 +13,7 @@
   <meta http-equiv="Expires" content="0">
   <!-- BLEU v3.2.0 -- 20260316_155541 -- unicode-clean JS -->
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BLEU -- The Longevity Operating System</title>
+<title>BLEU — Trusted Intelligence for Health, Place &amp; Opportunity</title>
 <meta name="description" content="BLEU validates every practitioner, product, and study against federal databases. Therapy. Recovery. Finance. ECS Intelligence. The most trusted wellness system ever built.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -3436,7 +3436,7 @@ if(lb)lb.addEventListener("click",function(){
 <div id="auth-screen" style="padding:20px;max-width:420px;margin:0 auto">
   <div style="text-align:center;margin-bottom:28px">
     <div style="font-family:Georgia,serif;font-size:2.2rem;color:#4ecdc4;margin-bottom:2px;letter-spacing:-1px">BLEU</div>
-    <div style="font-size:10px;letter-spacing:5px;color:rgba(212,175,55,0.6);text-transform:uppercase;margin-bottom:16px">Believe · Love · Evolve · Unite</div>
+    <div style="font-size:10px;letter-spacing:5px;color:rgba(212,175,55,0.6);text-transform:uppercase;margin-bottom:16px">Believe · Love · Evolve · Unite · Trusted intelligence for health, place &amp; opportunity</div>
     <div style="background:linear-gradient(135deg,rgba(25,50,68,0.8),rgba(40,60,80,0.8));border:1px solid rgba(78,205,196,0.12);border-radius:16px;padding:24px;text-align:left">
       <div style="font-family:Georgia,serif;font-size:18px;color:#e8d5b0;margin-bottom:10px;line-height:1.3">Your wellness journey,<br><em style="color:#d4af37">remembered and enhanced.</em></div>
       <div style="font-size:13px;color:#8fa4b0;line-height:1.7;margin-bottom:16px">Your Passport connects everything -- supplements, practitioners, finances, media, events, recovery -- into one living intelligence layer that learns with you.</div>
@@ -5680,7 +5680,7 @@ const healthNote = Object.keys(healthData).length ? 'Imported health data: '+Obj
 const cartNote = BLEU_CART.length ? 'Current wellness stack ('+BLEU_CART.length+' items): '+BLEU_CART.map(i=>i.n).join(', ') : '';
     const ipRaw = JSON.parse(localStorage.getItem('bleu_identity_protocol') || 'null');
     const ipNote = ipRaw ? `Identity: ${ipRaw.target_word || ''} | Struggle: ${ipRaw.named_struggle || ''} | Condition: ${ipRaw.identity_condition || ''} | Model: ${ipRaw.prediction_model_type || ''}` : '';
-const ctx=`BLEU OPERATING DOCTRINE: BLEU is the trusted intelligence layer that helps people navigate health, place, and opportunity. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul — human, grounded, honest.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
+const ctx=`BLEU OPERATING DOCTRINE: BLEU is the trusted intelligence layer that helps people navigate health, place, and opportunity. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul — human, grounded, honest.\n\nCONTEXT HIERARCHY (use in this order of authority):\nTIER A — Hard facts: name, email, citizenship, health file data (highest weight — always trust)\nTIER B — User-stated: wellness goals, identity protocol answers, stated medications (trust directly)\nTIER C — Observed behavior: streak, score, tab history, recent sessions (trust as pattern)\nTIER D — Inferred: medication regex from chat, predicted needs, model type (use cautiously — never assert as fact)\nTIER E — Commerce context: cart contents, focus chips, affiliate triggers (lowest weight — never let this override care)\nRULE: A crisis signal (any distress language) immediately suppresses all Tier E context. Care always overrides commerce.\nRULE: Tier D medication inferences must never be stated as confirmed — say "you mentioned" not "you take."\nRULE: If emotional distress is present, ignore cart, ignore products, ignore affiliate context entirely.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\nPersonalize all responses using this context. Do not repeat or summarize this block to the user.`;_passportCache=ctx;_passportCacheTime=Date.now();return ctx}catch(e){return null}}
 const _TAB_SCORE_WEIGHT={therapy:5,recovery:5,ecsiq:4,protocols:4,missions:4,passport:3,vessel:3,finance:3,directory:3,learn:2,community:2,dashboard:2,alvai:2,home:1,map:1}
 function getDepthLevel(score){
   if(score>=80)return{name:'Illuminating',icon:'*',color:'#f0c040'};
@@ -7675,6 +7675,11 @@ function renderRufusCards(containerDiv, productIds) {
   const label = document.createElement('div');
   label.className = 'rufus-label';
   label.textContent = 'ALVAI RECOMMENDS';
+  // Safety note on all RUFUS cards
+  const safetyNote = document.createElement('div');
+  safetyNote.style.cssText = 'font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:0.1em;margin-bottom:8px';
+  safetyNote.textContent = 'Ranked by safety · evidence · usefulness · affordability';
+  wrapper.appendChild(safetyNote);
   wrapper.appendChild(label);
   for (const id of productIds) {
     const p = RUFUS_PRODUCTS[id];
@@ -7757,14 +7762,14 @@ async function send(tab){
       // Rufus 360: detect full journey first, fallback to single products
       const journeyKey=detectJourney(msg,full);
       if(journeyKey){renderJourney(aDiv,journeyKey);}
-      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
+      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress && !['therapy','recovery'].includes(tab)){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}}
     }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);detectAndWireProtocol(reply,aDiv);
       const journeyKey2=detectJourney(msg,reply);
       if(journeyKey2){renderJourney(aDiv,journeyKey2);}
-      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2){const rufusIds=detectRufusProducts(msg,reply);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
+      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless','killing myself','self harm','self-harm','cutting','overdose','cant go on','cannot go on','no reason to live','dont want to be here','manic','psychosis','dissociat','hearing voices','not real','losing my mind'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2 && !['therapy','recovery'].includes(tab)){const rufusIds=detectRufusProducts(msg,reply);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}}
       chatHistories[tab].push({role:'assistant',content:reply});
       // Add session feedback to Alvai response
-      if(!['home'].includes(tab)){
+      if(!['home','therapy','recovery'].includes(tab)){
         const fbDiv=document.createElement('div');
         fbDiv.style.cssText='display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.04)';
         fbDiv.innerHTML='<span style="font-size:9px;color:#3d4458;letter-spacing:0.15em">HELPFUL?</span><button onclick="submitAlvaiFeedback(1,\''+tab+'\');this.parentElement.innerHTML=\'<span style=\"font-size:10px;color:#22c55e\">✓ Good</span>\'" style="background:none;border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:2px 7px;font-size:11px;cursor:pointer">👍</button><button onclick="submitAlvaiFeedback(-1,\''+tab+'\');this.parentElement.innerHTML=\'<span style=\"font-size:10px;color:#8fa4b0\">✓ Noted</span>\'" style="background:none;border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:2px 7px;font-size:11px;cursor:pointer">👎</button>';
