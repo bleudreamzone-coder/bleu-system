@@ -5540,6 +5540,29 @@ renderSessions();
 
 <!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
 <script>
+
+function checkStreakShare(streakDays) {
+  const milestones = [3, 7, 14, 30, 60, 100];
+  if (!milestones.includes(streakDays)) return;
+  const ipData = typeof getIdentityProtocol === 'function' ? getIdentityProtocol() : null;
+  const arcWord = ipData && ipData.target_word ? 'The ' + ipData.target_word : 'a Pioneer Citizen';
+  window._bleuShareStreakMsg = 'Day ' + streakDays + ' on BLEU. I am ' + arcWord + ' in New Orleans.';
+  setTimeout(function() {
+    const ppChat = document.getElementById('chat-passport');
+    if (!ppChat) return;
+    const el = document.createElement('div');
+    el.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1);border-radius:6px;margin-top:8px';
+    el.innerHTML = '<span style="font-size:10px;color:rgba(201,168,76,.5);flex:1">Day ' + streakDays + '. Worth sharing.</span>';
+    const btn = document.createElement('button');
+    btn.textContent = 'Share ↗';
+    btn.style.cssText = 'background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:#c9a84c;font-size:9px;letter-spacing:.15em;padding:6px 12px;cursor:pointer;border-radius:4px';
+    btn.onclick = function() { bleuShare({title:'Day '+streakDays+' on BLEU',text:window._bleuShareStreakMsg,url:'https://bleu.live',source:'streak_milestone'}); };
+    el.appendChild(btn);
+    ppChat.appendChild(el);
+    ppChat.scrollTop = ppChat.scrollHeight;
+  }, 3000);
+}
+
 const SB='https://sqyzboesdpdussiwqpzk.supabase.co'
 const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw'
 let sbClient=null,currentUser=null,currentConvoIds={},touristMsgCount={}
@@ -5579,7 +5602,7 @@ async function showProfile(){
         }
       }catch(e){}
     }
-  }, 800);document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});setTimeout(checkPendingProtocol,400);setTimeout(renderAffStrip,300);updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
+  }, 800);document.getElementById('auth-screen').style.display='none';document.getElementById('profile-screen').style.display='block';upsertProfile({}).catch(()=>{});setTimeout(checkPendingProtocol,400);setTimeout(renderAffStrip,300);updateStreak().catch(()=>{});if(!currentUser)return;document.getElementById('prof-name').textContent=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Friend';document.getElementById('set-email').textContent=currentUser.email||'';if(sbClient){const{data:p}=await sbClient.from('profiles').select('*').eq('id',currentUser.id).single();if(p){document.getElementById('stat-convos').textContent=p.conversations_count||0;document.getElementById('stat-streak').textContent=p.streak_days||0;checkStreakShare(p.streak_days||0);const sc=Math.min(100,p.bleu_score||0);document.getElementById('stat-score').textContent=sc;animateRing(sc);if(p.wellness_goals)p.wellness_goals.forEach(g=>{const c=document.querySelector('.gc[data-g="'+g+'"]');if(c)c.classList.add('active')})}loadSessions()}}
 async function loadSessions(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('id,title,mode,created_at').eq('user_id',currentUser.id).order('updated_at',{ascending:false}).limit(10);const el=document.getElementById('session-list');if(!data||!data.length){el.innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">Talk to Alvai to see history here.</div>';return}el.innerHTML=data.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer"><div style="width:32px;height:32px;border-radius:8px;background:rgba(78,205,196,0.1);display:flex;align-items:center;justify-content:center"></div><div><div style="color:#e8d5b0;font-size:0.85rem">'+(c.title||'Session')+'</div><div style="color:#8fa4b0;font-size:0.7rem">'+new Date(c.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' . '+(c.mode||'general')+'</div></div></div>').join('')}
 // -- FEEDBACK LOOP -------------------------------------------------------
 function submitFeedback(productId, score, btn) {
@@ -8189,6 +8212,7 @@ function renderRufusCards(containerDiv, productIds) {
         <div class="rufus-card-actions">
           <a href="${p.url}" target="_blank" class="rufus-btn-primary" onclick="logRufusAction('${id}','buy_now')">Buy Now</a>
           <button onclick="addToCart('${id}');this.textContent='✓ Added';this.style.background='rgba(34,197,94,0.2)';this.style.borderColor='#22c55e';this.style.color='#22c55e'" class="rufus-btn-secondary" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:#c9a84c;border-radius:8px;padding:6px 12px;font-size:10px;cursor:pointer;font-weight:600;font-family:inherit">+ Add to Stack</button>
+          <button onclick="bleuShare({title:'${p.n}',text:'Alvai recommended this for me on BLEU — ${p.why}',url:'${p.url}',product:'${p.n}'})" style="background:none;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;color:rgba(255,255,255,0.35);transition:all 0.2s" title="Share this with someone">↗</button>
         </div>
         <div class="rufus-feedback" id="rfb-${id}" style="display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04)">
           <span style="font-size:10px;color:#4a5068;letter-spacing:0.1em">HELPFUL?</span>
@@ -8212,6 +8236,59 @@ function send_tourist_continue(tab){
   if(last)last.remove();
   send(tab);
 }
+
+// ── BLEU SHARE ENGINE ──────────────────────────────────────
+// Universal share function. Web Share API + clipboard fallback.
+// Fires native OS share sheet on mobile (same as Amazon screenshot share).
+// Tracks every share as an affiliate signal.
+function bleuShare({ title, text, url, product, archetype, source }) {
+  const shareData = {
+    title: title || 'BLEU — Living Model of Care',
+    text: text || 'Found this on BLEU.',
+    url: url || 'https://bleu.live'
+  };
+  // Track the share event
+  try {
+    const shareLog = JSON.parse(localStorage.getItem('bleu_shares') || '[]');
+    shareLog.push({ product, archetype, source, url, ts: new Date().toISOString() });
+    localStorage.setItem('bleu_shares', JSON.stringify(shareLog.slice(-100)));
+    // Log to affiliate transaction if product share
+    if (product && typeof recordAffiliateTransaction === 'function') {
+      recordAffiliateTransaction(product, 'share', url);
+    }
+  } catch(e) {}
+  // Web Share API — fires native OS sheet (iOS/Android)
+  if (navigator.share) {
+    navigator.share(shareData).catch(() => {});
+  } else {
+    // Fallback: copy to clipboard + show toast
+    const copyText = shareData.text + ' ' + shareData.url;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(copyText).then(() => {
+        bleuShareToast('Link copied to clipboard');
+      }).catch(() => bleuShareToast('Share: ' + shareData.url));
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = copyText;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      bleuShareToast('Link copied');
+    }
+  }
+}
+
+function bleuShareToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(20,25,38,.95);border:1px solid rgba(201,168,76,.3);color:#c9a84c;font-size:10px;letter-spacing:.15em;padding:10px 20px;border-radius:6px;z-index:9999;transition:opacity .4s';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2000);
+}
+// ── END BLEU SHARE ENGINE ──────────────────────────────────
 async function send(tab){
   const input=document.getElementById('in-'+tab),box=document.getElementById('chat-'+tab)
   if(!input||!box)return
