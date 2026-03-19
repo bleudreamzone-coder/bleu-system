@@ -11138,5 +11138,251 @@ document.addEventListener("DOMContentLoaded",function(){
   if(gw)gw.addEventListener("click",function(e){if(e.target===this)closeGateway();});
 });
 </script>
+
+<!-- ════ BLEU STACK CART ════ -->
+<div id="bleu-cart-drawer" style="position:fixed;top:0;right:-420px;width:400px;height:100vh;background:#0d1520;border-left:1px solid rgba(201,168,76,0.2);z-index:9998;transition:right .3s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,0.5)">
+  
+  <!-- Header -->
+  <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between">
+    <div>
+      <div style="font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(201,168,76,0.7);margin-bottom:2px">YOUR WELLNESS STACK</div>
+      <div style="font-size:16px;font-weight:700;color:#e2e8f0">BLEU Cart <span id="cart-count-badge" style="font-size:12px;color:#22c55e;font-weight:400"></span></div>
+    </div>
+    <button onclick="closeCart()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;padding:4px 8px">✕</button>
+  </div>
+  
+  <!-- Cart items -->
+  <div id="cart-items-list" style="flex:1;overflow-y:auto;padding:16px 24px"></div>
+  
+  <!-- Cart total + checkout -->
+  <div style="padding:20px 24px;border-top:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.3)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:13px;color:rgba(255,255,255,0.5)">Stack total (est.)</div>
+      <div id="cart-total-display" style="font-size:20px;font-weight:700;color:#22c55e">$0/mo</div>
+    </div>
+    
+    <!-- Checkout button - assembles Amazon multi-cart URL -->
+    <button id="cart-amazon-btn" onclick="checkoutAmazon()" style="width:100%;padding:14px;background:linear-gradient(135deg,#FF9900,#e88800);border:none;border-radius:10px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
+      <span style="font-size:18px">🛒</span> Checkout on Amazon — ships tomorrow
+    </button>
+    
+    <!-- Fullscript alternative -->
+    <button id="cart-fullscript-btn" onclick="checkoutFullscript()" style="width:100%;padding:12px;background:rgba(127,178,133,0.12);border:1px solid rgba(127,178,133,0.3);border-radius:10px;color:#7fb285;font-weight:600;font-size:13px;cursor:pointer;margin-bottom:12px">
+      Order via Fullscript (Dr. Felicia dispensary)
+    </button>
+    
+    <!-- Save to Passport -->
+    <button onclick="saveStackToPassport()" style="width:100%;padding:10px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:8px;color:rgba(201,168,76,0.8);font-size:12px;cursor:pointer;font-weight:600">
+      Save Stack to Wellness Passport →
+    </button>
+    
+    <div style="font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:10px;line-height:1.4">
+      BLEU earns a small commission on purchases · never affects recommendations · Clinically audited by Dr. Felicia Stoler DCN RDN
+    </div>
+  </div>
+</div>
+
+<!-- Cart trigger button (floating) -->
+<div id="cart-trigger" onclick="toggleCart()" style="display:none;position:fixed;bottom:80px;right:20px;background:linear-gradient(135deg,#C9A84C,#b8943c);border-radius:50px;padding:12px 18px;cursor:pointer;z-index:9997;box-shadow:0 4px 20px rgba(201,168,76,0.3);align-items:center;gap:8px;font-weight:700;font-size:13px;color:#0a1628">
+  <span style="font-size:16px">🧬</span> Stack <span id="cart-trigger-count" style="background:rgba(10,22,40,0.3);border-radius:20px;padding:2px 8px;font-size:11px">0</span>
+</div>
+
+<style>
+#bleu-cart-drawer.open{right:0}
+.cart-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.cart-item:last-child{border-bottom:none}
+.ci-emoji{font-size:24px;min-width:32px;text-align:center}
+.ci-name{font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:2px;line-height:1.3}
+.ci-dose{font-size:11px;color:rgba(45,138,158,0.9)}
+.ci-price{font-size:13px;font-weight:700;color:#22c55e;margin-top:4px}
+.ci-remove{background:none;border:none;color:rgba(255,255,255,0.2);cursor:pointer;font-size:16px;padding:0;line-height:1;margin-left:auto;min-width:20px}
+.ci-remove:hover{color:rgba(255,100,100,0.7)}
+</style>
+
+<script>
+(function(){
+
+// ── CART STATE ──
+// Source of truth: localStorage + Supabase for citizens
+// RUFUS_CART maps product IDs to full product data
+
+var PRODUCT_MASTER = {
+  // All BLEU products with ASIN, Fullscript, price, emoji
+  'thorne-mag':     {name:'Thorne Magnesium Bisglycinate',dose:'400mg',price:25,asin:'B07RY37KGB',fullscript:'magnesium-bisglycinate',emoji:'🧠',fsq:'thorne+magnesium'},
+  'omega3':         {name:'Nordic Naturals Ultimate Omega',dose:'2g EPA/DHA',price:28,asin:'B002CQU564',fullscript:'omega-3',emoji:'🐟',fsq:'nordic+naturals+omega'},
+  'ashwa':          {name:'NOW Ashwagandha KSM-66 450mg',dose:'450mg',price:12,asin:'B01N0A5XEJ',fullscript:'ashwagandha',emoji:'🌿',fsq:'ashwagandha+ksm'},
+  'ltheanine':      {name:'L-Theanine 200mg',dose:'200mg',price:13,asin:'B001DZKHGA',fullscript:'l-theanine',emoji:'🍵',fsq:'l-theanine'},
+  'vitd3':          {name:'Vitamin D3+K2 5000IU',dose:'5000IU',price:17,asin:'B01GBGS7JU',fullscript:'vitamin-d3-k2',emoji:'☀️',fsq:'vitamin+d3+k2'},
+  'coq10':          {name:'CoQ10 Ubiquinol 100mg',dose:'100mg',price:40,asin:'B00I5JV0AC',fullscript:'coq10-ubiquinol',emoji:'⚡',fsq:'ubiquinol+200mg'},
+  'berberine':      {name:'Thorne Berberine-500',dose:'500mg x3',price:40,asin:'B07BG2CNKD',fullscript:'berberine',emoji:'🌱',fsq:'berberine+500'},
+  'creatine':       {name:'Momentous Creatine',dose:'5g daily',price:30,asin:'B0BGVB8T84',fullscript:'creatine',emoji:'💪',fsq:'creatine+monohydrate'},
+  'lions-mane':     {name:"Lion's Mane Mushroom",dose:'500mg',price:22,asin:'B07BS2KYLC',fullscript:'lions-mane',emoji:'🍄',fsq:'lions+mane'},
+  'b12-methyl':     {name:'Methyl B12 1000mcg',dose:'1000mcg',price:8,asin:'B06XFMLTTM',fullscript:'b12',emoji:'🔴',fsq:'methylcobalamin+b12'},
+  'zinc':           {name:'Zinc Picolinate 30mg',dose:'30mg',price:12,asin:'B07Y3G6R2D',fullscript:'zinc',emoji:'🛡️',fsq:'zinc+picolinate'},
+  'protein-powder': {name:'Momentous Essential Protein',dose:'25g/serving',price:55,asin:'B09KQDQBYW',fullscript:'protein',emoji:'🥛',fsq:'protein+powder'},
+  'cw-cbd':         {name:"Charlotte's Web CBD Oil",dose:'17mg/serving',price:45,asin:'B07ZF3YRLZ',fullscript:'cbd-oil',emoji:'🌿',fsq:'cbd+oil'},
+  'endel':          {name:'Endel Sleep Soundscapes',dose:'App subscription',price:50,asin:null,url:'https://endel.io',emoji:'🎵'},
+  'oura':           {name:'Oura Ring Gen 3',dose:'Wearable',price:299,asin:'B0CJQHXJHV',emoji:'💍'},
+  'omega3-high':    {name:'Nordic Naturals Ultimate Omega',dose:'3g EPA/DHA',price:40,asin:'B002CQU564',emoji:'🐟'},
+  'protein-powder': {name:'Momentous Protein',dose:'25g/serving',price:55,asin:'B09KQDQBYW',emoji:'🥛'},
+  'mag-budget':     {name:"Doctor's Best Magnesium",dose:'400mg',price:15,asin:'B00YXTHZXE',emoji:'🧠'},
+};
+
+function getCart() {
+  return JSON.parse(localStorage.getItem('bleu_cart')||'[]');
+}
+
+function saveCart(items) {
+  localStorage.setItem('bleu_cart', JSON.stringify(items));
+  renderCart();
+  updateCartTrigger();
+  // Sync to Supabase for citizens
+  if(currentUser && sbClient) {
+    sbClient.from('profiles').update({cart_items:items}).eq('id',currentUser.id).then(()=>{}).catch(()=>{});
+  }
+  if(typeof bleuSignal==='function') bleuSignal('cart_updated',{count:items.length,total:calcTotal(items)});
+}
+
+window.addToCart = function(productId) {
+  var items = getCart();
+  if(!items.includes(productId)) {
+    items.push(productId);
+    saveCart(items);
+  }
+  // Show cart trigger
+  document.getElementById('cart-trigger').style.display = 'flex';
+  // Flash the trigger
+  var t = document.getElementById('cart-trigger');
+  t.style.transform = 'scale(1.1)';
+  setTimeout(function(){t.style.transform='scale(1)';},200);
+};
+
+window.removeFromCart = function(productId) {
+  var items = getCart().filter(function(id){return id!==productId;});
+  saveCart(items);
+  if(items.length===0) document.getElementById('cart-trigger').style.display='none';
+};
+
+function calcTotal(items) {
+  return items.reduce(function(sum,id){
+    var p = PRODUCT_MASTER[id];
+    return sum + (p?p.price:0);
+  }, 0);
+}
+
+function updateCartTrigger() {
+  var items = getCart();
+  var count = document.getElementById('cart-trigger-count');
+  var badge = document.getElementById('cart-count-badge');
+  if(count) count.textContent = items.length;
+  if(badge) badge.textContent = items.length > 0 ? '('+items.length+')' : '';
+  var trigger = document.getElementById('cart-trigger');
+  if(trigger) trigger.style.display = items.length > 0 ? 'flex' : 'none';
+}
+
+function renderCart() {
+  var items = getCart();
+  var list = document.getElementById('cart-items-list');
+  if(!list) return;
+  
+  if(items.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:rgba(255,255,255,0.25)">'
+      +'<div style="font-size:40px;margin-bottom:12px">🧬</div>'
+      +'<div style="font-size:13px">Your stack is empty.</div>'
+      +'<div style="font-size:11px;margin-top:6px">Ask Alvai what your body needs.</div>'
+      +'</div>';
+    document.getElementById('cart-total-display').textContent = '$0/mo';
+    return;
+  }
+  
+  var total = 0;
+  list.innerHTML = items.map(function(id){
+    var p = PRODUCT_MASTER[id] || {name:id,dose:'',price:0,emoji:'💊'};
+    total += p.price||0;
+    return '<div class="cart-item">'
+      +'<div class="ci-emoji">'+(p.emoji||'💊')+'</div>'
+      +'<div style="flex:1">'
+      +'<div class="ci-name">'+p.name+'</div>'
+      +(p.dose?'<div class="ci-dose">'+p.dose+'</div>':'')
+      +'<div class="ci-price">$'+p.price+'/mo</div>'
+      +'</div>'
+      +'<button class="ci-remove" onclick="window.removeFromCart(\'' + id + '\')">x</button>'
+      +'</div>';
+  }).join('');
+  
+  var totalEl = document.getElementById('cart-total-display');
+  if(totalEl) totalEl.textContent = '$'+total+'/mo';
+}
+
+window.checkoutAmazon = function() {
+  var items = getCart();
+  var asins = items.map(function(id){return PRODUCT_MASTER[id]&&PRODUCT_MASTER[id].asin;}).filter(Boolean);
+  if(!asins.length) {alert('No Amazon products in your stack yet.'); return;}
+  
+  // Build multi-ASIN Amazon cart URL
+  var url = 'https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleu-live-20';
+  asins.forEach(function(asin,i){
+    url += '&ASIN.'+(i+1)+'='+asin+'&Qty.'+(i+1)+'=1';
+  });
+  
+  if(typeof bleuSignal==='function') bleuSignal('cart_checkout_amazon',{items:items.length,asins:asins.length,total:calcTotal(items)});
+  if(typeof recordAffiliateTransaction==='function') recordAffiliateTransaction('amazon-cart','Amazon Stack Checkout','cart_checkout',{items:asins});
+  
+  window.open(url,'_blank');
+};
+
+window.checkoutFullscript = function() {
+  var items = getCart();
+  var fsItems = items.map(function(id){return PRODUCT_MASTER[id]&&PRODUCT_MASTER[id].fsq;}).filter(Boolean);
+  var query = fsItems.join('+');
+  var url = 'https://us.fullscript.com/catalog?q='+encodeURIComponent(query);
+  if(typeof bleuSignal==='function') bleuSignal('cart_checkout_fullscript',{items:items.length});
+  window.open(url,'_blank');
+};
+
+window.saveStackToPassport = function() {
+  if(!currentUser) {
+    // Nudge to sign up
+    var passport = document.getElementById('p-passport');
+    if(passport) {go('passport'); setTimeout(function(){passport.scrollTop=0;},100);}
+    return;
+  }
+  // Already synced via saveCart — confirm to user
+  var btn = document.querySelector('#bleu-cart-drawer button[onclick="saveStackToPassport()"]');
+  if(btn) {btn.textContent='✓ Saved to Passport';btn.style.color='#22c55e';}
+  setTimeout(function(){if(btn)btn.textContent='Save Stack to Wellness Passport →';},2000);
+};
+
+window.toggleCart = function() {
+  var d = document.getElementById('bleu-cart-drawer');
+  if(d) {
+    d.classList.toggle('open');
+    if(d.classList.contains('open')) renderCart();
+  }
+};
+
+window.closeCart = function() {
+  var d = document.getElementById('bleu-cart-drawer');
+  if(d) d.classList.remove('open');
+};
+
+// Init
+document.addEventListener('DOMContentLoaded', function(){
+  renderCart();
+  updateCartTrigger();
+  
+  // Close cart on backdrop click
+  document.addEventListener('click', function(e){
+    var d = document.getElementById('bleu-cart-drawer');
+    var t = document.getElementById('cart-trigger');
+    if(d && d.classList.contains('open') && !d.contains(e.target) && !t.contains(e.target)) {
+      closeCart();
+    }
+  });
+});
+
+})();
+</script>
+
 </body>
 </html>
