@@ -8338,7 +8338,13 @@ async function send(tab){
     user_state:JSON.stringify(_userState),
     orchestration:JSON.stringify(_orchestration)
   };
-  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-8),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null}
+  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-8),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null,
+      journey_context:(()=>{
+        const cm=["lets go","book it","give me everything","all of it","total plan","put it together","im ready","lets do this","sign me up","i want all","give me all","transform me","time travel","years back","take me back","total system","full plan","assemble all","all resources"];
+        const isCommit=cm.some(w=>msg.toLowerCase().includes(w));
+        if(isCommit)return'COMMITMENT MOMENT DETECTED: This person has said YES. Do not ask clarifying questions. ASSEMBLE the total system immediately. Name every resource. Link every product. Deliver everything in one response. They are ready. Do not make them wait.';
+        return null;
+      })()}
   if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
   if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
   if(typeof getActiveJourney==='function'){const _aj=getActiveJourney();if(_aj){if(tab==='passport')body.mode=_aj.alvaiMode;body.journey_context='[ACTIVE JOURNEY: '+_aj.name+'] '+_aj.alvaiContext;}}
