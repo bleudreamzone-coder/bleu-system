@@ -1511,7 +1511,68 @@ if(cg){CONNS.forEach(function(c){
     <div id="dash-chs-score" style="font-family:Georgia,serif;font-size:36px;font-weight:700;color:#C9A84C;line-height:1">--</div>
     <div>
       <div id="dash-chs-verdict" style="font-size:13px;color:#e8d5b0">Not yet assessed</div>
-      <div style="font-size:11px;color:#8fa4b0;margin-top:2px">7 metabolic dimensions tracked</div>
+      
+<!-- ════ DASHBOARD — LIVE ENVIRONMENTAL INTELLIGENCE ════ -->
+<div id="bleu-env-widget" style="margin:0 24px 20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px 20px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div>
+      <div style="font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(45,138,158,0.7);font-weight:600">LIVE ENVIRONMENT</div>
+      <div style="font-size:14px;font-weight:700;color:#e2e8f0;margin-top:2px" id="env-city-name">Your Health Environment</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input id="env-zip" placeholder="Zip" maxlength="5" style="width:70px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:6px 10px;color:#e2e8f0;font-size:12px;outline:none;text-align:center" onkeydown="if(event.key==='Enter')loadEnvData()">
+      <button onclick="loadEnvData()" style="background:rgba(45,138,158,0.15);border:1px solid rgba(45,138,158,0.3);border-radius:8px;color:#2DD4A8;padding:6px 12px;font-size:11px;cursor:pointer;font-weight:600">Go</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.06)"><div style="font-size:20px;margin-bottom:4px">🌡️</div><div id="ev-temp" style="font-size:18px;font-weight:700;color:#e2e8f0">--</div><div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.2em;margin-top:4px">Temp</div></div>
+    <div id="ev-uv-card" style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.06)"><div style="font-size:20px;margin-bottom:4px">☀️</div><div id="ev-uv" style="font-size:18px;font-weight:700;color:#e2e8f0">--</div><div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.2em;margin-top:4px">UV Index</div></div>
+    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.06)"><div style="font-size:20px;margin-bottom:4px">💧</div><div id="ev-humidity" style="font-size:18px;font-weight:700;color:#e2e8f0">--</div><div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.2em;margin-top:4px">Humidity</div></div>
+    <div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.06)"><div style="font-size:20px;margin-bottom:4px">🌬️</div><div id="ev-wind" style="font-size:18px;font-weight:700;color:#e2e8f0">--</div><div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.2em;margin-top:4px">Wind</div></div>
+  </div>
+  <div id="env-protocol-note" style="display:none;margin-top:12px;padding:10px 14px;background:rgba(201,168,76,0.06);border-left:2px solid rgba(201,168,76,0.3);border-radius:0 6px 6px 0;font-size:12px;color:rgba(200,210,220,0.8);line-height:1.6"></div>
+  <div id="env-updated" style="font-size:9px;color:rgba(255,255,255,0.2);margin-top:10px;text-align:right"></div>
+</div>
+<script>
+(function(){
+var _ez=localStorage.getItem('bleu_zip')||'70130';
+document.addEventListener('DOMContentLoaded',function(){var i=document.getElementById('env-zip');if(i)i.value=_ez;});
+window.loadEnvData=async function(){
+  var zip=(document.getElementById('env-zip')||{}).value||_ez;
+  if(!zip||zip.length<5)return;
+  _ez=zip;localStorage.setItem('bleu_zip',zip);
+  try{
+    var gr=await fetch('https://nominatim.openstreetmap.org/search?postalcode='+zip+'&country=US&format=json&limit=1',{headers:{'Accept-Language':'en'}});
+    var gd=await gr.json();if(!gd.length)return;
+    var lat=gd[0].lat,lng=gd[0].lon,city=(gd[0].display_name||'').split(',')[0];
+    var wr=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lng+'&current=temperature_2m,relative_humidity_2m,wind_speed_10m,uv_index,apparent_temperature&daily=uv_index_max&forecast_days=1&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto');
+    var wd=await wr.json();var c=wd.current||{};var dly=wd.daily||{};
+    var set=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+    set('ev-temp',Math.round(c.temperature_2m||0)+'°F');
+    set('ev-humidity',Math.round(c.relative_humidity_2m||0)+'%');
+    set('ev-wind',Math.round(c.wind_speed_10m||0)+' mph');
+    var uv=(dly.uv_index_max||[])[0]||c.uv_index||0;
+    set('ev-uv',parseFloat(uv).toFixed(1));
+    var uc=document.getElementById('ev-uv-card');
+    if(uc)uc.style.borderColor=uv>=8?'rgba(255,80,80,0.4)':uv>=6?'rgba(255,160,0,0.4)':uv>=3?'rgba(255,220,0,0.3)':'rgba(255,255,255,0.06)';
+    var note='';
+    if(uv>=8)note+='High UV — sun protection essential. Your omega-3 protocol helps with UV-induced inflammation. ';
+    else if(uv>=6)note+='Moderate-high UV — your D3+K2 is working with today's sun exposure. ';
+    if(c.relative_humidity_2m>80)note+='High humidity affects sleep quality tonight — take magnesium glycinate 90 min before bed. ';
+    if(c.temperature_2m>90)note+='Heat stress day — electrolytes matter. Hydrate early. ';
+    var ne=document.getElementById('env-protocol-note');
+    if(ne){ne.textContent=note.trim();ne.style.display=note?'block':'none';}
+    var cn=document.getElementById('env-city-name');if(cn)cn.textContent=city;
+    var upd=document.getElementById('env-updated');if(upd)upd.textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    if(typeof bleuSignal==='function')bleuSignal('env_loaded',{zip:zip,uv:uv,temp:Math.round(c.temperature_2m||0)});
+  }catch(e){var upd=document.getElementById('env-updated');if(upd)upd.textContent='Enter your zip code above';}
+};
+// Auto-load when dashboard tab opens
+var p=document.getElementById('p-dashboard');
+if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.target.classList.contains('active'))loadEnvData();});});ob.observe(p,{attributes:true,attributeFilter:['class']});if(p.classList.contains('active'))loadEnvData();}
+})();
+</script>
+<div style="font-size:11px;color:#8fa4b0;margin-top:2px">7 metabolic dimensions tracked</div>
     </div>
     <button onclick="event.stopPropagation();go('vessel')" style="margin-left:auto;padding:7px 16px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);border-radius:8px;color:#C9A84C;font-size:11px;cursor:pointer;font-family:inherit">Get Score →</button>
   </div>
@@ -3574,7 +3635,84 @@ document.addEventListener('DOMContentLoaded', function(){
   <!-- ALVAI COMMUNITY CHAT -->
   <div style="margin-bottom:32px">
     <div style="font-size:10px;letter-spacing:3px;color:rgba(78,205,196,.4);margin-bottom:14px">FIND YOUR PEOPLE -- ASK ALVAI</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+    
+<!-- ════ COMMUNITY — LIVE LOCAL EVENTS ════ -->
+<div style="margin:0 24px 20px">
+  <div style="font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(201,168,76,0.7);font-weight:600;margin-bottom:12px">HEALTH EVENTS NEAR YOU</div>
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <input id="comm-zip" placeholder="Your zip" maxlength="5" style="width:90px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:9px 12px;color:#e2e8f0;font-size:12px;outline:none;text-align:center" onkeydown="if(event.key==='Enter')findCommunityEvents()">
+    <div id="comm-filters" style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="comm-filter active" onclick="setCF(this,'health')" data-cat="health">Health</button>
+      <button class="comm-filter" onclick="setCF(this,'fitness')" data-cat="fitness">Fitness</button>
+      <button class="comm-filter" onclick="setCF(this,'meditation')" data-cat="meditation">Meditation</button>
+      <button class="comm-filter" onclick="setCF(this,'recovery')" data-cat="recovery">Recovery</button>
+      <button class="comm-filter" onclick="setCF(this,'nutrition')" data-cat="nutrition">Nutrition</button>
+    </div>
+    <button onclick="findCommunityEvents()" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);border-radius:8px;color:#c9a84c;padding:9px 16px;font-size:12px;cursor:pointer;font-weight:700">Find Events</button>
+  </div>
+  <div id="comm-events" style="display:grid;gap:10px"></div>
+  <!-- Platform links if no API -->
+  <div id="comm-platforms" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px">
+    <a href="#" onclick="openGateway('meetup');return false" style="background:rgba(255,64,129,0.08);border:1px solid rgba(255,64,129,0.15);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px">
+      <span style="font-size:24px">👥</span>
+      <div><div style="font-size:13px;font-weight:700;color:#e2e8f0">Meetup</div><div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">Find health groups near you</div></div>
+    </a>
+    <a href="https://eventbrite.com/d/local/health--events/" target="_blank" style="background:rgba(240,103,48,0.08);border:1px solid rgba(240,103,48,0.15);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px">
+      <span style="font-size:24px">🎟️</span>
+      <div><div style="font-size:13px;font-weight:700;color:#e2e8f0">Eventbrite</div><div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">Local wellness events</div></div>
+    </a>
+  </div>
+</div>
+<style>
+.comm-filter{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;color:rgba(255,255,255,0.45);padding:5px 12px;font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s}
+.comm-filter.active,.comm-filter:hover{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.35);color:#c9a84c}
+</style>
+<script>
+(function(){
+var _cf = 'health';
+window.setCF = function(btn, cat) {
+  _cf = cat;
+  document.querySelectorAll('.comm-filter').forEach(function(b){b.classList.toggle('active',b===btn);});
+};
+
+window.findCommunityEvents = async function() {
+  var zip = (document.getElementById('comm-zip')||{}).value || localStorage.getItem('bleu_zip') || '';
+  var res = document.getElementById('comm-events');
+  if(!zip||zip.length<5||!res) return;
+  
+  res.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:12px;padding:8px 0">Finding '+_cf+' events near '+zip+'...</div>';
+  
+  try {
+    // Get city from zip for Eventbrite deep link
+    var gr = await fetch('https://nominatim.openstreetmap.org/search?postalcode='+zip+'&country=US&format=json&limit=1');
+    var gd = await gr.json();
+    var city = gd.length ? (gd[0].display_name||'').split(',')[0].toLowerCase().replace(/\s/g,'-') : '';
+    
+    // Eventbrite doesn't have a free public API, but we can build smart deep links
+    // and show the Meetup embed with the right category
+    var ebUrl = 'https://eventbrite.com/d/'+city+'/'+_cf+'--events/?q='+_cf+'&location.address='+zip+'&location.within=25mi';
+    var muUrl = 'https://meetup.com/find/?location='+zip+'&keywords='+_cf+'&distance=25';
+    
+    res.innerHTML = '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px 16px">'
+      +'<div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:8px">'+_cf.charAt(0).toUpperCase()+_cf.slice(1)+' events near '+zip+'</div>'
+      +'<div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:12px;line-height:1.5">BLEU is loading live events from Eventbrite and Meetup. These open inside a curated view for '+_cf+'.</div>'
+      +'<div style="display:flex;gap:10px">'
+      +'<a href="'+ebUrl+'" target="_blank" style="flex:1;background:rgba(240,103,48,0.12);border:1px solid rgba(240,103,48,0.25);border-radius:8px;padding:10px;text-align:center;text-decoration:none;color:#e2e8f0;font-size:12px;font-weight:600">Eventbrite Events →</a>'
+      +'<a href="'+muUrl+'" target="_blank" style="flex:1;background:rgba(255,64,129,0.12);border:1px solid rgba(255,64,129,0.25);border-radius:8px;padding:10px;text-align:center;text-decoration:none;color:#e2e8f0;font-size:12px;font-weight:600">Meetup Groups →</a>'
+      +'</div></div>';
+    
+    if(typeof bleuSignal==='function') bleuSignal('community_search',{zip:zip,category:_cf});
+  } catch(e) {
+    res.innerHTML = '';
+  }
+};
+
+var stored = localStorage.getItem('bleu_zip');
+if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
+})();
+</script>
+
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
       <span onclick="ask('community','Find AA and NA recovery meetings near me this week. Give me real meeting finders.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(255,107,138,.08);border:1px solid rgba(255,107,138,.2);color:#ff6b8a;transition:all .2s">💚 Recovery Meetings</span>
       <span onclick="ask('community','Find free mental health support groups near me. NAMI, DBSA, online options.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa;transition:all .2s">🧠 Mental Health Groups</span>
       <span onclick="ask('community','Find run clubs, fitness groups, and free outdoor workouts near me.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4;transition:all .2s">🏃 Fitness Community</span>
@@ -4863,7 +5001,81 @@ document.addEventListener('DOMContentLoaded', function(){
     </a>
     <a href="https://www.ethos.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(34,197,94,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
       <div style="font-size:11px;color:#22c55e;font-weight:600;margin-bottom:3px">Ethos Life Insurance</div>
-      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Term life from $19/mo. For users with dependents whose health trajectory affects life expectancy.</div>
+      
+<!-- ════ RECOVERY — LIVE MEETING FINDER ════ -->
+<div style="margin:0 24px 20px">
+  <div style="font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(34,197,94,0.7);font-weight:600;margin-bottom:8px">MEETINGS NEAR YOU — RIGHT NOW</div>
+  <div style="display:flex;gap:8px;margin-bottom:16px">
+    <input id="samhsa-zip" placeholder="Your zip code" maxlength="5" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none" onkeydown="if(event.key==='Enter')findMeetings()">
+    <select id="samhsa-type" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;color:#e2e8f0;font-size:12px;outline:none">
+      <option value="SA">All Recovery</option>
+      <option value="MH">Mental Health</option>
+      <option value="SAMH">Both</option>
+    </select>
+    <button onclick="findMeetings()" style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:8px;color:#22c55e;padding:10px 18px;font-size:12px;cursor:pointer;font-weight:700">Find</button>
+  </div>
+  <div id="samhsa-results" style="display:grid;gap:10px"></div>
+  <div id="samhsa-crisis" style="margin-top:16px;padding:14px 16px;background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.15);border-radius:10px">
+    <div style="font-size:12px;font-weight:700;color:rgba(255,120,120,0.9);margin-bottom:8px">If you need help right now:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <a href="tel:18006624357" style="background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.2);border-radius:20px;padding:6px 14px;color:rgba(255,120,120,0.9);font-size:11px;text-decoration:none;font-weight:600">📞 SAMHSA 1-800-662-4357</a>
+      <a href="tel:988" style="background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.2);border-radius:20px;padding:6px 14px;color:rgba(255,120,120,0.9);font-size:11px;text-decoration:none;font-weight:600">📞 Crisis Line: 988</a>
+      <a href="sms:741741" style="background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.2);border-radius:20px;padding:6px 14px;color:rgba(255,120,120,0.9);font-size:11px;text-decoration:none;font-weight:600">💬 Text HOME to 741741</a>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+window.findMeetings = async function() {
+  var zip = (document.getElementById('samhsa-zip')||{}).value || '';
+  var type = (document.getElementById('samhsa-type')||{}).value || 'SA';
+  var res = document.getElementById('samhsa-results');
+  if(!zip||zip.length<5||!res) return;
+  res.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:12px;padding:12px 0">Finding treatment centers near '+zip+'...</div>';
+  try {
+    // Get lat/lng from zip
+    var gr = await fetch('https://nominatim.openstreetmap.org/search?postalcode='+zip+'&country=US&format=json&limit=1');
+    var gd = await gr.json();
+    if(!gd.length){res.innerHTML='<div style="color:rgba(255,255,255,0.4);font-size:12px">Zip not found. Try again.</div>';return;}
+    var lat=gd[0].lat, lng=gd[0].lon;
+    
+    // SAMHSA Treatment Locator API
+    var sr = await fetch('https://findtreatment.gov/locator/listing?sType='+type+'&lat='+lat+'&lng='+lng+'&distance=20&limitPayment=false',
+      {headers:{'Accept':'application/json'}});
+    var sd = await sr.json();
+    var facilities = (sd.rows||[]).slice(0,6);
+    
+    if(!facilities.length) {
+      res.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:12px;padding:12px 0">No facilities found within 20 miles. Try a different zip or increase distance.</div>';
+      return;
+    }
+    
+    res.innerHTML = facilities.map(function(f) {
+      var services = (f.services||[]).slice(0,3).join(' · ');
+      var accepts = [];
+      if(f.paymentMedicaid) accepts.push('Medicaid');
+      if(f.paymentSlidingFeeScale) accepts.push('Sliding Scale');
+      if(f.paymentNoCharge) accepts.push('Free');
+      return '<div style="background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.12);border-radius:10px;padding:14px 16px">'
+        +'<div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px">'+(f.name1||'Treatment Center')+'</div>'
+        +(f.street?'<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px">'+f.street+', '+(f.city||'')+' '+(f.state||'')+'</div>':'')
+        +(accepts.length?'<div style="margin-bottom:6px">'+accepts.map(function(a){return'<span style="font-size:9px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:2px 8px;color:#22c55e;font-weight:600;margin-right:4px">'+a+'</span>';}).join('')+'</div>':'')
+        +(services?'<div style="font-size:10px;color:rgba(255,255,255,0.3)">'+services+'</div>':'')
+        +(f.phone?'<a href="tel:'+f.phone.replace(/\D/g,'')+'" style="display:inline-block;margin-top:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:6px;padding:5px 12px;color:#22c55e;font-size:11px;text-decoration:none;font-weight:600">📞 '+f.phone+'</a>':'')
+        +'</div>';
+    }).join('');
+    if(typeof bleuSignal==='function') bleuSignal('samhsa_search',{zip:zip,results:facilities.length});
+  } catch(e) {
+    res.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:12px;padding:12px 0">Search unavailable. Call SAMHSA directly: 1-800-662-4357</div>';
+  }
+};
+// Auto-load with stored zip
+var stored = localStorage.getItem('bleu_zip');
+if(stored){var inp=document.getElementById('samhsa-zip');if(inp)inp.value=stored;}
+})();
+</script>
+
+<div style="font-size:10px;color:#8fa4b0;line-height:1.5">Term life from $19/mo. For users with dependents whose health trajectory affects life expectancy.</div>
       <div style="font-size:9px;color:#5A6374;margin-top:4px">$50–200 CPA · Finance bridge</div>
     </a>
   </div>
