@@ -1055,6 +1055,15 @@ const PROTOCOL_BUNDLES: Record<string, {
     duration: "60 days",
     est_cost: "~$40/mo",
   },
+  longevity: {
+    name: "Longevity & Performance Protocol",
+    items: ["CoQ10 Ubiquinol 200mg", "Omega-3 EPA/DHA 2000mg", "Magnesium Glycinate 400mg", "Vitamin D3+K2 5000IU"],
+    amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00I5JV0AC&Quantity.1=1&ASIN.2=B002CQU564&Quantity.2=1&ASIN.3=B00M9D42HM&Quantity.3=1&AssociateTag=bleu-live-20",
+    iherb_cart: "https://fullscript.com/plans/bleuplatform/search?kw=ubiquinol+omega3+magnesium+glycinate+vitamin+d3&",
+    duration: "90 days",
+    est_cost: "~$75/mo",
+  },
+
   metabolic: {
     name: "Metabolic Reset Protocol",
     items: ["Berberine HCl 1500mg", "Chromium Picolinate 400mcg", "Omega-3 2000mg"],
@@ -1127,8 +1136,11 @@ function classifyPathway(msg: string, biomarkers: any): string[] {
   // CARDIOVASCULAR
   if (/heart|blood pressure|hypertension|cholesterol|cardiovascular/.test(t)) paths.push("cardiovascular");
 
+  // LONGEVITY / ENERGY / PERFORMANCE
+  if (/longevity|used to feel|feel incredible|years ago|energy back|feel younger|biohack|healthspan|anti.aging|feel strong|feel sharp|feel like i did|get it back|time travel/.test(t)) paths.push("longevity");
+
   // WEIGHT / METABOLIC
-  if (/weight|lose.*weight|metabolism|blood sugar|insulin|glp|ozempic|semaglutide/.test(t)) paths.push("metabolic");
+  if (/weight|lose.*weight|blood sugar|insulin|glp|ozempic|semaglutide/.test(t)) paths.push("metabolic");
 
   return paths;
 }

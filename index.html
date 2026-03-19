@@ -7436,7 +7436,7 @@ const RUFUS_JOURNEYS = {
 
   weight_loss: {
     title: "YOUR WEIGHT LOSS JOURNEY",
-    triggers: /weight loss|lose weight|overweight|obese|obesity|glp.?1|semaglutide|ozempic|wegovy|tirzepatide|mounjaro|zepbound|berberine|metaboli|insulin resistance|blood sugar control/i,
+    triggers: /weight loss|lose weight|overweight|obese|obesity|glp.?1|semaglutide|ozempic|wegovy|tirzepatide|mounjaro|zepbound|lose.*weight|need to lose|want to lose|gained weight|can.t lose|struggling.*weight/i,
     steps: [
       {step:'START HERE',label:'step-start',id:'function-health'},
       {step:'PRESCRIBER',label:'step-prescriber',id:'hims-weight'},
@@ -7448,6 +7448,23 @@ const RUFUS_JOURNEYS = {
       {step:'TRACK',label:'step-track',id:'oura'},
       {step:'MOVE',label:'step-move',id:'classpass'},
       {step:'LABS',label:'step-start',id:'labcorp-demand'},
+      {step:'LEARN',label:'step-learn',id:'audible'},
+      {step:'COMMUNITY',label:'step-community',id:'meetup'},
+    ]
+  },
+
+  longevity: {
+    title: "YOUR LONGEVITY PROTOCOL",
+    triggers: /longevity|feel incredible|used to feel|years ago|feel like i did|get it back|turn back|energy back|sharp again|feel strong|47|48|49|50|51|52|53|54|55|feel younger|biohack|biological age|healthspan|lifespan|aging|anti.aging|slow aging|feel 35|feel 40|feel 30/i,
+    steps: [
+      {step:'FOUNDATION',label:'step-start',id:'omega3'},
+      {step:'MITOCHONDRIA',label:'step-stack',id:'coq10'},
+      {step:'SLEEP',label:'step-stack',id:'thorne-mag'},
+      {step:'CORTISOL',label:'step-stack',id:'ashwa'},
+      {step:'BRAIN',label:'step-stack',id:'ltheanine'},
+      {step:'TRACK',label:'step-track',id:'oura'},
+      {step:'MOVE',label:'step-move',id:'classpass'},
+      {step:'LABS',label:'step-start',id:'function-health'},
       {step:'LEARN',label:'step-learn',id:'audible'},
       {step:'COMMUNITY',label:'step-community',id:'meetup'},
     ]
