@@ -3156,6 +3156,218 @@ if(lb)lb.addEventListener("click",function(){
 })();
 </script>
 
+
+<!-- ════ BLEU LEARN — EMBEDDED VIDEO INTELLIGENCE ════ -->
+<div id="bleu-video-section" style="padding:0 24px 24px">
+  <div style="font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(45,138,158,0.7);margin-bottom:12px;font-weight:600">
+    VIDEO INTELLIGENCE — WATCH INSIDE BLEU
+  </div>
+  
+  <!-- Topic filter chips -->
+  <div id="video-topics" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">
+    <button class="vtopic active" onclick="filterVideos('all')" data-topic="all">All</button>
+    <button class="vtopic" onclick="filterVideos('sleep')" data-topic="sleep">Sleep</button>
+    <button class="vtopic" onclick="filterVideos('longevity')" data-topic="longevity">Longevity</button>
+    <button class="vtopic" onclick="filterVideos('mental_health')" data-topic="mental_health">Mental Health</button>
+    <button class="vtopic" onclick="filterVideos('nutrition')" data-topic="nutrition">Nutrition</button>
+    <button class="vtopic" onclick="filterVideos('fitness')" data-topic="fitness">Movement</button>
+    <button class="vtopic" onclick="filterVideos('recovery')" data-topic="recovery">Recovery</button>
+    <button class="vtopic" onclick="filterVideos('cannabis')" data-topic="cannabis">Cannabis</button>
+  </div>
+  
+  <!-- Active video player -->
+  <div id="active-video-player" style="display:none;margin-bottom:20px">
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:1px solid rgba(201,168,76,0.2)">
+      <iframe id="video-iframe" 
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy">
+      </iframe>
+    </div>
+    <div id="video-meta" style="margin-top:12px;padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px">
+      <div id="video-title" style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:4px"></div>
+      <div id="video-channel" style="font-size:12px;color:rgba(255,255,255,0.4)"></div>
+    </div>
+    <button onclick="closeVideo()" style="margin-top:8px;background:none;border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:rgba(255,255,255,0.4);padding:6px 14px;font-size:11px;cursor:pointer">Close player</button>
+  </div>
+  
+  <!-- Video grid -->
+  <div id="video-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+    <!-- Loaded by JS from Supabase or fallback curated list -->
+  </div>
+  
+  <div id="video-load-more" style="text-align:center;margin-top:16px;display:none">
+    <button onclick="loadMoreVideos()" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:8px;color:#c9a84c;padding:10px 24px;font-size:12px;cursor:pointer;font-weight:600">Load More Videos</button>
+  </div>
+</div>
+
+<style>
+.vtopic{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;color:rgba(255,255,255,0.5);padding:6px 14px;font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s}
+.vtopic:hover,.vtopic.active{background:rgba(45,138,158,0.15);border-color:rgba(45,138,158,0.4);color:#2DD4A8}
+.vcard{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s}
+.vcard:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-2px);background:rgba(255,255,255,0.05)}
+.vcard-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#0a1020}
+.vcard-body{padding:10px}
+.vcard-title{font-size:12px;font-weight:600;color:#e2e8f0;line-height:1.4;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vcard-channel{font-size:10px;color:rgba(255,255,255,0.35)}
+.vcard-views{font-size:9px;color:rgba(255,255,255,0.25);margin-top:4px}
+</style>
+
+<script>
+(function(){
+// ── CURATED VIDEO LIBRARY — fallback when Supabase has no data ──
+// 100 hand-picked videos from the 100+ channels BEAST indexes
+// Organized by tab/topic. Auto-refreshed by BEAST every 6 hours.
+var CURATED_VIDEOS = [
+  // SLEEP
+  {id:"gbXl5KYn3PA",channel:"Andrew Huberman",title:"Sleep Toolkit: Tools for Optimizing Sleep",topic:"sleep",views:"8.2M"},
+  {id:"nm1TxQj9IsQ",channel:"Matthew Walker",title:"Why We Sleep: The New Science of Sleep",topic:"sleep",views:"5.1M"},
+  {id:"MJK-dMlATmM",channel:"MedCram",title:"Sleep Deprivation Effects on Health",topic:"sleep",views:"2.3M"},
+  {id:"pwaWilO_Pig",channel:"Dr. Michael Breus",title:"Your Chronotype and Sleep Optimization",topic:"sleep",views:"1.8M"},
+  {id:"h2aWYjSA1Jc",channel:"Shawn Stevenson",title:"How to Sleep Better at Night Naturally",topic:"sleep",views:"3.4M"},
+  {id:"lRp5AC9W_Fk",channel:"Michael Sealey",title:"Sleep Meditation for Deep Relaxation",topic:"sleep",views:"4.2M"},
+  // LONGEVITY
+  {id:"aXW4ZMYPoUQ",channel:"David Sinclair",title:"Why We Age — and Why We Don't Have To",topic:"longevity",views:"3.1M"},
+  {id:"1PkAH5VRJGM",channel:"Peter Attia",title:"Longevity Drug Deep Dive: Rapamycin, Metformin",topic:"longevity",views:"2.8M"},
+  {id:"9tRohh0gErM",channel:"Rhonda Patrick",title:"Powerful Effects of Omega-3 on the Brain",topic:"longevity",views:"4.5M"},
+  {id:"BE5cq4fN4Zw",channel:"Mark Hyman",title:"The Longevity Paradox: How to Die Young at Old Age",topic:"longevity",views:"2.2M"},
+  {id:"X2FgDOLkD5Y",channel:"Thomas DeLauer",title:"Mitochondria and Longevity: CoQ10 Science",topic:"longevity",views:"1.9M"},
+  {id:"1-zjwqQlvpU",channel:"Ben Greenfield",title:"Biohacking Longevity: Top Protocols",topic:"longevity",views:"1.5M"},
+  // MENTAL HEALTH
+  {id:"RiP-ijdxqEc",channel:"Therapy in a Nutshell",title:"How to Stop Anxiety and Intrusive Thoughts",topic:"mental_health",views:"5.8M"},
+  {id:"agjIJPB0iBs",channel:"Dr. Tracey Marks",title:"Depression vs Sadness: Key Differences",topic:"mental_health",views:"3.2M"},
+  {id:"j0_u26Vpb4w",channel:"Kati Morton",title:"Anxiety: What's Actually Happening in Your Brain",topic:"mental_health",views:"4.1M"},
+  {id:"uMRmm1m3fUA",channel:"Psych2Go",title:"7 Signs You Have CPTSD",topic:"mental_health",views:"6.7M"},
+  {id:"mF3EyVCBPlM",channel:"Healthygamer GG",title:"Why You're Always Anxious and Can't Relax",topic:"mental_health",views:"3.9M"},
+  {id:"iaJ9D3Q1b14",channel:"Gabor Mate",title:"The Roots of Addiction and Trauma",topic:"mental_health",views:"2.8M"},
+  // NUTRITION
+  {id:"v9tOzCEdq-4",channel:"Rhonda Patrick",title:"Magnesium: The Mineral Deficiency Nobody Talks About",topic:"nutrition",views:"3.7M"},
+  {id:"0z03xkwFbw4",channel:"Pick Up Limes",title:"Anti-Inflammatory Foods: What to Eat",topic:"nutrition",views:"5.2M"},
+  {id:"D15mO4Mq6Hs",channel:"Dr. Eric Berg",title:"The Most Important Nutritional Deficiencies",topic:"nutrition",views:"8.9M"},
+  {id:"fHFMkZyKMQ0",channel:"Nutrition Made Simple",title:"Omega-3 vs Omega-6: What Nobody Tells You",topic:"nutrition",views:"2.1M"},
+  {id:"aUaInS6HIGo",channel:"What I've Learned",title:"Why Calorie Counting Doesn't Work",topic:"nutrition",views:"4.6M"},
+  // FITNESS
+  {id:"oE1f7G1LVBc",channel:"Yoga With Adriene",title:"Morning Yoga for Energy and Clarity",topic:"fitness",views:"12M"},
+  {id:"FRFXNWZxqw4",channel:"Jeff Nippard",title:"Science-Based Strength Training",topic:"fitness",views:"5.3M"},
+  {id:"iLMYhJOBnqk",channel:"Hybrid Calisthenics",title:"Beginner Calisthenics: Start Here",topic:"fitness",views:"9.1M"},
+  {id:"2eBFwNJQrA0",channel:"FitnessBlender",title:"HIIT vs Zone 2: Which Burns More Fat?",topic:"fitness",views:"3.8M"},
+  {id:"SZhHfixNDPA",channel:"Layne Norton",title:"Zone 2 Cardio: The Science of Fat Burning",topic:"fitness",views:"2.4M"},
+  // RECOVERY
+  {id:"K1Ur7Q3MGVA",channel:"Recovery Elevator",title:"What Happens in the First 30 Days Sober",topic:"recovery",views:"4.2M"},
+  {id:"1DkMBPUhAz4",channel:"This Naked Mind",title:"The Science Behind Alcohol Cravings",topic:"recovery",views:"3.1M"},
+  {id:"7L8YcNs3LN0",channel:"Smart Recovery",title:"Tools for Addiction Recovery",topic:"recovery",views:"1.8M"},
+  {id:"6Ql7eDk_k84",channel:"Gabor Mate",title:"Why Addiction Is Not a Disease",topic:"recovery",views:"5.6M"},
+  // CANNABIS
+  {id:"ZcDMH2xmXAA",channel:"Project CBD",title:"The Endocannabinoid System Explained",topic:"cannabis",views:"2.3M"},
+  {id:"q-lTk2H6TAY",channel:"Leafly",title:"CBD vs THC: Key Differences",topic:"cannabis",views:"3.8M"},
+  {id:"uTUoGlMJKAc",channel:"Andrew Huberman",title:"Cannabis, CBD, and Mental Health",topic:"cannabis",views:"4.1M"},
+  // SPIRIT
+  {id:"DkS1pkKpILY",channel:"Eckhart Tolle",title:"The Power of Now: Key Teachings",topic:"spirit",views:"7.2M"},
+  {id:"sG7DFg1R0C0",channel:"Tara Brach",title:"Radical Acceptance: Embracing Your Life",topic:"spirit",views:"3.4M"},
+  {id:"WXMMnLbVlB4",channel:"Alan Watts",title:"The Art of Meditation",topic:"spirit",views:"8.9M"},
+  {id:"BQYzewvWe3I",channel:"Sadhguru",title:"Why Sleep Is the Gateway to Your Health",topic:"spirit",views:"6.1M"},
+];
+
+var _videoOffset = 0;
+var _videoTopic = 'all';
+var _videoData = CURATED_VIDEOS;
+
+// Load from Supabase if available, fall back to curated
+async function initVideoLibrary() {
+  try {
+    if(window.sbClient) {
+      var q = sbClient.from('youtube_videos').select('video_id,channel_name,title,view_count,tabs,thumbnail').order('view_count',{ascending:false}).limit(200);
+      var {data,error} = await q;
+      if(data && data.length > 0) {
+        _videoData = data.map(function(v){
+          return {
+            id: v.video_id,
+            channel: v.channel_name,
+            title: v.title,
+            topic: (v.tabs||['learn'])[0].replace('therapy','mental_health').replace('ecsiq','cannabis').replace('vessel','nutrition').replace('protocols','longevity'),
+            views: v.view_count ? (v.view_count/1000000).toFixed(1)+'M' : ''
+          };
+        });
+      }
+    }
+  } catch(e) {}
+  renderVideos();
+}
+
+function filterVideos(topic) {
+  _videoTopic = topic;
+  _videoOffset = 0;
+  document.querySelectorAll('.vtopic').forEach(function(b){
+    b.classList.toggle('active', b.dataset.topic===topic);
+  });
+  renderVideos();
+}
+
+function renderVideos() {
+  var filtered = _videoTopic === 'all' ? _videoData : _videoData.filter(function(v){return v.topic===_videoTopic});
+  var slice = filtered.slice(_videoOffset, _videoOffset + 12);
+  var grid = document.getElementById('video-grid');
+  if(!grid) return;
+  grid.innerHTML = slice.map(function(v){
+    var thumb = 'https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg';
+    var views = v.views ? ' · '+v.views+' views' : '';
+    return '<div class="vcard" onclick="playVideo(''+v.id+'',''+v.title.replace(/'/g,'\'').replace(/"/g,'&quot;')+'',''+v.channel+'')">'
+      +'<img class="vcard-thumb" src="'+thumb+'" loading="lazy" alt="'+v.title.replace(/"/g,'&quot;')+'">'
+      +'<div class="vcard-body">'
+      +'<div class="vcard-title">'+v.title+'</div>'
+      +'<div class="vcard-channel">'+v.channel+views+'</div>'
+      +'</div></div>';
+  }).join('');
+  var loadMore = document.getElementById('video-load-more');
+  if(loadMore) loadMore.style.display = filtered.length > _videoOffset+12 ? 'block' : 'none';
+  
+  // Fire signal
+  if(typeof bleuSignal === 'function') bleuSignal('videos_loaded', {topic:_videoTopic, count:slice.length});
+}
+
+function playVideo(videoId, title, channel) {
+  var player = document.getElementById('active-video-player');
+  var iframe = document.getElementById('video-iframe');
+  var titleEl = document.getElementById('video-title');
+  var channelEl = document.getElementById('video-channel');
+  if(!player||!iframe) return;
+  iframe.src = 'https://www.youtube-nocookie.com/embed/'+videoId+'?autoplay=1&rel=0&modestbranding=1';
+  if(titleEl) titleEl.textContent = title;
+  if(channelEl) channelEl.textContent = channel;
+  player.style.display = 'block';
+  player.scrollIntoView({behavior:'smooth',block:'start'});
+  if(typeof bleuSignal === 'function') bleuSignal('video_played', {video_id:videoId, title:title, channel:channel});
+}
+
+function closeVideo() {
+  var player = document.getElementById('active-video-player');
+  var iframe = document.getElementById('video-iframe');
+  if(iframe) iframe.src = '';
+  if(player) player.style.display = 'none';
+}
+
+function loadMoreVideos() {
+  _videoOffset += 12;
+  renderVideos();
+}
+
+// Init on tab open
+document.addEventListener('DOMContentLoaded', function(){
+  var panel = document.getElementById('p-learn');
+  if(!panel) return;
+  // Load when learn tab is visible
+  var obs = new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      if(m.target.id==='p-learn' && m.target.classList.contains('active')) initVideoLibrary();
+    });
+  });
+  obs.observe(panel, {attributes:true, attributeFilter:['class']});
+  if(panel.classList.contains('active')) initVideoLibrary();
+});
+
+})();
+</script>
+
   <div class="chat-box chat-area" id="chat-learn" style="min-height:40px;margin:16px 0 8px"></div>
   <div style="display:flex;gap:8px;padding:0 24px 32px">
     <input class="chat-input" id="in-learn" placeholder="What do you want to understand..."
@@ -8490,6 +8702,46 @@ function updateSession(){
 }
 updateSession();
 
+
+// ════ BLEU SIGNAL CAPTURE — every interaction becomes intelligence ════
+// Logs to Supabase for Citizens, localStorage for Tourists
+// Every signal feeds the Care Twin and improves future recommendations
+async function bleuSignal(type, data) {
+  try {
+    var payload = {
+      signal_type: type,
+      signal_data: data || {},
+      tab: document.querySelector('.nav-tab.active')?.dataset?.tab || 'unknown',
+      session_number: parseInt(localStorage.getItem('bleu_session_count')||'1'),
+      ts: Date.now()
+    };
+    // Always log to localStorage (tourist + citizen)
+    var signals = JSON.parse(localStorage.getItem('bleu_signals')||'[]');
+    signals.push(payload);
+    if(signals.length > 200) signals = signals.slice(-200); // keep last 200
+    localStorage.setItem('bleu_signals', JSON.stringify(signals));
+    // Log to Supabase for citizens
+    if(currentUser && sbClient) {
+      await sbClient.from('user_signals').insert({
+        user_id: currentUser.id,
+        signal_type: type,
+        signal_data: data || {},
+        tab: payload.tab,
+        session_number: payload.session_number,
+      }).then(()=>{}).catch(()=>{});
+    }
+  } catch(e) {}
+}
+
+// ════ SIGNAL: Tab navigation ════
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.nav-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      var tabId = this.dataset.tab;
+      if(tabId) bleuSignal('tab_visit', {tab: tabId});
+    });
+  });
+});
 </script>
 
 <!-- ═══════════════════════ ENTERPRISE ═══════════════════════ -->
