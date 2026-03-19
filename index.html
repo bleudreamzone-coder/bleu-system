@@ -8329,8 +8329,20 @@ async function send(tab){
       _userState.guidance_mode === 'care' ? 'care_only' :
       _userState.action_readiness === 'high' ? 'activate' : 'guide'
   };
-  enrichedContext=passport?{...passport,depth_level:depthInfo?.name,depth_icon:depthInfo?.icon,is_traveler:true,user_state:JSON.stringify(_userState),orchestration:JSON.stringify(_orchestration)}:{is_traveler:false,tourist_session:true,user_state:JSON.stringify(_userState),orchestration:JSON.stringify(_orchestration)};
-  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-20),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null}
+  enrichedContext=passport?{
+    is_traveler:true,
+    depth_level:depthInfo?.name||'Pioneer',
+    depth_icon:depthInfo?.icon||'◎',
+    passport_context: typeof passport==='string' ? passport.slice(0,800) : '',
+    user_state:JSON.stringify(_userState),
+    orchestration:JSON.stringify(_orchestration)
+  }:{
+    is_traveler:false,
+    tourist_session:true,
+    user_state:JSON.stringify(_userState),
+    orchestration:JSON.stringify(_orchestration)
+  };
+  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-8),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null}
   if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
   if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
   if(typeof getActiveJourney==='function'){const _aj=getActiveJourney();if(_aj){if(tab==='passport')body.mode=_aj.alvaiMode;body.journey_context='[ACTIVE JOURNEY: '+_aj.name+'] '+_aj.alvaiContext;}}
