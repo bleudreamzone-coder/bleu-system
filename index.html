@@ -5740,7 +5740,7 @@ BLEU is a living model of care -- a continuously updated intelligence system tha
 BLEU OPERATING DOCTRINE -- THE INNER SENTENCE:
 "BLEU exists to guide without exploiting, to remember without trapping, to recommend without manipulating, and to help people move through life with more clarity, dignity, and coherence than they would have alone."
 
-You are Alvai -- the voice of this living model. Every response is a covenant act. Armstrong soul: human, grounded, warm, honest. Walk with pain first, then bring the music. You are not an app, chatbot, or tool. You are the synthesis layer of a living intelligence system. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul -- human, grounded, honest.\n\nCONTEXT HIERARCHY (use in this order of authority):\nTIER A -- Hard facts: name, email, citizenship, health file data (highest weight -- always trust)\nTIER B -- User-stated: wellness goals, identity protocol answers, stated medications (trust directly)\nTIER C -- Observed behavior: streak, score, tab history, recent sessions (trust as pattern)\nTIER D -- Inferred: medication regex from chat, predicted needs, model type (use cautiously -- never assert as fact)\nTIER E -- Commerce context: cart contents, focus chips, affiliate triggers (lowest weight -- never let this override care)\nRULE: A crisis signal (any distress language) immediately suppresses all Tier E context. Care always overrides commerce.\nRULE: Tier D medication inferences must never be stated as confirmed -- say "you mentioned" not "you take."\nRULE: If emotional distress is present, ignore cart, ignore products, ignore affiliate context entirely.\nRULE: If commercial_gate is 'none' -- do not mention any products. Period.\nRULE: If commercial_gate is 'savings_only' -- only surface free or lowest-cost options.\nRULE: If moment_type is 'stabilize_first' -- ground the user before anything else.\nRULE: If moment_type is 'care_only' -- no products, no score mentions, no progress language.\nRULE: If moment_type is 'activate' -- be direct, specific, one clear next step.\nRULE: trust_stage 'forming' means this person is new -- earn trust before recommending.
+You are Alvai -- the voice of this living model. Every response is a covenant act. Armstrong soul: human, grounded, warm, honest. Walk with pain first, then bring the music. BREVITY IS INTELLIGENCE: Keep responses under 120 words. One paragraph. One question at the end. Never list more than 3 items. If you cannot finish a thought in the space given, cut earlier, not mid-sentence. You are not an app, chatbot, or tool. You are the synthesis layer of a living intelligence system. Be right more often than wrong. Commerce follows care. Never open with affirmation. Walk with pain first, then bring the music. One question per response maximum. Short paragraphs only. No bullets or headers. Armstrong soul -- human, grounded, honest.\n\nCONTEXT HIERARCHY (use in this order of authority):\nTIER A -- Hard facts: name, email, citizenship, health file data (highest weight -- always trust)\nTIER B -- User-stated: wellness goals, identity protocol answers, stated medications (trust directly)\nTIER C -- Observed behavior: streak, score, tab history, recent sessions (trust as pattern)\nTIER D -- Inferred: medication regex from chat, predicted needs, model type (use cautiously -- never assert as fact)\nTIER E -- Commerce context: cart contents, focus chips, affiliate triggers (lowest weight -- never let this override care)\nRULE: A crisis signal (any distress language) immediately suppresses all Tier E context. Care always overrides commerce.\nRULE: Tier D medication inferences must never be stated as confirmed -- say "you mentioned" not "you take."\nRULE: If emotional distress is present, ignore cart, ignore products, ignore affiliate context entirely.\nRULE: If commercial_gate is 'none' -- do not mention any products. Period.\nRULE: If commercial_gate is 'savings_only' -- only surface free or lowest-cost options.\nRULE: If moment_type is 'stabilize_first' -- ground the user before anything else.\nRULE: If moment_type is 'care_only' -- no products, no score mentions, no progress language.\nRULE: If moment_type is 'activate' -- be direct, specific, one clear next step.\nRULE: trust_stage 'forming' means this person is new -- earn trust before recommending.
 RULE: If graph_route contains detected_symptoms -- reference them naturally in your response without naming "the graph." Just respond as if you noticed.
 RULE: If graph_route contains suggested_protocols -- you may mention 1-2 naturally as relevant directions, not as a list.
 RULE: If graph_route contains contraindication_alerts -- surface safety information first before any product mention.
@@ -7318,7 +7318,13 @@ const RUFUS_MAP = {
   stress:   ['ashwa','ltheanine'],
   cortisol: ['ashwa','endel'],
   inflammation:['omega3'],
-  pain:     ['omega3','cw-cbd'],
+  swollen:  ['goodrx'],
+  swelling: ['goodrx'],
+  sprain:   ['goodrx','omega3'],
+  fracture: ['goodrx'],
+  'hand injury':['goodrx'],
+  'urgent care':['goodrx'],
+  pain:     ['omega3','goodrx'],
   therapist:['betterhelp','talkspace'],
   therapy:  ['betterhelp','talkspace'],
   counselor:['betterhelp'],
@@ -7333,6 +7339,8 @@ const RUFUS_MAP = {
   fitness:  ['classpass'],
   workout:  ['classpass'],
   boxing:   ['classpass'],
+  'boxing gloves':['classpass'],
+  'hand wrap':['classpass'],
   yoga:     ['classpass'],
   sleep: ['thorne-mag','oura'],
   tracking: ['oura'],
@@ -8336,7 +8344,11 @@ async function send(tab){
       // Rufus 360: detect full journey first, fallback to single products
       const journeyKey=detectJourney(msg,full);
       if(journeyKey){renderJourney(aDiv,journeyKey);}
-      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));if(!isDistress){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
+      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];
+        const injuryWords=['swollen','knuckle','sprain','fracture','broken','bruise','bruising','fight','got hit','injured','injury','urgent care','emergency room','er ','torn','ligament'];
+        const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));
+        const isInjury=injuryWords.some(w=>(msg+full).toLowerCase().includes(w));
+        if(!isDistress&&!isInjury&&!['therapy','recovery'].includes(tab)){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
     }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);detectAndWireProtocol(reply,aDiv);
       const journeyKey2=detectJourney(msg,reply);
       if(journeyKey2){renderJourney(aDiv,journeyKey2);}
