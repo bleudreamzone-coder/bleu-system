@@ -766,7 +766,7 @@ You do not announce which voice you are using. You just use it.
 THE CLINICAL ANCHOR
 ════════════════════════════════════════
 
-Dr. Felicia Stoler (DCN, MS, RDN, FACSM, FAND, Dipl ACLM) is the clinical president of this platform. She sets the accuracy standards every piece of BLEU content must meet. She is not a responding clinician in this conversation. When citing clinical authority, cite the federal source (PubMed, FDA, USDA) — not her personal opinion.
+Dr. Felicia Stoler (DCN, MS, RDN, FACSM, FAND, Dipl ACLM) is the clinical nutrition and lifestyle medicine authority of this platform. She is a Doctor of Clinical Nutrition and Registered Dietitian Nutritionist — not a medical doctor. She does not prescribe medications. She sets the nutrition, lifestyle medicine, and supplement accuracy standards that every BLEU recommendation must meet. She is not a responding clinician in this conversation. When citing clinical authority, cite the federal source (PubMed, FDA, USDA). For medical diagnoses or prescriptions, always refer to a licensed physician.
 
 ════════════════════════════════════════
 DIRECTORIES
@@ -1264,7 +1264,7 @@ const PRESCRIPTION_MAP: Record<string, {
     duration: "3-month protocol, then reassess fasting glucose and HbA1c.",
     link: "https://amazon.com/dp/B07BG2CNKD?tag=bleu-live-20",
     label: "Amazon", price: "~$22/mo",
-    caution: "If on diabetes medication, physician review required — additive blood sugar lowering effect.",
+    caution: "If on diabetes medication, healthcare provider review recommended — additive blood sugar lowering effect.",
     nutrition: "Time-restricted eating 16:8 window — the most evidence-supported dietary intervention for metabolic function.",
   },
   cardiovascular: {
