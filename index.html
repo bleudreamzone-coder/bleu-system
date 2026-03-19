@@ -10586,5 +10586,70 @@ if(typeof trackReferralVisit==='function')trackReferralVisit();if(document.ready
 </div>
 
 </div>
+
+<!-- ════ BLEU GATEWAY MODAL ════ -->
+<div id="bleu-gateway">
+  <div class="gw-box">
+    <button class="gw-close" onclick="closeGateway()">&#x2715;</button>
+    <div class="gw-badge" id="gw-badge">BLEU INTELLIGENCE</div>
+    <div class="gw-title" id="gw-title">Loading...</div>
+    <div class="gw-why" id="gw-why"></div>
+    <div class="gw-details" id="gw-details"></div>
+    <div class="gw-intake" id="gw-intake" style="display:none">
+      <div class="gw-intake-label">Quick match &mdash; takes 30 seconds</div>
+      <div id="gw-questions"></div>
+    </div>
+    <button class="gw-cta" id="gw-cta" onclick="gatewayProceed()">Continue &rarr;</button>
+    <span class="gw-skip" onclick="gatewaySkip()">Go directly without answering</span>
+    <div class="gw-disclosure">BLEU earns a small commission &middot; never affects trust scores or recommendations</div>
+  </div>
+</div>
+
+<script>
+var GATEWAY_DATA={betterhelp:{badge:"LICENSED THERAPY - 48HR MATCH",title:"BetterHelp",why:"Matched with a licensed therapist in 48 hours. You communicate via video, phone, or messaging. Alvai already understands your situation. This match will be tailored to it.",price:"$65/week",included:"Unlimited messaging + weekly sessions",intake:[{id:"th-type",label:"What brings you to therapy?",type:"select",options:["Sleep and anxiety","Grief or loss","Relationship issues","Trauma or PTSD","Depression","Life transitions","Other"]},{id:"th-format",label:"Preferred session format?",type:"select",options:["Video sessions","Phone calls","Messaging/text","Mix of all three"]}],urlBuilder:function(a){return"https://betterhelp.com/bleu?concern="+encodeURIComponent(a["th-type"]||"")},baseUrl:"https://betterhelp.com/bleu"},talkspace:{badge:"THERAPY - TEXT ANYTIME",title:"Talkspace",why:"Text your therapist any time. Good for 3am thoughts. Licensed professionals nationwide. Video, audio, and text sessions.",price:"$69/week",included:"Text, audio, and video sessions",intake:[{id:"ts-concern",label:"What do you most want to work on?",type:"select",options:["Anxiety","Depression","Relationships","Stress","Trauma","Sleep","Other"]}],urlBuilder:function(a){return"https://talkspace.com?concern="+encodeURIComponent(a["ts-concern"]||"")},baseUrl:"https://talkspace.com"},"hims-weight":{badge:"GLP-1 WEIGHT LOSS - TELEHEALTH",title:"Hims Weight Loss",why:"Telehealth prescriber for semaglutide and tirzepatide. Bloodwork required first. Physician oversight included. 95% qualify.",price:"from $199/month",included:"Physician consult + medication + monitoring",intake:[{id:"hw-bmi",label:"Your weight loss goal?",type:"select",options:["Lose 10-20 lbs","Lose 20-50 lbs","Lose 50+ lbs","Want evaluation"]}],urlBuilder:function(a){return"https://forhims.com/weight-loss?utm_source=bleu&utm_medium=affiliate"},baseUrl:"https://forhims.com/weight-loss?utm_source=bleu&utm_medium=affiliate"},"function-health":{badge:"100+ BIOMARKERS - ANNUAL PANEL",title:"Function Health",why:"100+ biomarkers twice a year. Results in 48 hours reviewed by a physician. Know your baseline before starting any protocol.",price:"$499/year",included:"160+ lab tests x2/year + physician review",intake:[{id:"fh-goal",label:"What are you trying to learn?",type:"select",options:["Energy and fatigue","Hormones","Cardiovascular risk","Inflammation","Complete baseline","All of the above"]}],urlBuilder:function(a){return"https://functionhealth.com?utm_source=bleu"},baseUrl:"https://functionhealth.com"},classpass:{badge:"EVERY STUDIO - ONE MEMBERSHIP",title:"ClassPass",why:"Boxing, yoga, pilates, cycling, swimming in your city on one membership. First month free. Cancel anytime.",price:"from $19/month",included:"Credits usable at hundreds of studios",intake:[{id:"cp-city",label:"What city are you in?",type:"input",placeholder:"New Orleans, LA"},{id:"cp-type",label:"What type of movement?",type:"select",options:["Boxing","Yoga / pilates","Cycling / spin","Strength training","Mix of everything"]}],urlBuilder:function(a){return"https://classpass.com?utm_source=bleu"},baseUrl:"https://classpass.com"},meetup:{badge:"LOCAL COMMUNITY - FREE",title:"Meetup",why:"Walking clubs, run crews, meditation circles, recovery support. Social isolation raises mortality risk equivalent to 15 cigarettes per day. This is clinical.",price:"Free to join",included:"In-person and online events",intake:[{id:"mu-city",label:"What city or zip code?",type:"input",placeholder:"New Orleans, LA"},{id:"mu-interest",label:"Type of community?",type:"select",options:["Fitness and movement","Recovery support","Meditation","Nutrition","Health professionals"]}],urlBuilder:function(a){return"https://meetup.com/find/?location="+encodeURIComponent(a["mu-city"]||"")+"&keywords="+encodeURIComponent(a["mu-interest"]||"health")},baseUrl:"https://meetup.com"},goodrx:{badge:"PRESCRIPTION SAVINGS - FREE",title:"GoodRx",why:"Show this at the pharmacy counter before they ring anything up. People save $80-$200 on the same prescription. The pharmacist expects it. 30 seconds.",price:"Free",included:"Coupons at 35,000+ pharmacies",intake:[],urlBuilder:function(){return"https://goodrx.com"},baseUrl:"https://goodrx.com"},audible:{badge:"AUDIO EDUCATION",title:"Audible",why:"Start with Why We Sleep (Walker), The Body Keeps the Score (van der Kolk), Atomic Habits (Clear). These three books will change how you understand your own biology. First month free.",price:"$14.95/month",included:"1 credit/month + Audible Plus",intake:[],urlBuilder:function(){return"https://audible.com?source_code=BLEU"},baseUrl:"https://audible.com?source_code=BLEU"},"labcorp-demand":{badge:"SELF-ORDER LABS",title:"LabCorp OnDemand",why:"Order your own bloodwork without a doctor's order. Results to your phone. A1C is $30. You do not need permission to know your own numbers.",price:"Pay per test",included:"Results in 24-48 hours",intake:[{id:"lc-test",label:"What are you testing for?",type:"select",options:["Blood sugar / A1C","Hormones / testosterone","Thyroid","Complete metabolic panel","Inflammation markers","Vitamin D and B12"]}],urlBuilder:function(a){return"https://ondemand.labcorp.com"},baseUrl:"https://ondemand.labcorp.com"},weedmaps:{badge:"DISPENSARY FINDER",title:"Weedmaps",why:"Real-time dispensary menus, lab-tested products, verified deals. Alvai CannaIQ analysis paired with Weedmaps gives you strain intelligence and where to buy it.",price:"Free",included:"Menus, reviews, delivery, lab results",intake:[{id:"wm-state",label:"What state are you in?",type:"input",placeholder:"Louisiana"}],urlBuilder:function(a){return"https://weedmaps.com/dispensaries/in/"+(a["wm-state"]||"").toLowerCase().replace(/\s/g,"-")},baseUrl:"https://weedmaps.com"}};
+var _gwProductId=null,_gwAnswers={};
+function openGateway(productId){
+  var data=GATEWAY_DATA[productId];
+  if(!data){var p=RUFUS_PRODUCTS[productId];if(p)window.open(p.url,"_blank");return;}
+  _gwProductId=productId;_gwAnswers={};
+  document.getElementById("gw-badge").textContent=data.badge;
+  document.getElementById("gw-title").textContent=data.title;
+  document.getElementById("gw-why").textContent=data.why;
+  document.getElementById("gw-details").innerHTML="<div class='gw-detail'><div class='gw-detail-label'>Price</div><div class='gw-detail-val'>"+data.price+"</div></div><div class='gw-detail'><div class='gw-detail-label'>Includes</div><div class='gw-detail-val'>"+data.included+"</div></div>";
+  var intake=document.getElementById("gw-intake"),qDiv=document.getElementById("gw-questions");
+  if(data.intake&&data.intake.length>0){
+    qDiv.innerHTML=data.intake.map(function(q){
+      if(q.type==="select"){return "<div class='gw-q'><label>"+q.label+"</label><select id='"+q.id+"' onchange="_gwAnswers['"+q.id+"']=this.value"><option value=''>Select...</option>"+q.options.map(function(o){return"<option value='"+o+"'>"+o+"</option>"}).join("")+"</select></div>";}
+      return "<div class='gw-q'><label>"+q.label+"</label><input type='text' id='"+q.id+"' placeholder='"+(q.placeholder||"")+"' oninput="_gwAnswers['"+q.id+"']=this.value" /></div>";
+    }).join("");
+    intake.style.display="block";
+    document.getElementById("gw-cta").textContent="Match me with "+data.title+" →";
+  }else{intake.style.display="none";document.getElementById("gw-cta").textContent="Continue to "+data.title+" →";}
+  document.getElementById("bleu-gateway").classList.add("open");
+  document.body.style.overflow="hidden";
+  if(typeof logRufusAction==="function")logRufusAction(productId,"gateway_open");
+}
+function gatewayProceed(){
+  var data=GATEWAY_DATA[_gwProductId];if(!data)return;
+  if(data.intake){data.intake.forEach(function(q){var el=document.getElementById(q.id);if(el&&el.value)_gwAnswers[q.id]=el.value;});}
+  var url=data.urlBuilder(_gwAnswers);
+  if(typeof logRufusAction==="function")logRufusAction(_gwProductId,"gateway_convert");
+  if(typeof recordAffiliateTransaction==="function")recordAffiliateTransaction(_gwProductId,data.title,"gateway_purchase",{intent:_gwAnswers});
+  closeGateway();window.open(url,"_blank");
+}
+function gatewaySkip(){
+  var data=GATEWAY_DATA[_gwProductId];if(!data)return;
+  if(typeof logRufusAction==="function")logRufusAction(_gwProductId,"gateway_skip");
+  closeGateway();window.open(data.baseUrl,"_blank");
+}
+function closeGateway(){
+  document.getElementById("bleu-gateway").classList.remove("open");
+  document.body.style.overflow="";_gwProductId=null;
+}
+document.addEventListener("DOMContentLoaded",function(){
+  var gw=document.getElementById("bleu-gateway");
+  if(gw)gw.addEventListener("click",function(e){if(e.target===this)closeGateway();});
+});
+</script>
 </body>
 </html>
