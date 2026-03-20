@@ -4456,7 +4456,7 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
           <div style="font-size:22px;font-weight:700;color:#e8dfc8;margin-bottom:2px">Free</div>
           <div style="font-size:10px;color:#5A6374;margin-bottom:12px">Always free · Forever</div>
           <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:12px;line-height:1.6">Core navigation · Alvai · Practitioners · Supply · Learn</div>
-          <button onclick="startStripeCheckout()" style="width:100%;padding:9px 0;background:rgba(255,255,255,.06);color:#e8dfc8;border:1px solid rgba(255,255,255,.12);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">Join Free →</button>
+          <button onclick="startStripeCheckout()" style="width:100%;padding:9px 0;background:rgba(255,255,255,.06);color:#e8dfc8;border:1px solid rgba(255,255,255,.12);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit" onclick="document.getElementById('auth-signup').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('auth-email').focus()},400)">Join Free →</button>
         </div>
         <!-- CITIZEN -->
         <div style="border:1px solid rgba(201,168,76,.35);border-radius:12px;padding:16px;text-align:center;background:rgba(201,168,76,.06);position:relative">
@@ -6244,7 +6244,25 @@ window.addEventListener('DOMContentLoaded',()=>{
 })
 let authMode=true
 function toggleAuth(){authMode=!authMode;document.getElementById('auth-signup').style.display=authMode?'block':'none';document.getElementById('auth-signin').style.display=authMode?'none':'block';document.getElementById('toggle-to-signin').style.display=authMode?'block':'none';document.getElementById('toggle-to-signup').style.display=authMode?'none':'block'}
-async function doSignUp(){if(!sbClient)return sErr('System loading, try again');const n=document.getElementById('auth-name').value.trim(),e=document.getElementById('auth-email').value.trim(),p=document.getElementById('auth-pass').value;if(!n||!e||!p)return sErr('Please fill in all fields');if(p.length<6)return sErr('Password needs 6+ characters');hErr();const{data,error}=await sbClient.auth.signUp({email:e,password:p,options:{data:{full_name:n}}});if(error)return sErr(error.message);if(data.user&&!data.session)sMsg('Check your email to confirm your account!');else if(data.session){currentUser=data.user;showProfile()}}
+async function doSignUp(){if(!sbClient)return sErr('System loading, try again');const n=document.getElementById('auth-name').value.trim(),e=document.getElementById('auth-email').value.trim(),p=document.getElementById('auth-pass').value;if(!n||!e||!p)return sErr('Please fill in all fields');if(p.length<6)return sErr('Password needs 6+ characters');hErr();const{data,error}=await sbClient.auth.signUp({email:e,password:p,options:{data:{full_name:n}}});if(error)return sErr(error.message);if(error)return sErr(error.message);
+  if(data.user){
+    // Try auto sign-in after signup (works when email confirm is disabled)
+    if(data.session){
+      currentUser=data.user;
+      showProfile();
+      sMsg('Welcome to BLEU. Your Passport is ready.');
+    } else {
+      // Email confirmation required - sign them in after they verify
+      sMsg('Almost there — check your email to confirm, then come back and sign in.');
+      // Switch to sign-in view
+      setTimeout(function(){
+        document.getElementById('auth-signup').style.display='none';
+        document.getElementById('auth-signin').style.display='block';
+        document.getElementById('si-email').value = e;
+      }, 2000);
+    }
+  }
+}
 async function doSignIn(){if(!sbClient)return siErr('Loading...');const e=document.getElementById('si-email').value.trim(),p=document.getElementById('si-pass').value;if(!e||!p)return siErr('Enter email and password');hSiErr();const{data,error}=await sbClient.auth.signInWithPassword({email:e,password:p});if(error)return siErr(error.message);currentUser=data.user;showProfile()}
 async function doGoogleAuth(){
   if(!sbClient){sErr('Auth not initialized. Please refresh the page.');return;}
