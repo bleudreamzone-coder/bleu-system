@@ -4596,770 +4596,151 @@ CHOOSE YOUR MODE</div>
   <style>
     .fin-card{border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);cursor:pointer;transition:all .25s}
     .fin-card:hover{transform:translateY(-3px);border-color:rgba(212,175,55,.35);background:rgba(212,175,55,.04)}
-    .fin-input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none;width:100%;box-sizing:border-box}
-    .fin-input:focus{border-color:rgba(212,175,55,.4)}
-    .fin-btn{background:linear-gradient(135deg,#d4af37,#b8962e);border:none;border-radius:10px;padding:12px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer;width:100%;transition:all .2s}
-    .fin-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(212,175,55,.25)}
-    .recipe-step{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04);align-items:flex-start}
-    .recipe-num{font-family:Georgia,serif;font-size:28px;font-weight:300;color:rgba(212,175,55,.2);min-width:36px;line-height:1}
+    .recipe-step{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.04);align-items:flex-start}
+    .recipe-step:last-child{border-bottom:none}
+    .recipe-num{font-family:Georgia,serif;font-size:32px;font-weight:300;color:rgba(212,175,55,.2);min-width:40px;line-height:1}
+    .fin-chip{padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;border:1px solid rgba(212,175,55,.15);color:rgba(212,175,55,.7);background:rgba(212,175,55,.04);transition:all .2s;white-space:nowrap}
+    .fin-chip:hover{border-color:rgba(212,175,55,.4);background:rgba(212,175,55,.08);color:#d4af37}
   </style>
 
   <!-- HERO -->
-  <div style="text-align:center;padding:16px 0 28px">
-    <div style="font-size:10px;letter-spacing:5px;color:rgba(212,175,55,.4);margin-bottom:10px">Financial health is molecular health.</div>
-
-<h1 class="hero-title" style="margin-bottom:10px">Financial stress is not in your head.<br><span style="color:#d4af37">It is in your cortisol.</span></h1>
-<div id="tw-finance-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
-  <div id="tw-finance" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
-</div>
-<script>
-(function(){
-  var el=document.getElementById("tw-finance");
-  if(!el)return;
-  var lines=["Medical debt is the leading cause of personal bankruptcy in the United States.",
-"Financial stress floods your body with cortisol. Cortisol is linked to worse cancer outcomes.",
-"65 billion dollars in government benefits goes unclaimed every year. Alvai finds yours.",
-"Your money stress is not a character flaw. It is a public health crisis.",
-"The predatory fee industry extracts 9 billion dollars annually from people who can least afford it.",
-"Financial clarity is not a luxury. It is a biological necessity. This is the tab that proves it."];
-  var li=0,ci=0,cur="",typing=true,pause=0;
-  function tick(){
-    if(pause>0){pause--;setTimeout(tick,30);return;}
-    if(typing){
-      if(ci<lines[li].length){cur+=lines[li][ci++];el.textContent=cur;setTimeout(tick,38);}
-      else{typing=false;pause=60;setTimeout(tick,30);}
-    }else{
-      if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,18);}
-      else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}
-    }
-  }
-  setTimeout(tick,800);
-})();
-</script>
-
-    <h1 style="font-family:Georgia,serif;font-size:clamp(28px,5vw,44px);font-weight:300;color:#e8d5b0;margin:0 0 10px">💰 Finance</h1>
-    <p style="font-size:13px;color:#8b95a5;max-width:640px;margin:0 auto;line-height:1.9">67% of Americans say money is their biggest source of stress. What that means biologically: chronic financial anxiety floods your body with cortisol. Sustained cortisol is linked to worse cancer outcomes, faster cellular aging, and immune suppression. Money stress is not just uncomfortable. It is physically damaging. BLEU Finance does not give you financial advice. It gives you clarity, navigation, and the benefits you are already owed but have not claimed.</p>
-    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.3),transparent);margin:20px auto;max-width:280px"></div>
+  <div style="text-align:center;padding:20px 0 32px;">
+    <div style="font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:rgba(212,175,55,.35);margin-bottom:14px;">Financial health is molecular health.</div>
+    <h1 class="hero-title" style="margin-bottom:12px;">Financial stress is not in your head.<br><span style="color:#d4af37">It is in your cortisol.</span></h1>
+    <div id="tw-finance-wrap" style="height:26px;overflow:hidden;margin:-4px 0 20px;text-align:center">
+      <div id="tw-finance" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.4);line-height:1.6;letter-spacing:.3px"></div>
+    </div>
+    <script>
+    (function(){
+      var el=document.getElementById("tw-finance");
+      if(!el)return;
+      var lines=["Medical debt is the leading cause of personal bankruptcy in the United States.","Financial stress floods your body with cortisol. Cortisol is linked to worse cancer outcomes.","65 billion dollars in government benefits goes unclaimed every year. Alvai finds yours.","Your money stress is not a character flaw. It is a public health crisis.","The predatory fee industry extracts 9 billion dollars annually from people who can least afford it.","Financial clarity is not a luxury. It is a biological necessity."];
+      var li=0,ci=0,cur="",typing=true,pause=0;
+      function tick(){if(pause>0){pause--;setTimeout(tick,30);return;}if(typing){if(ci<lines[li].length){cur+=lines[li][ci++];el.textContent=cur;setTimeout(tick,38);}else{typing=false;pause=60;setTimeout(tick,30);}}else{if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,18);}else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}}}
+      setTimeout(tick,800);
+    })();
+    </script>
+    <p style="font-size:14px;color:#8b95a5;max-width:600px;margin:0 auto;line-height:1.9;">67% of Americans say money is their biggest source of stress. Biologically, chronic financial anxiety floods your body with cortisol — linked to worse cancer outcomes, faster cellular aging, and immune suppression. BLEU Finance does not give you financial advice. It gives you clarity, navigation, and the benefits you are already owed but have not claimed.</p>
+    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.3),transparent);margin:24px auto;max-width:280px;"></div>
   </div>
 
-  <!-- VITAL SIGN STATS -->
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px">
-    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.1)"><div style="font-size:22px;font-weight:300;color:#ef4444;font-family:Georgia,serif">2x</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">HEART DISEASE RISK</div><div style="font-size:9px;color:#5a6374;margin-top:2px">From financial stress</div></div>
-    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.1)"><div style="font-size:22px;font-weight:300;color:#d4af37;font-family:Georgia,serif">15yr</div>
-<div style="max-width:880px;margin:16px auto 0;padding:0 20px">
-  <div style="background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.15);border-radius:12px;padding:16px 20px">
-    <div style="font-size:9px;letter-spacing:3px;color:rgba(212,175,55,.6);text-transform:uppercase;margin-bottom:10px">FINANCIAL STRESS IS CORTISOL MEDICINE</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
-      <div style="text-align:center">
-        <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#d4af37">56%</div>
-        <div style="font-size:10px;color:#8b95a5;margin-top:3px;line-height:1.4">Worse cancer outcomes from financial toxicity -- oncology literature</div>
-      </div>
-      <div style="text-align:center">
-        <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#d4af37">$9B</div>
-        <div style="font-size:10px;color:#8b95a5;margin-top:3px;line-height:1.4">Annual predatory lending fees on medical debt -- CFPB 2024</div>
-      </div>
-      <div style="text-align:center">
-        <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#d4af37">$1,800</div>
-        <div style="font-size:10px;color:#8b95a5;margin-top:3px;line-height:1.4">Average annual savings per BLEU Finance user documented</div>
-      </div>
-      <div style="text-align:center">
-        <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#d4af37">10:1</div>
-        <div style="font-size:10px;color:#8b95a5;margin-top:3px;line-height:1.4">ROI on medication therapy management -- NEJM 2023</div>
-      </div>
+  <!-- EIGHT STATS — clean 4-col grid, two rows -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.1);">
+      <div style="font-size:26px;font-weight:300;color:#ef4444;font-family:Georgia,serif;line-height:1;">2x</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Heart disease risk<br>from financial stress</div>
+    </div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.1);">
+      <div style="font-size:26px;font-weight:300;color:#d4af37;font-family:Georgia,serif;line-height:1;">15yr</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Lifespan loss<br>from poverty</div>
+    </div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1);">
+      <div style="font-size:26px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif;line-height:1;">$600</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Avg YNAB savings<br>first 2 months</div>
+    </div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.1);">
+      <div style="font-size:26px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif;line-height:1;">80%</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Rx savings<br>GoodRx vs retail</div>
     </div>
   </div>
-</div>
-<div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LIFESPAN LOSS</div><div style="font-size:9px;color:#5a6374;margin-top:2px">From poverty</div></div>
-    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1)"><div style="font-size:22px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif">$600</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">AVG YNAB SAVINGS</div><div style="font-size:9px;color:#5a6374;margin-top:2px">First 2 months</div></div>
-    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.1)"><div style="font-size:22px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif">80%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">RX SAVINGS</div><div style="font-size:9px;color:#5a6374;margin-top:2px">GoodRx vs retail</div></div>
-  </div>
-
-  <!-- FINANCIAL HEALTH RECIPE -- THE MISSING PIECE -->
-  <div style="background:linear-gradient(135deg,rgba(212,175,55,.06),rgba(10,12,16,.9));border:1px solid rgba(212,175,55,.15);border-radius:16px;padding:24px;margin-bottom:32px">
-    <div style="font-size:10px;letter-spacing:4px;color:rgba(212,175,55,.5);margin-bottom:6px">THE MISSING PIECE</div>
-    <h2 style="font-family:Georgia,serif;font-size:clamp(20px,4vw,28px);font-weight:300;color:#e8d5b0;margin:0 0 8px">The <!-- thread-finance --><div style="margin-top:28px;padding:16px 20px;border-top:1px solid rgba(255,255,255,.06);text-align:center;">
-       <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,.25);cursor:pointer;" onclick="go('dashboard')">
-         When financial stress lifts, your whole body changes. See your Pulse. →
-       </span>
-     </div>
-Financial Health Recipe</h2>
-    <p style="font-size:13px;color:#8b95a5;line-height:1.8;margin-bottom:20px">Your health plan is incomplete without a financial plan. These two systems run on the same fuel -- stress hormones, decision fatigue, and time. Fix one, you fix both. This is the recipe.</p>
-    <div>
-      <div class="recipe-step">
-        <div class="recipe-num">01</div>
-        <div><div style="font-size:13px;font-weight:600;color:#d4af37;margin-bottom:4px">Know Your Number -- The Wellness Floor</div><div style="font-size:12px;color:#8b95a5;line-height:1.7">Calculate the minimum monthly spend that keeps you physically healthy. Prescriptions + practitioner + basic nutrition. This is non-negotiable in your budget -- it comes before everything else.</div><span onclick="ask('finance','Help me calculate my personal wellness floor -- minimum monthly spend to stay healthy. Include prescriptions, practitioner visits, basic nutrition costs.')" style="display:inline-block;margin-top:8px;padding:5px 12px;border-radius:12px;font-size:10px;cursor:pointer;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37">Calculate Mine →</span></div>
-      </div>
-      <div class="recipe-step">
-        <div class="recipe-num">02</div>
-        <div><div style="font-size:13px;font-weight:600;color:#4ecdc4;margin-bottom:4px">Audit the Drain -- The Harming Budget</div><div style="font-size:12px;color:#8b95a5;line-height:1.7">Alcohol, tobacco, fast food, stress-spending, subscriptions you forgot about. Most people are accidentally funding their illness while claiming they cannot afford their health.</div><span onclick="ask('finance','Help me audit my harming budget -- alcohol, tobacco, fast food, forgotten subscriptions. What am I spending on things that hurt me?')" style="display:inline-block;margin-top:8px;padding:5px 12px;border-radius:12px;font-size:10px;cursor:pointer;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4">Audit Mine →</span></div>
-      </div>
-      <div class="recipe-step">
-        <div class="recipe-num">03</div>
-        <div><div style="font-size:13px;font-weight:600;color:#a78bfa;margin-bottom:4px">Stack the Tax Wins -- HSA/FSA/EAP</div><div style="font-size:12px;color:#8b95a5;line-height:1.7">Most Americans leave thousands in pre-tax health dollars unclaimed every year. HSA, FSA, and EAP benefits are your government-funded health subsidy. Use every dollar.</div><span onclick="ask('finance','Walk me through maximizing my HSA, FSA, and EAP benefits. What expenses qualify? How much can I contribute in 2025?')" style="display:inline-block;margin-top:8px;padding:5px 12px;border-radius:12px;font-size:10px;cursor:pointer;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa">Maximize Mine →</span></div>
-      </div>
-      <div class="recipe-step">
-        <div class="recipe-num">04</div>
-        <div><div style="font-size:13px;font-weight:600;color:#4ecd8c;margin-bottom:4px">Slash the Rx Bill -- Cost Plus + GoodRx</div><div style="font-size:12px;color:#8b95a5;line-height:1.7">Mark Cuban's Cost Plus Drugs sells prescriptions at cost + 15%. GoodRx comparison-shops every pharmacy near you. Americans overpay $100B+ on prescriptions annually. Stop it.</div><span onclick="ask('finance','Help me find the cheapest prices for my prescriptions using Cost Plus Drugs, GoodRx, and NeedyMeds. How do I use all three?')" style="display:inline-block;margin-top:8px;padding:5px 12px;border-radius:12px;font-size:10px;cursor:pointer;background:rgba(78,205,140,.08);border:1px solid rgba(78,205,140,.2);color:#4ecd8c">Cut My Rx Bill →</span></div>
-      </div>
-      <div class="recipe-step" style="border-bottom:none">
-        <div class="recipe-num">05</div>
-        <div><div style="font-size:13px;font-weight:600;color:#d4af37;margin-bottom:4px">Build the Longevity Fund -- ROI on Your Life</div><div style="font-size:12px;color:#8b95a5;line-height:1.7">$150/month invested in your health today vs. $15,000 in ICU costs at 65. The math is violent in your favor. Budget your wellness like an investment -- because it is the highest-ROI investment you will ever make.</div><span onclick="ask('finance','Calculate the ROI of preventive health spending vs. reactive medical costs. Show me the math on investing $150/month in wellness vs. chronic disease costs at 65.')" style="display:inline-block;margin-top:8px;padding:5px 12px;border-radius:12px;font-size:10px;cursor:pointer;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37">Show Me The Math →</span></div>
-      </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:32px;">
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.08);">
+      <div style="font-size:26px;font-weight:300;color:#f87171;font-family:Georgia,serif;line-height:1;">56%</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Worse cancer outcomes<br>financial toxicity</div>
+    </div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.08);">
+      <div style="font-size:26px;font-weight:300;color:#d4af37;font-family:Georgia,serif;line-height:1;">$9B</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Predatory lending fees<br>on medical debt · CFPB</div>
+    </div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.08);">
+      <div style="font-size:26px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif;line-height:1;">$1,800</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Avg annual savings<br>per BLEU Finance user</div>
+    </div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.08);">
+      <div style="font-size:26px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif;line-height:1;">10:1</div>
+      <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">ROI medication therapy<br>management · NEJM</div>
     </div>
   </div>
 
-  <!-- ALVAI FINANCE CHAT -->
-  <div style="margin-bottom:32px">
-    <div style="font-size:10px;letter-spacing:3px;color:rgba(212,175,55,.4);margin-bottom:14px">ALVAI FINANCIAL INTELLIGENCE</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
-      <span onclick="ask('finance','What is my wellness spending ratio and how do I improve it?')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37">📊 Wellness Ratio</span>
-      <span onclick="ask('finance','Free prescription savings: GoodRx vs Cost Plus Drugs vs NeedyMeds -- comparison')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4">💊 Slash My Rx Bill</span>
-      <span onclick="ask('finance','Give me a medical bill negotiation script and strategy for reducing my hospital bill')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(255,107,138,.08);border:1px solid rgba(255,107,138,.2);color:#ff6b8a">🏥 Negotiate Bills</span>
-      <span onclick="ask('finance','What HSA and FSA expenses qualify? Give me the full 2025 list')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa">🏦 HSA/FSA Max</span>
-      <span onclick="ask('finance','I cannot afford wellness right now. Show me every free option -- free therapy, free clinics, free supplements, sliding scale')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(78,205,140,.08);border:1px solid rgba(78,205,140,.2);color:#4ecd8c">💚 Broke But Healing</span>
-      <span onclick="ask('finance','Calculate the lifetime ROI of preventive health investment vs reactive medical costs')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37">📈 Longevity ROI</span>
-      <span onclick="ask('finance','What employee benefits am I probably not using -- FSA, HSA, EAP, gym reimbursement, mental health days')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4">🏢 Hidden Benefits</span>
-      <span onclick="ask('finance','Help me understand ACA marketplace insurance options and how to pick the right plan')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa">🛡 Insurance Nav</span>
-    </div>
-    <div class="chat-box"><div class="chat-messages" 
-<!-- ═══ FINANCIAL WELLNESS AFFILIATES -- INSURANCE + HSA ═══ -->
-<div id="finance-insurance-aff" style="margin:20px 0">
-  <div style="font-size:9px;letter-spacing:3px;color:#8fa4b0;margin-bottom:8px">FINANCIAL WELLNESS PARTNERS</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-    <a href="https://www.ethoslife.com/?utm_source=bleu&utm_medium=affiliate" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(34,197,94,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
-      <div style="font-size:11px;color:#22c55e;font-weight:600;margin-bottom:3px">Ethos Life Insurance</div>
-      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Term life from $19/month. Quick online approval. For users whose health trajectory makes coverage urgent.</div>
-      <div style="font-size:9px;color:#5A6374;margin-top:4px">$50–200 CPA per converted quote</div>
-    </a>
-    <a href="https://livelyme.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(45,138,158,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
-      <div style="font-size:11px;color:#2DD4A8;font-weight:600;margin-bottom:3px">Lively HSA</div>
-      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Best-rated HSA account. Triple tax advantage. Invest your HSA balance. For users without an HSA.</div>
-      <div style="font-size:9px;color:#5A6374;margin-top:4px">Referral fee per account open</div>
-    </a>
-    <a href="https://www.goodrx.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(34,197,94,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
-      <div style="font-size:11px;color:#22c55e;font-weight:600;margin-bottom:3px">GoodRx</div>
-      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Prescription savings -- up to 80% off. The $47 savings moment. Highest trust signal in the ecosystem.</div>
-      <div style="font-size:9px;color:#5A6374;margin-top:4px">CPA · trust flywheel</div>
-    </a>
-    <a href="https://www.costplusdrugs.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(34,197,94,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
-      <div style="font-size:11px;color:#22c55e;font-weight:600;margin-bottom:3px">Cost Plus Drugs</div>
-      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Mark Cuban's pharmacy. Radically transparent pricing. Generic medications at cost + 15% margin.</div>
-      <div style="font-size:9px;color:#5A6374;margin-top:4px">Referral · trust building</div>
-    </a>
-  </div>
-</div>
+  <!-- FINANCIAL HEALTH RECIPE -->
+  <div style="background:linear-gradient(135deg,rgba(212,175,55,.06),rgba(10,12,16,.9));border:1px solid rgba(212,175,55,.15);border-radius:16px;padding:28px;margin-bottom:28px;">
+    <div style="font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:rgba(212,175,55,.4);margin-bottom:8px;">The missing piece.</div>
+    <h2 style="font-family:Georgia,serif;font-size:clamp(22px,4vw,30px);font-weight:300;color:#e8d5b0;margin:0 0 10px;line-height:1.2;">Financial Health Recipe</h2>
+    <p style="font-size:13px;color:#8b95a5;line-height:1.85;margin-bottom:20px;">Your health plan is incomplete without a financial plan. These two systems run on the same fuel — stress hormones, decision fatigue, and time. Fix one, you fix both. This is the recipe.</p>
 
-<div id="chat-finance" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-finance" placeholder="What is money stress doing to your body right now?" onkeydown="if(event.key==='Enter')send('finance')"><button onclick="send('finance')">Help Me</button></div></div>
-  </div>
-
-  <!-- 6 CENTERS -->
-  <div style="font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.2);margin-bottom:16px">THE SIX FINANCIAL HEALTH CENTERS</div>
-  <div class="card-grid" style="margin-bottom:32px">
-    <div class="card card-clickable" onclick="ask('finance','How do I improve my credit score step by step? Include free tools, dispute process, and timeline.')">
-      <span class="card-icon">📊</span><h3>Credit Health</h3>
-      <p>Understand your score. Dispute errors. Improve strategically. Free monitoring via Credit Karma + Experian.</p>
-      <span class="tag badge-gold">HIGH IMPACT</span>
-    </div>
-    <div class="card card-clickable" onclick="ask('finance','I want to buy a house -- where do I start as a first time buyer? Down payment assistance, mortgage math, neighborhood health scoring.')">
-      <span class="card-icon">🏠</span><h3>Home & Housing</h3>
-      <p>First-time buyer guidance. Mortgage math. Down payment assistance programs. Neighborhood health scoring.</p>
-    </div>
-    <div class="card card-clickable" onclick="ask('finance','Help me understand ACA marketplace vs employer insurance. How do I compare plans and maximize coverage for wellness?')">
-      <span class="card-icon">🏥</span><h3>Insurance Navigator</h3>
-      <p>ACA marketplace. Plan comparison. HSA/FSA maximization. Mental health parity laws. Holistic coverage check.</p>
-    </div>
-    <div class="card card-clickable" onclick="ask('finance','Help me build a wellness-first budget. Calculate my Wellness Spending Ratio and show me smart swaps.')">
-      <span class="card-icon">💵</span><h3>Wellness Budget</h3>
-      <p>Wellness Spending Ratio. Healing-to-harming audit. Smart swaps. Subscription cuts. Meal cost calculator.</p>
-      <span class="tag badge-ember">KILLER FEATURE</span>
-    </div>
-    <div class="card card-clickable" onclick="ask('finance','What employee benefits am I probably not using? FSA, HSA, EAP, gym reimbursement, mental health days, tuition assistance.')">
-      <span class="card-icon">🏢</span><h3>Benefits Maximizer</h3>
-      <p>FSA, HSA, EAP, gym reimbursements, and mental health benefits most employees never claim. Side income ideas.</p>
-    </div>
-    <div class="card card-clickable" onclick="ask('finance','I have medical bills I cannot pay. Give me negotiation scripts, financial assistance finders, and payment plan strategies.')">
-      <span class="card-icon">🆘</span><h3>Medical Bill Rescue</h3>
-      <p>Negotiation scripts. Financial assistance finder. Charity care programs. Emergency fund builder. Rx savings.</p>
-      <span class="tag badge-ember">CRITICAL</span>
-    </div>
-  </div>
-
-  <!-- WELLNESS SPENDING RATIO CALCULATOR -->
-  <div style="background:rgba(25,50,68,.4);border:1px solid rgba(212,175,55,.15);border-radius:18px;padding:24px;margin-bottom:32px">
-    <div style="font-size:10px;letter-spacing:3px;color:rgba(212,175,55,.6);margin-bottom:6px">LIVE CALCULATOR</div>
-    <div style="font-size:18px;font-weight:600;color:#e8d5b0;margin-bottom:6px">💰 Wellness Spending Ratio</div>
-    <p style="color:#8b95a5;font-size:13px;line-height:1.7;margin-bottom:20px">How much of your monthly spend goes toward healing vs harming? This single number is a better health predictor than most lab tests.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+    <div class="recipe-step">
+      <div class="recipe-num">01</div>
       <div>
-        <div style="color:#4ecdc4;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">HEALING (monthly $)</div>
-        <input id="wsr-therapy" placeholder="Therapy / counseling" type="number" class="fin-input" style="margin-bottom:6px">
-        <input id="wsr-supplements" placeholder="Supplements / vitamins" type="number" class="fin-input" style="margin-bottom:6px">
-        <input id="wsr-fitness" placeholder="Gym / fitness / movement" type="number" class="fin-input" style="margin-bottom:6px">
-        <input id="wsr-food" placeholder="Healthy food / meal prep" type="number" class="fin-input" style="margin-bottom:6px">
-        <input id="wsr-sleep" placeholder="Sleep tools / Oura / etc" type="number" class="fin-input">
+        <div style="font-size:14px;font-weight:600;color:#e8d5b0;margin-bottom:4px;">Know Your Number — The Wellness Floor</div>
+        <div style="font-size:13px;color:#8b95a5;line-height:1.75;">Calculate the minimum monthly spend that keeps you physically healthy. Prescriptions + practitioner + basic nutrition. This is non-negotiable in your budget — it comes before everything else.</div>
+        <div style="margin-top:10px;"><span class="fin-chip" onclick="ask('finance','Help me calculate my minimum monthly wellness floor — prescriptions, practitioner costs, basic nutrition')">Calculate Mine →</span></div>
       </div>
+    </div>
+    <div class="recipe-step">
+      <div class="recipe-num">02</div>
       <div>
-        <div style="color:#d4af37;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">HARMING (monthly $)</div>
-        <input id="wsr-alcohol" placeholder="Alcohol" type="number" class="fin-input" style="margin-bottom:6px">
-        <input id="wsr-tobacco" placeholder="Tobacco / nicotine" type="number" class="fin-input" style="margin-bottom:6px">
-        <input id="wsr-junk" placeholder="Fast food / junk food" type="number" class="fin-input" style="margin-bottom:6px">
-        <input id="wsr-gambling" placeholder="Gambling / risky spending" type="number" class="fin-input" style="margin-bottom:6px">
-        <input id="wsr-other" placeholder="Other harmful habits" type="number" class="fin-input">
+        <div style="font-size:14px;font-weight:600;color:#e8d5b0;margin-bottom:4px;">Audit the Drain — The Harming Budget</div>
+        <div style="font-size:13px;color:#8b95a5;line-height:1.75;">Alcohol, tobacco, fast food, stress-spending, subscriptions you forgot about. Most people are accidentally funding their illness while claiming they cannot afford their health.</div>
+        <div style="margin-top:10px;"><span class="fin-chip" onclick="ask('finance','Help me audit my spending to find money I am accidentally wasting on things that harm my health')">Audit Mine →</span></div>
       </div>
     </div>
-    <button onclick="calcWSR()" class="fin-btn" style="margin-bottom:14px">Calculate My Wellness Spending Ratio →</button>
-    <div id="wsr-result" style="display:none;border-radius:12px;padding:18px;background:rgba(25,50,68,.6)"></div>
-  </div>
-
-  <!-- HSA/FSA MAXIMIZER CALCULATOR -->
-  <div style="background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.15);border-radius:18px;padding:24px;margin-bottom:32px">
-    <div style="font-size:10px;letter-spacing:3px;color:rgba(167,139,250,.5);margin-bottom:6px">LIVE CALCULATOR</div>
-    <div style="font-size:18px;font-weight:600;color:#e8d5b0;margin-bottom:6px">🏦 HSA/FSA Tax Savings Calculator</div>
-    <p style="color:#8b95a5;font-size:13px;line-height:1.7;margin-bottom:20px">How much are you leaving on the table? Calculate your tax savings from maxing your health accounts.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+    <div class="recipe-step">
+      <div class="recipe-num">03</div>
       <div>
-        <div style="color:#a78bfa;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Annual Income ($)</div>
-        <input id="hsa-income" placeholder="e.g. 55000" type="number" class="fin-input">
+        <div style="font-size:14px;font-weight:600;color:#e8d5b0;margin-bottom:4px;">Stack the Tax Wins — HSA / FSA / EAP</div>
+        <div style="font-size:13px;color:#8b95a5;line-height:1.75;">Most Americans leave thousands in pre-tax health dollars unclaimed every year. HSA, FSA, and EAP benefits are your government-funded health subsidy. Use every dollar.</div>
+        <div style="margin-top:10px;"><span class="fin-chip" onclick="ask('finance','Help me maximize my HSA, FSA, and EAP benefits — what am I probably leaving unclaimed?')">Maximize Mine →</span></div>
       </div>
+    </div>
+    <div class="recipe-step">
+      <div class="recipe-num">04</div>
       <div>
-        <div style="color:#a78bfa;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">HSA Contribution ($)</div>
-        <input id="hsa-contrib" placeholder="Max 2025: $4,300" type="number" class="fin-input">
-      </div>
-      <div>
-        <div style="color:#a78bfa;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">FSA Contribution ($)</div>
-        <input id="fsa-contrib" placeholder="Max 2025: $3,300" type="number" class="fin-input">
-      </div>
-    </div>
-    <button onclick="calcHSA()" class="fin-btn" style="background:linear-gradient(135deg,#a78bfa,#7c5cbf);margin-bottom:14px">Calculate My Tax Savings →</button>
-    <div id="hsa-result" style="display:none;border-radius:12px;padding:18px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.1)"></div>
-  </div>
-
-  <!-- PRESCRIPTION SAVINGS CALCULATOR -->
-  <div style="background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.15);border-radius:18px;padding:24px;margin-bottom:32px">
-    <div style="font-size:10px;letter-spacing:3px;color:rgba(78,205,196,.5);margin-bottom:6px">LIVE CALCULATOR</div>
-    <div style="font-size:18px;font-weight:600;color:#e8d5b0;margin-bottom:6px">💊 Prescription Savings Calculator</div>
-    <p style="color:#8b95a5;font-size:13px;line-height:1.7;margin-bottom:20px">Enter what you currently pay. See what you should pay with the right tools.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-      <div>
-        <div style="color:#4ecdc4;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Drug Name</div>
-        <input id="rx-name" placeholder="e.g. Metformin, Lisinopril" class="fin-input">
-      </div>
-      <div>
-        <div style="color:#4ecdc4;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Current Monthly Cost ($)</div>
-        <input id="rx-cost" placeholder="What you pay now" type="number" class="fin-input">
-      </div>
-    </div>
-    <button onclick="calcRx()" class="fin-btn" style="background:linear-gradient(135deg,#4ecdc4,#2a9d8f);margin-bottom:14px">Find My Savings →</button>
-    <div id="rx-result" style="display:none;border-radius:12px;padding:18px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1)"></div>
-  </div>
-
-  <!-- LONGEVITY ROI CALCULATOR -->
-  <div style="background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.15);border-radius:18px;padding:24px;margin-bottom:32px">
-    <div style="font-size:10px;letter-spacing:3px;color:rgba(78,205,140,.5);margin-bottom:6px">LIVE CALCULATOR</div>
-    <div style="font-size:18px;font-weight:600;color:#e8d5b0;margin-bottom:6px">📈 Longevity ROI Calculator</div>
-    <p style="color:#8b95a5;font-size:13px;line-height:1.7;margin-bottom:20px">What is $1 invested in your health worth over 20 years compared to reactive medical costs? The math will change how you see your health budget.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
-      <div>
-        <div style="color:#4ecd8c;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Current Age</div>
-        <input id="roi-age" placeholder="e.g. 35" type="number" class="fin-input">
-      </div>
-      <div>
-        <div style="color:#4ecd8c;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Monthly Wellness Spend ($)</div>
-        <input id="roi-spend" placeholder="e.g. 200" type="number" class="fin-input">
-      </div>
-      <div>
-        <div style="color:#4ecd8c;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Health Risk Level</div>
-        <select id="roi-risk" class="fin-input" style="background:rgba(15,20,30,.8)">
-          <option value="low">Low Risk</option>
-          <option value="medium" selected>Medium Risk</option>
-          <option value="high">High Risk</option>
-        </select>
-      </div>
-    </div>
-    <button onclick="calcROI()" class="fin-btn" style="background:linear-gradient(135deg,#4ecd8c,#2a9d6a);margin-bottom:14px">Calculate My Longevity ROI →</button>
-    <div id="roi-result" style="display:none;border-radius:12px;padding:18px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.1)"></div>
-  </div>
-
-  <!-- QUICK ACTION ROWS -->
-  <div class="quick-row" style="margin-bottom:32px">
-    <span class="quick-btn" onclick="ask('finance','What is my wellness spending ratio and how do I calculate it?')">📊 Wellness Ratio</span>
-    <span class="quick-btn" onclick="ask('finance','Free prescription savings: GoodRx vs Cost Plus Drugs vs NeedyMeds')">💊 Slash Rx Bill</span>
-    <span class="quick-btn" onclick="ask('finance','Medical bill negotiation script -- how do I get 40-60% off my hospital bill?')">🏥 Negotiate Bills</span>
-    <span class="quick-btn" onclick="ask('finance','Best high yield savings accounts for a wellness emergency fund')">💰 Savings Tools</span>
-    <span class="quick-btn" onclick="ask('finance','I cannot afford wellness right now. Every free option available.')">💚 Broke But Healing</span>
-    <span class="quick-btn" onclick="ask('finance','Walk me through ACA open enrollment and picking the right health plan')">🛡 ACA Navigator</span>
-  </div>
-
-  <!-- QUICK ACTION CARDS -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px">
-    <div class="fin-card" onclick="ask('finance','Help me understand what my health insurance covers for holistic wellness, therapy, and cannabis-related care.')"><div style="font-size:24px;margin-bottom:10px">🛡️</div><div style="color:#4ecdc4;font-weight:600;font-size:13px;margin-bottom:6px">Insurance Deep Dive</div><div style="color:#8b95a5;font-size:11px;line-height:1.6">Holistic, therapy, cannabis -- what is covered?</div></div>
-    <div class="fin-card" onclick="ask('finance','Help me calculate my monthly wellness costs and find the biggest savings opportunities.')"><div style="font-size:24px;margin-bottom:10px">🧮</div><div style="color:#d4af37;font-weight:600;font-size:13px;margin-bottom:6px">Cost Calculator</div><div style="color:#8b95a5;font-size:11px;line-height:1.6">Supplements + therapy + cannabis -- full picture.</div></div>
-    <div class="fin-card" onclick="ask('finance','I cannot afford wellness right now. Show me every free option -- free therapy, free clinics, free supplements, sliding scale, FQHC.')"><div style="font-size:24px;margin-bottom:10px">💚</div><div style="color:#4ecd8c;font-weight:600;font-size:13px;margin-bottom:6px">Broke But Healing</div><div style="color:#8b95a5;font-size:11px;line-height:1.6">Free therapy. Free clinics. Zero excuses.</div></div>
-    <div class="fin-card" onclick="ask('finance','What wellness expenses qualify for HSA and FSA? Give me the complete 2025 qualified expense list.')"><div style="font-size:24px;margin-bottom:10px">🏦</div><div style="color:#a78bfa;font-weight:600;font-size:13px;margin-bottom:6px">HSA/FSA Guide</div><div style="color:#8b95a5;font-size:11px;line-height:1.6">Tax-free wellness spending -- full 2025 list.</div></div>
-    <div class="fin-card" onclick="ask('finance','Find sliding scale practitioners and federally qualified health centers near New Orleans and everywhere else.')"><div style="font-size:24px;margin-bottom:10px">🤝</div><div style="color:#4ecdc4;font-weight:600;font-size:13px;margin-bottom:6px">Sliding Scale Finder</div><div style="color:#8b95a5;font-size:11px;line-height:1.6">Practitioners who adjust to your income.</div></div>
-    <div class="fin-card" onclick="ask('finance','Help me find manufacturer prescription coupons, patient assistance programs, and charity care for my medications.')"><div style="font-size:24px;margin-bottom:10px">💊</div><div style="color:#d4af37;font-weight:600;font-size:13px;margin-bottom:6px">Rx Assistance</div><div style="color:#8b95a5;font-size:11px;line-height:1.6">GoodRx · Cost Plus · NeedyMeds · PAPs.</div></div>
-  </div>
-
-  <!-- AFFILIATE PARTNERS -- EXPANDED -->
-  <div style="font-size:10px;letter-spacing:3px;color:rgba(212,175,55,.5);margin-bottom:16px">BLEU FINANCIAL HEALTH PARTNERS</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px">
-
-    <div style="background:linear-gradient(135deg,rgba(212,175,55,.06),rgba(28,45,58,.6));border:1px solid rgba(212,175,55,.15);border-radius:16px;padding:22px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="width:42px;height:42px;border-radius:12px;background:rgba(212,175,55,.15);display:flex;align-items:center;justify-content:center;font-size:20px">📊</div>
-        <div><div style="color:#d4af37;font-weight:700;font-size:16px">YNAB</div><div style="color:#8b95a5;font-size:11px">You Need A Budget -- wellness-first budgeting</div></div>
-      </div>
-      <p style="color:#8b95a5;font-size:12px;line-height:1.7;margin-bottom:12px">Average user saves $600 in the first 2 months. Zero-based budgeting gives every dollar a job -- including therapy, supplements, and healing. Your wellness floor gets funded first.</p>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-        <span style="background:rgba(212,175,55,.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ 34-day free trial</span>
-        <span style="background:rgba(212,175,55,.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ Avg saves $600/mo</span>
-        <span style="background:rgba(212,175,55,.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ Wellness categories</span>
-      </div>
-      <a href="https://www.ynab.com" target="_blank" style="display:block;background:linear-gradient(135deg,#d4af37,#b8962e);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none">Start Free Trial →</a>
-      <div style="text-align:center;color:rgba(212,175,55,.4);font-size:10px;margin-top:8px">💛 Affiliate -- funds this free platform</div>
-    </div>
-
-    <div style="background:linear-gradient(135deg,rgba(78,205,196,.06),rgba(25,50,68,.6));border:1px solid rgba(78,205,196,.15);border-radius:16px;padding:22px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="width:42px;height:42px;border-radius:12px;background:rgba(78,205,196,.15);display:flex;align-items:center;justify-content:center;font-size:20px">💊</div>
-        <div><div style="color:#4ecdc4;font-weight:700;font-size:16px">GoodRx</div><div style="color:#8b95a5;font-size:11px">Prescription savings -- up to 80% off</div></div>
-      </div>
-      <p style="color:#8b95a5;font-size:12px;line-height:1.7;margin-bottom:12px">Free. No insurance needed. Compare prices at every pharmacy near you. Americans overpay billions on prescriptions every year. GoodRx fixes that in 30 seconds.</p>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-        <span style="background:rgba(78,205,196,.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ Completely free</span>
-        <span style="background:rgba(78,205,196,.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ No insurance needed</span>
-        <span style="background:rgba(78,205,196,.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ Up to 80% off</span>
-      </div>
-      <a href="https://www.goodrx.com" target="_blank" style="display:block;background:linear-gradient(135deg,#4ecdc4,#2a9d8f);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none">Check My Prescription Price →</a>
-      <div style="text-align:center;color:rgba(212,175,55,.4);font-size:10px;margin-top:8px">💛 Affiliate -- funds this free platform</div>
-    </div>
-
-    <div style="background:linear-gradient(135deg,rgba(167,139,250,.06),rgba(28,45,58,.6));border:1px solid rgba(167,139,250,.15);border-radius:16px;padding:22px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="width:42px;height:42px;border-radius:12px;background:rgba(167,139,250,.15);display:flex;align-items:center;justify-content:center;font-size:20px">🧪</div>
-        <div><div style="color:#a78bfa;font-weight:700;font-size:16px">Cost Plus Drugs</div><div style="color:#8b95a5;font-size:11px">Mark Cuban's pharmacy -- cost + 15% only</div></div>
-      </div>
-      <p style="color:#8b95a5;font-size:12px;line-height:1.7;margin-bottom:12px">Sells prescriptions at manufacturer cost plus 15% flat markup. No insurance games. No PBM markup. Imatinib went from $19,000/month to $47. This is the future of pharmacy.</p>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-        <span style="background:rgba(167,139,250,.08);color:#a78bfa;font-size:10px;padding:3px 8px;border-radius:6px">✓ Cost + 15% only</span>
-        <span style="background:rgba(167,139,250,.08);color:#a78bfa;font-size:10px;padding:3px 8px;border-radius:6px">✓ 1,000+ drugs</span>
-        <span style="background:rgba(167,139,250,.08);color:#a78bfa;font-size:10px;padding:3px 8px;border-radius:6px">✓ No insurance needed</span>
-      </div>
-      <a href="https://costplusdrugs.com" target="_blank" style="display:block;background:linear-gradient(135deg,#a78bfa,#7c5cbf);border-radius:10px;padding:11px;text-align:center;color:#fff;font-weight:700;font-size:13px;text-decoration:none">Find My Drug Price →</a>
-      <div style="text-align:center;color:rgba(212,175,55,.4);font-size:10px;margin-top:8px">💛 Affiliate -- funds this free platform</div>
-    </div>
-
-    <div style="background:linear-gradient(135deg,rgba(78,205,140,.06),rgba(25,50,68,.6));border:1px solid rgba(78,205,140,.15);border-radius:16px;padding:22px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="width:42px;height:42px;border-radius:12px;background:rgba(78,205,140,.15);display:flex;align-items:center;justify-content:center;font-size:20px">🏦</div>
-        <div><div style="color:#4ecd8c;font-weight:700;font-size:16px">Lively HSA</div><div style="color:#8b95a5;font-size:11px">Modern HSA -- invest your health dollars</div></div>
-      </div>
-      <p style="color:#8b95a5;font-size:12px;line-height:1.7;margin-bottom:12px">The best HSA account on the market. No fees. Invest contributions in index funds. Triple tax advantage -- pre-tax in, tax-free growth, tax-free out for medical. The ultimate wellness account.</p>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-        <span style="background:rgba(78,205,140,.08);color:#4ecd8c;font-size:10px;padding:3px 8px;border-radius:6px">✓ No monthly fees</span>
-        <span style="background:rgba(78,205,140,.08);color:#4ecd8c;font-size:10px;padding:3px 8px;border-radius:6px">✓ Triple tax advantage</span>
-        <span style="background:rgba(78,205,140,.08);color:#4ecd8c;font-size:10px;padding:3px 8px;border-radius:6px">✓ Invest contributions</span>
-      </div>
-      <a href="https://livelyme.com?utm_source=bleu&utm_medium=affiliate" target="_blank" style="display:block;background:linear-gradient(135deg,#4ecd8c,#2a9d6a);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none">Open My HSA →</a>
-      <div style="text-align:center;color:rgba(212,175,55,.4);font-size:10px;margin-top:8px">💛 Affiliate -- funds this free platform</div>
-    </div>
-
-    <div style="background:linear-gradient(135deg,rgba(255,107,138,.06),rgba(28,45,58,.6));border:1px solid rgba(255,107,138,.15);border-radius:16px;padding:22px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="width:42px;height:42px;border-radius:12px;background:rgba(255,107,138,.15);display:flex;align-items:center;justify-content:center;font-size:20px">📱</div>
-        <div><div style="color:#ff6b8a;font-weight:700;font-size:16px">Credit Karma</div><div style="color:#8b95a5;font-size:11px">Free credit score + financial health monitoring</div></div>
-      </div>
-      <p style="color:#8b95a5;font-size:12px;line-height:1.7;margin-bottom:12px">Free credit score monitoring, dispute assistance, and personalized financial product recommendations. Your credit score is a vital sign -- monitor it free for life.</p>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-        <span style="background:rgba(255,107,138,.08);color:#ff6b8a;font-size:10px;padding:3px 8px;border-radius:6px">✓ Free forever</span>
-        <span style="background:rgba(255,107,138,.08);color:#ff6b8a;font-size:10px;padding:3px 8px;border-radius:6px">✓ Dispute errors</span>
-        <span style="background:rgba(255,107,138,.08);color:#ff6b8a;font-size:10px;padding:3px 8px;border-radius:6px">✓ Credit monitoring</span>
-      </div>
-      <a href="https://www.creditkarma.com?utm_source=bleu&utm_medium=affiliate" target="_blank" style="display:block;background:linear-gradient(135deg,#ff6b8a,#d4506c);border-radius:10px;padding:11px;text-align:center;color:#fff;font-weight:700;font-size:13px;text-decoration:none">Check My Score Free →</a>
-      <div style="text-align:center;color:rgba(212,175,55,.4);font-size:10px;margin-top:8px">💛 Affiliate -- funds this free platform</div>
-    </div>
-
-    <div style="background:linear-gradient(135deg,rgba(212,175,55,.06),rgba(28,45,58,.6));border:1px solid rgba(212,175,55,.15);border-radius:16px;padding:22px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="width:42px;height:42px;border-radius:12px;background:rgba(212,175,55,.15);display:flex;align-items:center;justify-content:center;font-size:20px">📋</div>
-        <div><div style="color:#d4af37;font-weight:700;font-size:16px">NeedyMeds</div><div style="color:#8b95a5;font-size:11px">Patient assistance programs + free clinics</div></div>
-      </div>
-      <p style="color:#8b95a5;font-size:12px;line-height:1.7;margin-bottom:12px">Database of 10,000+ patient assistance programs, free clinics, free or low-cost diagnostics, and drug discount cards. If you cannot afford your medications, NeedyMeds finds a path.</p>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
-        <span style="background:rgba(212,175,55,.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ 10K+ PAPs</span>
-        <span style="background:rgba(212,175,55,.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ Free clinics map</span>
-        <span style="background:rgba(212,175,55,.08);color:#d4af37;font-size:10px;padding:3px 8px;border-radius:6px">✓ Free drug card</span>
-      </div>
-      <a href="https://www.needymeds.org" target="_blank" style="display:block;background:linear-gradient(135deg,#d4af37,#b8962e);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none">Find Free Resources →</a>
-      <div style="text-align:center;color:rgba(212,175,55,.4);font-size:10px;margin-top:8px">💛 Nonprofit -- no affiliate, just right</div>
-    </div>
-
-  </div>
-
-  <!-- EMERGENCY RESOURCES -->
-  <div style="background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.15);border-radius:14px;padding:20px;margin-bottom:32px">
-    <div style="font-size:10px;letter-spacing:3px;color:rgba(239,68,68,.6);margin-bottom:14px">IF YOU CANNOT AFFORD CARE RIGHT NOW</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
-      <a href="https://findahealthcenter.hrsa.gov" target="_blank" style="text-decoration:none;padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(239,68,68,.1);display:block"><div style="font-size:12px;font-weight:700;color:#ef4444;margin-bottom:4px">FQHC Finder</div><div style="font-size:11px;color:#5a6374">Federally qualified health centers. Sliding scale by income. Medical + dental + mental health.</div></a>
-      <a href="https://www.needymeds.org/free-clinics" target="_blank" style="text-decoration:none;padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(239,68,68,.1);display:block"><div style="font-size:12px;font-weight:700;color:#ef4444;margin-bottom:4px">Free Clinic Map</div><div style="font-size:11px;color:#5a6374">NeedyMeds free clinic locator. Search by zip code.</div></a>
-      <a href="https://www.rxassist.org" target="_blank" style="text-decoration:none;padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(239,68,68,.1);display:block"><div style="font-size:12px;font-weight:700;color:#ef4444;margin-bottom:4px">RxAssist</div><div style="font-size:11px;color:#5a6374">Pharmaceutical company patient assistance programs. Free brand-name drugs.</div></a>
-      <a href="https://www.healthcare.gov/medicaid-chip/getting-medicaid-chip/" target="_blank" style="text-decoration:none;padding:12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(239,68,68,.1);display:block"><div style="font-size:12px;font-weight:700;color:#ef4444;margin-bottom:4px">Medicaid Check</div><div style="font-size:11px;color:#5a6374">See if you qualify for Medicaid or CHIP right now. Healthcare.gov eligibility tool.</div></a>
-    </div>
-  </div>
-
-  <div class="disclaimer">💰 BLEU provides financial wellness information, not professional financial, tax, or investment advice. Consult licensed financial advisors for specific investment and tax decisions. Affiliate links are clearly disclosed.</div>
-
-  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">A living model of care &middot; Patent Pending &middot; &copy; 2026</span></div>
-
-  <script>
-  (function(){
-
-    // WELLNESS SPENDING RATIO
-    window.calcWSR = function(){
-      var h = ['wsr-therapy','wsr-supplements','wsr-fitness','wsr-food','wsr-sleep'].reduce(function(s,id){return s+(parseFloat(document.getElementById(id).value)||0)},0);
-      var harm = ['wsr-alcohol','wsr-tobacco','wsr-junk','wsr-gambling','wsr-other'].reduce(function(s,id){return s+(parseFloat(document.getElementById(id).value)||0)},0);
-      var total = h + harm;
-      var el = document.getElementById('wsr-result');
-      el.style.display = 'block';
-      if(total === 0){el.innerHTML='<span style="color:#ff6b8a">Enter some numbers first.</span>';return;}
-      var ratio = total > 0 ? Math.round((h/total)*100) : 0;
-      var grade = ratio >= 80 ? ['A','#4ecd8c','Thriving','Your budget is actively building longevity.'] : ratio >= 60 ? ['B','#4ecdc4','Healing','Good foundation -- small shifts will compound.'] : ratio >= 40 ? ['C','#d4af37','Neutral','You\'re spending as much against yourself as for yourself.'] : ['D','#ff6b8a','At Risk','Your spending patterns are working against your health.'];
-      el.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">'
-        +'<div style="text-align:center"><div style="font-size:42px;font-weight:300;color:'+grade[1]+';font-family:Georgia,serif">'+grade[0]+'</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px">GRADE</div></div>'
-        +'<div style="text-align:center"><div style="font-size:42px;font-weight:300;color:'+grade[1]+';font-family:Georgia,serif">'+ratio+'%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px">HEALING RATIO</div></div>'
-        +'<div style="text-align:center"><div style="font-size:24px;font-weight:300;color:#e8d5b0;font-family:Georgia,serif;margin-top:8px">'+grade[2]+'</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">STATUS</div></div>'
-        +'</div>'
-        +'<div style="font-size:12px;color:#8b95a5;line-height:1.8;margin-bottom:12px">'+grade[3]+'</div>'
-        +'<div style="display:flex;gap:16px;font-size:12px"><span style="color:#4ecdc4">Healing: $'+h.toFixed(0)+'/mo</span><span style="color:#d4af37">Harming: $'+harm.toFixed(0)+'/mo</span><span style="color:#5a6374">Annual harm cost: $'+(harm*12).toFixed(0)+'</span></div>'
-        +(harm > 0 ? '<div style="margin-top:12px;padding:10px;border-radius:8px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.1);font-size:11px;color:#d4af37">If you redirected your $'+harm.toFixed(0)+'/mo harming spend to healing, your ratio becomes '+(Math.round((h+harm)/(h+harm)*100))+'% -- that is $'+(harm*12).toFixed(0)+' per year toward your longevity.</div>' : '');
-    };
-
-    // HSA CALCULATOR
-    window.calcHSA = function(){
-      var inc = parseFloat(document.getElementById('hsa-income').value)||0;
-      var hsa = parseFloat(document.getElementById('hsa-contrib').value)||0;
-      var fsa = parseFloat(document.getElementById('fsa-contrib').value)||0;
-      var el = document.getElementById('hsa-result');
-      el.style.display='block';
-      if(!inc){el.innerHTML='<span style="color:#ff6b8a">Enter your income first.</span>';return;}
-      var rate = inc<=44725?.12:inc<=95375?.22:inc<=201050?.24:.32;
-      var taxSaved = Math.round((hsa+fsa)*rate);
-      var ficaSaved = Math.round((hsa+fsa)*.0765);
-      var total = taxSaved + ficaSaved;
-      el.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px">'
-        +'<div style="text-align:center"><div style="font-size:28px;font-weight:300;color:#a78bfa;font-family:Georgia,serif">$'+taxSaved.toLocaleString()+'</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">INCOME TAX SAVED</div></div>'
-        +'<div style="text-align:center"><div style="font-size:28px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif">$'+ficaSaved.toLocaleString()+'</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">FICA TAX SAVED</div></div>'
-        +'<div style="text-align:center"><div style="font-size:28px;font-weight:300;color:#d4af37;font-family:Georgia,serif">$'+total.toLocaleString()+'</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">TOTAL SAVED</div></div>'
-        +'</div>'
-        +'<div style="font-size:12px;color:#8b95a5;line-height:1.8">At your income level (~'+Math.round(rate*100)+'% federal bracket), every $1 contributed saves you $'+(rate+.0765).toFixed(2)+' in taxes. Maxing both accounts saves you <strong style="color:#a78bfa">$'+total.toLocaleString()+'</strong> annually -- money that pays for more wellness.</div>';
-    };
-
-    // RX SAVINGS
-    window.calcRx = function(){
-      var name = document.getElementById('rx-name').value.trim();
-      var cost = parseFloat(document.getElementById('rx-cost').value)||0;
-      var el = document.getElementById('rx-result');
-      el.style.display='block';
-      if(!name||!cost){el.innerHTML='<span style="color:#ff6b8a">Enter drug name and current cost.</span>';return;}
-      var goodrx = Math.round(cost*.35);
-      var costplus = Math.round(cost*.08);
-      var annual = (cost - costplus)*12;
-      el.innerHTML='<div style="font-size:10px;letter-spacing:2px;color:#5a6374;margin-bottom:12px">ESTIMATED PRICES FOR: '+name.toUpperCase()+'</div>'
-        +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">'
-        +'<div style="text-align:center;padding:12px;border-radius:8px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.1)"><div style="font-size:22px;font-weight:300;color:#ef4444;font-family:Georgia,serif">$'+cost.toFixed(0)+'</div><div style="font-size:9px;color:#5a6374;letter-spacing:1px;margin-top:3px">RETAIL / MO</div></div>'
-        +'<div style="text-align:center;padding:12px;border-radius:8px;background:rgba(78,205,196,.06);border:1px solid rgba(78,205,196,.1)"><div style="font-size:22px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif">~$'+goodrx+'</div><div style="font-size:9px;color:#5a6374;letter-spacing:1px;margin-top:3px">GOODRX EST.</div></div>'
-        +'<div style="text-align:center;padding:12px;border-radius:8px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.1)"><div style="font-size:22px;font-weight:300;color:#a78bfa;font-family:Georgia,serif">~$'+costplus+'</div><div style="font-size:9px;color:#5a6374;letter-spacing:1px;margin-top:3px">COST PLUS EST.</div></div>'
-        +'</div>'
-        +'<div style="font-size:12px;color:#4ecd8c;margin-bottom:10px">Potential annual savings with Cost Plus Drugs: <strong>$'+annual.toLocaleString()+'</strong></div>'
-        +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
-        +'<a href="https://www.goodrx.com/'+encodeURIComponent(name)+'" target="_blank" style="padding:7px 14px;border-radius:8px;font-size:11px;background:rgba(78,205,196,.1);border:1px solid rgba(78,205,196,.2);color:#4ecdc4;text-decoration:none">Check GoodRx -></a>'
-        +'<a href="https://costplusdrugs.com/medications/?q='+encodeURIComponent(name)+'" target="_blank" style="padding:7px 14px;border-radius:8px;font-size:11px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2);color:#a78bfa;text-decoration:none">Check Cost Plus -></a>'
-        +'<a href="https://www.needymeds.org/drug-search?drugname='+encodeURIComponent(name)+'" target="_blank" style="padding:7px 14px;border-radius:8px;font-size:11px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.2);color:#d4af37;text-decoration:none">NeedyMeds PAP -></a>'
-        +'</div>'
-        +'<div style="margin-top:10px;font-size:10px;color:#5a6374">! Estimates only. Actual prices vary by formulation, quantity, and location. Always verify directly.</div>';
-    };
-
-    // LONGEVITY ROI
-    window.calcROI = function(){
-      var age = parseInt(document.getElementById('roi-age').value)||35;
-      var spend = parseFloat(document.getElementById('roi-spend').value)||0;
-      var risk = document.getElementById('roi-risk').value;
-      var el = document.getElementById('roi-result');
-      el.style.display='block';
-      if(!spend){el.innerHTML='<span style="color:#ff6b8a">Enter monthly wellness spend.</span>';return;}
-      var yrs = Math.max(0,65-age);
-      var invested = spend*12*yrs;
-      var riskMult = risk==='low'?0.6:risk==='medium'?1.0:1.6;
-      var chronicCost = Math.round(285000*riskMult);
-      var saved = Math.max(0,chronicCost-invested);
-      var roi = invested>0 ? Math.round((saved/invested)*100) : 0;
-      el.innerHTML='<div style="font-size:10px;letter-spacing:2px;color:#5a6374;margin-bottom:14px">LONGEVITY ROI -- AGE '+age+' TO 65 ('+yrs+' YEARS)</div>'
-        +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">'
-        +'<div style="text-align:center;padding:14px;border-radius:10px;background:rgba(78,205,140,.06);border:1px solid rgba(78,205,140,.1)"><div style="font-size:24px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif">$'+invested.toLocaleString()+'</div><div style="font-size:9px;color:#5a6374;letter-spacing:1px;margin-top:4px">TOTAL INVESTED</div></div>'
-        +'<div style="text-align:center;padding:14px;border-radius:10px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.1)"><div style="font-size:24px;font-weight:300;color:#ef4444;font-family:Georgia,serif">$'+chronicCost.toLocaleString()+'</div><div style="font-size:9px;color:#5a6374;letter-spacing:1px;margin-top:4px">AVG CHRONIC DISEASE COST</div></div>'
-        +'<div style="text-align:center;padding:14px;border-radius:10px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.1)"><div style="font-size:24px;font-weight:300;color:#d4af37;font-family:Georgia,serif">'+roi+'%</div><div style="font-size:9px;color:#5a6374;letter-spacing:1px;margin-top:4px">ESTIMATED ROI</div></div>'
-        +'</div>'
-        +'<div style="font-size:13px;color:#8b95a5;line-height:1.8;font-family:Georgia,serif;font-size:14px;font-style:italic;border-left:2px solid #d4af37;padding-left:14px">Every $1 you invest in prevention today displaces an estimated $'+(chronicCost/Math.max(1,invested)).toFixed(1)+' in reactive medical costs. That is not philosophy. That is the math of your body.</div>';
-    };
-
-  })();
-  </script>
-
-</div></div>
-
-<div class="panel" id="p-recovery">
-  <div class="section-label">Recovery as molecular restoration.</div>
-  <h1 class="hero-title"> <span class="accent">Recovery</span></h1>
-<div id="tw-recovery-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
-  <div id="tw-recovery" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
-</div>
-<script>
-(function(){
-  var el=document.getElementById("tw-recovery");
-  if(!el)return;
-  var lines=["Whether you are 3 hours sober or 3 years sober -- you are in the right place.",
-"Addiction is what a human brain does when pain exceeds its capacity to cope.",
-"Recovery is not the absence of the substance. It is the presence of something better.",
-"The first 72 hours. Day 30. Year 5. Each one is its own kind of courage.",
-"BLEU Recovery was not built in a boardroom. It was built by people who know what this costs.",
-"You survived to get here. That is not nothing. That is everything."];
-  var li=0,ci=0,cur="",typing=true,pause=0;
-  function tick(){
-    if(pause>0){pause--;setTimeout(tick,30);return;}
-    if(typing){
-      if(ci<lines[li].length){cur+=lines[li][ci++];el.textContent=cur;setTimeout(tick,38);}
-      else{typing=false;pause=60;setTimeout(tick,30);}
-    }else{
-      if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,18);}
-      else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}
-    }
-  }
-  setTimeout(tick,800);
-})();
-</script>
-  <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:18px;border-left:2px solid rgba(201,168,76,.3);padding-left:16px;">This was not built in a boardroom. It was built by someone who survived 9 overdoses and overcame 31 felonies. Who treated 30,000 patients. Who knows what the first 72 hours feel like, what Day 30 feels like, what Year 5 feels like. This meets you where you are -- with dignity, privacy, and real tools.</p>
-<p class="hero-sub">Recovery is not willpower. It never was. Addiction is the brain's dopamine system doing exactly what it was designed to do -- seek relief from overwhelming stress. BLEU Recovery doesn't judge. It understands the neuroscience, the trauma, the isolation, and the shame that precede every relapse. Whether you are 3 hours sober or 3 years sober or just thinking about it -- you are in the right place. 
-
-  <div class="section-label" style="margin-top:24px"><!-- thread-recovery --><div style="margin-top:28px;padding:16px 20px;border-top:1px solid rgba(255,255,255,.06);text-align:center;">
-       <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,.25);cursor:pointer;" onclick="go('sleep')">
-         Your sleep is part of your recovery. Sleep changes everything. →
-       </span>
-     </div>
-CHOOSE YOUR MODE</div>
-  <div class="mode-bar" id="recovery-modes">
-    <span class="mode-btn active" onclick="setMode('recovery','sobriety',this)">🌅 Early Sobriety</span>
-    <span class="mode-btn" onclick="setMode('recovery','relapse',this)">🛡️ Relapse Prevention</span>
-    <span class="mode-btn" onclick="setMode('recovery','harm',this)">❤️ Harm Reduction</span>
-    <span class="mode-btn" onclick="setMode('recovery','12step',this)">📿 12-Step</span>
-    <span class="mode-btn" onclick="setMode('recovery','family',this)">👨‍👩‍👧 Family</span>
-    <span class="mode-btn" onclick="setMode('recovery','mat',this)">💊 MAT</span>
-    <span class="mode-btn" onclick="setMode('recovery','milestones',this)">🏆 Milestones</span>
-  </div>
-
-  <div class="quick-row">
-    <span class="quick-btn" onclick="ask('recovery','Im on day 1 of sobriety - what do I do right now')">🌅 Day 1</span>
-    <span class="quick-btn" onclick="ask('recovery','I want to drink right now and I dont know what to do')">⚡ Craving Now</span>
-    <span class="quick-btn" onclick="ask('recovery','Find a treatment center near New Orleans')">🏥 Find Treatment</span>
-    <span class="quick-btn" onclick="ask('recovery','My family member is using and I dont know what to do')">👨‍👩‍👧 Family Help</span>
-    <span class="quick-btn" onclick="ask('recovery','What is Suboxone and how does MAT work')">💊 MAT Info</span>
-    <span class="quick-btn" onclick="ask('recovery','I relapsed and I feel like a complete failure')">🔄 After Relapse</span>
-    <span class="quick-btn" onclick="ask('recovery','How do I get naloxone Narcan for free')">❤️ Get Narcan</span>
-    <span class="quick-btn" onclick="ask('recovery','Im celebrating 90 days sober')">🏆 90 Days!</span>
-  <div style="margin:16px 0"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.15);border-radius:14px;padding:20px;text-align:center;margin-bottom:16px"><div style="color:#9acd32;font-size:13px;font-weight:500">If you are in crisis right now</div><div style="color:#e8d5b0;font-size:18px;font-weight:300;margin-top:8px">988 Suicide + Crisis Lifeline</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">Call or text 988 &#8226; Free &#8226; 24/7 &#8226; Confidential</div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Find AA NA and recovery meetings near me in New Orleans this week')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Find meetings</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">AA, NA, SMART Recovery near you. This week.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Find sober social events and communities in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129309;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Sober community</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Events, groups, social without substances.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','I need someone to talk to right now. Show me free crisis and warmline options')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128172;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Talk to someone</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Crisis lines, warmlines, text support. Free.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Help me set up a sobriety day counter and track my recovery journey')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128197;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Day counter</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Track your journey. Every day matters.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','I am struggling with relapse. I need support without judgment')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128156;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Relapse support</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">No shame. Just a step. Get back on path.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Find family support resources like Al-Anon near New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127968;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Family support</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Al-Anon, family therapy, healing together.</div></div></div></div></div>
-
-  <div class="chat-box"><div class="chat-messages" 
-<!-- ═══ TIER 2 CLINICAL AFFILIATES -- RECOVERY ═══ -->
-<div id="recovery-clinical-aff" style="margin:20px 0">
-  <div style="font-size:9px;letter-spacing:3px;color:#8fa4b0;margin-bottom:8px">RECOVERY RESOURCES -- AGENT-VERIFIED READINESS REQUIRED</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-    <a href="https://www.foundhq.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(234,179,8,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
-      <div style="font-size:11px;color:#d4af37;font-weight:600;margin-bottom:3px">Found</div>
-      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Medically supervised weight and metabolic management. GLP-1 eligible. Action-stage users only -- shame gate active.</div>
-      <div style="font-size:9px;color:#5A6374;margin-top:4px">$50–200 CPA · Agent 10 gate required</div>
-    </a>
-    <a href="https://www.calm.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
-      <div style="font-size:11px;color:#4ecdc4;font-weight:600;margin-bottom:3px">Calm</div>
-      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Meditation, sleep stories, mindfulness. Complementary tool at any recovery stage.</div>
-      <div style="font-size:9px;color:#5A6374;margin-top:4px">Referral commission · HSA-eligible</div>
-    </a>
-    <a href="https://www.talkspace.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
-      <div style="font-size:11px;color:#4ecdc4;font-weight:600;margin-bottom:3px">Talkspace</div>
-      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Text + video therapy. Covered by many insurance plans. Low-barrier entry to human support.</div>
-      <div style="font-size:9px;color:#5A6374;margin-top:4px">CPA · insurance-covered</div>
-    </a>
-    <a href="https://www.ethos.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(34,197,94,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
-      <div style="font-size:11px;color:#22c55e;font-weight:600;margin-bottom:3px">Ethos Life Insurance</div>
-      
-<!-- ════ RECOVERY — LIVE MEETING FINDER ════ -->
-<div style="margin:0 24px 20px">
-  <div style="font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(34,197,94,0.7);font-weight:600;margin-bottom:8px">MEETINGS NEAR YOU — RIGHT NOW</div>
-  <div style="display:flex;gap:8px;margin-bottom:16px">
-    <input id="samhsa-zip" placeholder="Your zip code" maxlength="5" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none" onkeydown="if(event.key==='Enter')findMeetings()">
-    <select id="samhsa-type" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;color:#e2e8f0;font-size:12px;outline:none">
-      <option value="SA">All Recovery</option>
-      <option value="MH">Mental Health</option>
-      <option value="SAMH">Both</option>
-    </select>
-    <button onclick="findMeetings()" style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:8px;color:#22c55e;padding:10px 18px;font-size:12px;cursor:pointer;font-weight:700">Find</button>
-  </div>
-  <div id="samhsa-results" style="display:grid;gap:10px"></div>
-  <div id="samhsa-crisis" style="margin-top:16px;padding:14px 16px;background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.15);border-radius:10px">
-    <div style="font-size:12px;font-weight:700;color:rgba(255,120,120,0.9);margin-bottom:8px">If you need help right now:</div>
-    <div style="display:flex;flex-wrap:wrap;gap:10px">
-      <a href="tel:18006624357" style="background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.2);border-radius:20px;padding:6px 14px;color:rgba(255,120,120,0.9);font-size:11px;text-decoration:none;font-weight:600">📞 SAMHSA 1-800-662-4357</a>
-      <a href="tel:988" style="background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.2);border-radius:20px;padding:6px 14px;color:rgba(255,120,120,0.9);font-size:11px;text-decoration:none;font-weight:600">📞 Crisis Line: 988</a>
-      <a href="sms:741741" style="background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.2);border-radius:20px;padding:6px 14px;color:rgba(255,120,120,0.9);font-size:11px;text-decoration:none;font-weight:600">💬 Text HOME to 741741</a>
-    </div>
-  </div>
-</div>
-<script>
-(function(){
-window.findMeetings = async function() {
-  var zip = (document.getElementById('samhsa-zip')||{}).value || '';
-  var type = (document.getElementById('samhsa-type')||{}).value || 'SA';
-  var res = document.getElementById('samhsa-results');
-  if(!zip||zip.length<5||!res) return;
-  res.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:12px;padding:12px 0">Finding treatment centers near '+zip+'...</div>';
-  try {
-    // Get lat/lng from zip
-    var gr = await fetch('https://nominatim.openstreetmap.org/search?postalcode='+zip+'&country=US&format=json&limit=1');
-    var gd = await gr.json();
-    if(!gd.length){res.innerHTML='<div style="color:rgba(255,255,255,0.4);font-size:12px">Zip not found. Try again.</div>';return;}
-    var lat=gd[0].lat, lng=gd[0].lon;
-    
-    // SAMHSA Treatment Locator API
-    var sr = await fetch('https://findtreatment.gov/locator/listing?sType='+type+'&lat='+lat+'&lng='+lng+'&distance=20&limitPayment=false',
-      {headers:{'Accept':'application/json'}});
-    var sd = await sr.json();
-    var facilities = (sd.rows||[]).slice(0,6);
-    
-    if(!facilities.length) {
-      res.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:12px;padding:12px 0">No facilities found within 20 miles. Try a different zip or increase distance.</div>';
-      return;
-    }
-    
-    res.innerHTML = facilities.map(function(f) {
-      var services = (f.services||[]).slice(0,3).join(' · ');
-      var accepts = [];
-      if(f.paymentMedicaid) accepts.push('Medicaid');
-      if(f.paymentSlidingFeeScale) accepts.push('Sliding Scale');
-      if(f.paymentNoCharge) accepts.push('Free');
-      return '<div style="background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.12);border-radius:10px;padding:14px 16px">'
-        +'<div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px">'+(f.name1||'Treatment Center')+'</div>'
-        +(f.street?'<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px">'+f.street+', '+(f.city||'')+' '+(f.state||'')+'</div>':'')
-        +(accepts.length?'<div style="margin-bottom:6px">'+accepts.map(function(a){return'<span style="font-size:9px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:2px 8px;color:#22c55e;font-weight:600;margin-right:4px">'+a+'</span>';}).join('')+'</div>':'')
-        +(services?'<div style="font-size:10px;color:rgba(255,255,255,0.3)">'+services+'</div>':'')
-        +(f.phone?'<a href="tel:'+f.phone.replace(/\D/g,'')+'" style="display:inline-block;margin-top:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:6px;padding:5px 12px;color:#22c55e;font-size:11px;text-decoration:none;font-weight:600">📞 '+f.phone+'</a>':'')
-        +'</div>';
-    }).join('');
-    if(typeof bleuSignal==='function') bleuSignal('samhsa_search',{zip:zip,results:facilities.length});
-  } catch(e) {
-    res.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:12px;padding:12px 0">Search unavailable. Call SAMHSA directly: 1-800-662-4357</div>';
-  }
-};
-// Auto-load with stored zip
-var stored = localStorage.getItem('bleu_zip');
-if(stored){var inp=document.getElementById('samhsa-zip');if(inp)inp.value=stored;}
-})();
-</script>
-
-<div style="font-size:10px;color:#8fa4b0;line-height:1.5">Term life from $19/mo. For users with dependents whose health trajectory affects life expectancy.</div>
-      <div style="font-size:9px;color:#5A6374;margin-top:4px">$50–200 CPA · Finance bridge</div>
-    </a>
-  </div>
-</div>
-
-<div id="chat-recovery" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-recovery" placeholder="You\'re not alone. What's happening right now?" onkeydown="if(event.key==='Enter')send('recovery')"><button onclick="send('recovery')">Share</button></div></div></div>
-
-  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">A living model of care · Patent Pending · © 2026</span></div>
-<div class="divider"></div>
-  <div class="section-label">THE 7 MODES</div>
-  <div class="card-grid">
-    <div class="card"><h3>🌅 Early Sobriety</h3><p>Day-by-day guidance. What your body does in the first 72 hours, first week, first month. Withdrawal support. Supplement recommendations.</p></div>
-    <div class="card"><h3>🛡️ Relapse Prevention</h3><p>HALT checks. Trigger mapping. Urge surfing. Emergency contacts. Playing the tape forward. Relapse is data, not failure.</p></div>
-    <div class="card"><h3>❤️ Harm Reduction</h3><p>Non-judgmental. Naloxone access. Fentanyl test strips. Never Use Alone hotline. Dead people can\'t recover.</p></div>
-    <div class="card"><h3>📿 12-Step Companion</h3><p>Meeting finder. Step work journaling. Sponsor tools. Daily reflection. Chip tracking. All paths valid.</p></div>
-    <div class="card"><h3>👨‍👩‍👧 Family & Codependency</h3><p>For people loving someone in addiction. Al-Anon principles. Boundaries. Enabling vs supporting. Everyone needs healing.</p></div>
-    <div class="card"><h3>💊 MAT Support</h3><p>Suboxone, methadone, naltrexone information. Clinic finder. Side effect management. MAT is treatment, not trading.</p></div>
-    <div class="card"><h3>🏆 Milestones</h3><p>Celebrate recovery. Health improvements at each milestone. Savings calculator. Community celebration.</p></div>
-  </div>
-
-  
-  <!-- SOBRIETY DAY COUNTER -->
-  <div style="background:linear-gradient(135deg,rgba(154,205,50,0.06),rgba(25,50,68,0.6));border:1px solid rgba(154,205,50,0.2);border-radius:18px;padding:24px;margin:24px 0">
-    <div style="color:rgba(154,205,50,0.7);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">🏆 YOUR SOBRIETY COUNTER</div>
-    <div id="sober-display">
-      <div style="color:#e8d5b0;font-size:14px;margin-bottom:14px;font-weight:300">When did your journey begin?</div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <input type="date" id="sober-date" style="background:rgba(25,50,68,0.8);border:1px solid rgba(154,205,50,0.3);border-radius:10px;padding:10px 14px;color:#e8d5b0;font-size:13px;outline:none">
-        <button onclick="setSoberDate()" style="background:linear-gradient(135deg,#9acd32,#6b8f23);border:none;border-radius:10px;padding:10px 20px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer">Start Counter →</button>
-      </div>
-    </div>
-    <div id="sober-stats" style="display:none">
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
-        <div style="text-align:center;background:rgba(154,205,50,0.08);border-radius:12px;padding:14px">
-          <div id="sc-days" style="color:#9acd32;font-size:28px;font-weight:700">0</div>
-          <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Days</div>
-        </div>
-        <div style="text-align:center;background:rgba(78,205,196,0.08);border-radius:12px;padding:14px">
-          <div id="sc-hours" style="color:#4ecdc4;font-size:28px;font-weight:700">0</div>
-          <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Hours</div>
-        </div>
-        <div style="text-align:center;background:rgba(212,175,55,0.08);border-radius:12px;padding:14px">
-          <div id="sc-saved" style="color:#d4af37;font-size:28px;font-weight:700">$0</div>
-          <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Saved</div>
-        </div>
-        <div style="text-align:center;background:rgba(154,205,50,0.08);border-radius:12px;padding:14px">
-          <div id="sc-milestone" style="color:#9acd32;font-size:18px;font-weight:700">--</div>
-          <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Next milestone</div>
+        <div style="font-size:14px;font-weight:600;color:#e8d5b0;margin-bottom:4px;">Slash the Rx Bill — Cost Plus + GoodRx</div>
+        <div style="font-size:13px;color:#8b95a5;line-height:1.75;">Mark Cuban's Cost Plus Drugs sells prescriptions at cost + 15%. GoodRx comparison-shops every pharmacy near you. Americans overpay $100B+ on prescriptions annually.</div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="https://costplusdrugs.com" target="_blank" style="text-decoration:none;"><span class="fin-chip">Cost Plus Drugs →</span></a>
+          <a href="https://www.goodrx.com" target="_blank" style="text-decoration:none;"><span class="fin-chip">GoodRx →</span></a>
         </div>
       </div>
-      <div id="sc-message" style="background:rgba(154,205,50,0.06);border-radius:10px;padding:12px;color:#8fa4b0;font-size:13px;line-height:1.6;margin-bottom:12px"></div>
-      <button onclick="resetCounter()" style="background:transparent;border:1px solid rgba(154,205,50,0.2);border-radius:8px;padding:6px 14px;color:#8fa4b0;font-size:11px;cursor:pointer">Reset counter</button>
     </div>
-  </div>
-
-  <!-- FIND TREATMENT -- Live Directory -->
-  <div style="background:rgba(28,45,58,0.5);border:1px solid rgba(212,175,55,0.12);border-radius:18px;padding:24px;margin:24px 0">
-    <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">FIND REAL HELP NEAR YOU</div>
-    <div style="color:#e8d5b0;font-size:18px;font-weight:600;margin-bottom:8px;font-family:'Cormorant Garamond',serif">Treatment Centers & Counselors</div>
-    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:16px;font-weight:300">Search 800,000+ NPI-verified providers -- addiction counselors, substance abuse specialists, MAT clinics -- with real phone numbers.</p>
-    <div style="display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:12px">
-      <input id="rec-city" placeholder="Your city..." style="background:rgba(25,50,68,0.8);border:1px solid rgba(154,205,50,0.2);border-radius:10px;padding:10px 14px;color:#e8d5b0;font-size:13px;outline:none">
-      <button onclick="searchTreatment()" style="background:linear-gradient(135deg,#9acd32,#6b8f23);border:none;border-radius:10px;padding:10px 20px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer">Search</button>
-    </div>
-    <div id="treatment-results"><div style="text-align:center;color:#8fa4b0;font-size:12px;padding:8px">Enter your city to find addiction counselors and treatment near you.</div></div>
-  </div>
-
-  <!-- AFFILIATE: GOODRX for MAT medications -->
-  <div style="background:linear-gradient(135deg,rgba(78,205,196,0.06),rgba(25,50,68,0.5));border:1px solid rgba(78,205,196,0.15);border-radius:16px;padding:22px;margin:24px 0">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-      <div style="width:42px;height:42px;border-radius:12px;background:rgba(78,205,196,0.15);display:flex;align-items:center;justify-content:center;font-size:20px">💊</div>
+    <div class="recipe-step">
+      <div class="recipe-num">05</div>
       <div>
-        <div style="color:#4ecdc4;font-weight:700;font-size:16px">GoodRx -- MAT Medication Savings</div>
-        <div style="color:#8fa4b0;font-size:11px">Suboxone, naltrexone, methadone -- up to 80% off</div>
+        <div style="font-size:14px;font-weight:600;color:#e8d5b0;margin-bottom:4px;">Build the Longevity Fund — ROI on Your Life</div>
+        <div style="font-size:13px;color:#8b95a5;line-height:1.75;">$150/month invested in your health today vs. $15,000 in ICU costs at 65. The math is violent in your favor. Budget your wellness like an investment — because it is the highest-ROI investment you will ever make.</div>
+        <div style="margin-top:10px;"><span class="fin-chip" onclick="ask('finance','Show me the long-term financial ROI of investing in my health now vs paying for chronic disease treatment later')">Show Me The Math →</span></div>
       </div>
     </div>
-    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:14px;font-weight:300">MAT medications save lives. GoodRx finds the lowest price at pharmacies near you -- no insurance needed. Suboxone can cost $500+/month retail. GoodRx often cuts that to under $100.</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-      <a href="https://www.goodrx.com/buprenorphine-naloxone" target="_blank" rel="noopener" style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:10px;padding:12px;text-align:center;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'">
-        <div style="color:#4ecdc4;font-weight:600;font-size:13px">Suboxone</div>
-        <div style="color:#8fa4b0;font-size:11px;margin-top:4px">Buprenorphine/Naloxone</div>
-      </a>
-      <a href="https://www.goodrx.com/naltrexone" target="_blank" rel="noopener" style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:10px;padding:12px;text-align:center;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'">
-        <div style="color:#4ecdc4;font-weight:600;font-size:13px">Naltrexone</div>
-        <div style="color:#8fa4b0;font-size:11px;margin-top:4px">Vivitrol / ReVia</div>
-      </a>
-      <a href="https://www.goodrx.com/naloxone" target="_blank" rel="noopener" style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.1);border-radius:10px;padding:12px;text-align:center;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#9acd32'" onmouseout="this.style.borderColor='rgba(154,205,50,0.1)'">
-        <div style="color:#9acd32;font-weight:600;font-size:13px">Naloxone</div>
-        <div style="color:#8fa4b0;font-size:11px;margin-top:4px">Narcan -- Save a life</div>
-      </a>
-    </div>
-    <a href="https://www.goodrx.com" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#4ecdc4,#2a9d8f);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none">Find Lowest Price Near Me →</a>
-    <div style="text-align:center;color:rgba(212,175,55,0.4);font-size:10px;margin-top:8px">💛 Affiliate -- funds this free platform</div>
   </div>
 
-<div class="disclaimer disclaimer-crisis">🔥 If you or someone near you is experiencing an overdose: <strong>Call 911 immediately.</strong> Administer naloxone (Narcan) if available. <strong>988 Lifeline</strong> (call/text 988) · <strong>SAMHSA Helpline</strong>: 1-800-662-4357 (free, 24/7) · <strong>Never Use Alone</strong>: 1-800-484-3731 · <strong>Crisis Text Line</strong>: text HOME to 741741</div>
+  <!-- ALVAI FINANCIAL INTELLIGENCE -->
+  <div style="background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.1);border-radius:14px;padding:20px;margin-bottom:20px;">
+    <div style="font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:rgba(212,175,55,.4);margin-bottom:12px;">Alvai Financial Intelligence</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+      <span class="fin-chip" onclick="ask('finance','Calculate my wellness ratio — what percentage of my income goes to health?')">📊 Wellness Ratio</span>
+      <span class="fin-chip" onclick="ask('finance','Help me slash my prescription costs using GoodRx and Cost Plus Drugs')">💊 Slash My Rx Bill</span>
+      <span class="fin-chip" onclick="ask('finance','How do I negotiate medical bills and reduce medical debt?')">🏥 Negotiate Bills</span>
+      <span class="fin-chip" onclick="ask('finance','Help me maximize my HSA and FSA contributions this year')">🏦 HSA / FSA Max</span>
+      <span class="fin-chip" onclick="ask('finance','I cannot afford healthcare right now. What free and low-cost options exist near me?')">💚 Broke But Healing</span>
+      <span class="fin-chip" onclick="ask('finance','Show me the financial return on investment of preventive health spending vs future medical costs')">📈 Longevity ROI</span>
+      <span class="fin-chip" onclick="ask('finance','What employee benefits am I probably not using — FSA, HSA, EAP, gym reimbursement, mental health days')">🎁 Benefits Audit</span>
+    </div>
+    <div class="chat-box">
+      <div class="chat-messages" id="chat-finance"></div>
+      <div class="input-row">
+        <input class="chat-input" id="in-finance" placeholder="What is money stress doing to your body right now?" onkeydown="if(event.key==='Enter')send('finance')"/>
+        <button class="send-btn" onclick="send('finance')">Ask Alvai ✦</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONNECTIVE THREAD -->
+  <div style="margin-top:24px;padding:16px 20px;border-top:1px solid rgba(255,255,255,.06);text-align:center;">
+    <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,.25);cursor:pointer;" onclick="go('dashboard')">
+      When financial stress lifts, your whole body changes. See your Pulse. →
+    </span>
+  </div>
+
 </div>
 
 <!-- ═══════════════════════ ECSIQ ═══════════════════════ -->
