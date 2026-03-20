@@ -687,15 +687,15 @@ button[type="submit"],
 
       <div class="hf4" style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:36px">
         <div style="background:rgba(78,205,196,.06);border:1px solid rgba(78,205,196,.15);border-radius:10px;padding:10px 18px;text-align:center;min-width:100px">
-          <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#4ecdc4;animation:hcountUp .6s .8s both">800K+</div>
+          <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#4ecdc4;animation:hcountUp .6s .8s both" onclick="statAsk('directory','How does BLEU find and verify 800,000 practitioners — and how do I find the right one for me?')" style="cursor:pointer" title="Tap to explore">800K+</div>
           <div style="font-size:9px;color:#8b95a5;letter-spacing:2px;margin-top:2px">PRACTITIONERS</div>
         </div>
         <div style="background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.15);border-radius:10px;padding:10px 18px;text-align:center;min-width:100px">
-          <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#d4af37;animation:hcountUp .6s 1s both">302K+</div>
+          <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#d4af37;animation:hcountUp .6s 1s both" onclick="statAsk('ecsiq','What does BLEU know about drug and supplement interactions — and can you check mine?')" style="cursor:pointer" title="Tap to explore">302K+</div>
           <div style="font-size:9px;color:#8b95a5;letter-spacing:2px;margin-top:2px">INTERACTIONS</div>
         </div>
         <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.15);border-radius:10px;padding:10px 18px;text-align:center;min-width:100px">
-          <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#a78bfa;animation:hcountUp .6s 1.1s both">22</div>
+          <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#a78bfa;animation:hcountUp .6s 1.1s both" onclick="statAsk('home','What are the 22 AI modes in BLEU and which one is right for what I am going through right now?')" style="cursor:pointer" title="Tap to explore">22</div>
           <div style="font-size:9px;color:#8b95a5;letter-spacing:2px;margin-top:2px">AI MODES</div>
         </div>
         <div style="background:rgba(78,205,140,.06);border:1px solid rgba(78,205,140,.15);border-radius:10px;padding:10px 18px;text-align:center;min-width:100px">
@@ -1609,9 +1609,9 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 })();
 </script>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0">
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:18px;text-align:center"><div style="color:#4ecdc4;font-size:24px;font-weight:600">485K+</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">NPI Verified</div></div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:18px;text-align:center"><div style="color:#d4af37;font-size:24px;font-weight:600">127+</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Specialties</div></div>
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:18px;text-align:center"><div style="color:#4ecdc4;font-size:24px;font-weight:600">50</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">States</div></div>
+    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:18px;text-align:center" onclick="statAsk('directory','How does BLEU verify 485 thousand practitioners and what does NPI verification actually mean for me when choosing care?')" style="cursor:pointer"><div style="color:#4ecdc4;font-size:24px;font-weight:600">485K+</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">NPI Verified</div></div>
+    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:18px;text-align:center" onclick="statAsk('directory','What 127 specialties are in BLEU\'s directory? Help me find the right type of care for what I am dealing with.')" style="cursor:pointer"><div style="color:#d4af37;font-size:24px;font-weight:600">127+</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Specialties</div></div>
+    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:18px;text-align:center" onclick="statAsk('directory','BLEU covers all 50 states. How do I find the best care near me — or the best telehealth option if nothing is close?')" style="cursor:pointer"><div style="color:#4ecdc4;font-size:24px;font-weight:600">50</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">States</div></div>
     <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:18px;text-align:center"><div style="color:#d4af37;font-size:24px;font-weight:600">Nightly</div><div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Re-Verified</div></div>
   </div>
   <div style="background:rgba(25,50,68,0.35);border:1px solid rgba(78,205,196,0.08);border-radius:18px;padding:28px;margin:20px 0">
@@ -3776,9 +3776,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
   <!-- SCIENCE STATS -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px">
-    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1)"><div style="font-size:22px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif">+50%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LONGER LIFE</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Strong social ties</div></div>
-    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.1)"><div style="font-size:22px;font-weight:300;color:#d4af37;font-family:Georgia,serif">148</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">STUDIES</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Holt-Lunstad meta-analysis</div></div>
-    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1)"><div style="font-size:22px;font-weight:300;color:#a78bfa;font-family:Georgia,serif">29%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LESS DEMENTIA</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Socially connected adults</div></div>
+    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1)"><div style="font-size:22px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif" onclick="statAsk('community','The research says strong social ties extend life by 50 percent. What does my current connection level actually look like and what do I do about it?')" style="cursor:pointer">+50%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LONGER LIFE</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Strong social ties</div></div>
+    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.1)"><div style="font-size:22px;font-weight:300;color:#d4af37;font-family:Georgia,serif" onclick="statAsk('community','148 studies confirm connection extends life. What does the research actually say and how do I act on it today?')" style="cursor:pointer">148</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">STUDIES</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Holt-Lunstad meta-analysis</div></div>
+    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1)"><div style="font-size:22px;font-weight:300;color:#a78bfa;font-family:Georgia,serif" onclick="statAsk('community','Socially connected adults have 29 percent less dementia. What can I do starting today to build that protection?')" style="cursor:pointer">29%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LESS DEMENTIA</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Socially connected adults</div></div>
     <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(255,107,138,.04);border:1px solid rgba(255,107,138,.1)"><div style="font-size:22px;font-weight:300;color:#ff6b8a;font-family:Georgia,serif">#1</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">BLUE ZONE FACTOR</div><div style="font-size:9px;color:#5a6374;margin-top:2px">All 5 zones: belonging</div></div>
   </div>
 
@@ -4400,7 +4400,7 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#f97316">8-12wk</div>
     <div style="font-size:9px;color:#5a6374;margin-top:3px;line-height:1.4">CBT reduces NF-&#954;B inflammatory pathway activation</div>
   </div>
-  <div style="background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.12);border-radius:10px;padding:12px;text-align:center">
+  <div style="background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.12);border-radius:10px;padding:12px;text-align:center" onclick="statAsk('therapy','Untreated maternal mood disorders cost 32 thousand dollars per case. What does untreated mental health actually cost a person long-term?')" style="cursor:pointer">
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#a78bfa">$32K</div>
     <div style="font-size:9px;color:#5a6374;margin-top:3px;line-height:1.4">Prevented cost per untreated maternal mood disorder case</div>
   </div>
@@ -4408,7 +4408,7 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#ef4444">1 in 5</div>
     <div style="font-size:9px;color:#5a6374;margin-top:3px;line-height:1.4">Mothers experience perinatal mood disorder -- now #1 childbirth complication</div>
   </div>
-  <div style="background:rgba(78,205,196,.05);border:1px solid rgba(78,205,196,.12);border-radius:10px;padding:12px;text-align:center">
+  <div style="background:rgba(78,205,196,.05);border:1px solid rgba(78,205,196,.12);border-radius:10px;padding:12px;text-align:center" onclick="statAsk('therapy','Unprocessed grief costs 3600 dollars extra in healthcare per year. Help me understand that connection and what I can do.')" style="cursor:pointer">
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#4ecdc4">$3,600</div>
     <div style="font-size:9px;color:#5a6374;margin-top:3px;line-height:1.4">Excess healthcare cost per year from untreated grief</div>
   </div>
@@ -4626,38 +4626,30 @@ CHOOSE YOUR MODE</div>
 
   <!-- EIGHT STATS — clean 4-col grid, two rows -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
-    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.1);">
-      <div style="font-size:26px;font-weight:300;color:#ef4444;font-family:Georgia,serif;line-height:1;">2x</div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.1);" onclick="statAsk('finance','Financial stress doubles heart disease risk. What is it doing to my body right now and what can I actually do about it?')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"><div style="font-size:26px;font-weight:300;color:#ef4444;font-family:Georgia,serif;line-height:1;">2x</div>
       <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Heart disease risk<br>from financial stress</div>
     </div>
-    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.1);">
-      <div style="font-size:26px;font-weight:300;color:#d4af37;font-family:Georgia,serif;line-height:1;">15yr</div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.1);" onclick="statAsk('finance','Poverty reduces lifespan by 15 years. I want to understand the biology and what BLEU Finance can do to help.')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"><div style="font-size:26px;font-weight:300;color:#d4af37;font-family:Georgia,serif;line-height:1;">15yr</div>
       <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Lifespan loss<br>from poverty</div>
     </div>
-    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1);">
-      <div style="font-size:26px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif;line-height:1;">$600</div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1);" onclick="statAsk('finance','How does YNAB work and how do I set it up to start reducing my health costs starting this month?')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"><div style="font-size:26px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif;line-height:1;">$600</div>
       <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Avg YNAB savings<br>first 2 months</div>
     </div>
-    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.1);">
-      <div style="font-size:26px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif;line-height:1;">80%</div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.1);" onclick="statAsk('finance','How do I get 80 percent off my prescriptions using GoodRx right now? Walk me through it step by step.')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"><div style="font-size:26px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif;line-height:1;">80%</div>
       <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Rx savings<br>GoodRx vs retail</div>
     </div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:32px;">
-    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.08);">
-      <div style="font-size:26px;font-weight:300;color:#f87171;font-family:Georgia,serif;line-height:1;">56%</div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.08);" onclick="statAsk('finance','Financial toxicity worsens cancer outcomes by 56 percent. I want to understand this connection and what I can do to protect myself.')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"><div style="font-size:26px;font-weight:300;color:#f87171;font-family:Georgia,serif;line-height:1;">56%</div>
       <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Worse cancer outcomes<br>financial toxicity</div>
     </div>
-    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.08);">
-      <div style="font-size:26px;font-weight:300;color:#d4af37;font-family:Georgia,serif;line-height:1;">$9B</div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(212,175,55,.04);border:1px solid rgba(212,175,55,.08);" onclick="statAsk('finance','9 billion dollars in predatory lending fees on medical debt every year. How do I know if I am being overcharged and how do I fight it?')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"><div style="font-size:26px;font-weight:300;color:#d4af37;font-family:Georgia,serif;line-height:1;">$9B</div>
       <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Predatory lending fees<br>on medical debt · CFPB</div>
     </div>
-    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.08);">
-      <div style="font-size:26px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif;line-height:1;">$1,800</div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.08);" onclick="statAsk('finance','How do BLEU Finance users save an average of 1800 dollars a year? Show me exactly how to get those savings.')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"><div style="font-size:26px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif;line-height:1;">$1,800</div>
       <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">Avg annual savings<br>per BLEU Finance user</div>
     </div>
-    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.08);">
-      <div style="font-size:26px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif;line-height:1;">10:1</div>
+    <div style="text-align:center;padding:18px 12px;border-radius:12px;background:rgba(78,205,140,.04);border:1px solid rgba(78,205,140,.08);" onclick="statAsk('finance','Medication therapy management has a 10 to 1 ROI according to NEJM. What is that program and do I qualify for it?')" style="cursor:pointer;transition:all .2s" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'"><div style="font-size:26px;font-weight:300;color:#4ecd8c;font-family:Georgia,serif;line-height:1;">10:1</div>
       <div style="font-size:9px;color:#5a6374;letter-spacing:.15em;text-transform:uppercase;margin-top:6px;line-height:1.4;">ROI medication therapy<br>management · NEJM</div>
     </div>
   </div>
@@ -4798,14 +4790,14 @@ CHOOSE YOUR MODE</div>
     <p style="font-size:14px;color:#8B95A5;line-height:1.9;max-width:720px;margin:0 0 20px">The endocannabinoid system contains more receptors than all neurotransmitter systems combined. Discovered in 1992. Zero FDA-approved medications in 33 years. ECSIQ is the only consumer platform that understands Clinical Endocannabinoid Deficiency, accounts for FAAH polymorphisms, screens CYP3A4 drug interactions, and deploys lifestyle ECS activation before touching any phytocannabinoid. 529 strains. 302K interactions. 6 ECS types. This is the moat nobody sees.</p>
 
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
-      <span class="eq-pill" style="background:rgba(78,205,140,.08);border:1px solid rgba(78,205,140,.2);color:#4ecd8c">529 Strains</span>
-      <span class="eq-pill" style="background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37">302K Interactions</span>
-      <span class="eq-pill" style="background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4">25 Terpenes</span>
-      <span class="eq-pill" style="background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa">6 ECS Types</span>
-      <span class="eq-pill" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#F472B6">5-Layer Safety</span>
-      <span class="eq-pill" style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#22c55e">BEMS Engine</span>
-      <span class="eq-pill" style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);color:#60A5FA">51 Partners</span>
-      <span class="eq-pill" style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);color:#C8A951">PubMed Cited</span>
+      <span class="eq-pill" style="background:rgba(78,205,140,.08);border:1px solid rgba(78,205,140,.2);color:#4ecd8c" onclick="statAsk('ecsiq','Walk me through BLEU\'s strain database — how do 529 strains get matched to a specific person\'s needs and goals?')" style="cursor:pointer" title="Tap to explore">529 Strains</span>
+      <span class="eq-pill" style="background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);color:#d4af37" onclick="statAsk('ecsiq','What are drug-cannabis interactions and can you check whether any of my medications have conflicts I should know about?')" style="cursor:pointer" title="Tap to explore">302K Interactions</span>
+      <span class="eq-pill" style="background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4" onclick="statAsk('ecsiq','What do terpenes actually do in the body and how do they affect what cannabis does for me specifically?')" style="cursor:pointer" title="Tap to explore">25 Terpenes</span>
+      <span class="eq-pill" style="background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);color:#a78bfa" onclick="statAsk('ecsiq','What are the 6 endocannabinoid system types and which one am I? Walk me through how to find out.')" style="cursor:pointer" title="Tap to explore">6 ECS Types</span>
+      <span class="eq-pill" style="background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.2);color:#F472B6" onclick="statAsk('ecsiq','Explain BLEU\'s 5-layer safety protocol for cannabis — what does it check before recommending anything?')" style="cursor:pointer" title="Tap to explore">5-Layer Safety</span>
+      <span class="eq-pill" style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:#22c55e" onclick="statAsk('ecsiq','What is the BEMS engine and how does it personalize cannabis recommendations to my specific biology?')" style="cursor:pointer" title="Tap to explore">BEMS Engine</span>
+      <span class="eq-pill" style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);color:#60A5FA" onclick="statAsk('ecsiq','What are the 51 verified cannabis partners in BLEU and how do I access their products safely?')" style="cursor:pointer" title="Tap to explore">51 Partners</span>
+      <span class="eq-pill" style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);color:#C8A951" onclick="statAsk('ecsiq','Show me the clinical research ECSIQ is built on. I want to understand the science behind the recommendations.')" style="cursor:pointer" title="Tap to explore">PubMed Cited</span>
     </div>
 
     <!-- BUD CARD -->
@@ -5377,19 +5369,19 @@ renderSessions();
 </script>
   <p class="hero-sub">You already know sleep matters. What you might not know is what happens when you don't get it. One bad night raises Alzheimer's-linked proteins in your brain. A week of poor sleep rewrites 700 genes. Chronic short sleep costs you roughly 1.7 biological years per decade. BLEU Sleep gives you the science, the tools, and the practitioners who understand that fixing your sleep fixes almost everything else.</p>
 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:880px;margin:16px auto 0;padding:0 20px">
-  <div style="background:rgba(78,205,196,.05);border:1px solid rgba(78,205,196,.12);border-radius:10px;padding:12px;text-align:center">
+  <div style="background:rgba(78,205,196,.05);border:1px solid rgba(78,205,196,.12);border-radius:10px;padding:12px;text-align:center" onclick="statAsk('sleep','Optimized sleep reduces DNA damage by 47 percent. What does my sleep actually need right now to get there?')" style="cursor:pointer" title="Tap to explore">
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#4ecdc4">47%</div>
     <div style="font-size:9px;color:#5a6374;margin-top:3px;line-height:1.4">Less oxidative DNA damage (8-OHdG) with optimized sleep</div>
   </div>
-  <div style="background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.12);border-radius:10px;padding:12px;text-align:center">
+  <div style="background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.12);border-radius:10px;padding:12px;text-align:center" onclick="statAsk('sleep','Every night of poor sleep raises Alzheimer-linked proteins by 5 percent. What does that mean for me and what do I do tonight?')" style="cursor:pointer" title="Tap to explore">
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#a78bfa">5%</div>
     <div style="font-size:9px;color:#5a6374;margin-top:3px;line-height:1.4">Amyloid-beta increase per night of sleep deprivation</div>
   </div>
-  <div style="background:rgba(212,175,55,.05);border:1px solid rgba(212,175,55,.12);border-radius:10px;padding:12px;text-align:center">
+  <div style="background:rgba(212,175,55,.05);border:1px solid rgba(212,175,55,.12);border-radius:10px;padding:12px;text-align:center" onclick="statAsk('sleep','Short sleepers age 1.7 times faster at the cellular level. How do I find out if this is happening to me?')" style="cursor:pointer" title="Tap to explore">
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#d4af37">1.7x</div>
     <div style="font-size:9px;color:#5a6374;margin-top:3px;line-height:1.4">Faster telomere attrition in short sleepers under 6 hours</div>
   </div>
-  <div style="background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.12);border-radius:10px;padding:12px;text-align:center">
+  <div style="background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.12);border-radius:10px;padding:12px;text-align:center" onclick="statAsk('sleep','Sleep deprivation costs America 411 billion dollars a year. What is it costing me personally and how do I fix it?')" style="cursor:pointer" title="Tap to explore">
     <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#ef4444">$411B</div>
     <div style="font-size:9px;color:#5a6374;margin-top:3px;line-height:1.4">Annual US economic cost of sleep deprivation (RAND Corp)</div>
   </div>
@@ -10498,9 +10490,9 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
 
   <!-- LONGEVITY STATS -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px">
-    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1)"><div style="font-size:22px;font-weight:300;color:#d4af37;font-family:Georgia,serif">+7.5</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">YEARS LONGER</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Regular practice</div></div>
-    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1)"><div style="font-size:22px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif">40%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LESS DEPRESSION</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Harvard study</div></div>
-    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1)"><div style="font-size:22px;font-weight:300;color:#a78bfa;font-family:Georgia,serif">29%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LOWER MORTALITY</div><div style="font-size:9px;color:#5a6374;margin-top:2px">JAMA meta-analysis</div></div>
+    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1)" onclick="statAsk('spirit','Ikigai — a reason to rise — is associated with 7.5 more years of life. Help me find mine.')" style="cursor:pointer"><div style="font-size:22px;font-weight:300;color:#d4af37;font-family:Georgia,serif">+7.5</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">YEARS LONGER</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Regular practice</div></div>
+    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.1)" onclick="statAsk('spirit','Purpose reduces depression by 40 percent. What does purpose actually look like in a real life — not as a concept but as a practice?')" style="cursor:pointer"><div style="font-size:22px;font-weight:300;color:#4ecdc4;font-family:Georgia,serif">40%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LESS DEPRESSION</div><div style="font-size:9px;color:#5a6374;margin-top:2px">Harvard study</div></div>
+    <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1)" onclick="statAsk('spirit','Meaning reduces all-cause mortality by 29 percent. Help me understand the biology of why meaning keeps people alive longer.')" style="cursor:pointer"><div style="font-size:22px;font-weight:300;color:#a78bfa;font-family:Georgia,serif">29%</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">LOWER MORTALITY</div><div style="font-size:9px;color:#5a6374;margin-top:2px">JAMA meta-analysis</div></div>
     <div style="text-align:center;padding:16px;border-radius:12px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1)"><div style="font-size:22px;font-weight:300;color:#d4af37;font-family:Georgia,serif">5</div><div style="font-size:9px;color:#5a6374;letter-spacing:2px;margin-top:4px">BLUE ZONES</div><div style="font-size:9px;color:#5a6374;margin-top:2px">All have faith culture</div></div>
   </div>
 
@@ -11259,5 +11251,17 @@ id="bleu-footer-links" style="text-align:center;padding:24px 0 48px;border-top:1
     <span style="color:rgba(255,255,255,.12);">bleu.live · Jazz Bird NOLA 501(c)(3) · New Orleans</span>
   </span>
 </div>
+
+<script>
+function statAsk(tab, msg) {
+  go(tab);
+  setTimeout(function(){
+    var inp = document.getElementById('in-' + tab);
+    if(inp){ inp.value = msg; }
+    if(typeof send === 'function') send(tab);
+  }, 120);
+}
+</script>
+
 </body>
 </html>
