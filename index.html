@@ -619,12 +619,138 @@ button[type="submit"],
 .gw-skip:hover{color:rgba(255,255,255,0.6)}
 .gw-disclosure{font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:14px;line-height:1.4}
 </style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MedicalWebPage",
+      "@id": "https://bleu.live/#webpage",
+      "url": "https://bleu.live",
+      "name": "BLEU.live — A Living Model of Care",
+      "description": "A living health navigation platform connecting 855,000 verified practitioners, clinical supplement guidance, recovery resources, financial health tools, and AI-powered wellness intelligence. Clinically reviewed by Dr. Felicia Stoler, DCN MS RDN FACSM.",
+      "specialty": ["General Practice","Mental Health","Addiction Medicine","Nutrition","Sleep Medicine"],
+      "lastReviewed": "2026-03-20",
+      "reviewedBy": {
+        "@type": "Person",
+        "name": "Dr. Felicia Stoler",
+        "jobTitle": "Clinical Nutrition Director",
+        "honorificSuffix": "DCN, MS, RDN, FACSM, FAND, Dipl ACLM",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "Jazz Bird NOLA",
+          "url": "https://jazzbirdnola.org"
+        }
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://bleu.live/#organization",
+        "name": "BLEU.live",
+        "url": "https://bleu.live",
+        "logo": "https://bleu.live/favicon.ico",
+        "foundingLocation": "New Orleans, Louisiana",
+        "description": "A living model of care. Health navigation platform covering practitioners, supplements, recovery, therapy, financial wellness, and community — clinically reviewed to doctoral standard.",
+        "sameAs": ["https://jazzbirdnola.org"]
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bleu.live/#organization",
+      "name": "BLEU.live",
+      "url": "https://bleu.live",
+      "foundingDate": "2024",
+      "foundingLocation": {
+        "@type": "Place",
+        "name": "New Orleans, Louisiana"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "United States"
+      },
+      "knowsAbout": [
+        "Health Navigation","Clinical Nutrition","Recovery Support","Mental Health","Cannabis Intelligence","Sleep Science","Financial Wellness","Community Health"
+      ]
+    },
+    {
+      "@type": "Service",
+      "@id": "https://bleu.live/#service",
+      "name": "BLEU Health Navigation",
+      "serviceType": "Health Navigation Platform",
+      "provider": {"@id": "https://bleu.live/#organization"},
+      "areaServed": "United States",
+      "description": "AI-powered health navigation connecting users to 855,000 NPI-verified practitioners, evidence-based supplement protocols, SAMHSA recovery resources, and financial health tools. Clinically reviewed by Dr. Felicia Stoler, DCN RDN FACSM.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free forever for Pioneer Citizens"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is BLEU.live?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "BLEU.live is a living health navigation platform connecting people to 855,000 NPI-verified practitioners, clinically reviewed supplement protocols, SAMHSA recovery resources, financial wellness tools, and AI-powered guidance. Clinically reviewed by Dr. Felicia Stoler, DCN MS RDN FACSM. Free forever for Pioneer Citizens."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I find a practitioner near me?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "BLEU.live's Find Care tab searches 855,000 NPI-verified practitioners across 127 specialties in all 50 states. Search by concern, specialty, or location. Many offer telehealth and free consultations. All credentials verified against federal NPI databases nightly."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is BLEU.live free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. BLEU.live is free forever for Pioneer Citizens. The platform earns through verified affiliate relationships — never from the people it serves. No ads. No data selling. No paywalls on core navigation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does BLEU.live help with addiction and recovery?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Recovery tab provides live SAMHSA treatment center data, AA and NA meeting locations within 20 miles of any zip code, medication-assisted treatment information, and 24/7 AI support from Alvai. Crisis resources including 988 are always visible. Available at any hour, no account required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who reviews the clinical content on BLEU.live?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "All clinical content, supplement protocols, and health guidance on BLEU.live is reviewed by Dr. Felicia Stoler, DCN MS RDN FACSM FAND Dipl ACLM — a doctoral-level registered dietitian nutritionist and Fellow of the American College of Sports Medicine. No claim goes unreviewed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the BLEU Wellness Passport?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Wellness Passport is your personal health identity inside BLEU — a Care Twin that learns who you are, remembers your practitioners, tracks your supplement stack, and deepens with every session. Portable, user-owned, and exportable in FHIR R4 format. Free forever for Pioneer Citizens."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
 </head>
 <body>
 
 <!-- ═══════════════════════ NAV ═══════════════════════ -->
 <nav class="nav" id="nav">
   <div class="nav-logo" onclick="go('home')">BLEU</div>
+<div style="text-align:center;margin:8px 0 16px;font-size:9px;color:rgba(201,168,76,.35);letter-spacing:.08em;font-family:monospace;">✦ Every practitioner NPI-verified · Clinical standard maintained by Dr. Felicia Stoler DCN RDN FACSM</div>
   <div data-tab="home" class="nav-tab active" onclick="go('home')">Home</div>
   <div data-tab="passport" class="nav-tab" onclick="go('passport')">Passport</div>
   <div data-tab="dashboard" class="nav-tab" onclick="go('dashboard')">Pulse</div>
@@ -706,7 +832,113 @@ button[type="submit"],
 
       <div class="hf4" style="max-width:640px;margin:0 auto">
         <div style="font-size:10px;letter-spacing:3px;color:rgba(212,175,55,.4);margin-bottom:10px">&#10024; SPEAK TO ALVAI &mdash; YOUR PATH BEGINS HERE</div>
-        <div class="chat-box" style="margin-bottom:0;border-color:rgba(212,175,55,.2);background:rgba(10,12,16,.7);backdrop-filter:blur(12px)">
+        
+<!-- ══ RETURNING CITIZEN — shows only for logged-in Passport holders ══ -->
+<div id="returning-citizen" style="display:none;padding:0 20px 16px;">
+  <div style="background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.1);border-radius:14px;padding:18px 20px;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:rgba(201,168,76,.35);margin-bottom:3px;font-family:monospace;">Welcome back</div>
+        <div id="rc-name" style="font-size:16px;font-weight:600;color:#e8dfc8;"></div>
+      </div>
+      <div style="display:flex;gap:16px;">
+        <div style="text-align:center;">
+          <div id="rc-streak" style="font-size:22px;font-weight:700;color:#c9a84c;font-family:monospace;line-height:1;">1</div>
+          <div style="font-size:7px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-top:2px;">Day streak</div>
+        </div>
+        <div style="text-align:center;">
+          <div id="rc-sessions" style="font-size:22px;font-weight:700;color:#2DD4A8;font-family:monospace;line-height:1;">1</div>
+          <div style="font-size:7px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-top:2px;">Sessions</div>
+        </div>
+      </div>
+    </div>
+    <div id="rc-mirror" style="font-family:Georgia,serif;font-style:italic;font-size:14px;color:rgba(255,255,255,.35);line-height:1.65;border-top:1px solid rgba(255,255,255,.05);padding-top:10px;margin-bottom:10px;"></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <span onclick="go('passport')" style="font-size:9px;letter-spacing:.1em;padding:4px 10px;border:1px solid rgba(201,168,76,.18);color:rgba(201,168,76,.55);cursor:pointer;border-radius:3px;font-family:monospace;">Passport</span>
+      <span onclick="go('dashboard')" style="font-size:9px;letter-spacing:.1em;padding:4px 10px;border:1px solid rgba(45,212,168,.12);color:rgba(45,212,168,.45);cursor:pointer;border-radius:3px;font-family:monospace;">My Pulse</span>
+      <span id="rc-continue" onclick="" style="font-size:9px;letter-spacing:.1em;padding:4px 10px;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.25);cursor:pointer;border-radius:3px;font-family:monospace;display:none;"></span>
+    </div>
+  </div>
+</div>
+<!-- ══ END RETURNING CITIZEN ══ -->
+
+<script>
+(function(){
+  var MIRRORS = {
+    recovery:"Every day you show up is a day that matters. You are still here.",
+    sleep:"Your sleep work is building. The changes are real even when they don't feel like it.",
+    therapy:"You have been doing the harder work. That takes something most people never find.",
+    finance:"Financial clarity compounds the same way interest does. You are building something.",
+    spirit:"You came back. That is the practice. That is the whole thing.",
+    community:"Connection is medicine. You remembered that.",
+    ecsiq:"Your endocannabinoid system is paying attention. So is BLEU.",
+    supply:"Your stack reflects your intention. Keep refining it.",
+    dashboard:"Your biological signals are building a picture. The longer you stay, the clearer it gets.",
+    default:"You came back. What do you need today?"
+  };
+
+  function initReturning(){
+    var name = localStorage.getItem("bleu_display_name") || localStorage.getItem("bleu_name");
+    var email = localStorage.getItem("bleu_email") || localStorage.getItem("bleu_user_email");
+    if(!name && !email) return;
+
+    var rc = document.getElementById("returning-citizen");
+    if(!rc) return;
+    rc.style.display = "block";
+
+    // Hide archetype for returning users
+    var arch = document.getElementById("bleu-archetype-selector");
+    if(arch) arch.style.display = "none";
+    // Also hide by class pattern
+    document.querySelectorAll("[id*=archetype]").forEach(function(el){el.style.display="none";});
+
+    var streak = parseInt(localStorage.getItem("bleu_streak")||"1");
+    var sessions = parseInt(localStorage.getItem("bleu_session_count")||localStorage.getItem("bleu_sessions")||"1");
+    var lastTab = localStorage.getItem("bleu_last_tab");
+
+    var nameEl=document.getElementById("rc-name");
+    if(nameEl) nameEl.textContent = name || (email ? email.split("@")[0] : "Citizen");
+
+    var strEl=document.getElementById("rc-streak");
+    if(strEl) strEl.textContent = streak;
+
+    var sesEl=document.getElementById("rc-sessions");
+    if(sesEl) sesEl.textContent = sessions;
+
+    var mirror = (lastTab && MIRRORS[lastTab]) || MIRRORS.default;
+    if(sessions > 15) mirror = "Session "+sessions+". The relationship is real now. BLEU knows you. What are we working on today?";
+    var mEl=document.getElementById("rc-mirror");
+    if(mEl) mEl.textContent = mirror;
+
+    var cEl=document.getElementById("rc-continue");
+    if(cEl && lastTab && lastTab!=="home"){
+      var names={passport:"Passport",dashboard:"Pulse",directory:"Find Care",vessel:"Supply",map:"City",learn:"Learn",community:"Community",therapy:"Therapy",finance:"Finance",recovery:"Recovery",ecsiq:"ECSIQ",sleep:"Sleep",spirit:"Spirit"};
+      cEl.textContent = "Continue in "+(names[lastTab]||lastTab)+" →";
+      cEl.setAttribute("onclick","go('"+lastTab+"')");
+      cEl.style.display = "inline-block";
+    }
+  }
+
+  // Track last tab
+  document.addEventListener("DOMContentLoaded", function(){
+    var origGo = window.go;
+    if(origGo && !window._goWrapped){
+      window._goWrapped = true;
+      window.go = function(tab){
+        if(tab && tab!=="home") localStorage.setItem("bleu_last_tab", tab);
+        return origGo(tab);
+      };
+    }
+    initReturning();
+  });
+
+  window.refreshReturningUser = initReturning;
+  // Re-run after login events
+  window.addEventListener("bleu_login", initReturning);
+})();
+</script>
+
+<div class="chat-box" style="margin-bottom:0;border-color:rgba(212,175,55,.2);background:rgba(10,12,16,.7);backdrop-filter:blur(12px)">
           <div class="chat-messages" id="chat-home" style="min-height:80px;max-height:280px"></div>
           <div class="chat-input-row">
             <input autocomplete="off" id="in-home" placeholder="Tell me what brought you here today..." onkeydown="if(event.key==='Enter')send('home')">
@@ -1904,6 +2136,8 @@ function renderVesselProducts(cat) {
       +'<span style="font-size:10px;color:rgba(255,255,255,0.3)">trust: verified</span>'
       +'</div>'
       +'<div class="vp-actions">'
+      
++'<div style="font-size:9px;color:rgba(201,168,76,.35);margin:6px 0 8px;font-family:monospace;letter-spacing:.08em;">✦ Reviewed · Dr. Felicia Stoler DCN RDN FACSM</div>'
       +'<button class="vp-buy" style="background:linear-gradient(135deg,'+platformColor+','+platformColor+'cc)" onclick="window.open(''+buyUrl+'','_blank');logRufusAction(''+p.id+'','vessel_buy');if(typeof bleuSignal!=='undefined')bleuSignal('product_buy',{id:''+p.id+'',name:''+p.name+''})">'+platform+'</button>'
       +'<button class="vp-stack" onclick="addToCart(''+p.id+'');this.textContent='✓ In Stack';this.style.borderColor='#22c55e'">+ Stack</button>'
       +'</div></div>';
