@@ -45,7 +45,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .nav::-webkit-scrollbar{display:none}
 .nav-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold);margin-right:16px;white-space:nowrap;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:.3s}
 .nav-logo:hover{text-shadow:0 0 20px rgba(201,168,76,.4)}
-.nav-tab{padding:7px 16px;border-radius:24px;font-size:12.5px;font-weight:500;white-space:nowrap;cursor:pointer;transition:all .3s;color:var(--dim);border:1px solid transparent;letter-spacing:.3px}
+.nav-tab{padding:6px 10px;border-radius:20px;font-size:11.5px;font-weight:500;white-space:nowrap;cursor:pointer;transition:all .3s;color:var(--dim);border:1px solid transparent;letter-spacing:.2px}
 .nav-tab:hover{color:var(--text);background:rgba(255,255,255,.04)}
 .nav-tab.active{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.08);box-shadow:0 0 20px rgba(201,168,76,.08)}
 .nav-tab.t2{color:var(--teal)}
@@ -750,7 +750,7 @@ button[type="submit"],
 <!-- ═══════════════════════ NAV ═══════════════════════ -->
 <nav class="nav" id="nav">
   <div class="nav-logo" onclick="go('home')">BLEU</div>
-<div style="text-align:center;margin:8px 0 16px;font-size:9px;color:rgba(201,168,76,.35);letter-spacing:.08em;font-family:monospace;">✦ Every practitioner NPI-verified · Clinical standard maintained by Dr. Felicia Stoler DCN RDN FACSM</div>
+<div style="text-align:center;margin:12px 0 4px;font-size:10px;color:rgba(201,168,76,.3);letter-spacing:.06em;font-family:monospace;">✦ Clinical standard: Dr. Felicia Stoler DCN RDN FACSM · No claim goes unreviewed</div>
   <div data-tab="home" class="nav-tab active" onclick="go('home')">Home</div>
   <div data-tab="passport" class="nav-tab" onclick="go('passport')">Passport</div>
   <div data-tab="dashboard" class="nav-tab" onclick="go('dashboard')">Pulse</div>
@@ -833,8 +833,79 @@ button[type="submit"],
       <div class="hf4" style="max-width:640px;margin:0 auto">
         <div style="font-size:10px;letter-spacing:3px;color:rgba(212,175,55,.4);margin-bottom:10px">&#10024; SPEAK TO ALVAI &mdash; YOUR PATH BEGINS HERE</div>
         
+
+
+<div class="chat-box" style="margin-bottom:0;border-color:rgba(212,175,55,.2);background:rgba(10,12,16,.7);backdrop-filter:blur(12px)">
+          <div class="chat-messages" id="chat-home" style="min-height:80px;max-height:280px"></div>
+          <div class="chat-input-row">
+            <input autocomplete="off" id="in-home" placeholder="Tell me what brought you here today..." onkeydown="if(event.key==='Enter')send('home')">
+            <button onclick="send('home')">Enter</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px">
+          <span onclick="ask('home','I cant sleep')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(78,205,196,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#4ecdc4';this.style.color='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,.2)';this.style.color='#8b95a5'">&#128164; Sleep</span>
+          <span onclick="ask('home','I need a therapist')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(167,139,250,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa';this.style.color='#a78bfa'" onmouseout="this.style.borderColor='rgba(167,139,250,.2)';this.style.color='#8b95a5'">&#128156; Therapy</span>
+          <span onclick="ask('home','Im in recovery and struggling')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(78,205,140,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#4ecd8c';this.style.color='#4ecd8c'" onmouseout="this.style.borderColor='rgba(78,205,140,.2)';this.style.color='#8b95a5'">&#128154; Recovery</span>
+          <span onclick="ask('home','Build me a supplement stack')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(212,175,55,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#d4af37';this.style.color='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,.2)';this.style.color='#8b95a5'">&#128138; Supplements</span>
+          <span onclick="ask('home','Check my cannabis interactions')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(78,205,140,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#4ecd8c';this.style.color='#4ecd8c'" onmouseout="this.style.borderColor='rgba(78,205,140,.2)';this.style.color='#8b95a5'">&#127807; Cannabis</span>
+          <span onclick="ask('home','Find me a doctor near New Orleans')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(78,205,196,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#4ecdc4';this.style.color='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,.2)';this.style.color='#8b95a5'">&#129658; Directory</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var lines = [
+      "I cannot sleep and I don't know why.",
+      "My doctor has 7 minutes for me. That's not enough.",
+      "I've been managing this alone for too long.",
+      "My zip code shouldn't determine how long I live.",
+      "I'm 3 days sober and I am scared.",
+      "I hurt everywhere. I'm tired of it.",
+      "I need someone who treats the whole person.",
+      "My finances are making me physically sick.",
+      "I want to understand what is actually happening in my body.",
+      "I'm a caregiver and nobody is taking care of me.",
+      "I've tried everything. I need something different.",
+      "I want to feel like myself again.",
+      "There has to be a better way to age.",
+      "I don't know where to start. That's okay. Start here."
+    ]
+    var el = document.getElementById("hw-type");
+    if(!el) return;
+    var li = 0, ci = 0, deleting = false;
+    function tick(){
+      var full = lines[li];
+      if(!deleting){
+        ci++;
+        el.textContent = full.slice(0, ci);
+        if(ci >= full.length){ deleting = true; setTimeout(tick, 2200); return; }
+        setTimeout(tick, 52 + Math.random()*30);
+      } else {
+        ci--;
+        el.textContent = full.slice(0, ci);
+        if(ci <= 0){ deleting = false; li = (li + 1) % lines.length; setTimeout(tick, 500); return; }
+        setTimeout(tick, 28);
+      }
+    }
+    setTimeout(tick, 900);
+  })();
+  </script>
+
+
+  <div class="divider"></div>
+
+  <!-- WHERE DO YOU WANT TO GO -->
+  <div style="text-align:center;margin-bottom:24px">
+    <div style="font-size:10px;letter-spacing:4px;color:rgba(212,175,55,.4);margin-bottom:8px">YOUR PATH IN</div>
+    <h2 style="font-family:Georgia,serif;font-size:clamp(22px,4vw,32px);font-weight:300;color:#e2e8f0;margin:0">What brought you here today?</h2>
+    <p style="font-size:13px;color:#8b95a5;margin:8px auto 0;max-width:520px;line-height:1.7">You do not need the clinical term. Start where it hurts. Every card opens the right system.</p>
+  </div>
+
 <!-- ══ RETURNING CITIZEN — shows only for logged-in Passport holders ══ -->
-<div id="returning-citizen" style="display:none;padding:0 20px 16px;">
+<div id="returning-citizen" style="display:none;padding:16px 20px;">
   <div style="background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.1);border-radius:14px;padding:18px 20px;">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
       <div>
@@ -937,75 +1008,6 @@ button[type="submit"],
   window.addEventListener("bleu_login", initReturning);
 })();
 </script>
-
-<div class="chat-box" style="margin-bottom:0;border-color:rgba(212,175,55,.2);background:rgba(10,12,16,.7);backdrop-filter:blur(12px)">
-          <div class="chat-messages" id="chat-home" style="min-height:80px;max-height:280px"></div>
-          <div class="chat-input-row">
-            <input autocomplete="off" id="in-home" placeholder="Tell me what brought you here today..." onkeydown="if(event.key==='Enter')send('home')">
-            <button onclick="send('home')">Enter</button>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px">
-          <span onclick="ask('home','I cant sleep')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(78,205,196,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#4ecdc4';this.style.color='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,.2)';this.style.color='#8b95a5'">&#128164; Sleep</span>
-          <span onclick="ask('home','I need a therapist')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(167,139,250,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa';this.style.color='#a78bfa'" onmouseout="this.style.borderColor='rgba(167,139,250,.2)';this.style.color='#8b95a5'">&#128156; Therapy</span>
-          <span onclick="ask('home','Im in recovery and struggling')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(78,205,140,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#4ecd8c';this.style.color='#4ecd8c'" onmouseout="this.style.borderColor='rgba(78,205,140,.2)';this.style.color='#8b95a5'">&#128154; Recovery</span>
-          <span onclick="ask('home','Build me a supplement stack')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(212,175,55,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#d4af37';this.style.color='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,.2)';this.style.color='#8b95a5'">&#128138; Supplements</span>
-          <span onclick="ask('home','Check my cannabis interactions')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(78,205,140,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#4ecd8c';this.style.color='#4ecd8c'" onmouseout="this.style.borderColor='rgba(78,205,140,.2)';this.style.color='#8b95a5'">&#127807; Cannabis</span>
-          <span onclick="ask('home','Find me a doctor near New Orleans')" style="font-size:11px;padding:5px 14px;border:1px solid rgba(78,205,196,.2);border-radius:16px;color:#8b95a5;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#4ecdc4';this.style.color='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,.2)';this.style.color='#8b95a5'">&#129658; Directory</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <script>
-  (function(){
-    var lines = [
-      "I cannot sleep and I don't know why.",
-      "My doctor has 7 minutes for me. That's not enough.",
-      "I've been managing this alone for too long.",
-      "My zip code shouldn't determine how long I live.",
-      "I'm 3 days sober and I am scared.",
-      "I hurt everywhere. I'm tired of it.",
-      "I need someone who treats the whole person.",
-      "My finances are making me physically sick.",
-      "I want to understand what is actually happening in my body.",
-      "I'm a caregiver and nobody is taking care of me.",
-      "I've tried everything. I need something different.",
-      "I want to feel like myself again.",
-      "There has to be a better way to age.",
-      "I don't know where to start. That's okay. Start here."
-    ]
-    var el = document.getElementById("hw-type");
-    if(!el) return;
-    var li = 0, ci = 0, deleting = false;
-    function tick(){
-      var full = lines[li];
-      if(!deleting){
-        ci++;
-        el.textContent = full.slice(0, ci);
-        if(ci >= full.length){ deleting = true; setTimeout(tick, 2200); return; }
-        setTimeout(tick, 52 + Math.random()*30);
-      } else {
-        ci--;
-        el.textContent = full.slice(0, ci);
-        if(ci <= 0){ deleting = false; li = (li + 1) % lines.length; setTimeout(tick, 500); return; }
-        setTimeout(tick, 28);
-      }
-    }
-    setTimeout(tick, 900);
-  })();
-  </script>
-
-
-  <div class="divider"></div>
-
-  <!-- WHERE DO YOU WANT TO GO -->
-  <div style="text-align:center;margin-bottom:24px">
-    <div style="font-size:10px;letter-spacing:4px;color:rgba(212,175,55,.4);margin-bottom:8px">YOUR PATH IN</div>
-    <h2 style="font-family:Georgia,serif;font-size:clamp(22px,4vw,32px);font-weight:300;color:#e2e8f0;margin:0">What brought you here today?</h2>
-    <p style="font-size:13px;color:#8b95a5;margin:8px auto 0;max-width:520px;line-height:1.7">You do not need the clinical term. Start where it hurts. Every card opens the right system.</p>
-  </div>
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:40px">
 
