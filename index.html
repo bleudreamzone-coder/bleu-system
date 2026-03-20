@@ -41,11 +41,11 @@ a{color:var(--teal);text-decoration:none;transition:.2s}a:hover{color:var(--gold
 body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 20% 50%,rgba(45,138,158,.04) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(201,168,76,.03) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(122,158,126,.03) 0%,transparent 50%);pointer-events:none;z-index:0}
 
 /* ═══ NAV ═══ */
-.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(6,11,22,.97);backdrop-filter:blur(24px) saturate(1.8);border-bottom:1px solid rgba(201,168,76,.15);height:52px;display:flex;align-items:center;padding:0 12px;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(6,11,22,.97);backdrop-filter:blur(24px) saturate(1.8);border-bottom:1px solid rgba(201,168,76,.15);height:52px;display:flex;align-items:center;padding:0 8px;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .nav::-webkit-scrollbar{display:none}
 .nav-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--gold);margin-right:16px;white-space:nowrap;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:.3s;flex-shrink:0;margin-right:6px}
 .nav-logo:hover{text-shadow:0 0 20px rgba(201,168,76,.4)}
-.nav-tab{padding:4px 0;border-radius:14px;font-size:10.5px;font-weight:500;white-space:nowrap;cursor:pointer;transition:all .25s;color:rgba(255,255,255,.32);border:1px solid transparent;letter-spacing:0;flex:1;text-align:center;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.nav-tab{padding:5px 11px;border-radius:16px;font-size:11px;font-weight:500;white-space:nowrap;cursor:pointer;transition:all .25s;color:rgba(255,255,255,.35);border:1px solid transparent;letter-spacing:0}
 .nav-tab:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.05)}
 .nav-tab.active{color:var(--gold);border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.1);box-shadow:0 0 12px rgba(201,168,76,.1)}
 .nav-tab.t2{color:rgba(45,212,168,.5)}
@@ -4969,6 +4969,264 @@ CHOOSE YOUR MODE</div>
   </div>
 
 </div>
+
+
+
+<!-- ═══════════════════════ RECOVERY ═══════════════════════ -->
+<div class="panel" id="p-recovery">
+  
+  <h1 class="hero-title"> <span class="accent">Recovery</span></h1>
+<div id="tw-recovery-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
+  <div id="tw-recovery" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
+</div>
+<script>
+(function(){
+  var el=document.getElementById("tw-recovery");
+  if(!el)return;
+  var lines=["Whether you are 3 hours sober or 3 years sober -- you are in the right place.",
+"Addiction is what a human brain does when pain exceeds its capacity to cope.",
+"Recovery is not the absence of the substance. It is the presence of something better.",
+"The first 72 hours. Day 30. Year 5. Each one is its own kind of courage.",
+"BLEU Recovery was not built in a boardroom. It was built by people who know what this costs.",
+"You survived to get here. That is not nothing. That is everything."];
+  var li=0,ci=0,cur="",typing=true,pause=0;
+  function tick(){
+    if(pause>0){pause--;setTimeout(tick,30);return;}
+    if(typing){
+      if(ci<lines[li].length){cur+=lines[li][ci++];el.textContent=cur;setTimeout(tick,38);}
+      else{typing=false;pause=60;setTimeout(tick,30);}
+    }else{
+      if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,18);}
+      else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}
+    }
+  }
+  setTimeout(tick,800);
+})();
+</script>
+  <p class="hero-sub">Recovery is not willpower. It never was. Addiction is the brain's dopamine system doing exactly what it was designed to do -- seek relief from overwhelming stress. BLEU Recovery doesn't judge. It understands the neuroscience, the trauma, the isolation, and the shame that precede every relapse. Whether you are 3 hours sober or 3 years sober or just thinking about it -- you are in the right place. This was not built in a boardroom. It was built by someone who survived 9 overdoses and overcame 31 felonies. Who treated 30,000 patients. Who knows what the first 72 hours feel like, what Day 30 feels like, what Year 5 feels like. This meets you where you are -- with dignity, privacy, and real tools.</p>
+
+  <div class="section-label" style="margin-top:24px">CHOOSE YOUR MODE</div>
+  <div class="mode-bar" id="recovery-modes">
+    <span class="mode-btn active" onclick="setMode('recovery','sobriety',this)">🌅 Early Sobriety</span>
+    <span class="mode-btn" onclick="setMode('recovery','relapse',this)">🛡️ Relapse Prevention</span>
+    <span class="mode-btn" onclick="setMode('recovery','harm',this)">❤️ Harm Reduction</span>
+    <span class="mode-btn" onclick="setMode('recovery','12step',this)">📿 12-Step</span>
+    <span class="mode-btn" onclick="setMode('recovery','family',this)">👨‍👩‍👧 Family</span>
+    <span class="mode-btn" onclick="setMode('recovery','mat',this)">💊 MAT</span>
+    <span class="mode-btn" onclick="setMode('recovery','milestones',this)">🏆 Milestones</span>
+  </div>
+
+  <div class="quick-row">
+    <span class="quick-btn" onclick="ask('recovery','Im on day 1 of sobriety - what do I do right now')">🌅 Day 1</span>
+    <span class="quick-btn" onclick="ask('recovery','I want to drink right now and I dont know what to do')">⚡ Craving Now</span>
+    <span class="quick-btn" onclick="ask('recovery','Find a treatment center near New Orleans')">🏥 Find Treatment</span>
+    <span class="quick-btn" onclick="ask('recovery','My family member is using and I dont know what to do')">👨‍👩‍👧 Family Help</span>
+    <span class="quick-btn" onclick="ask('recovery','What is Suboxone and how does MAT work')">💊 MAT Info</span>
+    <span class="quick-btn" onclick="ask('recovery','I relapsed and I feel like a complete failure')">🔄 After Relapse</span>
+    <span class="quick-btn" onclick="ask('recovery','How do I get naloxone Narcan for free')">❤️ Get Narcan</span>
+    <span class="quick-btn" onclick="ask('recovery','Im celebrating 90 days sober')">🏆 90 Days!</span>
+  <div style="margin:16px 0"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.15);border-radius:14px;padding:20px;text-align:center;margin-bottom:16px"><div style="color:#9acd32;font-size:13px;font-weight:500">If you are in crisis right now</div><div style="color:#e8d5b0;font-size:18px;font-weight:300;margin-top:8px">988 Suicide + Crisis Lifeline</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;font-weight:300">Call or text 988 &#8226; Free &#8226; 24/7 &#8226; Confidential</div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Find AA NA and recovery meetings near me in New Orleans this week')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128154;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Find meetings</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">AA, NA, SMART Recovery near you. This week.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Find sober social events and communities in New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#129309;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Sober community</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Events, groups, social without substances.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','I need someone to talk to right now. Show me free crisis and warmline options')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128172;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Talk to someone</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Crisis lines, warmlines, text support. Free.</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px"><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Help me set up a sobriety day counter and track my recovery journey')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128197;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Day counter</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Track your journey. Every day matters.</div></div><div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','I am struggling with relapse. I need support without judgment')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#128156;</div><div style="color:#d4af37;font-weight:600;font-size:14px">Relapse support</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">No shame. Just a step. Get back on path.</div></div><div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.2s" onclick="ask('recovery','Find family support resources like Al-Anon near New Orleans')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'"><div style="font-size:24px;margin-bottom:10px">&#127968;</div><div style="color:#4ecdc4;font-weight:600;font-size:14px">Family support</div><div style="color:#8fa4b0;font-size:12px;margin-top:6px;line-height:1.5;font-weight:300">Al-Anon, family therapy, healing together.</div></div></div></div></div>
+
+  <div class="chat-box"><div class="chat-messages" 
+<!-- ═══ TIER 2 CLINICAL AFFILIATES -- RECOVERY ═══ -->
+<div id="recovery-clinical-aff" style="margin:20px 0">
+  <div style="font-size:9px;letter-spacing:3px;color:#8fa4b0;margin-bottom:8px">RECOVERY RESOURCES -- AGENT-VERIFIED READINESS REQUIRED</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <a href="https://www.foundhq.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(234,179,8,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+      <div style="font-size:11px;color:#d4af37;font-weight:600;margin-bottom:3px">Found</div>
+      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Medically supervised weight and metabolic management. GLP-1 eligible. Action-stage users only -- shame gate active.</div>
+      <div style="font-size:9px;color:#5A6374;margin-top:4px">$50–200 CPA · Agent 10 gate required</div>
+    </a>
+    <a href="https://www.calm.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+      <div style="font-size:11px;color:#4ecdc4;font-weight:600;margin-bottom:3px">Calm</div>
+      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Meditation, sleep stories, mindfulness. Complementary tool at any recovery stage.</div>
+      <div style="font-size:9px;color:#5A6374;margin-top:4px">Referral commission · HSA-eligible</div>
+    </a>
+    <a href="https://www.talkspace.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+      <div style="font-size:11px;color:#4ecdc4;font-weight:600;margin-bottom:3px">Talkspace</div>
+      <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Text + video therapy. Covered by many insurance plans. Low-barrier entry to human support.</div>
+      <div style="font-size:9px;color:#5A6374;margin-top:4px">CPA · insurance-covered</div>
+    </a>
+    <a href="https://www.ethos.com/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(34,197,94,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+      <div style="font-size:11px;color:#22c55e;font-weight:600;margin-bottom:3px">Ethos Life Insurance</div>
+      
+<!-- ════ RECOVERY — LIVE MEETING FINDER ════ -->
+<div style="margin:0 24px 20px">
+  <div style="font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(34,197,94,0.7);font-weight:600;margin-bottom:8px">MEETINGS NEAR YOU — RIGHT NOW</div>
+  <div style="display:flex;gap:8px;margin-bottom:16px">
+    <input id="samhsa-zip" placeholder="Your zip code" maxlength="5" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none" onkeydown="if(event.key==='Enter')findMeetings()">
+    <select id="samhsa-type" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;color:#e2e8f0;font-size:12px;outline:none">
+      <option value="SA">All Recovery</option>
+      <option value="MH">Mental Health</option>
+      <option value="SAMH">Both</option>
+    </select>
+    <button onclick="findMeetings()" style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:8px;color:#22c55e;padding:10px 18px;font-size:12px;cursor:pointer;font-weight:700">Find</button>
+  </div>
+  <div id="samhsa-results" style="display:grid;gap:10px"></div>
+  <div id="samhsa-crisis" style="margin-top:16px;padding:14px 16px;background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.15);border-radius:10px">
+    <div style="font-size:12px;font-weight:700;color:rgba(255,120,120,0.9);margin-bottom:8px">If you need help right now:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <a href="tel:18006624357" style="background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.2);border-radius:20px;padding:6px 14px;color:rgba(255,120,120,0.9);font-size:11px;text-decoration:none;font-weight:600">📞 SAMHSA 1-800-662-4357</a>
+      <a href="tel:988" style="background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.2);border-radius:20px;padding:6px 14px;color:rgba(255,120,120,0.9);font-size:11px;text-decoration:none;font-weight:600">📞 Crisis Line: 988</a>
+      <a href="sms:741741" style="background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.2);border-radius:20px;padding:6px 14px;color:rgba(255,120,120,0.9);font-size:11px;text-decoration:none;font-weight:600">💬 Text HOME to 741741</a>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+window.findMeetings = async function() {
+  var zip = (document.getElementById('samhsa-zip')||{}).value || '';
+  var type = (document.getElementById('samhsa-type')||{}).value || 'SA';
+  var res = document.getElementById('samhsa-results');
+  if(!zip||zip.length<5||!res) return;
+  res.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:12px;padding:12px 0">Finding treatment centers near '+zip+'...</div>';
+  try {
+    // Get lat/lng from zip
+    var gr = await fetch('https://nominatim.openstreetmap.org/search?postalcode='+zip+'&country=US&format=json&limit=1');
+    var gd = await gr.json();
+    if(!gd.length){res.innerHTML='<div style="color:rgba(255,255,255,0.4);font-size:12px">Zip not found. Try again.</div>';return;}
+    var lat=gd[0].lat, lng=gd[0].lon;
+    
+    // SAMHSA Treatment Locator API
+    var sr = await fetch('https://findtreatment.gov/locator/listing?sType='+type+'&lat='+lat+'&lng='+lng+'&distance=20&limitPayment=false',
+      {headers:{'Accept':'application/json'}});
+    var sd = await sr.json();
+    var facilities = (sd.rows||[]).slice(0,6);
+    
+    if(!facilities.length) {
+      res.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:12px;padding:12px 0">No facilities found within 20 miles. Try a different zip or increase distance.</div>';
+      return;
+    }
+    
+    res.innerHTML = facilities.map(function(f) {
+      var services = (f.services||[]).slice(0,3).join(' · ');
+      var accepts = [];
+      if(f.paymentMedicaid) accepts.push('Medicaid');
+      if(f.paymentSlidingFeeScale) accepts.push('Sliding Scale');
+      if(f.paymentNoCharge) accepts.push('Free');
+      return '<div style="background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.12);border-radius:10px;padding:14px 16px">'
+        +'<div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px">'+(f.name1||'Treatment Center')+'</div>'
+        +(f.street?'<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px">'+f.street+', '+(f.city||'')+' '+(f.state||'')+'</div>':'')
+        +(accepts.length?'<div style="margin-bottom:6px">'+accepts.map(function(a){return'<span style="font-size:9px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:2px 8px;color:#22c55e;font-weight:600;margin-right:4px">'+a+'</span>';}).join('')+'</div>':'')
+        +(services?'<div style="font-size:10px;color:rgba(255,255,255,0.3)">'+services+'</div>':'')
+        +(f.phone?'<a href="tel:'+f.phone.replace(/\D/g,'')+'" style="display:inline-block;margin-top:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:6px;padding:5px 12px;color:#22c55e;font-size:11px;text-decoration:none;font-weight:600">📞 '+f.phone+'</a>':'')
+        +'</div>';
+    }).join('');
+    if(typeof bleuSignal==='function') bleuSignal('samhsa_search',{zip:zip,results:facilities.length});
+  } catch(e) {
+    res.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:12px;padding:12px 0">Search unavailable. Call SAMHSA directly: 1-800-662-4357</div>';
+  }
+};
+// Auto-load with stored zip
+var stored = localStorage.getItem('bleu_zip');
+if(stored){var inp=document.getElementById('samhsa-zip');if(inp)inp.value=stored;}
+})();
+</script>
+
+<div style="font-size:10px;color:#8fa4b0;line-height:1.5">Term life from $19/mo. For users with dependents whose health trajectory affects life expectancy.</div>
+      <div style="font-size:9px;color:#5A6374;margin-top:4px">$50–200 CPA · Finance bridge</div>
+    </a>
+  </div>
+</div>
+
+<div id="chat-recovery" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-recovery" placeholder="You\'re not alone. What's happening right now?" onkeydown="if(event.key==='Enter')send('recovery')"><button onclick="send('recovery')">Share</button></div></div></div>
+
+  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">The Longevity Operating System · Patent Pending · © 2026</span></div>
+<div class="divider"></div>
+  <div class="section-label">THE 7 MODES</div>
+  <div class="card-grid">
+    <div class="card"><h3>🌅 Early Sobriety</h3><p>Day-by-day guidance. What your body does in the first 72 hours, first week, first month. Withdrawal support. Supplement recommendations.</p></div>
+    <div class="card"><h3>🛡️ Relapse Prevention</h3><p>HALT checks. Trigger mapping. Urge surfing. Emergency contacts. Playing the tape forward. Relapse is data, not failure.</p></div>
+    <div class="card"><h3>❤️ Harm Reduction</h3><p>Non-judgmental. Naloxone access. Fentanyl test strips. Never Use Alone hotline. Dead people can\'t recover.</p></div>
+    <div class="card"><h3>📿 12-Step Companion</h3><p>Meeting finder. Step work journaling. Sponsor tools. Daily reflection. Chip tracking. All paths valid.</p></div>
+    <div class="card"><h3>👨‍👩‍👧 Family & Codependency</h3><p>For people loving someone in addiction. Al-Anon principles. Boundaries. Enabling vs supporting. Everyone needs healing.</p></div>
+    <div class="card"><h3>💊 MAT Support</h3><p>Suboxone, methadone, naltrexone information. Clinic finder. Side effect management. MAT is treatment, not trading.</p></div>
+    <div class="card"><h3>🏆 Milestones</h3><p>Celebrate recovery. Health improvements at each milestone. Savings calculator. Community celebration.</p></div>
+  </div>
+
+  
+  <!-- SOBRIETY DAY COUNTER -->
+  <div style="background:linear-gradient(135deg,rgba(154,205,50,0.06),rgba(25,50,68,0.6));border:1px solid rgba(154,205,50,0.2);border-radius:18px;padding:24px;margin:24px 0">
+    <div style="color:rgba(154,205,50,0.7);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">🏆 YOUR SOBRIETY COUNTER</div>
+    <div id="sober-display">
+      <div style="color:#e8d5b0;font-size:14px;margin-bottom:14px;font-weight:300">When did your journey begin?</div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <input type="date" id="sober-date" style="background:rgba(25,50,68,0.8);border:1px solid rgba(154,205,50,0.3);border-radius:10px;padding:10px 14px;color:#e8d5b0;font-size:13px;outline:none">
+        <button onclick="setSoberDate()" style="background:linear-gradient(135deg,#9acd32,#6b8f23);border:none;border-radius:10px;padding:10px 20px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer">Start Counter →</button>
+      </div>
+    </div>
+    <div id="sober-stats" style="display:none">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+        <div style="text-align:center;background:rgba(154,205,50,0.08);border-radius:12px;padding:14px">
+          <div id="sc-days" style="color:#9acd32;font-size:28px;font-weight:700">0</div>
+          <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Days</div>
+        </div>
+        <div style="text-align:center;background:rgba(78,205,196,0.08);border-radius:12px;padding:14px">
+          <div id="sc-hours" style="color:#4ecdc4;font-size:28px;font-weight:700">0</div>
+          <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Hours</div>
+        </div>
+        <div style="text-align:center;background:rgba(212,175,55,0.08);border-radius:12px;padding:14px">
+          <div id="sc-saved" style="color:#d4af37;font-size:28px;font-weight:700">$0</div>
+          <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Saved</div>
+        </div>
+        <div style="text-align:center;background:rgba(154,205,50,0.08);border-radius:12px;padding:14px">
+          <div id="sc-milestone" style="color:#9acd32;font-size:18px;font-weight:700">--</div>
+          <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Next milestone</div>
+        </div>
+      </div>
+      <div id="sc-message" style="background:rgba(154,205,50,0.06);border-radius:10px;padding:12px;color:#8fa4b0;font-size:13px;line-height:1.6;margin-bottom:12px"></div>
+      <button onclick="resetCounter()" style="background:transparent;border:1px solid rgba(154,205,50,0.2);border-radius:8px;padding:6px 14px;color:#8fa4b0;font-size:11px;cursor:pointer">Reset counter</button>
+    </div>
+  </div>
+
+  <!-- FIND TREATMENT -- Live Directory -->
+  <div style="background:rgba(28,45,58,0.5);border:1px solid rgba(212,175,55,0.12);border-radius:18px;padding:24px;margin:24px 0">
+    <div style="color:rgba(212,175,55,0.6);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">FIND REAL HELP NEAR YOU</div>
+    <div style="color:#e8d5b0;font-size:18px;font-weight:600;margin-bottom:8px;font-family:'Cormorant Garamond',serif">Treatment Centers & Counselors</div>
+    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:16px;font-weight:300">Search 800,000+ NPI-verified providers -- addiction counselors, substance abuse specialists, MAT clinics -- with real phone numbers.</p>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:12px">
+      <input id="rec-city" placeholder="Your city..." style="background:rgba(25,50,68,0.8);border:1px solid rgba(154,205,50,0.2);border-radius:10px;padding:10px 14px;color:#e8d5b0;font-size:13px;outline:none">
+      <button onclick="searchTreatment()" style="background:linear-gradient(135deg,#9acd32,#6b8f23);border:none;border-radius:10px;padding:10px 20px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer">Search</button>
+    </div>
+    <div id="treatment-results"><div style="text-align:center;color:#8fa4b0;font-size:12px;padding:8px">Enter your city to find addiction counselors and treatment near you.</div></div>
+  </div>
+
+  <!-- AFFILIATE: GOODRX for MAT medications -->
+  <div style="background:linear-gradient(135deg,rgba(78,205,196,0.06),rgba(25,50,68,0.5));border:1px solid rgba(78,205,196,0.15);border-radius:16px;padding:22px;margin:24px 0">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <div style="width:42px;height:42px;border-radius:12px;background:rgba(78,205,196,0.15);display:flex;align-items:center;justify-content:center;font-size:20px">💊</div>
+      <div>
+        <div style="color:#4ecdc4;font-weight:700;font-size:16px">GoodRx -- MAT Medication Savings</div>
+        <div style="color:#8fa4b0;font-size:11px">Suboxone, naltrexone, methadone -- up to 80% off</div>
+      </div>
+    </div>
+    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:14px;font-weight:300">MAT medications save lives. GoodRx finds the lowest price at pharmacies near you -- no insurance needed. Suboxone can cost $500+/month retail. GoodRx often cuts that to under $100.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+      <a href="https://www.goodrx.com/buprenorphine-naloxone" target="_blank" rel="noopener" style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:10px;padding:12px;text-align:center;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'">
+        <div style="color:#4ecdc4;font-weight:600;font-size:13px">Suboxone</div>
+        <div style="color:#8fa4b0;font-size:11px;margin-top:4px">Buprenorphine/Naloxone</div>
+      </a>
+      <a href="https://www.goodrx.com/naltrexone" target="_blank" rel="noopener" style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.1);border-radius:10px;padding:12px;text-align:center;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.1)'">
+        <div style="color:#4ecdc4;font-weight:600;font-size:13px">Naltrexone</div>
+        <div style="color:#8fa4b0;font-size:11px;margin-top:4px">Vivitrol / ReVia</div>
+      </a>
+      <a href="https://www.goodrx.com/naloxone" target="_blank" rel="noopener" style="background:rgba(25,50,68,0.6);border:1px solid rgba(154,205,50,0.1);border-radius:10px;padding:12px;text-align:center;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#9acd32'" onmouseout="this.style.borderColor='rgba(154,205,50,0.1)'">
+        <div style="color:#9acd32;font-weight:600;font-size:13px">Naloxone</div>
+        <div style="color:#8fa4b0;font-size:11px;margin-top:4px">Narcan -- Save a life</div>
+      </a>
+    </div>
+    <a href="https://www.goodrx.com" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#4ecdc4,#2a9d8f);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none">Find Lowest Price Near Me →</a>
+    <div style="text-align:center;color:rgba(212,175,55,0.4);font-size:10px;margin-top:8px">💛 Affiliate -- funds this free platform</div>
+  </div>
+
+<div class="disclaimer disclaimer-crisis">🔥 If you or someone near you is experiencing an overdose: <strong>Call 911 immediately.</strong> Administer naloxone (Narcan) if available. <strong>988 Lifeline</strong> (call/text 988) · <strong>SAMHSA Helpline</strong>: 1-800-662-4357 (free, 24/7) · <strong>Never Use Alone</strong>: 1-800-484-3731 · <strong>Crisis Text Line</strong>: text HOME to 741741</div>
+
+<div style="margin-top:28px;padding:16px 20px;border-top:1px solid rgba(255,255,255,.06);text-align:center;">
+  <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,.25);cursor:pointer;" onclick="go('sleep')">
+    Your sleep is part of your recovery. Sleep changes everything. →
+  </span>
+</div></div>
+
 
 <!-- ═══════════════════════ ECSIQ ═══════════════════════ -->
 <div class="panel" id="p-ecsiq">
