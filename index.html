@@ -626,22 +626,19 @@ button[type="submit"],
 <nav class="nav" id="nav">
   <div class="nav-logo" onclick="go('home')">BLEU</div>
   <div data-tab="home" class="nav-tab active" onclick="go('home')">Home</div>
-  <div data-tab="alvai" class="nav-tab" onclick="go('alvai')">Alvai ✦</div>
-  <div data-tab="dashboard" class="nav-tab" onclick="go('dashboard')">Dashboard</div>
-  <div data-tab="directory" class="nav-tab" onclick="go('directory')">Directory</div>
-  <div data-tab="vessel" class="nav-tab" onclick="go('vessel')">Vessel</div>
-  <div data-tab="map" class="nav-tab" onclick="go('map')">Map</div>
-  <div data-tab="learn" class="nav-tab" onclick="go('learn')">Learn</div>
-  <div data-tab="protocols" class="nav-tab" onclick="go('protocols')">Protocols</div>
-  <div data-tab="community" class="nav-tab" onclick="go('community')">Community</div>
   <div data-tab="passport" class="nav-tab" onclick="go('passport')">Passport</div>
-  <div data-tab="therapy" class="nav-tab t2" onclick="go('therapy')">Therapy</div>
-  <div data-tab="finance" class="nav-tab t2" onclick="go('finance')">Finance</div>
-  <div data-tab="recovery" class="nav-tab t3" onclick="go('recovery')">Recovery</div>
-  <div data-tab="ecsiq" class="nav-tab t3" onclick="go('ecsiq')">ECSIQ</div>
-  <div data-tab="sleep" class="nav-tab t3" onclick="go('sleep')">Sleep</div>
-  <div data-tab="enterprise" class="nav-tab t3" onclick="go('enterprise')">Enterprise</div>
-  <div data-tab="spirit" class="nav-tab t3" onclick="go('spirit')">Spirit</div>
+  <div data-tab="dashboard" class="nav-tab" onclick="go('dashboard')">Pulse</div>
+  <div data-tab="directory" class="nav-tab" onclick="go('directory')">Find Care</div>
+  <div data-tab="vessel" class="nav-tab" onclick="go('vessel')">Supply</div>
+  <div data-tab="map" class="nav-tab" onclick="go('map')">City</div>
+  <div data-tab="learn" class="nav-tab" onclick="go('learn')">Learn</div>
+  <div data-tab="community" class="nav-tab" onclick="go('community')">Community</div>
+  <div data-tab="therapy" class="nav-tab" onclick="go('therapy')">Therapy</div>
+  <div data-tab="recovery" class="nav-tab" onclick="go('recovery')">Recovery</div>
+  <div data-tab="finance" class="nav-tab" onclick="go('finance')">Finance</div>
+  <div data-tab="ecsiq" class="nav-tab" onclick="go('ecsiq')">ECSIQ</div>
+  <div data-tab="sleep" class="nav-tab" onclick="go('sleep')">Sleep</div>
+  <div data-tab="spirit" class="nav-tab" onclick="go('spirit')">Spirit</div>
 </nav>
 
 <!-- ═══════════════════════ HOME ═══════════════════════ -->
@@ -1368,7 +1365,7 @@ if(cg){CONNS.forEach(function(c){
 </div>
 
 <div class="panel" id="p-dashboard">
-  <div class="section-label">YOUR BIOLOGICAL AGE -- LIVE</div>
+  <div class="section-label">Your pulse, right now.</div>
   <h1 class="hero-title">📊 <span class="teal">Dashboard</span></h1>
 <div id="tw-dashboard-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
   <div id="tw-dashboard" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
@@ -1577,12 +1574,12 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
   </div>
 </div>
 
-<div id="chat-dashboard" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-dashboard" placeholder="How am I doing? Show me my progress..." onkeydown="if(event.key==='Enter')send('dashboard')"><button onclick="send('dashboard')">Check In</button></div></div></div>
+<div id="chat-dashboard" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-dashboard" placeholder="How are you actually feeling right now?" onkeydown="if(event.key==='Enter')send('dashboard')"><button onclick="send('dashboard')">Check In</button></div></div></div>
 </div>
 
 <!-- ═══════════════════════ DIRECTORY ═══════════════════════ -->
 <div class="panel" id="p-directory">
-  <div class="section-label">FIND THE RIGHT PRACTITIONER</div>
+  <div class="section-label">Find the care you need.</div>
   <h1 class="hero-title">Find <span class="accent">Exactly</span> Who You Need</h1>
 <div id="tw-directory-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
   <div id="tw-directory" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
@@ -1703,7 +1700,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 
 <div style="text-align:center;margin-top:8px;color:#8fa4b0;font-size:10px;font-weight:300">Real licensed providers · NPI verified · Data from CMS.gov federal registry</div></div></div>
 
-  <div class="chat-box"><div class="chat-messages" id="chat-directory"></div><div class="chat-input-row"><input autocomplete="off" id="in-directory" placeholder="I need a therapist... chiropractor... nutritionist near me..." onkeydown="if(event.key==='Enter')send('directory')"><button onclick="send('directory')">Find</button></div></div>
+  <div class="chat-box"><div class="chat-messages" id="chat-directory"></div><div class="chat-input-row"><input autocomplete="off" id="in-directory" placeholder="Where does it hurt? What do you need?" onkeydown="if(event.key==='Enter')send('directory')"><button onclick="send('directory')">Find</button></div></div>
 
   <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">A living model of care · Patent Pending · © 2026</span></div>
 <div class="divider"></div>
@@ -1726,7 +1723,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 <!-- ═══════════════════════ VESSEL ═══════════════════════ -->
 <div class="panel" id="p-vessel">
   <div style="padding:32px 20px 0;max-width:880px;margin:0 auto;text-align:center">
-  <div style="font-size:9px;letter-spacing:4px;color:rgba(34,197,94,.5);text-transform:uppercase;margin-bottom:10px">MOLECULAR NUTRITION INTELLIGENCE</div>
+  <div style="font-size:9px;letter-spacing:4px;color:rgba(34,197,94,.5);text-transform:uppercase;margin-bottom:10px">What your body actually needs.</div>
   <h1 style="font-family:Georgia,serif;font-size:clamp(26px,4vw,40px);font-weight:300;color:#e2e8f0;margin:0 0 14px;line-height:1.2">Food is not fuel.<br><em style="color:#22c55e">It is molecular medicine.</em></h1>
   <p style="font-size:14px;color:#8b95a5;line-height:1.9;max-width:680px;margin:0 auto 20px">What you eat tells your cells what to do. Broccoli activates gene pathways that protect your mitochondria. Ultra-processed food suppresses the same pathways. This is not nutritional philosophy. It is molecular biology. BLEU Vessel connects you to verified supplements, food prescriptions, and practitioners who understand that the grocery store is a pharmacy, if you know how to read it.</p>
 </div>
@@ -1960,7 +1957,7 @@ document.addEventListener('DOMContentLoaded',function(){setTimeout(refreshMyStac
 <div class="chat-box chat-area" id="chat-vessel" style="min-height:60px;max-height:200px;overflow-y:auto;padding:16px"></div>
   <div style="display:flex;gap:0;border-top:1px solid rgba(45,138,158,.12)">
     <input autocomplete="off" id="in-vessel"
-      placeholder="What supplements should I take? What interacts with my meds? Find me the lowest price on..."
+      placeholder="What is your body asking for?"
       onkeydown="if(event.key==='Enter')send('vessel')"
       style="flex:1;background:transparent;border:none;padding:14px 18px;color:#E8E0D0;font-size:13px;font-family:'DM Sans',sans-serif;outline:none"/>
     <button onclick="send('vessel')"
@@ -2613,7 +2610,7 @@ document.addEventListener('DOMContentLoaded',function(){setTimeout(refreshMyStac
 </style>
 
 <div class="ci-wrap">
-<div class="section-label">CITY INTELLIGENCE SYSTEM</div>
+<div class="section-label">Your city. Your neighborhood. Your access.</div>
 <h1 class="hero-title" style="margin-bottom:4px">New Orleans.<br><span class="teal">Every neighborhood. Every practitioner.</span></h1>
 <div id="tw-map-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
   <div id="tw-map" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
@@ -2872,7 +2869,7 @@ document.addEventListener('DOMContentLoaded',function(){setTimeout(refreshMyStac
 id="chat-map" style="min-height:40px;margin-bottom:8px"></div>
 <div class="ci-qs" id="ci-qs"></div>
 <div class="ci-ask">
-  <input class="ci-ask-input" id="in-map" placeholder="Ask about any neighborhood, practitioner, crisis, or city..."/>
+  <input class="ci-ask-input" id="in-map" placeholder="What neighborhood are you in?"/>
   <button class="ci-ask-btn" id="ci-ab">Ask Alvai</button>
   <button class="ci-loc-btn" onclick="ciLoc()">My Location</button>
 </div>
@@ -3721,7 +3718,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   <div class="chat-box chat-area" id="chat-learn" style="min-height:40px;margin:16px 0 8px"></div>
   <div style="display:flex;gap:8px;padding:0 24px 32px">
-    <input class="chat-input" id="in-learn" placeholder="What do you want to understand..."
+    <input class="chat-input" id="in-learn" placeholder="What do you want to understand?"
       style="flex:1;background:rgba(6,12,22,.9);border:1px solid rgba(45,138,158,.22);border-radius:10px;padding:11px 16px;color:#E8E0D0;font-size:13px;font-family:'DM Sans',sans-serif;outline:none"
       onkeydown="if(event.key==='Enter')send('learn')"/>
     <button onclick="send('learn')"
@@ -3890,7 +3887,7 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
       <span onclick="ask('community','How do I start a wellness group in my neighborhood? Step by step.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(78,205,140,.08);border:1px solid rgba(78,205,140,.2);color:#4ecd8c;transition:all .2s">🏘️ Start a Group</span>
       <span onclick="ask('community','Find wellness events, health fairs, and community circles happening this month near me.')" style="padding:7px 14px;border-radius:18px;font-size:11px;cursor:pointer;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.2);color:#4ecdc4;transition:all .2s">📅 Events Near Me</span>
     </div>
-    <div class="chat-box"><div class="chat-messages" id="chat-community"></div><div class="chat-input-row"><input autocomplete="off" id="in-community" placeholder="Find recovery groups, fitness clubs, support circles, or wellness events near you..." onkeydown="if(event.key===&apos;Enter&apos;)send(&apos;community&apos;)"><button onclick="send(&apos;community&apos;)">Connect</button></div></div>
+    <div class="chat-box"><div class="chat-messages" id="chat-community"></div><div class="chat-input-row"><input autocomplete="off" id="in-community" placeholder="What kind of people do you need around you right now?" onkeydown="if(event.key===&apos;Enter&apos;)send(&apos;community&apos;)"><button onclick="send(&apos;community&apos;)">Connect</button></div></div>
   </div>
 
   <!-- CITY COMMUNITY FINDER -->
@@ -4466,7 +4463,7 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
   </div>
 </div>
 
-<div id="chat-therapy" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-therapy" placeholder="I feel anxious... I can\'t stop thinking... I need someone to talk to..." onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Share</button></div></div></div>
+<div id="chat-therapy" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-therapy" placeholder="What are you carrying right now?" onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Share</button></div></div></div>
 
   <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">A living model of care · Patent Pending · © 2026</span></div>
 <div class="divider"></div>
@@ -4737,7 +4734,7 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
   </div>
 </div>
 
-<div id="chat-finance" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-finance" placeholder="Save on prescriptions · negotiate medical bills · maximize HSA · budget for wellness..." onkeydown="if(event.key==='Enter')send('finance')"><button onclick="send('finance')">Help Me</button></div></div>
+<div id="chat-finance" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-finance" placeholder="What is money stress doing to your body right now?" onkeydown="if(event.key==='Enter')send('finance')"><button onclick="send('finance')">Help Me</button></div></div>
   </div>
 
   <!-- 6 CENTERS -->
@@ -5441,7 +5438,7 @@ if(stored){var inp=document.getElementById('samhsa-zip');if(inp)inp.value=stored
 <div style="max-width:920px;margin:0 auto;padding:20px 20px 0">
   <div class="chat-box"><div class="chat-messages" id="chat-ecsiq"></div>
     <div class="chat-input-row">
-      <input autocomplete="off" id="in-ecsiq" placeholder="Match me a strain · Check my drug interactions · What ECS type am I · First-time guide..." onkeydown="if(event.key==='Enter')send('ecsiq')">
+      <input autocomplete="off" id="in-ecsiq" placeholder="What are you trying to heal?" onkeydown="if(event.key==='Enter')send('ecsiq')">
       <button onclick="send('ecsiq')">Ask Bud</button>
     </div>
   </div>
@@ -6143,7 +6140,7 @@ renderSessions();
     </div>
   </div>
 
-  <div class="chat-box"><div class="chat-messages" id="chat-sleep"></div><div class="chat-input-row"><input autocomplete="off" id="in-sleep" placeholder="How do I fix my sleep? Why do I wake at 3am?" onkeydown="if(event.key==='Enter')send('sleep')"><button onclick="send('sleep')">Ask Alvai</button></div></div>
+  <div class="chat-box"><div class="chat-messages" id="chat-sleep"></div><div class="chat-input-row"><input autocomplete="off" id="in-sleep" placeholder="What happens when you close your eyes?" onkeydown="if(event.key==='Enter')send('sleep')"><button onclick="send('sleep')">Ask Alvai</button></div></div>
 
   <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">A living model of care &middot; Patent Pending &middot; &copy; 2026</span></div>
   <div class="disclaimer">&#128164; Sleep information is educational. Consult your physician before starting supplements, especially with existing medications.</div>
@@ -11840,5 +11837,15 @@ window._pickArch = function(type) {
 })();
 </script>
 
+
+<div id="bleu-footer-links" style="text-align:center;padding:24px 0 48px;border-top:1px solid rgba(255,255,255,.05);margin-top:20px;">
+  <span style="font-family:monospace;font-size:10px;letter-spacing:.15em;">
+    <a href="#" onclick="go('enterprise');return false;" style="color:rgba(255,255,255,.25);text-decoration:none;margin:0 14px;">For Organizations</a>
+    <a href="#" onclick="go('terms');return false;" style="color:rgba(255,255,255,.18);text-decoration:none;margin:0 14px;">Terms</a>
+    <a href="#" onclick="go('privacy');return false;" style="color:rgba(255,255,255,.18);text-decoration:none;margin:0 14px;">Privacy</a>
+    <span style="color:rgba(255,255,255,.1);margin:0 14px;">·</span>
+    <span style="color:rgba(255,255,255,.12);">bleu.live · Jazz Bird NOLA 501(c)(3) · New Orleans</span>
+  </span>
+</div>
 </body>
 </html>
