@@ -98,10 +98,10 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .msg.ai a{color:var(--gold);font-weight:500}.msg.ai strong{color:var(--gold)}
 @keyframes msgIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @keyframes cursorPulse{0%,100%{opacity:1;box-shadow:0 0 4px rgba(201,168,76,.4)}50%{opacity:.2;box-shadow:none}}
-.chat-input-row{display:flex;border-top:1px solid var(--border);padding:14px 16px;gap:10px;background:rgba(12,24,41,.8)}
-.chat-input-row input{flex:1;background:transparent;border:none;color:var(--text);font-size:14px;outline:none;font-family:'DM Sans',sans-serif}
+.chat-input-row{display:flex;align-items:center;border-top:1px solid var(--border);padding:10px 14px;gap:8px;background:rgba(8,16,32,.9)}
+.chat-input-row input{flex:1;background:transparent;border:none;color:var(--text);font-size:13px;outline:none;font-family:'DM Sans',sans-serif;height:36px;padding:0 4px}
 .chat-input-row input::placeholder{color:var(--muted)}
-.chat-input-row button{background:linear-gradient(135deg,var(--teal),#1E7A8E);color:var(--white);border:none;padding:10px 24px;border-radius:24px;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:.3px;transition:.3s;box-shadow:0 2px 12px rgba(45,138,158,.2)}
+.chat-input-row button{background:linear-gradient(135deg,var(--teal),#1a6a7e);color:#fff;border:none;padding:0 18px;height:36px;border-radius:18px;cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:.3px;transition:.3s;white-space:nowrap;flex-shrink:0}
 .chat-input-row button:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(45,138,158,.3)}
 
 /* ═══ MODE / QUICK BARS ═══ */
@@ -4725,11 +4725,11 @@ CHOOSE YOUR MODE</div>
       <span class="fin-chip" onclick="ask('finance','Show me the financial return on investment of preventive health spending vs future medical costs')">📈 Longevity ROI</span>
       <span class="fin-chip" onclick="ask('finance','What employee benefits am I probably not using — FSA, HSA, EAP, gym reimbursement, mental health days')">🎁 Benefits Audit</span>
     </div>
-    <div class="chat-box">
+    <div class="chat-box" style="margin-top:14px;">
       <div class="chat-messages" id="chat-finance"></div>
-      <div class="input-row">
-        <input class="chat-input" id="in-finance" placeholder="What is money stress doing to your body right now?" onkeydown="if(event.key==='Enter')send('finance')"/>
-        <button class="send-btn" onclick="send('finance')">Ask Alvai ✦</button>
+      <div class="chat-input-row">
+        <input id="in-finance" placeholder="What is money stress doing to your body right now?" onkeydown="if(event.key==='Enter')send('finance')"/>
+        <button onclick="send('finance')">Ask Alvai ✦</button>
       </div>
     </div>
   </div>
