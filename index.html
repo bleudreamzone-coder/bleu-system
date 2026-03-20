@@ -43,9 +43,9 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 /* ═══ NAV ═══ */
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,14,26,.92);backdrop-filter:blur(20px) saturate(1.5);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;padding:0 24px;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;transition:.3s}
 .nav::-webkit-scrollbar{display:none}
-.nav-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--gold);margin-right:16px;white-space:nowrap;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:.3s}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--gold);margin-right:16px;white-space:nowrap;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:.3s}
 .nav-logo:hover{text-shadow:0 0 20px rgba(201,168,76,.4)}
-.nav-tab{padding:6px 10px;border-radius:20px;font-size:11.5px;font-weight:500;white-space:nowrap;cursor:pointer;transition:all .3s;color:var(--dim);border:1px solid transparent;letter-spacing:.2px}
+.nav-tab{padding:5px 8px;border-radius:18px;font-size:11px;font-weight:500;white-space:nowrap;cursor:pointer;transition:all .3s;color:var(--dim);border:1px solid transparent;letter-spacing:0px}
 .nav-tab:hover{color:var(--text);background:rgba(255,255,255,.04)}
 .nav-tab.active{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.08);box-shadow:0 0 20px rgba(201,168,76,.08)}
 .nav-tab.t2{color:var(--teal)}
@@ -750,7 +750,6 @@ button[type="submit"],
 <!-- ═══════════════════════ NAV ═══════════════════════ -->
 <nav class="nav" id="nav">
   <div class="nav-logo" onclick="go('home')">BLEU</div>
-<div style="text-align:center;margin:12px 0 4px;font-size:10px;color:rgba(201,168,76,.3);letter-spacing:.06em;font-family:monospace;">✦ Clinical standard: Dr. Felicia Stoler DCN RDN FACSM · No claim goes unreviewed</div>
   <div data-tab="home" class="nav-tab active" onclick="go('home')">Home</div>
   <div data-tab="passport" class="nav-tab" onclick="go('passport')">Passport</div>
   <div data-tab="dashboard" class="nav-tab" onclick="go('dashboard')">Pulse</div>
@@ -836,10 +835,10 @@ button[type="submit"],
 
 
 <div class="chat-box" style="margin-bottom:0;border-color:rgba(212,175,55,.2);background:rgba(10,12,16,.7);backdrop-filter:blur(12px)">
-          <div class="chat-messages" id="chat-home" style="min-height:80px;max-height:280px"></div>
+          <div class="chat-messages" id="chat-home" style="min-height:120px;max-height:400px"></div>
           <div class="chat-input-row">
             <input autocomplete="off" id="in-home" placeholder="Tell me what brought you here today..." onkeydown="if(event.key==='Enter')send('home')">
-            <button onclick="send('home')">Enter</button>
+            <button onclick="send('home')">Ask Alvai ✦</button>
           </div>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px">
@@ -3587,10 +3586,10 @@ var V2=[
 ];
 var V3=[
   {id:"1ZYbU82uhe8",t:"Deep Sleep Music -- Calm Healing Frequencies",ch:"Soothing Relaxation",av:"SR",ac:"#185fa5",cat:"sleep",dur:"8:00:00",views:"42M",tag:"432Hz",tc:"rgba(24,95,165,.85)",cf:"rgba(24,95,165,.15)",cc:"#60A5FA",cr:"Healing"},
-  {id:"dFPaADjVe9E",t:"Addiction Recovery: What Science Says",ch:"TED",av:"TED",ac:"#C9A84C",cat:"recovery",dur:"14:35",views:"2.8M",tag:"Recovery",tc:"rgba(201,168,76,.85)",cf:"rgba(201,168,76,.15)",cc:"#C9A84C",cr:"TED 2024"},
-  {id:"5o_sCEMYcBk",t:"Spiritual Health & Purpose in Modern Life",ch:"BLEU Spirit",av:"B",ac:"#7055a8",cat:"spirit",dur:"31:18",views:"892K",tag:"Spirit",tc:"rgba(112,85,168,.85)",cf:"rgba(112,85,168,.15)",cc:"#a78bfa",cr:"BLEU"},
-  {id:"QmOF0csBqBO",t:"Nutrients for Brain Health & Cognition",ch:"Huberman Lab",av:"HL",ac:"#1d9e75",cat:"nutrition",dur:"1:12:44",views:"3.4M",tag:"Brain",tc:"rgba(29,158,117,.85)",cf:"rgba(29,158,117,.15)",cc:"#1d9e75",cr:"Stanford"},
-  {id:"T9aRN9h4mOw",t:"Financial Wellness & Health Outcomes",ch:"BLEU Finance",av:"B",ac:"#C9A84C",cat:"finance",dur:"44:12",views:"341K",tag:"Finance",tc:"rgba(201,168,76,.85)",cf:"rgba(201,168,76,.15)",cc:"#C9A84C",cr:"BLEU"},
+  {id:"PY9DcIMGxMs",t:"Addiction Recovery: What Science Says",ch:"TED",av:"TED",ac:"#C9A84C",cat:"recovery",dur:"14:35",views:"2.8M",tag:"Recovery",tc:"rgba(201,168,76,.85)",cf:"rgba(201,168,76,.15)",cc:"#C9A84C",cr:"TED 2024"},
+  {id:"kxKa0xBO3xc",t:"Spiritual Health & Purpose in Modern Life",ch:"BLEU Spirit",av:"B",ac:"#7055a8",cat:"spirit",dur:"31:18",views:"892K",tag:"Spirit",tc:"rgba(112,85,168,.85)",cf:"rgba(112,85,168,.15)",cc:"#a78bfa",cr:"BLEU"},
+  {id:"BHY0FxzoKZE",t:"Nutrients for Brain Health & Cognition",ch:"Huberman Lab",av:"HL",ac:"#1d9e75",cat:"nutrition",dur:"1:12:44",views:"3.4M",tag:"Brain",tc:"rgba(29,158,117,.85)",cf:"rgba(29,158,117,.15)",cc:"#1d9e75",cr:"Stanford"},
+  {id:"q1k4G3pzPiA",t:"Financial Wellness & Health Outcomes",ch:"BLEU Finance",av:"B",ac:"#C9A84C",cat:"finance",dur:"44:12",views:"341K",tag:"Finance",tc:"rgba(201,168,76,.85)",cf:"rgba(201,168,76,.15)",cc:"#C9A84C",cr:"BLEU"},
   {id:"a5kKLCaQGFo",t:"Strength Training for Longevity Over 40",ch:"Andy Galpin",av:"AG",ac:"#185fa5",cat:"fitness",dur:"1:28:33",views:"4.3M",tag:"Longevity",tc:"rgba(24,95,165,.85)",cf:"rgba(24,95,165,.15)",cc:"#60A5FA",cr:"Cal State"}
 ];
 var MUSIC=[
@@ -4709,7 +4708,7 @@ CHOOSE YOUR MODE</div>
   </div>
 </div>
 
-<div id="chat-therapy" class="chat-box chat-area" style="min-height:40px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-therapy" placeholder="What are you carrying right now?" onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Share</button></div></div></div>
+<div id="chat-therapy" class="chat-box chat-area" style="min-height:200px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-therapy" placeholder="What are you carrying right now?" onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Ask Alvai ✦</button></div></div></div>
 
   <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">A living model of care · Patent Pending · © 2026</span></div>
 <div class="divider"></div>
