@@ -1250,7 +1250,7 @@ button[type="submit"],
   <div style="background:rgba(10,12,16,.4);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:16px 20px;margin-bottom:16px">
     <div style="font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.2);text-align:center;margin-bottom:12px">TRUSTED PARTNERS &mdash; VETTED, NEVER PAID PLACEMENT</div>
     <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px">
-      <a href="https://betterhelp.com/bleu" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(167,139,250,.2);color:#a78bfa;background:rgba(167,139,250,.05);text-decoration:none;white-space:nowrap">&#128172; BetterHelp</a>
+      <a href="#" onclick="event.preventDefault();startBetterHelpIntake()" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(167,139,250,.2);color:#a78bfa;background:rgba(167,139,250,.05);text-decoration:none;white-space:nowrap">&#128172; BetterHelp</a>
       <a href="https://thorne.com" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(212,175,55,.2);color:#d4af37;background:rgba(212,175,55,.05);text-decoration:none;white-space:nowrap">&#128138; Thorne</a>
       <a href="https://amazon.com/?tag=bleu-live-20" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(78,205,196,.2);color:#4ecdc4;background:rgba(78,205,196,.05);text-decoration:none;white-space:nowrap">&#128230; Amazon</a>
       <a href="https://charlottesweb.com?utm_source=bleu&utm_medium=affiliate&utm_campaign=wellness" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(78,205,140,.2);color:#4ecd8c;background:rgba(78,205,140,.05);text-decoration:none;white-space:nowrap">&#127807; Charlotte's Web</a>
@@ -4242,12 +4242,12 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
   <div style="margin-bottom:32px">
     <div style="font-size:10px;letter-spacing:3px;color:rgba(255,107,138,.5);margin-bottom:16px">RECOVERY COMMUNITIES &mdash; REAL MEETING FINDERS</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
-      <a href="https://www.aa.org/find-aa" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">💚</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">Alcoholics Anonymous</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Official AA meeting finder. 70,000+ groups worldwide. In-person and online.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">aa.org/find-aa · FREE</div></a>
-      <a href="https://www.na.org/meetingsearch/" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🔵</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">Narcotics Anonymous</div><div style="font-size:11px;color:#5a6374;line-height:1.6">NA meeting search by zip code, city, or country. Any substance, every path.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">na.org · FREE</div></a>
-      <a href="https://www.smartrecovery.org/community/meeting-search.php" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🟠</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">SMART Recovery</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Science-based, non-12-step. In-person + 30+ online meetings daily. Secular.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">smartrecovery.org · FREE</div></a>
-      <a href="https://intherooms.com" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🌐</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">In The Rooms</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Online recovery community. 100+ live meetings weekly. All programs.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">intherooms.com · FREE</div></a>
-      <a href="https://www.refugerecovery.org/find-a-meeting" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">☸️</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">Refuge Recovery</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Buddhist-inspired recovery. Meditation-based. No higher power requirement.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">refugerecovery.org · FREE</div></a>
-      <a href="https://www.samhsa.gov/find-help/national-helpline" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">📞</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">SAMHSA Helpline</div><div style="font-size:11px;color:#5a6374;line-height:1.6">1-800-662-4357. Free, confidential, 24/7. Treatment referrals and information.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">1-800-662-4357 · FREE 24/7</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="go('recovery');setTimeout(()=>ask('recovery','Find me an Alcoholics Anonymous meeting near New Orleans. In-person and online options with meeting times.'),200)"><div style="font-size:20px;margin-bottom:8px">💚</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">Alcoholics Anonymous</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Official AA meeting finder. 70,000+ groups worldwide. In-person and online.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">aa.org/find-aa · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="go('recovery');setTimeout(()=>ask('recovery','Find me a Narcotics Anonymous meeting near New Orleans. Any substance, all paths welcome.'),200)"><div style="font-size:20px;margin-bottom:8px">🔵</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">Narcotics Anonymous</div><div style="font-size:11px;color:#5a6374;line-height:1.6">NA meeting search by zip code, city, or country. Any substance, every path.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">na.org · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="go('recovery');setTimeout(()=>ask('recovery','Find me a SMART Recovery meeting near New Orleans. Science-based, non-12-step, secular approach.'),200)"><div style="font-size:20px;margin-bottom:8px">🟠</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">SMART Recovery</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Science-based, non-12-step. In-person + 30+ online meetings daily. Secular.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">smartrecovery.org · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="go('recovery');setTimeout(()=>ask('recovery','Find me an In The Rooms online recovery community meeting. All programs, multiple times daily.'),200)"><div style="font-size:20px;margin-bottom:8px">🌐</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">In The Rooms</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Online recovery community. 100+ live meetings weekly. All programs.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">intherooms.com · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="go('recovery');setTimeout(()=>ask('recovery','Find me a Refuge Recovery meeting. Buddhist-inspired, meditation-based, no higher power requirement.'),200)"><div style="font-size:20px;margin-bottom:8px">☸️</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">Refuge Recovery</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Buddhist-inspired recovery. Meditation-based. No higher power requirement.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">refugerecovery.org · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="go('recovery');setTimeout(()=>ask('recovery','I need SAMHSA treatment resources. 1-800-662-4357. Help me find local treatment options right now.'),200)"><div style="font-size:20px;margin-bottom:8px">📞</div><div style="font-size:12px;font-weight:700;color:#ff6b8a;margin-bottom:4px">SAMHSA Helpline</div><div style="font-size:11px;color:#5a6374;line-height:1.6">1-800-662-4357. Free, confidential, 24/7. Treatment referrals and information.</div><div style="margin-top:8px;font-size:9px;color:rgba(255,107,138,.5)">1-800-662-4357 · FREE 24/7</div></a>
     </div>
   </div>
 
@@ -4255,10 +4255,10 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
   <div style="margin-bottom:32px">
     <div style="font-size:10px;letter-spacing:3px;color:rgba(167,139,250,.5);margin-bottom:16px">MENTAL HEALTH COMMUNITIES</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
-      <a href="https://www.nami.org/Support-Education/Support-Groups" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🧠</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">NAMI Support Groups</div><div style="font-size:11px;color:#5a6374;line-height:1.6">National Alliance on Mental Illness. Free peer-led groups nationwide. Family support included.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">nami.org · FREE</div></a>
-      <a href="https://www.dbsalliance.org/support/chapters-and-support-groups/" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">💜</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">DBSA</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Depression & Bipolar Support Alliance. 700+ chapters. In-person and online.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">dbsalliance.org · FREE</div></a>
-      <a href="https://www.7cups.com" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">☕</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">7 Cups</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Free emotional support from trained listeners. Online community forums 24/7.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">7cups.com · FREE</div></a>
-      <a href="https://www.reddit.com/r/mentalhealth/" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🔴</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">Reddit Mental Health</div><div style="font-size:11px;color:#5a6374;line-height:1.6">r/mentalhealth, r/anxiety, r/depression -- millions of members, peer support, 24/7.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">reddit.com · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('community','Find me a NAMI support group near New Orleans. Free peer-led groups. Include meeting times and how to join.')"><div style="font-size:20px;margin-bottom:8px">🧠</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">NAMI Support Groups</div><div style="font-size:11px;color:#5a6374;line-height:1.6">National Alliance on Mental Illness. Free peer-led groups nationwide. Family support included.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">nami.org · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('community','Find me a Depression and Bipolar Support Alliance group near New Orleans. In-person and online chapters.')"><div style="font-size:20px;margin-bottom:8px">💜</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">DBSA</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Depression & Bipolar Support Alliance. 700+ chapters. In-person and online.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">dbsalliance.org · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('therapy','I want to talk to someone right now. Tell me about 7 Cups free emotional support and how to connect with a trained listener today.')"><div style="font-size:20px;margin-bottom:8px">☕</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">7 Cups</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Free emotional support from trained listeners. Online community forums 24/7.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">7cups.com · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('community','Tell me about the best Reddit mental health communities -- r/mentalhealth, r/anxiety, r/depression. What are they like and how do I join?')"><div style="font-size:20px;margin-bottom:8px">🔴</div><div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px">Reddit Mental Health</div><div style="font-size:11px;color:#5a6374;line-height:1.6">r/mentalhealth, r/anxiety, r/depression -- millions of members, peer support, 24/7.</div><div style="margin-top:8px;font-size:9px;color:rgba(167,139,250,.5)">reddit.com · FREE</div></a>
     </div>
   </div>
 
@@ -4266,10 +4266,10 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
   <div style="margin-bottom:32px">
     <div style="font-size:10px;letter-spacing:3px;color:rgba(78,205,196,.5);margin-bottom:16px">FITNESS &amp; MOVEMENT COMMUNITIES</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
-      <a href="https://www.strava.com/clubs" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🏃</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">Strava Clubs</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Find local run, cycle, and fitness clubs. 100M+ athletes. Free to join.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">strava.com · FREE</div></a>
-      <a href="https://www.parkrun.com" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🌳</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">parkrun</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Free weekly 5K events worldwide. Every Saturday. All paces welcome. 2,000+ locations.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">parkrun.com · FREE FOREVER</div></a>
-      <a href="https://www.classpass.com" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🧘</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">ClassPass</div><div style="font-size:11px;color:#5a6374;line-height:1.6">35,000+ studios. Yoga, pilates, HIIT, martial arts. Find your fitness community.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">classpass.com · FROM $19/MO</div></a>
-      <a href="https://www.meetup.com/topics/fitness/" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🤝</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">Fitness Meetups</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Local fitness groups, hiking clubs, outdoor workouts. Most are free.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">meetup.com · FREE TO JOIN</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('community','Find me local running, cycling, or fitness clubs in New Orleans on Strava. I want to find my people.')"><div style="font-size:20px;margin-bottom:8px">🏃</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">Strava Clubs</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Find local run, cycle, and fitness clubs. 100M+ athletes. Free to join.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">strava.com · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('community','Find me the nearest Parkrun free 5K event to New Orleans. Every Saturday, all paces welcome. When and where?')"><div style="font-size:20px;margin-bottom:8px">🌳</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">parkrun</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Free weekly 5K events worldwide. Every Saturday. All paces welcome. 2,000+ locations.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">parkrun.com · FREE FOREVER</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('community','Find me yoga, pilates, HIIT or martial arts classes in New Orleans through ClassPass. First month discount available.')"><div style="font-size:20px;margin-bottom:8px">🧘</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">ClassPass</div><div style="font-size:11px;color:#5a6374;line-height:1.6">35,000+ studios. Yoga, pilates, HIIT, martial arts. Find your fitness community.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">classpass.com · FROM $19/MO</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('community','Find me free fitness meetup groups in New Orleans -- hiking clubs, outdoor workouts, run crews. When do they meet?')"><div style="font-size:20px;margin-bottom:8px">🤝</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">Fitness Meetups</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Local fitness groups, hiking clubs, outdoor workouts. Most are free.</div><div style="margin-top:8px;font-size:9px;color:rgba(78,205,196,.5)">meetup.com · FREE TO JOIN</div></a>
     </div>
   </div>
 
@@ -4277,9 +4277,9 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
   <div style="margin-bottom:32px">
     <div style="font-size:10px;letter-spacing:3px;color:rgba(212,175,55,.5);margin-bottom:16px">GRIEF, CHRONIC ILLNESS &amp; SPECIALIZED SUPPORT</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
-      <a href="https://www.griefshare.org/findagroup" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🕊</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">GriefShare</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Find grief support groups near you. 14,000+ groups worldwide. Loss of any kind.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">griefshare.org · FREE</div></a>
-      <a href="https://www.cancersupportcommunity.org/find-location" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🎗️</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">Cancer Support Community</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Free support groups for patients and families. 175+ locations + online.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">cancersupportcommunity.org · FREE</div></a>
-      <a href="https://www.alz.org/help-support/community/support-groups" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🧡</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">Alzheimer's Association</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Support groups for caregivers and those living with dementia. Virtual and in-person.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">alz.org · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('therapy','Find me a GriefShare support group near New Orleans. I am processing loss and need a community.')"><div style="font-size:20px;margin-bottom:8px">🕊</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">GriefShare</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Find grief support groups near you. 14,000+ groups worldwide. Loss of any kind.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">griefshare.org · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('community','Find me a Cancer Support Community group near New Orleans. For patients and families. Free.')"><div style="font-size:20px;margin-bottom:8px">🎗️</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">Cancer Support Community</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Free support groups for patients and families. 175+ locations + online.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">cancersupportcommunity.org · FREE</div></a>
+      <div class="comm-platform" style="cursor:pointer" onclick="ask('community','Find me an Alzheimer's Association support group near New Orleans for caregivers and families.')"><div style="font-size:20px;margin-bottom:8px">🧡</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">Alzheimer's Association</div><div style="font-size:11px;color:#5a6374;line-height:1.6">Support groups for caregivers and those living with dementia. Virtual and in-person.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">alz.org · FREE</div></a>
       <a href="https://www.thehotline.org" target="_blank" class="comm-platform"><div style="font-size:20px;margin-bottom:8px">🛡️</div><div style="font-size:12px;font-weight:700;color:#d4af37;margin-bottom:4px">National DV Hotline</div><div style="font-size:11px;color:#5a6374;line-height:1.6">1-800-799-7233. Safe community support for domestic violence survivors. 24/7.</div><div style="margin-top:8px;font-size:9px;color:rgba(212,175,55,.5)">1-800-799-7233 · FREE 24/7</div></a>
     </div>
   </div>
@@ -4289,8 +4289,8 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
     <div style="font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.2);margin-bottom:16px">CONNECT ONLINE -- PLATFORMS WITH REAL COMMUNITIES</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
       <a href="https://www.meetup.com" target="_blank" class="comm-platform" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">🤝</div><div style="font-size:12px;font-weight:700;color:#e8d5b0;margin-bottom:4px">Meetup</div><div style="font-size:10px;color:#5a6374">50M+ members. Local groups for everything wellness.</div></a>
-      <a href="https://www.spotify.com/us/wellness" target="_blank" class="comm-platform" style="text-align:center;border-color:rgba(30,215,96,.2)" onmouseover="this.style.borderColor='rgba(30,215,96,.5)'" onmouseout="this.style.borderColor='rgba(30,215,96,.2)'"><div style="font-size:28px;margin-bottom:8px">🎵</div><div style="font-size:12px;font-weight:700;color:#1ed760;margin-bottom:4px">Spotify</div><div style="font-size:10px;color:#5a6374">Music is medicine. Armstrong, jazz, second line — measurable cortisol reduction. Ask Alvai for a prescription playlist.</div></a>
-      <a href="https://www.alltrails.com" target="_blank" class="comm-platform" style="text-align:center;border-color:rgba(78,205,196,.2)" onmouseover="this.style.borderColor='rgba(78,205,196,.5)'" onmouseout="this.style.borderColor='rgba(78,205,196,.2)'"><div style="font-size:28px;margin-bottom:8px">🥾</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">AllTrails</div><div style="font-size:10px;color:#5a6374">Walking in nature reduces cortisol more than most supplements. Find the trail 0.8 miles from you. This is clinical.</div></a>
+      <div style="cursor:pointer" onclick="showSpotifyEmbed('spotify:playlist:37i9dQZEVXbMZ5PAcNTDXd')" class="comm-platform" style="text-align:center;border-color:rgba(30,215,96,.2)" onmouseover="this.style.borderColor='rgba(30,215,96,.5)'" onmouseout="this.style.borderColor='rgba(30,215,96,.2)'"><div style="font-size:28px;margin-bottom:8px">🎵</div><div style="font-size:12px;font-weight:700;color:#1ed760;margin-bottom:4px">Spotify</div><div style="font-size:10px;color:#5a6374">Music is medicine. Armstrong, jazz, second line — measurable cortisol reduction. Ask Alvai for a prescription playlist.</div></a>
+      <div style="cursor:pointer" onclick="ask('community','Find me the best walking or hiking trails near New Orleans on AllTrails. Within 10 miles, good for all fitness levels.')" class="comm-platform" style="text-align:center;border-color:rgba(78,205,196,.2)" onmouseover="this.style.borderColor='rgba(78,205,196,.5)'" onmouseout="this.style.borderColor='rgba(78,205,196,.2)'"><div style="font-size:28px;margin-bottom:8px">🥾</div><div style="font-size:12px;font-weight:700;color:#4ecdc4;margin-bottom:4px">AllTrails</div><div style="font-size:10px;color:#5a6374">Walking in nature reduces cortisol more than most supplements. Find the trail 0.8 miles from you. This is clinical.</div></a>
       <a href="https://nextdoor.com" target="_blank" class="comm-platform" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">🏡</div><div style="font-size:12px;font-weight:700;color:#e8d5b0;margin-bottom:4px">Nextdoor</div><div style="font-size:10px;color:#5a6374">Hyperlocal. Your actual neighbors. Local wellness groups.</div></a>
       <a href="https://discord.com/servers/health-wellness" target="_blank" class="comm-platform" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">💬</div><div style="font-size:12px;font-weight:700;color:#e8d5b0;margin-bottom:4px">Discord</div><div style="font-size:10px;color:#5a6374">Wellness servers. Recovery communities. Mental health spaces.</div></a>
       <a href="https://www.reddit.com/r/wellness" target="_blank" class="comm-platform" style="text-align:center"><div style="font-size:28px;margin-bottom:8px">🔴</div><div style="font-size:12px;font-weight:700;color:#e8d5b0;margin-bottom:4px">Reddit</div><div style="font-size:10px;color:#5a6374">r/wellness, r/sobriety, r/fitness, r/meditation -- millions.</div></a>
@@ -4816,7 +4816,7 @@ CHOOSE YOUR MODE</div>
       <div style="font-size:10px;color:#8fa4b0;line-height:1.5">Psychiatry + therapy. Full mental health care online.</div>
       <div style="font-size:9px;color:#5A6374;margin-top:4px">$65–100 CPA</div>
     </a>
-    <a href="https://www.betterhelp.com/get-started/" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+    <a href="#" onclick="event.preventDefault();startBetterHelpIntake()" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
       <div style="font-size:11px;color:#4ecdc4;font-weight:600;margin-bottom:3px">BetterHelp</div>
       <div style="font-size:10px;color:#8fa4b0;line-height:1.5">General therapy. Largest online therapist network. Referral for broad therapeutic needs.</div>
       <div style="font-size:9px;color:#5A6374;margin-top:4px">Commission · HSA-eligible</div>
@@ -4895,7 +4895,7 @@ CHOOSE YOUR MODE</div>
         <span style="background:rgba(78,205,196,0.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ Switch anytime</span>
         <span style="background:rgba(78,205,196,0.08);color:#4ecdc4;font-size:10px;padding:3px 8px;border-radius:6px">✓ Financial aid</span>
       </div>
-      <a href="https://betterhelp.com/bleu" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#4ecdc4,#2a9d8f);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none;transition:opacity 0.2s" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">Start with BetterHelp →</a>
+      <a href="#" onclick="event.preventDefault();startBetterHelpIntake()" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#4ecdc4,#2a9d8f);border-radius:10px;padding:11px;text-align:center;color:#0a1628;font-weight:700;font-size:13px;text-decoration:none;transition:opacity 0.2s" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">Start with BetterHelp →</a>
       <div style="text-align:center;color:rgba(212,175,55,0.4);font-size:10px;margin-top:8px">💛 Affiliate -- funds this free platform</div>
     </div>
 
@@ -11956,7 +11956,72 @@ function statAsk(tab, msg) {
   }, 120);
 }
 
-// ═══ AGENT 14 — VOICE INPUT (Whisper STT) ═══
+// ═══ SPOTIFY EMBED — plays inside BLEU, user never leaves ═══
+let _spotifyController = null;
+function showSpotifyEmbed(uri) {
+  const existing = document.getElementById('bleu-spotify-embed');
+  if (existing) {
+    existing.remove();
+    if (_spotifyController) { _spotifyController.destroy(); _spotifyController = null; }
+  }
+  const wrap = document.createElement('div');
+  wrap.id = 'bleu-spotify-embed';
+  wrap.style.cssText = 'position:fixed;bottom:80px;right:24px;width:320px;background:#0a0c10;border:1px solid rgba(30,215,96,.3);border-radius:16px;padding:16px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.6)';
+  wrap.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <span style="font-size:10px;letter-spacing:2px;color:rgba(30,215,96,.7)">&#9834; MUSIC AS MEDICINE</span>
+      <span onclick="document.getElementById('bleu-spotify-embed').remove()" style="cursor:pointer;color:#5a6374;font-size:16px">&#10005;</span>
+    </div>
+    <div id="spotify-iframe-container"></div>
+    <div style="font-size:9px;color:#3d4458;margin-top:8px;text-align:center">Spotify plays inside BLEU &mdash; you never leave</div>
+  `;
+  document.body.appendChild(wrap);
+
+  const script = document.createElement('script');
+  script.src = 'https://open.spotify.com/embed/iframe-api/v1';
+  script.async = true;
+  document.body.appendChild(script);
+
+  window.onSpotifyIframeApiReady = (IFrameAPI) => {
+    const el = document.getElementById('spotify-iframe-container');
+    if (!el) return;
+    IFrameAPI.createController(el, { uri: uri, width: '100%', height: 152 }, (c) => {
+      _spotifyController = c;
+    });
+  };
+}
+
+// Alvai can call this to play a specific playlist
+function playSpotifyPlaylist(uri) { showSpotifyEmbed(uri); }
+
+// ═══ BETTERHELP INTAKE — warm match inside BLEU, not cold link ═══
+function startBetterHelpIntake() {
+  const tab = 'therapy';
+  go(tab);
+  setTimeout(() => {
+    ask(tab, 'I want to connect with a licensed therapist through BetterHelp. Before I go there, help me figure out exactly what I need: what type of therapy fits my situation, what format works for me (video, phone, or text), and whether my budget makes sense. Then help me build the right BetterHelp link with those preferences pre-filled so my match is better.');
+  }, 200);
+}
+
+// ═══ UNIVERSAL CARD ENGAGEMENT — every affiliate card fires Alvai first ═══
+// Called by any card that has an affiliate but should start a conversation
+function engageCard(tab, prompt, affiliateUrl, affiliateName) {
+  go(tab);
+  setTimeout(() => {
+    ask(tab, prompt);
+    // After 3 seconds surface the affiliate as a warm option, not a cold link
+    setTimeout(() => {
+      const chatEl = document.getElementById('chat-' + tab);
+      if (!chatEl) return;
+      const hint = document.createElement('div');
+      hint.style.cssText = 'background:rgba(78,205,196,.06);border:1px solid rgba(78,205,196,.15);border-radius:10px;padding:10px 14px;margin:6px 0;font-size:11px;color:#8fa4b0;display:flex;align-items:center;justify-content:space-between';
+      hint.innerHTML = `<span>Ready to take action through ${affiliateName}?</span><a href="${affiliateUrl}" target="_blank" style="font-size:10px;padding:4px 12px;border-radius:12px;background:rgba(78,205,196,.1);color:#4ecdc4;border:1px solid rgba(78,205,196,.3);text-decoration:none;flex-shrink:0">Go when ready &rarr;</a>`;
+      chatEl.appendChild(hint);
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }, 3000);
+  }, 200);
+}
+
 // Mic button → record → transcribe → fill input → send
 const _voiceState = { recording: false, recorder: null, chunks: [], tab: null };
 async function startVoice(tab) {
