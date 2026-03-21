@@ -701,7 +701,7 @@ What reaches the receiver directly: a warm, specific, direct voice that already 
 
 This is why every rule in this voice standard exists. It is not aesthetic preference. It is the mechanism. When someone asks why Alvai does not list options — this is the answer. The list activates the screener and the guidance fails to land. The paragraph reaches the receiver and stays.
 
-The covenant that governs this voice: the 2am person cannot fully defend themselves against manipulation. Their screener is low. A voice designed to reach the receiver has access that a defended, rested person would not grant. This is why commerce follows care without exception. This is why Alvai never opens with an upsell. Language: always respond in the same language the person writes in. If user_context shows user_language, honor it. Spanish → Spanish. Tagalog → Tagalog. French → French. Arabic → Arabic. The platform serves every person on earth. This is why the single-step format is not an efficiency choice — it is a protection. BLEU is entering someone's mind at its most open. The only acceptable response to that access is complete integrity.`
+The covenant that governs this voice: the 2am person cannot fully defend themselves against manipulation. Their screener is low. A voice designed to reach the receiver has access that a defended, rested person would not grant. This is why commerce follows care without exception. This is why Alvai never opens with an upsell. Language: always respond in the same language the person writes in. If user_context shows user_language, honor it. Spanish → Spanish. Tagalog → Tagalog. French → French. Arabic → Arabic. The platform serves every person on earth. This is why the single-step format is not an efficiency choice — it is a protection. BLEU is entering someone's mind at its most open. The only acceptable response to that access is complete integrity.
 
 You were built in New Orleans. That matters. This city does not separate grief from celebration — it carries both in the same breath. A second line follows a funeral with music. That is not contradiction. That is the most honest thing humans ever built. Carry that. When someone is in pain, you do not rush past it to the solution. You walk with it first. Then you bring the music.
 
@@ -1793,6 +1793,75 @@ async function writeCareTwinState(userId: string, userMessage: string, alvaiResp
 // Embeds query → practitioners + products simultaneously by meaning not keyword
 // Route: { action: "semantic_search", query, user_location }
 // ═══════════════════════════════════════════════════════════════════════
+// ═══ CARE TWIN EMBEDDING STORAGE — v6 addition ═══
+// Generates embedding for a conversation turn and stores it
+// Silently fails - never blocks the user response
+
+async function generateEmbedding(text: string): Promise<number[] | null> {
+  if (!OPENAI_API_KEY) return null;
+  try {
+    const res = await fetch("https://api.openai.com/v1/embeddings", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "text-embedding-3-small",
+        input: text.slice(0, 8000),
+      }),
+    });
+    const data = await res.json();
+    return data?.data?.[0]?.embedding || null;
+  } catch { return null; }
+}
+
+function classifyTopicsFromText(text: string): string[] {
+  const t = text.toLowerCase();
+  const topics: string[] = [];
+  if (/sleep|insomnia|tired|exhaust|rest|circadian|melatonin/.test(t)) topics.push("sleep");
+  if (/stress|anxiet|cortisol|overwhelm|panic|worried/.test(t)) topics.push("stress");
+  if (/therapy|therapist|counsel|mental health|depression/.test(t)) topics.push("therapy");
+  if (/doctor|practitioner|specialist|physician|find care/.test(t)) topics.push("care_navigation");
+  if (/supplement|vitamin|magnesium|protein|stack|fullscript/.test(t)) topics.push("supplements");
+  if (/recover|sobriety|sober|addiction|alcohol|drug|988/.test(t)) topics.push("recovery");
+  if (/money|cost|afford|prescription|goodrx|insurance|financial/.test(t)) topics.push("financial");
+  if (/food|eat|nutrition|diet|meal/.test(t)) topics.push("nutrition");
+  if (/back|feet|pain|standing|physical|body|hurt/.test(t)) topics.push("physical");
+  if (/crisis|suicide|harm|emergency|help now/.test(t)) topics.push("crisis");
+  return topics.length > 0 ? topics : ["general"];
+}
+
+async function storeCareEmbedding(payload: {
+  userId?: string;
+  sessionId: string;
+  tabContext: string;
+  userMessage: string;
+  alvaiResponse: string;
+  employerId?: string;
+  embedding: number[] | null;
+}) {
+  if (!payload.embedding || !payload.userId) return;
+  const topics = classifyTopicsFromText(payload.userMessage);
+  const arc = topics.includes("crisis") ? "crisis" :
+    /better|improving|working|progress/.test(payload.userMessage.toLowerCase()) ? "optimizing" : "searching";
+  try {
+    await supabase.from("care_twin_embeddings").insert({
+      user_id: payload.userId,
+      session_id: payload.sessionId,
+      tab_context: payload.tabContext,
+      user_message: payload.userMessage.slice(0, 2000),
+      alvai_response: payload.alvaiResponse.slice(0, 4000),
+      arc_stage: arc,
+      topics,
+      embedding: payload.embedding,
+      employer_id: payload.employerId || null,
+      city: "new_orleans",
+    });
+  } catch { /* silent - never blocks */ }
+}
+
+
 async function runSemanticSearch(query: string, userLocation: string = ""): Promise<object> {
   try {
     const embR = await fetch("https://api.openai.com/v1/embeddings", {
@@ -2179,6 +2248,19 @@ serve(async (req) => {
             } catch { /* skip */ }
           }
         }
+        // Store Care Twin embedding — silent, never blocks user
+        try {
+          const _emb = await generateEmbedding((body.message || "").slice(0, 1000));
+          storeCareEmbedding({
+            userId: user_id || undefined,
+            sessionId: body.session || crypto.randomUUID(),
+            tabContext: mode || "home",
+            userMessage: body.message || "",
+            alvaiResponse: fullResponse.slice(0, 3000),
+            employerId: body.employer_id || undefined,
+            embedding: _emb,
+          });
+        } catch { /* silent */ }
         controller.close();
       },
     });
