@@ -1,0 +1,57 @@
+{
+  "name": "BLEU \u2014 The Longevity Operating System",
+  "short_name": "BLEU",
+  "description": "Everything you need to heal \u2014 in one place. Always free for Explorers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#02040a",
+  "theme_color": "#02040a",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": [
+    "health",
+    "medical",
+    "wellness"
+  ],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%2302040a'/><text x='96' y='130' font-family='Georgia' font-size='100' fill='%23c9a84c' text-anchor='middle'>B</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%2302040a'/><text x='256' y='340' font-family='Georgia' font-size='280' fill='%23c9a84c' text-anchor='middle'>B</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "BLEU \u2014 The Longevity Operating System"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Talk to Alvai",
+      "url": "/#home",
+      "description": "Start a conversation with Alvai"
+    },
+    {
+      "name": "Find Care",
+      "url": "/#directory",
+      "description": "Find a practitioner near you"
+    },
+    {
+      "name": "My Passport",
+      "url": "/#passport",
+      "description": "Your wellness passport"
+    }
+  ]
+}

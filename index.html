@@ -18,7 +18,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <!-- BLEU v3.2.0 -- 20260316_155541 -- unicode-clean JS -->
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>BLEU — Trusted Intelligence for Health, Place &amp; Opportunity</title>
 <meta name="description" content="BLEU validates every practitioner, product, and study against federal databases. Therapy. Recovery. Finance. ECS Intelligence. The most trusted wellness system ever built.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -781,6 +781,12 @@ button[type="submit"],
 }
 </script>
 
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#02040a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BLEU">
+<link rel="apple-touch-icon" href="https://bleu.live/icon-192.png">
 </head>
 <body>
 
@@ -9158,6 +9164,21 @@ async function send(tab){
   };
   var _citizenStack=[];try{var _cIds=JSON.parse(localStorage.getItem('bleu_cart')||'[]');if(typeof PRODUCT_MASTER!=='undefined'){_citizenStack=_cIds.map(function(id){var p=PRODUCT_MASTER[id];return p?p.name+' ('+p.dose+')':id;}).filter(Boolean);}}catch(e){}
   var _citizenZip=localStorage.getItem('bleu_zip')||'';
+
+  // Detect user's browser language — passes to Alvai for multilingual response
+  var _userLang = navigator.language || navigator.userLanguage || 'en';
+  var _langHint = _userLang.startsWith('es') ? 'Spanish' :
+                  _userLang.startsWith('fr') ? 'French' :
+                  _userLang.startsWith('tl') || _userLang.startsWith('fil') ? 'Filipino/Tagalog' :
+                  _userLang.startsWith('zh') ? 'Chinese' :
+                  _userLang.startsWith('ar') ? 'Arabic' :
+                  _userLang.startsWith('pt') ? 'Portuguese' :
+                  _userLang.startsWith('hi') ? 'Hindi' :
+                  _userLang.startsWith('ms') ? 'Malay' :
+                  _userLang.startsWith('sw') ? 'Swahili' :
+                  _userLang.startsWith('ko') ? 'Korean' :
+                  _userLang.startsWith('ja') ? 'Japanese' : 'English';
+  
   enrichedContext=passport?{
     is_traveler:true,
     citizen_name:currentUser?.user_metadata?.full_name||'',
@@ -9166,11 +9187,13 @@ async function send(tab){
     passport_context: typeof passport==='string' ? passport.slice(0,800) : '',
     active_stack:_citizenStack.length?'Current supplement stack: '+_citizenStack.join(', '):'',
     location_zip:_citizenZip,
+    user_language:_langHint,
     user_state:JSON.stringify(_userState),
     orchestration:JSON.stringify(_orchestration)
   }:{
     is_traveler:false,
     tourist_session:true,
+    user_language:_langHint,
     user_state:JSON.stringify(_userState),
     orchestration:JSON.stringify(_orchestration)
   };
@@ -12035,5 +12058,46 @@ async function uploadImage(event, tab) {
 }
 </script>
 
+
+<script>
+// BLEU PWA — Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('BLEU SW registered:', reg.scope);
+    }).catch(function(err) {
+      console.log('SW registration failed (non-critical):', err);
+    });
+  });
+}
+
+// Install prompt — show "Add to Home Screen" 
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Show our custom install button if it exists
+  const installBtn = document.getElementById('bleu-install-btn');
+  if (installBtn) {
+    installBtn.style.display = 'flex';
+    installBtn.onclick = function() {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(choice) {
+        if (choice.outcome === 'accepted') {
+          console.log('BLEU installed to home screen');
+        }
+        deferredPrompt = null;
+        installBtn.style.display = 'none';
+      });
+    };
+  }
+});
+
+// Track successful install
+window.addEventListener('appinstalled', function() {
+  console.log('BLEU installed as app');
+  deferredPrompt = null;
+});
+</script>
 </body>
 </html>
