@@ -1394,7 +1394,53 @@ const corsHeaders = {
 };
 
 // ═══════════════════════════════════════════════════════════════════════
-// AGENT 13 — VISION INTELLIGENCE (GPT-4o Vision)
+// MODERATION LAYER — Free OpenAI API. Fires before everything. Zero tokens.
+// Catches harm categories Agent 01 doesn't classify.
+// ═══════════════════════════════════════════════════════════════════════
+async function runModeration(input: string): Promise<{flagged: boolean; categories: string[]}> {
+  try {
+    const r = await fetch("https://api.openai.com/v1/moderations", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ input: input.slice(0, 2000) }),
+    });
+    if (!r.ok) return { flagged: false, categories: [] };
+    const d = await r.json();
+    const result = d.results?.[0];
+    if (!result?.flagged) return { flagged: false, categories: [] };
+    const flaggedCategories = Object.entries(result.categories || {})
+      .filter(([_, v]) => v === true)
+      .map(([k]) => k);
+    return { flagged: true, categories: flaggedCategories };
+  } catch { return { flagged: false, categories: [] }; }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// WHISPER STT — Speech to Text. Receives audio blob, returns transcript.
+// Route: { action: "transcribe", audio_base64, audio_format }
+// audio_format: "webm" | "mp4" | "wav" | "m4a"
+// ═══════════════════════════════════════════════════════════════════════
+async function transcribeAudio(audioBase64: string, audioFormat: string = "webm"): Promise<string> {
+  try {
+    const binaryStr = atob(audioBase64);
+    const bytes = new Uint8Array(binaryStr.length);
+    for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
+    const blob = new Blob([bytes], { type: `audio/${audioFormat}` });
+    const formData = new FormData();
+    formData.append("file", blob, `audio.${audioFormat}`);
+    formData.append("model", "whisper-1");
+    formData.append("language", "en");
+    formData.append("prompt", "This is a health and wellness conversation. The speaker may mention supplements, medications, symptoms, emotions, or wellness goals.");
+    const r = await fetch("https://api.openai.com/v1/audio/transcriptions", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}` },
+      body: formData,
+    });
+    if (!r.ok) return "";
+    const d = await r.json();
+    return d.text || "";
+  } catch { return ""; }
+}
 // Reads lab results, supplement labels, food photos, health screenshots
 // Route: { action: "analyze_image", image_base64, image_context, user_context }
 // ═══════════════════════════════════════════════════════════════════════
@@ -1462,7 +1508,7 @@ async function synthesizeAlvaiVoice(text: string, voiceMode: string = "warm"): P
       method: "POST",
       headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "tts-1",
+        model: "tts-1-hd",
         voice: voice,
         input: cleanText,
         speed: 0.92, // Armstrong never rushes
@@ -1707,6 +1753,17 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    if (action === "transcribe") {
+      if (!body.audio_base64) {
+        return new Response(JSON.stringify({ error: "No audio provided" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const transcript = await transcribeAudio(body.audio_base64, body.audio_format || "webm");
+      return new Response(JSON.stringify({ transcript }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     // ═══ END ACTION ROUTER — existing 12-agent flow continues below ═══
 
     const messages = body.messages || (body.history?.length > 0 ? body.history : body.message ? [{role:"user",content:body.message}] : null);
@@ -1719,6 +1776,16 @@ serve(async (req) => {
 
     const lastUserMessage = messages.filter((m:any) => m.role === "user").pop();
     const userText = lastUserMessage?.content || "";
+
+    // ═══ MODERATION PRE-FILTER — free, zero tokens, fires before all agents ═══
+    const modResult = await runModeration(userText);
+    if (modResult.flagged && !modResult.categories.includes("self-harm")) {
+      // Self-harm goes to crisis pipeline, not rejection. All others — gate.
+      return new Response(JSON.stringify({
+        content: "I can't engage with that kind of content. If you're going through something difficult, Alvai is here for that — just tell me what's actually happening.",
+        flagged: true,
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
     const lookupNeeds = detectLookupNeeds(userText);
 
     // ═══ PARALLEL FAN-OUT — All agents fire simultaneously ═══

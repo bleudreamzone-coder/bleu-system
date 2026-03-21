@@ -1412,12 +1412,16 @@ button[type="submit"],
 <div class="divider"></div>
   <div class="section-label">WHAT ALVAI IS CONNECTED TO</div>
   <div class="feature-grid">
-    <div class="feature-item"><div class="feature-icon">⚕️</div><div class="feature-text"><h4>855,247 Practitioners</h4><p>NPI-verified. Trust-scored. Matched to your needs.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">💊</div><div class="feature-text"><h4>1,054 Products</h4><p>FDA-checked. Clinically scored. With affiliate links.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">📚</div><div class="feature-text"><h4>50,000+ PubMed Studies</h4><p>50,000+ indexed studies across 32 crisis categories. Delivered in plain language.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">⚠️</div><div class="feature-text"><h4>Drug Interactions</h4><p>CYP450 enzyme pathways. Severity ratings. What to do.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">🧠</div><div class="feature-text"><h4>12 Therapy Modes</h4><p>CBT, DBT, somatic, crisis, couples, grief, trauma, motivational interviewing + more. Each mode backed by clinical frameworks and connected to Directory practitioners for escalation.</p></div></div>
-    <div class="feature-item"><div class="feature-icon">🔥</div><div class="feature-text"><h4>8 Recovery Modes</h4><p>Sobriety, relapse prevention, harm reduction, MAT, family support, faith-based, holistic, cannabis-informed. Integrated with Recovery tab tracking and SAMHSA referrals.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">⚕️</div><div class="feature-text"><h4>855,247 Practitioners</h4><p>NPI-verified. Trust-scored. Matched to your location and need. Dr. Felicia reviewed for marketplace bookings.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">💊</div><div class="feature-text"><h4>1,054 Validated Products</h4><p>FDA-checked. Clinically scored. Fullscript dispensary — Dr. Felicia Stoler DCN RDN. Pharmaceutical-grade sourcing.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">📚</div><div class="feature-text"><h4>50,000+ PubMed Studies</h4><p>Indexed across 32 clinical categories. Evidence graded A–D. Causal mechanism extracted. Delivered in plain language.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">⚠️</div><div class="feature-text"><h4>Drug &amp; Supplement Safety</h4><p>CYP450 enzyme pathways. FDA alerts. RxNorm interactions. Severity ratings. What to do and what to stop.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🧠</div><div class="feature-text"><h4>12 Therapy Modes</h4><p>CBT, DBT, somatic, crisis, couples, grief, trauma, motivational interviewing + more. Each backed by clinical frameworks.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🔥</div><div class="feature-text"><h4>8 Recovery Modes</h4><p>Sobriety, relapse prevention, harm reduction, MAT, family support, faith-based, holistic, cannabis-informed.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">👁️</div><div class="feature-text"><h4>Vision Intelligence</h4><p>Upload your lab results, supplement label, or meal photo. Alvai reads it with full clinical context and tells you exactly what it means.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🎙️</div><div class="feature-text"><h4>Voice In &amp; Out</h4><p>Speak to Alvai. Hear Alvai respond. The 2am person who can't find words can just talk. Armstrong voice. Never rushes.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🧬</div><div class="feature-text"><h4>Care Twin</h4><p>Every session builds your structured health model — conditions, medications, supplements, arc position, committed actions. Gets smarter every conversation.</p></div></div>
+    <div class="feature-item"><div class="feature-icon">🌍</div><div class="feature-text"><h4>17-Agent Agentic System</h4><p>The architecture Jensen Huang called the new computer — built for the person the healthcare system forgot. Safety, memory, knowledge, emotion, prediction, vision, voice, image, research. All parallel. All yours.</p></div></div>
   </div>
 
   <div class="disclaimer">⚕️ Alvai is an AI wellness advisor powered by Claude, not a medical professional. For emergencies call 911. For crisis support call/text 988. Alvai does not diagnose, prescribe, or replace professional care.</div>
@@ -1511,6 +1515,8 @@ button[type="submit"],
 <div class="alv-chat">
   <div class="chat-box chat-area alv-msgs" id="chat-alvai"></div>
   <div class="alv-row">
+    <button id="mic-alvai" onclick="startVoice('alvai')" title="Speak to Alvai" style="width:36px;height:36px;border-radius:50%;border:1px solid rgba(201,168,76,.25);background:rgba(201,168,76,.06);color:rgba(201,168,76,.7);cursor:pointer;font-size:15px;flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center" onmouseover="this.style.borderColor='rgba(201,168,76,.6)';this.style.color='#c9a84c'" onmouseout="this.style.borderColor='rgba(201,168,76,.25)';this.style.color='rgba(201,168,76,.7)'">🎤</button>
+    <label title="Upload lab results, supplement label, or food photo" style="width:36px;height:36px;border-radius:50%;border:1px solid rgba(78,205,196,.2);background:rgba(78,205,196,.05);color:rgba(78,205,196,.7);cursor:pointer;font-size:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.6)';this.style.color='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,.2)';this.style.color='rgba(78,205,196,.7)'">📷<input type="file" accept="image/*" style="display:none" onchange="uploadImage(event,'alvai')"></label>
     <input class="alv-input" id="in-alvai" placeholder="What hurts? What keeps you up? What do you need right now?" onkeydown="if(event.key==='Enter')send('alvai')"/>
     <button class="alv-btn" onclick="send('alvai')">Ask Alvai ✦</button>
   </div>
@@ -4811,7 +4817,7 @@ CHOOSE YOUR MODE</div>
   </div>
 </div>
 
-<div id="chat-therapy" class="chat-box chat-area" style="min-height:200px;margin:8px 0"></div><div class="chat-input-row"><input autocomplete="off" id="in-therapy" placeholder="What are you carrying right now?" onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Ask Alvai ✦</button></div></div></div>
+<div id="chat-therapy" class="chat-box chat-area" style="min-height:200px;margin:8px 0"></div><div class="chat-input-row"><button onclick="startVoice('therapy')" title="Speak" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(167,139,250,.25);background:rgba(167,139,250,.06);color:rgba(167,139,250,.7);cursor:pointer;font-size:14px;flex-shrink:0;transition:all .2s" onmouseover="this.style.borderColor='rgba(167,139,250,.6)'" onmouseout="this.style.borderColor='rgba(167,139,250,.25)'">🎤</button><input autocomplete="off" id="in-therapy" placeholder="What are you carrying right now?" onkeydown="if(event.key==='Enter')send('therapy')"><button onclick="send('therapy')">Ask Alvai ✦</button></div></div></div>
 
   <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">A living model of care · Patent Pending · © 2026</span></div>
 <div class="divider"></div>
@@ -11941,6 +11947,84 @@ function statAsk(tab, msg) {
     if(inp){ inp.value = msg; }
     if(typeof send === 'function') send(tab);
   }, 120);
+}
+
+// ═══ AGENT 14 — VOICE INPUT (Whisper STT) ═══
+// Mic button → record → transcribe → fill input → send
+const _voiceState = { recording: false, recorder: null, chunks: [], tab: null };
+async function startVoice(tab) {
+  if (_voiceState.recording) { _voiceState.recorder?.stop(); return; }
+  const btn = document.getElementById('mic-' + tab) || document.querySelector('[onclick*="startVoice(\'' + tab + '\')"]');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const recorder = new MediaRecorder(stream);
+    _voiceState.recorder = recorder; _voiceState.chunks = []; _voiceState.tab = tab; _voiceState.recording = true;
+    if (btn) { btn.style.background = 'rgba(239,68,68,.2)'; btn.style.borderColor = '#ef4444'; btn.textContent = '⏹'; }
+    recorder.ondataavailable = e => _voiceState.chunks.push(e.data);
+    recorder.onstop = async () => {
+      _voiceState.recording = false; stream.getTracks().forEach(t => t.stop());
+      if (btn) { btn.style.background = ''; btn.style.borderColor = ''; btn.textContent = '🎤'; }
+      const blob = new Blob(_voiceState.chunks, { type: 'audio/webm' });
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const b64 = reader.result.split(',')[1];
+        const inp = document.getElementById('in-' + tab);
+        if (inp) inp.value = '🎤 Transcribing...';
+        try {
+          const ALVAI_URL = typeof supabaseUrl !== 'undefined' ? supabaseUrl.replace('supabase.co','supabase.co/functions/v1/alvai') : 'https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai';
+          const r = await fetch(ALVAI_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': typeof supabaseKey !== 'undefined' ? supabaseKey : '' },
+            body: JSON.stringify({ action: 'transcribe', audio_base64: b64, audio_format: 'webm' })
+          });
+          const d = await r.json();
+          if (inp && d.transcript) { inp.value = d.transcript; send(tab); }
+          else if (inp) inp.value = '';
+        } catch { if (inp) inp.value = ''; }
+      };
+      reader.readAsDataURL(blob);
+    };
+    recorder.start();
+    setTimeout(() => { if (_voiceState.recording) recorder.stop(); }, 30000);
+  } catch(e) {
+    if (btn) btn.title = 'Microphone access denied';
+    console.warn('Voice input:', e);
+  }
+}
+
+// ═══ AGENT 13 — IMAGE UPLOAD (Vision) ═══
+// Camera button → file select → base64 → Alvai Vision → response in chat
+async function uploadImage(event, tab) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const inp = document.getElementById('in-' + tab);
+  if (inp) inp.value = '📷 Analyzing image...';
+  go(tab);
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const b64 = reader.result.split(',')[1];
+    const userContext = typeof currentUser !== 'undefined' && currentUser ? JSON.stringify({ user_id: currentUser.id }) : '';
+    try {
+      const ALVAI_URL = 'https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai';
+      const r = await fetch(ALVAI_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': typeof supabaseKey !== 'undefined' ? supabaseKey : '' },
+        body: JSON.stringify({ action: 'analyze_image', image_base64: b64, image_context: 'User uploaded a health document or image for analysis.', user_context: userContext })
+      });
+      const d = await r.json();
+      if (inp) inp.value = '';
+      if (d.content) {
+        const chatEl = document.getElementById('chat-' + tab);
+        if (chatEl) {
+          const msg = document.createElement('div');
+          msg.className = 'msg-in'; msg.style.cssText = 'background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.15);border-radius:12px;padding:16px;margin:8px 0;font-size:13px;color:#c8d6e0;line-height:1.8;white-space:pre-wrap';
+          msg.textContent = d.content; chatEl.appendChild(msg); chatEl.scrollTop = chatEl.scrollHeight;
+        }
+      }
+    } catch { if (inp) inp.value = ''; }
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
 }
 </script>
 
