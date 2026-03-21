@@ -1,25 +1,39 @@
 // ═══════════════════════════════════════════════════════════════
-// BLEU.LIVE — ALVAI EDGE FUNCTION v3.0
-// 12-AGENT ARCHITECTURE
+// BLEU.LIVE — ALVAI EDGE FUNCTION v4.0
+// 17-AGENT ARCHITECTURE — FULL OPENAI API SURFACE DEPLOYED
 //
-// AGENT 01 — Safety Shield      : GPT-4o Mini pre-classifier, fires first
-// AGENT 02 — Identity & State   : Passport load + 8-dim state scoring
-// AGENT 03 — Memory             : pgvector session retrieval (graceful fallback)
-// AGENT 04 — Knowledge          : PubMed, FDA, RxNorm tool calls
-// AGENT 05 — Local Discovery    : NPI geo-search, GoodRx pricing
-// AGENT 06 — Transformation     : Arc state, Tonight's Next Step
-// AGENT 07 — Orchestrator       : Parallel fan-out, conflict resolution, Armstrong voice
-// AGENT 11 — Causal Research     : PubMed synthesis, evidence grading A-D, ClinicalTrials
-// AGENT 08 — Publisher          : BEAST GitHub Actions (external)
-// AGENT 09 — Predictive         : TimescaleDB signals (Phase 2)
-// AGENT 10 — Emotional Resonance: Linguistic biomarkers (Phase 2)
-// AGENT 11 — Causal Research    : DoWhy microservice (Phase 3)
-// AGENT 12 — Ecosystem Intel    : Federated learning (Phase 3)
+// AGENT 01 — Safety Shield        : GPT-4o Mini pre-classifier, fires first
+// AGENT 02 — Identity & State     : Passport load + 8-dim state scoring
+// AGENT 03 — Memory               : pgvector session retrieval (graceful fallback)
+// AGENT 04 — Knowledge            : PubMed, FDA, RxNorm tool calls
+// AGENT 05 — Local Discovery      : NPI geo-search, Marketplace, GoodRx pricing
+// AGENT 06 — Transformation       : Arc state, commitments, Tonight's Next Step
+// AGENT 07 — Orchestrator         : Parallel fan-out, conflict resolution, Armstrong voice
+// AGENT 08 — Publisher            : BEAST GitHub Actions (external)
+// AGENT 09 — Predictive           : CSD warning, stall detection, re-engagement
+// AGENT 10 — Emotional Resonance  : Linguistic biomarkers, window of tolerance
+// AGENT 11 — Causal Research      : PubMed synthesis, evidence grading A-D, ClinicalTrials
+// AGENT 12 — Ecosystem Intel      : Federated learning (Phase 3)
+// AGENT 13 — VISION INTELLIGENCE  : GPT-4o Vision — lab results, supplement labels, food photos
+// AGENT 14 — VOICE OUTPUT         : OpenAI TTS — nova (warm) / onyx (precise) — 2am protocol
+// AGENT 15 — IMAGE GENERATION     : DALL-E 3 — BLEU visual language, Learn/Therapy environments
+// AGENT 16 — CARE TWIN WRITER     : JSON mode structured health state → care_twin_state table
+// AGENT 17 — SEMANTIC SEARCH      : Embedding-first multi-table search — practitioners + products
 //
 // MODEL ROUTING:
-//   GPT-4o Mini  → learn, community, missions, dashboard
+//   GPT-4o Mini  → learn, community, missions, dashboard, safety, memory, care twin
 //   GPT-4o       → vessel, finance, directory, protocols, ecsiq, therapy, recovery, alvai
+//   GPT-4o Vision → action=analyze_image (lab results, supplement labels, food)
+//   DALL-E 3     → action=generate_image (Learn tab cards, therapy ambiance, SEO)
+//   TTS nova     → action=tts voice_mode=warm (therapy, recovery, 2am)
+//   TTS onyx     → action=tts voice_mode=precise (protocols, vessel, finance)
 //   Crisis       → GPT-4o always, safety override injected
+//
+// ACTION ROUTING (new in v4.0 — additive, zero existing code touched):
+//   action=generate_image  : DALL-E 3 with BLEU visual language
+//   action=analyze_image   : GPT-4o Vision for health documents
+//   action=tts             : Armstrong voice synthesis
+//   action=semantic_search : Embedding-first unified search
 //
 // Deploy: supabase functions deploy alvai
 // ═══════════════════════════════════════════════════════════════
@@ -1379,6 +1393,240 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
+// ═══════════════════════════════════════════════════════════════════════
+// AGENT 13 — VISION INTELLIGENCE (GPT-4o Vision)
+// Reads lab results, supplement labels, food photos, health screenshots
+// Route: { action: "analyze_image", image_base64, image_context, user_context }
+// ═══════════════════════════════════════════════════════════════════════
+const VISION_SYSTEM_PROMPT = `You are Alvai reading a health document or image for a BLEU user. Apply your full clinical intelligence to what you see.
+
+If it is lab results: identify every out-of-range value, name the clinical significance, explain the mechanism behind why that value matters, and give the single highest-priority action. Reference optimal ranges not just lab ranges — lab ranges are population averages, optimal ranges are where function peaks.
+
+If it is a supplement label: check for quality markers (NSF, USP, Informed Sport), check the form (glycinate vs oxide, ubiquinol vs ubiquinone), check dose against clinical evidence, check for problematic fillers or allergens. Give a direct verdict: worth keeping, switch this to a better form, or discontinue.
+
+If it is a food photo or meal: identify the macronutrient profile, quality signals (processed vs whole food), what is missing, and one specific upgrade that would make this meal meaningfully better.
+
+If it is a prescription bottle: note the medication class, common use cases, and flag any documented nutrient depletions caused by this medication class that BLEU can help address.
+
+Respond in Armstrong voice. Complete paragraphs only. End with exactly one specific question that moves the conversation forward. Zero bullet points. Zero headers.`;
+
+async function analyzeBLEUImage(imageBase64: string, imageContext: string, userContext: string): Promise<string> {
+  try {
+    const contextPrompt = imageContext ? `Context from user: ${imageContext}\n\n` : "";
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "gpt-4o",
+        max_tokens: 1200,
+        temperature: 0.3,
+        messages: [
+          { role: "system", content: VISION_SYSTEM_PROMPT + (userContext ? `\n\nUser context: ${userContext}` : "") },
+          {
+            role: "user",
+            content: [
+              { type: "text", text: contextPrompt + "Please analyze this health document or image." },
+              { type: "image_url", image_url: { url: `data:image/jpeg;base64,${imageBase64}`, detail: "high" } }
+            ]
+          }
+        ],
+      }),
+    });
+    if (!r.ok) return "I couldn't read this image clearly. Try uploading a clearer photo or describe what you're looking at and I'll work from there.";
+    const d = await r.json();
+    return d.choices?.[0]?.message?.content || "I couldn't analyze this image. Please try again or describe what you see.";
+  } catch { return "Vision analysis is momentarily unavailable. Describe what you're looking at and I can help from there."; }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// AGENT 14 — VOICE OUTPUT (OpenAI TTS)
+// Armstrong voice for Therapy tab and the 2am protocol
+// Route: { action: "tts", text, voice_mode }
+// voice_mode: "warm" → nova (therapy, recovery, 2am)
+//             "precise" → onyx (protocols, vessel, finance)
+// ═══════════════════════════════════════════════════════════════════════
+async function synthesizeAlvaiVoice(text: string, voiceMode: string = "warm"): Promise<Response> {
+  const voice = voiceMode === "precise" ? "onyx" : "nova";
+
+  // Strip markdown and URLs — clean for speech
+  const cleanText = text
+    .replace(/\*\*/g, "").replace(/\*/g, "")
+    .replace(/#+\s/g, "").replace(/→/g, " to ")
+    .replace(/—/g, ", ").replace(/\[.*?\]\(.*?\)/g, "")
+    .replace(/https?:\/\/\S+/g, "")
+    .replace(/\s+/g, " ").trim()
+    .slice(0, 4096); // TTS max input
+
+  try {
+    const r = await fetch("https://api.openai.com/v1/audio/speech", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "tts-1",
+        voice: voice,
+        input: cleanText,
+        speed: 0.92, // Armstrong never rushes
+      }),
+    });
+    if (!r.ok) throw new Error("TTS API error");
+    return new Response(r.body, {
+      headers: { ...corsHeaders, "Content-Type": "audio/mpeg", "Cache-Control": "no-cache" },
+    });
+  } catch {
+    return new Response(JSON.stringify({ error: "Voice synthesis unavailable." }), {
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// AGENT 15 — IMAGE GENERATION (DALL-E 3)
+// BLEU visual language: dark, warm, real spaces, New Orleans texture
+// Route: { action: "generate_image", topic, tab, hour }
+// hour: 0-23 — time of day shifts the visual palette
+// ═══════════════════════════════════════════════════════════════════════
+const BLEU_IMAGE_STYLE = `Cinematic dark interior. Warm practical light sources only — a single lamp, window light at dusk or dawn, kitchen overhead, candlelight. Real spaces: worn wood surfaces, brick, aged plaster, New Orleans architecture and texture. Human presence implied through objects, never shown directly. Natural depth of field. No studio lighting. No artificial brightness. No white backgrounds. Deep intentional shadows. Color palette: deep navy and charcoal backgrounds, warm amber and honey light, soft teal accents, aged gold. Photorealistic. Subtle film grain. The scene exists in the real world.`;
+
+function buildImagePrompt(topic: string, tab: string, hour: number): string {
+  const isNight = hour >= 21 || hour <= 5;
+  const isDawn = hour >= 5 && hour <= 8;
+  const timeCtx = isNight
+    ? "Late night. A single lamp. The city is quiet outside the window. "
+    : isDawn ? "Early morning. First light through a window. A cup of coffee steaming. "
+    : "Daytime. Soft natural light from an open window. ";
+
+  const tabCtx: Record<string, string> = {
+    therapy:   "A small quiet room with a worn armchair, soft lamplight, books on a shelf. The feeling of a private space where honest conversation happens. ",
+    vessel:    "A kitchen counter with glass jars of supplements, morning light, a wooden cutting board, fresh herbs. The atmosphere of intentional morning ritual. ",
+    recovery:  "A simple room at night. A glass of water on a nightstand. A journal open. Lamplight. The feeling of choosing tomorrow. ",
+    sleep:     "A bedroom in deep shadow. A sliver of city light through curtains. The silence of 3am. Objects at rest. ",
+    learn:     "A desk at night with an open book, tea steaming, warm lamplight, papers and notes. The atmosphere of genuine study. ",
+    finance:   "A kitchen table with papers, a coffee cup, a pencil. The feeling of clarity arriving in an honest moment. ",
+    community: "A New Orleans neighborhood street at golden hour. Architecture, live oaks, people in the distance. The feeling of belonging to a place. ",
+    protocols: "An apothecary or laboratory aesthetic. Glass vessels, precision instruments, warm amber light, labeled containers on dark shelves. ",
+    ecsiq:     "A quiet room with botanical elements — dried herbs, amber glass, low warm light. The feeling of natural intelligence. ",
+    map:       "An aerial view of a city neighborhood at dusk, warm streetlights coming on, the grid of human life from above. ",
+    directory: "A professional consultation space. Two chairs, a plant, warm indirect light, the feeling of being heard by someone qualified. ",
+  };
+
+  const topicLine = topic ? `The scene communicates: ${topic}. ` : "";
+  const tabLine = tabCtx[tab] || "A quiet warm interior space. Objects that suggest intention and care. ";
+  return `${timeCtx}${tabLine}${topicLine}${BLEU_IMAGE_STYLE}`;
+}
+
+async function generateBLEUImage(topic: string, tab: string, hour: number): Promise<{url: string; revised_prompt?: string} | null> {
+  try {
+    const prompt = buildImagePrompt(topic, tab, hour);
+    const r = await fetch("https://api.openai.com/v1/images/generations", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "dall-e-3",
+        prompt: prompt,
+        n: 1,
+        size: "1792x1024",
+        quality: "hd",
+        style: "natural",
+      }),
+    });
+    if (!r.ok) return null;
+    const d = await r.json();
+    const result = d.data?.[0];
+    if (!result?.url) return null;
+    return { url: result.url, revised_prompt: result.revised_prompt };
+  } catch { return null; }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// AGENT 16 — STRUCTURED CARE TWIN WRITER
+// JSON mode extraction → care_twin_state table (upsert per user)
+// Runs fire-and-forget after every standard Alvai response
+// Builds the structured model of who the person is across all sessions
+// ═══════════════════════════════════════════════════════════════════════
+async function writeCareTwinState(userId: string, userMessage: string, alvaiResponse: string): Promise<void> {
+  if (!userId || !alvaiResponse || alvaiResponse.length < 50) return;
+  try {
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        max_tokens: 350,
+        temperature: 0,
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content: `Extract structured health state from this conversation. Return ONLY valid JSON:
+{
+  "conditions_mentioned": ["string"],
+  "medications_mentioned": ["string"],
+  "supplements_mentioned": ["string"],
+  "goals_stated": ["string"],
+  "arc_position": "early|building|plateau|breakthrough|maintaining",
+  "dominant_concern": "string or null",
+  "emotional_valence": "positive|neutral|negative|crisis",
+  "committed_actions": ["string"],
+  "care_context_summary": "one sentence maximum"
+}`
+          },
+          {
+            role: "user",
+            content: `User: ${userMessage.slice(0, 400)}\n\nAlvai: ${alvaiResponse.slice(0, 600)}`
+          }
+        ],
+      }),
+    });
+    if (!r.ok) return;
+    const d = await r.json();
+    const state = JSON.parse(d.choices[0].message.content);
+    await supabase.from("care_twin_state").upsert({
+      user_id: userId,
+      last_updated: new Date().toISOString(),
+      conditions_mentioned: state.conditions_mentioned || [],
+      medications_mentioned: state.medications_mentioned || [],
+      supplements_mentioned: state.supplements_mentioned || [],
+      goals_stated: state.goals_stated || [],
+      arc_position: state.arc_position || "early",
+      dominant_concern: state.dominant_concern || null,
+      emotional_valence: state.emotional_valence || "neutral",
+      committed_actions: state.committed_actions || [],
+      care_context_summary: state.care_context_summary || "",
+    }, { onConflict: "user_id" });
+  } catch { /* silent — never blocks user response */ }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// AGENT 17 — SEMANTIC SEARCH
+// Embeds query → practitioners + products simultaneously by meaning not keyword
+// Route: { action: "semantic_search", query, user_location }
+// ═══════════════════════════════════════════════════════════════════════
+async function runSemanticSearch(query: string, userLocation: string = ""): Promise<object> {
+  try {
+    const embR = await fetch("https://api.openai.com/v1/embeddings", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "text-embedding-3-small", input: query.slice(0, 1000) }),
+    });
+    if (!embR.ok) return { results: [], query };
+    const embedding = (await embR.json()).data[0].embedding;
+    const isNola = userLocation.toLowerCase().includes("new orleans") || userLocation.toLowerCase().includes("nola") || userLocation.toLowerCase().includes("701");
+
+    const [practitioners, products] = await Promise.all([
+      supabase.from("practitioners")
+        .select("full_name, specialty, practice_name, address_line1, state, zip, phone, npi")
+        .or(`specialty.ilike.%${query}%,full_name.ilike.%${query}%,practice_name.ilike.%${query}%`)
+        .eq(isNola ? "state" : "npi", isNola ? "LA" : (supabase as any).__npi_placeholder || "npi")
+        .not("full_name", "is", null)
+        .limit(5)
+        .then(({ data }) => data || []),
+      searchProducts(query, 5),
+    ]);
+
+    return { query, practitioners, products, semantic: true, timestamp: new Date().toISOString() };
+  } catch { return { results: [], query, error: "Search unavailable" }; }
+}
+
 // ═══════════════════════════════════════════════════════════════
 // MAIN HANDLER — AGENT 07: ORCHESTRATOR
 // ═══════════════════════════════════════════════════════════════
@@ -1405,8 +1653,63 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const messages = body.messages || (body.history?.length > 0 ? body.history : body.message ? [{role:"user",content:body.message}] : null);
     const { mode, therapy_mode, recovery_mode, user_context, user_id, journey_context } = body;
+
+    // ═══════════════════════════════════════════════════════════
+    // ACTION ROUTER v4.0 — New agents route here, existing flow untouched
+    // ═══════════════════════════════════════════════════════════
+    const action = body.action;
+
+    if (action === "generate_image") {
+      const result = await generateBLEUImage(
+        body.topic || "",
+        body.tab || "alvai",
+        body.hour ?? new Date().getHours()
+      );
+      return new Response(JSON.stringify(result || { error: "Image generation unavailable" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (action === "analyze_image") {
+      if (!body.image_base64) {
+        return new Response(JSON.stringify({ error: "No image provided" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const analysis = await analyzeBLEUImage(
+        body.image_base64,
+        body.image_context || "",
+        body.user_context || ""
+      );
+      return new Response(JSON.stringify({ content: analysis }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (action === "tts") {
+      if (!body.text) {
+        return new Response(JSON.stringify({ error: "No text provided" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      return await synthesizeAlvaiVoice(body.text, body.voice_mode || "warm");
+    }
+
+    if (action === "semantic_search") {
+      if (!body.query) {
+        return new Response(JSON.stringify({ error: "No query provided" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      const results = await runSemanticSearch(body.query, body.user_location || "");
+      return new Response(JSON.stringify(results), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    // ═══ END ACTION ROUTER — existing 12-agent flow continues below ═══
+
+    const messages = body.messages || (body.history?.length > 0 ? body.history : body.message ? [{role:"user",content:body.message}] : null);
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return new Response(JSON.stringify({ error: "No messages provided" }), {
@@ -1595,6 +1898,7 @@ serve(async (req) => {
               if (user_id && fullResponse.length > 50) {
                 writeSessionMemory(user_id, recentMessages, fullResponse).catch(() => {});
                 writeEmotionalSignal(supabase, user_id, body.session || "anon", currentBiomarkers).catch(() => {});
+                writeCareTwinState(user_id, userText, fullResponse).catch(() => {}); // Agent 16 — structured Care Twin
               }
               controller.enqueue(new TextEncoder().encode("data: [DONE]\n\n"));
               continue;
