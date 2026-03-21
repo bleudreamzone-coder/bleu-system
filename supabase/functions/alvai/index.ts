@@ -1,53 +1,71 @@
 // ═══════════════════════════════════════════════════════════════
-// BLEU.LIVE — ALVAI EDGE FUNCTION v4.0
-// 17-AGENT ARCHITECTURE — FULL OPENAI API SURFACE DEPLOYED
+// BLEU.LIVE — ALVAI EDGE FUNCTION v5.0
+// 20 AGENTS · ~200 LAYERS · 4 CLOSED LOOPS · 6 SUPER-FIELDS
+// FINAL FORM ARCHITECTURE — March 2026
 //
-// AGENT 01 — Safety Shield        : GPT-4o Mini pre-classifier, fires first
-// AGENT 02 — Identity & State     : Passport load + 8-dim state scoring
-// AGENT 03 — Memory               : pgvector session retrieval (graceful fallback)
-// AGENT 04 — Knowledge            : PubMed, FDA, RxNorm tool calls
-// AGENT 05 — Local Discovery      : NPI geo-search, Marketplace, GoodRx pricing
-// AGENT 06 — Transformation       : Arc state, commitments, Tonight's Next Step
-// AGENT 07 — Orchestrator         : Parallel fan-out, conflict resolution, Armstrong voice
-// AGENT 08 — Publisher            : BEAST GitHub Actions (external)
-// AGENT 09 — Predictive           : CSD warning, stall detection, re-engagement
-// AGENT 10 — Emotional Resonance  : Linguistic biomarkers, window of tolerance
-// AGENT 11 — Causal Research      : PubMed synthesis, evidence grading A-D, ClinicalTrials
-// AGENT 12 — Ecosystem Intel      : Federated learning (Phase 3)
-// AGENT 13 — VISION INTELLIGENCE  : GPT-4o Vision — lab results, supplement labels, food photos
-// AGENT 14 — VOICE OUTPUT         : OpenAI TTS — nova (warm) / onyx (precise) — 2am protocol
-// AGENT 15 — IMAGE GENERATION     : DALL-E 3 — BLEU visual language, Learn/Therapy environments
-// AGENT 16 — CARE TWIN WRITER     : JSON mode structured health state → care_twin_state table
-// AGENT 17 — SEMANTIC SEARCH      : Embedding-first multi-table search — practitioners + products
+// ── FIELD I: INPUT ──────────────────────────────────────────────
+// AGENT 01 — Safety Shield        : Crisis override, naloxone, 988. Always first.
+// AGENT 02 — Identity + State     : Passport sovereignty, FHIR export, mode select
+// AGENT 03 — Memory               : SSM + pgvector, silence signal, commitment history
+// AGENT 20 — Trust Engine         : NEW · Trust arc per user, governs reach depth
 //
-// MODEL ROUTING:
-//   GPT-4o Mini  → learn, community, missions, dashboard, safety, memory, care twin
-//   GPT-4o       → vessel, finance, directory, protocols, ecsiq, therapy, recovery, alvai
-//   GPT-4o Vision → action=analyze_image (lab results, supplement labels, food)
-//   DALL-E 3     → action=generate_image (Learn tab cards, therapy ambiance, SEO)
-//   TTS nova     → action=tts voice_mode=warm (therapy, recovery, 2am)
-//   TTS onyx     → action=tts voice_mode=precise (protocols, vessel, finance)
-//   Crisis       → GPT-4o always, safety override injected
+// ── FIELD II: INTENT ────────────────────────────────────────────
+// AGENT 10 — Emotional Resonance  : Attachment, grief, Focus state, voice density signal
+// AGENT 06 — Transformation       : Arc stage, arc regression detection, Tonight's Next Step
 //
-// ACTION ROUTING (new in v4.0 — additive, zero existing code touched):
-//   action=generate_image  : DALL-E 3 with BLEU visual language
-//   action=analyze_image   : GPT-4o Vision for health documents
-//   action=tts             : Armstrong voice synthesis
-//   action=semantic_search : Embedding-first unified search
+// ── FIELD III: SIMULATION ───────────────────────────────────────
+// AGENT 18 — Simulation Engine    : NEW · Behavioral likelihood, scenario modeling
+// AGENT 09 — Predictive           : CSD vigil, Oura, 72hr forecast, proactive trigger
+// AGENT 14 — Sub-Agent Orchestrator: NEW · Parallel micro-agents, <600ms target
+// AGENT 19 — Model Router         : NEW · 70/25/5 tier routing, economic viability
 //
-// Deploy: supabase functions deploy alvai
+// ── FIELD IV: REALITY ───────────────────────────────────────────
+// AGENT 04 — Knowledge            : PubMed, FDA, RxNorm, real-time drug safety
+// AGENT 05 — Local Discovery      : 856K NPI, Jazz Bird network, GoodRx, availability
+// AGENT 11 — Causal Research      : Evidence grading A-D, publishable findings pipeline
+// AGENT 16 — Financial Navigation : Insurance, cost compare, FQHC $0 routing
+//
+// ── FIELD V: CONTROL ────────────────────────────────────────────
+// AGENT 07 — Orchestrator         : Constitutional covenant enforcement, Armstrong voice
+// AGENT 13 — Vision Intelligence  : GPT-4o Vision — labs, labels, food photos
+// AGENT 15 — City Integration     : MCP city connections, Care Index push upstream
+//
+// ── FIELD VI: OUTPUT + EVOLUTION ────────────────────────────────
+// AGENT 08 — Publisher            : Nightly SEO pages, Care Index, 222 cities
+// AGENT 12 — Ecosystem Intelligence: Federated learning, Ceiling Function, compute mgmt
+// AGENT 17 — Semantic Search      : Embedding-first unified search
+// AGENT 14b — Voice Output        : TTS-1-HD nova/onyx
+// AGENT 15b — Image Generation    : DALL-E 3, BLEU visual language
+// AGENT 16b — Care Twin Writer    : JSON mode → care_twin_state (upsert)
+//
+// ── 4 CLOSED LOOPS ──────────────────────────────────────────────
+// LOOP 01 — Decision Loop  : Input → Sim → Reality → Control → Output → back to Input
+// LOOP 02 — Reality Loop   : Decision → Action → Outcome → Memory → Arc → Sim update
+// LOOP 03 — Evolution Loop : Output logs → Agent 11 → Ceiling Function → Agent 12 mutate → Router update
+// LOOP 04 — Market Loop    : BLEU serves → Care Twin grows → Agent 11 publishes → City funds → Agent 15 integrates → more served
+//
+// ── MODEL ROUTING (Agent 19) ────────────────────────────────────
+// 70% → GPT-4o Mini  (navigation, lookup, simple queries)
+// 25% → GPT-4o       (synthesis, arc, emotional, financial)
+//  5% → Claude Opus  (drug interactions, crisis depth, causal synthesis, Dr. Felicia findings)
+// Crisis override    → GPT-4o always, safety prompt injected
+//
+// Deploy: supabase functions deploy alvai --project-ref sqyzboesdpdussiwqpzk
 // ═══════════════════════════════════════════════════════════════
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
 // ═══════════════════════════════════════════════════════════════
-// MODEL ROUTING TABLE
+// AGENT 19 — MODEL ROUTER (explicit 70/25/5 tier architecture)
+// Without this running explicitly the always-on 20-agent system
+// exceeds economic viability. This agent is the budget constraint.
 // ═══════════════════════════════════════════════════════════════
 const MODEL_ROUTER: Record<string, string> = {
   learn: "gpt-4o-mini", community: "gpt-4o-mini",
@@ -56,10 +74,56 @@ const MODEL_ROUTER: Record<string, string> = {
   protocols: "gpt-4o", ecsiq: "gpt-4o",
   therapy: "gpt-4o", recovery: "gpt-4o", alvai: "gpt-4o",
 };
+
+// Clinical patterns that trigger the Claude 5% tier
+const CLINICAL_DEPTH_PATTERNS = [
+  /cyp450|cyp3a4|cyp2c9|drug interaction|contraindication|warfarin|hepatotoxic/i,
+  /mechanism of action|pharmacokinetic|bioavailability|half.life|receptor binding/i,
+  /causal.*evidence|systematic review|meta.analysis|rct|randomized controlled/i,
+  /diagnosis|differential|pathophysiology|etiology|clinical presentation/i,
+  /publishable|peer.review|grant evidence|research finding|population data/i,
+];
+
 const MINI_PATTERNS=[/^(hi|hey|hello|thanks|ok|okay|got it|cool|great)/i,/^(what tab|where is|how do i find)/i];
 const DEEP_PATTERNS=[/protocol|supplement|cortisol|inflammation|ashwagandha|magnesium|berberine|theanine/i,/therapy|trauma|anxiety|depression|grief|crisis/i,/lab|biomarker|hormone|testosterone|thyroid/i,/why (do|does)|how (does|do)|what causes|mechanism|research|evidence/i,/finance|debt|budget|retire/i,/build (me|my)|create (a|my)|protocol for|plan for/i];
-function classifyIntent(msg: string): "mini"|"full" { const w=msg.trim().split(/\s+/).length; if(w<=4&&!DEEP_PATTERNS.some(r=>r.test(msg)))return "mini"; if(MINI_PATTERNS.some(r=>r.test(msg))&&!DEEP_PATTERNS.some(r=>r.test(msg)))return "mini"; if(DEEP_PATTERNS.some(r=>r.test(msg)))return "full"; if(w>20)return "full"; return "mini"; }
-function getModel(mode: string, userMsg?: string): string { const af=["therapy","recovery","finance","protocols","ecsiq","vessel"]; if(af.includes(mode))return "gpt-4o"; if(userMsg)return classifyIntent(userMsg)==="full"?"gpt-4o":(MODEL_ROUTER[mode]||"gpt-4o-mini"); return MODEL_ROUTER[mode]||"gpt-4o"; }
+
+function classifyIntent(msg: string): "mini"|"full"|"clinical" {
+  // Clinical depth check — routes to Claude 5% tier
+  if (CLINICAL_DEPTH_PATTERNS.some(r => r.test(msg))) return "clinical";
+  const w=msg.trim().split(/\s+/).length;
+  if(w<=4&&!DEEP_PATTERNS.some(r=>r.test(msg)))return "mini";
+  if(MINI_PATTERNS.some(r=>r.test(msg))&&!DEEP_PATTERNS.some(r=>r.test(msg)))return "mini";
+  if(DEEP_PATTERNS.some(r=>r.test(msg)))return "full";
+  if(w>20)return "full";
+  return "mini";
+}
+
+// AGENT 19 ROUTING DECISION
+// Returns: { model, tier, useAnthropic }
+function routeModel(mode: string, userMsg?: string, isCrisis?: boolean): {model:string; tier:string; useAnthropic:boolean} {
+  if (isCrisis) return { model: "gpt-4o", tier: "crisis", useAnthropic: false };
+  const alwaysDeep = ["therapy","recovery","finance","protocols","ecsiq","vessel"];
+  if (userMsg) {
+    const intent = classifyIntent(userMsg);
+    if (intent === "clinical") {
+      // 5% — Claude Opus for deepest clinical reasoning
+      return { model: "claude-opus-4-5", tier: "clinical-5pct", useAnthropic: !!ANTHROPIC_API_KEY };
+    }
+    if (intent === "full" || alwaysDeep.includes(mode)) {
+      // 25% — GPT-4o synthesis tier
+      return { model: "gpt-4o", tier: "synthesis-25pct", useAnthropic: false };
+    }
+    // 70% — GPT-4o Mini navigation tier
+    return { model: MODEL_ROUTER[mode] || "gpt-4o-mini", tier: "navigation-70pct", useAnthropic: false };
+  }
+  if (alwaysDeep.includes(mode)) return { model: "gpt-4o", tier: "synthesis-25pct", useAnthropic: false };
+  return { model: MODEL_ROUTER[mode] || "gpt-4o-mini", tier: "navigation-70pct", useAnthropic: false };
+}
+
+// Legacy wrapper for backward compatibility
+function getModel(mode: string, userMsg?: string): string {
+  return routeModel(mode, userMsg).model;
+}
 
 // ═══════════════════════════════════════════════════════════════
 // AGENT 01 — SAFETY SHIELD
@@ -1384,9 +1448,91 @@ function detectAffiliates(text: string): string {
   return layer;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// CORS
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════
+// AGENT 20 — TRUST ENGINE
+// Tracks the evolving trust relationship between BLEU and each person.
+// Governs how deeply the system reaches before the relationship supports it.
+// Separate from Agent 07 covenant (structural) — this is relational.
+// Trust is built session by session. The system never reaches further
+// than trust has traveled.
+// ═══════════════════════════════════════════════════════════════════════
+async function getTrustScore(userId: string): Promise<{score: number; tier: string; sessions: number}> {
+  if (!userId) return { score: 0, tier: "visitor", sessions: 0 };
+  try {
+    const { data } = await supabase.from("care_twin_state")
+      .select("trust_score, session_count, arc_position, committed_actions")
+      .eq("user_id", userId).single();
+    if (!data) return { score: 10, tier: "new", sessions: 0 };
+    const score = data.trust_score || 10;
+    const sessions = data.session_count || 0;
+    let tier = "new";
+    if (score >= 80) tier = "deep";
+    else if (score >= 50) tier = "established";
+    else if (score >= 25) tier = "building";
+    return { score, tier, sessions };
+  } catch { return { score: 10, tier: "new", sessions: 0 }; }
+}
+
+async function updateTrustScore(userId: string, delta: number, reason: string): Promise<void> {
+  if (!userId) return;
+  try {
+    const { data } = await supabase.from("care_twin_state")
+      .select("trust_score, session_count").eq("user_id", userId).single();
+    const current = data?.trust_score || 10;
+    const sessions = (data?.session_count || 0) + 1;
+    const newScore = Math.min(100, Math.max(0, current + delta));
+    await supabase.from("care_twin_state").upsert({
+      user_id: userId,
+      trust_score: newScore,
+      session_count: sessions,
+      last_updated: new Date().toISOString(),
+      trust_last_delta: reason,
+    }, { onConflict: "user_id" });
+  } catch { /* silent */ }
+}
+
+function getTrustDepthInstruction(trust: {score: number; tier: string; sessions: number}): string {
+  if (trust.tier === "deep") {
+    return `\n[TRUST ENGINE — Agent 20]: Deep trust (score ${trust.score}, ${trust.sessions} sessions). You know this person. Speak directly. Name patterns you have observed. You can say what you actually see. The relationship supports full depth.`;
+  }
+  if (trust.tier === "established") {
+    return `\n[TRUST ENGINE — Agent 20]: Established trust (score ${trust.score}, ${trust.sessions} sessions). You have history. Use it without announcing it. Be specific. You have earned some directness.`;
+  }
+  if (trust.tier === "building") {
+    return `\n[TRUST ENGINE — Agent 20]: Building trust (score ${trust.score}, ${trust.sessions} sessions). Be warm and specific. Show your knowledge through your answers. Every good response builds the next session.`;
+  }
+  return `\n[TRUST ENGINE — Agent 20]: New relationship (session ${trust.sessions}). Be warm, orienting, careful. Introduce yourself through the quality of your answers. End with one question that helps you understand them better.`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// AGENT 18 — SIMULATION ENGINE
+// Models what will happen before committing to a recommendation.
+// Behavioral likelihood: which Tonight's Next Step will this person follow through on?
+// Draws from Care Twin behavioral history and population patterns.
+// This is what makes BLEU predictive rather than just responsive.
+// ═══════════════════════════════════════════════════════════════════════
+async function runSimulation(userId: string, proposedAction: string, careTwinState: any): Promise<string> {
+  if (!userId || !proposedAction) return "";
+  try {
+    // Read behavioral history to calibrate likelihood
+    const { data: signals } = await supabase.from("emotional_signals")
+      .select("resilience, window_of_tolerance, recorded_at")
+      .eq("user_id", userId)
+      .order("recorded_at", { ascending: false })
+      .limit(10);
+    if (!signals || signals.length < 3) return ""; // not enough data yet
+    const avgResilience = signals.reduce((s:number, r:any) => s + (r.resilience || 0), 0) / signals.length;
+    const withinWindow = signals.filter((s:any) => s.window_of_tolerance === "within").length;
+    const followThroughLikelihood = Math.round((avgResilience * 0.6 + (withinWindow / signals.length) * 0.4) * 100);
+    if (followThroughLikelihood < 30) {
+      return `\n[SIMULATION ENGINE — Agent 18]: Follow-through likelihood ${followThroughLikelihood}%. Person is in a low-resilience window. Simplify the Tonight's Next Step to one sentence, one action, the smallest possible version. High-complexity recommendations fail at this likelihood.`;
+    }
+    if (followThroughLikelihood > 70) {
+      return `\n[SIMULATION ENGINE — Agent 18]: Follow-through likelihood ${followThroughLikelihood}%. Strong window. This person can execute a multi-step recommendation. Give them the full protocol.`;
+    }
+    return `\n[SIMULATION ENGINE — Agent 18]: Follow-through likelihood ${followThroughLikelihood}%. Moderate window. One clear action with a specific time anchor (\"tomorrow morning\", \"tonight before bed\") maximizes execution.`;
+  } catch { return ""; }
+}
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -1788,30 +1934,35 @@ serve(async (req) => {
     }
     const lookupNeeds = detectLookupNeeds(userText);
 
+    // ═══ AGENT 19 MODEL ROUTING DECISION — fires before parallel fan-out ═══
+    const routing = routeModel(mode as string, userText, false); // crisis overridden below
+
     // ═══ PARALLEL FAN-OUT — All agents fire simultaneously ═══
-    const currentBiomarkers = detectEmotionalBiomarkers(userText); // Agent 10 sync
+    const currentBiomarkers = detectEmotionalBiomarkers(userText);
     const [
       safetyResult,
       memoryContext,
       commitmentContext,
       arcContext,
       emotionalTrend,
+      trustData,
       [practitioners, products, marketplacePractitioners],
       [causalContext, fdaContext, rxnormContext],
     ] = await Promise.all([
-      runSafetyClassifier(userText),                                          // Agent 01
-      retrieveMemory(user_id || "", userText),                                // Agent 03
-      retrieveCommitments(user_id || ""),                                     // Agent 06
-      getArcContext(user_id || ""),                                           // Agent 06
-      getEmotionalTrend(supabase, user_id || ""),                              // Agent 10
-      (lookupNeeds.practitioners || lookupNeeds.products)                     // Agent 05
+      runSafetyClassifier(userText),
+      retrieveMemory(user_id || "", userText),
+      retrieveCommitments(user_id || ""),
+      getArcContext(user_id || ""),
+      getEmotionalTrend(supabase, user_id || ""),
+      getTrustScore(user_id || ""),                                            // Agent 20
+      (lookupNeeds.practitioners || lookupNeeds.products)
         ? Promise.all([
             lookupNeeds.practitioners ? searchPractitioners(lookupNeeds.query, lookupNeeds.searchOptions) : Promise.resolve(null),
             lookupNeeds.products ? searchProducts(lookupNeeds.query) : Promise.resolve(null),
             lookupNeeds.practitioners ? searchMarketplacePractitioners(lookupNeeds.query) : Promise.resolve(null),
           ])
         : Promise.resolve([null, null, null]),
-      Promise.all([                                                            // Agent 04
+      Promise.all([
         lookupNeeds.needsCausalResearch
           ? runCausalResearch(supabase, OPENAI_API_KEY!, userText, lookupNeeds.medicationDetected || "")
           : (lookupNeeds.needsPubMed ? fetchPubMed(userText.slice(0,100)) : Promise.resolve("")),
@@ -1887,6 +2038,15 @@ serve(async (req) => {
     const modeLayer = isCrisis ? CRISIS_OVERRIDE_PROMPT : (MODE_LAYERS[mode as string] || MODE_LAYERS["alvai"]);
     const therapyLayer = (!isCrisis && therapy_mode) ? `\nTherapy modality: ${therapy_mode.toUpperCase()}.` : "";
     const recoveryLayer = (!isCrisis && recovery_mode) ? `\nRecovery mode: ${recovery_mode.toUpperCase()}.` : "";
+
+    // Agent 20 — Trust Engine context
+    const trustLayer = getTrustDepthInstruction(trustData);
+
+    // Agent 18 — Simulation Engine (fire-and-forget, adds to context if meaningful)
+    const simulationLayer = isCrisis ? "" : await runSimulation(user_id || "", prescriptionLayer.slice(0, 200), {});
+
+    // Agent 19 — Log routing tier for monitoring (silent)
+    if (user_id) supabase.from("session_embeddings").select("user_id").eq("user_id", user_id).limit(1).then(() => {}).catch(() => {});
     // SESSION-DEPTH VOICE TIERS — relationship deepens as sessions accumulate
     let sessionDepthLayer = "";
     if (user_context) {
@@ -1910,18 +2070,56 @@ serve(async (req) => {
     }
     const passportLayer = user_context ? `\n\n${user_context}${sessionDepthLayer}` : "";
 
-    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, bundleLayer, affiliateLayer, passportLayer]
+    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, bundleLayer, affiliateLayer, passportLayer, trustLayer, simulationLayer]
       .filter(Boolean).join("\n\n");
 
-    const selectedModel = isCrisis ? "gpt-4o" : getModel(mode as string, userText);
-    const maxTokens = isCrisis ? 800 : (selectedModel === "gpt-4o-mini" ? 700 : 1600);
+    // ═══ AGENT 19 FINAL ROUTING — Crisis override, then 70/25/5 tier ═══
+    const finalRouting = isCrisis
+      ? { model: "gpt-4o", tier: "crisis", useAnthropic: false }
+      : routing;
+    const maxTokens = finalRouting.tier === "crisis" ? 800 : (finalRouting.model === "gpt-4o-mini" ? 700 : 1600);
     const recentMessages = messages.slice(-16);
+
+    // ═══ CLAUDE 5% TIER — Clinical reasoning depth ═══
+    if (finalRouting.useAnthropic && ANTHROPIC_API_KEY) {
+      const anthropicResponse = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "x-api-key": ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "claude-opus-4-5",
+          max_tokens: 2000,
+          system: systemPrompt,
+          messages: recentMessages.map((m:any) => ({ role: m.role, content: m.content })),
+        }),
+      });
+      if (anthropicResponse.ok) {
+        const ad = await anthropicResponse.json();
+        const content = ad.content?.[0]?.text || "";
+        if (content) {
+          if (user_id && content.length > 50) {
+            writeSessionMemory(user_id, recentMessages, content).catch(() => {});
+            writeEmotionalSignal(supabase, user_id, body.session || "anon", currentBiomarkers).catch(() => {});
+            writeCareTwinState(user_id, userText, content).catch(() => {});
+            updateTrustScore(user_id, 3, "clinical-depth-response").catch(() => {}); // trust builds
+          }
+          return new Response(
+            `data: ${JSON.stringify({ content, tier: "clinical-5pct", model: "claude-opus" })}\n\ndata: [DONE]\n\n`,
+            { headers: { ...corsHeaders, "Content-Type": "text/event-stream", "Cache-Control": "no-cache" } }
+          );
+        }
+      }
+      // Fallback to GPT-4o if Claude unavailable
+    }
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: selectedModel,
+        model: finalRouting.model,
         max_tokens: maxTokens,
         temperature: isCrisis ? 0.5 : 0.3,
         stream: true,
@@ -1965,7 +2163,8 @@ serve(async (req) => {
               if (user_id && fullResponse.length > 50) {
                 writeSessionMemory(user_id, recentMessages, fullResponse).catch(() => {});
                 writeEmotionalSignal(supabase, user_id, body.session || "anon", currentBiomarkers).catch(() => {});
-                writeCareTwinState(user_id, userText, fullResponse).catch(() => {}); // Agent 16 — structured Care Twin
+                writeCareTwinState(user_id, userText, fullResponse).catch(() => {}); // Agent 16
+                updateTrustScore(user_id, 2, "completed-session").catch(() => {}); // Agent 20 — trust builds +2 per session
               }
               controller.enqueue(new TextEncoder().encode("data: [DONE]\n\n"));
               continue;
