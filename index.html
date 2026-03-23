@@ -807,6 +807,7 @@ button[type="submit"],
   <div data-tab="ecsiq" class="nav-tab" onclick="go('ecsiq')">ECSIQ</div>
   <div data-tab="sleep" class="nav-tab" onclick="go('sleep')">Sleep</div>
   <div data-tab="spirit" class="nav-tab" onclick="go('spirit')">Spirit</div>
+  <div data-tab="why" class="nav-tab" onclick="go('why')" style="color:rgba(201,168,76,.6)">Why BLEU</div>
 </nav>
 
 <!-- ═══════════════════════ HOME ═══════════════════════ -->
@@ -1025,7 +1026,7 @@ button[type="submit"],
 
     var cEl=document.getElementById("rc-continue");
     if(cEl && lastTab && lastTab!=="home"){
-      var names={passport:"Passport",dashboard:"Pulse",directory:"Find Care",vessel:"Supply",map:"City",learn:"Learn",community:"Community",therapy:"Therapy",finance:"Finance",recovery:"Recovery",ecsiq:"ECSIQ",sleep:"Sleep",spirit:"Spirit"};
+      var names={passport:"Passport",dashboard:"Pulse",directory:"Find Care",vessel:"Supply",map:"City",learn:"Learn",community:"Community",therapy:"Therapy",finance:"Finance",recovery:"Recovery",ecsiq:"ECSIQ",sleep:"Sleep",spirit:"Spirit",why:"Why BLEU"};
       cEl.textContent = "Continue in "+(names[lastTab]||lastTab)+" →";
       cEl.setAttribute("onclick","go('"+lastTab+"')");
       cEl.style.display = "inline-block";
@@ -6562,7 +6563,7 @@ async function updateBleScore(tab){if(!sbClient||!currentUser)return;try{const{d
 
 const ALVAI='https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai'
 const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw'
-const tabs=['home','alvai','dashboard','directory','vessel','map','protocols','learn','community','passport','therapy','finance','missions','recovery','ecsiq','sleep','enterprise','spirit','terms','privacy']
+const tabs=['home','alvai','dashboard','directory','vessel','map','protocols','learn','community','passport','therapy','finance','missions','recovery','ecsiq','sleep','enterprise','spirit','why','terms','privacy']
 const chatHistories={},chatModes={therapy:'talk',recovery:'sobriety'}
 tabs.forEach(t=>chatHistories[t]=[])
 
@@ -9273,6 +9274,7 @@ window.addEventListener('DOMContentLoaded',function(){
     'ecsiq': "<span style='color:#C9A84C;font-size:12px;letter-spacing:2px;text-transform:uppercase'>ENDOCANNABINOID INTELLIGENCE</span><br><br>Discovered in 1992. The largest receptor network in the human body. Still ignored by most doctors 33 years later. Clinical Endocannabinoid Deficiency underlies fibromyalgia, migraine, and IBS. BLEU ECSIQ is built around understanding it properly.<br><br><span style='color:#7B8DA6;font-style:italic'>What do you want to understand about your endocannabinoid system?</span>",
     'sleep': "<span style='color:#C9A84C;font-size:12px;letter-spacing:2px;text-transform:uppercase'>SLEEP INTELLIGENCE</span><br><br>One bad night raises Alzheimer's-linked proteins in your brain. A week of poor sleep rewrites 700 genes. Chronic short sleep costs roughly 1.7 biological years per decade. This is not about discipline. It is molecular biology. And it is fixable.<br><br><span style='color:#7B8DA6;font-style:italic'>What is happening with your sleep right now?</span>",
     'enterprise': "<span style='color:#C9A84C;font-size:12px;letter-spacing:2px;text-transform:uppercase'>ENTERPRISE</span><br><br>The healthiest employees produce more, stay longer, and cost less. Hotel Monteleone. Royal Street. 400 employees. The proof of concept is already running. Documented 23 to 1 return on investment.<br><br><span style='color:#7B8DA6;font-style:italic'>Tell me about your organization and what problem you are trying to solve.</span>",
+    'why': "<span style='color:#d4af37;font-size:12px;letter-spacing:2px;text-transform:uppercase'>CLINICAL DECISION INFRASTRUCTURE</span><br><br>ChatGPT knows everything about health. BLEU knows you. Nine structural advantages built into the system — not marketing claims, technical reality.",
     'spirit': "<span style='color:#C9A84C;font-size:12px;letter-spacing:2px;text-transform:uppercase'>MEANING IS MEDICINE</span><br><br>Viktor Frankl survived four concentration camps by finding a reason to continue. Purpose reduces all-cause mortality by 23 percent. Telomerase -- the enzyme protecting your chromosomes -- activates in states of meaning. This is not philosophy. This is measurable biology.<br><br><span style='color:#7B8DA6;font-style:italic'>What does purpose feel like for you right now?</span>",
     'map': "<span style='color:#C9A84C;font-size:12px;letter-spacing:2px;text-transform:uppercase'>CITY INTELLIGENCE</span><br><br>New Orleans scores 40 out of 100. Louisiana ranked 50th nationally. 9th Ward scores 24. Central City scores 28. 855,000 practitioners mapped. 32 crises documented with peer-reviewed evidence.<br><br><span style='color:#7B8DA6;font-style:italic'>What do you want to know about health in New Orleans?</span>"
   };
@@ -11109,6 +11111,182 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
   </div></div>
 
 <!-- ═══════════════════════ SPIRIT ═══════════════════════ -->
+
+<div class="panel" id="p-why">
+<style>
+.why-hero{text-align:center;padding:60px 24px 40px;position:relative;overflow:hidden}
+.why-hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%);pointer-events:none}
+.why-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,6vw,64px);font-weight:300;color:var(--cream);line-height:1.1;margin-bottom:12px}
+.why-headline em{color:var(--gold);font-style:italic}
+.why-sub{font-size:14px;color:rgba(240,236,228,0.5);max-width:520px;margin:0 auto 32px;line-height:1.7}
+.why-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:30px;padding:8px 18px;font-size:12px;color:var(--gold);letter-spacing:.05em}
+.why-split{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin:0 16px 32px}
+.why-col{background:#0b1018;padding:24px 18px}
+.why-col.bleu-col{background:rgba(201,168,76,0.03)}
+.why-col-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,236,228,0.25);margin-bottom:10px}
+.why-col-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream);margin-bottom:8px}
+.why-col-name.gold{color:var(--gold)}
+.why-col-item{font-size:11px;color:rgba(240,236,228,0.45);line-height:1.5;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.why-col-item.gold{color:rgba(201,168,76,0.8)}
+.why-adv{margin:0 16px 8px;background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:18px;display:grid;grid-template-columns:32px 1fr 1fr;gap:0;transition:border-color .2s}
+.why-adv:hover{border-color:rgba(201,168,76,0.2)}
+.why-adv-num{font-family:'Cormorant Garamond',serif;font-size:13px;color:rgba(240,236,228,0.2);padding-top:2px}
+.why-adv-bleu{padding-left:16px;border-left:1px solid rgba(255,255,255,0.05)}
+.why-adv-title{font-size:13px;font-weight:500;color:var(--cream);margin-bottom:4px}
+.why-adv-text{font-size:11px;color:rgba(240,236,228,0.45);line-height:1.55}
+.why-adv-gold{font-size:11px;color:rgba(201,168,76,0.8);line-height:1.55}
+.why-final{text-align:center;padding:48px 24px 32px}
+.why-quote{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,3vw,30px);font-weight:300;color:var(--cream);line-height:1.4;max-width:700px;margin:0 auto 16px}
+.why-quote em{color:var(--gold);font-style:italic}
+.why-attr{font-size:11px;color:rgba(240,236,228,0.25);letter-spacing:.08em}
+.why-cta-btn{display:inline-flex;align-items:center;gap:6px;margin-top:24px;padding:12px 24px;background:var(--gold);color:#0b1018;border-radius:30px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s}
+.why-cta-btn:hover{opacity:.88;transform:translateY(-1px)}
+@media(max-width:600px){.why-split{grid-template-columns:1fr}.why-adv{grid-template-columns:24px 1fr}}
+</style>
+
+<div class="why-hero">
+  <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,236,228,0.25);margin-bottom:20px">BLEU · Clinical Decision Infrastructure</div>
+  <h1 class="why-headline">ChatGPT knows everything<br>about health.<br><em>BLEU knows you.</em></h1>
+  <p class="why-sub">ChatGPT and Claude answer questions and stop there. BLEU resolves conditions, delivers protocols, executes transactions, tracks outcomes, and compounds trust over a lifetime.</p>
+  <div class="why-pill">✦ 9 structural advantages — built into the system</div>
+</div>
+
+<div class="why-split">
+  <div class="why-col">
+    <div class="why-col-label">Intelligence tool</div>
+    <div class="why-col-name">ChatGPT</div>
+    <div class="why-col-item">Answers health questions</div>
+    <div class="why-col-item">Resets every session</div>
+    <div class="why-col-item">No clinical databases</div>
+    <div class="why-col-item">No transaction capability</div>
+    <div class="why-col-item">No outcome tracking</div>
+  </div>
+  <div class="why-col">
+    <div class="why-col-label">Intelligence tool</div>
+    <div class="why-col-name">Claude</div>
+    <div class="why-col-item">Thoughtful reasoning</div>
+    <div class="why-col-item">No persistent clinical memory</div>
+    <div class="why-col-item">No structured drug data</div>
+    <div class="why-col-item">No NPI lookup</div>
+    <div class="why-col-item">No transaction completion</div>
+  </div>
+  <div class="why-col bleu-col">
+    <div class="why-col-label">Clinical decision infrastructure</div>
+    <div class="why-col-name gold">BLEU</div>
+    <div class="why-col-item gold">Passport — world model per user</div>
+    <div class="why-col-item gold">302K drug interaction pairs</div>
+    <div class="why-col-item gold">855K NPI-verified practitioners</div>
+    <div class="why-col-item gold">Inline Stripe checkout</div>
+    <div class="why-col-item gold">Day 7 + 25 outcome tracking</div>
+  </div>
+</div>
+
+<div class="why-adv">
+  <div class="why-adv-num">01</div>
+  <div style="padding:0 12px">
+    <div class="why-adv-title">Persistent Clinical Identity</div>
+    <div class="why-adv-text">Others: "Tell me about your health situation." Every session starts over.</div>
+  </div>
+  <div class="why-adv-bleu">
+    <div class="why-adv-gold">"Your cortisol has been elevated 3 weeks. Last Tuesday's protocol improved your sleep score 18%. Tonight's next step:"</div>
+  </div>
+</div>
+
+<div class="why-adv">
+  <div class="why-adv-num">02</div>
+  <div style="padding:0 12px">
+    <div class="why-adv-title">302K Drug Interaction Pairs</div>
+    <div class="why-adv-text">ChatGPT has training data. BLEU has structured clinical databases firing in real time — CYP450, UGT, P-gp pathways.</div>
+  </div>
+  <div class="why-adv-bleu">
+    <div class="why-adv-gold">Every recommendation checked against your medication list before surfacing. No other consumer AI does this.</div>
+  </div>
+</div>
+
+<div class="why-adv">
+  <div class="why-adv-num">03</div>
+  <div style="padding:0 12px">
+    <div class="why-adv-title">Human Clinical Authority</div>
+    <div class="why-adv-text">No AI platform has a credentialed DCN, RDN, FACSM signing off on every protocol.</div>
+  </div>
+  <div class="why-adv-bleu">
+    <div class="why-adv-gold">Dr. Felicia Stoler's authority transfers to every user interaction. That's the moat nobody replicates overnight.</div>
+  </div>
+</div>
+
+<div class="why-adv">
+  <div class="why-adv-num">04</div>
+  <div style="padding:0 12px">
+    <div class="why-adv-title">Transaction Completion</div>
+    <div class="why-adv-text">Every other AI informs and stops. The user must search, compare, navigate, purchase elsewhere. The loop never closes.</div>
+  </div>
+  <div class="why-adv-bleu">
+    <div class="why-adv-gold">ALVAI speaks → cart appears inline → user taps → order confirmed. All inside one conversation. Zero exits.</div>
+  </div>
+</div>
+
+<div class="why-adv">
+  <div class="why-adv-num">05</div>
+  <div style="padding:0 12px">
+    <div class="why-adv-title">222 City Cultural Rootedness</div>
+    <div class="why-adv-text">Not territory-based replication. Each city born from its culture. New Orleans first — a city that heals through music, food, and community.</div>
+  </div>
+  <div class="why-adv-bleu">
+    <div class="why-adv-gold">neworleans.bleu.live knows Rouses, knows NOLA practitioners, knows Jazz Fest. Every city gets its own ecosystem.</div>
+  </div>
+</div>
+
+<div class="why-adv">
+  <div class="why-adv-num">06</div>
+  <div style="padding:0 12px">
+    <div class="why-adv-title">Causal Research Pipeline</div>
+    <div class="why-adv-text">General AI generates no causal data. Every conversation produces no research output.</div>
+  </div>
+  <div class="why-adv-bleu">
+    <div class="why-adv-gold">Jazz Bird CAUSES outcomes. Every interaction is a research data point. PCORI + Google.org grants in active application.</div>
+  </div>
+</div>
+
+<div class="why-adv">
+  <div class="why-adv-num">07</div>
+  <div style="padding:0 12px">
+    <div class="why-adv-title">Zero Ad Revenue. Ever.</div>
+    <div class="why-adv-text">Structurally impossible for Google or Meta to replicate. Their business model requires ads.</div>
+  </div>
+  <div class="why-adv-bleu">
+    <div class="why-adv-gold">The only revenue is user outcomes. Every recommendation exists because it works — never because an advertiser paid.</div>
+  </div>
+</div>
+
+<div class="why-adv">
+  <div class="why-adv-num">08</div>
+  <div style="padding:0 12px">
+    <div class="why-adv-title">Model-Agnostic Intelligence</div>
+    <div class="why-adv-text">ChatGPT and Claude are single models. Improvements require model updates.</div>
+  </div>
+  <div class="why-adv-bleu">
+    <div class="why-adv-gold">BLEU sits above the AI layer. Uses Claude, GPT, any future model as components. Better AI improves BLEU automatically.</div>
+  </div>
+</div>
+
+<div class="why-adv">
+  <div class="why-adv-num">09</div>
+  <div style="padding:0 12px">
+    <div class="why-adv-title">The 2am Moment</div>
+    <div class="why-adv-text">Others: provide information about anxiety, list options, suggest consulting a professional. User closes tab. Nothing changes.</div>
+  </div>
+  <div class="why-adv-bleu">
+    <div class="why-adv-gold">Recognizes the user. Identifies the cause. Surfaces BetterHelp + protocol. User acts. Outcome tracked. Loop closes.</div>
+  </div>
+</div>
+
+<div class="why-final">
+  <p class="why-quote">"As intelligence becomes commoditized, the system that controls decisions and outcomes becomes the <em>dominant layer.</em> BLEU is that system."</p>
+  <div class="why-attr">Jazz Bird 501(c)(3) · bleu.live · 533 commits · 29 agents · Dr. Felicia Stoler DCN RDN FACSM</div>
+  <button class="why-cta-btn" onclick="go('home')">Experience BLEU →</button>
+</div>
+</div>
+
 <div class="panel" id="p-spirit">
   <style>
     @keyframes spiritglow{0%,100%{opacity:.04;transform:scale(1)}50%{opacity:.1;transform:scale(1.06)}}
