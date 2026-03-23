@@ -1897,13 +1897,23 @@ async function runSemanticSearch(query: string, userLocation: string = ""): Prom
 // 2. Thorne (thorne.com) — NSF Certified for Sport, Dr. Felicia approved, 15-20%
 // 3. Pure Encapsulations (pureencapsulations.com) — hypoallergenic, no fillers, 10-15%
 // 4. Vitacost (vitacost.com) — direct pricing, 8-12%
-// 5. Amazon (amazon.com?tag=bleu-live-20) — HSA-eligible products, 4-8%
+// 5. Amazon (amazon.com/?tag=bleulive-20) — HSA-eligible products, 4-8%
 // METABOLIC AFFILIATES:
 // Function Health (functionhealth.com) — 100+ biomarkers, $499/yr, 15-20%
 // InsideTracker (insidetracker.com) — biological age, 15-20%
 // Oura Ring (ouraring.com) — HRV + sleep, 10-15%
 // Levels CGM (levelshealth.com) — continuous glucose monitoring, 10-15%
+// GROCERY/FOOD: Instacart (instacart.com/store?affiliate=bleu) — $10/new user
+// MEALS: Factor (factor75.com?code=bleu) — $10/signup
 // CLINICAL TELEHEALTH (Agent 10 emotional gate required):
+// BetterHelp (betterhelp.com/bleu) — therapy/anxiety/stress, $100+ CPA — SURFACE FIRST for any anxiety/stress/mental health mention
+// WRITING RULES — NON-NEGOTIABLE:
+// 1. Write at a 9th grade reading level. No jargon. No clinical terms without plain explanation.
+// 2. Every sentence must be complete. Never cut off mid-thought.
+// 3. If you mention exercise, say "a brisk 30-minute walk" not "Zone 2 cardio"
+// 4. If you mention HPA axis or any medical term, explain it in one plain sentence immediately after.
+// 5. Max 3 paragraphs per response. Short. Clear. Human.
+// 6. Always surface BetterHelp card immediately when user mentions anxiety, stress, overwhelm, worry, panic, depression — do not wait for Agent 10 gate.
 // Brightside Health (brightside.com) — depression/anxiety, $50-150 CPA
 // Done (donefirst.com) — ADHD, $100-200 CPA
 // Cerebral (cerebral.com) — psychiatry, $65-100 CPA
