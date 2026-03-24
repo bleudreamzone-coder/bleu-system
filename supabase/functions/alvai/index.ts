@@ -1447,7 +1447,7 @@ function detectAffiliates(text: string): string {
   if (/anxiety|anxious|stress|cortisol|panic|worry/.test(msg)) relevant.push("anxiety");
   if (/inflam|pain|joint|arthritis|omega|fish oil/.test(msg)) relevant.push("inflammation");
   if (/energy|fatigue|tired|exhausted|brain fog|focus/.test(msg)) relevant.push("energy");
-  if (/therapist|therapy|counselor|mental health|betterhelp|talkspace/.test(msg)) relevant.push("therapy");
+  if (/therapist|therapy|counselor|mental.?health|betterhelp|talkspace|anxious|anxiety|panic|depress|overwhelm|burnout|trauma/.test(msg)) relevant.push("therapy");
   if (/prescription|medication|rx|pharmacy|goodrx|afford/.test(msg)) relevant.push("prescription");
   if (/gym|workout|exercise|yoga|fitness|classpass/.test(msg)) relevant.push("fitness");
   if (/cannabis|cbd|thc|marijuana|hemp|weed/.test(msg)) relevant.push("cannabis");
