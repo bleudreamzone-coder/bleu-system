@@ -11713,6 +11713,65 @@ var h=document.getElementById('p-home');if(!h)return;
 const STRIPE_PK = 'pk_live_51ShZN7K4cATmIFbo3tKd8kNUDAIiuaIFnNVI0uXcF5XBnjOFBCYsQLa4RJFCS5ryMwrcOcOHWe8xkuz30chjc1HW00mSzmlrCW';
 const PRICE_PIONEER_FREE = 'price_1TD6geK4cATmIFboP4HWA3OB'; // Pioneer 12-month founding (free)
 const PRICE_PRO = 'price_1TBPtAK4cATmIFboFVb9m0QN'; // PRO $9.99/mo
+
+// ═══ BLEU PROTOCOL BUNDLES ═══
+const PRICE_SLEEP    = 'price_1TEKQmK4cATmIFbokmkYg47S'; // Sleep Reset Protocol $49/mo
+const PRICE_STRESS   = 'price_1TEKS6K4cATmIFbo1OW7BeCW'; // Stress Protocol $45/mo
+const PRICE_LONGEVITY= 'price_1TEKSWK4cATmIFbojDTEJng9'; // Longevity Core Protocol $69/mo
+const PRICE_GUT      = 'price_1TEKSsK4cATmIFbouxOBHtwQ'; // Gut Reset Protocol $55/mo
+
+function bleuProtocolCheckout(protocol) {
+  const prices = {
+    sleep: PRICE_SLEEP, stress: PRICE_STRESS,
+    longevity: PRICE_LONGEVITY, gut: PRICE_GUT
+  };
+  const names = {
+    sleep: 'Sleep Reset Protocol — $49/mo',
+    stress: 'Stress Protocol — $45/mo',
+    longevity: 'Longevity Core Protocol — $69/mo',
+    gut: 'Gut Reset Protocol — $55/mo'
+  };
+  const items = {
+    sleep: ['Magnesium Glycinate 400mg','L-Theanine 200mg','Melatonin 0.5mg','Ashwagandha KSM-66'],
+    stress: ['Ashwagandha KSM-66 300mg','Magnesium Bisglycinate','L-Theanine 200mg','Rhodiola Rosea'],
+    longevity: ['Omega-3 EPA/DHA 1280mg','Vitamin D3+K2 5000IU','Creatine 5g','Collagen 10g'],
+    gut: ['Probiotic 50B CFU','L-Glutamine 5g','Digestive Enzymes','Zinc Carnosine']
+  };
+  var priceId = prices[protocol];
+  var name = names[protocol] || 'BLEU Protocol';
+  var stack = items[protocol] || [];
+  if (!priceId) return;
+
+  // Remove existing overlay
+  var old = document.getElementById('bleu-proto-sheet');
+  if (old) old.remove();
+
+  var overlay = document.createElement('div');
+  overlay.id = 'bleu-proto-sheet';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(16px);z-index:99999;display:flex;align-items:flex-end;justify-content:center';
+
+  overlay.innerHTML = '<div style="width:100%;max-width:540px;background:#0b1018;border-radius:24px 24px 0 0;border:1px solid rgba(201,168,76,0.2);padding:28px 24px 48px;animation:bleuSheetUp .4s cubic-bezier(.16,1,.3,1)">'
+    +'<div style="width:36px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin:0 auto 20px"></div>'
+    +'<div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(201,168,76,0.6);margin-bottom:8px;font-family:DM Sans,sans-serif">BLEU Wellness Protocol</div>'
+    +'<div style="font-family:Cormorant Garamond,Georgia,serif;font-size:22px;font-weight:300;color:#f0ece4;margin-bottom:4px">'+name+'</div>'
+    +'<div style="font-size:11px;color:rgba(240,236,228,0.4);margin-bottom:20px">Dr. Felicia Stoler DCN RDN FACSM · Clinical oversight · Cancel anytime</div>'
+    +'<div style="margin-bottom:20px">'
+    +stack.map(function(item){return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:rgba(240,236,228,0.75)"><span style="color:#C9A84C;font-size:11px">✓</span>'+item+'</div>';}).join('')
+    +'</div>'
+    +'<button onclick="startPaidCheckout(''+priceId+'')" style="width:100%;padding:16px;background:#C9A84C;color:#0b1018;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;font-family:DM Sans,sans-serif;margin-bottom:12px">Activate Protocol — Inside BLEU →</button>'
+    +'<div style="text-align:center;font-size:11px;color:rgba(240,236,228,0.3)">Or get individual items: <a href="https://amazon.com?tag=bleulive-20" target="_blank" style="color:rgba(240,236,228,0.5)">Amazon</a> · <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" style="color:rgba(240,236,228,0.5)">Fullscript</a></div>'
+    +'</div>';
+
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+
+  if (!document.getElementById('bleu-sheet-style')) {
+    var st = document.createElement('style');
+    st.id = 'bleu-sheet-style';
+    st.textContent = '@keyframes bleuSheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}';
+    document.head.appendChild(st);
+  }
+  document.body.appendChild(overlay);
+}
 // price_1TD6hnK4cATmIFboH73q77gN archived (old $19.99 tier)
 let stripeInstance = null;
 
