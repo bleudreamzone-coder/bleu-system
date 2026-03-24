@@ -1103,7 +1103,8 @@ const PROTOCOL_BUNDLES: Record<string, {
   name: string;
   items: string[];
   amazon_cart: string;
-  iherb_cart: string;
+  fullscript_cart: string;
+  stripe_price_id: string;
   duration: string;
   est_cost: string;
 }> = {
@@ -1111,7 +1112,8 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Sleep Restoration Protocol",
     items: ["Magnesium Glycinate 400mg", "L-Theanine 200mg", "Insight Timer (free)"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00M9D42HM&Quantity.1=1&ASIN.2=B001DZKHGA&Quantity.2=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://us.fullscript.com/catalog?q=magnesium+glycinate+l-theanine&",
+    fullscript_cart: "https://us.fullscript.com/welcome/fstoler",
+    stripe_price_id: "price_1TEKQmK4cATmIFbokmkYg47S",
     duration: "21 days",
     est_cost: "~$28/mo",
   },
@@ -1119,7 +1121,8 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Cortisol Sleep Protocol",
     items: ["Ashwagandha KSM-66 600mg", "Phosphatidylserine 200mg", "Magnesium Glycinate 400mg"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00M9D42HM&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://us.fullscript.com/catalog?q=ashwagandha+ksm66+phosphatidylserine&",
+    fullscript_cart: "https://us.fullscript.com/welcome/fstoler",
+    stripe_price_id: "price_1TEKQmK4cATmIFbokmkYg47S",
     duration: "42 days",
     est_cost: "~$45/mo",
   },
@@ -1127,7 +1130,8 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Anxiety Relief Protocol",
     items: ["L-Theanine 200mg", "Ashwagandha KSM-66 300mg", "Magnesium Glycinate 300mg"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B001DZKHGA&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://us.fullscript.com/catalog?q=l-theanine+ashwagandha+magnesium&",
+    fullscript_cart: "https://us.fullscript.com/welcome/fstoler",
+    stripe_price_id: "price_1TEKS6K4cATmIFbo1OW7BeCW",
     duration: "30 days",
     est_cost: "~$35/mo",
   },
@@ -1135,7 +1139,8 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Anti-Inflammation Protocol",
     items: ["Omega-3 EPA/DHA 2000mg", "Curcumin Phytosome 500mg", "Vitamin D3+K2 5000IU"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B002CQU564&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://us.fullscript.com/catalog?q=omega3+curcumin+phytosome+vitamin+d3&",
+    fullscript_cart: "https://us.fullscript.com/welcome/fstoler",
+    stripe_price_id: "price_1TEKSWK4cATmIFbojDTEJng9",
     duration: "60 days",
     est_cost: "~$55/mo",
   },
@@ -1143,7 +1148,8 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Energy + Focus Protocol",
     items: ["CoQ10 Ubiquinol 200mg", "Vitamin D3+K2 5000IU", "Vitamin B-Complex"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00I5JV0AC&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://us.fullscript.com/catalog?q=ubiquinol+200mg+vitamin+d3+b-complex&",
+    fullscript_cart: "https://us.fullscript.com/welcome/fstoler",
+    stripe_price_id: "price_1TEKSWK4cATmIFbojDTEJng9",
     duration: "30 days",
     est_cost: "~$42/mo",
   },
@@ -1151,7 +1157,8 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Mood + Mental Health Protocol",
     items: ["Omega-3 EPA-dominant 2000mg", "Vitamin D3 5000IU", "Magnesium Glycinate 400mg"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B002CQU564&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://us.fullscript.com/catalog?q=omega3+epa+vitamin+d3+magnesium+glycinate&",
+    fullscript_cart: "https://us.fullscript.com/welcome/fstoler",
+    stripe_price_id: "price_1TEKS6K4cATmIFbo1OW7BeCW",
     duration: "60 days",
     est_cost: "~$40/mo",
   },
@@ -1159,7 +1166,8 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Longevity & Performance Protocol",
     items: ["CoQ10 Ubiquinol 200mg", "Omega-3 EPA/DHA 2000mg", "Magnesium Glycinate 400mg", "Vitamin D3+K2 5000IU"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B00I5JV0AC&Quantity.1=1&ASIN.2=B002CQU564&Quantity.2=1&ASIN.3=B00M9D42HM&Quantity.3=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://us.fullscript.com/catalog?q=ubiquinol+omega3+magnesium+glycinate+vitamin+d3&",
+    fullscript_cart: "https://us.fullscript.com/welcome/fstoler",
+    stripe_price_id: "price_1TEKSWK4cATmIFbojDTEJng9",
     duration: "90 days",
     est_cost: "~$75/mo",
   },
@@ -1168,7 +1176,8 @@ const PROTOCOL_BUNDLES: Record<string, {
     name: "Metabolic Reset Protocol",
     items: ["Berberine HCl 1500mg", "Chromium Picolinate 400mcg", "Omega-3 2000mg"],
     amazon_cart: "https://www.amazon.com/cart/add?ASIN.1=B07BG2CNKD&Quantity.1=1&AssociateTag=bleu-live-20",
-    iherb_cart: "https://us.fullscript.com/catalog?q=berberine+chromium+omega3&",
+    fullscript_cart: "https://us.fullscript.com/welcome/fstoler",
+    stripe_price_id: "price_1TEKSWK4cATmIFbojDTEJng9",
     duration: "90 days",
     est_cost: "~$38/mo",
   },
@@ -1185,8 +1194,12 @@ function generateBundleCart(paths: string[]): string {
     `INCLUDES: ${bundle.items.join(", ")}\n` +
     `DURATION: ${bundle.duration} | COST: ${bundle.est_cost}\n` +
     `AMAZON CART (all items pre-loaded, one-click checkout): ${bundle.amazon_cart}\n` +
-    `IHERB CART (alternative, code BLEU auto-applied): ${bundle.iherb_cart}\n` +
-    `INSTRUCTION: This line is MANDATORY after your closing question — copy it exactly substituting the values: "Your complete ${bundle.name} is built — ${bundle.amazon_cart} — one click, ships tomorrow."\n`;
+    `IHERB CART (alternative, 20% below retail, Dr. Stoler clinical oversight): ${bundle.iherb_cart}\n` +
+    `COMMERCE PRIORITY — MANDATORY:
+1. AMAZON (primary): ${bundle.amazon_cart} — ships tomorrow, tag bleulive-20
+2. FULLSCRIPT DISPENSARY (clinical): https://us.fullscript.com/welcome/fstoler — 20% below retail, Dr. Stoler oversight
+3. STRIPE SUBSCRIPTION (owned): price_id=${bundle.stripe_price_id} — $${bundle.est_cost}/mo inside BLEU
+INSTRUCTION: End EVERY full protocol response with exactly: "Your complete ${bundle.name} is on Amazon — ${bundle.amazon_cart} — one click, ships tomorrow. Or subscribe through the Bleu Wellness Dispensary for clinical-grade sourcing and 20% below retail."\n`;
 }
 
 function classifyPathway(msg: string, biomarkers: any): string[] {
@@ -1900,7 +1913,7 @@ async function runSemanticSearch(query: string, userLocation: string = ""): Prom
 // MAIN HANDLER — AGENT 07: ORCHESTRATOR
 // ═══════════════════════════════════════════════════════════════
 // BLEU COMMERCE LAYER
-// SUPPLEMENT AFFILIATES (priority order — NO iHerb, NEVER mention iHerb):
+// SUPPLEMENT AFFILIATES (priority order — NO Fullscript, NEVER mention Fullscript):
 // 1. Fullscript (fullscript.com/plans/bleuplatform) — practitioner-grade catalog, 10-15% referral
 // 2. Thorne (thorne.com) — NSF Certified for Sport, Dr. Felicia approved, 15-20%
 // 3. Pure Encapsulations (pureencapsulations.com) — hypoallergenic, no fillers, 10-15%
