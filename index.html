@@ -807,13 +807,13 @@ button[type="submit"],
     }
 
     // 2. HOME HERO — city-aware headline + note
-    var heroTitle = document.querySelector('#p-home .hero-title');
+    var heroTitle = document.getElementById('home-hero-title');
     if (heroTitle) {
       heroTitle.innerHTML = 'BLEU <span class="accent">'+city+'</span><br><span class="teal" style="font-size:.6em;font-weight:300">Longevity Operating System</span>';
     }
 
     // 3. HOME SUB — city cultural note
-    var heroSub = document.querySelector('.hero-sub');
+    var heroSub = document.querySelector('#p-home .hero-sub');
     if (heroSub && note) {
       heroSub.innerHTML = note + '<br><span style="font-size:13px;opacity:.6">Clinical oversight by Dr. Felicia Stoler, DCN RDN FACSM · 855K practitioners · 302K drug interactions</span>';
     }
@@ -826,6 +826,8 @@ button[type="submit"],
 
     // 5. ALVAI — pre-load city context into first message
     var cityContext = 'I am in '+city+'. '+note;
+    var greetEl = document.querySelector('.greet-fade');
+    if (greetEl && note) { greetEl.textContent = note; greetEl.style.color = primary; }
     window.BLEU_CITY_CONTEXT = cityContext;
 
     // 6. PAGE TITLE
@@ -905,7 +907,7 @@ button[type="submit"],
 <div id="tw-home" style="display:none"></div>
 
       <div class="hf3" style="margin-bottom:10px">
-        <h1 class="hero-title" style="font-family:Georgia,serif;font-size:clamp(30px,5.5vw,52px);font-weight:300;line-height:1.1;color:#e2e8f0;margin:0">
+        <h1 class="hero-title" id="home-hero-title" style="font-family:Georgia,serif;font-size:clamp(30px,5.5vw,52px);font-weight:300;line-height:1.1;color:#e2e8f0;margin:0">
           Everything you need<br>to <em style="color:#4ecdc4;font-style:italic">heal</em> &mdash; in one place.
         </h1>
       </div>
