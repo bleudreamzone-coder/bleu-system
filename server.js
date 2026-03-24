@@ -910,6 +910,11 @@ const server = http.createServer((req, res) => {
     const slug = pn.slice(8);
     if (serveDistFile(res, _path.join(DIST,'cities',slug+'.html'))) return;
   }
+  if(pn==='/sitemap.xml'){serveDist(res,_path2.join(DIST2,'sitemap.xml'));return;}
+  if(pn==='/robots.txt'){serveDist(res,_path2.join(DIST2,'robots.txt'));return;}
+  const cm=pn.match(/^\/(sleep|anxiety|gut)(\/(.+))?$/);
+  if(cm){const fp=cm[3]?_path2.join(DIST2,cm[1],cm[3]+'.html'):_path2.join(DIST2,cm[1],'index.html');if(serveDist(res,fp))return;}
+  if(pn.startsWith('/cities/')){if(serveDist(res,_path2.join(DIST2,'cities',pn.slice(8)+'.html')))return;}
   json(res, 404, { error: 'Not found' });
 });
 
@@ -932,6 +937,21 @@ function serveDistFile(res, filepath) {
   return false;
 }
 
+
+// ═══ BLEU DIST ROUTER ═══
+const _fs2 = require('fs');
+const _path2 = require('path');
+const DIST2 = _path2.join(__dirname, 'dist');
+function serveDist(res, fp) {
+  if (_fs2.existsSync(fp)) {
+    const ext = _path2.extname(fp);
+    const ct = ext==='.xml'?'text/xml':ext==='.txt'?'text/plain':'text/html';
+    res.writeHead(200,{'Content-Type':ct});
+    res.end(_fs2.readFileSync(fp));
+    return true;
+  }
+  return false;
+}
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
   console.log(`✦ ALVAI v4.0 — THE TOTAL OVERHAUL — port ${PORT}`);
