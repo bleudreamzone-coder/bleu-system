@@ -13,6 +13,25 @@ const OPENAI_KEY = process.env.OPENAI_API_KEY || '';
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
 
+
+// ═══════════════════════════════════════════
+// BLEU 222 CITY SYSTEM
+// ═══════════════════════════════════════════
+const BLEU_CITIES = {"neworleans": {"name": "New Orleans", "primary": "#C9A84C", "note": "Born from jazz, second lines, and the refusal to be anything other than alive."}, "batonrouge": {"name": "Baton Rouge", "primary": "#C9A84C", "note": "Louisiana capital. River town with deep roots."}, "shreveport": {"name": "Shreveport", "primary": "#C9A84C", "note": "Northwest Louisiana crossroads. Blues and resilience."}, "lafayette": {"name": "Lafayette", "primary": "#C9A84C", "note": "Heart of Cajun country. Zydeco and healing culture."}, "memphis": {"name": "Memphis", "primary": "#C9A84C", "note": "Birthplace of the blues. Music and healing are the same."}, "nashville": {"name": "Nashville", "primary": "#C9A84C", "note": "Music City. Tradition meets transformation."}, "mobile": {"name": "Mobile", "primary": "#C9A84C", "note": "Original Mardi Gras city. Gulf Coast roots."}, "jackson": {"name": "Jackson", "primary": "#C9A84C", "note": "Mississippi capital. Blues heritage and health equity fight."}, "atlanta": {"name": "Atlanta", "primary": "#7A8C6E", "note": "The engine of the South. MLK city. Built on legacy."}, "birmingham": {"name": "Birmingham", "primary": "#7A8C6E", "note": "Forged the Civil Rights movement and emerged stronger."}, "charleston": {"name": "Charleston", "primary": "#7A8C6E", "note": "Oldest port city. Gullah Geechee culture. Deep roots."}, "charlotte": {"name": "Charlotte", "primary": "#7A8C6E", "note": "New South financial capital. Fast-growing and diverse."}, "raleigh": {"name": "Raleigh", "primary": "#7A8C6E", "note": "Research Triangle. Academic medicine meets community."}, "durham": {"name": "Durham", "primary": "#7A8C6E", "note": "Bull City. Duke NCCU and a health-forward community."}, "miami": {"name": "Miami", "primary": "#7A8C6E", "note": "Where the Americas meet. Latin culture Caribbean roots."}, "orlando": {"name": "Orlando", "primary": "#7A8C6E", "note": "Beyond theme parks lives a city with real health needs."}, "tampa": {"name": "Tampa", "primary": "#7A8C6E", "note": "Cigar City. Latin heritage and waterfront culture."}, "jacksonville": {"name": "Jacksonville", "primary": "#7A8C6E", "note": "Florida largest city. River city meets Atlantic energy."}, "richmond": {"name": "Richmond", "primary": "#7A8C6E", "note": "Transformed from Confederate capital to progressive city."}, "knoxville": {"name": "Knoxville", "primary": "#7A8C6E", "note": "Gateway to the Smokies. Mountain wellness traditions."}, "savannah": {"name": "Savannah", "primary": "#7A8C6E", "note": "Spanish moss and cobblestones. Beauty and history inseparable."}, "newyork": {"name": "New York City", "primary": "#4A6FA5", "note": "The city that invented reinvention. Every culture every need."}, "nyc": {"name": "New York City", "primary": "#4A6FA5", "note": "The city that invented reinvention. Every culture every need."}, "brooklyn": {"name": "Brooklyn", "primary": "#4A6FA5", "note": "Culture capital of the world. Radical self-care."}, "philadelphia": {"name": "Philadelphia", "primary": "#4A6FA5", "note": "City of brotherly love. Real community health challenges."}, "boston": {"name": "Boston", "primary": "#4A6FA5", "note": "America academic capital. Harvard MIT medical innovation."}, "cambridge": {"name": "Cambridge", "primary": "#4A6FA5", "note": "Where ideas become infrastructure. MIT and Harvard backyard."}, "baltimore": {"name": "Baltimore", "primary": "#4A6FA5", "note": "Charm City. Johns Hopkins and health equity fight."}, "washington": {"name": "Washington DC", "primary": "#4A6FA5", "note": "The nation capital. Policy power and diverse community."}, "dc": {"name": "Washington DC", "primary": "#4A6FA5", "note": "The nation capital. Policy power and diverse community."}, "newark": {"name": "Newark", "primary": "#4A6FA5", "note": "New Jersey largest city rising with community energy."}, "pittsburgh": {"name": "Pittsburgh", "primary": "#4A6FA5", "note": "Steel bridges and innovation. City that reinvented itself."}, "buffalo": {"name": "Buffalo", "primary": "#4A6FA5", "note": "Steel City resilience. A community that endures and thrives."}, "rochester": {"name": "Rochester", "primary": "#4A6FA5", "note": "Finger Lakes culture and University of Rochester medicine."}, "chicago": {"name": "Chicago", "primary": "#C4853A", "note": "City of broad shoulders. Blues jazz and American resilience."}, "detroit": {"name": "Detroit", "primary": "#C4853A", "note": "Where Motown was born. Motor City healing runs deep."}, "cleveland": {"name": "Cleveland", "primary": "#C4853A", "note": "Rock capital. Cleveland Clinic. A medical city."}, "columbus": {"name": "Columbus", "primary": "#C4853A", "note": "Ohio capital. Big Ten tech growth diverse community."}, "indianapolis": {"name": "Indianapolis", "primary": "#C4853A", "note": "Racing and basketball. Midwestern health innovation."}, "milwaukee": {"name": "Milwaukee", "primary": "#C4853A", "note": "Cream City. Beer brats and a lakefront community."}, "minneapolis": {"name": "Minneapolis", "primary": "#C4853A", "note": "City of lakes. Prince home. Progressive health culture."}, "stpaul": {"name": "St Paul", "primary": "#C4853A", "note": "Twin Cities quieter half. Rich diversity heals together."}, "kansascity": {"name": "Kansas City", "primary": "#C4853A", "note": "BBQ capital. Jazz roots. Unified community identity."}, "stlouis": {"name": "St Louis", "primary": "#C4853A", "note": "Gateway Arch. Blues heritage and community rebuilding."}, "omaha": {"name": "Omaha", "primary": "#C4853A", "note": "Midwest reliability meets growing innovation community."}, "desmoines": {"name": "Des Moines", "primary": "#C4853A", "note": "Iowa capital. Farming community navigating modern health."}, "madison": {"name": "Madison", "primary": "#C4853A", "note": "University of Wisconsin. Progressive and health-conscious."}, "wichita": {"name": "Wichita", "primary": "#C4853A", "note": "Air capital of the world. Kansas plains culture."}, "tulsa": {"name": "Tulsa", "primary": "#C4853A", "note": "Oil capital. Greenwood legacy. Healing forward."}, "oklahomacity": {"name": "Oklahoma City", "primary": "#C4853A", "note": "OKC strong. Rebuilt after unimaginable tragedy."}, "houston": {"name": "Houston", "primary": "#C4553A", "note": "NASA and Texas Medical Center. Most diverse city in America."}, "dallas": {"name": "Dallas", "primary": "#C4553A", "note": "Big D. Corporate HQ and fast-growing diverse community."}, "sanantonio": {"name": "San Antonio", "primary": "#C4553A", "note": "The Alamo city. Deepest Latino roots in Texas."}, "austin": {"name": "Austin", "primary": "#C4553A", "note": "Keep Austin Weird. Live music meets wellness culture."}, "fortworth": {"name": "Fort Worth", "primary": "#C4553A", "note": "Where the West begins. Stockyards meets modern city."}, "elpaso": {"name": "El Paso", "primary": "#C4553A", "note": "Borderland city. Deeply bicultural and binational."}, "phoenix": {"name": "Phoenix", "primary": "#C4553A", "note": "Valley of the Sun. Desert wellness Native healing."}, "tucson": {"name": "Tucson", "primary": "#C4553A", "note": "Old Pueblo. Sonoran Desert and indigenous healing roots."}, "denver": {"name": "Denver", "primary": "#C4553A", "note": "Mile High City. Cannabis pioneer. Outdoor culture."}, "lasvegas": {"name": "Las Vegas", "primary": "#C4553A", "note": "The city that never sleeps needs BLEU most."}, "saltlakecity": {"name": "Salt Lake City", "primary": "#C4553A", "note": "Wasatch Mountains and one of America most active communities."}, "albuquerque": {"name": "Albuquerque", "primary": "#C4553A", "note": "Duke City. Indigenous Hispanic Anglo cultures healing together."}, "boise": {"name": "Boise", "primary": "#C4553A", "note": "City of Trees. Outdoor culture and explosive growth."}, "coloradosprings": {"name": "Colorado Springs", "primary": "#C4553A", "note": "Military capital. Pikes Peak. Strong wellness traditions."}, "reno": {"name": "Reno", "primary": "#C4553A", "note": "Biggest Little City. Sierra Nevada gateway."}, "losangeles": {"name": "Los Angeles", "primary": "#2D8A7A", "note": "Entertainment capital wellness capital dream capital."}, "la": {"name": "Los Angeles", "primary": "#2D8A7A", "note": "Entertainment capital wellness capital dream capital."}, "sandiego": {"name": "San Diego", "primary": "#2D8A7A", "note": "America Finest City. Military biotech surf culture."}, "sanfrancisco": {"name": "San Francisco", "primary": "#2D8A7A", "note": "Bay Area innovation. Tech meets sourdough tradition."}, "sf": {"name": "San Francisco", "primary": "#2D8A7A", "note": "Bay Area innovation. Tech meets sourdough tradition."}, "sanjose": {"name": "San Jose", "primary": "#2D8A7A", "note": "Silicon Valley capital. Tech and diverse immigrants."}, "oakland": {"name": "Oakland", "primary": "#2D8A7A", "note": "The Town. East Bay culture and radical self-love."}, "seattle": {"name": "Seattle", "primary": "#2D8A7A", "note": "Emerald City. Amazon Boeing coffee health innovation."}, "portland": {"name": "Portland", "primary": "#2D8A7A", "note": "City of Roses. Most health-conscious city in America."}, "sacramento": {"name": "Sacramento", "primary": "#2D8A7A", "note": "Farm-to-fork capital. Gold Rush roots diverse community."}, "fresno": {"name": "Fresno", "primary": "#2D8A7A", "note": "Central Valley heart. Hmong Latino Armenian roots."}, "anchorage": {"name": "Anchorage", "primary": "#2D8A7A", "note": "Alaska largest city. Indigenous healing frontier resilience."}, "honolulu": {"name": "Honolulu", "primary": "#2D8A7A", "note": "Where aloha is medicine. Native Hawaiian healing wisdom."}, "tacoma": {"name": "Tacoma", "primary": "#2D8A7A", "note": "Grit City. South Sound culture redefining itself with pride."}, "spokane": {"name": "Spokane", "primary": "#2D8A7A", "note": "Inland Northwest hub. Outdoor and wellness culture."}};
+function getCityData(host) {
+  if (!host) return null;
+  const sub = host.split('.')[0].toLowerCase().replace(/-/g,'');
+  if (sub === 'www' || sub === 'bleu') return null;
+  if (!host.includes('bleu.live')) return null;
+  return BLEU_CITIES[sub] || null;
+}
+function buildCityHTML(html, city) {
+  const s = '<scr'+'ipt>window.BLEU_CITY='+JSON.stringify(city.name)+';window.BLEU_CITY_NOTE='+JSON.stringify(city.note)+';document.documentElement.style.setProperty("--gold",'+JSON.stringify(city.primary)+');<\/scr'+'ipt>';
+  const schema = '<scr'+'ipt type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalWebPage","name":"BLEU '+city.name+'","spatialCoverage":{"@type":"City","name":"'+city.name+'"},"author":{"@type":"Person","name":"Dr. Felicia Stoler","honorificSuffix":"DCN, RDN, FACSM"},"publisher":{"@type":"Organization","name":"BLEU.live","url":"https://bleu.live"}}<\/scr'+'ipt>';
+  return html
+    .replace('<title>BLEU', '<title>'+city.name+' — BLEU')
+    .replace('</head>', s+schema+'</head>');
+}
 const ALVAI_CORE = `You are Alvai — the AI soul of BLEU.live, The Longevity Operating System.
 
 BLEU means Believe, Love, Evolve, Unite. That is not a slogan. It is a promise to every person who finds this platform.
@@ -869,14 +888,49 @@ const server = http.createServer((req, res) => {
   }
   if (pn === '/api/stats') return json(res, 200, { version:'4.0', modes: Object.keys(MODE_PROMPTS).length, therapy: Object.keys(THERAPY_MODES).length, recovery: Object.keys(RECOVERY_MODES).length });
 
-  if (pn === '/' || pn === '/index.html') { fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,{'Content-Type':'text/html'});res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,{'Content-Type':'text/html'});res.end(d);} }); return; }
+  if (pn === '/' || pn === '/index.html') { fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,{'Content-Type':'text/html'});res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,{'Content-Type':'text/html'});const _c=getCityData(req.headers.host);res.end(_c?Buffer.from(buildCityHTML(d.toString(),_c)):d);} }); return; }
 
   const ext = path.extname(pn);
   const mime = {'.css':'text/css','.js':'application/javascript','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon','.json':'application/json'};
   if (mime[ext]) { fs.readFile(path.join(__dirname,pn), (e,d) => { if(e) return json(res,404,{error:'Not found'}); res.writeHead(200,{'Content-Type':mime[ext]}); res.end(d); }); return; }
 
+  // DIST ROUTING
+  if (pn === '/sitemap.xml') { serveDistFile(res, _path.join(DIST,'sitemap.xml')); return; }
+  if (pn === '/robots.txt') { serveDistFile(res, _path.join(DIST,'robots.txt')); return; }
+  const condMatch = pn.match(/^\/(sleep|anxiety|gut)(\/(.+))?$/);
+  if (condMatch) {
+    const cond = condMatch[1];
+    const city = condMatch[3];
+    const fp = city
+      ? _path.join(DIST, cond, city + '.html')
+      : _path.join(DIST, cond, 'index.html');
+    if (serveDistFile(res, fp)) return;
+  }
+  if (pn.startsWith('/cities/')) {
+    const slug = pn.slice(8);
+    if (serveDistFile(res, _path.join(DIST,'cities',slug+'.html'))) return;
+  }
   json(res, 404, { error: 'Not found' });
 });
+
+
+// ═══════════════════════════════════════════
+// BLEU DIST ROUTER — condition × city pages
+// ═══════════════════════════════════════════
+const _fs = require('fs');
+const _path = require('path');
+const DIST = _path.join(__dirname, 'dist');
+
+function serveDistFile(res, filepath) {
+  if (_fs.existsSync(filepath)) {
+    const ext = _path.extname(filepath);
+    const ct = ext === '.xml' ? 'text/xml' : ext === '.txt' ? 'text/plain' : 'text/html';
+    res.writeHead(200, {'Content-Type': ct});
+    res.end(_fs.readFileSync(filepath));
+    return true;
+  }
+  return false;
+}
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {

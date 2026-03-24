@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bleu.live/sitemap.xml
+
+# BLEU — Jazz Bird 501(c)(3) — New Orleans, Louisiana
+# Clinical Authority: Dr. Felicia Stoler DCN MS RDN FACSM FAND Dipl ACLM
+# Zero ad revenue. Built for the person — not the market.
