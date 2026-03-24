@@ -787,6 +787,69 @@ button[type="submit"],
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BLEU">
 <link rel="apple-touch-icon" href="https://bleu.live/icon-192.png">
+
+<script>
+(function() {
+  if (!window.BLEU_CITY) return;
+  var city = window.BLEU_CITY;
+  var note = window.BLEU_CITY_NOTE || '';
+  var primary = window.BLEU_CITY_PRIMARY || '#C9A84C';
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // 1. NAV — add city badge next to logo
+    var logo = document.querySelector('.nav-logo');
+    if (logo) {
+      var badge = document.createElement('span');
+      badge.style.cssText = 'font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:'+primary+';opacity:.8;margin-left:6px;font-family:"DM Sans",sans-serif;font-weight:500;vertical-align:middle';
+      badge.textContent = city.toUpperCase();
+      logo.appendChild(badge);
+    }
+
+    // 2. HOME HERO — city-aware headline + note
+    var heroTitle = document.querySelector('.hero-title');
+    if (heroTitle && heroTitle.closest('#p-home, .panel')) {
+      heroTitle.innerHTML = 'BLEU <span class="accent">'+city+'</span><br><span class="teal" style="font-size:.6em;font-weight:300">Longevity Operating System</span>';
+    }
+
+    // 3. HOME SUB — city cultural note
+    var heroSub = document.querySelector('.hero-sub');
+    if (heroSub && note) {
+      heroSub.innerHTML = note + '<br><span style="font-size:13px;opacity:.6">Clinical oversight by Dr. Felicia Stoler, DCN RDN FACSM · 855K practitioners · 302K drug interactions</span>';
+    }
+
+    // 4. ALVAI HERO — city-specific opening
+    var alvHero = document.querySelector('.alv-hero .hero-title, #p-alvai .hero-title');
+    if (alvHero) {
+      alvHero.innerHTML = 'BLEU '+city+'<br><span class="teal" style="font-size:.55em;font-weight:300">The intelligence built for this city.</span>';
+    }
+
+    // 5. ALVAI — pre-load city context into first message
+    var cityContext = 'I am in '+city+'. '+note;
+    window.BLEU_CITY_CONTEXT = cityContext;
+
+    // 6. PAGE TITLE
+    document.title = city + ' — BLEU · Longevity Operating System';
+
+    // 7. JSON-LD schema for this city
+    var schema = document.createElement('script');
+    schema.type = 'application/ld+json';
+    schema.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "MedicalWebPage",
+      "name": "BLEU " + city + " — Longevity Operating System",
+      "url": window.location.href,
+      "spatialCoverage": {"@type": "City", "name": city},
+      "author": {"@type": "Person", "name": "Dr. Felicia Stoler", "honorificSuffix": "DCN, RDN, FACSM"},
+      "publisher": {"@type": "Organization", "name": "Jazz Bird 501(c)(3)", "url": "https://bleu.live"},
+      "datePublished": "2026-03-24"
+    });
+    document.head.appendChild(schema);
+
+  });
+})();
+</script>
+
 </head>
 <body>
 
@@ -9275,6 +9338,7 @@ window.addEventListener('DOMContentLoaded',function(){
     'sleep': "<span style='color:#C9A84C;font-size:12px;letter-spacing:2px;text-transform:uppercase'>SLEEP INTELLIGENCE</span><br><br>One bad night raises Alzheimer's-linked proteins in your brain. A week of poor sleep rewrites 700 genes. Chronic short sleep costs roughly 1.7 biological years per decade. This is not about discipline. It is molecular biology. And it is fixable.<br><br><span style='color:#7B8DA6;font-style:italic'>What is happening with your sleep right now?</span>",
     'enterprise': "<span style='color:#C9A84C;font-size:12px;letter-spacing:2px;text-transform:uppercase'>ENTERPRISE</span><br><br>The healthiest employees produce more, stay longer, and cost less. Hotel Monteleone. Royal Street. 400 employees. The proof of concept is already running. Documented 23 to 1 return on investment.<br><br><span style='color:#7B8DA6;font-style:italic'>Tell me about your organization and what problem you are trying to solve.</span>",
     'why': "<span style='color:#d4af37;font-size:12px;letter-spacing:2px;text-transform:uppercase'>CLINICAL DECISION INFRASTRUCTURE</span><br><br>ChatGPT knows everything about health. BLEU knows you. Nine structural advantages built into the system — not marketing claims, technical reality.",
+    'home_city': window.BLEU_CITY ? 'You are in ' + window.BLEU_CITY + '. ' + (window.BLEU_CITY_NOTE||'') + ' BLEU was built for exactly this community.' : null,
     'spirit': "<span style='color:#C9A84C;font-size:12px;letter-spacing:2px;text-transform:uppercase'>MEANING IS MEDICINE</span><br><br>Viktor Frankl survived four concentration camps by finding a reason to continue. Purpose reduces all-cause mortality by 23 percent. Telomerase -- the enzyme protecting your chromosomes -- activates in states of meaning. This is not philosophy. This is measurable biology.<br><br><span style='color:#7B8DA6;font-style:italic'>What does purpose feel like for you right now?</span>",
     'map': "<span style='color:#C9A84C;font-size:12px;letter-spacing:2px;text-transform:uppercase'>CITY INTELLIGENCE</span><br><br>New Orleans scores 40 out of 100. Louisiana ranked 50th nationally. 9th Ward scores 24. Central City scores 28. 855,000 practitioners mapped. 32 crises documented with peer-reviewed evidence.<br><br><span style='color:#7B8DA6;font-style:italic'>What do you want to know about health in New Orleans?</span>"
   };
