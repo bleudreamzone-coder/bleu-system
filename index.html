@@ -807,8 +807,8 @@ button[type="submit"],
     }
 
     // 2. HOME HERO — city-aware headline + note
-    var heroTitle = document.querySelector('.hero-title');
-    if (heroTitle && heroTitle.closest('#p-home, .panel')) {
+    var heroTitle = document.querySelector('#p-home .hero-title');
+    if (heroTitle) {
       heroTitle.innerHTML = 'BLEU <span class="accent">'+city+'</span><br><span class="teal" style="font-size:.6em;font-weight:300">Longevity Operating System</span>';
     }
 
