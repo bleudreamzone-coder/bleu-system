@@ -1,7 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>(function(){if(window.BLEU_CITY)return;var s=window.location.hostname.split(".")[0];if(!s||s==="bleu"||s==="www")return;var C={"newyork":["New York City","#4A6FA5","The city that invented reinvention. Every culture every need."],"nyc":["New York City","#4A6FA5","The city that invented reinvention. Every culture every need."],"losangeles":["Los Angeles","#2D8A7A","Entertainment capital wellness capital dream capital."],"la":["Los Angeles","#2D8A7A","Entertainment capital wellness capital dream capital."],"chicago":["Chicago","#C4853A","City of broad shoulders. Blues jazz and American resilience."],"houston":["Houston","#C4553A","NASA and Texas Medical Center. Most diverse city in America."],"atlanta":["Atlanta","#7A8C6E","The engine of the South. MLK city. Built on legacy."],"miami":["Miami","#7A8C6E","Where the Americas meet. Latin culture Caribbean roots."],"seattle":["Seattle","#2D8A7A","Emerald City. Amazon Boeing coffee health innovation."],"boston":["Boston","#4A6FA5","Americas academic capital. Harvard MIT medical innovation."],"dallas":["Dallas","#C4553A","Big D. Corporate HQ and fast-growing diverse community."],"denver":["Denver","#C4553A","Mile High City. Cannabis pioneer. Outdoor culture."],"austin":["Austin","#C4553A","Keep Austin Weird. Live music meets wellness culture."],"phoenix":["Phoenix","#C4553A","Valley of the Sun. Desert wellness Native healing."],"philadelphia":["Philadelphia","#4A6FA5","City of brotherly love. Real community health challenges."],"sanfrancisco":["San Francisco","#2D8A7A","Bay Area innovation. Tech meets sourdough tradition."],"sf":["San Francisco","#2D8A7A","Bay Area innovation. Tech meets sourdough tradition."],"sandiego":["San Diego","#2D8A7A","Americas Finest City. Military biotech surf culture."],"portland":["Portland","#2D8A7A","City of Roses. Most health-conscious city in America."],"nashville":["Nashville","#C9A84C","Music City. Tradition meets transformation."],"memphis":["Memphis","#C9A84C","Birthplace of the blues. Music and healing are the same."],"detroit":["Detroit","#C4853A","Where Motown was born. Motor City healing runs deep."],"minneapolis":["Minneapolis","#C4853A","City of lakes. Prince home. Progressive health culture."],"charlotte":["Charlotte","#7A8C6E","New South financial capital. Fast-growing and diverse."],"baltimore":["Baltimore","#4A6FA5","Charm City. Johns Hopkins and health equity fight."],"washington":["Washington DC","#4A6FA5","The nations capital. Policy power and diverse community."],"dc":["Washington DC","#4A6FA5","The nations capital. Policy power and diverse community."],"lasvegas":["Las Vegas","#C4553A","The city that never sleeps needs BLEU most."],"milwaukee":["Milwaukee","#C4853A","Cream City. Beer brats and a lakefront community."],"raleigh":["Raleigh","#7A8C6E","Research Triangle. Academic medicine meets community."],"richmond":["Richmond","#7A8C6E","Transformed from Confederate capital to progressive city."],"pittsburgh":["Pittsburgh","#4A6FA5","Steel bridges and innovation. City that reinvented itself."],"tampa":["Tampa","#7A8C6E","Cigar City. Latin heritage and waterfront culture."],"orlando":["Orlando","#7A8C6E","Beyond theme parks lives a city with real health needs."],"honolulu":["Honolulu","#2D8A7A","Where aloha is medicine. Native Hawaiian healing wisdom."],"anchorage":["Anchorage","#2D8A7A","Alaska largest city. Indigenous healing frontier resilience."],"batonrouge":["Baton Rouge","#C9A84C","Louisiana capital. River town with deep roots."],"lafayette":["Lafayette","#C9A84C","Heart of Cajun country. Zydeco and healing culture."],"shreveport":["Shreveport","#C9A84C","Northwest Louisiana crossroads. Blues and resilience."]};var d=C[s];if(!d)return;window.BLEU_CITY=d[0];window.BLEU_CITY_PRIMARY=d[1];window.BLEU_CITY_NOTE=d[2];document.documentElement.style.setProperty("--gold",d[1]);document.title=d[0]+" — BLEU · Longevity Operating System";document.addEventListener("DOMContentLoaded",function(){var h=document.getElementById("home-hero-title");if(h)h.innerHTML="Everything you need<br>to <em style="color:#4ecdc4;font-style:italic">heal</em> — in <em style="color:"+d[1]+";font-style:normal">"+d[0]+"</em>.";var t=document.getElementById("hw-type");if(t)t.textContent=d[2];var n=document.querySelector(".nav-logo");if(n&&!n.querySelector(".cb")){var b=document.createElement("span");b.className="cb";b.style="font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:"+d[1]+";opacity:.8;margin-left:8px;font-weight:500";b.textContent=d[0].toUpperCase();n.appendChild(b);}});})();</script>
+<script>
+(function(){
+  var s=window.location.hostname.split('.')[0];
+  if(!s||s==='bleu'||s==='www'||s==='localhost')return;
+  var C={
+    "newyork":["New York City","#4A6FA5","The city that invented reinvention. Every culture every need."],
+    "nyc":["New York City","#4A6FA5","The city that invented reinvention. Every culture every need."],
+    "losangeles":["Los Angeles","#2D8A7A","Entertainment capital wellness capital dream capital."],
+    "la":["Los Angeles","#2D8A7A","Entertainment capital wellness capital dream capital."],
+    "chicago":["Chicago","#C4853A","City of broad shoulders. Blues jazz and American resilience."],
+    "houston":["Houston","#C4553A","NASA and Texas Medical Center. Most diverse city in America."],
+    "atlanta":["Atlanta","#7A8C6E","The engine of the South. MLK city. Built on legacy."],
+    "miami":["Miami","#7A8C6E","Where the Americas meet. Latin culture Caribbean roots."],
+    "seattle":["Seattle","#2D8A7A","Emerald City. Amazon Boeing coffee health innovation."],
+    "boston":["Boston","#4A6FA5","Americas academic capital. Harvard MIT medical innovation."],
+    "dallas":["Dallas","#C4553A","Big D. Corporate HQ and fast-growing diverse community."],
+    "denver":["Denver","#C4553A","Mile High City. Cannabis pioneer. Outdoor culture."],
+    "austin":["Austin","#C4553A","Keep Austin Weird. Live music meets wellness culture."],
+    "phoenix":["Phoenix","#C4553A","Valley of the Sun. Desert wellness Native healing."],
+    "philadelphia":["Philadelphia","#4A6FA5","City of brotherly love. Real community health challenges."],
+    "sanfrancisco":["San Francisco","#2D8A7A","Bay Area innovation. Tech meets sourdough tradition."],
+    "sf":["San Francisco","#2D8A7A","Bay Area innovation. Tech meets sourdough tradition."],
+    "sandiego":["San Diego","#2D8A7A","Americas Finest City. Military biotech surf culture."],
+    "portland":["Portland","#2D8A7A","City of Roses. Most health-conscious city in America."],
+    "nashville":["Nashville","#C9A84C","Music City. Tradition meets transformation."],
+    "memphis":["Memphis","#C9A84C","Birthplace of the blues. Music and healing are the same."],
+    "detroit":["Detroit","#C4853A","Where Motown was born. Motor City healing runs deep."],
+    "minneapolis":["Minneapolis","#C4853A","City of lakes. Prince home. Progressive health culture."],
+    "charlotte":["Charlotte","#7A8C6E","New South financial capital. Fast-growing and diverse."],
+    "baltimore":["Baltimore","#4A6FA5","Charm City. Johns Hopkins and health equity fight."],
+    "washington":["Washington DC","#4A6FA5","The nations capital. Policy power and diverse community."],
+    "dc":["Washington DC","#4A6FA5","The nations capital. Policy power and diverse community."],
+    "lasvegas":["Las Vegas","#C4553A","The city that never sleeps needs BLEU most."],
+    "milwaukee":["Milwaukee","#C4853A","Cream City. Beer brats and a lakefront community."],
+    "raleigh":["Raleigh","#7A8C6E","Research Triangle. Academic medicine meets community."],
+    "tampa":["Tampa","#7A8C6E","Cigar City. Latin heritage and waterfront culture."],
+    "orlando":["Orlando","#7A8C6E","Beyond theme parks lives a city with real health needs."],
+    "honolulu":["Honolulu","#2D8A7A","Where aloha is medicine. Native Hawaiian healing wisdom."],
+    "batonrouge":["Baton Rouge","#C9A84C","Louisiana capital. River town with deep roots."],
+    "lafayette":["Lafayette","#C9A84C","Heart of Cajun country. Zydeco and healing culture."]
+  };
+  var d=C[s];
+  if(!d)return;
+  window.BLEU_CITY=d[0];
+  window.BLEU_CITY_PRIMARY=d[1];
+  window.BLEU_CITY_NOTE=d[2];
+  document.documentElement.style.setProperty('--gold',d[1]);
+  document.title=d[0]+' — BLEU · Longevity Operating System';
+
+  // Override typewriter phrases immediately
+  window.BLEU_CITY_PHRASES=[d[2],"Built for "+d[0]+".","Clinical. Free. Yours."];
+
+  // Aggressive DOM update — runs repeatedly until it lands
+  var attempts=0;
+  var interval=setInterval(function(){
+    attempts++;
+    var h=document.getElementById('home-hero-title');
+    if(h && h.textContent.indexOf(d[0])===-1){
+      h.innerHTML='Everything you need<br>to <em style="color:#4ecdc4;font-style:italic">heal</em> — in <em style="color:'+d[1]+';font-style:normal">'+d[0]+'</em>.';
+    }
+    var t=document.getElementById('hw-type');
+    if(t) t.textContent=d[2];
+    var n=document.querySelector('.nav-logo');
+    if(n&&!n.querySelector('.cb')){
+      var b=document.createElement('span');
+      b.className='cb';
+      b.style='font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:'+d[1]+';opacity:.8;margin-left:8px;font-weight:500;vertical-align:middle';
+      b.textContent=d[0].toUpperCase();
+      n.appendChild(b);
+    }
+    if(attempts>20)clearInterval(interval);
+  },100);
+})();
+</script>
+
 <meta name="description" content="BLEU is a living model of care — an intelligence system that maps health at the intersection of place, person, and time. Powered by a cognitive stack. Personalized through a Care Twin. Synthesis in under three seconds.">
 <meta property="og:title" content="BLEU.live — Trusted Intelligence for Health, Place &amp; Opportunity">
 <meta property="og:description" content="BLEU is a living model of care. Powered by 12 agents, 120 intelligence layers, and a Care Twin that evolves with every session. Free forever for Pioneer Citizens.">
