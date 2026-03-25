@@ -1099,6 +1099,7 @@ button[type="submit"],
     ]
     var el = document.getElementById("hw-type");
     if(!el) return;
+    if(window.BLEU_CITY) { el.textContent = window.BLEU_CITY_NOTE || ""; el.style.color = window.BLEU_CITY_PRIMARY || "#C9A84C"; return; }
     var li = 0, ci = 0, deleting = false;
     function tick(){
       var full = lines[li];
