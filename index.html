@@ -54,6 +54,17 @@
   window.BLEU_CITY_PHRASES=[d[2],"Built for "+d[0]+".","Clinical. Free. Yours."];
 
   // Aggressive DOM update — runs repeatedly until it lands
+  // Stop typewriter on city subdomains
+  var twEl = document.getElementById('hw-type');
+  var twCursor = document.querySelector('.hcursor');
+  if (twEl && window.BLEU_CITY) {
+    twEl.textContent = window.BLEU_CITY_NOTE || '';
+    twEl.style.color = window.BLEU_CITY_PRIMARY || '#C9A84C';
+    if (twCursor) twCursor.style.display = 'none';
+    // Stop any typewriter intervals
+    if (window._twInterval) clearInterval(window._twInterval);
+    window._twStopped = true;
+  }
   var attempts=0;
   setTimeout(function(){
   var interval=setInterval(function(){
