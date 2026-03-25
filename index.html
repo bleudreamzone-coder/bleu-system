@@ -1694,12 +1694,15 @@ button[type="submit"],
   </div>
   <script>
   (function(){var el=document.getElementById("tw-alvai");if(!el)return;
-  var lines=["Ask it anything. It already knows the context.",
-  "Commerce follows care. Always. When someone is depleted, scared, or in distress -- give them full guidance with zero product mentions. When someone is in flow, building, or optimizing -- weave specific products into the recommendation naturally. Never append a product list. Mention the product inside the sentence: "Magnesium glycinate specifically -- the Thorne brand is around $25 and it's the right form for sleep." The recommendation and the product are one thing, not two. That is not a slogan. It is the architecture.",
-  "22 specialised modes. Because your situation is not generic.",
-  "When you need a human, Alvai routes to one. It knows what it is.",
-  "855,000 practitioners. Alvai knows which one is right for you specifically.",
-  "Not a chatbot. A clinical intelligence that understands what is underneath your question."];
+  var lines=[
+  "Ask it anything. It already knows the context.",
+  "Commerce follows care. Always.",
+  "Your body keeps the score. So does BLEU.",
+  "You are not broken. Your system is overloaded.",
+  "The protocol exists. Tonight is when it starts.",
+  "ALVAI has read 50,000 peer-reviewed studies. Ask it anything.",
+  "Every city. Every condition. One system."
+];
   var li=0,ci=0,cur="",typing=true,pause=0;
   function tick(){if(pause>0){pause--;setTimeout(tick,30);return;}if(typing){if(ci<lines[li].length){cur+=lines[li][ci++];el.textContent=cur;setTimeout(tick,40);}else{typing=false;pause=65;setTimeout(tick,30);}}else{if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,16);}else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}}}
   setTimeout(tick,1200);})();
