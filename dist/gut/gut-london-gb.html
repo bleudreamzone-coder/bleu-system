@@ -1075,5 +1075,554 @@ window.addEventListener('beforeunload',function(){
 const mob=document.querySelector('.mob-cta');
 if(mob){mob.style.opacity='0';mob.style.transition='opacity 0.3s';window.addEventListener('scroll',function(){mob.style.opacity=window.scrollY>200?'1':'0';},{passive:true});}
 </script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     BLEU INTELLIGENCE LAYER — March 25 2026 Upgrade
+     Applied to: London / gut
+     All features additive. Nothing removed.
+════════════════════════════════════════════════════════════ -->
+
+<style>
+/* ── UPGRADE STYLES ── */
+.bleu-glow-field{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 55% 55% at 50% 50%,rgba(201,168,76,0.03),transparent 70%);
+  transition:background 5s ease}
+.bleu-glow-field.breathe-in{background:radial-gradient(ellipse 65% 65% at 50% 50%,rgba(26,236,184,0.05),transparent 70%)}
+.return-badge{position:fixed;top:68px;right:1rem;font-family:'JetBrains Mono',monospace;
+  font-size:0.55rem;color:rgba(201,168,76,0.5);letter-spacing:0.15em;text-transform:uppercase;
+  z-index:250;opacity:0;transition:opacity 1s ease 2s}
+.return-badge.show{opacity:1}
+.bleu-breath-overlay{position:fixed;inset:0;z-index:300;background:rgba(5,8,15,0.97);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.8s ease;padding:2rem;text-align:center}
+.bleu-breath-overlay.active{opacity:1;pointer-events:all}
+.bbo-pre{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1rem,3vw,1.3rem);
+  font-weight:300;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:0.75rem;
+  max-width:400px;line-height:1.6}
+.bbo-ring{position:relative;width:clamp(160px,35vw,220px);height:clamp(160px,35vw,220px);margin:0 auto 1.5rem}
+.bbo-ring svg{width:100%;height:100%}
+.bbo-track{fill:none;stroke:rgba(255,255,255,0.04);stroke-width:1.5}
+.bbo-fill{fill:none;stroke:#1AECB8;stroke-width:1.5;stroke-dasharray:0 999;
+  filter:drop-shadow(0 0 10px rgba(26,236,184,0.4));transition:none}
+.bbo-circle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:68%;height:68%;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,236,184,0.07),transparent 60%);
+  border:1px solid rgba(26,236,184,0.1);transition:all 4s cubic-bezier(0.4,0,0.2,1)}
+.bbo-circle.inhale{width:84%;height:84%;background:radial-gradient(circle,rgba(26,236,184,0.12),rgba(26,236,184,0.03) 60%,transparent);border-color:rgba(26,236,184,0.22)}
+.bbo-circle.hold{width:84%;height:84%;border-color:rgba(26,236,184,0.3)}
+.bbo-circle.exhale{width:68%;height:68%;border-color:rgba(26,236,184,0.07)}
+.bbo-word{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(0.8rem,2.5vw,1rem);
+  font-weight:300;color:rgba(255,255,255,0.6);letter-spacing:0.15em;text-transform:uppercase;
+  font-style:italic;white-space:nowrap;transition:opacity 0.4s ease}
+.bbo-guide{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(0.9rem,2.8vw,1.1rem);
+  font-weight:300;color:rgba(255,255,255,0.55);font-style:italic;min-height:1.6rem;
+  transition:opacity 0.5s ease;margin-bottom:0.75rem}
+.bbo-timer{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:rgba(107,122,153,1);
+  letter-spacing:0.2em;margin-bottom:1rem}
+.bbo-half{font-family:'Cormorant Garamond',Georgia,serif;font-size:0.95rem;color:rgba(26,236,184,0.75);
+  font-style:italic;opacity:0;transition:opacity 1s ease;min-height:1.4rem}
+.bbo-half.show{opacity:1}
+.bbo-note{font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:rgba(107,122,153,0.7);
+  letter-spacing:0.12em;max-width:340px;line-height:1.8;margin-top:1rem}
+/* After breathwork */
+.bbo-after{display:none;flex-direction:column;align-items:center;width:100%;max-width:400px}
+.bbo-after.show{display:flex}
+.bbo-human{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.8rem,5vw,2.6rem);
+  font-weight:300;font-style:italic;color:rgba(26,236,184,0.85);margin-bottom:0.4rem;
+  opacity:0;transition:opacity 1.4s ease}
+.bbo-sub{font-size:0.9rem;color:rgba(255,255,255,0.4);font-style:italic;margin-bottom:2rem;
+  opacity:0;transition:opacity 1s ease}
+.bbo-feedback{opacity:0;transition:opacity 0.8s ease;margin-bottom:1.5rem;width:100%}
+.bbo-feedback-q{font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;
+  color:rgba(255,255,255,0.6);font-style:italic;margin-bottom:0.85rem}
+.bbo-btns{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap}
+.bbo-fb-btn{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:rgba(255,255,255,0.55);
+  background:transparent;border:1px solid rgba(255,255,255,0.1);padding:0.5rem 1rem;
+  border-radius:4px;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.2s}
+.bbo-fb-btn:hover{border-color:rgba(26,236,184,0.4);color:#1AECB8;background:rgba(26,236,184,0.05)}
+.bbo-action-card{opacity:0;transition:opacity 1s ease;background:rgba(26,236,184,0.04);
+  border:1px solid rgba(26,236,184,0.12);border-radius:10px;padding:1rem 1.25rem;
+  width:100%;margin-bottom:1rem;text-align:left}
+.bbo-action-lbl{font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:#1AECB8;
+  letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.35rem}
+.bbo-action-text{font-size:0.92rem;color:#fff;line-height:1.5}
+.bbo-return-txt{opacity:0;transition:opacity 1.2s ease;font-family:'JetBrains Mono',monospace;
+  font-size:0.58rem;color:rgba(201,168,76,0.5);letter-spacing:0.15em;text-transform:uppercase;
+  margin-bottom:1rem}
+.bbo-close{position:fixed;top:1rem;right:1rem;font-family:'JetBrains Mono',monospace;
+  font-size:0.6rem;color:rgba(107,122,153,0.6);background:none;border:none;cursor:pointer;
+  letter-spacing:0.12em;text-transform:uppercase}
+/* Snap moment */
+.snap-overlay{position:fixed;inset:0;z-index:400;background:rgba(5,8,15,0.93);
+  display:flex;align-items:center;justify-content:center;padding:2rem;
+  opacity:0;pointer-events:none;transition:opacity 0.4s}
+.snap-overlay.show{opacity:1;pointer-events:all}
+.snap-card{background:#111827;border:1px solid rgba(201,168,76,0.25);border-radius:14px;
+  padding:2.5rem;max-width:420px;width:100%;text-align:center;
+  transform:scale(0.92);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+.snap-overlay.show .snap-card{transform:scale(1)}
+.snap-icon{font-size:2rem;margin-bottom:0.75rem}
+.snap-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.8rem;font-weight:300;color:#fff;margin-bottom:0.5rem}
+.snap-sub{font-size:0.85rem;color:rgba(107,122,153,1);line-height:1.7;margin-bottom:2rem;max-width:300px;margin-left:auto;margin-right:auto}
+.snap-cta{background:#C9A84C;color:#05080F;font-family:'Syne',system-ui,sans-serif;font-weight:700;
+  font-size:0.9rem;padding:1rem 2rem;border-radius:7px;border:none;cursor:pointer;
+  display:block;width:100%;margin-bottom:0.75rem;letter-spacing:0.04em;transition:opacity 0.2s}
+.snap-cta:hover{opacity:0.9}
+.snap-skip{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:rgba(107,122,153,0.7);
+  background:none;border:none;cursor:pointer;letter-spacing:0.12em;text-transform:uppercase}
+/* Tonight tab breathwork trigger */
+.bleu-breathwork-trigger{background:rgba(26,236,184,0.05);border:1px solid rgba(26,236,184,0.15);
+  border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;cursor:pointer;
+  transition:all 0.2s;text-align:center}
+.bleu-breathwork-trigger:hover{background:rgba(26,236,184,0.08);border-color:rgba(26,236,184,0.25)}
+.bwt-pulse{width:48px;height:48px;border-radius:50%;background:rgba(26,236,184,0.08);
+  border:1px solid rgba(26,236,184,0.2);margin:0 auto 0.75rem;
+  animation:bwt-pulse 4s ease-in-out infinite}
+@keyframes bwt-pulse{0%,100%{transform:scale(0.92);opacity:0.6}50%{transform:scale(1.08);opacity:1}}
+.bwt-label{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:#1AECB8;
+  letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.35rem}
+.bwt-text{font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;color:rgba(255,255,255,0.7);font-style:italic}
+.bwt-note{font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:rgba(107,122,153,0.6);margin-top:0.5rem;letter-spacing:0.1em}
+</style>
+
+<!-- ── AMBIENT GLOW FIELD ── -->
+<div class="bleu-glow-field" id="bleuGlowField"></div>
+
+<!-- ── RETURN BADGE ── -->
+<div class="return-badge" id="bleuReturnBadge"></div>
+
+<!-- ── BREATHWORK OVERLAY ── -->
+<div class="bleu-breath-overlay" id="bleuBreathOverlay">
+  <button class="bbo-close" onclick="bleuCloseBreath()">✕ Close</button>
+  <!-- Pre-breathwork state -->
+  <div id="bleuBreathPre">
+    <div class="bbo-pre" id="bleuPreMsg">The city asks. This is where you get something back.</div>
+    <div class="bbo-ring">
+      <svg viewBox="0 0 200 200">
+        <circle class="bbo-track" cx="100" cy="100" r="90"/>
+        <circle class="bbo-fill" id="bleuRingFill" cx="100" cy="100" r="90" transform="rotate(-90 100 100)"/>
+      </svg>
+      <div class="bbo-circle" id="bleuBreathCircle"><div class="bbo-word" id="bleuBreathWord">Breathe</div></div>
+    </div>
+    <div class="bbo-guide" id="bleuBreathGuide" style="opacity:0">Just follow this.</div>
+    <div class="bbo-timer" id="bleuBreathTimer">1:30</div>
+    <div class="bbo-half" id="bleuHalfMsg">Your system is starting to come down.</div>
+    <div class="bbo-note">Your system is running. The breathwork creates the anchor.</div>
+  </div>
+  <!-- After breathwork -->
+  <div class="bbo-after" id="bleuAfterBreath">
+    <div class="bbo-human" id="bleuHumanMoment">I'm here.</div>
+    <div class="bbo-sub" id="bleuAfterSub">Stay with me for a second.</div>
+    <div class="bbo-feedback" id="bleuFeedback">
+      <div class="bbo-feedback-q">Did that take the edge off?</div>
+      <div class="bbo-btns">
+        <button class="bbo-fb-btn" onclick="bleuFeedback('yes',2)">Yes</button>
+        <button class="bbo-fb-btn" onclick="bleuFeedback('little',4)">A little</button>
+        <button class="bbo-fb-btn" onclick="bleuFeedback('not yet',7)">Not yet</button>
+      </div>
+    </div>
+    <div class="bbo-action-card" id="bleuActionCard">
+      <div class="bbo-action-lbl">One thing</div>
+      <div class="bbo-action-text" id="bleuActionText">Put your phone face down. Let your breathing settle.</div>
+    </div>
+    <div class="bbo-return-txt" id="bleuReturnTxt">If you wake again tonight — come back here.</div>
+  </div>
+</div>
+
+<!-- ── SNAP MOMENT OVERLAY ── -->
+<div class="snap-overlay" id="bleuSnapOverlay">
+  <div class="snap-card">
+    <div class="snap-icon" id="bleuSnapIcon">◐</div>
+    <div class="snap-title" id="bleuSnapTitle">This is working.</div>
+    <div class="snap-sub" id="bleuSnapSub">Your system has shifted. This is the moment to lock it in.</div>
+    <button class="snap-cta" onclick="bleuSnapConvert()">Continue My Protocol →</button>
+    <button class="snap-skip" onclick="bleuSnapDismiss()">Not now</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// BLEU INTELLIGENCE LAYER — London / gut
+// ═══════════════════════════════════════════════════════════════
+(function() {
+'use strict';
+
+const CITY_SLUG = 'london-gb';
+const COND_KEY = 'gut';
+const LOC_LABEL = 'London';
+const STRIPE_PRICE = 'price_1TEKSsK4cATmIFbouxOBHtwQ';
+
+// ── RETURN VISITOR ─────────────────────────────────────────
+const visits = parseInt(localStorage.getItem('bleu_v_' + CITY_SLUG) || '0') + 1;
+localStorage.setItem('bleu_v_' + CITY_SLUG, visits);
+if (visits > 1) {
+  const badge = document.getElementById('bleuReturnBadge');
+  if (badge) {
+    badge.textContent = 'Night ' + visits;
+    badge.classList.add('show');
+  }
+}
+
+// ── AUTO-PULSE GLOW ────────────────────────────────────────
+const glow = document.getElementById('bleuGlowField');
+let glowExpanding = true;
+setInterval(function() {
+  if (!glow) return;
+  glowExpanding = !glowExpanding;
+  glow.classList.toggle('breathe-in', glowExpanding);
+}, 5000);
+
+// ── ADD BREATHWORK TRIGGER TO TONIGHT TAB ─────────────────
+// Injected after the timeline, before the CTA
+document.addEventListener('DOMContentLoaded', function() {
+  const tonightTab = document.getElementById('tab-tonight');
+  if (tonightTab) {
+    const trigger = document.createElement('div');
+    trigger.className = 'bleu-breathwork-trigger';
+    trigger.innerHTML = '<div class="bwt-pulse"></div>' +
+      '<div class="bwt-label">90-Second Reset</div>' +
+      '<div class="bwt-text">Follow the breath. Your system shifts in 90 seconds.</div>' +
+      '<div class="bwt-note">4 · 2 · 6 parasympathetic protocol · Vagal activation</div>';
+    trigger.onclick = bleuStartBreath;
+    // Insert before the CTA div
+    const cta = tonightTab.querySelector('.cta-center');
+    if (cta) cta.parentNode.insertBefore(trigger, cta);
+    else tonightTab.appendChild(trigger);
+  }
+
+  // Inject breathwork trigger on Protocol tab too
+  const protocolTab = document.getElementById('tab-protocol');
+  if (protocolTab) {
+    const theAsk = protocolTab.querySelector('.the-ask-block');
+    if (theAsk) {
+      const trigger2 = document.createElement('div');
+      trigger2.className = 'bleu-breathwork-trigger';
+      trigger2.style.marginBottom = '1rem';
+      trigger2.innerHTML = '<div class="bwt-pulse"></div>' +
+        '<div class="bwt-label">Start Right Now</div>' +
+        '<div class="bwt-text">90-second cortisol reset. No equipment. No decisions.</div>';
+      trigger2.onclick = bleuStartBreath;
+      theAsk.parentNode.insertBefore(trigger2, theAsk);
+    }
+  }
+});
+
+// ── BREATHWORK ENGINE ──────────────────────────────────────
+// 4-2-6 pattern (not 4-4-6 — shorter hold, longer exhale)
+const PHASES = [
+  {name:'Inhale', dur:4000, cls:'inhale'},
+  {name:'Hold',   dur:2000, cls:'hold'},
+  {name:'Exhale', dur:6000, cls:'exhale'},
+];
+const GUIDES = {Inhale:'Breathe in slowly…', Hold:'Hold gently…', Exhale:'Let it go…'};
+
+let totalTime = 90;
+let cyclePhase = 0;
+let timerInt = null;
+let phaseTO = null;
+let breathRunning = false;
+const STATE_IN = Math.floor(Math.random() * 4) + 5; // Default mid-range, overridden by journal
+
+window.bleuStartBreath = function() {
+  if (breathRunning) return;
+  breathRunning = true;
+  totalTime = 90; cyclePhase = 0;
+  window.BLEU_BREATH_START = Date.now();
+
+  document.getElementById('bleuBreathOverlay').classList.add('active');
+  document.getElementById('bleuBreathPre').style.display = '';
+  document.getElementById('bleuAfterBreath').classList.remove('show');
+
+  const guide = document.getElementById('bleuBreathGuide');
+  setTimeout(function() {
+    guide.style.opacity = '1';
+    guide.style.transition = 'opacity 1s ease';
+    setTimeout(bleuRunCycle, 1200);
+  }, 600);
+
+  timerInt = setInterval(function() {
+    totalTime--;
+    const m = Math.floor(totalTime / 60);
+    const s = totalTime % 60;
+    const timerEl = document.getElementById('bleuBreathTimer');
+    if (timerEl) timerEl.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    if (totalTime === 45) {
+      const half = document.getElementById('bleuHalfMsg');
+      if (half) half.classList.add('show');
+    }
+    if (totalTime <= 0) {
+      clearInterval(timerInt);
+      if (phaseTO) clearTimeout(phaseTO);
+      bleuEndBreath();
+    }
+  }, 1000);
+};
+
+function bleuRunCycle() {
+  if (totalTime <= 0) return;
+  const phase = PHASES[cyclePhase % PHASES.length];
+  const circle = document.getElementById('bleuBreathCircle');
+  if (circle) circle.className = 'bbo-circle ' + phase.cls;
+  const word = document.getElementById('bleuBreathWord');
+  if (word) word.textContent = phase.name;
+  const guide = document.getElementById('bleuBreathGuide');
+  if (guide) {
+    guide.style.opacity = '0';
+    setTimeout(function() {
+      guide.textContent = GUIDES[phase.name];
+      guide.style.opacity = '1';
+    }, 250);
+  }
+  if (glow) glow.classList.toggle('breathe-in', phase.name === 'Inhale');
+  bleuAnimRing(phase.dur);
+  cyclePhase++;
+  phaseTO = setTimeout(bleuRunCycle, phase.dur);
+}
+
+function bleuAnimRing(dur) {
+  const ring = document.getElementById('bleuRingFill');
+  if (!ring) return;
+  const circ = 2 * Math.PI * 90;
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min(1, (now - start) / dur);
+    ring.style.strokeDasharray = (p * circ) + ' ' + ((1 - p) * circ);
+    if (p < 1) requestAnimationFrame(step);
+    else ring.style.strokeDasharray = '0 ' + circ;
+  }
+  requestAnimationFrame(step);
+}
+
+function bleuEndBreath() {
+  breathRunning = false;
+  const timeToRelief = Math.round((Date.now() - (window.BLEU_BREATH_START || Date.now())) / 1000);
+
+  // Set action text
+  const actions = {
+    low: "You're almost there. Keep your eyes soft and your jaw loose.",
+    mid: "Put your phone face down. Let your breathing settle.",
+    high: "Stay still. Don't try to sleep — just let the stillness hold you.",
+  };
+  const level = STATE_IN;
+  const actionText = level <= 3 ? actions.low : level <= 7 ? actions.mid : actions.high;
+  const actionEl = document.getElementById('bleuActionText');
+  if (actionEl) actionEl.textContent = actionText;
+
+  // Hide pre, show after
+  const pre = document.getElementById('bleuBreathPre');
+  if (pre) pre.style.display = 'none';
+  const after = document.getElementById('bleuAfterBreath');
+  if (after) after.classList.add('show');
+
+  // Staggered reveal
+  setTimeout(function() {
+    const hm = document.getElementById('bleuHumanMoment');
+    if (hm) hm.style.opacity = '1';
+  }, 400);
+  setTimeout(function() {
+    const sub = document.getElementById('bleuAfterSub');
+    if (sub) sub.style.opacity = '1';
+  }, 2200);
+  setTimeout(function() {
+    const fb = document.getElementById('bleuFeedback');
+    if (fb) fb.style.opacity = '1';
+  }, 3800);
+
+  // Log research data
+  bleuLogSession({ stateIn: STATE_IN, timeToRelief, completed: true });
+
+  // Check snap moment
+  bleuCheckSnap();
+}
+
+window.bleuFeedback = function(label, stateOut) {
+  // Log outcome
+  bleuLogSession({ stateIn: STATE_IN, stateOut, feedbackLabel: label, completed: true });
+  // Update button UI
+  document.querySelectorAll('.bbo-fb-btn').forEach(function(b) { b.disabled = true; b.style.opacity = '0.4'; });
+  // Show action card
+  setTimeout(function() {
+    const ac = document.getElementById('bleuActionCard');
+    if (ac) ac.style.opacity = '1';
+  }, 600);
+  // Show return trigger
+  setTimeout(function() {
+    const rt = document.getElementById('bleuReturnTxt');
+    if (rt) rt.style.opacity = '1';
+  }, label === 'not yet' ? 4000 : 8000);
+};
+
+window.bleuCloseBreath = function() {
+  document.getElementById('bleuBreathOverlay').classList.remove('active');
+  clearInterval(timerInt);
+  if (phaseTO) clearTimeout(phaseTO);
+  breathRunning = false;
+};
+
+// ── RESEARCH LOGGING ───────────────────────────────────────
+function bleuLogSession(data) {
+  const sessionKey = bleuGetSessionKey();
+  const entry = Object.assign({
+    session_key: sessionKey,
+    city: CITY_SLUG,
+    condition: COND_KEY,
+    visit: visits,
+    ts: Date.now(),
+  }, data);
+
+  // localStorage — research backbone
+  const logs = JSON.parse(localStorage.getItem('bleu_research_log') || '[]');
+  logs.push(entry);
+  localStorage.setItem('bleu_research_log', JSON.stringify(logs.slice(-50)));
+
+  // Supabase hook — fires when endpoint available
+  if (typeof fetch !== 'undefined') {
+    fetch('/log-session', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(entry),
+    }).catch(function() {}); // Silent fail — localStorage is the backup
+  }
+}
+
+function bleuGetSessionKey() {
+  let key = localStorage.getItem('bleu_sk');
+  if (!key) {
+    key = 'sk_' + Date.now() + '_' + Math.random().toString(36).slice(2,9);
+    localStorage.setItem('bleu_sk', key);
+  }
+  return key;
+}
+
+// ── SNAP MOMENT ────────────────────────────────────────────
+function bleuCheckSnap() {
+  if (sessionStorage.getItem('bleu_snap_shown')) return;
+  const streak = bleuGetStreak();
+  const logs = JSON.parse(localStorage.getItem('bleu_research_log') || '[]');
+  const cityLogs = logs.filter(function(l) { return l.city === CITY_SLUG && l.stateIn && l.stateOut; });
+  if (cityLogs.length >= 2) {
+    const lastTwo = cityLogs.slice(-2);
+    const improvement = (lastTwo[0].stateIn - lastTwo[0].stateOut) + (lastTwo[1].stateIn - lastTwo[1].stateOut);
+    if (improvement >= 10) {
+      setTimeout(function() { bleuShowSnap('The protocol is working.', 'Your system shifted ' + improvement + ' points tonight. Lock it in.', '↑'); }, 20000);
+      return;
+    }
+  }
+  if (streak >= 3) {
+    setTimeout(function() { bleuShowSnap('3 nights.', 'Three nights in a row. The biology is changing. This is the moment to extend it.', '◐'); }, 20000);
+  }
+}
+
+function bleuShowSnap(title, sub, icon) {
+  document.getElementById('bleuSnapTitle').textContent = title;
+  document.getElementById('bleuSnapSub').textContent = sub;
+  document.getElementById('bleuSnapIcon').textContent = icon;
+  document.getElementById('bleuSnapOverlay').classList.add('show');
+  sessionStorage.setItem('bleu_snap_shown', '1');
+}
+
+window.bleuSnapConvert = function() {
+  document.getElementById('bleuSnapOverlay').classList.remove('show');
+  if (typeof bleuProtocolCheckout === 'function') {
+    bleuProtocolCheckout('gut');
+  } else if (typeof startPaidCheckout === 'function') {
+    startPaidCheckout(STRIPE_PRICE);
+  } else {
+    window.open('https://us.fullscript.com/welcome/fstoler', '_blank');
+  }
+};
+
+window.bleuSnapDismiss = function() {
+  document.getElementById('bleuSnapOverlay').classList.remove('show');
+};
+
+// ── STREAK ─────────────────────────────────────────────────
+function bleuGetStreak() {
+  const data = JSON.parse(localStorage.getItem('bleu_streak_' + CITY_SLUG) || '{"streak":0,"last":""}');
+  const today = new Date().toDateString();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (data.last === today) return data.streak;
+  if (data.last === yesterday.toDateString()) {
+    data.streak = (data.streak || 0) + 1;
+  } else {
+    data.streak = 1;
+  }
+  data.last = today;
+  localStorage.setItem('bleu_streak_' + CITY_SLUG, JSON.stringify(data));
+  return data.streak;
+}
+
+// ── CONNECT TRIGGER ────────────────────────────────────────
+// Checks if connect energy is low and trajectory is declining
+// Surfaces in ALVAI chat as a priority message
+function bleuConnectCheck() {
+  const logs = JSON.parse(localStorage.getItem('bleu_research_log') || '[]');
+  const cityLogs = logs.filter(function(l) { return l.city === CITY_SLUG; }).slice(-5);
+  if (cityLogs.length < 3) return;
+  const declining = cityLogs.every(function(l, i) {
+    if (i === 0) return true;
+    return (l.stateOut || l.stateIn) >= (cityLogs[i-1].stateOut || cityLogs[i-1].stateIn);
+  });
+  if (declining) {
+    // Add connect prompt to ALVAI chat if open
+    const chatEl = document.getElementById('chatMessages');
+    if (chatEl) {
+      const d = document.createElement('div');
+      d.className = 'chat-msg system';
+      d.innerHTML = '<div class="cm-icon">◊</div><div class="cm-text" style="border-color:rgba(122,158,135,0.3);color:rgba(122,158,135,0.9)">This isn't about the protocol right now. Is there one person who could know you started this? Connect Energy amplifies everything else by 1.9–2.7×. The biology responds to witness.</div>';
+      chatEl.appendChild(d);
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+  }
+}
+
+// Run connect check when ALVAI tab opens
+document.addEventListener('DOMContentLoaded', function() {
+  const alvaiBtn = document.getElementById('tbtn-intelligence');
+  if (alvaiBtn) {
+    alvaiBtn.addEventListener('click', function() {
+      setTimeout(bleuConnectCheck, 1500);
+    });
+  }
+});
+
+// ── GRAVITY DISPLAY ────────────────────────────────────────
+// Shows gravity stage in community tab
+function bleuUpdateGravityDisplay() {
+  const logs = JSON.parse(localStorage.getItem('bleu_research_log') || '[]');
+  const streak = bleuGetStreak();
+  const stages = ['discovery','reinforcement','association','automation'];
+  const stage = logs.length <= 1 ? 'discovery'
+    : logs.length <= 3 ? 'reinforcement'
+    : streak >= 7 ? 'automation'
+    : 'association';
+  const stageMsg = {
+    discovery: 'First session. The system is reading you.',
+    reinforcement: 'The pattern is establishing. Two more sessions to lock it in.',
+    association: 'The brain is beginning to link this city with relief.',
+    automation: 'The reflex is forming. Opening BLEU is becoming automatic.',
+  };
+  const commTab = document.getElementById('tab-community');
+  if (commTab && !commTab.querySelector('.bleu-gravity-display')) {
+    const gd = document.createElement('div');
+    gd.className = 'bleu-gravity-display';
+    gd.style.cssText = 'background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.15);border-radius:8px;padding:1rem 1.25rem;margin-top:1rem;font-size:0.82rem;';
+    gd.innerHTML = '<div style="font-family:JetBrains Mono,monospace;font-size:0.56rem;color:#C9A84C;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.35rem">Your Gravity Stage</div>' +
+      '<div style="color:#fff;margin-bottom:0.2rem">' + stage.charAt(0).toUpperCase() + stage.slice(1) + '</div>' +
+      '<div style="color:rgba(107,122,153,1);font-size:0.78rem">' + stageMsg[stage] + '</div>';
+    commTab.appendChild(gd);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', bleuUpdateGravityDisplay);
+
+})(); // end IIFE
+</script>
+<!-- ═══════════════════════════════════════════════════════════
+     END BLEU INTELLIGENCE LAYER
+════════════════════════════════════════════════════════════ -->
+
 </body>
 </html>
