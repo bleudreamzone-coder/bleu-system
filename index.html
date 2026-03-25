@@ -11881,11 +11881,7 @@ async function startStripeCheckout() {
 }
 
 async function startPaidCheckout(priceId) {
-  if (!currentUser) {
-    alert('Please create your Passport first to continue.');
-    go('passport');
-    return;
-  }
+  // No login required — anyone can purchase
   const stripe = await loadStripe();
   try {
     const result = await stripe.redirectToCheckout({
