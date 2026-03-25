@@ -2399,6 +2399,8 @@ function renderVesselProducts(cat) {
   </div>
 </div>
 <script>
+try {
+
 (function(){
 function refreshMyStack(){
   var items=JSON.parse(localStorage.getItem('bleu_cart')||'[]');
@@ -2422,6 +2424,8 @@ var vp=document.getElementById('p-vessel');
 if(vp){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.target.classList.contains('active'))refreshMyStack();});});ob.observe(vp,{attributes:true,attributeFilter:['class']});}
 document.addEventListener('DOMContentLoaded',function(){setTimeout(refreshMyStack,1500);});
 })();
+
+} catch(e) { console.warn("Block 17 error:", e.message); }
 </script>
 
 <div class="chat-box chat-area" id="chat-vessel" style="min-height:60px;max-height:200px;overflow-y:auto;padding:16px"></div>
@@ -3083,9 +3087,9 @@ document.addEventListener('DOMContentLoaded',function(){setTimeout(refreshMyStac
 <div class="section-label">Your city. Your neighborhood. Your access.</div>
 <h1 class="hero-title" style="margin-bottom:4px">New Orleans.<br><span class="teal">Every neighborhood. Every practitioner.</span></h1>
 <div id="tw-map-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
-  <div id="tw-map" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
-</div>
-<script>
+  <div id="tw-map" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(2<script>
+try {
+
 (function(){
   var el=document.getElementById("tw-map");
   if(!el)return;
@@ -3104,6 +3108,13 @@ document.addEventListener('DOMContentLoaded',function(){setTimeout(refreshMyStac
     }else{
       if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,18);}
       else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}
+    }
+  }
+  setTimeout(tick,800);
+})();
+
+} catch(e) { console.warn("Block 19 error:", e.message); }
+</script>imeout(tick,30);}
     }
   }
   setTimeout(tick,800);
@@ -3540,9 +3551,9 @@ var fi=0;
   <div class="section-label">PROTOCOLS BUILT ON PEER-REVIEWED EVIDENCE</div>
   <h1 class="hero-title"> <span class="accent">Protocols</span></h1>
 <div id="tw-protocols-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
-  <div id="tw-protocols" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
-</div>
-<script>
+  <div id="tw-protocols" style="font<script>
+try {
+
 (function(){
   var el=document.getElementById("tw-protocols");
   if(!el)return;
@@ -3560,6 +3571,14 @@ var fi=0;
       else{typing=false;pause=60;setTimeout(tick,30);}
     }else{
       if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,18);}
+      else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}
+    }
+  }
+  setTimeout(tick,800);
+})();
+
+} catch(e) { console.warn("Block 21 error:", e.message); }
+</script>;}
       else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}
     }
   }
@@ -4255,10 +4274,9 @@ document.addEventListener('DOMContentLoaded', function(){
     <div style="font-size:10px;letter-spacing:5px;color:rgba(78,205,196,.5);margin-bottom:10px">The genomic case for connection.</div>
 
 <h1 class="hero-title" style="margin-bottom:10px">Loneliness kills 871,000 people per year.<br><span class="teal">Connection reverses every gene.</span></h1>
-<div id="tw-community-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
-  <div id="tw-community" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
-</div>
-<script>
+<div id="tw-community-wrap" style="height:26px;overflow:hidden;margin:-<script>
+try {
+
 (function(){
   var el=document.getElementById("tw-community");
   if(!el)return;
@@ -4276,6 +4294,14 @@ document.addEventListener('DOMContentLoaded', function(){
       else{typing=false;pause=60;setTimeout(tick,30);}
     }else{
       if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,18);}
+      else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}
+    }
+  }
+  setTimeout(tick,800);
+})();
+
+} catch(e) { console.warn("Block 25 error:", e.message); }
+</script>ength>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,18);}
       else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}
     }
   }
@@ -6454,14 +6480,9 @@ SLEEP MODE</div>
     if(typeof recordReferralConversion==='function')recordReferralConversion('share_'+platform);
   };
   var _asc=0,_asd=false,_os=window.send;
-  if(_os){window.send=function(tab){_os(tab);if(!_asd&&['alvai','therapy','recovery'].includes(tab)){_asc++;if(_asc>=4){_asd=true;setTimeout(function(){openShareOverlay({headline:'Know someone who needs this?',sub:'Share BLEU -- it's completely free'});},2500);}}};}
-  var fab=document.getElementById('bleu-share-fab');
-  if(fab)window.addEventListener('scroll',function(){fab.style.opacity=window.scrollY>100?'1':'0.7';});
-})();
-</script>
+  if(_os){window.send=function(tab){_os(tab);if(!_asd&&['alvai','therapy','recovery'].includes(tab)){_asc++;if(_asc>=4){_asd=true;setTimeout(function(){openShareOverlay({headline:'Know someone who needs this?',sub:'Share BLEU -- it's complet<script>
+try {
 
-<!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
-<script>
 
 function checkStreakShare(streakDays) {
   const milestones = [3, 7, 14, 30, 60, 100];
@@ -9637,6 +9658,16 @@ function exportFHIR() {
     alert('Export failed. Try again.');
   }
 }
+
+} catch(e) { console.warn("Block 37 error:", e.message); }
+</script>
+    if(typeof bleuSignal === 'function') bleuSignal('fhir_export', {has_health_data: Object.keys(healthData).length > 0, stack_size: cart.length});
+    
+  } catch(e) {
+    console.error('FHIR export error:', e);
+    alert('Export failed. Try again.');
+  }
+}
 </script>
 
 <!-- ═══════════════════════ ENTERPRISE ═══════════════════════ -->
@@ -11023,15 +11054,9 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
   </div>
 
   <div style="background:rgba(17,30,46,.8);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:22px 28px;max-width:600px;margin:0 auto 0;text-align:center">
-    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#C9A84C;letter-spacing:1px;margin-bottom:10px">THE THREE-WORD VERSION</div>
-    <div style="font-size:20px;color:#4ecdc4;font-weight:500;letter-spacing:2px">Search. Serve. Sustain.</div>
-  </div>
+    <div style="font-family:'JetBrains Mono',m<script>
+try {
 
-</div>
-<!-- ═══ END HOW THE MOAT WORKS ═══ -->
-
-<!-- ═══ ALL ENTERPRISE JS -- INLINE, SELF-CONTAINED ═══ -->
-<script>
 (function(){
   // == COUNTERS ==
   function animCount(id,target){
@@ -11274,6 +11299,18 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
 
 
   // Hook into tab switch
+  var og=window.go;
+  if(og){window.go=function(tab){og(tab);if(tab==='enterprise'){setTimeout(initAll,200)}}}
+
+  // Also try to init on load if enterprise is visible
+  setTimeout(function(){
+    var panel=document.getElementById('p-enterprise');
+    if(panel&&panel.offsetParent!==null){initAll()}
+  },500);
+})();
+
+} catch(e) { console.warn("Block 40 error:", e.message); }
+</script>tab switch
   var og=window.go;
   if(og){window.go=function(tab){og(tab);if(tab==='enterprise'){setTimeout(initAll,200)}}}
 
@@ -12139,14 +12176,9 @@ document.addEventListener("DOMContentLoaded",function(){
 .cart-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
 .cart-item:last-child{border-bottom:none}
 .ci-emoji{font-size:24px;min-width:32px;text-align:center}
-.ci-name{font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:2px;line-height:1.3}
-.ci-dose{font-size:11px;color:rgba(45,138,158,0.9)}
-.ci-price{font-size:13px;font-weight:700;color:#22c55e;margin-top:4px}
-.ci-remove{background:none;border:none;color:rgba(255,255,255,0.2);cursor:pointer;font-size:16px;padding:0;line-height:1;margin-left:auto;min-width:20px}
-.ci-remove:hover{color:rgba(255,100,100,0.7)}
-</style>
+.ci-name{font-size:1<script>
+try {
 
-<script>
 (function(){
 
 // ── CART STATE ──
@@ -12315,6 +12347,23 @@ window.closeCart = function() {
 
 // Init
 document.addEventListener('DOMContentLoaded', function(){
+  renderCart();
+  updateCartTrigger();
+  
+  // Close cart on backdrop click
+  document.addEventListener('click', function(e){
+    var d = document.getElementById('bleu-cart-drawer');
+    var t = document.getElementById('cart-trigger');
+    if(d && d.classList.contains('open') && !d.contains(e.target) && !t.contains(e.target)) {
+      closeCart();
+    }
+  });
+});
+
+})();
+
+} catch(e) { console.warn("Block 45 error:", e.message); }
+</script>Loaded', function(){
   renderCart();
   updateCartTrigger();
   
