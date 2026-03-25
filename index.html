@@ -11737,7 +11737,7 @@ const PRICE_STRESS   = 'price_1TEKS6K4cATmIFbo1OW7BeCW'; // Stress Protocol $45/
 const PRICE_LONGEVITY= 'price_1TEKSWK4cATmIFbojDTEJng9'; // Longevity Core Protocol $69/mo
 const PRICE_GUT      = 'price_1TEKSsK4cATmIFbouxOBHtwQ'; // Gut Reset Protocol $55/mo
 
-function bleuProtocolCheckout(protocol) {
+window.bleuProtocolCheckout = function(protocol) {
   const prices = {
     sleep: PRICE_SLEEP, stress: PRICE_STRESS,
     longevity: PRICE_LONGEVITY, gut: PRICE_GUT
