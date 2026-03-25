@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BLEU — New Orleans</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04060D;
+  --gold:#C9A84C;
+  --teal:#1AECB8;
+  --text:#E8EAF2;
+  --muted:#4A5568;
+  --fd:'Cormorant Garamond',Georgia,serif;
+  --fm:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--fd);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  position:relative;
+}
+
+/* ambient glow — shifts with breathing */
+.glow{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(201,168,76,0.04) 0%,transparent 70%);
+  transition:opacity 4s ease;
+}
+.glow.breathe-in{
+  background:radial-gradient(ellipse 70% 70% at 50% 50%,rgba(26,236,184,0.06) 0%,transparent 70%);
+}
+
+/* SCREENS */
+.screen{
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2rem;
+  z-index:10;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.8s ease;
+  text-align:center;
+}
+.screen.active{opacity:1;pointer-events:all}
+
+/* ── SCREEN 1: ARRIVAL ── */
+#s1 .headline{
+  font-size:clamp(2rem,6vw,3.4rem);
+  font-weight:300;
+  line-height:1.2;
+  color:#fff;
+  margin-bottom:0.5rem;
+  letter-spacing:-0.01em;
+}
+#s1 .sub{
+  font-family:var(--fm);
+  font-size:0.68rem;
+  color:var(--muted);
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  margin-bottom:3.5rem;
+  opacity:0;
+  transition:opacity 1.2s ease 0.6s;
+}
+#s1 .sub.show{opacity:1}
+.human-moment{
+  font-family:var(--fd);
+  font-size:clamp(1.8rem,5vw,2.6rem);
+  font-weight:300;font-style:italic;
+  color:rgba(26,236,184,0.85);
+  margin-bottom:0.4rem;
+  letter-spacing:0.02em;
+}
+#s3 .after-sub{
+  font-size:0.95rem;
+  color:rgba(255,255,255,0.45);
+  font-style:italic;
+  margin-bottom:2.5rem;
+}
+.deep-head{
+  font-size:clamp(1.8rem,5vw,2.8rem);
+  font-weight:300;color:#fff;
+  margin-bottom:0.4rem;line-height:1.2;
+}
+.deep-sub{
+  font-family:var(--fd);font-size:clamp(1rem,3vw,1.4rem);
+  color:rgba(255,255,255,0.35);font-style:italic;
+  margin-bottom:3rem;
+}
+.feedback-btn{
+  font-family:var(--fm);font-size:0.65rem;
+  color:rgba(255,255,255,0.6);
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.1);
+  padding:0.55rem 1.1rem;border-radius:4px;
+  cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;
+  transition:all 0.2s;
+}
+.feedback-btn:hover,.feedback-btn.selected{
+  border-color:rgba(26,236,184,0.4);
+  color:var(--teal);
+  background:rgba(26,236,184,0.05);
+}
+.returning-banner{
+  position:fixed;top:1.5rem;right:1.5rem;
+  font-family:var(--fm);font-size:0.56rem;
+  color:rgba(201,168,76,0.5);letter-spacing:0.15em;
+  text-transform:uppercase;z-index:50;
+  opacity:0;transition:opacity 1s ease 2s;
+}
+.returning-banner.show{opacity:1}
+
+/* ── SLIDER ── */
+.slider-wrap{
+  width:100%;max-width:340px;
+  opacity:0;transform:translateY(12px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.slider-wrap.show{opacity:1;transform:translateY(0)}
+.slider-question{
+  font-size:1.1rem;font-weight:300;color:rgba(255,255,255,0.8);
+  margin-bottom:2rem;line-height:1.5;
+}
+.wired-slider{
+  -webkit-appearance:none;
+  width:100%;height:2px;
+  background:linear-gradient(90deg,var(--teal) var(--pct,50%),rgba(255,255,255,0.08) var(--pct,50%));
+  border-radius:1px;outline:none;cursor:pointer;
+  margin-bottom:0.75rem;
+}
+.wired-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--gold);
+  border:2px solid var(--bg);
+  box-shadow:0 0 16px rgba(201,168,76,0.6);
+  cursor:pointer;transition:transform 0.15s;
+}
+.wired-slider::-webkit-slider-thumb:active{transform:scale(1.2)}
+.slider-labels{
+  display:flex;justify-content:space-between;
+  font-family:var(--fm);font-size:0.56rem;color:var(--muted);
+  letter-spacing:0.15em;text-transform:uppercase;
+}
+.slider-response{
+  margin-top:1.75rem;min-height:2rem;
+  font-size:1rem;color:rgba(255,255,255,0.7);
+  font-style:italic;
+  opacity:0;transition:opacity 0.5s ease;
+}
+.slider-response.show{opacity:1}
+
+/* ── SCREEN 2: BREATHWORK ── */
+#s2{background:var(--bg)}
+.breath-ring{
+  position:relative;
+  width:clamp(180px,40vw,260px);
+  height:clamp(180px,40vw,260px);
+  margin:0 auto 2rem;
+}
+.breath-ring svg{width:100%;height:100%}
+.br-track{fill:none;stroke:rgba(255,255,255,0.04);stroke-width:1.5}
+.br-fill{
+  fill:none;stroke:var(--teal);stroke-width:1.5;
+  stroke-dasharray:0 999;
+  transition:none;
+  filter:drop-shadow(0 0 12px rgba(26,236,184,0.5));
+}
+.breath-circle{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:70%;height:70%;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(26,236,184,0.08),rgba(26,236,184,0.02) 60%,transparent);
+  border:1px solid rgba(26,236,184,0.12);
+  transition:all 4s cubic-bezier(0.4,0,0.2,1);
+}
+.breath-circle.inhale{
+  width:88%;height:88%;
+  background:radial-gradient(circle,rgba(26,236,184,0.14),rgba(26,236,184,0.04) 60%,transparent);
+  border-color:rgba(26,236,184,0.25);
+  box-shadow:0 0 40px rgba(26,236,184,0.12);
+}
+.breath-circle.hold{
+  width:88%;height:88%;
+  border-color:rgba(26,236,184,0.35);
+}
+.breath-circle.exhale{
+  width:70%;height:70%;
+  background:radial-gradient(circle,rgba(26,236,184,0.05),transparent 60%);
+  border-color:rgba(26,236,184,0.08);
+}
+.breath-word{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--fd);font-size:clamp(0.9rem,3vw,1.1rem);
+  font-weight:300;color:rgba(255,255,255,0.7);
+  letter-spacing:0.15em;text-transform:uppercase;
+  white-space:nowrap;transition:opacity 0.5s ease;
+  font-style:italic;
+}
+.breath-guide{
+  font-family:var(--fd);font-size:clamp(1rem,3.5vw,1.25rem);
+  font-weight:300;color:rgba(255,255,255,0.6);
+  margin-bottom:1rem;min-height:1.8rem;
+  font-style:italic;letter-spacing:0.03em;
+  transition:opacity 0.6s ease;
+}
+.breath-timer{
+  font-family:var(--fm);font-size:0.62rem;
+  color:var(--muted);letter-spacing:0.2em;
+  margin-bottom:2rem;
+}
+.halfway-msg{
+  font-family:var(--fd);font-size:1rem;
+  color:rgba(26,236,184,0.8);font-style:italic;
+  opacity:0;transition:opacity 1s ease;min-height:1.4rem;
+}
+.halfway-msg.show{opacity:1}
+
+/* ── SCREEN 3: AFTER ── */
+#s3 .after-headline{
+  font-size:clamp(1.6rem,5vw,2.4rem);
+  font-weight:300;color:#fff;
+  margin-bottom:1rem;line-height:1.3;
+}
+#s3 .after-sub{
+  font-size:1rem;color:rgba(255,255,255,0.55);
+  font-style:italic;line-height:1.7;max-width:340px;
+  margin-bottom:3rem;
+}
+.one-action{
+  background:rgba(26,236,184,0.05);
+  border:1px solid rgba(26,236,184,0.15);
+  border-radius:12px;padding:1.25rem 1.75rem;
+  max-width:340px;width:100%;margin-bottom:2.5rem;
+}
+.oa-label{
+  font-family:var(--fm);font-size:0.56rem;color:var(--teal);
+  letter-spacing:0.22em;text-transform:uppercase;margin-bottom:0.5rem;
+}
+.oa-text{
+  font-size:1.05rem;color:#fff;line-height:1.6;
+}
+.soft-offer{
+  font-size:0.88rem;color:rgba(255,255,255,0.4);
+  margin-bottom:1rem;max-width:300px;line-height:1.6;
+  font-style:italic;
+}
+.show-me-btn{
+  font-family:var(--fm);font-size:0.65rem;
+  color:var(--gold);
+  background:transparent;border:1px solid rgba(201,168,76,0.25);
+  padding:0.65rem 1.5rem;border-radius:4px;
+  cursor:pointer;letter-spacing:0.15em;text-transform:uppercase;
+  transition:all 0.2s;text-decoration:none;display:inline-block;
+}
+.show-me-btn:hover{background:rgba(201,168,76,0.08);border-color:rgba(201,168,76,0.5)}
+
+/* ── SCREEN 4: DEEPER ── */
+#s4 .deep-head{
+  font-size:clamp(1.4rem,4vw,2rem);font-weight:300;color:#fff;
+  margin-bottom:0.75rem;
+}
+#s4 .deep-sub{font-size:0.9rem;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:2.5rem;max-width:340px}
+
+.stack-preview{
+  width:100%;max-width:360px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;text-align:left;
+}
+.sp-title{
+  font-family:var(--fm);font-size:0.58rem;color:var(--gold);
+  letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;
+}
+.sp-item{font-size:0.85rem;color:rgba(255,255,255,0.7);padding:0.35rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;gap:0.6rem}
+.sp-item:last-child{border:none}
+.sp-check{color:var(--teal);font-size:0.7rem}
+.sp-price{
+  font-family:var(--fd);font-size:1.1rem;color:var(--gold);
+  text-align:center;margin-bottom:0.5rem;
+}
+.sp-note{font-family:var(--fm);font-size:0.58rem;color:var(--muted);text-align:center;margin-bottom:1.25rem}
+.activate-btn{
+  width:100%;max-width:360px;
+  background:var(--gold);color:#04060D;
+  font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;
+  padding:1rem 2rem;border-radius:8px;border:none;cursor:pointer;
+  letter-spacing:0.04em;transition:opacity 0.2s;
+}
+.activate-btn:hover{opacity:0.9}
+.clinical-note{
+  font-family:var(--fm);font-size:0.55rem;color:var(--muted);
+  text-align:center;margin-top:1rem;letter-spacing:0.1em;line-height:1.8;
+  max-width:340px;
+}
+
+/* NOLA mark */
+.nola-mark{
+  position:fixed;top:1.5rem;left:50%;transform:translateX(-50%);
+  font-family:var(--fm);font-size:0.56rem;color:rgba(201,168,76,0.35);
+  letter-spacing:0.25em;text-transform:uppercase;z-index:50;
+}
+</style>
+</head>
+<body>
+
+<div class="glow" id="glow"></div>
+<div class="nola-mark">BLEU · New Orleans</div>
+
+<!-- ── SCREEN 1: ARRIVAL ── -->
+<div class="screen active" id="s1">
+  <div class="headline" id="headline">You're awake.</div>
+  <div class="sub" id="s1sub">New Orleans · 2am · You're not alone</div>
+
+  <div class="slider-wrap" id="sliderWrap">
+    <div class="slider-question">How wired do you feel right now?</div>
+    <input type="range" class="wired-slider" id="wiredSlider"
+      min="1" max="10" value="5"
+      oninput="onSlider(this.value)"
+      style="--pct:44%">
+    <div class="slider-labels">
+      <span>Restless</span>
+      <span>Wired</span>
+    </div>
+    <div class="slider-response" id="sliderResponse"></div>
+  </div>
+
+  <div class="city-note">Jazz Bird 501(c)(3) · Dr. Felicia Stoler DCN RDN FACSM</div>
+</div>
+
+<!-- ── SCREEN 2: BREATHWORK ── -->
+<div class="screen" id="s2">
+  <div class="breath-guide" id="breathGuide" style="opacity:0">Don't try to sleep yet.</div>
+
+  <div class="breath-ring">
+    <svg viewBox="0 0 200 200">
+      <circle class="br-track" cx="100" cy="100" r="90"/>
+      <circle class="br-fill" id="brFill" cx="100" cy="100" r="90"
+        transform="rotate(-90 100 100)"
+        stroke-dasharray="0 999"/>
+    </svg>
+    <div class="breath-circle" id="breathCircle">
+      <div class="breath-word" id="breathWord">Breathe</div>
+    </div>
+  </div>
+
+  <div class="breath-timer" id="breathTimer">1:30</div>
+  <div class="halfway-msg" id="halfwayMsg">Your system is starting to come down.</div>
+</div>
+
+<!-- ── SCREEN 3: AFTER ── -->
+<div class="screen" id="s3">
+  <div class="after-headline" id="afterHeadline">That helped.</div>
+  <div class="human-moment" id="humanMoment" style="opacity:0;transition:opacity 1.4s ease">I'm here.</div>
+  <div class="after-sub" id="afterSub" style="opacity:0;transition:opacity 1s ease 0.4s">Stay with me for a second.</div>
+
+  <!-- FIX 5: FEEDBACK — before the action card -->
+  <div id="feedbackBlock" style="opacity:0;margin-bottom:1.5rem;width:100%;max-width:320px">
+    <div style="font-family:var(--fd);font-size:1rem;color:rgba(255,255,255,0.6);font-style:italic;margin-bottom:1rem">
+      Did that take the edge off?
+    </div>
+    <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap">
+      <button class="feedback-btn" onclick="recordFeedback('yes',2)">Yes</button>
+      <button class="feedback-btn" onclick="recordFeedback('little',4)">A little</button>
+      <button class="feedback-btn" onclick="recordFeedback('not yet',7)">Not yet</button>
+    </div>
+  </div>
+
+  <div class="one-action" id="oneActionCard" style="opacity:0;transition:opacity 1s ease">
+    <div class="oa-label">One thing</div>
+    <div class="oa-text" id="oneAction">Put your phone face down.<br>Let your breathing settle.</div>
+  </div>
+
+  <!-- FIX 6: RETURN TRIGGER -->
+  <div id="returnTrigger" style="opacity:0;font-family:var(--fm);font-size:0.6rem;color:rgba(201,168,76,0.5);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem">
+    If you wake again tonight — come back here.
+  </div>
+
+  <div class="soft-offer" id="softOffer" style="opacity:0">
+    If nights like this happen often, I can help make them easier.
+  </div>
+  <button class="show-me-btn" id="showMeBtn" onclick="goDeeper()" style="opacity:0">Show me how</button>
+</div>
+
+<!-- ── SCREEN 4: DEEPER — stripped to one moment ── -->
+<div class="screen" id="s4">
+  <div class="deep-head" id="deepHead">What you felt just now.</div>
+  <div class="deep-sub" id="deepSub">Every night.</div>
+  <button class="activate-btn" id="activateBtn" onclick="activate()" style="opacity:0;transition:opacity 1s ease 0.6s">
+    Activate Sleep Reset Protocol →
+  </button>
+  <div class="clinical-note" id="clinicalNote" style="opacity:0;transition:opacity 1s ease 1.2s">
+    Dr. Felicia Stoler · DCN RDN FACSM · Jazz Bird 501(c)(3) · $49/mo · Cancel anytime
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// BLEU NOLA — THE 2AM EXPERIENCE
+// One sentence. One slider. 90 seconds. One action.
+// ══════════════════════════════════════════════════════════════
+
+// ── ARRIVAL SEQUENCE ─────────────────────────────────────────
+// FIX 1: Slider visible immediately. Sub fades in. No delay gate.
+let sliderTouched = false;
+let autoBreathStarted = false;
+let timerInterval = null;
+let phaseTimeout = null;
+
+// Sub fades at 700ms — but slider is already visible
+setTimeout(() => {
+  document.getElementById('s1sub').classList.add('show');
+}, 700);
+
+// Slider already visible (no 1600ms delay)
+// Just ensure the show class is set
+document.getElementById('sliderWrap').classList.add('show');
+document.getElementById('sliderWrap').style.opacity = '1';
+document.getElementById('sliderWrap').style.transform = 'translateY(0)';
+
+// FIX 2: AUTO-START subtle breathing immediately
+// The glow pulses before any interaction — feels alive on landing
+let autoPulse = null;
+function startAutoPulse() {
+  const glow = document.getElementById('glow');
+  let expanding = true;
+  autoPulse = setInterval(() => {
+    if (expanding) {
+      glow.style.background = 'radial-gradient(ellipse 65% 65% at 50% 50%,rgba(26,236,184,0.05) 0%,transparent 70%)';
+    } else {
+      glow.style.background = 'radial-gradient(ellipse 55% 55% at 50% 50%,rgba(201,168,76,0.03) 0%,transparent 70%)';
+    }
+    expanding = !expanding;
+  }, 5000); // slow 5-second pulse — 4-2-6 total ≈ 12s/cycle suggestion
+}
+startAutoPulse();
+
+// ── SLIDER ───────────────────────────────────────────────────
+const RESPONSES = {
+  low:  "You're close. One thing and you'll be there.",
+  mid:  "You're stuck in a loop. We're breaking it now.",
+  high: "Your system is overloaded. We're slowing it down.",
+};
+
+function onSlider(val) {
+  const v = parseInt(val);
+  const pct = ((v - 1) / 9 * 100).toFixed(0) + '%';
+  document.getElementById('wiredSlider').style.setProperty('--pct', pct);
+
+  const resp = document.getElementById('sliderResponse');
+  resp.textContent = v <= 3 ? RESPONSES.low : v <= 7 ? RESPONSES.mid : RESPONSES.high;
+  resp.classList.add('show');
+
+  window.WIRED_LEVEL = v;
+  window.STATE_IN = v; // research log: state on entry
+
+  if (!sliderTouched) {
+    sliderTouched = true;
+    // FIX 3: No gap — start instantly on first touch
+    if (autoPulse) clearInterval(autoPulse);
+    startBreathwork();
+  } else {
+    // Subsequent moves: adjust breath intensity live
+    // Higher wired level = slightly slower exhale emphasis
+    window.EXHALE_DUR = v >= 8 ? 8000 : 6000;
+  }
+}
+
+// FIX 4: Pattern changed from 4-4-6 to 4-2-6
+// Research: hold phase increases tension in anxious users
+// Shorter hold → smoother nervous system drop
+const PHASES = [
+  {name:'Inhale', dur:4000, cls:'inhale'},
+  {name:'Hold',   dur:2000, cls:'hold'},
+  {name:'Exhale', dur:6000, cls:'exhale'},
+];
+
+let totalTime = 90;
+let cyclePhase = 0;
+let phaseTimeout = null;
+
+function startBreathwork() {
+  transition('s1','s2');
+
+  setTimeout(() => {
+    const guide = document.getElementById('breathGuide');
+    guide.style.opacity = '1';
+    guide.style.transition = 'opacity 1s ease';
+    setTimeout(() => {
+      guide.textContent = 'Just follow this.';
+      setTimeout(runBreathCycle, 1000);
+    }, 1800);
+  }, 600);
+
+  // Timer countdown
+  timerInterval = setInterval(() => {
+    totalTime--;
+    const m = Math.floor(totalTime / 60);
+    const s = totalTime % 60;
+    document.getElementById('breathTimer').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+
+    // Halfway message at 45s
+    if (totalTime === 45) {
+      document.getElementById('halfwayMsg').classList.add('show');
+    }
+
+    if (totalTime <= 0) {
+      clearInterval(timerInterval);
+      if (phaseTimeout) clearTimeout(phaseTimeout);
+      endBreathwork();
+    }
+  }, 1000);
+}
+
+function runBreathCycle() {
+  if (totalTime <= 0) return;
+  const phase = PHASES[cyclePhase % PHASES.length];
+
+  // Update circle
+  const circle = document.getElementById('breathCircle');
+  circle.className = 'breath-circle ' + phase.cls;
+
+  // Update word
+  document.getElementById('breathWord').textContent = phase.name;
+
+  // Update guide text
+  const guides = {
+    Inhale:'Breathe in slowly…',
+    Hold:'Hold gently…',
+    Exhale:'Let it go…',
+  };
+  const g = document.getElementById('breathGuide');
+  g.style.opacity = '0';
+  setTimeout(() => {
+    g.textContent = guides[phase.name];
+    g.style.opacity = '1';
+  }, 300);
+
+  // Glow shift
+  const glow = document.getElementById('glow');
+  if (phase.name === 'Inhale') glow.classList.add('breathe-in');
+  else glow.classList.remove('breathe-in');
+
+  // Progress ring
+  animateRing(phase.dur);
+
+  cyclePhase++;
+  phaseTimeout = setTimeout(runBreathCycle, phase.dur);
+}
+
+function animateRing(dur) {
+  const circle = document.getElementById('brFill');
+  const circ = 2 * Math.PI * 90; // ~565
+  const start = performance.now();
+
+  function step(now) {
+    const elapsed = now - start;
+    const progress = Math.min(1, elapsed / dur);
+    const dash = progress * circ;
+    circle.style.strokeDasharray = `${dash} ${circ - dash}`;
+    if (progress < 1) requestAnimationFrame(step);
+    else circle.style.strokeDasharray = `0 ${circ}`;
+  }
+  requestAnimationFrame(step);
+}
+
+// ── RETURN VISITOR RECOGNITION ───────────────────────────────
+const visits = parseInt(localStorage.getItem('bleu_nola_visits') || '0') + 1;
+localStorage.setItem('bleu_nola_visits', visits);
+const isReturn = visits > 1;
+
+if (isReturn) {
+  setTimeout(() => {
+    document.getElementById('headline').textContent = 'Welcome back.';
+    document.getElementById('s1sub').textContent = "Let's pick up where you left off.";
+  }, 200);
+  const rb = document.createElement('div');
+  rb.className = 'returning-banner show';
+  rb.textContent = `Night ${visits}`;
+  document.body.appendChild(rb);
+}
+
+// ── RESEARCH LOG ─────────────────────────────────────────────
+function logOutcome(stateOut) {
+  const entry = {
+    city: 'new-orleans',
+    state_in: window.STATE_IN || 5,
+    state_out: stateOut,
+    completed: true,
+    wired_level: window.WIRED_LEVEL || 5,
+    visit: visits,
+    ts: Date.now(),
+  };
+  // localStorage — Supabase hook ready
+  const logs = JSON.parse(localStorage.getItem('bleu_research_log') || '[]');
+  logs.push(entry);
+  localStorage.setItem('bleu_research_log', JSON.stringify(logs.slice(-30)));
+  // Future: POST to /api/log or Supabase edge function
+  // fetch('/api/research-log', {method:'POST',body:JSON.stringify(entry)});
+}
+
+// ── AFTER BREATHWORK ─────────────────────────────────────────
+function endBreathwork() {
+  const level = window.WIRED_LEVEL || 5;
+
+  const actions = {
+    low:  "You're almost there.\nJust keep your eyes soft and your jaw loose.",
+    mid:  "Put your phone face down.\nLet your breathing settle.",
+    high: "Stay horizontal.\nDon't try to sleep — just let the stillness hold you.",
+  };
+  document.getElementById('oneAction').textContent =
+    level <= 3 ? actions.low : level <= 7 ? actions.mid : actions.high;
+
+  setTimeout(() => {
+    transition('s2', 's3');
+
+    // FIX 5: FEEDBACK LOOP — user acknowledges improvement
+    // "I'm here." appears first, alone
+    setTimeout(() => {
+      document.getElementById('humanMoment').style.opacity = '1';
+    }, 400);
+
+    // Sub line
+    setTimeout(() => {
+      document.getElementById('afterSub').style.opacity = '1';
+    }, 2200);
+
+    // FIX 5 continued: Feedback question appears before the action card
+    setTimeout(() => {
+      showFeedback();
+    }, 3500);
+
+  }, 600);
+}
+
+// FIX 5: Feedback — user confirms shift (or doesn't)
+// This builds agency, creates memory, closes the behavior loop
+function showFeedback() {
+  const fb = document.getElementById('feedbackBlock');
+  if (fb) {
+    fb.style.opacity = '1';
+    fb.style.transition = 'opacity 0.8s ease';
+  }
+}
+
+function recordFeedback(label, stateOut) {
+  // Log the outcome
+  logOutcome(stateOut);
+
+  // Hide feedback, show one action
+  document.getElementById('feedbackBlock').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('feedbackBlock').style.display = 'none';
+    document.getElementById('oneActionCard').style.opacity = '1';
+
+    // FIX 6: RETURN TRIGGER — appears after action card
+    setTimeout(() => {
+      document.getElementById('returnTrigger').style.opacity = '1';
+      document.getElementById('returnTrigger').style.transition = 'opacity 1.2s ease';
+    }, 6000);
+
+    // Soft offer
+    setTimeout(() => {
+      document.getElementById('softOffer').style.opacity = '1';
+      document.getElementById('softOffer').style.transition = 'opacity 1.2s ease';
+    }, label === 'not yet' ? 8000 : 14000);
+
+    // Button
+    setTimeout(() => {
+      document.getElementById('showMeBtn').style.opacity = '1';
+      document.getElementById('showMeBtn').style.transition = 'opacity 1s ease';
+    }, label === 'not yet' ? 9500 : 15500);
+
+  }, 500);
+}
+
+// ── DEEPER ───────────────────────────────────────────────────
+function goDeeper() {
+  transition('s3', 's4');
+  // Staggered reveal on s4 — headline first, then button
+  setTimeout(() => {
+    document.getElementById('activateBtn').style.opacity = '1';
+    document.getElementById('clinicalNote').style.opacity = '1';
+  }, 200);
+}
+
+function activate() {
+  if (typeof bleuProtocolCheckout === 'function') {
+    bleuProtocolCheckout('sleep');
+  } else if (typeof startPaidCheckout === 'function') {
+    startPaidCheckout('price_1TEKQmK4cATmIFbokmkYg47S');
+  } else {
+    window.open('https://us.fullscript.com/welcome/fstoler', '_blank');
+  }
+}
+
+// ── TRANSITION ───────────────────────────────────────────────
+function transition(from, to) {
+  const f = document.getElementById(from);
+  const t = document.getElementById(to);
+  f.style.opacity = '0';
+  f.style.pointerEvents = 'none';
+  setTimeout(() => {
+    f.classList.remove('active');
+    t.classList.add('active');
+  }, 800);
+}
+</script>
+</body>
+</html>
