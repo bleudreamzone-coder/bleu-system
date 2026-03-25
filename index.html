@@ -55,6 +55,7 @@
 
   // Aggressive DOM update — runs repeatedly until it lands
   var attempts=0;
+  setTimeout(function(){
   var interval=setInterval(function(){
     attempts++;
     var h=document.getElementById('home-hero-title');
@@ -73,6 +74,7 @@
     }
     if(attempts>20)clearInterval(interval);
   },100);
+  },800);
 })();
 </script>
 
