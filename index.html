@@ -3498,7 +3498,7 @@ window.nhDetail=function(i){
     +"</div>"
     +"</div>"
     +"<div class='nh-d-btns'>"
-    +"<button class='nh-d-btn' onclick="ask('map','"+z.q.replace(/'/g,"\'")+"')">Full Report</button>"
+    +"<button class='nh-d-btn' onclick="ask(\'map\',\'+z.q.replace(/'/g,"\'")+"')">Full Report</button>"
     +"<button class='nh-d-btn' onclick="ask('map','Find practitioners near ZIP "+z.zip+" New Orleans')">Find Practitioners</button>"
     +"<button class='nh-d-btn' onclick="ask('map','Top 3 health crises in "+z.n+" New Orleans')">Crisis Analysis</button>"
     +"<button class='nh-d-btn g' onclick="ask('enterprise','BLEU enterprise deployment model for "+z.n+" New Orleans')">Enterprise Brief</button>"
@@ -11775,7 +11775,7 @@ function bleuProtocolCheckout(protocol) {
     +'<div style="margin-bottom:20px">'
     +stack.map(function(item){return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:rgba(240,236,228,0.75)"><span style="color:#C9A84C;font-size:11px">✓</span>'+item+'</div>';}).join('')
     +'</div>'
-    +'<button onclick="startPaidCheckout(''+priceId+'')" style="width:100%;padding:16px;background:#C9A84C;color:#0b1018;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;font-family:DM Sans,sans-serif;margin-bottom:12px">Activate Protocol -- Inside BLEU →</button>'
+    +'<button onclick="startPaidCheckout(\''+priceId+'\')" style="width:100%;padding:16px;background:#C9A84C;color:#0b1018;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;font-family:DM Sans,sans-serif;margin-bottom:12px">Activate Protocol -- Inside BLEU →</button>'
     +'<div style="text-align:center;font-size:11px;color:rgba(240,236,228,0.3)">Or get individual items: <a href="https://amazon.com?tag=bleulive-20" target="_blank" style="color:rgba(240,236,228,0.5)">Amazon</a> · <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" style="color:rgba(240,236,228,0.5)">Fullscript</a></div>'
     +'</div>';
 
