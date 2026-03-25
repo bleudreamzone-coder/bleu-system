@@ -2021,7 +2021,7 @@ window.loadEnvData=async function(){
     if(uc)uc.style.borderColor=uv>=8?'rgba(255,80,80,0.4)':uv>=6?'rgba(255,160,0,0.4)':uv>=3?'rgba(255,220,0,0.3)':'rgba(255,255,255,0.06)';
     var note='';
     if(uv>=8)note+='High UV -- sun protection essential. Your omega-3 protocol helps with UV-induced inflammation. ';
-    else if(uv>=6)note+='Moderate-high UV -- your D3+K2 is working with today's sun exposure. ';
+    else if(uv>=6)note+='Moderate-high UV -- your D3+K2 is working with today\'s sun exposure. ';
     if(c.relative_humidity_2m>80)note+='High humidity affects sleep quality tonight -- take magnesium glycinate 90 min before bed. ';
     if(c.temperature_2m>90)note+='Heat stress day -- electrolytes matter. Hydrate early. ';
     var ne=document.getElementById('env-protocol-note');
@@ -2904,7 +2904,7 @@ document.addEventListener('DOMContentLoaded',function(){setTimeout(refreshMyStac
     } else {
       verdict='Urgent Metabolic Attention Needed';
       desc='The pattern here is consistent with advanced metabolic stress across multiple dimensions. I want to be direct with you: these signals are serious and they are reversible -- but reversal requires intervention, not just awareness.';
-      step='I'd recommend starting with a Function Health biomarker panel. 100+ markers interpreted inside BLEU will give us the biological data we need to build the right protocol for your specific situation.';
+      step='I\'d recommend starting with a Function Health biomarker panel. 100+ markers interpreted inside BLEU will give us the biological data we need to build the right protocol for your specific situation.';
     }
 
     // Build context for Alvai
@@ -12054,7 +12054,7 @@ function openGateway(productId){
   var intake=document.getElementById("gw-intake"),qDiv=document.getElementById("gw-questions");
   if(data.intake&&data.intake.length>0){
     qDiv.innerHTML=data.intake.map(function(q){
-      if(q.type==="select"){return "<div class='gw-q'><label>"+q.label+"</label><select id='"+q.id+"' onchange="_gwAnswers['"+q.id+"']=this.value"><option value=''>Select...</option>"+q.options.map(function(o){return"<option value='"+o+"'>"+o+"</option>"}).join("")+"</select></div>";}
+      if(q.type==="select"){return "<div class='gw-q'><label>"+q.label+"</label><select id='"+q.id+"' onchange=\'_gwAnswers['"+q.id+"']=this.value"><option value=''>Select...</option>"+q.options.map(function(o){return"<option value='"+o+"'>"+o+"</option>"}).join("")+"</select></div>";}
       return "<div class='gw-q'><label>"+q.label+"</label><input type='text' id='"+q.id+"' placeholder='"+(q.placeholder||"")+"' oninput="_gwAnswers['"+q.id+"']=this.value" /></div>";
     }).join("");
     intake.style.display="block";
