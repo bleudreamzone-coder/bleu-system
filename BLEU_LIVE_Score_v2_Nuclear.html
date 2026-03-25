@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BLEU .LIVE Score v2 — Nuclear Behavioral State Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#05080F;--surface:#0D1421;--card:#111827;--card2:#0F1A2E;
+  --accent:#C9A84C;--teal:#1AECB8;--sage:#7A9E87;--ember:#E8603C;--rose:#E85D75;
+  --muted:#6B7A99;--text:#E8EAF2;--border:rgba(255,255,255,0.06);
+  --adim:rgba(201,168,76,0.08);--abrd:rgba(201,168,76,0.2);
+  --tdim:rgba(26,236,184,0.07);--tbrd:rgba(26,236,184,0.2);
+  --fd:'Cormorant Garamond',Georgia,serif;
+  --fs:'Syne',system-ui,sans-serif;
+  --fm:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--fs);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 20% 0%,rgba(26,236,184,0.04),transparent 70%),
+  radial-gradient(ellipse 50% 30% at 80% 100%,rgba(201,168,76,0.05),transparent 70%)}
+
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:2rem 1.5rem 6rem}
+
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem}
+.logo{font-family:var(--fd);font-size:1.8rem;font-weight:600;color:var(--accent);letter-spacing:0.12em}
+.logo span{color:var(--teal);font-size:0.9rem;font-family:var(--fm);letter-spacing:0.2em;display:block;margin-top:-4px}
+.hdr-right{text-align:right;font-family:var(--fm);font-size:0.58rem;color:var(--muted);letter-spacing:0.1em;line-height:2}
+.hdr-time{color:var(--accent)}
+
+/* ── READINESS STATE BANNER ── */
+.readiness-banner{border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;transition:all 0.6s ease;border:1px solid transparent}
+.rb-fragile{background:rgba(232,96,60,0.08);border-color:rgba(232,96,60,0.2)}
+.rb-stabilizing{background:rgba(201,168,76,0.08);border-color:rgba(201,168,76,0.2)}
+.rb-ready{background:rgba(26,236,184,0.07);border-color:rgba(26,236,184,0.2)}
+.rb-expanding{background:rgba(122,158,135,0.08);border-color:rgba(122,158,135,0.25)}
+.rb-left{display:flex;align-items:center;gap:1rem}
+.rb-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;animation:pulse-rb 2.5s infinite}
+.rb-fragile .rb-dot{background:var(--ember);box-shadow:0 0 12px rgba(232,96,60,0.5)}
+.rb-stabilizing .rb-dot{background:var(--accent);box-shadow:0 0 12px rgba(201,168,76,0.5)}
+.rb-ready .rb-dot{background:var(--teal);box-shadow:0 0 12px rgba(26,236,184,0.5)}
+.rb-expanding .rb-dot{background:var(--sage);box-shadow:0 0 12px rgba(122,158,135,0.5)}
+@keyframes pulse-rb{0%,100%{opacity:1}50%{opacity:0.5}}
+.rb-state{font-family:var(--fm);font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase}
+.rb-fragile .rb-state{color:var(--ember)}
+.rb-stabilizing .rb-state{color:var(--accent)}
+.rb-ready .rb-state{color:var(--teal)}
+.rb-expanding .rb-state{color:var(--sage)}
+.rb-desc{font-size:0.85rem;color:var(--text)}
+.rb-right{font-family:var(--fm);font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;flex-shrink:0}
+
+/* ── HERO GRID ── */
+.hero-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+@media(max-width:760px){.hero-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.hero-grid{grid-template-columns:1fr}}
+
+.metric-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;position:relative;overflow:hidden}
+.mc-label{font-family:var(--fm);font-size:0.56rem;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.75rem}
+.mc-val{font-family:var(--fd);font-size:2.4rem;font-weight:300;line-height:1;margin-bottom:0.3rem}
+.mc-sub{font-size:0.75rem;color:var(--muted)}
+.mc-bar{height:2px;background:var(--border);border-radius:1px;overflow:hidden;margin-top:0.75rem}
+.mc-fill{height:100%;border-radius:1px;transition:width 1s ease}
+
+/* Live Score */
+.live-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;position:relative}
+.lc-ring{position:relative;width:100px;height:100px;margin:0 auto 0.75rem}
+.lc-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.lc-ring circle{fill:none;stroke-width:7;stroke-linecap:round}
+.lr-bg{stroke:rgba(255,255,255,0.05)}
+.lr-fill{stroke:var(--teal);stroke-dasharray:283;stroke-dashoffset:283;transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)}
+.lc-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.lc-n{font-family:var(--fd);font-size:2rem;font-weight:300;color:#fff}
+.lc-max{font-family:var(--fm);font-size:0.5rem;color:var(--muted)}
+
+/* Trajectory */
+.traj-display{text-align:center}
+.td-arrow{font-size:2rem;margin-bottom:0.3rem;transition:color 0.4s}
+.td-num{font-family:var(--fd);font-size:1.8rem;font-weight:300}
+.td-label{font-size:0.72rem;color:var(--muted)}
+
+/* Friction */
+.friction-display{text-align:center}
+.fd-gauge{width:80px;height:80px;margin:0 auto 0.5rem}
+.fd-gauge svg{width:100%;height:100%}
+.fd-num{font-family:var(--fd);font-size:1.8rem;font-weight:300}
+.fd-label{font-size:0.72rem;color:var(--muted)}
+
+/* ── NEXT BEST ACTION ── */
+.nba-card{background:var(--card2);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden;border:1px solid var(--border)}
+.nba-card.fragile{border-color:rgba(232,96,60,0.25)}
+.nba-card.stabilizing{border-color:rgba(201,168,76,0.25)}
+.nba-card.ready{border-color:rgba(26,236,184,0.25)}
+.nba-card.expanding{border-color:rgba(122,158,135,0.25)}
+.nba-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
+.nba-pulse{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse-dot 2s infinite;flex-shrink:0}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(26,236,184,0.4)}70%{box-shadow:0 0 0 8px rgba(26,236,184,0)}}
+.nba-title{font-family:var(--fm);font-size:0.6rem;color:var(--teal);letter-spacing:0.2em;text-transform:uppercase}
+.nba-mode-badge{margin-left:auto;font-family:var(--fm);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:2rem}
+.nba-action{font-family:var(--fd);font-size:1.25rem;color:#fff;line-height:1.6;margin-bottom:1rem;font-style:italic}
+.nba-reason{font-size:0.8rem;color:var(--muted);line-height:1.6;border-left:2px solid var(--border);padding-left:1rem;margin-bottom:1rem}
+.nba-timer{font-family:var(--fm);font-size:0.65rem;color:var(--accent);letter-spacing:0.1em;display:flex;align-items:center;gap:0.5rem}
+.nba-do-btn{background:var(--accent);color:#05080F;font-family:var(--fs);font-size:0.82rem;font-weight:700;padding:0.75rem 1.5rem;border-radius:7px;border:none;cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;display:inline-flex;align-items:center;gap:0.5rem}
+.nba-do-btn:hover{opacity:0.9;transform:translateY(-1px)}
+.nba-do-btn.done{background:var(--teal);color:#05080F}
+
+/* ── ALVAI INTELLIGENCE ── */
+.alvai-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem}
+.alvai-top{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap}
+.alvai-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse-dot 2s infinite;flex-shrink:0}
+.alvai-lbl{font-family:var(--fm);font-size:0.6rem;color:var(--teal);letter-spacing:0.2em;text-transform:uppercase}
+.alvai-mode{font-family:var(--fm);font-size:0.58rem;color:var(--muted);margin-left:auto;padding:0.2rem 0.6rem;border:1px solid var(--border);border-radius:2rem}
+.alvai-msg{font-family:var(--fd);font-size:1.05rem;color:#fff;line-height:1.7;font-style:italic;margin-bottom:1rem}
+.alvai-causal{background:var(--tdim);border:1px solid var(--tbrd);border-radius:8px;padding:0.85rem 1rem;margin-bottom:0.75rem}
+.ac-label{font-family:var(--fm);font-size:0.56rem;color:var(--teal);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.3rem}
+.ac-text{font-size:0.82rem;color:var(--text);line-height:1.6}
+.alvai-next{font-family:var(--fm);font-size:0.62rem;color:var(--accent);letter-spacing:0.08em}
+
+/* ── DIMENSIONS ── */
+.dims-label{font-family:var(--fm);font-size:0.6rem;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.75rem}
+.dims-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.dims-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1.5rem}
+@media(max-width:700px){.dims-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:440px){.dims-grid{grid-template-columns:1fr}}
+
+.dim-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.1rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.dim-card:hover,.dim-card.active{border-color:var(--dc,var(--teal));background:rgba(255,255,255,0.02);transform:translateY(-1px)}
+.dim-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem}
+.dim-icon{font-size:1rem}
+.dim-score{font-family:var(--fd);font-size:1.5rem;font-weight:300;color:var(--dc,#fff)}
+.dim-name{font-family:var(--fm);font-size:0.56rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem}
+.dim-bar{height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden;margin-bottom:0.4rem}
+.dim-fill{height:100%;border-radius:1px;transition:width 1s ease;background:var(--dc,var(--teal))}
+.dim-status{font-size:0.7rem;color:var(--muted);display:flex;align-items:center;gap:0.35rem}
+
+/* ── CONNECT MULTIPLIER ── */
+.connect-section{background:var(--card2);border:1px solid rgba(122,158,135,0.2);border-radius:12px;padding:1.4rem;margin-bottom:1.5rem}
+.cs-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem}
+.cs-lbl{font-family:var(--fm);font-size:0.6rem;color:var(--sage);letter-spacing:0.2em;text-transform:uppercase}
+.cs-mult{font-family:var(--fd);font-size:1.6rem;color:var(--sage)}
+.cs-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:0.75rem}
+.cs-fill{height:100%;background:linear-gradient(90deg,var(--sage),var(--teal));border-radius:2px;transition:width 0.8s ease}
+.cs-body{font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem}
+.cs-trigger{background:rgba(122,158,135,0.07);border:1px solid rgba(122,158,135,0.15);border-radius:8px;padding:0.85rem 1rem;font-size:0.82rem;color:var(--sage);font-style:italic}
+
+/* ── LOG SECTION ── */
+.log-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem}
+.log-header{font-family:var(--fm);font-size:0.6rem;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.75rem}
+.log-header::after{content:'';flex:1;height:1px;background:var(--border)}
+.sliders-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0.85rem;margin-bottom:1.1rem}
+@media(max-width:500px){.sliders-grid{grid-template-columns:1fr}}
+.slider-item{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.9rem}
+.si-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem}
+.si-label{font-family:var(--fm);font-size:0.56rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase}
+.si-val{font-family:var(--fm);font-size:0.65rem;color:var(--accent)}
+.bleu-slider{-webkit-appearance:none;width:100%;height:3px;border-radius:1px;outline:none;cursor:pointer;background:linear-gradient(90deg,var(--sc,var(--teal)) var(--pct,44%),rgba(255,255,255,0.07) var(--pct,44%))}
+.bleu-slider::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--sc,var(--teal));border:2px solid var(--bg);box-shadow:0 0 8px rgba(26,236,184,0.3);transition:transform 0.15s}
+.bleu-slider::-webkit-slider-thumb:hover{transform:scale(1.2)}
+
+.behavior-checks{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem}
+.bc-pill{font-family:var(--fm);font-size:0.58rem;color:var(--muted);border:1px solid var(--border);padding:0.35rem 0.75rem;border-radius:2rem;cursor:pointer;background:transparent;transition:all 0.18s;letter-spacing:0.07em}
+.bc-pill:hover{border-color:var(--abrd);color:var(--accent)}
+.bc-pill.on{background:var(--adim);border-color:var(--abrd);color:var(--accent)}
+
+.log-btn{width:100%;background:var(--accent);color:#05080F;font-family:var(--fs);font-size:0.88rem;font-weight:700;padding:0.9rem;border-radius:8px;border:none;cursor:pointer;letter-spacing:0.04em;transition:opacity 0.2s,transform 0.15s}
+.log-btn:hover{opacity:0.9;transform:translateY(-1px)}
+.log-btn:active{transform:translateY(0)}
+
+/* ── SNAP MOMENT ── */
+.snap-overlay{position:fixed;inset:0;z-index:400;background:rgba(5,8,15,0.92);display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity 0.4s}
+.snap-overlay.show{opacity:1;pointer-events:all}
+.snap-card{background:var(--card);border:1px solid var(--abrd);border-radius:16px;padding:2.5rem;max-width:440px;width:100%;text-align:center;transform:scale(0.9);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+.snap-overlay.show .snap-card{transform:scale(1)}
+.snap-icon{font-size:2.5rem;margin-bottom:1rem}
+.snap-title{font-family:var(--fd);font-size:1.8rem;font-weight:300;color:#fff;margin-bottom:0.5rem}
+.snap-sub{font-size:0.88rem;color:var(--muted);line-height:1.6;margin-bottom:2rem}
+.snap-cta{background:var(--accent);color:#05080F;font-family:var(--fs);font-weight:700;font-size:0.9rem;padding:1rem 2rem;border-radius:8px;border:none;cursor:pointer;letter-spacing:0.04em;display:block;width:100%;margin-bottom:0.75rem;transition:opacity 0.2s}
+.snap-cta:hover{opacity:0.9}
+.snap-skip{font-family:var(--fm);font-size:0.6rem;color:var(--muted);background:none;border:none;cursor:pointer;letter-spacing:0.12em;text-transform:uppercase}
+
+/* ── HISTORY ── */
+.history-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem}
+.hs-header{font-family:var(--fm);font-size:0.6rem;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.75rem}
+.hs-header::after{content:'';flex:1;height:1px;background:var(--border)}
+.history-chart{display:flex;align-items:flex-end;gap:2px;height:56px;margin-bottom:1rem}
+.hc-bar{flex:1;min-width:5px;border-radius:2px 2px 0 0;transition:height 0.5s ease,opacity 0.3s;opacity:0.65;cursor:pointer}
+.hc-bar:hover{opacity:1}
+.history-list{display:flex;flex-direction:column;gap:0;max-height:180px;overflow-y:auto}
+.hl-row{display:flex;align-items:center;gap:1rem;padding:0.55rem 0;border-bottom:1px solid var(--border);font-size:0.78rem}
+.hl-date{font-family:var(--fm);font-size:0.58rem;color:var(--muted);min-width:65px}
+.hl-score{font-family:var(--fd);font-size:1.1rem;min-width:30px}
+.hl-state{color:var(--muted);font-style:italic;flex:1}
+.hl-delta{font-family:var(--fm);font-size:0.62rem;min-width:32px;text-align:right}
+
+/* ── RESEARCH ── */
+.research-panel{background:var(--tdim);border:1px solid var(--tbrd);border-radius:14px;padding:1.5rem}
+.rp-header{font-family:var(--fm);font-size:0.6rem;color:var(--teal);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1.25rem}
+.rp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:480px){.rp-grid{grid-template-columns:repeat(2,1fr)}}
+.rg-item{text-align:center}
+.rg-val{font-family:var(--fd);font-size:1.8rem;font-weight:300;color:var(--teal);display:block}
+.rg-lbl{font-family:var(--fm);font-size:0.54rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;line-height:1.4}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--teal);color:#05080F;font-family:var(--fd);font-size:1rem;font-weight:600;padding:0.8rem 2rem;border-radius:8px;z-index:500;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">BLEU<span>.LIVE SCORE v2</span></div>
+    <div class="hdr-right">
+      Jazz Bird 501(c)(3) · New Orleans<br>
+      Dr. Felicia Stoler · DCN RDN FACSM<br>
+      <span class="hdr-time" id="nowTime"></span>
+    </div>
+  </div>
+
+  <!-- READINESS BANNER -->
+  <div class="readiness-banner" id="readinessBanner">
+    <div class="rb-left">
+      <div class="rb-dot"></div>
+      <div>
+        <div class="rb-state" id="rbState">Awaiting Signal</div>
+        <div class="rb-desc" id="rbDesc">Log your first check-in to initialize your system.</div>
+      </div>
+    </div>
+    <div class="rb-right" id="rbRight">—</div>
+  </div>
+
+  <!-- HERO METRICS -->
+  <div class="hero-grid">
+    <!-- Live Score -->
+    <div class="metric-card" style="text-align:center">
+      <div class="mc-label">System State</div>
+      <div class="lc-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="lr-bg" cx="50" cy="50" r="45"/>
+          <circle class="lr-fill" id="ringFill" cx="50" cy="50" r="45"/>
+        </svg>
+        <div class="lc-num">
+          <span class="lc-n" id="scoreNum">—</span>
+          <span class="lc-max">/100</span>
+        </div>
+      </div>
+      <div class="mc-sub" id="scoreSub">Initialize</div>
+    </div>
+
+    <!-- Trajectory -->
+    <div class="metric-card" style="text-align:center">
+      <div class="mc-label">Trajectory</div>
+      <div class="traj-display">
+        <div class="td-arrow" id="trajArrow" style="color:var(--muted)">→</div>
+        <div class="td-num mc-val" id="trajNum" style="color:var(--muted)">—</div>
+        <div class="td-label" id="trajLabel">No history yet</div>
+      </div>
+      <div class="mc-bar"><div class="mc-fill" id="trajBar" style="width:50%;background:var(--accent)"></div></div>
+    </div>
+
+    <!-- Friction -->
+    <div class="metric-card" style="text-align:center">
+      <div class="mc-label">Friction Score</div>
+      <div class="friction-display">
+        <div class="td-num mc-val" id="frictionNum" style="color:var(--muted)">—</div>
+        <div class="td-label" id="frictionLabel">Awaiting log</div>
+      </div>
+      <div class="mc-bar"><div class="mc-fill" id="frictionBar" style="width:0%;background:var(--ember)"></div></div>
+      <div class="mc-sub" id="frictionMode" style="margin-top:0.4rem;font-family:var(--fm);font-size:0.58rem;letter-spacing:0.1em"></div>
+    </div>
+  </div>
+
+  <!-- NEXT BEST ACTION -->
+  <div class="nba-card" id="nbaCard">
+    <div class="nba-header">
+      <div class="nba-pulse"></div>
+      <div class="nba-title">Next Best Action</div>
+      <div class="nba-mode-badge" id="nbaBadge" style="background:var(--tdim);color:var(--teal);border:1px solid var(--tbrd)">ALVAI Active</div>
+    </div>
+    <div class="nba-action" id="nbaAction">Log your first check-in. I'll tell you exactly what to do next — one thing, under two minutes.</div>
+    <div class="nba-reason" id="nbaReason">The system reads your state, trajectory, and friction before deciding. It never gives more than you can do right now.</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem">
+      <div class="nba-timer" id="nbaTimer">⏱ Under 2 minutes</div>
+      <button class="nba-do-btn" id="nbaBtn" onclick="doAction()">Mark Done →</button>
+    </div>
+  </div>
+
+  <!-- ALVAI CARD -->
+  <div class="alvai-card">
+    <div class="alvai-top">
+      <div class="alvai-dot"></div>
+      <div class="alvai-lbl">ALVAI — Decision Intelligence</div>
+      <div class="alvai-mode" id="alvaiMode">Awaiting signal</div>
+    </div>
+    <div class="alvai-msg" id="alvaiMsg">The system is listening. Your biology has a specific signal. Log a check-in and I'll read it — and tell you what caused the last shift, not just what the score is.</div>
+    <div class="alvai-causal">
+      <div class="ac-label">Causal Analysis</div>
+      <div class="ac-text" id="alvaiCausal">Causal analysis activates after 2+ entries. The system identifies what behavior produced the last outcome shift — and tells you directly.</div>
+    </div>
+    <div class="alvai-next" id="alvaiNext"></div>
+  </div>
+
+  <!-- DIMENSIONS -->
+  <div class="dims-label">6 Dimensions</div>
+  <div class="dims-grid" id="dimsGrid"></div>
+
+  <!-- CONNECT MULTIPLIER -->
+  <div class="connect-section">
+    <div class="cs-header">
+      <div class="cs-lbl">◊ Connect Energy — System Multiplier</div>
+      <div class="cs-mult" id="connectMult">×1.00</div>
+    </div>
+    <div class="cs-bar"><div class="cs-fill" id="connectBar" style="width:0%"></div></div>
+    <div class="cs-body" id="connectBody">Peer-reviewed research confirms: protocols followed with community witness work 1.9–2.7× better than alone. Connect Energy amplifies every dimension. This is the single highest-leverage action available to you.</div>
+    <div class="cs-trigger" id="connectTrigger">"Is there one person who could know you started this tonight?" — ALVAI</div>
+  </div>
+
+  <!-- LOG -->
+  <div class="log-section">
+    <div class="log-header">Log Check-In</div>
+    <div class="sliders-grid" id="slidersGrid"></div>
+    <div class="behavior-checks" id="behaviorChecks"></div>
+    <button class="log-btn" onclick="logEntry()">Log This Moment →</button>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-section">
+    <div class="hs-header">System History</div>
+    <div class="history-chart" id="historyChart"></div>
+    <div class="history-list" id="historyList"><div style="font-size:0.82rem;color:var(--muted);font-style:italic;padding:0.5rem 0">No entries yet. Your first log creates the baseline.</div></div>
+  </div>
+
+  <!-- RESEARCH -->
+  <div class="research-panel">
+    <div class="rp-header">Jazz Bird 501(c)(3) — Causal Research Signal</div>
+    <div class="rp-grid">
+      <div class="rg-item"><span class="rg-val" id="rLogs">0</span><span class="rg-lbl">Total Logs</span></div>
+      <div class="rg-item"><span class="rg-val" id="rStreak">0</span><span class="rg-lbl">Day Streak</span></div>
+      <div class="rg-item"><span class="rg-val" id="rPeak">—</span><span class="rg-lbl">Peak Score</span></div>
+      <div class="rg-item"><span class="rg-val" id="r7d">—</span><span class="rg-lbl">7-Day Delta</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SNAP MOMENT OVERLAY -->
+<div class="snap-overlay" id="snapOverlay">
+  <div class="snap-card">
+    <div class="snap-icon" id="snapIcon">◐</div>
+    <div class="snap-title" id="snapTitle">This is working.</div>
+    <div class="snap-sub" id="snapSub">Your system has shifted. This is the moment to lock it in.</div>
+    <button class="snap-cta" onclick="snapConvert()">Continue My Protocol →</button>
+    <button class="snap-skip" onclick="snapDismiss()">Not now</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// BLEU .LIVE SCORE v2 — NUCLEAR BEHAVIORAL STATE ENGINE
+// ══════════════════════════════════════════════════════════════════
+// Architecture:
+//   STATE → TRAJECTORY → FRICTION → READINESS → NBA ENGINE → ALVAI
+// Every decision flows through this chain. No shortcuts.
+// ══════════════════════════════════════════════════════════════════
+
+const DIMS = {
+  sleep:     {label:'Sleep',     icon:'◐', color:'#1AECB8', weight:0.28, invert:false},
+  stress:    {label:'Stress',    icon:'◈', color:'#C9A84C', weight:0.22, invert:true },
+  nutrition: {label:'Nutrition', icon:'◉', color:'#7A9E87', weight:0.18, invert:false},
+  movement:  {label:'Movement',  icon:'◎', color:'#E8603C', weight:0.15, invert:false},
+  finance:   {label:'Finance',   icon:'◷', color:'#E85D75', weight:0.07, invert:false},
+  connect:   {label:'Connect',   icon:'◊', color:'#7A9E87', weight:0.10, invert:false},
+};
+
+const BEHAVIORS = [
+  'Box breathing','Magnesium taken','Screen-free hour','Journaled',
+  'Morning light','Walked outside','Cold water','No caffeine after 3pm','Sat for meals',
+];
+
+// ── SCORING ENGINE ──────────────────────────────────────────────
+
+function dimScore(key, rawVal, history) {
+  const dim = DIMS[key];
+  const norm = dim.invert ? (11 - rawVal) * 10 : rawVal * 10;
+  const streak = calcStreak(history);
+  const adherence = Math.min(100, streak * 14 + 30);
+  const recentOutcome = history.length > 1
+    ? Math.min(100, norm + (norm - (dim.invert ? (11 - history[0].raw[key]) * 10 : history[0].raw[key] * 10)) * 0.4)
+    : norm;
+  const recency = Math.min(100, 65 + history.length * 5);
+  return Math.round(Math.max(0, Math.min(100,
+    norm * 0.25 + adherence * 0.25 + recentOutcome * 0.35 + recency * 0.15
+  )));
+}
+
+function connectMultiplier(connectScore) {
+  return 1 + (connectScore / 200);
+}
+
+function liveScore(dimScores) {
+  const cm = connectMultiplier(dimScores.connect);
+  return Math.round(Math.max(0, Math.min(100,
+    Object.entries(DIMS).reduce((sum, [k, d]) => {
+      return sum + dimScores[k] * d.weight * (k === 'connect' ? 1 : cm);
+    }, 0)
+  )));
+}
+
+// NEW: TRAJECTORY — where you're going, not where you are
+function trajectory(history) {
+  if (history.length < 2) return null;
+  const today = history[history.length - 1].score;
+  const last3 = history.slice(-4, -1);
+  if (last3.length === 0) return 0;
+  const avg = last3.reduce((s, e) => s + e.score, 0) / last3.length;
+  return Math.round(today - avg);
+}
+
+// NEW: FRICTION — how hard is it for this user to comply
+function frictionScore(history) {
+  if (history.length === 0) return 0.5; // unknown
+  const recent = history.slice(-5);
+  const totalBehaviorSlots = recent.length * 3; // expect ~3 behaviors per entry
+  const totalBehaviorsLogged = recent.reduce((s, e) => s + (e.behaviors || []).length, 0);
+  const raw = 1 - Math.min(1, totalBehaviorsLogged / Math.max(1, totalBehaviorSlots));
+  // also factor in completion of NBA actions
+  const nbaCompletions = recent.filter(e => e.nbaCompleted).length;
+  const nbaFriction = 1 - (nbaCompletions / Math.max(1, recent.length));
+  return Math.round(((raw * 0.6) + (nbaFriction * 0.4)) * 100) / 100;
+}
+
+// NEW: READINESS STATE — human-readable system classification
+function readinessState(score, traj, friction) {
+  if (score === null) return 'init';
+  if (friction > 0.65) return 'fragile'; // friction override
+  if (score < 40) return 'fragile';
+  if (score < 55 || (traj !== null && traj < -6)) return 'stabilizing';
+  if (score < 72 && traj !== null && traj >= 0) return 'ready';
+  if (score >= 72) return 'expanding';
+  return 'stabilizing';
+}
+
+function calcStreak(history) {
+  if (history.length === 0) return 0;
+  let streak = 0;
+  const dates = [...new Set(history.map(e => new Date(e.ts).toDateString()))].reverse();
+  for (let i = 0; i < dates.length; i++) {
+    const expected = new Date();
+    expected.setDate(expected.getDate() - i);
+    if (dates[i] === expected.toDateString()) streak++;
+    else break;
+  }
+  return streak;
+}
+
+// ── NEXT BEST ACTION ENGINE ─────────────────────────────────────
+// One action. State-aware. Friction-aware. Under 2 minutes. Always.
+
+const NBA = {
+  fragile: {
+    actions: [
+      {action:"Put your phone face down and take 5 slow breaths. That's everything.",reason:"Your system is under load. The single highest-leverage move is reducing sensory input for 60 seconds.",time:"60 seconds"},
+      {action:"Lie flat. Let your arms fall open. Do not try to sleep — just let your body be horizontal.",reason:"Fragile states don't respond to effort. Gravity and stillness are the protocol right now.",time:"2 minutes"},
+      {action:"Exhale completely — longer than your inhale — 4 times. Nothing else.",reason:"The exhale activates the vagus nerve. This is a direct cortisol interrupt. It works in under 90 seconds.",time:"90 seconds"},
+    ],
+    badge:{label:'Protect Mode',bg:'rgba(232,96,60,0.1)',color:'#E8603C',brd:'rgba(232,96,60,0.25)'},
+  },
+  stabilizing: {
+    actions: [
+      {action:"Repeat what worked last time. Don't add anything new tonight.",reason:"Your system is stabilizing. Novelty raises cortisol. Repetition lowers it. Do the same thing that worked.",time:"Your usual protocol"},
+      {action:"Dim all lights to 10% right now. Just that.",reason:"Light is the most controllable cortisol input. This one change starts the melatonin signal immediately.",time:"10 seconds"},
+      {action:"Take your Magnesium Glycinate 400mg. Tonight's window is open.",reason:"You're in the stabilization zone where the supplement's cortisol effect is most measurable. Don't miss this window.",time:"30 seconds"},
+    ],
+    badge:{label:'Reinforce Mode',bg:'rgba(201,168,76,0.1)',color:'#C9A84C',brd:'rgba(201,168,76,0.25)'},
+  },
+  ready: {
+    actions: [
+      {action:"Set your sleep window — same time tonight as last night. Lock it.",reason:"Circadian anchoring is the leverage point at this stage. Consistency of timing compounds faster than any supplement.",time:"1 minute decision"},
+      {action:"Do 4 rounds of box breathing now. Your nervous system is ready to go deeper.",reason:"You've crossed the threshold where breathwork produces measurable HRV improvement. This is the upgrade moment.",time:"8 minutes"},
+      {action:"10 minutes outside tomorrow morning — first thing. Set the reminder now.",reason:"Morning light anchors the cortisol curve for the entire day. You're stable enough that this will compound.",time:"10 minutes tomorrow"},
+    ],
+    badge:{label:'Build Mode',bg:'rgba(26,236,184,0.08)',color:'#1AECB8',brd:'rgba(26,236,184,0.2)'},
+  },
+  expanding: {
+    actions: [
+      {action:"Add the morning light protocol — 10 minutes outside before checking your phone.",reason:"You're in the optimization window. Morning light is the highest-leverage addition at this stage of the protocol.",time:"10 min tomorrow AM"},
+      {action:"Consider adding Ashwagandha KSM-66 600mg to your morning routine.",reason:"At this stability level, adaptogenic support begins compounding. The HPA axis is regulated enough to benefit.",time:"30 seconds daily"},
+      {action:"Tell one person you're running this protocol. Just one.",reason:"Connect Energy amplifies everything. At your current score, one social anchor produces the largest remaining gain available.",time:"2 minutes"},
+    ],
+    badge:{label:'Optimize Mode',bg:'rgba(122,158,135,0.08)',color:'#7A9E87',brd:'rgba(122,158,135,0.2)'},
+  },
+  init: {
+    actions:[{action:"Log your first check-in. The system reads your signal before deciding what you need.",reason:"No protocol is right for everyone. BLEU reads your specific state first.",time:"30 seconds"}],
+    badge:{label:'ALVAI Active',bg:'var(--tdim)',color:'var(--teal)',brd:'var(--tbrd)'},
+  },
+};
+
+// ── CAUSAL ENGINE ───────────────────────────────────────────────
+// What CAUSED the last shift — not just what changed
+
+function causalAnalysis(history) {
+  if (history.length < 2) return null;
+  const last = history[history.length - 1];
+  const prev = history[history.length - 2];
+  const delta = last.score - prev.score;
+  const newBehaviors = (last.behaviors || []).filter(b => !(prev.behaviors || []).includes(b));
+  const lostBehaviors = (prev.behaviors || []).filter(b => !(last.behaviors || []).includes(b));
+
+  if (Math.abs(delta) < 3) return "The system held steady. No significant input change detected.";
+
+  if (delta > 0) {
+    if (newBehaviors.length > 0) {
+      return `Score improved ${delta} points. Most likely cause: ${newBehaviors[0]} was added to your protocol. ${newBehaviors.length > 1 ? `Also new: ${newBehaviors.slice(1).join(', ')}.` : ''} Repeat this.`;
+    }
+    const risingDim = Object.keys(DIMS).find(k => {
+      const curr = last.dims?.[k] || 50;
+      const pastVal = prev.dims?.[k] || 50;
+      return curr - pastVal > 8;
+    });
+    if (risingDim) return `Score improved ${delta} points. The ${DIMS[risingDim].label} dimension drove the shift. What you did differently in that area is working.`;
+    return `Score improved ${delta} points. The pattern suggests sustained consistency is producing the compound effect.`;
+  } else {
+    if (lostBehaviors.length > 0) {
+      return `Score declined ${Math.abs(delta)} points. Most likely cause: ${lostBehaviors[0]} was removed from your protocol. The system registered the gap.`;
+    }
+    const highStress = last.raw?.stress > 7;
+    if (highStress) return `Score declined ${Math.abs(delta)} points. Elevated stress was the primary input. The cortisol load suppressed other dimensions. The protocol response is to simplify, not add.`;
+    return `Score declined ${Math.abs(delta)} points. Likely environmental — increased load without corresponding protocol support. Stay the course.`;
+  }
+}
+
+// ── ALVAI INTELLIGENCE ──────────────────────────────────────────
+
+const ALVAI_MSGS = {
+  fragile: [
+    "Your system is under load. This isn't the moment for protocol — it's the moment for the single smallest action that asks the least of you.",
+    "The signal is fragile right now. What you need isn't more information. It's less. One breath. One step. That's it.",
+    "At this state, I don't optimize. I protect. The only thing that matters in the next 90 seconds is reducing the cortisol load by one degree.",
+  ],
+  stabilizing: [
+    "The system is finding its floor. This is the stage most people misread as failure. It isn't. The biology is reorganizing before it rises.",
+    "You're in the stabilization window. The protocol is working below the threshold of subjective experience. Trust the data, not the feeling.",
+    "Stabilizing means the cortisol curve is responding. The gap between 'feels the same' and 'measurably different' closes around day 7.",
+  ],
+  ready: [
+    "You've crossed the threshold. The biology is stable enough to build on. This is the moment to add one thing — not many things. One.",
+    "The system is ready for the next layer. The foundation is holding. Now we add structure on top of stability, not chaos on top of hope.",
+    "Ready state means the cortisol floor has dropped. Your decisions from the last several days are visible in this number.",
+  ],
+  expanding: [
+    "The system is running well. This is the window where precision matters more than effort. The biology is ready for a higher signal.",
+    "Strong signal. You've crossed the threshold where the protocol works for you instead of requiring effort. Now we optimize the ceiling.",
+    "Expanding state. Every additional behavior added now compounds on a stable foundation. This is where the research data gets interesting.",
+  ],
+  init: ["The system is listening. Log your first check-in and I'll tell you exactly what's happening in your biology — and the one thing to do about it tonight."],
+};
+
+// ── SNAP MOMENT ENGINE ──────────────────────────────────────────
+// Triggers on: 3-day streak OR 10-point improvement
+// Not a sales trick. A behavioral lock-in moment.
+
+function checkSnapMoment(history, streak) {
+  if (history.length < 2) return false;
+  const last = history[history.length - 1];
+  const prev = history[history.length - 2];
+  const improvement = last.score - prev.score;
+
+  // Only trigger once per session
+  if (sessionStorage.getItem('bleu_snap_shown')) return false;
+
+  if (streak === 3) {
+    showSnap('3-Day Streak.', `You've checked in 3 days in a row. The system has enough data to see your pattern. This is the moment where consistency becomes biology.`, '◐');
+    return true;
+  }
+  if (improvement >= 10) {
+    showSnap('The protocol is working.', `Your score improved ${improvement} points in one session. That shift is real and measurable. Lock it in before it fades.`, '↑');
+    return true;
+  }
+  return false;
+}
+
+function showSnap(title, sub, icon) {
+  document.getElementById('snapTitle').textContent = title;
+  document.getElementById('snapSub').textContent = sub;
+  document.getElementById('snapIcon').textContent = icon;
+  document.getElementById('snapOverlay').classList.add('show');
+  sessionStorage.setItem('bleu_snap_shown', '1');
+}
+
+function snapConvert() {
+  document.getElementById('snapOverlay').classList.remove('show');
+  // Hook to Stripe — calls existing bleuProtocolCheckout if available
+  if (typeof bleuProtocolCheckout === 'function') {
+    bleuProtocolCheckout('sleep');
+  } else {
+    window.open('https://us.fullscript.com/welcome/fstoler', '_blank');
+  }
+  showToast('Continuing your protocol →');
+}
+
+function snapDismiss() {
+  document.getElementById('snapOverlay').classList.remove('show');
+}
+
+// ── CONNECT TRIGGER ─────────────────────────────────────────────
+// If connect is low AND trajectory is declining → override with connection prompt
+
+function connectTrigger(connectScore, traj, readiness) {
+  if (connectScore < 30 && traj !== null && traj < -3) return true;
+  if (readiness === 'fragile' && connectScore < 40) return true;
+  return false;
+}
+
+// ── NBA ACTION ──────────────────────────────────────────────────
+let currentNBAIdx = 0;
+
+function doAction() {
+  const btn = document.getElementById('nbaBtn');
+  btn.textContent = '✓ Done';
+  btn.classList.add('done');
+  btn.disabled = true;
+
+  // Mark last entry as NBA completed
+  if (S.history.length > 0) {
+    S.history[S.history.length - 1].nbaCompleted = true;
+    save();
+  }
+
+  const toasts = {
+    fragile: "That helped. Your system just shifted slightly.",
+    stabilizing: "Good. The pattern is reinforcing.",
+    ready: "That's working. The system is building.",
+    expanding: "Strong. The protocol is compounding.",
+    init: "First step taken. Log a check-in to go deeper.",
+  };
+  const rs = S.readiness || 'init';
+  showToast(toasts[rs] || "Logged.");
+
+  setTimeout(() => {
+    btn.textContent = 'Mark Done →';
+    btn.classList.remove('done');
+    btn.disabled = false;
+    currentNBAIdx = (currentNBAIdx + 1) % (NBA[rs]?.actions?.length || 1);
+    render();
+  }, 3000);
+}
+
+// ── STATE ────────────────────────────────────────────────────────
+const S = {
+  inputs: {sleep:5,stress:5,nutrition:5,movement:5,finance:5,connect:5},
+  behaviors: new Set(),
+  history: [],
+  readiness: 'init',
+};
+
+function save() { localStorage.setItem('bleu_v3', JSON.stringify({history:S.history,inputs:S.inputs})); }
+function load() {
+  const d = localStorage.getItem('bleu_v3');
+  if (d) { const p = JSON.parse(d); S.history = p.history||[]; S.inputs = p.inputs||S.inputs; }
+}
+
+// ── RENDER ───────────────────────────────────────────────────────
+function render() {
+  const hist = S.history;
+  const dimScores = {};
+  for (const k of Object.keys(DIMS)) dimScores[k] = dimScore(k, S.inputs[k], hist);
+  const live = hist.length > 0 ? liveScore(dimScores) : null;
+  const traj = trajectory(hist);
+  const friction = frictionScore(hist);
+  const readiness = readinessState(live, traj, friction);
+  S.readiness = readiness;
+  const streak = calcStreak(hist);
+  const causal = causalAnalysis(hist);
+
+  renderReadiness(readiness, live, traj, friction);
+  renderHero(live, traj, friction, dimScores);
+  renderNBA(readiness, friction);
+  renderALVAI(readiness, live, traj, causal, dimScores);
+  renderDims(dimScores);
+  renderConnect(dimScores.connect, traj, readiness);
+  renderHistory(hist);
+  renderResearch(streak, hist);
+}
+
+function renderReadiness(rs, score, traj, friction) {
+  const banner = document.getElementById('readinessBanner');
+  banner.className = 'readiness-banner rb-' + (rs === 'init' ? 'stabilizing' : rs);
+
+  const labels = {init:'Awaiting Signal',fragile:'Fragile',stabilizing:'Stabilizing',ready:'Ready',expanding:'Expanding'};
+  const descs = {
+    init:'Log your first check-in to initialize your system.',
+    fragile:'Your system is under load. One simple action is better than a full protocol right now.',
+    stabilizing:'The system is finding its floor. The biology is reorganizing before it rises.',
+    ready:'You\'ve crossed the threshold. The foundation is holding. Now we build.',
+    expanding:'The system is running well. Precision over effort. Optimize the ceiling.',
+  };
+  const rights = {
+    init:'—',
+    fragile:`Friction: ${Math.round(friction*100)}% · Simplify`,
+    stabilizing:`Traj: ${traj !== null ? (traj>=0?'+':'')+traj : '—'} · Reinforce`,
+    ready:`Traj: +${traj||0} · Build`,
+    expanding:`Peak mode · Optimize`,
+  };
+
+  document.getElementById('rbState').textContent = labels[rs] || rs;
+  document.getElementById('rbDesc').textContent = descs[rs] || '';
+  document.getElementById('rbRight').textContent = rights[rs] || '';
+}
+
+function renderHero(live, traj, friction, dimScores) {
+  // Live score ring
+  const ring = document.getElementById('ringFill');
+  const numEl = document.getElementById('scoreNum');
+  const subEl = document.getElementById('scoreSub');
+  if (live !== null) {
+    numEl.textContent = live;
+    const offset = 283 - (live / 100) * 283;
+    ring.style.strokeDashoffset = offset;
+    const c = live >= 70 ? '#1AECB8' : live >= 45 ? '#C9A84C' : '#E8603C';
+    ring.style.stroke = c;
+    ring.style.filter = `drop-shadow(0 0 10px ${c}55)`;
+    const states = ['—','Under Pressure','Stabilizing','Stabilizing','Progressing','Progressing','Progressing','Ready','Ready','Expanding','Thriving'];
+    subEl.textContent = states[Math.floor(live/10)] || 'Active';
+  } else {
+    numEl.textContent = '—';
+    ring.style.strokeDashoffset = '283';
+    subEl.textContent = 'Initialize';
+  }
+
+  // Trajectory
+  const ta = document.getElementById('trajArrow');
+  const tn = document.getElementById('trajNum');
+  const tl = document.getElementById('trajLabel');
+  const tb = document.getElementById('trajBar');
+  if (traj !== null) {
+    ta.textContent = traj > 3 ? '↑' : traj < -3 ? '↓' : '→';
+    ta.style.color = traj > 3 ? 'var(--teal)' : traj < -3 ? 'var(--ember)' : 'var(--accent)';
+    tn.textContent = (traj >= 0 ? '+' : '') + traj;
+    tn.style.color = traj > 3 ? 'var(--teal)' : traj < -3 ? 'var(--ember)' : 'var(--accent)';
+    tl.textContent = traj > 3 ? 'Rising fast' : traj > 0 ? 'Trending up' : traj < -3 ? 'Declining' : 'Holding steady';
+    tb.style.width = Math.max(5, Math.min(95, 50 + traj * 3)) + '%';
+    tb.style.background = traj > 0 ? 'var(--teal)' : 'var(--ember)';
+  } else {
+    ta.textContent = '→'; tn.textContent = '—'; tl.textContent = 'Log 2+ entries';
+  }
+
+  // Friction
+  const fn = document.getElementById('frictionNum');
+  const fl = document.getElementById('frictionLabel');
+  const fb = document.getElementById('frictionBar');
+  const fm = document.getElementById('frictionMode');
+  const fpct = Math.round(friction * 100);
+  fn.textContent = fpct + '%';
+  fn.style.color = friction > 0.6 ? 'var(--ember)' : friction > 0.35 ? 'var(--accent)' : 'var(--teal)';
+  fl.textContent = friction > 0.65 ? 'High — simplify' : friction > 0.35 ? 'Moderate' : 'Low — system flowing';
+  fb.style.width = fpct + '%';
+  fb.style.background = friction > 0.6 ? 'var(--ember)' : friction > 0.35 ? 'var(--accent)' : 'var(--teal)';
+  fm.textContent = friction > 0.4 ? '⚡ SIMPLIFY MODE ACTIVE' : '';
+  fm.style.color = 'var(--ember)';
+}
+
+function renderNBA(readiness, friction) {
+  const pool = NBA[readiness] || NBA.init;
+  const idx = currentNBAIdx % pool.actions.length;
+  const action = pool.actions[idx];
+  const badge = pool.badge;
+  const card = document.getElementById('nbaCard');
+  card.className = 'nba-card ' + readiness;
+
+  // Connect override
+  const hist = S.history;
+  const dimScores = {};
+  for (const k of Object.keys(DIMS)) dimScores[k] = dimScore(k, S.inputs[k], hist);
+  const traj = trajectory(hist);
+  const connectS = dimScores.connect;
+  const isConnectOverride = connectTrigger(connectS, traj, readiness);
+
+  if (isConnectOverride) {
+    document.getElementById('nbaAction').textContent = "This isn't about the protocol right now. Is there one person who can know you started?";
+    document.getElementById('nbaReason').textContent = "Your Connect Energy is low while the system is under pressure. One social anchor changes the biological outcome more than any supplement at this stage.";
+    document.getElementById('nbaTimer').textContent = "⏱ 2 minutes";
+  } else {
+    document.getElementById('nbaAction').textContent = action.action;
+    document.getElementById('nbaReason').textContent = action.reason;
+    document.getElementById('nbaTimer').textContent = '⏱ ' + action.time;
+  }
+
+  const badgeEl = document.getElementById('nbaBadge');
+  badgeEl.textContent = badge.label;
+  badgeEl.style.background = badge.bg;
+  badgeEl.style.color = badge.color;
+  badgeEl.style.border = `1px solid ${badge.brd}`;
+}
+
+function renderALVAI(readiness, live, traj, causal, dimScores) {
+  const msgs = ALVAI_MSGS[readiness] || ALVAI_MSGS.init;
+  const idx = S.history.length % msgs.length;
+  document.getElementById('alvaiMsg').textContent = msgs[idx];
+
+  const modes = {init:'Awaiting signal',fragile:'Protection Mode',stabilizing:'Stabilization Mode',ready:'Build Mode',expanding:'Optimization Mode'};
+  document.getElementById('alvaiMode').textContent = modes[readiness] || 'Active';
+
+  if (causal) {
+    document.getElementById('alvaiCausal').textContent = causal;
+  }
+
+  const nexts = {
+    init:'First data point activates full decision intelligence.',
+    fragile:'Next signal: check in tomorrow morning — one data point shifts the read.',
+    stabilizing:'Next signal: Day 3 is the critical threshold. Stay the course through it.',
+    ready:'Next signal: Day 7 check-in — the first point that matters for Jazz Bird research.',
+    expanding:'Next signal: Day 30 — the inflection point where the system becomes self-sustaining.',
+  };
+  document.getElementById('alvaiNext').textContent = nexts[readiness] || '';
+}
+
+function renderDims(dimScores) {
+  document.getElementById('dimsGrid').innerHTML = Object.entries(DIMS).map(([key, dim]) => {
+    const s = dimScores[key];
+    const arrow = s >= 60 ? '↑' : s >= 40 ? '→' : '↓';
+    const arrowClass = s >= 60 ? 'arrow-up' : s >= 40 ? '' : 'arrow-down';
+    const status = s >= 60 ? 'Improving' : s >= 40 ? 'Stable' : 'Needs attention';
+    return `<div class="dim-card" style="--dc:${dim.color}">
+      <div class="dim-top">
+        <span class="dim-icon">${dim.icon}</span>
+        <span class="dim-score" style="color:${dim.color}">${s}</span>
+      </div>
+      <div class="dim-name">${dim.label}</div>
+      <div class="dim-bar"><div class="dim-fill" style="width:${s}%;background:${dim.color}"></div></div>
+      <div class="dim-status">
+        <span style="color:${s>=60?'var(--teal)':s>=40?'var(--accent)':'var(--ember)'}">${arrow}</span>
+        ${status}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderConnect(connectScore, traj, readiness) {
+  const mult = connectMultiplier(connectScore);
+  document.getElementById('connectMult').textContent = '×' + mult.toFixed(2);
+  const pct = Math.min(100, (mult - 1) * 200);
+  document.getElementById('connectBar').style.width = pct + '%';
+
+  const isOverride = connectTrigger(connectScore, traj, readiness);
+  const body = isOverride
+    ? "⚡ CONNECT OVERRIDE ACTIVE — Your Connect Energy is low while the system is declining. This is the single highest-leverage action right now. Not the supplements. Not the protocol. One person knowing you started."
+    : connectScore >= 70
+    ? `Connect Energy is high. Every dimension is amplified by ${Math.round((mult-1)*100)}%. The system is running with full biological support.`
+    : connectScore >= 40
+    ? `Connect Energy is moderate. A single social anchor would amplify adherence probability by 1.9–2.7×. The biology responds to witness.`
+    : `Connect Energy is low. This is the highest-leverage remaining action: tell one person you're running this protocol. The research is unambiguous.`;
+
+  document.getElementById('connectBody').textContent = body;
+  document.getElementById('connectTrigger').textContent = connectScore >= 60
+    ? '"Someone knows you started this. The system is tracking the compound effect." — ALVAI'
+    : '"Is there one person who could know you started this tonight?" — ALVAI';
+}
+
+function renderHistory(hist) {
+  const chart = document.getElementById('historyChart');
+  const list = document.getElementById('historyList');
+  if (hist.length === 0) {
+    chart.innerHTML = '<div style="color:var(--muted);font-family:var(--fm);font-size:0.65rem;align-self:center;width:100%;text-align:center">No data yet</div>';
+    list.innerHTML = '<div style="font-size:0.82rem;color:var(--muted);font-style:italic;padding:0.5rem 0">No entries yet. Your first log creates the baseline.</div>';
+    return;
+  }
+  const entries = hist.slice(-30);
+  const max = Math.max(...entries.map(e => e.score), 1);
+  chart.innerHTML = entries.map(e => {
+    const h = Math.round((e.score / max) * 100);
+    const c = e.score >= 70 ? '#1AECB8' : e.score >= 45 ? '#C9A84C' : '#E8603C';
+    const rs = e.readiness || 'stabilizing';
+    return `<div class="hc-bar" title="${e.score} — ${rs}" style="height:${h}%;background:${c};flex:1"></div>`;
+  }).join('');
+
+  list.innerHTML = hist.slice().reverse().slice(0, 12).map((e, i, arr) => {
+    const prev = arr[i + 1];
+    const delta = prev ? e.score - prev.score : 0;
+    const dc = delta > 0 ? 'var(--teal)' : delta < 0 ? 'var(--ember)' : 'var(--muted)';
+    const d = new Date(e.ts);
+    return `<div class="hl-row">
+      <span class="hl-date">${d.toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span>
+      <span class="hl-score" style="color:${e.score>=70?'var(--teal)':e.score>=45?'var(--accent)':'var(--ember)'}">${e.score}</span>
+      <span class="hl-state">${e.readiness || '—'}</span>
+      <span class="hl-delta" style="color:${dc}">${delta > 0 ? '+' + delta : delta < 0 ? delta : '—'}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderResearch(streak, hist) {
+  document.getElementById('rLogs').textContent = hist.length;
+  document.getElementById('rStreak').textContent = streak;
+  const scores = hist.map(e => e.score);
+  document.getElementById('rPeak').textContent = scores.length ? Math.max(...scores) : '—';
+  const last7 = hist.slice(-7);
+  if (last7.length >= 2) {
+    const d = last7[last7.length-1].score - last7[0].score;
+    const el = document.getElementById('r7d');
+    el.textContent = (d >= 0 ? '+' : '') + d;
+    el.style.color = d >= 0 ? 'var(--teal)' : 'var(--ember)';
+  } else {
+    document.getElementById('r7d').textContent = '—';
+  }
+}
+
+// ── INPUT RENDERING ──────────────────────────────────────────────
+function renderSliders() {
+  const colors = {sleep:'#1AECB8',stress:'#C9A84C',nutrition:'#7A9E87',movement:'#E8603C',finance:'#E85D75',connect:'#7A9E87'};
+  const notes = {stress:'(lower = better)'};
+  document.getElementById('slidersGrid').innerHTML = Object.entries(DIMS).map(([k, d]) => `
+    <div class="slider-item">
+      <div class="si-top">
+        <span class="si-label">${d.icon} ${d.label} ${notes[k]||''}</span>
+        <span class="si-val" id="sv_${k}">${S.inputs[k]}</span>
+      </div>
+      <input type="range" class="bleu-slider" min="1" max="10" value="${S.inputs[k]}"
+        style="--sc:${colors[k]};--pct:${((S.inputs[k]-1)/9*100).toFixed(0)}%"
+        oninput="updateSlider('${k}',this)">
+    </div>`).join('');
+}
+
+function updateSlider(k, el) {
+  S.inputs[k] = parseInt(el.value);
+  document.getElementById('sv_' + k).textContent = el.value;
+  const pct = ((el.value - 1) / 9 * 100).toFixed(0) + '%';
+  el.style.setProperty('--pct', pct);
+}
+
+function renderBehaviorPills() {
+  document.getElementById('behaviorChecks').innerHTML = BEHAVIORS.map(b =>
+    `<button class="bc-pill${S.behaviors.has(b)?' on':''}" onclick="toggleB('${b}')">${b}</button>`
+  ).join('');
+}
+
+function toggleB(b) {
+  S.behaviors.has(b) ? S.behaviors.delete(b) : S.behaviors.add(b);
+  renderBehaviorPills();
+}
+
+// ── LOG ENTRY ────────────────────────────────────────────────────
+function logEntry() {
+  const dimScores = {};
+  for (const k of Object.keys(DIMS)) dimScores[k] = dimScore(k, S.inputs[k], S.history);
+  const live = liveScore(dimScores);
+  const traj = trajectory(S.history);
+  const friction = frictionScore(S.history);
+  const readiness = readinessState(live, traj, friction);
+
+  const entry = {
+    ts: Date.now(),
+    score: live,
+    readiness,
+    traj,
+    friction,
+    raw: {...S.inputs},
+    dims: {...dimScores},
+    behaviors: [...S.behaviors],
+    nbaCompleted: false,
+  };
+
+  S.history.push(entry);
+  S.behaviors.clear();
+  save();
+  renderBehaviorPills();
+  render();
+
+  // Snap moment check
+  const streak = calcStreak(S.history);
+  checkSnapMoment(S.history, streak);
+
+  // Dopamine feedback — state-aware
+  const feedback = {
+    fragile:"Signal received. One step at a time.",
+    stabilizing:"That shift you feel? That's your system slowing down.",
+    ready:"Good. The pattern is building.",
+    expanding:"Strong signal. The biology is responding.",
+  };
+  showToast(feedback[readiness] || "Logged.");
+}
+
+// ── TOAST ────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── CLOCK ────────────────────────────────────────────────────────
+function updateClock() {
+  document.getElementById('nowTime').textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+load();
+renderSliders();
+renderBehaviorPills();
+render();
+updateClock();
+setInterval(updateClock, 60000);
+</script>
+</body>
+</html>
