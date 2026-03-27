@@ -2187,784 +2187,378 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 
 <!-- ═══════════════════════ VESSEL ═══════════════════════ -->
 <div class="panel" id="p-vessel">
-  <div style="padding:32px 20px 0;max-width:880px;margin:0 auto;text-align:center">
-  <div style="font-size:9px;letter-spacing:4px;color:rgba(34,197,94,.5);text-transform:uppercase;margin-bottom:10px">What your body actually needs.</div>
-  <h1 style="font-family:Georgia,serif;font-size:clamp(26px,4vw,40px);font-weight:300;color:#e2e8f0;margin:0 0 14px;line-height:1.2">Food is not fuel.<br><em style="color:#22c55e">It is molecular medicine.</em></h1>
-  <p style="font-size:14px;color:#8b95a5;line-height:1.9;max-width:680px;margin:0 auto 20px">What you eat tells your cells what to do. Broccoli activates gene pathways that protect your mitochondria. Ultra-processed food suppresses the same pathways. This is not nutritional philosophy. It is molecular biology. BLEU Vessel connects you to verified supplements, food prescriptions, and practitioners who understand that the grocery store is a pharmacy, if you know how to read it.</p>
-</div>
-<div class="section-label">PRODUCTS. SERVICES. PRESCRIPTIONS. ON DEMAND.</div>
-  <h1 class="hero-title">The <span class="teal">Vessel.</span> Everything your body needs.</h1>
-<div id="tw-vessel-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
-  
-
-</div>
-  <!-- ORDER NOW GRID -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0">
-    <a href="#" onclick="event.preventDefault();openVesselProducts('supplements','Supplement Intelligence')" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(127,178,133,0.15),rgba(127,178,133,0.05));border:1px solid rgba(127,178,133,0.3);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#7fb285'" onmouseout="this.style.borderColor='rgba(127,178,133,0.3)'">
-      <span style="font-size:24px">💊</span>
-      <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Supplements</div><div style="font-size:10px;color:#7fb285;margin-top:2px">Buy Now →</div></div>
-    </a>
-    <a href="#" onclick="event.preventDefault();openGateway('instacart')" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(78,205,196,0.1),rgba(78,205,196,0.03));border:1px solid rgba(78,205,196,0.25);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.25)'">
-      <span style="font-size:24px">🛒</span>
-      <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Groceries</div><div style="font-size:10px;color:#4ecdc4;margin-top:2px">Buy Now →</div></div>
-    </a>
-    <a href="#" onclick="event.preventDefault();openGateway('goodrx')" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(167,139,250,0.1),rgba(167,139,250,0.03));border:1px solid rgba(167,139,250,0.25);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='rgba(167,139,250,0.25)'">
-      <span style="font-size:24px">💊</span>
-      <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Prescriptions</div><div style="font-size:10px;color:#a78bfa;margin-top:2px">Buy Now →</div></div>
-    </a>
-    <a href="#" onclick="event.preventDefault();openGateway('betterhelp')" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(212,175,55,0.03));border:1px solid rgba(212,175,55,0.25);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.25)'">
-      <span style="font-size:24px">🧠</span>
-      <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Therapy</div><div style="font-size:10px;color:#d4af37;margin-top:2px">Buy Now →</div></div>
-    </a>
-    <a href="#" onclick="event.preventDefault();openGateway('function-health')" style="display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(34,197,94,0.03));border:1px solid rgba(34,197,94,0.25);border-radius:13px;padding:14px;text-decoration:none;transition:border-color 0.2s;grid-column:span 2" onmouseover="this.style.borderColor='#22c55e'" onmouseout="this.style.borderColor='rgba(34,197,94,0.25)'">
-      <span style="font-size:24px">🔬</span>
-      <div><div style="font-size:12px;font-weight:700;color:#e8d5b0">Lab Tests — No Referral Needed</div><div style="font-size:10px;color:#22c55e;margin-top:2px">Buy Now → 100+ biomarkers · results in 48hrs</div></div>
-    </a>
-  </div>
-  <!-- END ORDER GRID -->
-
-
-<div id="tw-vessel" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:rgba(232,213,176,.45);line-height:1.6;letter-spacing:.3px"></div>
-
-<script>
-(function(){
-  var el=document.getElementById("tw-vessel");
-  if(!el)return;
-  var lines=["The Vessel is not a supplement store. It is every product your body actually needs.",
-"Supplements. Medications. Lab tests. Food prescriptions. All in one place.",
-"Every product scored against clinical evidence before it appears here.",
-"Cost Plus Drugs. GoodRx. Amazon Pharmacy. The lowest price on every medication you take.",
-"Order a lab test today. No referral. No waiting room. Results in 48 hours.",
-"The grocery store is a pharmacy. If you know how to read it.",
-"Food as medicine has a 10 to 1 documented return on investment. USDA 2024.",
-"Your microbiome produces 95 percent of your serotonin. Feed it deliberately."];
-
-  var li=0,ci=0,cur="",typing=true,pause=0;
-  function tick(){
-    if(pause>0){pause--;setTimeout(tick,30);return;}
-    if(typing){
-      if(ci<lines[li].length){cur+=lines[li][ci++];el.textContent=cur;setTimeout(tick,38);}
-      else{typing=false;pause=60;setTimeout(tick,30);}
-    }else{
-      if(cur.length>0){cur=cur.slice(0,-1);el.textContent=cur;setTimeout(tick,18);}
-      else{li=(li+1)%lines.length;ci=0;typing=true;pause=20;setTimeout(tick,30);}
-    }
-  }
-  setTimeout(tick,800);
-})();
-</script>
-  <p style="color:#8fa4b0;font-size:15px;line-height:1.85;max-width:740px;font-weight:300;margin:14px 0 24px">
-    The Vessel is the marketplace layer of your health. Supplements scored against clinical studies. Medications priced against every source that exists. Lab tests you can order today. Food prescriptions backed by peer-reviewed evidence. Telehealth when you need a human. Recovery products. Fitness. Mental health tools. Every product linked to the best verified price. Every recommendation traceable to primary literature. The wellness industry sells hope. The Vessel sells <span style="color:#4ecdc4">proof</span>.
-  </p>
-
-  <div style="background:rgba(6,12,22,.8);border:1px solid rgba(45,138,158,.2);border-radius:16px;padding:0;margin-bottom:24px;overflow:hidden">
-  
-<!-- ════ VESSEL — INLINE PRODUCT INTELLIGENCE ════ -->
-<div id="vessel-product-section" style="display:none;padding:0 24px 24px">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-    <div>
-      <div style="font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(201,168,76,0.7);margin-bottom:4px;font-weight:600" id="vp-category-label">SUPPLEMENTS</div>
-      <div style="font-size:18px;font-weight:700;color:#e2e8f0" id="vp-category-title">Your Stack</div>
-    </div>
-    <button onclick="closeVesselProducts()" style="background:none;border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:rgba(255,255,255,0.4);padding:6px 12px;font-size:11px;cursor:pointer">Close ✕</button>
-  </div>
-  
-  <!-- Sort + filter -->
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="vp-filters">
-    <button class="vp-filter active" onclick="filterVesselProducts('all')" data-cat="all">All</button>
-    <button class="vp-filter" onclick="filterVesselProducts('sleep')" data-cat="sleep">Sleep</button>
-    <button class="vp-filter" onclick="filterVesselProducts('anxiety')" data-cat="anxiety">Anxiety</button>
-    <button class="vp-filter" onclick="filterVesselProducts('longevity')" data-cat="longevity">Longevity</button>
-    <button class="vp-filter" onclick="filterVesselProducts('metabolic')" data-cat="metabolic">Metabolic</button>
-    <button class="vp-filter" onclick="filterVesselProducts('cognitive')" data-cat="cognitive">Cognitive</button>
-    <button class="vp-filter" onclick="filterVesselProducts('immune')" data-cat="immune">Immune</button>
-  </div>
-  
-  <!-- Product grid -->
-  <div id="vessel-products-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"></div>
-</div>
-
 <style>
-.vp-filter{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;color:rgba(255,255,255,0.45);padding:5px 12px;font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s}
-.vp-filter.active,.vp-filter:hover{background:rgba(127,178,133,0.15);border-color:rgba(127,178,133,0.4);color:#7fb285}
-.vp-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:16px;transition:all .2s;position:relative}
-.vp-card:hover{border-color:rgba(201,168,76,0.3);background:rgba(255,255,255,0.05)}
-.vp-name{font-size:14px;font-weight:700;color:#e2e8f0;margin-bottom:4px;line-height:1.3}
-.vp-dose{font-size:11px;color:rgba(45,138,158,0.9);margin-bottom:6px;font-weight:600}
-.vp-why{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5;margin-bottom:12px}
-.vp-safety{font-size:10px;color:rgba(127,178,133,0.7);margin-bottom:10px;padding:4px 8px;background:rgba(127,178,133,0.06);border-radius:4px}
-.vp-price{font-size:16px;font-weight:700;color:#22c55e}
-.vp-actions{display:flex;gap:8px;margin-top:10px}
-.vp-buy{flex:1;padding:10px 0;background:linear-gradient(135deg,#C9A84C,#b8943c);border:none;border-radius:8px;color:#0a1628;font-weight:700;font-size:12px;cursor:pointer}
-.vp-stack{padding:10px 14px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:8px;color:#22c55e;font-size:12px;cursor:pointer;font-weight:600;white-space:nowrap}
-.vp-stack:hover{background:rgba(34,197,94,0.2)}
+/* ── VESSEL CART STYLES ── */
+.vessel-wrap{max-width:1000px;margin:0 auto;padding:24px 16px 40px}
+.vessel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.vessel-title-block{}
+.vessel-eyebrow{font-size:9px;letter-spacing:4px;color:rgba(34,197,94,.6);text-transform:uppercase;margin-bottom:4px}
+.vessel-h1{font-family:Georgia,serif;font-size:clamp(22px,3.5vw,32px);font-weight:300;color:#e2e8f0;line-height:1.2}
+.vessel-h1 em{color:#c9a84c;font-style:normal}
+.vessel-badge-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.v-badge{font-size:9px;font-weight:700;padding:3px 10px;border-radius:2px;letter-spacing:1px;text-transform:uppercase;font-family:monospace}
+.v-badge-green{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3)}
+.v-badge-gold{background:rgba(201,168,76,.1);color:#c9a84c;border:1px solid rgba(201,168,76,.3)}
+.vessel-layout{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
+@media(max-width:720px){.vessel-layout{grid-template-columns:1fr}}
+
+/* ── CART SIDE ── */
+.cart-panel{background:#0e1118;border:1px solid #1a2030;border-radius:8px;overflow:hidden}
+.cart-panel-head{background:#0c0f16;border-bottom:1px solid #1a2030;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.cart-panel-title{font-size:11px;font-weight:700;color:#c9a84c;letter-spacing:2px;text-transform:uppercase;font-family:monospace}
+.cart-count{font-size:10px;color:#3d4f63;font-family:monospace}
+
+.product-card{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-bottom:1px solid #1a2030;transition:background .2s}
+.product-card:hover{background:rgba(201,168,76,.03)}
+.prod-icon{width:42px;height:42px;min-width:42px;background:#131720;border:1px solid #1a2030;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.prod-info{flex:1}
+.prod-name{font-size:13px;font-weight:600;color:#e2e8f0;margin-bottom:2px}
+.prod-brand{font-size:10px;color:#3d4f63;margin-bottom:4px;font-family:monospace}
+.prod-mechanism{font-size:11px;color:#5a6f87;line-height:1.5;margin-bottom:4px}
+.prod-price{font-size:13px;color:#c9a84c;font-weight:700}
+.prod-price span{font-size:10px;color:#3d4f63;font-weight:400;margin-left:4px}
+.prod-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.prod-added{font-size:10px;color:#22c55e;font-weight:700;font-family:monospace;letter-spacing:1px}
+.prod-remove{font-size:10px;color:#3d4f63;background:none;border:none;cursor:pointer;text-decoration:underline;font-family:monospace}
+.prod-buy{background:#c9a84c;color:#000;border:none;border-radius:3px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer;font-family:monospace;letter-spacing:0.5px;white-space:nowrap}
+.prod-buy:hover{background:#b89638}
+
+/* ── CART SUMMARY ── */
+.cart-summary{padding:16px}
+.cart-row{display:flex;justify-content:space-between;font-size:12px;color:#5a6f87;padding:4px 0}
+.cart-discount{color:#22c55e}
+.cart-divider{border:none;border-top:1px solid #1a2030;margin:8px 0}
+.cart-total-row{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#e2e8f0;padding:4px 0}
+.cart-checkout-btn{
+  display:block;width:100%;background:#c9a84c;color:#000;border:none;border-radius:4px;
+  padding:14px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;
+  font-family:Georgia,serif;letter-spacing:1px;text-align:center;text-decoration:none;
+  transition:background .2s;
+}
+.cart-checkout-btn:hover{background:#b89638}
+.cart-clinical-note{font-size:9px;color:#3d4f63;text-align:center;margin-top:8px;font-family:monospace;letter-spacing:0.5px}
+
+/* ── ALVAI PANEL ── */
+.alvai-cart-panel{background:#0c0f16;border:1px solid #1a2030;border-radius:8px;overflow:hidden;position:sticky;top:72px}
+.acp-head{background:#0e1118;border-bottom:1px solid #1a2030;padding:12px 16px;display:flex;align-items:center;gap:8px}
+.acp-dot{width:8px;height:8px;border-radius:50%;background:#14b8a6;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.acp-label{font-size:10px;font-weight:700;color:#14b8a6;letter-spacing:2px;text-transform:uppercase;font-family:monospace}
+.acp-body{padding:14px 16px}
+.acp-message{font-size:12px;color:#7d8fa3;line-height:1.75;margin-bottom:12px;font-style:italic;border-left:2px solid rgba(20,184,166,.3);padding-left:10px}
+.acp-message strong{color:#c9a84c;font-style:normal}
+.acp-message em{color:#22c55e;font-style:normal}
+.acp-input-row{display:flex;gap:8px;margin-top:auto}
+.acp-input{
+  flex:1;background:#131720;border:1px solid #1a2030;border-radius:4px;
+  padding:9px 12px;font-size:12px;color:#e2e8f0;font-family:inherit;outline:none;
+}
+.acp-input:focus{border-color:rgba(20,184,166,.4)}
+.acp-input::placeholder{color:#2d3d4f}
+.acp-send{background:#14b8a6;color:#000;border:none;border-radius:4px;padding:9px 14px;font-size:12px;font-weight:700;cursor:pointer}
+.acp-credential{font-size:9px;color:#2d3d4f;margin-top:8px;font-family:monospace;letter-spacing:0.5px}
+
+/* ── EMPTY STATE ── */
+.cart-empty{padding:32px 16px;text-align:center}
+.cart-empty-icon{font-size:36px;margin-bottom:12px;opacity:.4}
+.cart-empty-text{font-size:13px;color:#3d4f63;line-height:1.7}
+.cart-empty-text strong{color:#7d8fa3}
+
+/* ── BROWSE SECTION ── */
+.browse-section{margin-top:24px}
+.browse-title{font-size:10px;letter-spacing:3px;color:#3d4f63;text-transform:uppercase;font-family:monospace;margin-bottom:12px}
+.protocol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.protocol-card{
+  background:#0e1118;border:1px solid #1a2030;border-radius:6px;padding:14px;
+  cursor:pointer;transition:all .2s;
+}
+.protocol-card:hover{border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.03)}
+.proto-icon{font-size:22px;margin-bottom:6px}
+.proto-name{font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:2px}
+.proto-items{font-size:10px;color:#3d4f63;margin-bottom:8px}
+.proto-cost{font-size:11px;color:#c9a84c;font-weight:600}
+.proto-duration{font-size:10px;color:#3d4f63}
+.proto-add-btn{
+  display:block;width:100%;background:transparent;border:1px solid #1a2030;border-radius:3px;
+  padding:7px;font-size:10px;font-weight:700;color:#7d8fa3;cursor:pointer;margin-top:10px;
+  font-family:monospace;letter-spacing:1px;text-transform:uppercase;transition:all .2s;
+}
+.proto-add-btn:hover{background:#c9a84c;color:#000;border-color:#c9a84c}
 </style>
 
-<script>
-(function(){
+<div class="vessel-wrap">
+  <!-- HEADER -->
+  <div class="vessel-header">
+    <div class="vessel-title-block">
+      <div class="vessel-eyebrow">Your Clinical Protocol Cart</div>
+      <div class="vessel-h1">The Vessel<br><em>What your body actually needs.</em></div>
+    </div>
+    <div class="vessel-badge-row">
+      <span class="v-badge v-badge-green">FULLSCRIPT POWERED</span>
+      <span class="v-badge v-badge-gold">DR. FELICIA STOLER DCN RDN</span>
+    </div>
+  </div>
 
-var VP_PRODUCTS = [
-  // SLEEP
-  {id:'thorne-mag',name:'Thorne Magnesium Bisglycinate',dose:'400mg — 1hr before bed',price:'$25',cat:'sleep',asin:'B07RY37KGB',why:'GABA-A cofactor. Glycinate crosses the blood-brain barrier — oxide stays in the gut. Most impactful sleep supplement for most people.',safety:'No CYP450 interactions · NSF Certified · Safe long-term'},
-  {id:'ltheanine',name:'L-Theanine 200mg',dose:'200mg — 30min before sleep or stress',price:'$13',cat:'sleep',fullscript:'l-theanine+200mg',why:'Raises alpha wave activity in 30 minutes. Same brain state as meditation. Pairs with coffee to eliminate jitters.',safety:'No known interactions · Non-sedating · Can stack with ashwagandha'},
-  {id:'mag-budget',name:"Doctor's Best Magnesium Glycinate",dose:'400mg elemental — 1hr before bed',price:'$15',cat:'sleep',asin:'B00YXTHZXE',why:'Budget version of the same mechanism. Glycinate form, same efficacy, lower price point.',safety:'No CYP450 interactions · Good for long-term use'},
-  // ANXIETY
-  {id:'ashwa',name:'NOW Ashwagandha KSM-66 450mg',dose:'450mg with dinner — run 6-week cycles',price:'$12',cat:'anxiety',asin:'B01N0A5XEJ',why:'22 completed clinical trials specifically for KSM-66. Reduces cortisol 28-30% over 60 days. Do not take continuously.',safety:'Avoid with immunosuppressants or thyroid meds without healthcare provider review · Cycle: 6 weeks on, 2 weeks off'},
-  {id:'ltheanine-anxiety',name:'L-Theanine 400mg (Anxiety dose)',dose:'400mg — 45min before exposure',price:'$18',cat:'anxiety',asin:'B001DZKHGA',why:'Double dose for social anxiety. Higher theanine increases inhibitory neurotransmission more substantially.',safety:'No known interactions · Can combine with ashwagandha'},
-  // LONGEVITY
-  {id:'omega3',name:'Nordic Naturals Ultimate Omega',dose:'2g EPA/DHA — with fattiest meal',price:'$28',cat:'longevity',asin:'B002CQU564',why:'Triglyceride form — 70% better absorbed than ethyl ester. EPA is the anti-inflammatory molecule. 2:1 EPA:DHA ratio.',safety:'Caution with blood thinners at high doses · Third-party tested for oxidation'},
-  {id:'vitd3',name:'Sports Research Vitamin D3 + K2',dose:'5000IU D3 + 100mcg K2 — with fat',price:'$17',cat:'longevity',asin:'B01GBGS7JU',why:'42% of Americans deficient. D3 is energy + immune. K2 routes calcium to bones not arteries. Take together, always with fat.',safety:'Caution if on warfarin (K2) · Test levels at 90 days · Target 50-70 ng/mL'},
-  {id:'coq10',name:'Thorne CoQ10 Ubiquinol 100mg',dose:'100-200mg — with fat',price:'$40',cat:'longevity',asin:'B00I5JV0AC',why:'Mitochondrial electron carrier. Ubiquinol is the active reduced form — 8x more bioavailable than ubiquinone. Critical on statins.',safety:'Safe with most medications · If on statins: take 200mg, not 100mg'},
-  {id:'creatine',name:'Momentous Creatine Monohydrate',dose:'5g daily — any time, consistent',price:'$30',cat:'cognitive',asin:'B0BGVB8T84',why:'Most studied supplement in existence. Muscle AND brain. Cognitive benefits equal to muscle. Cheap. Works.',safety:'Increase water intake · Avoid with kidney disease'},
-  // METABOLIC
-  {id:'berberine',name:'Thorne Berberine-500',dose:'500mg x3 daily — with meals',price:'$40',cat:'metabolic',asin:'B07BG2CNKD',why:'Activates AMPK — same pathway as Metformin. Multiple RCTs show comparable fasting glucose reduction. Split dosing prevents GI side effects.',safety:'Additive with diabetes meds — healthcare provider review recommended · Caution in pregnancy'},
-  {id:'b12',name:'Jarrow Methyl B12 1000mcg',dose:'1000mcg — sublingual, morning',price:'$8',cat:'metabolic',asin:'B06XFMLTTM',why:'GLP-1 medications deplete B12. Methylcobalamin form is more bioavailable than cyanocobalamin. Also depleted by metformin.',safety:'No known interactions · Safe long-term · Urine may turn yellow (normal)'},
-  // IMMUNE
-  {id:'zinc',name:'Zinc Picolinate 30mg',dose:'30mg — with dinner',price:'$12',cat:'immune',asin:'B07Y3G6R2D',why:'Most common nutritional immune deficiency. Picolinate has highest bioavailability. Take with food to prevent nausea.',safety:'Do not exceed 40mg/day · Can affect copper absorption at high doses'},
-  // COGNITIVE  
-  {id:'lions-mane',name:"Lion's Mane Mushroom 500mg",dose:'500mg-1000mg — morning',price:'$22',cat:'cognitive',asin:'B07BS2KYLC',why:'NGF (Nerve Growth Factor) stimulator. Cognitive benefits 4-8 weeks to peak. Best evidence for mild cognitive impairment.',safety:'No known drug interactions · Avoid if mushroom allergy'},
+  <!-- TWO-COLUMN LAYOUT -->
+  <div class="vessel-layout">
+
+    <!-- LEFT: CART -->
+    <div>
+      <div class="cart-panel">
+        <div class="cart-panel-head">
+          <span class="cart-panel-title">Protocol Cart</span>
+          <span class="cart-count" id="vessel-cart-count">0 items</span>
+        </div>
+
+        <!-- CART ITEMS (dynamic) -->
+        <div id="vessel-cart-items">
+          <div class="cart-empty">
+            <div class="cart-empty-icon">🧬</div>
+            <div class="cart-empty-text">
+              <strong>Your protocol cart is empty.</strong><br>
+              Add a protocol below or ask Alvai what your body needs right now.
+            </div>
+          </div>
+        </div>
+
+        <!-- CART SUMMARY (shown when items exist) -->
+        <div id="vessel-cart-summary" style="display:none">
+          <div class="cart-summary">
+            <div class="cart-row"><span>Subtotal</span><span id="vessel-subtotal">$0.00</span></div>
+            <div class="cart-row cart-discount"><span>Dispensary discount (15%)</span><span id="vessel-discount">–$0.00</span></div>
+            <hr class="cart-divider">
+            <div class="cart-total-row"><span>Your total</span><span id="vessel-total">$0.00</span></div>
+            <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" class="cart-checkout-btn">
+              Checkout via Fullscript →
+            </a>
+            <div class="cart-clinical-note">Secured by Fullscript · Reviewed by Dr. Felicia Stoler DCN RDN · Clinical-grade sourcing</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BROWSE PROTOCOLS -->
+      <div class="browse-section">
+        <div class="browse-title">Build your protocol — choose what you need</div>
+        <div class="protocol-grid" id="vessel-protocol-grid">
+          <!-- Rendered by JS below -->
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: ALVAI PANEL -->
+    <div class="alvai-cart-panel">
+      <div class="acp-head">
+        <div class="acp-dot"></div>
+        <div class="acp-label">Alvai — Your Clinical Guide</div>
+      </div>
+      <div class="acp-body">
+        <div class="acp-message" id="vessel-alvai-msg">
+          <strong>Tell me what's not working.</strong><br><br>
+          Sleep, energy, inflammation, mood, focus, weight — describe exactly what you're feeling and I'll build the right protocol for your specific pattern. Every supplement recommendation comes with the mechanism behind it.<br><br>
+          <em>What's the main thing your body is struggling with right now?</em>
+        </div>
+        <div class="acp-input-row">
+          <input class="acp-input" id="vessel-chat-input" placeholder="Ask Alvai about your protocol..." 
+            onkeydown="if(event.key==='Enter')vesselAsk()">
+          <button class="acp-send" onclick="vesselAsk()">→</button>
+        </div>
+        <div class="acp-credential">Reviewed by Dr. Felicia Stoler DCN MS RDN FACSM FAND Dipl ACLM</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── VESSEL CART SYSTEM ──────────────────────────────────────────
+var vesselCart = [];
+
+var PROTOCOLS = [
+  {
+    id:'sleep_gaba', icon:'🌙', name:'Sleep Restoration',
+    items:['Magnesium Glycinate 400mg','L-Theanine 200mg'],
+    cost:28, duration:'21 days',
+    amazon:'https://www.amazon.com/cart/add?ASIN.1=B00YXTHZXE&Quantity.1=1&ASIN.2=B001DZKHGA&Quantity.2=1&AssociateTag=bleu-live-20',
+    fullscript:'https://us.fullscript.com/welcome/fstoler',
+    why:'Magnesium Glycinate crosses the blood-brain barrier and supports GABA — the neurotransmitter that tells your nervous system it can stop scanning and let you drop into deep sleep. L-Theanine raises alpha wave activity within 30 minutes.',
+  },
+  {
+    id:'anxiety_cortisol', icon:'🧘', name:'Anxiety Relief',
+    items:['L-Theanine 200mg','Ashwagandha KSM-66 300mg'],
+    cost:35, duration:'30 days',
+    amazon:'https://www.amazon.com/cart/add?ASIN.1=B001DZKHGA&Quantity.1=1&ASIN.2=B01N0A5XEJ&Quantity.2=1&AssociateTag=bleu-live-20',
+    fullscript:'https://us.fullscript.com/welcome/fstoler',
+    why:'L-Theanine raises alpha wave activity — the same brain state as eyes-closed meditation — within 30 minutes. Ashwagandha KSM-66 works on the HPA axis over 4-6 weeks to lower the baseline cortisol level that makes everything feel harder.',
+  },
+  {
+    id:'inflammation', icon:'🔥', name:'Anti-Inflammation',
+    items:['Omega-3 EPA/DHA 2000mg','Vitamin D3+K2 5000IU'],
+    cost:45, duration:'60 days',
+    amazon:'https://www.amazon.com/cart/add?ASIN.1=B002CQU564&Quantity.1=1&ASIN.2=B01GBGS7JU&Quantity.2=1&AssociateTag=bleu-live-20',
+    fullscript:'https://us.fullscript.com/welcome/fstoler',
+    why:'EPA is the specific anti-inflammatory omega. D3 deficiency doubles inflammation risk and affects 42% of Americans. K2 ensures calcium goes where it belongs. Take both with the largest meal — fat improves absorption significantly.',
+  },
+  {
+    id:'energy_mitochondria', icon:'⚡', name:'Energy + Focus',
+    items:['CoQ10 Ubiquinol 200mg','Vitamin B-Complex'],
+    cost:42, duration:'30 days',
+    amazon:'https://www.amazon.com/cart/add?ASIN.1=B00I5JV0AC&Quantity.1=1&AssociateTag=bleu-live-20',
+    fullscript:'https://us.fullscript.com/welcome/fstoler',
+    why:'Ubiquinol is the active form of CoQ10 — 8x more bioavailable than ubiquinone. It is the electron carrier in the mitochondrial ATP production chain. If you are on a statin, this is not optional — it is a correction.',
+  },
+  {
+    id:'mood', icon:'☀️', name:'Mood + Mental Health',
+    items:['Omega-3 EPA 2000mg','Magnesium Glycinate 400mg','Vitamin D3 5000IU'],
+    cost:40, duration:'60 days',
+    amazon:'https://www.amazon.com/cart/add?ASIN.1=B002CQU564&Quantity.1=1&ASIN.2=B00YXTHZXE&Quantity.2=1&AssociateTag=bleu-live-20',
+    fullscript:'https://us.fullscript.com/welcome/fstoler',
+    why:'EPA has 23 RCTs specifically for depression — it modulates neuroinflammation, which is the biological mechanism underlying a significant percentage of depressive episodes. Magnesium is required for serotonin synthesis.',
+  },
+  {
+    id:'metabolic', icon:'🔬', name:'Metabolic Reset',
+    items:['Berberine HCl 1500mg','Chromium Picolinate 400mcg','Omega-3 2000mg'],
+    cost:38, duration:'90 days',
+    amazon:'https://www.amazon.com/cart/add?ASIN.1=B07BG2CNKD&Quantity.1=1&AssociateTag=bleu-live-20',
+    fullscript:'https://us.fullscript.com/welcome/fstoler',
+    why:'Berberine activates AMPK — the same cellular energy sensor that metformin activates. Multiple RCTs show comparable fasting glucose reduction to Metformin 500mg. Chromium enhances insulin receptor sensitivity.',
+  },
+  {
+    id:'longevity', icon:'🧬', name:'Longevity Protocol',
+    items:['CoQ10 Ubiquinol 200mg','Omega-3 2000mg','Magnesium 400mg','D3+K2 5000IU'],
+    cost:75, duration:'90 days',
+    amazon:'https://www.amazon.com/cart/add?ASIN.1=B00I5JV0AC&Quantity.1=1&ASIN.2=B002CQU564&Quantity.2=1&ASIN.3=B00YXTHZXE&Quantity.3=1&AssociateTag=bleu-live-20',
+    fullscript:'https://us.fullscript.com/welcome/fstoler',
+    why:'The foundational four: mitochondrial fuel, systemic inflammation suppression, GABA and sleep architecture support, calcium routing and immune regulation. This is the protocol for someone who wants to function at the highest level.',
+  },
+  {
+    id:'immune', icon:'🛡️', name:'Immune Support',
+    items:['Zinc Picolinate 30mg','Vitamin D3 5000IU','Vitamin C 1000mg buffered'],
+    cost:22, duration:'ongoing',
+    amazon:'https://www.amazon.com/cart/add?ASIN.1=B07Y3G6R2D&Quantity.1=1&ASIN.2=B01GBGS7JU&Quantity.2=1&AssociateTag=bleu-live-20',
+    fullscript:'https://us.fullscript.com/welcome/fstoler',
+    why:'Zinc deficiency is the most common nutritional immune deficiency. Picolinate form has the highest bioavailability. D3 is the master immune regulator. Buffered C avoids GI irritation at therapeutic doses.',
+  },
 ];
 
-var _vpCurrent = [];
-
-window.openVesselProducts = function(category, title) {
-  var section = document.getElementById('vessel-product-section');
-  if(!section) return;
-  document.getElementById('vp-category-label').textContent = category.toUpperCase();
-  document.getElementById('vp-category-title').textContent = title;
-  section.style.display = 'block';
-  section.scrollIntoView({behavior:'smooth', block:'start'});
-  renderVesselProducts('all');
-  if(typeof bleuSignal === 'function') bleuSignal('vessel_opened', {category:category});
-};
-
-window.closeVesselProducts = function() {
-  var section = document.getElementById('vessel-product-section');
-  if(section) section.style.display = 'none';
-};
-
-window.filterVesselProducts = function(cat) {
-  document.querySelectorAll('.vp-filter').forEach(function(b){
-    b.classList.toggle('active', b.dataset.cat===cat);
-  });
-  renderVesselProducts(cat);
-};
-
-function renderVesselProducts(cat) {
-  var products = cat==='all' ? VP_PRODUCTS : VP_PRODUCTS.filter(function(p){return p.cat===cat});
-  var grid = document.getElementById('vessel-products-grid');
-  if(!grid) return;
-  grid.innerHTML = products.map(function(p){
-    var buyUrl = p.asin ? 'https://amazon.com/dp/'+p.asin+'?tag=bleulive-20' :
-                 p.fullscript ? 'https://us.fullscript.com/catalog?q='+p.fullscript : '#';
-    var platform = p.asin ? 'Buy on Amazon' : 'Buy on Fullscript';
-    var platformColor = p.asin ? '#c9a84c' : '#7fb285';
-    return '<div class="vp-card">'
-      +'<div class="vp-name">'+p.name+'</div>'
-      +'<div class="vp-dose">'+p.dose+'</div>'
-      +'<div class="vp-why">'+p.why+'</div>'
-      +'<div class="vp-safety">'+p.safety+'</div>'
-      +'<div style="display:flex;align-items:center;justify-content:space-between">'
-      +'<span class="vp-price">'+p.price+'/mo</span>'
-      +'<span style="font-size:10px;color:rgba(255,255,255,0.3)">trust: verified</span>'
-      +'</div>'
-      +'<div class="vp-actions">'
-      
-+'<div style="font-size:9px;color:rgba(201,168,76,.35);margin:6px 0 8px;font-family:monospace;letter-spacing:.08em;">✦ Reviewed · Dr. Felicia Stoler DCN RDN FACSM</div>'
-      +'<button class="vp-buy" style="background:linear-gradient(135deg,'+platformColor+','+platformColor+'cc)" onclick="window.open(''+buyUrl+'','_blank');logRufusAction(''+p.id+'','vessel_buy');if(typeof bleuSignal!=='undefined')bleuSignal('product_buy',{id:''+p.id+'',name:''+p.name+''})">'+platform+'</button>'
-      +'<button class="vp-stack" onclick="addToCart(''+p.id+'');this.textContent='✓ In Stack';this.style.borderColor='#22c55e'">+ Stack</button>'
-      +'</div></div>';
+function renderProtocols() {
+  var grid = document.getElementById('vessel-protocol-grid');
+  if (!grid) return;
+  grid.innerHTML = PROTOCOLS.map(function(p) {
+    var inCart = vesselCart.some(function(c){ return c.id === p.id; });
+    return '<div class="protocol-card" id="proto-'+p.id+'">' +
+      '<div class="proto-icon">'+p.icon+'</div>' +
+      '<div class="proto-name">'+p.name+'</div>' +
+      '<div class="proto-items">'+p.items.join(' · ')+'</div>' +
+      '<div class="proto-cost">$'+p.cost+'/mo <span class="proto-duration">· '+p.duration+'</span></div>' +
+      '<button class="proto-add-btn" onclick="addToCart(''+p.id+'')">' +
+        (inCart ? '✓ In Protocol' : '+ Add to Protocol') +
+      '</button>' +
+    '</div>';
   }).join('');
 }
 
-})();
-</script>
+function addToCart(protoId) {
+  var proto = PROTOCOLS.find(function(p){ return p.id === protoId; });
+  if (!proto) return;
+  var exists = vesselCart.some(function(c){ return c.id === protoId; });
+  if (exists) { removeFromCart(protoId); return; }
+  vesselCart.push(proto);
+  updateCart();
+  updateAlvaiContext(proto);
+  renderProtocols();
+}
 
+function removeFromCart(protoId) {
+  vesselCart = vesselCart.filter(function(c){ return c.id !== protoId; });
+  updateCart();
+  renderProtocols();
+}
 
-<div id="my-stack-section" style="display:none;margin:0 24px 20px;background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.15);border-radius:12px;padding:20px">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-    <div>
-      <div style="font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:rgba(34,197,94,0.6);font-weight:600;margin-bottom:3px">YOUR ACTIVE STACK</div>
-      <div style="font-size:14px;font-weight:700;color:#e2e8f0" id="my-stack-name">Wellness Protocol</div>
-    </div>
-    <button onclick="toggleCart()" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:8px;color:#22c55e;padding:8px 16px;font-size:11px;cursor:pointer;font-weight:600">View Full Stack →</button>
-  </div>
-  <div id="my-stack-items" style="display:flex;flex-wrap:wrap;gap:8px"></div>
-  <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);display:flex;gap:8px">
-    <button onclick="checkoutAmazon()" style="flex:1;padding:10px;background:linear-gradient(135deg,#FF9900,#e88800);border:none;border-radius:8px;color:#fff;font-weight:700;font-size:12px;cursor:pointer">&#x1F6D2; Buy on Amazon — ships tomorrow</button>
-    <button onclick="checkoutFullscript()" style="flex:1;padding:10px;background:rgba(127,178,133,0.12);border:1px solid rgba(127,178,133,0.3);border-radius:8px;color:#7fb285;font-weight:600;font-size:12px;cursor:pointer">Order via Fullscript RDN Dispensary</button>
-  </div>
-</div>
-<script>
-(function(){
-function refreshMyStack(){
-  var items=JSON.parse(localStorage.getItem('bleu_cart')||'[]');
-  var sec=document.getElementById('my-stack-section');
-  var itemsEl=document.getElementById('my-stack-items');
-  var nameEl=document.getElementById('my-stack-name');
-  if(!sec||!itemsEl) return;
-  if(items.length===0||!window.currentUser){sec.style.display='none';return;}
-  sec.style.display='block';
-  var fn=(window.currentUser?.user_metadata?.full_name||'Your').split(' ')[0];
-  if(nameEl) nameEl.textContent=fn+"'s Wellness Protocol";
-  if(typeof PRODUCT_MASTER!=='undefined'){
-    itemsEl.innerHTML=items.map(function(id){
-      var p=PRODUCT_MASTER[id]||{name:id,emoji:'&#x1F48A;',price:0};
-      return '<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px"><span style="font-size:18px">'+(p.emoji||'💊')+'</span><div><div style="font-size:11px;font-weight:600;color:#e2e8f0">'+p.name+'</div><div style="font-size:9px;color:rgba(255,255,255,0.3)">$'+p.price+'/mo</div></div></div>';
-    }).join('');
+function updateCart() {
+  var items = document.getElementById('vessel-cart-items');
+  var summary = document.getElementById('vessel-cart-summary');
+  var countEl = document.getElementById('vessel-cart-count');
+  if (!items) return;
+
+  if (vesselCart.length === 0) {
+    items.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">🧬</div><div class="cart-empty-text"><strong>Your protocol cart is empty.</strong><br>Add a protocol below or ask Alvai what your body needs right now.</div></div>';
+    if (summary) summary.style.display = 'none';
+    if (countEl) countEl.textContent = '0 items';
+    return;
+  }
+
+  var subtotal = vesselCart.reduce(function(s,p){ return s + p.cost; }, 0);
+  var discount = Math.round(subtotal * 0.15 * 100) / 100;
+  var total = Math.round((subtotal - discount) * 100) / 100;
+
+  items.innerHTML = vesselCart.map(function(p) {
+    return '<div class="product-card">' +
+      '<div class="prod-icon">'+p.icon+'</div>' +
+      '<div class="prod-info">' +
+        '<div class="prod-name">'+p.name+'</div>' +
+        '<div class="prod-brand">'+p.items.join(' · ')+'</div>' +
+        '<div class="prod-mechanism">'+p.why.slice(0,120)+'...</div>' +
+        '<div class="prod-price">$'+p.cost+'/mo <span>'+p.duration+'</span></div>' +
+      '</div>' +
+      '<div class="prod-actions">' +
+        '<span class="prod-added">✓ Added</span>' +
+        '<button class="prod-remove" onclick="removeFromCart(''+p.id+'')">remove</button>' +
+        '<a href="'+p.amazon+'" target="_blank" class="prod-buy">Buy Amazon →</a>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  if (summary) {
+    summary.style.display = 'block';
+    document.getElementById('vessel-subtotal').textContent = '$' + subtotal.toFixed(2);
+    document.getElementById('vessel-discount').textContent = '–$' + discount.toFixed(2);
+    document.getElementById('vessel-total').textContent = '$' + total.toFixed(2);
+  }
+  if (countEl) countEl.textContent = vesselCart.length + (vesselCart.length === 1 ? ' item' : ' items');
+}
+
+function updateAlvaiContext(proto) {
+  var msg = document.getElementById('vessel-alvai-msg');
+  if (!msg) return;
+  msg.innerHTML = '<strong>Why ' + proto.name + ' for you.</strong><br><br>' +
+    proto.why + '<br><br>' +
+    'The full protocol routes through Fullscript — Dr. Felicia's dispensary — which means every product is clinical-grade with practitioner oversight and a 15% dispensary discount applied automatically.<br><br>' +
+    '<em>Is there anything specific about your history I should factor into this recommendation before you check out?</em>';
+}
+
+function vesselAsk() {
+  var input = document.getElementById('vessel-chat-input');
+  var msg = input ? input.value.trim() : '';
+  if (!msg) return;
+  input.value = '';
+  var alvaiMsg = document.getElementById('vessel-alvai-msg');
+  if (alvaiMsg) alvaiMsg.innerHTML = '<strong>Searching for your protocol...</strong><br><br><em>' + msg + '</em>';
+  // Route to main Alvai with vessel context
+  if (typeof ask === 'function') {
+    ask(msg + ' [context: user is in the Vessel cart, focus on supplement protocol with Amazon and Fullscript sourcing]');
+    // Switch to Alvai tab
+    setTimeout(function(){
+      var alvaiTab = document.querySelector('[onclick*="alvai"]');
+      if(alvaiTab) alvaiTab.click();
+    }, 300);
   }
 }
-window.refreshMyStack=refreshMyStack;
-var vp=document.getElementById('p-vessel');
-if(vp){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.target.classList.contains('active'))refreshMyStack();});});ob.observe(vp,{attributes:true,attributeFilter:['class']});}
-document.addEventListener('DOMContentLoaded',function(){setTimeout(refreshMyStack,1500);});
-})();
+
+// Init on load
+document.addEventListener('DOMContentLoaded', function() {
+  renderProtocols();
+  updateCart();
+});
+if (document.readyState !== 'loading') {
+  renderProtocols();
+  updateCart();
+}
 </script>
 
-<div class="chat-box chat-area" id="chat-vessel" style="min-height:60px;max-height:200px;overflow-y:auto;padding:16px"></div>
-  <div style="display:flex;gap:0;border-top:1px solid rgba(45,138,158,.12)">
-    <input autocomplete="off" id="in-vessel"
-      placeholder="What is your body asking for?"
-      onkeydown="if(event.key==='Enter')send('vessel')"
-      style="flex:1;background:transparent;border:none;padding:14px 18px;color:#E8E0D0;font-size:13px;font-family:'DM Sans',sans-serif;outline:none"/>
-    <button onclick="send('vessel')"
-      style="padding:14px 22px;border:none;border-left:1px solid rgba(45,138,158,.12);background:rgba(45,138,158,.12);color:#2DD4A8;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;white-space:nowrap"
-      onmouseover="this.style.background='rgba(45,138,158,.24)'" onmouseout="this.style.background='rgba(45,138,158,.12)'">
-      Ask Alvai
-    </button>
-  </div>
-</div>
-<!-- STATS BAR -->
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px">
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:16px;text-align:center;cursor:pointer" onclick="ask('vessel','How does the BLEU 5-layer safety engine work')">
-      <div style="color:#4ecdc4;font-size:22px;font-weight:600">5-Layer</div>
-      <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Safety Engine</div>
-    </div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:16px;text-align:center;cursor:pointer" onclick="ask('vessel','Tell me about the 302K drug interactions BLEU screens')">
-      <div style="color:#d4af37;font-size:22px;font-weight:600">302K+</div>
-      <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Drug Interactions</div>
-    </div>
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.12);border-radius:14px;padding:16px;text-align:center;cursor:pointer" onclick="ask('vessel','What partners does BLEU Vessel work with')">
-      <div style="color:#4ecdc4;font-size:22px;font-weight:600">12+</div>
-      <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Verified Partners</div>
-    </div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:14px;padding:16px;text-align:center;cursor:pointer" onclick="ask('vessel','How does BLEU find me the lowest medication price')">
-      <div style="color:#d4af37;font-size:22px;font-weight:600">$0</div>
-      <div style="color:#8fa4b0;font-size:10px;margin-top:4px;letter-spacing:1.5px;text-transform:uppercase">Cost to Browse</div>
-    </div>
-  </div>
-
-  <!-- PARTNER TRUST BAR -->
-  <div style="background:rgba(25,50,68,0.3);border:1px solid rgba(78,205,196,0.06);border-radius:14px;padding:16px;margin-bottom:28px;text-align:center">
-    <div style="color:rgba(212,175,55,0.5);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px">VERIFIED PARTNERS</div>
-    <div style="display:flex;justify-content:center;gap:28px;flex-wrap:wrap;align-items:center">
-      <a href="https://www.thorne.com?utm_source=bleu&utm_medium=affiliate" target="_blank" style="color:#e8d5b0;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">THORNE</a>
-      <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" style="color:#4ecdc4;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">FULLSCRIPT</a>
-      <a href="https://www.charlottesweb.com?utm_source=bleu&utm_medium=affiliate&utm_campaign=wellness" target="_blank" style="color:#7ab87a;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">CHARLOTTE'S WEB</a>
-      <a href="https://www.amazon.com?tag=bleulive-20" target="_blank" style="color:#d4af37;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">AMAZON</a>
-      <a href="javascript:void(0)" onclick="engageCard('finance','Help me use Cost Plus Drugs to save money on my prescriptions — how does it work and which medications do they cover?','https://costplusdrugs.com')" target="_blank" style="color:#a78bfa;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">COST PLUS DRUGS</a>
-      <a href="javascript:void(0)" onclick="engageCard('finance','Help me use GoodRx to find the best prices on my medications — what do I need to know?','https://www.goodrx.com')" target="_blank" style="color:#f97316;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">GOODRX</a>
-      <a href="javascript:void(0)" onclick="engageCard('supply','Tell me about Function Health for comprehensive lab testing — is it right for me and what would it tell me about my health?','https://www.functionhealth.com')" target="_blank" style="color:#2DD4A8;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">FUNCTION HEALTH</a>
-      <a href="javascript:void(0)" onclick="engageCard('community','Help me find the best fitness and wellness classes in New Orleans through ClassPass','https://www.classpass.com')" target="_blank" style="color:#F472B6;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">CLASSPASS</a>
-      <a href="javascript:void(0)" onclick="engageCard('community','Help me find wellness studios and fitness classes near me in New Orleans through Mindbody','https://www.mindbodyonline.com')" target="_blank" style="color:#C9A84C;font-size:13px;font-weight:600;text-decoration:none;opacity:0.75;transition:opacity 0.2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">MINDBODY</a>
-    </div>
-    <div style="color:rgba(212,175,55,0.4);font-size:10px;margin-top:10px">💛 Affiliate links sustain BLEU and keep it free for Citizens. Trust scores are never pay-to-play. Every recommendation meets one standard: would Dr. Felicia Stoler stake her credentials on it? If not, it does not appear here. -- Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl ACLM</div>
-  </div>
-
-  
-  <!-- SERVICES ON DEMAND -->
-  <div style="margin-bottom:28px">
-    <div class="section-label" style="margin-bottom:14px">SERVICES ON DEMAND</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-
-      <div style="background:#0a1628;border:1px solid rgba(45,212,168,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','I want to order a lab test -- what does BLEU recommend for a comprehensive metabolic panel')" onmouseover="this.style.borderColor='#2DD4A8'" onmouseout="this.style.borderColor='rgba(45,212,168,.15)'">
-        <div style="font-size:10px;letter-spacing:2px;color:#2DD4A8;margin-bottom:6px">LAB TESTING</div>
-        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Order Labs Today</div>
-        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">No referral. No waiting room. Comprehensive metabolic panel, hormones, inflammation markers, telomere length. Results in 48 hours.</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(45,212,168,.1);color:#2DD4A8;border:1px solid rgba(45,212,168,.2)">Function Health</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(45,212,168,.1);color:#2DD4A8;border:1px solid rgba(45,212,168,.2)">InsideTracker</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(45,212,168,.1);color:#2DD4A8;border:1px solid rgba(45,212,168,.2)">Quest</span>
-        </div>
-      </div>
-
-      <div style="background:#0a1628;border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','Find me the lowest price on my medications -- I want to compare Cost Plus Drugs, GoodRx, and Amazon Pharmacy')" onmouseover="this.style.borderColor='#C9A84C'" onmouseout="this.style.borderColor='rgba(201,168,76,.15)'">
-        <div style="font-size:10px;letter-spacing:2px;color:#C9A84C;margin-bottom:6px">MEDICATIONS</div>
-        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Lowest Price on Every Rx</div>
-        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">Cost Plus Drugs. GoodRx. Amazon Pharmacy. Mark Cuban's model versus the pharmacy benefit. Alvai finds the lowest price on every medication you take.</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.2)">Cost Plus Drugs</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.2)">GoodRx</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.2)">Amazon Pharmacy</span>
-        </div>
-      </div>
-
-      <div style="background:#0a1628;border:1px solid rgba(249,115,22,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','What are the best fitness and movement options available through BLEU')" onmouseover="this.style.borderColor='#f97316'" onmouseout="this.style.borderColor='rgba(249,115,22,.15)'">
-        <div style="font-size:10px;letter-spacing:2px;color:#f97316;margin-bottom:6px">MOVEMENT</div>
-        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Fitness on Demand</div>
-        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">ClassPass. Mindbody. Yoga, pilates, strength, swimming -- every modality. Your movement prescription matched to your biological age protocol.</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,.1);color:#f97316;border:1px solid rgba(249,115,22,.2)">ClassPass</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,.1);color:#f97316;border:1px solid rgba(249,115,22,.2)">Mindbody</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,.1);color:#f97316;border:1px solid rgba(249,115,22,.2)">Local Studios</span>
-        </div>
-      </div>
-
-      <div style="background:#0a1628;border:1px solid rgba(112,85,168,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','What food prescription programs does BLEU recommend for my health goals')" onmouseover="this.style.borderColor='#7055a8'" onmouseout="this.style.borderColor='rgba(112,85,168,.15)'">
-        <div style="font-size:10px;letter-spacing:2px;color:#7055a8;margin-bottom:6px">FOOD PRESCRIPTION</div>
-        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Produce as Medicine</div>
-        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">Food prescription programs with documented 10:1 ROI. USDA ERS 2024. The right food for your specific metabolic profile. Not a diet. A molecular protocol.</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(112,85,168,.1);color:#7055a8;border:1px solid rgba(112,85,168,.2)">10:1 ROI</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(112,85,168,.1);color:#7055a8;border:1px solid rgba(112,85,168,.2)">USDA Documented</span>
-        </div>
-      </div>
-
-      <div style="background:#0a1628;border:1px solid rgba(244,114,182,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','What mental health tools and apps does BLEU recommend')" onmouseover="this.style.borderColor='#F472B6'" onmouseout="this.style.borderColor='rgba(244,114,182,.15)'">
-        <div style="font-size:10px;letter-spacing:2px;color:#F472B6;margin-bottom:6px">MENTAL HEALTH TOOLS</div>
-        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Apps That Actually Work</div>
-        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">Not all mental health apps are equal. BLEU rates them against evidence and routes you to the ones with documented outcomes -- not the ones with the best marketing.</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(244,114,182,.1);color:#F472B6;border:1px solid rgba(244,114,182,.2)">BetterHelp</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(244,114,182,.1);color:#F472B6;border:1px solid rgba(244,114,182,.2)">Talkspace</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(244,114,182,.1);color:#F472B6;border:1px solid rgba(244,114,182,.2)">Brightside</span>
-        </div>
-      </div>
-
-      <div style="background:#0a1628;border:1px solid rgba(29,158,117,.15);border-radius:14px;padding:16px;cursor:pointer;transition:all .22s" onclick="ask('vessel','What recovery products and devices does BLEU recommend')" onmouseover="this.style.borderColor='#1d9e75'" onmouseout="this.style.borderColor='rgba(29,158,117,.15)'">
-        <div style="font-size:10px;letter-spacing:2px;color:#1d9e75;margin-bottom:6px">RECOVERY PRODUCTS</div>
-        <div style="font-size:14px;font-weight:700;color:#E8E0D0;margin-bottom:6px">Tools for Repair</div>
-        <div style="font-size:11px;color:#7B8DA6;line-height:1.6;margin-bottom:10px">Oura Ring for sleep. Cold therapy for inflammation. Red light therapy for mitochondria. Percussion therapy for recovery. Every device scored against the evidence.</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(29,158,117,.1);color:#1d9e75;border:1px solid rgba(29,158,117,.2)">Oura</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(29,158,117,.1);color:#1d9e75;border:1px solid rgba(29,158,117,.2)">Cold Therapy</span>
-          <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(29,158,117,.1);color:#1d9e75;border:1px solid rgba(29,158,117,.2)">Red Light</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-<!-- SHOP BY NEED -->
-  <div class="section-label" style="margin-bottom:12px">SHOP BY WHAT YOU NEED</div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:28px">
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="showVesselCategory('sleep')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:22px">😴</div><div style="color:#4ecdc4;font-weight:600;font-size:11px;margin-top:6px">Sleep</div></div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="showVesselCategory('stress')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:22px">🧠</div><div style="color:#d4af37;font-weight:600;font-size:11px;margin-top:6px">Stress</div></div>
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="showVesselCategory('energy')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:22px">⚡</div><div style="color:#4ecdc4;font-weight:600;font-size:11px;margin-top:6px">Energy</div></div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="showVesselCategory('pain')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:22px">🔥</div><div style="color:#d4af37;font-weight:600;font-size:11px;margin-top:6px">Pain</div></div>
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="showVesselCategory('immunity')" onmouseover="this.style.borderColor='#4ecdc4'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:22px">🛡️</div><div style="color:#4ecdc4;font-weight:600;font-size:11px;margin-top:6px">Immunity</div></div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="showVesselCategory('gut')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:22px">🦠</div><div style="color:#d4af37;font-weight:600;font-size:11px;margin-top:6px">Gut</div></div>
-    <div style="background:rgba(25,50,68,0.6);border:1px solid rgba(78,205,196,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="showVesselCategory('cannabis')" onmouseover="this.style.borderColor='#7ab87a'" onmouseout="this.style.borderColor='rgba(78,205,196,0.08)'"><div style="font-size:22px">🌿</div><div style="color:#7ab87a;font-weight:600;font-size:11px;margin-top:6px">Cannabis</div></div>
-    <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(212,175,55,0.08);border-radius:12px;padding:12px;cursor:pointer;text-align:center;transition:all 0.2s" onclick="showVesselCategory('foundation')" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(212,175,55,0.08)'"><div style="font-size:22px">🏛️</div><div style="color:#d4af37;font-weight:600;font-size:11px;margin-top:6px">Foundation</div></div>
-  </div>
-
-  <!-- PRODUCT GRID -- rendered by JS -->
-  <div id="vessel-grid" style="margin-bottom:28px"></div>
-
-  <!-- STACK BUILDER -->
-  <div style="background:rgba(25,50,68,0.35);border:1px solid rgba(212,175,55,0.12);border-radius:18px;padding:24px;margin-bottom:28px">
-    <div style="color:rgba(212,175,55,0.7);font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">🧪 BUILD YOUR STACK</div>
-    <p style="color:#8fa4b0;font-size:13px;line-height:1.7;margin-bottom:16px;font-weight:300">Tell Alvai your goals and current medications. Get a personalized supplement stack with interaction checking, dosing schedule, and direct purchase links.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-      <input id="stack-goal" placeholder="Your goal (sleep, energy, anxiety...)" style="background:rgba(25,50,68,0.8);border:1px solid rgba(78,205,196,0.2);border-radius:10px;padding:10px 14px;color:#e8d5b0;font-size:13px;outline:none">
-      <input id="stack-meds" placeholder="Current meds (or none)" style="background:rgba(25,50,68,0.8);border:1px solid rgba(78,205,196,0.2);border-radius:10px;padding:10px 14px;color:#e8d5b0;font-size:13px;outline:none">
-    </div>
-    <button onclick="buildStack()" style="background:linear-gradient(135deg,#d4af37,#b8962e);border:none;border-radius:10px;padding:11px 28px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer;width:100%">Build My Stack →</button>
-  </div>
-
-  <!-- ALVAI CHAT -->
-  <div class="section-label" style="margin-bottom:8px">ASK ALVAI -- PRODUCT GUIDANCE</div>
-  <div class="quick-row" style="margin-bottom:12px">
-    <span class="quick-btn" onclick="ask('vessel','Build me a sleep stack under $50 with Thorne or Fullscript products')">😴 Sleep Stack</span>
-    <span class="quick-btn" onclick="ask('vessel','What supplements help anxiety without interacting with SSRIs?')">🧠 Anxiety Safe</span>
-    <span class="quick-btn" onclick="ask('vessel','Best Thorne products for energy and fatigue')">⚡ Energy Protocol</span>
-    <span class="quick-btn" onclick="ask('vessel','Check interactions between CBD and sertraline')">⚠️ Check Interactions</span>
-    <span class="quick-btn" onclick="ask('vessel','What does Charlotte\'s Web CBD do and is it safe?')">🌿 CBD Guide</span>
-    <span class="quick-btn" onclick="ask('vessel','Starter supplement kit under $40 from Fullscript')">💰 Budget Stack</span>
-  </div>
-  
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- METABOLIC INTELLIGENCE -- CELLULAR HEALTH SCORE            -->
-<!-- 7 Dimensions · 12-Question Proxy · 3-Tier Access          -->
-<!-- ═══════════════════════════════════════════════════════════ -->
-<div id="metabolic-module" style="margin-top:32px">
-
-  <style>
-    .chs-ring-wrap{position:relative;width:140px;height:140px;margin:0 auto 16px}
-    .chs-ring-wrap svg{transform:rotate(-90deg)}
-    .chs-score-val{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Georgia,serif;font-size:36px;font-weight:700;color:#C9A84C;line-height:1}
-    .chs-score-lbl{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:3px;color:#8fa4b0;text-transform:uppercase;white-space:nowrap}
-    .chs-dim{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid rgba(255,255,255,0.06)}
-    .chs-dim:last-child{border-bottom:none}
-    .chs-dim-bar{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,0.06);overflow:hidden}
-    .chs-dim-fill{height:100%;border-radius:2px;transition:width 1.2s ease}
-    .chs-q{background:rgba(25,50,68,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 16px;margin-bottom:8px}
-    .chs-q-text{font-size:13px;color:#e8d5b0;margin-bottom:10px;line-height:1.5}
-    .chs-opts{display:flex;flex-wrap:wrap;gap:6px}
-    .chs-opt{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);font-size:11px;color:#8fa4b0;cursor:pointer;transition:all 0.2s}
-    .chs-opt:hover{border-color:rgba(201,168,76,0.4);color:#e8d5b0}
-    .chs-opt.selected{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.5);color:#C9A84C}
-    .met-tier{background:rgba(25,50,68,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:all 0.3s}
-    .met-tier:hover{border-color:rgba(201,168,76,0.25);transform:translateY(-2px)}
-    .met-aff-card{background:rgba(25,50,68,0.35);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px;cursor:pointer;transition:all 0.2s}
-    .met-aff-card:hover{border-color:rgba(45,138,158,0.3);transform:translateY(-2px)}
-    @keyframes chsPulse{0%,100%{opacity:.6}50%{opacity:1}}
-    .chs-pulse{animation:chsPulse 2s ease-in-out infinite}
-  </style>
-
-  <!-- HERO -->
-  <div style="text-align:center;padding:20px 0 28px">
-    <div style="font-size:9px;letter-spacing:4px;color:rgba(201,168,76,0.5);margin-bottom:8px">METABOLIC INTELLIGENCE</div>
-    <h2 style="font-family:Georgia,serif;font-size:28px;color:#e8d5b0;margin-bottom:8px">Cellular Health <em style="color:#C9A84C">Score</em></h2>
-    <p style="font-size:13px;color:#8fa4b0;max-width:480px;margin:0 auto;line-height:1.7">7 metabolic dimensions. A single number. The truth about what your body is doing beneath the level of symptoms.</p>
-  </div>
-
-  <!-- ASSESSMENT OR SCORE -->
-  <div id="chs-assessment-gate">
-    <!-- NOT TAKEN YET -- SHOW START -->
-    <div id="chs-start-view">
-      <div style="background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02));border:1px solid rgba(201,168,76,.2);border-radius:16px;padding:24px;text-align:center;margin-bottom:20px">
-        <div style="font-size:48px;margin-bottom:12px" class="chs-pulse">◈</div>
-        <div style="font-family:Georgia,serif;font-size:18px;color:#e8d5b0;margin-bottom:8px">12 questions. 3 minutes.</div>
-        <div style="font-size:12px;color:#8fa4b0;line-height:1.7;margin-bottom:16px;max-width:380px;margin-left:auto;margin-right:auto">I'll tell you something true about your metabolic health that most people never get told. No device. No blood draw. Just answers.</div>
-        <button onclick="startCHSAssessment()" style="padding:12px 32px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Get My Cellular Health Score →</button>
-      </div>
-
-      <!-- 3 TIERS -->
-      <div style="font-size:9px;letter-spacing:3px;color:#8fa4b0;margin-bottom:10px">THREE WAYS TO GENERATE YOUR SCORE</div>
-      <div class="met-tier" onclick="startCHSAssessment()">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <div style="font-size:12px;font-weight:600;color:#e8d5b0">Option 1 -- Zero Cost · Launch Now</div>
-          <span style="font-size:9px;padding:2px 8px;background:rgba(34,197,94,.1);color:#22c55e;border-radius:4px">FREE</span>
-        </div>
-        <div style="font-size:11px;color:#8fa4b0;line-height:1.6">12 validated questions about eating patterns, energy, sleep, weight history, and family history. Predicts metabolic risk with 70–75% accuracy. The entry point for everyone.</div>
-      </div>
-      <div class="met-tier" onclick="window.open('https://ouraring.com/?utm_source=bleu','_blank')">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <div style="font-size:12px;font-weight:600;color:#e8d5b0">Option 2 -- Wearable Layer</div>
-          <span style="font-size:9px;padding:2px 8px;background:rgba(45,138,158,.1);color:#2DD4A8;border-radius:4px">DEEPER</span>
-        </div>
-        <div style="font-size:11px;color:#8fa4b0;line-height:1.6">Oura Ring, Whoop, or CGM provide continuous metabolic signals. BLEU becomes the intelligence layer for devices you already own. Affiliate: Oura Ring from $299.</div>
-      </div>
-      <div class="met-tier" onclick="window.open('https://www.functionhealth.com/','_blank')">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <div style="font-size:12px;font-weight:600;color:#e8d5b0">Option 3 -- Full Biological Precision</div>
-          <span style="font-size:9px;padding:2px 8px;background:rgba(201,168,76,.1);color:#C9A84C;border-radius:4px">PREMIUM</span>
-        </div>
-        <div style="font-size:11px;color:#8fa4b0;line-height:1.6">Function Health 100+ biomarker panel ($499/yr) or InsideTracker. Real biology. BLEU interprets every result. The most accurate world model possible.</div>
-      </div>
-    </div>
-
-    <!-- ASSESSMENT IN PROGRESS -->
-    <div id="chs-questions-view" style="display:none">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <div style="font-size:11px;color:#8fa4b0">Question <span id="chs-q-num">1</span> of 12</div>
-        <div style="font-size:11px;color:#C9A84C"><span id="chs-progress-pct">0</span>% complete</div>
-      </div>
-      <div style="background:rgba(255,255,255,.06);border-radius:4px;height:3px;margin-bottom:20px;overflow:hidden">
-        <div id="chs-progress-bar" style="height:100%;background:#C9A84C;border-radius:4px;transition:width .5s ease;width:0%"></div>
-      </div>
-      <div id="chs-question-card" class="chs-q">
-        <div class="chs-q-text" id="chs-q-text"></div>
-        <div class="chs-opts" id="chs-q-opts"></div>
-      </div>
-      <div id="chs-q-nav" style="display:flex;justify-content:space-between;margin-top:12px">
-        <button onclick="chsPrev()" id="chs-prev-btn" style="padding:8px 16px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:transparent;color:#8fa4b0;font-size:12px;cursor:pointer;font-family:inherit">← Back</button>
-        <button onclick="chsNext()" id="chs-next-btn" style="padding:8px 20px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:8px;color:#C9A84C;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600">Next →</button>
-      </div>
-    </div>
-
-    <!-- SCORE RESULT -->
-    <div id="chs-result-view" style="display:none">
-      <div style="text-align:center;margin-bottom:20px">
-        <div class="chs-ring-wrap">
-          <svg width="140" height="140" viewBox="0 0 140 140">
-            <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
-            <circle cx="70" cy="70" r="60" fill="none" stroke="url(#chsGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="377" id="chs-ring-circle" stroke-dashoffset="377"/>
-            <defs><linearGradient id="chsGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#C9A84C"/><stop offset="100%" stop-color="#2DD4A8"/></linearGradient></defs>
-          </svg>
-          <div class="chs-score-val" id="chs-score-display">0</div>
-          <div class="chs-score-lbl">CELLULAR HEALTH</div>
-        </div>
-        <div id="chs-score-verdict" style="font-family:Georgia,serif;font-size:18px;color:#e8d5b0;margin-bottom:6px"></div>
-        <div id="chs-score-desc" style="font-size:12px;color:#8fa4b0;max-width:380px;margin:0 auto;line-height:1.7"></div>
-      </div>
-
-      <!-- 7 DIMENSIONS -->
-      <div style="font-size:9px;letter-spacing:3px;color:#8fa4b0;margin-bottom:10px">7 METABOLIC DIMENSIONS</div>
-      <div id="chs-dimensions"></div>
-
-      <!-- NEXT STEP -->
-      <div id="chs-next-step" style="background:linear-gradient(135deg,rgba(45,138,158,.1),rgba(45,138,158,.03));border:1px solid rgba(45,138,158,.2);border-radius:14px;padding:18px;margin-top:20px;margin-bottom:20px">
-        <div style="font-size:9px;letter-spacing:3px;color:#2DD4A8;margin-bottom:6px">TONIGHT'S NEXT STEP</div>
-        <div id="chs-step-text" style="font-size:13px;color:#e8d5b0;line-height:1.7"></div>
-      </div>
-
-      <!-- AFFILIATE TRIGGERS -->
-      <div style="font-size:9px;letter-spacing:3px;color:#8fa4b0;margin-bottom:10px">BASED ON YOUR SCORE -- RECOMMENDED NEXT STEPS</div>
-      <div id="chs-affiliate-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px"></div>
-
-      <!-- TALK TO ALVAI -->
-      <button onclick="goAsk('vessel', 'My Cellular Health Score is ' + window.chsLastScore + '/100. ' + window.chsLastContext + ' What should I focus on first?')" style="width:100%;padding:13px;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.05));border:1px solid rgba(201,168,76,.3);border-radius:12px;color:#C9A84C;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600">
-        ✦ Talk to Alvai About Your Score →
-      </button>
-
-      <button onclick="document.getElementById('chs-result-view').style.display='none';document.getElementById('chs-start-view').style.display='block';chsAnswers=[];chsCurrent=0;" style="width:100%;padding:10px;background:transparent;border:1px solid rgba(255,255,255,.08);border-radius:10px;color:#8fa4b0;font-size:11px;cursor:pointer;font-family:inherit;margin-top:8px">Retake Assessment</button>
-    </div>
-  </div>
-
-  <!-- METABOLIC AFFILIATE ECOSYSTEM -->
-  <div style="margin-top:32px">
-    <div style="font-size:9px;letter-spacing:3px;color:#8fa4b0;margin-bottom:12px">METABOLIC INTELLIGENCE PARTNERS</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div class="met-aff-card" onclick="window.open('https://www.functionhealth.com/','_blank')">
-        <div style="font-size:10px;color:#C9A84C;font-weight:600;margin-bottom:3px">Function Health</div>
-        <div style="font-size:10px;color:#8fa4b0">100+ biomarkers · $499/yr</div>
-        <div style="font-size:9px;color:#5A6374;margin-top:4px">15–20% commission</div>
-      </div>
-      <div class="met-aff-card" onclick="window.open('https://www.insidetracker.com/','_blank')">
-        <div style="font-size:10px;color:#C9A84C;font-weight:600;margin-bottom:3px">InsideTracker</div>
-        <div style="font-size:10px;color:#8fa4b0">Biological age · bloodwork</div>
-        <div style="font-size:9px;color:#5A6374;margin-top:4px">15–20% commission</div>
-      </div>
-      <div class="met-aff-card" onclick="window.open('https://ouraring.com/?utm_source=bleu','_blank')">
-        <div style="font-size:10px;color:#2DD4A8;font-weight:600;margin-bottom:3px">Oura Ring</div>
-        <div style="font-size:10px;color:#8fa4b0">HRV · readiness · sleep</div>
-        <div style="font-size:9px;color:#5A6374;margin-top:4px">10–15% commission</div>
-      </div>
-      <div class="met-aff-card" onclick="window.open('https://www.whoop.com/','_blank')">
-        <div style="font-size:10px;color:#2DD4A8;font-weight:600;margin-bottom:3px">Whoop</div>
-        <div style="font-size:10px;color:#8fa4b0">Strain · recovery · HRV</div>
-        <div style="font-size:9px;color:#5A6374;margin-top:4px">Recurring commission</div>
-      </div>
-      <div class="met-aff-card" onclick="window.open('https://www.levelshealth.com/','_blank')">
-        <div style="font-size:10px;color:#22c55e;font-weight:600;margin-bottom:3px">Levels CGM</div>
-        <div style="font-size:10px;color:#8fa4b0">Continuous glucose monitoring</div>
-        <div style="font-size:9px;color:#5A6374;margin-top:4px">10–15% recurring</div>
-      </div>
-      <div class="met-aff-card" onclick="window.open('https://us.fullscript.com/welcome/fstoler','_blank')">
-        <div style="font-size:10px;color:#C9A84C;font-weight:600;margin-bottom:3px">Fullscript Dispensary</div>
-        <div style="font-size:10px;color:#8fa4b0">Dr. Felicia · practitioner-grade</div>
-        <div style="font-size:9px;color:#5A6374;margin-top:4px">20–35% commission</div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-  var chsAnswers = [], chsCurrent = 0;
-  window.chsLastScore = 0;
-  window.chsLastContext = '';
-
-  var CHS_QUESTIONS = [
-    {text: "How would you describe your energy levels throughout the day?", dim: "cellular_energy", opts: [
-      {label:"Consistent all day", score:10}, {label:"Strong morning, crash afternoon", score:5},
-      {label:"Low all day", score:2}, {label:"Unpredictable / irregular", score:3}
-    ]},
-    {text: "How often do you feel hungry within 2 hours of eating a full meal?", dim: "glucose_stability", opts: [
-      {label:"Rarely", score:10}, {label:"Sometimes (a few times/week)", score:6},
-      {label:"Often (daily)", score:3}, {label:"Almost always", score:1}
-    ]},
-    {text: "How would you describe your sleep quality?", dim: "sleep_recovery", opts: [
-      {label:"Wake refreshed consistently", score:10}, {label:"Hit or miss", score:6},
-      {label:"Often tired after sleep", score:3}, {label:"Rarely feel rested", score:1}
-    ]},
-    {text: "Do you experience brain fog, difficulty concentrating, or memory issues?", dim: "mitochondrial", opts: [
-      {label:"Rarely or never", score:10}, {label:"Occasionally", score:7},
-      {label:"Several times a week", score:4}, {label:"Daily", score:1}
-    ]},
-    {text: "How many days per week do you engage in 20+ minutes of movement?", dim: "metabolic_flex", opts: [
-      {label:"5-7 days", score:10}, {label:"3-4 days", score:7},
-      {label:"1-2 days", score:4}, {label:"Rarely or never", score:1}
-    ]},
-    {text: "How many hours typically pass between your last meal and when you go to sleep?", dim: "glucose_stability", opts: [
-      {label:"3+ hours", score:10}, {label:"2-3 hours", score:7},
-      {label:"1-2 hours", score:4}, {label:"I eat right before bed", score:1}
-    ]},
-    {text: "Do you have a family history of diabetes, cardiovascular disease, or metabolic syndrome?", dim: "inflammatory", opts: [
-      {label:"No family history", score:10}, {label:"One relative", score:7},
-      {label:"Multiple relatives", score:4}, {label:"Yes, close family", score:2}
-    ]},
-    {text: "How often do you experience joint pain, persistent soreness, or inflammation?", dim: "inflammatory", opts: [
-      {label:"Rarely", score:10}, {label:"Occasionally", score:7},
-      {label:"Weekly", score:4}, {label:"Daily", score:1}
-    ]},
-    {text: "How would you describe your stress levels over the past 3 months?", dim: "oxidative_stress", opts: [
-      {label:"Manageable / low", score:10}, {label:"Moderate", score:7},
-      {label:"High", score:4}, {label:"Overwhelming", score:1}
-    ]},
-    {text: "How many servings of vegetables or whole foods do you eat daily?", dim: "metabolic_flex", opts: [
-      {label:"5+ servings", score:10}, {label:"3-4 servings", score:7},
-      {label:"1-2 servings", score:4}, {label:"Rarely eat whole foods", score:1}
-    ]},
-    {text: "Have you been told you have or are at risk for any of these: prediabetes, insulin resistance, high triglycerides, or metabolic syndrome?", dim: "glucose_stability", opts: [
-      {label:"No, none of these", score:10}, {label:"At risk for one", score:6},
-      {label:"Diagnosed with one", score:3}, {label:"Multiple conditions", score:1}
-    ]},
-    {text: "How would you describe your weight trajectory over the past 2 years?", dim: "metabolic_flex", opts: [
-      {label:"Stable at healthy weight", score:10}, {label:"Minor fluctuations", score:7},
-      {label:"Gradual increase", score:4}, {label:"Significant change / struggling", score:2}
-    ]}
-  ];
-
-  var CHS_DIMS = [
-    {key:"cellular_energy", label:"Cellular energy production", color:"#C9A84C"},
-    {key:"glucose_stability", label:"Glucose stability", color:"#2DD4A8"},
-    {key:"inflammatory", label:"Inflammatory load", color:"#E07A58"},
-    {key:"mitochondrial", label:"Mitochondrial efficiency", color:"#9878D4"},
-    {key:"sleep_recovery", label:"Sleep recovery depth", color:"#4A7EC9"},
-    {key:"oxidative_stress", label:"Oxidative stress indicators", color:"#D4537E"},
-    {key:"metabolic_flex", label:"Metabolic flexibility", color:"#22c55e"}
-  ];
-
-  function startCHSAssessment(){
-    chsAnswers=[];chsCurrent=0;
-    document.getElementById('chs-start-view').style.display='none';
-    document.getElementById('chs-result-view').style.display='none';
-    document.getElementById('chs-questions-view').style.display='block';
-    renderCHSQuestion();
-  }
-
-  function renderCHSQuestion(){
-    var q = CHS_QUESTIONS[chsCurrent];
-    document.getElementById('chs-q-num').textContent = chsCurrent+1;
-    document.getElementById('chs-progress-pct').textContent = Math.round((chsCurrent/12)*100);
-    document.getElementById('chs-progress-bar').style.width = Math.round((chsCurrent/12)*100)+'%';
-    document.getElementById('chs-q-text').textContent = q.text;
-    var opts = document.getElementById('chs-q-opts');
-    opts.innerHTML = q.opts.map(function(o,i){
-      var sel = chsAnswers[chsCurrent]===i ? 'selected' : '';
-      return '<div class="chs-opt '+sel+'" onclick="selectCHSOpt('+i+')">'+o.label+'</div>';
-    }).join('');
-    document.getElementById('chs-prev-btn').style.opacity = chsCurrent===0?'0.3':'1';
-  }
-
-  function selectCHSOpt(idx){
-    chsAnswers[chsCurrent]=idx;
-    document.querySelectorAll('.chs-opt').forEach(function(o,i){
-      o.classList.toggle('selected', i===idx);
-    });
-    setTimeout(function(){
-      if(chsCurrent<11){chsCurrent++;renderCHSQuestion();}
-      else{calculateCHSScore();}
-    },400);
-  }
-
-  function chsNext(){
-    if(chsAnswers[chsCurrent]===undefined)return;
-    if(chsCurrent<11){chsCurrent++;renderCHSQuestion();}
-    else{calculateCHSScore();}
-  }
-
-  function chsPrev(){
-    if(chsCurrent>0){chsCurrent--;renderCHSQuestion();}
-  }
-
-  function calculateCHSScore(){
-    var dimScores={};
-    CHS_DIMS.forEach(function(d){dimScores[d.key]=[];});
-    CHS_QUESTIONS.forEach(function(q,qi){
-      var ansIdx=chsAnswers[qi]||0;
-      var score=q.opts[ansIdx]?q.opts[ansIdx].score:5;
-      if(dimScores[q.dim])dimScores[q.dim].push(score);
-    });
-
-    var dimAvgs={};
-    var totalScore=0, dimCount=0;
-    CHS_DIMS.forEach(function(d){
-      var scores=dimScores[d.key];
-      if(scores&&scores.length>0){
-        var avg=scores.reduce(function(a,b){return a+b;},0)/scores.length;
-        dimAvgs[d.key]=Math.round(avg*10);
-        totalScore+=avg;
-        dimCount++;
-      } else {
-        dimAvgs[d.key]=50;
-      }
-    });
-
-    var finalScore=Math.round((totalScore/dimCount)*10);
-    window.chsLastScore=finalScore;
-
-    var verdict,desc,step;
-    if(finalScore>=80){
-      verdict='Metabolically Resilient';
-      desc='Your patterns suggest strong metabolic function. The data shows consistency in the dimensions that matter most for longevity -- energy stability, recovery depth, and inflammatory control.';
-      step='Your foundation is solid. To push past 85, consider adding HRV tracking (Oura Ring) to quantify your recovery with biological precision.';
-    } else if(finalScore>=65){
-      verdict='Metabolic Stress Detected';
-      desc='Your body is working against several compounding signals. None are emergencies. All are addressable. The pattern I see most clearly: early insulin resistance risk combined with disrupted recovery cycles.';
-      step='Start with a 10-hour eating window and 20 minutes of movement before sleep. These two changes address your two lowest dimensions simultaneously.';
-    } else if(finalScore>=45){
-      verdict='Significant Metabolic Disruption';
-      desc='Multiple systems are signaling stress simultaneously. Glucose stability, inflammatory load, and recovery depth are the primary concerns. This is the pattern that, without attention, compounds over 3-5 years.';
-      step='Before supplements or devices -- start with a blood glucose awareness protocol. A CGM for 2 weeks will show you exactly what your body is doing. That data changes everything.';
-    } else {
-      verdict='Urgent Metabolic Attention Needed';
-      desc='The pattern here is consistent with advanced metabolic stress across multiple dimensions. I want to be direct with you: these signals are serious and they are reversible -- but reversal requires intervention, not just awareness.';
-      step='I'd recommend starting with a Function Health biomarker panel. 100+ markers interpreted inside BLEU will give us the biological data we need to build the right protocol for your specific situation.';
-    }
-
-    // Build context for Alvai
-    var lowestDim = Object.entries(dimAvgs).sort(function(a,b){return a[1]-b[1];})[0];
-    var dimLabel = CHS_DIMS.find(function(d){return d.key===lowestDim[0];});
-    window.chsLastContext = 'My lowest metabolic dimension is ' + (dimLabel?dimLabel.label:'metabolic flexibility') + '. The assessment identified: ' + verdict + '.';
-
-    document.getElementById('chs-questions-view').style.display='none';
-    document.getElementById('chs-result-view').style.display='block';
-
-    // Animate ring
-    document.getElementById('chs-score-display').textContent=finalScore;
-    var offset=377-(377*(finalScore/100));
-    document.getElementById('chs-ring-circle').style.transition='stroke-dashoffset 1.5s ease';
-    document.getElementById('chs-ring-circle').style.strokeDashoffset=offset;
-
-    document.getElementById('chs-score-verdict').textContent=verdict;
-    document.getElementById('chs-score-desc').textContent=desc;
-    document.getElementById('chs-step-text').textContent=step;
-
-    // Render dimensions
-    var dimsHTML='';
-    CHS_DIMS.forEach(function(d){
-      var v=dimAvgs[d.key]||50;
-      var status=v>=80?'Strong':v>=60?'Adequate':v>=40?'Stressed':'Critical';
-      dimsHTML+='<div class="chs-dim"><div style="font-size:11px;color:#e8d5b0;width:150px;flex-shrink:0">'+d.label+'</div><div class="chs-dim-bar"><div class="chs-dim-fill" style="width:'+v+'%;background:'+d.color+'"></div></div><div style="font-size:10px;color:'+d.color+';width:52px;text-align:right;flex-shrink:0">'+status+'</div></div>';
-    });
-    document.getElementById('chs-dimensions').innerHTML=dimsHTML;
-
-    // Affiliate triggers based on score
-    var cards=[];
-    if(finalScore<70){
-      cards.push({name:'Function Health',sub:'100+ biomarkers -- know your biology',color:'#C9A84C',url:'https://www.functionhealth.com/'});
-      cards.push({name:'Levels CGM',sub:'Glucose monitoring -- 2 weeks reveals everything',color:'#22c55e',url:'https://www.levelshealth.com/'});
-    }
-    if(dimAvgs.sleep_recovery<60){
-      cards.push({name:'Oura Ring',sub:'HRV & sleep precision tracking',color:'#2DD4A8',url:'https://ouraring.com/?utm_source=bleu'});
-    }
-    cards.push({name:'Fullscript Dispensary',sub:'Dr. Felicia-reviewed supplements',color:'#C9A84C',url:'https://us.fullscript.com/welcome/fstoler'});
-
-    document.getElementById('chs-affiliate-cards').innerHTML=cards.slice(0,4).map(function(c){
-      return '<div class="met-aff-card" onclick="window.open(''+c.url+'','_blank')"><div style="font-size:11px;color:'+c.color+';font-weight:600;margin-bottom:2px">'+c.name+'</div><div style="font-size:10px;color:#8fa4b0">'+c.sub+'</div></div>';
-    }).join('');
-
-    // Save to Supabase if logged in
-    if(typeof sbClient !== 'undefined' && sbClient && typeof currentUser !== 'undefined' && currentUser){
-      sbClient.from('profiles').upsert({
-        id: currentUser.id,
-        cellular_health_score: finalScore,
-        metabolic_assessment_date: new Date().toISOString(),
-        metabolic_dims: JSON.stringify(dimAvgs)
-      }).then(function(){});
-    }
-  }
-  </script>
-</div>
-
-<input class="chat-input" id="in-vessel" placeholder="What supplements should I take? What interacts with my meds?" onkeydown="if(event.key==='Enter')send('vessel')"><button onclick="send('vessel')">Find Stack</button>
-
-  <div class="disclaimer">⚕️ Supplements are not FDA-approved to treat disease. BLEU scores reflect safety data, clinical evidence, and manufacturing quality -- not medical claims. Consult your provider before starting any supplement, especially if taking medications.</div>
-  <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)"><span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">A living model of care · Patent Pending · © 2026</span></div>
-
-
+<div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)">
+  <span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(200,169,81,.4);font-weight:600">
+    A living model of care · Patent Pending · © 2026
+  </span>
 </div>
 
 <!-- ═══════════════════════ MAP ═══════════════════════ -->
@@ -12591,5 +12185,40 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
   document.body.appendChild(overlay);
 };
 </script>
+
+<script>
+// BLEU Hash Routing — bleu.live/#vessel, bleu.live/#therapy etc
+(function() {
+  function openTab(tabId) {
+    var target = document.getElementById('p-' + tabId) ||
+                 document.getElementById(tabId);
+    if (!target) return;
+    // Find and click the nav tab
+    var navItems = document.querySelectorAll('.nt, [onclick*="go("]');
+    navItems.forEach(function(n) {
+      var oc = n.getAttribute('onclick') || '';
+      if (oc.indexOf("'" + tabId + "'") > -1 || oc.indexOf('"' + tabId + '"') > -1) {
+        n.click();
+      }
+    });
+    // Fallback: direct panel show
+    document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('on'); });
+    target.classList.add('on');
+    window.scrollTo(0, 0);
+  }
+
+  function handleHash() {
+    var hash = window.location.hash.replace('#', '').toLowerCase().trim();
+    if (!hash) return;
+    setTimeout(function() { openTab(hash); }, 150);
+  }
+
+  // On load
+  window.addEventListener('load', handleHash);
+  // On hash change (back/forward navigation)
+  window.addEventListener('hashchange', handleHash);
+})();
+</script>
+
 </body>
 </html>
