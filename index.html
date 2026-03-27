@@ -2346,7 +2346,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     <div class="proto-name">Sleep Restoration</div>
     <div class="proto-items">Magnesium Glycinate 400mg · L-Theanine 200mg</div>
     <div class="proto-cost">$28/mo <span class="proto-duration">· 21 days</span></div>
-    <button class="proto-add-btn" onclick="addToCart('sleep_gaba')">+ Add to Protocol</button>
+    <button class="proto-add-btn" onclick="vesselAddToCart('sleep_gaba')">+ Add to Protocol</button>
   </div>
 
   <div class="protocol-card" id="proto-anxiety_cortisol">
@@ -2354,7 +2354,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     <div class="proto-name">Anxiety Relief</div>
     <div class="proto-items">L-Theanine 200mg · Ashwagandha KSM-66 300mg</div>
     <div class="proto-cost">$35/mo <span class="proto-duration">· 30 days</span></div>
-    <button class="proto-add-btn" onclick="addToCart('anxiety_cortisol')">+ Add to Protocol</button>
+    <button class="proto-add-btn" onclick="vesselAddToCart('anxiety_cortisol')">+ Add to Protocol</button>
   </div>
 
   <div class="protocol-card" id="proto-inflammation">
@@ -2362,7 +2362,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     <div class="proto-name">Anti-Inflammation</div>
     <div class="proto-items">Omega-3 EPA/DHA 2000mg · Vitamin D3+K2 5000IU</div>
     <div class="proto-cost">$45/mo <span class="proto-duration">· 60 days</span></div>
-    <button class="proto-add-btn" onclick="addToCart('inflammation')">+ Add to Protocol</button>
+    <button class="proto-add-btn" onclick="vesselAddToCart('inflammation')">+ Add to Protocol</button>
   </div>
 
   <div class="protocol-card" id="proto-energy_mitochondria">
@@ -2370,7 +2370,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     <div class="proto-name">Energy + Focus</div>
     <div class="proto-items">CoQ10 Ubiquinol 200mg · Vitamin B-Complex</div>
     <div class="proto-cost">$42/mo <span class="proto-duration">· 30 days</span></div>
-    <button class="proto-add-btn" onclick="addToCart('energy_mitochondria')">+ Add to Protocol</button>
+    <button class="proto-add-btn" onclick="vesselAddToCart('energy_mitochondria')">+ Add to Protocol</button>
   </div>
 
   <div class="protocol-card" id="proto-mood">
@@ -2378,7 +2378,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     <div class="proto-name">Mood + Mental Health</div>
     <div class="proto-items">Omega-3 EPA 2000mg · Magnesium 400mg · D3 5000IU</div>
     <div class="proto-cost">$40/mo <span class="proto-duration">· 60 days</span></div>
-    <button class="proto-add-btn" onclick="addToCart('mood')">+ Add to Protocol</button>
+    <button class="proto-add-btn" onclick="vesselAddToCart('mood')">+ Add to Protocol</button>
   </div>
 
   <div class="protocol-card" id="proto-metabolic">
@@ -2386,7 +2386,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     <div class="proto-name">Metabolic Reset</div>
     <div class="proto-items">Berberine HCl 1500mg · Chromium 400mcg · Omega-3</div>
     <div class="proto-cost">$38/mo <span class="proto-duration">· 90 days</span></div>
-    <button class="proto-add-btn" onclick="addToCart('metabolic')">+ Add to Protocol</button>
+    <button class="proto-add-btn" onclick="vesselAddToCart('metabolic')">+ Add to Protocol</button>
   </div>
 
   <div class="protocol-card" id="proto-longevity">
@@ -2394,7 +2394,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     <div class="proto-name">Longevity Protocol</div>
     <div class="proto-items">CoQ10 · Omega-3 · Magnesium · D3+K2</div>
     <div class="proto-cost">$75/mo <span class="proto-duration">· 90 days</span></div>
-    <button class="proto-add-btn" onclick="addToCart('longevity')">+ Add to Protocol</button>
+    <button class="proto-add-btn" onclick="vesselAddToCart('longevity')">+ Add to Protocol</button>
   </div>
 
   <div class="protocol-card" id="proto-immune">
@@ -2402,7 +2402,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     <div class="proto-name">Immune Support</div>
     <div class="proto-items">Zinc Picolinate 30mg · D3 5000IU · Vitamin C 1000mg</div>
     <div class="proto-cost">$22/mo <span class="proto-duration">· ongoing</span></div>
-    <button class="proto-add-btn" onclick="addToCart('immune')">+ Add to Protocol</button>
+    <button class="proto-add-btn" onclick="vesselAddToCart('immune')">+ Add to Protocol</button>
   </div>
 
 </div>
@@ -12183,7 +12183,7 @@ var PROTOCOLS = [
   },
 ];
 
-function renderProtocols() {
+function vesselRenderProtocols() {
   var grid = document.getElementById('vessel-protocol-grid');
   if (!grid) return;
   grid.innerHTML = PROTOCOLS.map(function(p) {
@@ -12200,24 +12200,24 @@ function renderProtocols() {
   }).join('');
 }
 
-function addToCart(protoId) {
+function vesselAddToCart(protoId) {
   var proto = PROTOCOLS.find(function(p){ return p.id === protoId; });
   if (!proto) return;
   var exists = vesselCart.some(function(c){ return c.id === protoId; });
-  if (exists) { removeFromCart(protoId); return; }
+  if (exists) { vesselRemoveFromCart(protoId); return; }
   vesselCart.push(proto);
-  updateCart();
-  updateAlvaiContext(proto);
-  renderProtocols();
+  vesselUpdateCart();
+  vesselUpdateAlvaiContext(proto);
+  vesselRenderProtocols();
 }
 
-function removeFromCart(protoId) {
+function vesselRemoveFromCart(protoId) {
   vesselCart = vesselCart.filter(function(c){ return c.id !== protoId; });
-  updateCart();
-  renderProtocols();
+  vesselUpdateCart();
+  vesselRenderProtocols();
 }
 
-function updateCart() {
+function vesselUpdateCart() {
   var items = document.getElementById('vessel-cart-items');
   var summary = document.getElementById('vessel-cart-summary');
   var countEl = document.getElementById('vessel-cart-count');
@@ -12260,7 +12260,7 @@ function updateCart() {
   if (countEl) countEl.textContent = vesselCart.length + (vesselCart.length === 1 ? ' item' : ' items');
 }
 
-function updateAlvaiContext(proto) {
+function vesselUpdateAlvaiContext(proto) {
   var msg = document.getElementById('vessel-alvai-msg');
   if (!msg) return;
   msg.innerHTML = '<strong>Why ' + proto.name + ' for you.</strong><br><br>' +
