@@ -2544,15 +2544,7 @@ function vesselAsk() {
   }
 }
 
-// Init on load
-document.addEventListener('DOMContentLoaded', function() {
-  renderProtocols();
-  updateCart();
-});
-if (document.readyState !== 'loading') {
-  renderProtocols();
-  updateCart();
-}
+// Init handled by late-fire script below
 </script>
 
 <div class="patent-badge" style="text-align:center;padding:16px 0 8px;margin-top:20px;border-top:1px solid rgba(200,169,81,.08)">
@@ -12220,5 +12212,17 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
 })();
 </script>
 
+<script>
+// Vessel protocol render — guaranteed late fire
+(function vesselLateInit(){
+  var grid = document.getElementById('vessel-protocol-grid');
+  if(grid && typeof renderProtocols === 'function'){
+    renderProtocols();
+    updateCart();
+  } else if(typeof renderProtocols === 'function') {
+    setTimeout(vesselLateInit, 200);
+  }
+})();
+</script>
 </body>
 </html>
