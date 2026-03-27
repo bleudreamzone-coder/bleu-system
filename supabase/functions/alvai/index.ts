@@ -95,7 +95,7 @@ function classifyIntent(msg: string): "mini"|"full"|"clinical" {
   if(MINI_PATTERNS.some(r=>r.test(msg))&&!DEEP_PATTERNS.some(r=>r.test(msg)))return "mini";
   if(DEEP_PATTERNS.some(r=>r.test(msg)))return "full";
   if(w>20)return "full";
-  return "mini";
+  return "full"; // default: any health query deserves the full model
 }
 
 // AGENT 19 ROUTING DECISION
@@ -107,7 +107,7 @@ function routeModel(mode: string, userMsg?: string, isCrisis?: boolean): {model:
     const intent = classifyIntent(userMsg);
     if (intent === "clinical") {
       // 5% — Claude Opus for deepest clinical reasoning
-      return { model: "claude-opus-4-5", tier: "clinical-5pct", useAnthropic: !!ANTHROPIC_API_KEY };
+      return { model: "claude-opus-4-6", tier: "clinical-5pct", useAnthropic: !!ANTHROPIC_API_KEY };
     }
     if (intent === "full" || alwaysDeep.includes(mode)) {
       // 25% — GPT-4o synthesis tier
@@ -1194,12 +1194,8 @@ function generateBundleCart(paths: string[]): string {
     `INCLUDES: ${bundle.items.join(", ")}\n` +
     `DURATION: ${bundle.duration} | COST: ${bundle.est_cost}\n` +
     `AMAZON CART (all items pre-loaded, one-click checkout): ${bundle.amazon_cart}\n` +
-    `IHERB CART (alternative, 20% below retail, Dr. Stoler clinical oversight): ${bundle.iherb_cart}\n` +
-    `COMMERCE PRIORITY — MANDATORY:
-1. AMAZON (primary): ${bundle.amazon_cart} — ships tomorrow, tag bleulive-20
-2. FULLSCRIPT DISPENSARY (clinical): https://us.fullscript.com/welcome/fstoler — 20% below retail, Dr. Stoler oversight
-3. STRIPE SUBSCRIPTION (owned): price_id=${bundle.stripe_price_id} — $${bundle.est_cost}/mo inside BLEU
-INSTRUCTION: End EVERY full protocol response with exactly: "Your complete ${bundle.name} is on Amazon — ${bundle.amazon_cart} — one click, ships tomorrow. Or subscribe through the Bleu Wellness Dispensary for clinical-grade sourcing and 20% below retail."\n`;
+    `FULLSCRIPT DISPENSARY (clinical grade, Dr. Stoler oversight): https://us.fullscript.com/welcome/fstoler\n` +
+    `Weave the Amazon or Fullscript link inline with the mechanism — inside the sentence where the product is named, not as a separate closing line.\n`;
 }
 
 function classifyPathway(msg: string, biomarkers: any): string[] {
@@ -1434,8 +1430,7 @@ function generatePrescription(msg: string, biomarkers: any, isCrisis: boolean): 
     if (rx.caution) output += `CLINICAL CAUTION: ${rx.caution}\n`;
   }
 
-  output += `\nINSTRUCTION: Surface the most relevant prescription above as a specific named recommendation. State the dose and timing exactly. Explain the mechanism in one sentence. Include the buy link naturally. If therapy or movement is prescribed, mention it after the supplement. Never say "you might want to try" — say "here is what the evidence supports for your specific pattern."\n`;
-  output += `\nPRESCRIPTION AUTHORITY RULES — NON-NEGOTIABLE:\n1. Exact product name as given. Not magnesium — Magnesium Glycinate 400mg.\n2. Exact dose and timing. Not before bed — 90 minutes before your target sleep time.\n3. Buy link with price inline. Not you can find it online — Amazon arrow url ~$15/mo.\n4. Zero hedging. No if you are open to trying. No you might consider. No could help. State what the evidence supports for this specific pattern.\n5. You just ran a clinical research engine, a biomarker pathway classifier, and a drug safety check simultaneously. A clinician who reviewed this evidence does not hedge. Neither do you.\n`;
+  output += `\nUse this prescription data directly. Name the product exactly as given. State dose and timing exactly. Explain the mechanism in one sentence. Include the buy link inline with the product name. Speak with the directness of someone who just ran the evidence — because you did.\n`;
 
   return output;
 }
@@ -2188,7 +2183,9 @@ serve(async (req) => {
     }
     const passportLayer = user_context ? `\n\n${user_context}${sessionDepthLayer}` : "";
 
-    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, bundleLayer, affiliateLayer, passportLayer, trustLayer, simulationLayer]
+    const VOICE_SEAL = `You are Alvai. Not a rules engine. Not a system running instructions. A voice.\nEvery rule above exists so you can forget it and speak directly.\nThe person in front of you is real. Speak to them. One thought. One question. Done.`;
+
+    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, bundleLayer, affiliateLayer, passportLayer, trustLayer, simulationLayer, VOICE_SEAL]
       .filter(Boolean).join("\n\n");
 
     // ═══ AGENT 19 FINAL ROUTING — Crisis override, then 70/25/5 tier ═══
@@ -2208,7 +2205,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "claude-opus-4-5",
+          model: "claude-opus-4-6",
           max_tokens: 2000,
           system: systemPrompt,
           messages: recentMessages.map((m:any) => ({ role: m.role, content: m.content })),
