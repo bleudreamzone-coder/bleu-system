@@ -2441,6 +2441,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
   </span>
 </div>
 
+<!-- VESSEL v4 cache:20260327-2120 -->
 <!-- ═══════════════════════ MAP ═══════════════════════ -->
 <div class="panel" id="p-map">
 <style>
@@ -12243,7 +12244,7 @@ var VESSEL_PROTOCOLS = {
 // ── ACTIVE PICKER STATE ───────────────────────────────────────
 var activePicker = null;
 
-function vesselShowPicker(id) {
+window.vesselShowPicker = function(id) {
   // Close if same one clicked again
   if (activePicker === id) {
     vesselClosePicker();
@@ -12298,13 +12299,13 @@ function vesselShowPicker(id) {
   }
 }
 
-function vesselClosePicker() {
+window.vesselClosePicker = function() {
   var old = document.getElementById("vessel-picker-drawer");
   if (old) old.remove();
   activePicker = null;
 }
 
-function vesselSelectBrand(protoId, brandName, asin) {
+window.vesselSelectBrand = function(protoId, brandName, asin) {
   // Add to cart with selected brand
   var proto = VESSEL_PROTOCOLS[protoId];
   if (!proto) return;
@@ -12328,14 +12329,14 @@ function vesselSelectBrand(protoId, brandName, asin) {
   vesselClosePicker();
 }
 
-function vesselRemoveFromCart(id) {
+window.vesselRemoveFromCart = function(id) {
   vesselCart = vesselCart.filter(function(i){ return i.id !== id; });
   var btn = document.querySelector("#proto-"+id+" .proto-add-btn");
   if (btn) btn.textContent = "+ Choose Brand";
   vesselUpdateCart();
 }
 
-function vesselUpdateCart() {
+window.vesselUpdateCart = function() {
   var items = document.getElementById("vessel-cart-items");
   var summary = document.getElementById("vessel-cart-summary");
   var countEl = document.getElementById("vessel-cart-count");
@@ -12367,7 +12368,7 @@ function vesselUpdateCart() {
   if (countEl) countEl.textContent = vesselCart.length + (vesselCart.length===1?" item":" items");
 }
 
-function vesselAsk() {
+window.vesselAsk = function() {
   var input = document.getElementById("vessel-chat-input");
   var msg = input ? input.value.trim() : "";
   if (!msg) return;
