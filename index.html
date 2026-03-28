@@ -2,146 +2,127 @@
 <html lang="en">
 <head>
 <script>
-/* BLEU VESSEL v5 - isolated global scope */
-var vesselCart = [];
-var VESSEL_PROTOCOLS = {
-  sleep_gaba:{name:"Sleep Restoration",cost:"$15-28",choices:[
-    {rank:1,medal:"GOLD",brand:"NOW Foods Magnesium Glycinate 400mg",why:"Only brand to pass independent lab testing for true chelated glycinate form. Uses Albion Minerals.",price:"~$17",asin:"B0CB984SHQ"},
-    {rank:2,medal:"SILVER",brand:"Thorne Magnesium Glycinate",why:"NSF Certified. Pharmaceutical-grade. No fillers. Preferred by medical professionals.",price:"~$28",asin:"B07LGSF5B7"},
-    {rank:3,medal:"BRONZE",brand:"Pure Encapsulations Magnesium Glycinate",why:"Hypoallergenic. No artificial fillers. Ideal for sensitive individuals.",price:"~$32",asin:"B001F9L7V8"}
-  ]},
-  anxiety_cortisol:{name:"Anxiety Relief",cost:"$13-35",choices:[
-    {rank:1,medal:"GOLD",brand:"NOW Foods L-Theanine 200mg",why:"200mg with Inositol. Raises alpha wave activity within 30 minutes. GMP certified.",price:"~$18",asin:"B00GQV9YX6"},
-    {rank:2,medal:"SILVER",brand:"Jarrow Formulas KSM-66 Ashwagandha 300mg",why:"Uses the exact KSM-66 extract from 22 clinical trials. Standardized to 5% withanolides.",price:"~$18",asin:"B01D7YKVWQ"},
-    {rank:3,medal:"BRONZE",brand:"Pure Encapsulations Ashwagandha",why:"Practitioner-grade hypoallergenic formula. No fillers. Trusted by integrative physicians.",price:"~$30",asin:"B079YLXG7T"}
-  ]},
-  inflammation:{name:"Anti-Inflammation",cost:"$28-55",choices:[
-    {rank:1,medal:"GOLD",brand:"Nordic Naturals ProOmega 2000",why:"IFOS 5-star certified. Triglyceride form for superior absorption. 2000mg EPA+DHA per serving. The clinical gold standard.",price:"~$55",asin:"B01HQPYHDC"},
-    {rank:2,medal:"SILVER",brand:"Carlson Elite Omega-3",why:"Family-owned since 1965. IFOS certified. Norwegian fish oil. Excellent purity record.",price:"~$35",asin:"B005E7FBKA"},
-    {rank:3,medal:"BRONZE",brand:"NOW Foods Ultra Omega-3",why:"Molecularly distilled. Enteric-coated. Third-party tested. Best value at this quality level.",price:"~$28",asin:"B002VLZHLS"}
-  ]},
-  energy_mitochondria:{name:"Energy + Focus",cost:"$22-45",choices:[
-    {rank:1,medal:"GOLD",brand:"Jarrow QH-absorb Ubiquinol 200mg",why:"The original ubiquinol with clinical research. 8x more bioavailable than ubiquinone. Softgel form absorbs best.",price:"~$40",asin:"B000VL1BMS"},
-    {rank:2,medal:"SILVER",brand:"Qunol Mega Ubiquinol CoQ10",why:"Water AND fat soluble. Superior absorption. Number one selling ubiquinol on Amazon.",price:"~$30",asin:"B00EHLDPME"},
-    {rank:3,medal:"BRONZE",brand:"NOW Foods CoQ10 Ubiquinol 200mg",why:"Consistent NOW quality. Affordable for long-term daily protocol.",price:"~$22",asin:"B00I5JV0AC"}
-  ]},
-  mood:{name:"Mood + Mental Health",cost:"$28-55",choices:[
-    {rank:1,medal:"GOLD",brand:"Nordic Naturals Ultimate Omega",why:"23 RCTs for depression show EPA is the active anti-inflammatory. Triglyceride form maximizes absorption.",price:"~$40",asin:"B0739KKHWL"},
-    {rank:2,medal:"SILVER",brand:"NOW Foods Magnesium Glycinate 400mg",why:"Required for serotonin synthesis. Deficiency directly impairs mood regulation.",price:"~$17",asin:"B0CB984SHQ"},
-    {rank:3,medal:"BRONZE",brand:"Life Extension Vitamin D3 5000IU",why:"D3 deficiency doubles depression risk. Cholecalciferol form. Take with omega-3.",price:"~$12",asin:"B07L3XGV8X"}
-  ]},
-  metabolic:{name:"Metabolic Reset",cost:"$20-38",choices:[
-    {rank:1,medal:"GOLD",brand:"Thorne Berberine-500",why:"Pharmaceutical-grade berberine HCl. NSF certified. Activates AMPK same pathway as metformin.",price:"~$38",asin:"B00IRL5VX4"},
-    {rank:2,medal:"SILVER",brand:"NOW Foods Berberine Glucose Support",why:"NOW quality standard. Berberine HCl 400mg per cap. GMP certified. Good value.",price:"~$25",asin:"B07BG2CNKD"},
-    {rank:3,medal:"BRONZE",brand:"Double Wood Berberine 1200mg",why:"Third-party tested. High dose per serving. Transparent labeling.",price:"~$20",asin:"B07KFRM36B"}
-  ]},
-  longevity:{name:"Longevity Protocol",cost:"$60-100",choices:[
-    {rank:1,medal:"GOLD",brand:"Nordic Naturals ProOmega 2000",why:"Start here. The EPA+DHA foundation for the longevity stack. Add NOW Magnesium and D3+K2 alongside.",price:"~$55",asin:"B01HQPYHDC"},
-    {rank:2,medal:"SILVER",brand:"Jarrow QH-absorb Ubiquinol 200mg",why:"Mitochondrial fuel. Add to the Nordic foundation for the complete four-supplement longevity protocol.",price:"~$40",asin:"B000VL1BMS"},
-    {rank:3,medal:"BRONZE",brand:"NOW Foods D3+K2 5000IU",why:"Calcium routing and immune regulation. Completes the longevity stack at the most affordable price point.",price:"~$18",asin:"B01GBGS7JU"}
-  ]},
-  immune:{name:"Immune Support",cost:"$15-35",choices:[
-    {rank:1,medal:"GOLD",brand:"Thorne Zinc Picolinate 30mg",why:"NSF Certified. Picolinate has highest bioavailability of all zinc forms. The form that reaches immune cells.",price:"~$18",asin:"B004O89XFS"},
-    {rank:2,medal:"SILVER",brand:"NOW Foods Zinc Picolinate 50mg",why:"Albion chelate. GMP certified. Affordable and clean. NOW quality standard.",price:"~$12",asin:"B002F09GEE"},
-    {rank:3,medal:"BRONZE",brand:"Life Extension Vitamin D3 5000IU",why:"The master immune regulator. Add buffered vitamin C for the complete three-piece protocol.",price:"~$15",asin:"B07L3XGV8X"}
-  ]}
+var _vc=[];
+var _vp={
+"sleep_gaba":{"n":"Sleep Restoration","c":[
+  ["GOLD","NOW Foods Magnesium Glycinate 400mg","Only brand to pass independent lab testing for true chelated form. Albion Minerals.","~$17","B0CB984SHQ"],
+  ["SILVER","Thorne Magnesium Glycinate","NSF Certified. Pharmaceutical-grade. No fillers.","~$28","B07LGSF5B7"],
+  ["BRONZE","Pure Encapsulations Magnesium","Hypoallergenic. No fillers. For sensitive individuals.","~$32","B001F9L7V8"]
+]},
+"anxiety_cortisol":{"n":"Anxiety Relief","c":[
+  ["GOLD","NOW Foods L-Theanine 200mg","200mg with Inositol. Raises alpha waves in 30 min. GMP certified.","~$18","B00GQV9YX6"],
+  ["SILVER","Jarrow KSM-66 Ashwagandha 300mg","The exact extract from 22 clinical trials. Cortisol reduction proven.","~$18","B01D7YKVWQ"],
+  ["BRONZE","Pure Encapsulations Ashwagandha","Practitioner-grade. Hypoallergenic. No fillers.","~$30","B079YLXG7T"]
+]},
+"inflammation":{"n":"Anti-Inflammation","c":[
+  ["GOLD","Nordic Naturals ProOmega 2000","IFOS 5-star. Triglyceride form. 2000mg EPA+DHA. Clinical gold standard.","~$55","B01HQPYHDC"],
+  ["SILVER","Carlson Elite Omega-3","IFOS certified. Family-owned since 1965. Norwegian fish oil.","~$35","B005E7FBKA"],
+  ["BRONZE","NOW Foods Ultra Omega-3","Molecularly distilled. Enteric-coated. Third-party tested.","~$28","B002VLZHLS"]
+]},
+"energy_mitochondria":{"n":"Energy + Focus","c":[
+  ["GOLD","Jarrow QH-absorb Ubiquinol 200mg","Original ubiquinol. 8x more bioavailable than ubiquinone.","~$40","B000VL1BMS"],
+  ["SILVER","Qunol Mega Ubiquinol CoQ10","Water AND fat soluble. Number one selling ubiquinol on Amazon.","~$30","B00EHLDPME"],
+  ["BRONZE","NOW Foods CoQ10 Ubiquinol 200mg","Consistent NOW quality. Best value for daily protocol.","~$22","B00I5JV0AC"]
+]},
+"mood":{"n":"Mood + Mental Health","c":[
+  ["GOLD","Nordic Naturals Ultimate Omega","23 RCTs for depression. EPA is the active anti-inflammatory component.","~$40","B0739KKHWL"],
+  ["SILVER","NOW Foods Magnesium Glycinate","Required for serotonin synthesis. Deficiency impairs mood.","~$17","B0CB984SHQ"],
+  ["BRONZE","Life Extension Vitamin D3 5000IU","D3 deficiency doubles depression risk. Take with omega-3.","~$12","B07L3XGV8X"]
+]},
+"metabolic":{"n":"Metabolic Reset","c":[
+  ["GOLD","Thorne Berberine-500","NSF certified. Activates AMPK same pathway as metformin.","~$38","B00IRL5VX4"],
+  ["SILVER","NOW Foods Berberine Glucose Support","GMP certified. 400mg per cap. Good value for 90-day protocol.","~$25","B07BG2CNKD"],
+  ["BRONZE","Double Wood Berberine 1200mg","Third-party tested. High dose. Transparent labeling.","~$20","B07KFRM36B"]
+]},
+"longevity":{"n":"Longevity Protocol","c":[
+  ["GOLD","Nordic Naturals ProOmega 2000","The EPA+DHA foundation. Start here then add magnesium and D3+K2.","~$55","B01HQPYHDC"],
+  ["SILVER","Jarrow QH-absorb Ubiquinol 200mg","Mitochondrial fuel. Add to Nordic foundation for complete stack.","~$40","B000VL1BMS"],
+  ["BRONZE","NOW Foods D3+K2 5000IU","Calcium routing and immune regulation. Completes the stack.","~$18","B01GBGS7JU"]
+]},
+"immune":{"n":"Immune Support","c":[
+  ["GOLD","Thorne Zinc Picolinate 30mg","NSF Certified. Highest bioavailability zinc form.","~$18","B004O89XFS"],
+  ["SILVER","NOW Foods Zinc Picolinate 50mg","Albion chelate. GMP certified. Affordable and clean.","~$12","B002F09GEE"],
+  ["BRONZE","Life Extension Vitamin D3 5000IU","Master immune regulator. Add buffered vitamin C.","~$15","B07L3XGV8X"]
+]}
 };
 
-var _activePicker = null;
-var _medalColors = {GOLD:"#c9a84c",SILVER:"#94a3b8",BRONZE:"#cd7f32"};
-
-window.vesselShowPicker = function(id) {
-  if (_activePicker === id) { window.vesselClosePicker(); return; }
-  _activePicker = id;
-  var proto = VESSEL_PROTOCOLS[id];
-  if (!proto) return;
-  var old = document.getElementById("vp-drawer");
-  if (old) old.remove();
-  var html = '<div id="vp-drawer" style="background:#0e1118;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:16px;margin-top:10px;grid-column:1/-1">';
-  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">';
-  html += '<div style="font-family:monospace;font-size:9px;color:#c9a84c;letter-spacing:2px">DR. FELICIA RANKED RECOMMENDATIONS</div>';
-  html += '<button onclick="vesselClosePicker()" style="background:none;border:none;color:#5a6f87;font-size:20px;cursor:pointer;line-height:1">x</button></div>';
-  html += '<div style="font-size:11px;color:#3d4f63;margin-bottom:12px">Three vetted brands. Same clinical standard. Pick what fits your budget.</div>';
-  proto.choices.forEach(function(c) {
-    html += '<div style="background:#0c0f16;border:1px solid #1a2030;border-radius:6px;padding:14px;margin-bottom:10px">';
-    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
-    html += '<span style="font-family:monospace;font-size:9px;font-weight:700;color:' + _medalColors[c.medal] + ';letter-spacing:1px">' + c.medal + '</span>';
-    html += '<span style="font-size:12px;font-weight:700;color:#e2e8f0">' + c.brand + '</span></div>';
-    html += '<div style="font-size:11px;color:#5a6f87;line-height:1.6;margin-bottom:8px">' + c.why + '</div>';
-    html += '<div style="display:flex;align-items:center;justify-content:space-between">';
-    html += '<span style="font-size:12px;color:#c9a84c;font-weight:700">' + c.price + '</span>';
-    html += '<a href="https://www.amazon.com/dp/' + c.asin + '?tag=bleu-live-20" target="_blank"';
-    html += ' onclick="vesselSelectBrand('' + id + '','' + c.brand.replace(/'/g,"\'") + '','' + c.asin + '')"';
-    html += ' style="background:#c9a84c;color:#000;padding:6px 14px;border-radius:3px;font-size:11px;font-weight:700;text-decoration:none">Buy Amazon</a>';
-    html += '</div></div>';
+function _vShow(id){
+  var d=document.getElementById("vd");
+  if(d){d.remove();if(d.dataset.pid===id)return;}
+  var p=_vp[id];if(!p)return;
+  var mc={GOLD:"#c9a84c",SILVER:"#94a3b8",BRONZE:"#cd7f32"};
+  var s='<div id="vd" data-pid="'+id+'" style="background:#0e1118;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:16px;margin-top:10px">';
+  s+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';
+  s+='<span style="font-family:monospace;font-size:9px;color:#c9a84c;letter-spacing:2px">DR. FELICIA RANKED RECOMMENDATIONS</span>';
+  s+='<button onclick="document.getElementById('vd').remove()" style="background:none;border:none;color:#5a6f87;font-size:18px;cursor:pointer">x</button></div>';
+  s+='<p style="font-size:11px;color:#5a6f87;margin-bottom:12px">Three vetted brands. Same clinical standard. Pick what fits your budget.</p>';
+  p.c.forEach(function(c){
+    s+='<div style="background:#0c0f16;border:1px solid #1a2030;border-radius:6px;padding:14px;margin-bottom:10px">';
+    s+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">';
+    s+='<span style="font-family:monospace;font-size:9px;font-weight:700;letter-spacing:1px;color:'+mc[c[0]]+'">'+c[0]+'</span>';
+    s+='<span style="font-size:12px;font-weight:700;color:#e2e8f0">'+c[1]+'</span></div>';
+    s+='<p style="font-size:11px;color:#5a6f87;line-height:1.6;margin-bottom:8px">'+c[2]+'</p>';
+    s+='<div style="display:flex;align-items:center;justify-content:space-between">';
+    s+='<span style="font-size:12px;color:#c9a84c;font-weight:700">'+c[3]+'</span>';
+    s+='<a href="https://www.amazon.com/dp/'+c[4]+'?tag=bleu-live-20" target="_blank"';
+    s+=' data-pid="'+id+'" data-brand="'+c[1]+'" data-asin="'+c[4]+'"';
+    s+=' class="vd-buy-btn"';
+    s+=' style="background:#c9a84c;color:#000;padding:6px 14px;border-radius:3px;font-size:11px;font-weight:700;text-decoration:none">Buy Amazon</a>';
+    s+='</div></div>';
   });
-  html += '</div>';
-  var card = document.getElementById("proto-" + id);
-  if (card) {
-    card.insertAdjacentHTML("afterend", html);
-    document.getElementById("vp-drawer").scrollIntoView({behavior:"smooth",block:"nearest"});
-  }
-};
-
-window.vesselClosePicker = function() {
-  var d = document.getElementById("vp-drawer");
-  if (d) d.remove();
-  _activePicker = null;
-};
-
-window.vesselSelectBrand = function(id, brand, asin) {
-  if (!vesselCart.some(function(i){return i.id===id;})) {
-    vesselCart.push({id:id, name:VESSEL_PROTOCOLS[id].name, brand:brand, asin:asin});
-    window.vesselUpdateCart();
-    var btn = document.querySelector("#proto-"+id+" .proto-add-btn");
-    if (btn) { btn.textContent = "In Protocol"; btn.style.background = "#22c55e"; btn.style.color = "#000"; }
-    var msg = document.getElementById("vessel-alvai-msg");
-    if (msg) {
-      var chosen = VESSEL_PROTOCOLS[id].choices.find(function(c){return c.asin===asin;});
-      if (chosen) msg.innerHTML = "<strong>Good choice.</strong><br><br><strong>" + chosen.brand + ":</strong> " + chosen.why + "<br><br><em>Anything else to address before you check out?</em>";
+  s+='</div>';
+  var card=document.getElementById("proto-"+id);
+  if(card){card.insertAdjacentHTML("afterend",s);}
+  // Wire buy buttons via event delegation
+  document.getElementById("vd").addEventListener("click",function(e){
+    var btn=e.target.closest(".vd-buy-btn");
+    if(!btn)return;
+    var pid=btn.dataset.pid,br=btn.dataset.brand,as=btn.dataset.asin;
+    if(!_vc.some(function(i){return i.id===pid;})){
+      _vc.push({id:pid,name:_vp[pid].n,brand:br,asin:as});
+      _vUpd();
+      var b=document.querySelector("#proto-"+pid+" .proto-add-btn");
+      if(b){b.textContent="In Protocol";b.style.background="#22c55e";b.style.color="#000";}
+      var m=document.getElementById("vessel-alvai-msg");
+      if(m)m.innerHTML="<strong>Good choice.</strong><br><br>"+br+": "+_vp[pid].c.find(function(c){return c[4]===as;})[2]+"<br><br><em>Anything else before you check out?</em>";
     }
-  }
-  window.vesselClosePicker();
-};
+    document.getElementById("vd").remove();
+  });
+}
 
-window.vesselRemoveFromCart = function(id) {
-  vesselCart = vesselCart.filter(function(i){return i.id!==id;});
-  var btn = document.querySelector("#proto-"+id+" .proto-add-btn");
-  if (btn) { btn.textContent = "+ Choose Brand"; btn.style.background = ""; btn.style.color = ""; }
-  window.vesselUpdateCart();
-};
-
-window.vesselUpdateCart = function() {
-  var items = document.getElementById("vessel-cart-items");
-  var summary = document.getElementById("vessel-cart-summary");
-  var countEl = document.getElementById("vessel-cart-count");
-  if (!items) return;
-  if (!vesselCart.length) {
-    items.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">🧬</div><div class="cart-empty-text"><strong>Your protocol cart is empty.</strong><br>Choose a protocol below and pick your brand.</div></div>';
-    if (summary) summary.style.display = "none";
-    if (countEl) countEl.textContent = "0 items";
+function _vUpd(){
+  var el=document.getElementById("vessel-cart-items");
+  var su=document.getElementById("vessel-cart-summary");
+  var co=document.getElementById("vessel-cart-count");
+  if(!el)return;
+  if(!_vc.length){
+    el.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">&#129532;</div><div class="cart-empty-text"><strong>Your protocol cart is empty.</strong><br>Click Choose Brand below.</div></div>';
+    if(su)su.style.display="none";
+    if(co)co.textContent="0 items";
     return;
   }
-  items.innerHTML = vesselCart.map(function(item) {
-    return '<div class="product-card">' +
-      '<div class="prod-info"><div class="prod-name">'+item.name+'</div><div class="prod-brand">'+item.brand+'</div></div>' +
-      '<div class="prod-actions">' +
-        '<a href="https://www.amazon.com/dp/'+item.asin+'?tag=bleu-live-20" target="_blank" class="prod-buy">Buy Amazon</a>' +
-        '<button class="prod-remove" onclick="vesselRemoveFromCart(''+item.id+'')">remove</button>' +
-      '</div></div>';
-  }).join('');
-  if (summary) summary.style.display = "block";
-  if (countEl) countEl.textContent = vesselCart.length + (vesselCart.length===1?" item":" items");
-};
+  el.innerHTML=_vc.map(function(x){
+    return '<div class="product-card"><div class="prod-info"><div class="prod-name">'+x.name+'</div><div class="prod-brand">'+x.brand+'</div></div>'+
+    '<div class="prod-actions"><a href="https://www.amazon.com/dp/'+x.asin+'?tag=bleu-live-20" target="_blank" class="prod-buy">Buy Amazon</a>'+
+    '<button class="prod-remove" onclick="_vDel(''+x.id+'')">remove</button></div></div>';
+  }).join("");
+  if(su)su.style.display="block";
+  if(co)co.textContent=_vc.length+(_vc.length===1?" item":" items");
+}
 
-window.vesselAsk = function() {
-  var input = document.getElementById("vessel-chat-input");
-  var msg = input ? input.value.trim() : "";
-  if (!msg) return;
-  input.value = "";
-  if (typeof ask === "function") ask(msg);
-};
+function _vDel(id){
+  _vc=_vc.filter(function(i){return i.id!==id;});
+  var b=document.querySelector("#proto-"+id+" .proto-add-btn");
+  if(b){b.textContent="+ Choose Brand";b.style.background="";b.style.color="";}
+  _vUpd();
+}
+
+window.vesselShowPicker=_vShow;
+window.vesselRemoveFromCart=_vDel;
+window.vesselUpdateCart=_vUpd;
+window.vesselAsk=function(){var i=document.getElementById("vessel-chat-input");if(i&&i.value.trim()&&typeof ask==="function"){ask(i.value.trim());i.value="";}};
 </script>
+
 <script>
 (function(){
   var s=window.location.hostname.split('.')[0];
