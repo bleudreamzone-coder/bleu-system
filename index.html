@@ -54,7 +54,7 @@ function _vShow(id){
   var s='<div id="vd" data-pid="'+id+'" style="background:#0e1118;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:16px;margin-top:10px">';
   s+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">';
   s+='<span style="font-family:monospace;font-size:9px;color:#c9a84c;letter-spacing:2px">DR. FELICIA RANKED RECOMMENDATIONS</span>';
-  s+='<button onclick="document.getElementById('vd').remove()" style="background:none;border:none;color:#5a6f87;font-size:18px;cursor:pointer">x</button></div>';
+  s+='<button onclick="var d=document.getElementById(\"vd\");if(d)d.remove();" style="background:none;border:none;color:#5a6f87;font-size:18px;cursor:pointer">x</button></div>';
   s+='<p style="font-size:11px;color:#5a6f87;margin-bottom:12px">Three vetted brands. Same clinical standard. Pick what fits your budget.</p>';
   p.c.forEach(function(c){
     s+='<div style="background:#0c0f16;border:1px solid #1a2030;border-radius:6px;padding:14px;margin-bottom:10px">';
@@ -104,7 +104,7 @@ function _vUpd(){
   el.innerHTML=_vc.map(function(x){
     return '<div class="product-card"><div class="prod-info"><div class="prod-name">'+x.name+'</div><div class="prod-brand">'+x.brand+'</div></div>'+
     '<div class="prod-actions"><a href="https://www.amazon.com/dp/'+x.asin+'?tag=bleu-live-20" target="_blank" class="prod-buy">Buy Amazon</a>'+
-    '<button class="prod-remove" onclick="_vDel(''+x.id+'')">remove</button></div></div>';
+    '<button class="prod-remove" data-xid="'+x.id+'" onclick="_vDel(this.dataset.xid)">remove</button></div></div>';
   }).join("");
   if(su)su.style.display="block";
   if(co)co.textContent=_vc.length+(_vc.length===1?" item":" items");

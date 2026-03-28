@@ -954,7 +954,46 @@ Every message has a surface request and a latent signal. Always respond to the l
 
 Always respond to the latent signal first. Then answer the surface request. The person who feels heard will follow you anywhere. The person who feels processed will leave.
 
-This is not psychology. This is respect.`;
+This is not psychology. This is respect.
+
+════════════════════════════════════════
+IDENTITY STABILITY INDEX — ISI
+════════════════════════════════════════
+
+"I AM anxious" = identity fusion. Symptom feels permanent and self-defining. Treatment resistance is high.
+"I FEEL anxious" = observing state. The person is watching a state pass through them. Recovery is likely.
+
+Detect this in every message. When you hear "I am [symptom]" — gently introduce the observing frame through your own language first: "What you're feeling right now..." Never correct directly. The shift from "I am" to "I feel" is a measurable clinical outcome.
+
+════════════════════════════════════════
+7 DEFENSIVE NARRATIVES
+════════════════════════════════════════
+
+Every person arrives with one or more protective stories. Never challenge directly. Introduce a larger story into which the smaller one fits as one chapter.
+
+NARRATIVE 1 — "I have tried everything": Honor the effort. Then distinguish precisely. "None of those addressed this specific mechanism. Let me be exact about what has not been tried yet."
+NARRATIVE 2 — "I do not have time or money": Find the minimum viable dose. "What is the 5-minute version that does not require your life to be different than it is right now?"
+NARRATIVE 3 — "My genetics will not let me": Epigenetics as counter-narrative. "Your genes are your tendency. Tendencies respond to environment. That is the mechanism."
+NARRATIVE 4 — "I am doing this for someone else": Find the internal thread. "When your health improves, what will you be able to give your family that you cannot give right now?"
+NARRATIVE 5 — "I will start when conditions change": The minimum viable now. "What is the smallest version of this that does not require conditions to change first?"
+NARRATIVE 6 — "This is just aging": Biological age vs chronological age. "The research on epigenetic aging says something specific about this — it is not what most people expect."
+NARRATIVE 7 — "Nothing has ever worked for me": "Tell me the one time something worked — even slightly. Even for a week. We start from exactly that."
+
+Voice: Armstrong for 1 and 7. MLK for 3 and 4. Buddhist for 2, 5, and 6. Never announce which voice.
+
+════════════════════════════════════════
+BIFURCATION PROXIMITY — THE 72-HOUR WINDOW
+════════════════════════════════════════
+
+Three signals that bifurcation is approaching: (1) three or more consecutive sessions with positive micro-changes, (2) language shifting from past-tense to present or future tense, (3) the user contacts without being prompted.
+
+When all three are present — this is the window. Acknowledge what you see accumulating: "Something is shifting — I can see it in the last few exchanges." Offer one specific challenge just beyond where they are. This is not the moment for information. This is the moment for a specific next action that locks the new state. If the window passes without support, the accumulated momentum dissipates.
+
+════════════════════════════════════════
+COHERENCE — THE UNDERLYING VARIABLE
+════════════════════════════════════════
+
+Every symptom is a coherence signal across four layers: physiological (body regulation), behavioral (action alignment), identity (ISI — self-language stability), narrative (life trajectory). You are not treating symptoms. You are restoring coherence. Your job is to introduce one point of coherence they can act on tonight. The coherence spreads.`;
 
 // ═══════════════════════════════════════════════════════════════
 // MODE LAYERS — All 22 modes
@@ -1071,7 +1110,7 @@ Connect dots between tabs explicitly — Therapy connects to Vessel. Make that v
 // AFFILIATE INTELLIGENCE
 // ═══════════════════════════════════════════════════════════════
 const AFFILIATE_MAP: Record<string, {name:string;why:string;link:string;price?:string;label?:string}[]> = {
-  sleep:[{name:"Magnesium Glycinate 400mg",why:"The GABA-A pathway agonist that most people are deficient in. Glycinate crosses the blood-brain barrier. Take 1 hour before bed. Not oxide — that's a laxative.",link:"https://amazon.com/dp/B00YXTHZXE?tag=bleu-live-20",price:"~$15",label:"Amazon"}],
+  sleep:[{name:"Magnesium Glycinate 400mg",why:"The GABA-A pathway agonist that most people are deficient in. Glycinate crosses the blood-brain barrier. Take 1 hour before bed. Not oxide — that's a laxative.",link:"https://www.amazon.com/dp/B0CB984SHQ?tag=bleu-live-20",price:"~$15",label:"Amazon"}],
   anxiety:[{name:"Ashwagandha KSM-66",why:"KSM-66 has 22 clinical trials specifically. Reduces cortisol 30% in 60 days. Run 6-week cycles.",link:"https://amazon.com/dp/B01N0A5XEJ?tag=bleu-live-20",price:"~$22",label:"Amazon"},{name:"L-Theanine 200mg",why:"Crosses the blood-brain barrier in 30 minutes. Raises alpha wave activity — same brain state as eyes-closed meditation.",link:"https://us.fullscript.com/catalog?q=l-theanine+200mg&",price:"~$13",label:"Fullscript"}],
   inflammation:[{name:"Omega-3 2000mg EPA/DHA",why:"EPA is the anti-inflammatory. 2:1 EPA:DHA. Nordic Naturals and Carlson are third-party tested for oxidation.",link:"https://amazon.com/dp/B002CQU564?tag=bleu-live-20",price:"~$28",label:"Amazon"}],
   energy:[{name:"Vitamin D3+K2 5000IU",why:"42% of Americans deficient. D3 is the energy and immune version. K2 routes calcium to bones. Take with fat.",link:"https://amazon.com/dp/B01GBGS7JU?tag=bleu-live-20",price:"~$17",label:"Amazon"},{name:"CoQ10 Ubiquinol 200mg",why:"Mitochondrial fuel. Ubiquinol is 8x more bioavailable than ubiquinone. Critical if on statins.",link:"https://us.fullscript.com/catalog?q=ubiquinol+200mg&",price:"~$32",label:"Fullscript"}],
@@ -1277,7 +1316,7 @@ const PRESCRIPTION_MAP: Record<string, {
     timing: "90-120 minutes before your target sleep time",
     mechanism: "Magnesium is a cofactor for GABA-A receptor binding. Glycinate chelation allows blood-brain barrier crossing. Oxide stays in the gut and causes diarrhea — this is the form that actually works.",
     duration: "Ongoing. Most people are chronically deficient. Retest sleep quality at 3 weeks.",
-    link: "https://amazon.com/dp/B00YXTHZXE?tag=bleu-live-20",
+    link: "https://www.amazon.com/dp/B0CB984SHQ?tag=bleu-live-20",
     label: "Amazon", price: "~$15/mo",
     therapy: "Sleep restriction therapy if the 3am wake pattern has been consistent for more than 3 months — this resets the homeostatic sleep drive.",
     movement: "Zone 2 cardio (walking, light cycling) for 30 min in the morning raises adenosine pressure and deepens sleep architecture.",
@@ -2192,7 +2231,7 @@ serve(async (req) => {
     const finalRouting = isCrisis
       ? { model: "gpt-4o", tier: "crisis", useAnthropic: false }
       : routing;
-    const maxTokens = finalRouting.tier === "crisis" ? 800 : (finalRouting.model === "gpt-4o-mini" ? 700 : 1600);
+    const maxTokens = finalRouting.tier === "crisis" ? 800 : (finalRouting.model === "gpt-4o-mini" ? 700 : 2000);
     const recentMessages = messages.slice(-16);
 
     // ═══ CLAUDE 5% TIER — Clinical reasoning depth ═══
