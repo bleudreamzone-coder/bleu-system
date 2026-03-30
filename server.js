@@ -867,6 +867,8 @@ const server = http.createServer((req, res) => {
     })();
     return;
   }
+  if (pn === '/stripe-webhook' && req.method === 'POST') { handleStripeWebhook(req, res); return; }
+
   if (pn === '/api/stats') return json(res, 200, { version:'4.0', modes: Object.keys(MODE_PROMPTS).length, therapy: Object.keys(THERAPY_MODES).length, recovery: Object.keys(RECOVERY_MODES).length });
 
   if (pn === '/' || pn === '/index.html') { fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,{'Content-Type':'text/html'});res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,{'Content-Type':'text/html'});res.end(d);} }); return; }
@@ -877,6 +879,98 @@ const server = http.createServer((req, res) => {
 
   json(res, 404, { error: 'Not found' });
 });
+
+
+// ── STRIPE WEBHOOK ─────────────────────────────────────────
+// Handles successful payments — activates protocol for user
+const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
+const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+
+const PROTOCOL_MAP = {
+  'price_1TEKQmK4cATmIFbokmkYg47S': 'sleep_reset',
+  'price_1TEKS6K4cATmIFbo1OW7BeCW': 'stress_reset',
+  'price_1TEKSWKcATmIFbojDTEJng9':  'longevity_core',
+  'price_1TEKSsK4cATmIFbouxOBHtwQ': 'gut_reset',
+  'price_1TBPtAK4cATmIFboFVb9m0QN': 'pro'
+};
+
+// Stripe webhook endpoint - must receive raw body
+function handleStripeWebhook(req, res) {
+  let body = '';
+  req.on('data', chunk => { body += chunk; });
+  req.on('end', async () => {
+    const sig = req.headers['stripe-signature'];
+    
+    // Verify webhook signature
+    if (STRIPE_WEBHOOK_SECRET && STRIPE_SECRET) {
+      try {
+        const crypto = require('crypto');
+        const timestamp = sig.split(',').find(s => s.startsWith('t=')).split('=')[1];
+        const expectedSig = crypto
+          .createHmac('sha256', STRIPE_WEBHOOK_SECRET)
+          .update(timestamp + '.' + body)
+          .digest('hex');
+        const receivedSig = sig.split(',').find(s => s.startsWith('v1=')).split('=')[1];
+        if (expectedSig !== receivedSig) {
+          json(res, 400, { error: 'Invalid signature' });
+          return;
+        }
+      } catch(e) {
+        json(res, 400, { error: 'Signature check failed' });
+        return;
+      }
+    }
+
+    let event;
+    try { event = JSON.parse(body); } catch(e) {
+      json(res, 400, { error: 'Invalid JSON' });
+      return;
+    }
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+      const userId = session.client_reference_id;
+      const priceId = session.metadata?.price_id || 
+                      (session.line_items?.data?.[0]?.price?.id);
+      const protocol = PROTOCOL_MAP[priceId] || 'pro';
+      const email = session.customer_details?.email;
+
+      console.log(`Payment complete: ${protocol} | user: ${userId} | email: ${email}`);
+
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        try {
+          const updateData = {
+            citizenship_status: 'citizen',
+            active_protocol: protocol,
+            protocol_started_at: new Date().toISOString(),
+            stripe_customer_id: session.customer
+          };
+          
+          // Update by user ID if available, else by email
+          const url = userId
+            ? `${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}`
+            : `${SUPABASE_URL}/rest/v1/profiles?email=eq.${encodeURIComponent(email)}`;
+
+          await fetch(url, {
+            method: 'PATCH',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_KEY,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify(updateData)
+          });
+          console.log(`Protocol ${protocol} activated`);
+        } catch(e) {
+          console.error('Supabase update failed:', e.message);
+        }
+      }
+    }
+
+    json(res, 200, { received: true });
+  });
+}
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
