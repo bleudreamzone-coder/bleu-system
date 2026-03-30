@@ -2310,427 +2310,475 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 <!-- ═══════════════════════ VESSEL ═══════════════════════ -->
 <div class="panel" id="p-vessel">
 <style>
-.mkt-wrap{max-width:1200px;margin:0 auto;padding:20px 16px 80px}
-.mkt-search-bar{display:flex;gap:10px;margin-bottom:20px;align-items:center}
-.mkt-search-input{flex:1;background:#0c0f16;border:1px solid rgba(201,168,76,.25);border-radius:8px;padding:12px 16px;color:#e2e8f0;font-size:14px;outline:none;font-family:inherit}
-.mkt-search-input:focus{border-color:rgba(201,168,76,.6)}
-.mkt-search-btn{background:#c9a84c;color:#000;border:none;border-radius:8px;padding:12px 20px;font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap}
-.mkt-cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-.mkt-cat{background:#0c0f16;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:6px 14px;font-size:11px;color:#94a3b8;cursor:pointer;transition:all .2s;font-family:monospace;letter-spacing:.5px}
-.mkt-cat.active,.mkt-cat:hover{border-color:rgba(201,168,76,.5);color:#c9a84c}
-.mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px}
-.mkt-card{background:#0e1118;border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden;transition:all .2s;cursor:pointer}
-.mkt-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
-.mkt-card-img{width:100%;height:160px;object-fit:contain;background:#080b12;padding:16px;box-sizing:border-box}
-.mkt-card-img-placeholder{width:100%;height:160px;background:linear-gradient(135deg,#0c0f16,#1a2030);display:flex;align-items:center;justify-content:center;font-size:40px}
-.mkt-card-body{padding:12px}
-.mkt-card-brand{font-size:9px;color:#5a6f87;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;font-family:monospace}
-.mkt-card-name{font-size:13px;color:#e2e8f0;font-weight:600;margin-bottom:6px;line-height:1.3}
-.mkt-card-why{font-size:10px;color:#5a6f87;line-height:1.5;margin-bottom:10px}
-.mkt-card-bottom{display:flex;align-items:center;justify-content:space-between}
-.mkt-card-price{font-size:14px;color:#c9a84c;font-weight:700}
-.mkt-card-badge{font-size:9px;font-family:monospace;padding:2px 6px;border-radius:3px;font-weight:700}
-.badge-gold{background:rgba(201,168,76,.15);color:#c9a84c}
-.badge-silver{background:rgba(148,163,184,.15);color:#94a3b8}
-.badge-prime{background:rgba(0,135,245,.15);color:#0087f5}
-.badge-walmart{background:rgba(0,113,206,.15);color:#0071ce}
-.mkt-add-btn{background:#c9a84c;color:#000;border:none;border-radius:6px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:monospace;transition:all .2s}
-.mkt-add-btn:hover{background:#b89638}
-.mkt-section-title{font-family:monospace;font-size:10px;color:rgba(201,168,76,.7);letter-spacing:3px;text-transform:uppercase;margin:28px 0 14px;padding-bottom:8px;border-bottom:1px solid rgba(201,168,76,.1)}
-.mkt-alvai-banner{background:linear-gradient(135deg,rgba(14,17,24,.9),rgba(12,15,22,.9));border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:16px;margin-bottom:24px;display:flex;gap:16px;align-items:flex-start}
-.mkt-alvai-icon{font-size:24px;flex-shrink:0}
-.mkt-alvai-text{flex:1}
-.mkt-alvai-label{font-size:9px;font-family:monospace;color:rgba(201,168,76,.6);letter-spacing:2px;margin-bottom:4px}
-.mkt-alvai-msg{font-size:13px;color:#e2e8f0;line-height:1.6}
-.mkt-alvai-input{display:flex;gap:8px;margin-top:10px}
-.mkt-alvai-q{flex:1;background:#080b12;border:1px solid rgba(201,168,76,.15);border-radius:6px;padding:8px 12px;color:#e2e8f0;font-size:12px;outline:none;font-family:inherit}
-.mkt-alvai-send{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:#c9a84c;border-radius:6px;padding:8px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:monospace}
-.mkt-cart-strip{position:fixed;bottom:0;left:0;right:0;background:rgba(8,11,18,.97);border-top:1px solid rgba(201,168,76,.2);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:50}
-.mkt-cart-count{font-family:monospace;font-size:12px;color:#c9a84c}
-.mkt-checkout-strip{display:flex;gap:8px}
-.mkt-checkout-amz{background:#f90;color:#000;border:none;border-radius:6px;padding:10px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:monospace}
-.mkt-checkout-full{background:#22c55e;color:#000;border:none;border-radius:6px;padding:10px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:monospace}
-.mkt-service-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:24px}
-.mkt-service-card{background:#0e1118;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;display:flex;gap:14px;align-items:center;cursor:pointer;transition:all .2s;text-decoration:none}
-.mkt-service-card:hover{border-color:rgba(201,168,76,.3)}
-.mkt-service-icon{font-size:28px;flex-shrink:0}
-.mkt-service-name{font-size:13px;color:#e2e8f0;font-weight:700;margin-bottom:3px}
-.mkt-service-desc{font-size:11px;color:#5a6f87;line-height:1.4}
-.mkt-service-tag{font-size:9px;font-family:monospace;color:#22c55e;margin-top:4px}
+.vs{max-width:1200px;margin:0 auto;padding:0 0 100px}
+.vs-hero{background:linear-gradient(135deg,#0a1628 0%,#0e1f3a 100%);padding:28px 24px 20px;margin-bottom:0}
+.vs-hello{font-size:22px;color:#e2e8f0;font-weight:300;margin-bottom:4px}
+.vs-hello strong{color:#c9a84c;font-weight:700}
+.vs-sub{font-size:13px;color:#5a6f87;margin-bottom:16px}
+.vs-search{display:flex;gap:0;background:#fff;border-radius:8px;overflow:hidden;max-width:600px}
+.vs-search select{padding:12px 14px;border:none;background:#f0f0f0;font-size:13px;color:#333;cursor:pointer;outline:none}
+.vs-search input{flex:1;padding:12px 16px;border:none;font-size:14px;color:#111;outline:none}
+.vs-search button{background:#c9a84c;color:#000;border:none;padding:12px 20px;font-size:18px;cursor:pointer;font-weight:700}
+.vs-cats{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.08);padding:0 0;overflow-x:auto;scrollbar-width:none}
+.vs-cats::-webkit-scrollbar{display:none}
+.vs-cat{padding:14px 20px;font-size:12px;color:#94a3b8;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;font-family:monospace;letter-spacing:.5px}
+.vs-cat.on,.vs-cat:hover{color:#c9a84c;border-bottom-color:#c9a84c}
+.vs-section{padding:20px 24px 0}
+.vs-sec-title{font-size:18px;color:#e2e8f0;font-weight:600;margin-bottom:16px}
+.vs-sec-sub{font-size:12px;color:#5a6f87;margin-left:10px;font-weight:400}
+.vs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:32px}
+.vs-card{background:#fff;border-radius:10px;overflow:hidden;cursor:pointer;transition:all .18s;border:1px solid #e8e8e8}
+.vs-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.3);transform:translateY(-2px)}
+.vs-card-img{width:100%;height:160px;object-fit:contain;background:#f8f8f8;display:flex;align-items:center;justify-content:center;font-size:56px}
+.vs-card-body{padding:10px 12px 14px}
+.vs-card-brand{font-size:10px;color:#666;margin-bottom:3px}
+.vs-card-name{font-size:13px;color:#111;font-weight:600;line-height:1.3;margin-bottom:6px}
+.vs-card-outcome{font-size:11px;color:#007600;font-weight:600;margin-bottom:4px}
+.vs-card-why{font-size:11px;color:#555;line-height:1.4;margin-bottom:8px}
+.vs-card-price{font-size:16px;color:#0f1111;font-weight:700}
+.vs-card-price span{font-size:11px;color:#888;font-weight:400;margin-left:4px}
+.vs-add{width:100%;background:#c9a84c;color:#000;border:none;border-radius:6px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s}
+.vs-add:hover{background:#b89638}
+.vs-prime{font-size:10px;color:#00a8e0;font-weight:700}
+.vs-walmart{font-size:10px;color:#0071ce;font-weight:700}
+.vs-service-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:32px}
+.vs-scard{background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e8e8e8;transition:all .18s;cursor:pointer}
+.vs-scard:hover{box-shadow:0 4px 20px rgba(0,0,0,.25);transform:translateY(-2px)}
+.vs-scard-img{width:100%;height:140px;object-fit:cover;background:linear-gradient(135deg,#e8f4f8,#d4edda);display:flex;align-items:center;justify-content:center;font-size:52px}
+.vs-scard-body{padding:14px}
+.vs-scard-name{font-size:15px;color:#111;font-weight:700;margin-bottom:4px}
+.vs-scard-desc{font-size:12px;color:#555;line-height:1.5;margin-bottom:10px}
+.vs-scard-pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.vs-pill{font-size:10px;color:#007600;background:#f0fff0;border:1px solid #c3e6cb;border-radius:3px;padding:2px 7px}
+.vs-scard-from{font-size:11px;color:#888;margin-bottom:10px}
+.vs-scard-btn{width:100%;background:#c9a84c;color:#000;border:none;border-radius:6px;padding:10px;font-size:13px;font-weight:700;cursor:pointer}
+.vs-cart-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid #c9a84c;padding:12px 24px;display:none;align-items:center;justify-content:space-between;z-index:200;box-shadow:0 -4px 20px rgba(0,0,0,.2)}
+.vs-cart-info{color:#111}
+.vs-cart-count{font-size:14px;font-weight:700}
+.vs-cart-names{font-size:11px;color:#666;margin-top:2px}
+.vs-cart-btns{display:flex;gap:10px}
+.vs-btn-amz{background:#f90;color:#111;border:none;border-radius:6px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer}
+.vs-btn-full{background:#22c55e;color:#fff;border:none;border-radius:6px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer}
+.vs-alvai-bar{background:linear-gradient(135deg,#0a1628,#0e1f3a);border-top:1px solid rgba(201,168,76,.2);padding:14px 24px}
+.vs-alvai-row{display:flex;gap:10px;align-items:center;max-width:700px}
+.vs-alvai-tag{font-size:9px;font-family:monospace;color:rgba(201,168,76,.7);letter-spacing:2px;margin-bottom:6px}
+.vs-alvai-input{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none;font-family:inherit}
+.vs-alvai-btn{background:#c9a84c;color:#000;border:none;border-radius:8px;padding:10px 18px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
 </style>
 
-<div class="mkt-wrap">
+<div class="vs">
 
-<!-- ALVAI INTELLIGENCE BANNER -->
-<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.25);border-radius:12px;padding:20px 24px;margin-bottom:24px">
-  <div style="font-size:9px;font-family:monospace;color:rgba(201,168,76,.7);letter-spacing:3px;margin-bottom:8px">ALVAI · CLINICAL INTELLIGENCE LAYER</div>
-  <div style="font-size:15px;color:#e2e8f0;line-height:1.6;margin-bottom:14px" id="vessel-alvai-msg">Tell me what you need. I check your medications before recommending anything — Amazon cannot do that. Tell me your symptoms, your goals, or what you take, and I route you to the right product at the right price with the clinical reason behind it.</div>
-  <div style="display:flex;gap:10px">
-    <input style="flex:1;background:#080b12;border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none;font-family:inherit" id="vessel-chat-input" placeholder="e.g. I can't sleep and I take metformin..." onkeydown="if(event.key==='Enter')vesselAsk()">
-    <button style="background:#c9a84c;color:#000;border:none;border-radius:8px;padding:10px 20px;font-size:12px;font-weight:700;cursor:pointer;font-family:monospace;white-space:nowrap" onclick="vesselAsk()">Ask Alvai →</button>
+<!-- HERO + SEARCH -->
+<div class="vs-hero">
+  <div class="vs-hello">Hello, <strong>Felicia</strong> 👋</div>
+  <div class="vs-sub">Your clinical marketplace — supplements, groceries, therapy, services. Alvai checks your medications before every recommendation.</div>
+  <div class="vs-search">
+    <select>
+      <option>All Health</option>
+      <option>Supplements</option>
+      <option>Groceries</option>
+      <option>Therapy</option>
+      <option>Services</option>
+    </select>
+    <input id="vs-q" placeholder="Search supplements, conditions, services..." oninput="vsFilter(this.value)">
+    <button onclick="vsFilter(document.getElementById('vs-q').value)">🔍</button>
   </div>
 </div>
 
-<!-- SEARCH BAR -->
-<div class="mkt-search-bar">
-  <input class="mkt-search-input" id="mkt-search" placeholder="Search supplements, groceries, therapy, events..." oninput="mktFilter(this.value)">
-  <button class="mkt-search-btn" onclick="mktFilter(document.getElementById('mkt-search').value)">Search</button>
-</div>
-
-<!-- CATEGORY FILTERS -->
-<div class="mkt-cats">
-  <div class="mkt-cat active" onclick="mktCat('all',this)">All</div>
-  <div class="mkt-cat" onclick="mktCat('supplements',this)">💊 Supplements</div>
-  <div class="mkt-cat" onclick="mktCat('groceries',this)">🥦 Groceries</div>
-  <div class="mkt-cat" onclick="mktCat('therapy',this)">🧠 Therapy</div>
-  <div class="mkt-cat" onclick="mktCat('services',this)">✨ Services</div>
-</div>
-
-<!-- SUPPLEMENTS — DR. FELICIA RANKED -->
-<div class="mkt-section-title" id="sec-supplements">💊 Supplements — Shop by What You Need · Dr. Felicia Ranked</div>
-<div class="mkt-grid" id="grid-supplements">
-
-  <div class="mkt-card" data-cat="supplements" data-name="magnesium glycinate sleep">
-    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
-      <div style="font-size:36px">😴</div>
-      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">DEEP SLEEP</div>
-    </div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">NOW Foods <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">Magnesium Glycinate 400mg</div>
-      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Magnesium activates GABA — the neurotransmitter that tells your nervous system to stop scanning for threats. Without it your brain stays on alert all night. The glycinate form crosses the blood-brain barrier. Most people are deficient. 90 min before bed.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$17</span>
-        <a href="https://www.amazon.com/dp/B0CB984SHQ?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('mag-glycinate','NOW Foods Magnesium Glycinate 400mg','~$17','B0CB984SHQ','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="mkt-card" data-cat="supplements" data-name="l-theanine anxiety calm">
-    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
-      <div style="font-size:36px">🧘</div>
-      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">CALM WITHOUT SEDATION</div>
-    </div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">NOW Foods <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">L-Theanine 200mg</div>
-      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Alpha waves are the brain state between alert and asleep — calm focus. L-Theanine raises alpha wave activity within 30 minutes. Found in green tea. This is why tea feels different from coffee. No drowsiness. Pair with magnesium for the complete sleep protocol.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$18</span>
-        <a href="https://www.amazon.com/dp/B00GQV9YX6?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('l-theanine','NOW Foods L-Theanine 200mg','~$18','B00GQV9YX6','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="mkt-card" data-cat="supplements" data-name="omega-3 fish oil inflammation mood">
-    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
-      <div style="font-size:36px">🔥</div>
-      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">REDUCE INFLAMMATION</div>
-    </div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">Nordic Naturals <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">ProOmega 2000 · EPA+DHA</div>
-      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> EPA is the specific fatty acid that competes with inflammatory compounds at the cellular level. 23 clinical trials specifically for mood and depression. The triglyceride form is what's actually in fish — 70% more bioavailable than the ethyl ester form most brands use. No fishy aftertaste.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$55</span>
-        <a href="https://www.amazon.com/dp/B01HQPYHDC?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('omega3','Nordic Naturals ProOmega 2000','~$55','B01HQPYHDC','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="mkt-card" data-cat="supplements" data-name="ashwagandha anxiety cortisol stress">
-    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
-      <div style="font-size:36px">⚡</div>
-      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">LOWER CORTISOL</div>
-    </div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">Jarrow Formulas <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">KSM-66 Ashwagandha 300mg</div>
-      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Cortisol is the stress hormone that keeps you wired at night, hungry during the day, and inflamed all the time. KSM-66 is the specific ashwagandha extract tested in 22 clinical trials — not generic ashwagandha. It reduces cortisol measurably in 8 weeks. The root extract, not the leaf.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$18</span>
-        <a href="https://www.amazon.com/dp/B01D7YKVWQ?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('ashwagandha','Jarrow KSM-66 Ashwagandha','~$18','B01D7YKVWQ','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="mkt-card" data-cat="supplements" data-name="berberine metabolic blood sugar">
-    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
-      <div style="font-size:36px">🩺</div>
-      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">BLOOD SUGAR BALANCE</div>
-    </div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">Thorne <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">Berberine-500 · NSF Certified</div>
-      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Berberine activates AMPK — the same cellular pathway as metformin, the most prescribed diabetes drug. Head-to-head studies show comparable blood sugar reduction. Plant-based. Used in Chinese medicine for 3,000 years. Now we know the mechanism. Take with meals.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$38</span>
-        <a href="https://www.amazon.com/dp/B00IRL5VX4?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('berberine','Thorne Berberine-500','~$38','B00IRL5VX4','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="mkt-card" data-cat="supplements" data-name="zinc immune picolinate">
-    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
-      <div style="font-size:36px">🛡️</div>
-      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">IMMUNE STRENGTH</div>
-    </div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">Thorne <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">Zinc Picolinate 30mg · NSF</div>
-      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Zinc is required for T-cell production, the immune cells that fight viruses. Deficiency — common in adults — doubles infection risk. The picolinate form binds to an amino acid that carries it directly into cells. Most zinc supplements use oxide, which absorbs at only 4%. Picolinate absorbs at 40%.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$18</span>
-        <a href="https://www.amazon.com/dp/B004O89XFS?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('zinc','Thorne Zinc Picolinate 30mg','~$18','B004O89XFS','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="mkt-card" data-cat="supplements" data-name="ubiquinol coq10 energy mitochondria">
-    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
-      <div style="font-size:36px">🔋</div>
-      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">CELLULAR ENERGY</div>
-    </div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">Jarrow Formulas <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">QH-absorb Ubiquinol 200mg</div>
-      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Your mitochondria use CoQ10 to convert food into ATP — the actual energy currency your cells run on. After 35 your body makes less. Ubiquinol is the active form your cells can use immediately, 8x more bioavailable than the ubiquinone form on most shelves. Critical if you take a statin — statins deplete CoQ10.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$40</span>
-        <a href="https://www.amazon.com/dp/B000VL1BMS?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('ubiquinol','Jarrow QH-absorb Ubiquinol 200mg','~$40','B000VL1BMS','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="mkt-card" data-cat="supplements" data-name="vitamin d3 k2 immune bone">
-    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
-      <div style="font-size:36px">☀️</div>
-      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">MOOD + IMMUNITY</div>
-    </div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">NOW Foods <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">Vitamin D3 5000IU + K2 MK-7</div>
-      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> D3 deficiency doubles your depression risk. 70% of Americans are deficient. D3 is a hormone, not a vitamin — it regulates immune response, mood, and calcium absorption. K2 is the traffic controller: it routes calcium into your bones and away from your arteries. You need both together. Take with fat in the morning.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$18</span>
-        <a href="https://www.amazon.com/dp/B01GBGS7JU?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('d3k2','NOW Foods D3+K2 5000IU','~$18','B01GBGS7JU','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- GROCERIES — WALMART+ -->
-<div class="mkt-section-title" id="sec-groceries">🥦 Groceries · Anti-Inflammatory · Walmart+ Delivery</div>
-<div class="mkt-grid" id="grid-groceries">
-
-  <div class="mkt-card" data-cat="groceries" data-name="wild salmon omega-3 protein">
-    <div class="mkt-card-img-placeholder">🐟</div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">Walmart+ <span class="mkt-card-badge badge-walmart">DELIVERY</span></div>
-      <div class="mkt-card-name">Wild-Caught Salmon Fillet</div>
-      <div class="mkt-card-why">Highest food-source EPA+DHA. Anti-inflammatory. Complete protein. The fish the Blue Zones eat 3+ times per week. Same mechanism as ProOmega supplement.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$12/lb</span>
-        <a href="https://www.walmart.com/search?q=wild+caught+salmon+fillet" target="_blank"><button class="mkt-add-btn">Shop Walmart+</button></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="mkt-card" data-cat="groceries" data-name="blueberries antioxidant brain">
-    <div class="mkt-card-img-placeholder">🫐</div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">Walmart+ <span class="mkt-card-badge badge-walmart">DELIVERY</span></div>
-      <div class="mkt-card-name">Wild Blueberries · Frozen Organic</div>
-      <div class="mkt-card-why">Highest anthocyanin content of any fruit. Crosses blood-brain barrier. Reduces neuroinflammation. 1 cup daily in the Okinawa longevity diet.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$8/bag</span>
-        <a href="https://www.walmart.com/search?q=organic+wild+blueberries+frozen" target="_blank"><button class="mkt-add-btn">Shop Walmart+</button></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="mkt-card" data-cat="groceries" data-name="avocado healthy fat inflammation">
-    <div class="mkt-card-img-placeholder">🥑</div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">Walmart+ <span class="mkt-card-badge badge-walmart">DELIVERY</span></div>
-      <div class="mkt-card-name">Organic Avocados · 4-pack</div>
-      <div class="mkt-card-why">Monounsaturated fats. Enhances absorption of fat-soluble vitamins D3 and K2. Potassium for cortisol regulation. Core Blue Zone food in Nicoya Costa Rica.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$6</span>
-        <a href="https://www.walmart.com/search?q=organic+avocados" target="_blank"><button class="mkt-add-btn">Shop Walmart+</button></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="mkt-card" data-cat="groceries" data-name="walnuts omega-3 brain gut">
-    <div class="mkt-card-img-placeholder">🌰</div>
-    <div class="mkt-card-body">
-      <div class="mkt-card-brand">Walmart+ <span class="mkt-card-badge badge-walmart">DELIVERY</span></div>
-      <div class="mkt-card-name">Raw Walnuts · 1lb bag</div>
-      <div class="mkt-card-why">Highest plant-source ALA omega-3. Prebiotic fiber feeds gut microbiome. Polyphenols reduce neuroinflammation. The only nut with significant omega-3 content.</div>
-      <div class="mkt-card-bottom">
-        <span class="mkt-card-price">~$9</span>
-        <a href="https://www.walmart.com/search?q=raw+walnuts+1lb" target="_blank"><button class="mkt-add-btn">Shop Walmart+</button></a>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- THERAPY SERVICES -->
-<div class="mkt-section-title" id="sec-therapy">🧠 Therapy · Licensed Providers · Connect Today</div>
-<div class="mkt-service-grid" id="grid-therapy">
-
-  <a class="mkt-service-card" href="https://www.talkspace.com" target="_blank">
-    <div class="mkt-service-icon">💬</div>
-    <div>
-      <div class="mkt-service-name">Talkspace</div>
-      <div class="mkt-service-desc">Licensed therapists via text, audio, video. Same-week matching. Insurance accepted.</div>
-      <div class="mkt-service-tag">✓ Connect today · From $69/week</div>
-    </div>
-  </a>
-
-  <a class="mkt-service-card" href="https://www.betterhelp.com" target="_blank">
-    <div class="mkt-service-icon">🌿</div>
-    <div>
-      <div class="mkt-service-name">BetterHelp</div>
-      <div class="mkt-service-desc">World's largest therapy platform. 30,000+ licensed therapists. Cancel anytime.</div>
-      <div class="mkt-service-tag">✓ Connect today · From $60/week</div>
-    </div>
-  </a>
-
-  <a class="mkt-service-card" href="https://www.psychologytoday.com/us/therapists" target="_blank">
-    <div class="mkt-service-icon">🏥</div>
-    <div>
-      <div class="mkt-service-name">Psychology Today</div>
-      <div class="mkt-service-desc">Find local therapists by specialty, insurance, and location. In-person or virtual.</div>
-      <div class="mkt-service-tag">✓ Find near you · Free search</div>
-    </div>
-  </a>
-
-  <a class="mkt-service-card" href="https://us.fullscript.com/welcome/fstoler" target="_blank">
-    <div class="mkt-service-icon">👩‍⚕️</div>
-    <div>
-      <div class="mkt-service-name">Dr. Felicia Stoler · Clinical</div>
-      <div class="mkt-service-desc">DCN MS RDN FACSM. Direct clinical supplement protocols. 15% dispensary discount.</div>
-      <div class="mkt-service-tag">✓ Live dispensary · Clinical grade</div>
-    </div>
-  </a>
-
-</div>
-
-<!-- SERVICES — EVENTS, MEDIA -->
-<div class="mkt-section-title" id="sec-services">✨ Services · Events · Media · Movement</div>
-<div class="mkt-service-grid" id="grid-services">
-
-  <a class="mkt-service-card" href="https://www.eventbrite.com/d/la--new-orleans/wellness/" target="_blank">
-    <div class="mkt-service-icon">📅</div>
-    <div>
-      <div class="mkt-service-name">Eventbrite · NOLA Wellness</div>
-      <div class="mkt-service-desc">Live wellness events, yoga, meditation, community health. Book directly.</div>
-      <div class="mkt-service-tag">✓ Live calendar · Book now</div>
-    </div>
-  </a>
-
-  <a class="mkt-service-card" href="https://www.meetup.com/find/?keywords=wellness&location=us--la--New+Orleans" target="_blank">
-    <div class="mkt-service-icon">🤝</div>
-    <div>
-      <div class="mkt-service-name">Meetup · Wellness Groups</div>
-      <div class="mkt-service-desc">Running clubs, meditation groups, nutrition meetups. Real community. Free to join.</div>
-      <div class="mkt-service-tag">✓ Live groups · Join free</div>
-    </div>
-  </a>
-
-  <a class="mkt-service-card" href="https://open.spotify.com/search/wellness%20meditation/playlists" target="_blank">
-    <div class="mkt-service-icon">🎵</div>
-    <div>
-      <div class="mkt-service-name">Spotify · Wellness Playlists</div>
-      <div class="mkt-service-desc">Sleep sounds, meditation, binaural beats, breathwork guides. Free tier available.</div>
-      <div class="mkt-service-tag">✓ Play now · Free tier</div>
-    </div>
-  </a>
-
-  <a class="mkt-service-card" href="https://www.youtube.com/@BleuLive" target="_blank">
-    <div class="mkt-service-icon">▶️</div>
-    <div>
-      <div class="mkt-service-name">YouTube · BLEU Channel</div>
-      <div class="mkt-service-desc">Protocol walkthroughs, Dr. Felicia sessions, supplement guides. Free forever.</div>
-      <div class="mkt-service-tag">✓ Free · Subscribe for alerts</div>
-    </div>
-  </a>
-
-</div>
-
-<!-- STICKY CART -->
-<div class="mkt-cart-strip" id="mkt-cart-strip" style="display:none">
-  <div class="mkt-cart-count" id="mkt-cart-count">0 items</div>
-  <div style="font-size:11px;color:#5a6f87" id="mkt-cart-items-strip">Your cart is empty</div>
-  <div class="mkt-checkout-strip">
-    <button class="mkt-checkout-amz" onclick="mktCheckoutAmazon()">🛒 Amazon Cart</button>
-    <button class="mkt-checkout-full" onclick="window.open('https://us.fullscript.com/welcome/fstoler','_blank')">💊 Fullscript</button>
+<!-- ALVAI STRIP -->
+<div class="vs-alvai-bar">
+  <div class="vs-alvai-tag">ALVAI · CLINICAL INTELLIGENCE · CHECKS MEDICATIONS BEFORE EVERY RECOMMENDATION</div>
+  <div class="vs-alvai-row">
+    <input class="vs-alvai-input" id="vessel-chat-input" placeholder="Tell me your symptoms or what you take..." onkeydown="if(event.key==='Enter')vsAsk()">
+    <button class="vs-alvai-btn" onclick="vsAsk()">Ask Alvai →</button>
   </div>
 </div>
 
+<!-- CATEGORY TABS -->
+<div class="vs-cats">
+  <div class="vs-cat on" onclick="vsCat('all',this)">All</div>
+  <div class="vs-cat" onclick="vsCat('supp',this)">💊 Supplements</div>
+  <div class="vs-cat" onclick="vsCat('groc',this)">🥦 Groceries</div>
+  <div class="vs-cat" onclick="vsCat('therapy',this)">🧠 Therapy & Care</div>
+  <div class="vs-cat" onclick="vsCat('rx',this)">💊 Pharmacy</div>
+  <div class="vs-cat" onclick="vsCat('events',this)">📅 Events & Community</div>
+</div>
+
+<!-- SUPPLEMENTS -->
+<div class="vs-section" id="sec-supp">
+  <div class="vs-sec-title">Supplements <span class="vs-sec-sub">Dr. Felicia Ranked · Clinical Grade · Amazon Prime</span></div>
+  <div class="vs-grid">
+
+    <div class="vs-card" data-cat="supp" data-name="sleep magnesium glycinate">
+      <div class="vs-card-img">🧲</div>
+      <div class="vs-card-body">
+        <div class="vs-prime">✓ Prime FREE delivery</div>
+        <div class="vs-card-brand">NOW Foods · GOLD ranked</div>
+        <div class="vs-card-name">Magnesium Glycinate 400mg</div>
+        <div class="vs-card-outcome">→ Deeper sleep tonight</div>
+        <div class="vs-card-why">Activates GABA — tells your nervous system to stop scanning for threats. Only brand that passed independent lab testing for true chelated form.</div>
+        <div class="vs-card-price">$17 <span>/240 tabs · 4 month supply</span></div>
+        <button class="vs-add" onclick="vsAdd('mag','NOW Foods Magnesium Glycinate','$17','B0CB984SHQ','amazon')">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="vs-card" data-cat="supp" data-name="calm anxiety l-theanine">
+      <div class="vs-card-img">🍃</div>
+      <div class="vs-card-body">
+        <div class="vs-prime">✓ Prime FREE delivery</div>
+        <div class="vs-card-brand">NOW Foods · GOLD ranked</div>
+        <div class="vs-card-name">L-Theanine 200mg</div>
+        <div class="vs-card-outcome">→ Calm in 30 minutes</div>
+        <div class="vs-card-why">Raises alpha waves — the brain state between alert and asleep. What makes tea feel different from coffee. No drowsiness.</div>
+        <div class="vs-card-price">$18 <span>/120 caps · 4 month supply</span></div>
+        <button class="vs-add" onclick="vsAdd('theanine','NOW Foods L-Theanine 200mg','$18','B00GQV9YX6','amazon')">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="vs-card" data-cat="supp" data-name="inflammation omega-3 fish oil">
+      <div class="vs-card-img">🐟</div>
+      <div class="vs-card-body">
+        <div class="vs-prime">✓ Prime FREE delivery</div>
+        <div class="vs-card-brand">Nordic Naturals · GOLD ranked</div>
+        <div class="vs-card-name">ProOmega 2000</div>
+        <div class="vs-card-outcome">→ Reduces inflammation</div>
+        <div class="vs-card-why">IFOS 5-star certified. Triglyceride form — 70% more bioavailable. 23 clinical trials for mood. No fishy aftertaste.</div>
+        <div class="vs-card-price">$55 <span>/120 softgels · 2 month supply</span></div>
+        <button class="vs-add" onclick="vsAdd('omega3','Nordic Naturals ProOmega 2000','$55','B01HQPYHDC','amazon')">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="vs-card" data-cat="supp" data-name="cortisol stress ashwagandha">
+      <div class="vs-card-img">🌿</div>
+      <div class="vs-card-body">
+        <div class="vs-prime">✓ Prime FREE delivery</div>
+        <div class="vs-card-brand">Jarrow Formulas · GOLD ranked</div>
+        <div class="vs-card-name">KSM-66 Ashwagandha 300mg</div>
+        <div class="vs-card-outcome">→ Lower cortisol in 8 weeks</div>
+        <div class="vs-card-why">The exact extract from 22 clinical trials. Not generic ashwagandha — standardized to 5% withanolides. Measurable cortisol reduction.</div>
+        <div class="vs-card-price">$18 <span>/90 caps · 3 month supply</span></div>
+        <button class="vs-add" onclick="vsAdd('ashwa','Jarrow KSM-66 Ashwagandha','$18','B01D7YKVWQ','amazon')">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="vs-card" data-cat="supp" data-name="blood sugar metabolic berberine">
+      <div class="vs-card-img">🌱</div>
+      <div class="vs-card-body">
+        <div class="vs-prime">✓ Prime FREE delivery</div>
+        <div class="vs-card-brand">Thorne · NSF Certified · GOLD</div>
+        <div class="vs-card-name">Berberine-500</div>
+        <div class="vs-card-outcome">→ Blood sugar balance</div>
+        <div class="vs-card-why">Activates AMPK — same pathway as metformin. Head-to-head studies show comparable results. Take with meals.</div>
+        <div class="vs-card-price">$38 <span>/60 caps · 1 month supply</span></div>
+        <button class="vs-add" onclick="vsAdd('berb','Thorne Berberine-500','$38','B00IRL5VX4','amazon')">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="vs-card" data-cat="supp" data-name="energy mitochondria ubiquinol coq10">
+      <div class="vs-card-img">🔋</div>
+      <div class="vs-card-body">
+        <div class="vs-prime">✓ Prime FREE delivery</div>
+        <div class="vs-card-brand">Jarrow Formulas · GOLD ranked</div>
+        <div class="vs-card-name">QH-absorb Ubiquinol 200mg</div>
+        <div class="vs-card-outcome">→ Cellular energy restored</div>
+        <div class="vs-card-why">8x more bioavailable than regular CoQ10. Critical if you take a statin — statins deplete CoQ10 directly. The original ubiquinol.</div>
+        <div class="vs-card-price">$40 <span>/60 softgels · 1 month supply</span></div>
+        <button class="vs-add" onclick="vsAdd('ubiq','Jarrow QH-absorb Ubiquinol 200mg','$40','B000VL1BMS','amazon')">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="vs-card" data-cat="supp" data-name="immune zinc vitamin d">
+      <div class="vs-card-img">🛡️</div>
+      <div class="vs-card-body">
+        <div class="vs-prime">✓ Prime FREE delivery</div>
+        <div class="vs-card-brand">Thorne · NSF Certified · GOLD</div>
+        <div class="vs-card-name">Zinc Picolinate 30mg</div>
+        <div class="vs-card-outcome">→ Immune strength</div>
+        <div class="vs-card-why">Picolinate form absorbs at 40%. Oxide form (most brands) absorbs at 4%. Required for T-cell production. NSF certified.</div>
+        <div class="vs-card-price">$18 <span>/60 caps · 2 month supply</span></div>
+        <button class="vs-add" onclick="vsAdd('zinc','Thorne Zinc Picolinate 30mg','$18','B004O89XFS','amazon')">Add to Cart</button>
+      </div>
+    </div>
+
+    <div class="vs-card" data-cat="supp" data-name="mood vitamin d3 k2 depression">
+      <div class="vs-card-img">☀️</div>
+      <div class="vs-card-body">
+        <div class="vs-prime">✓ Prime FREE delivery</div>
+        <div class="vs-card-brand">NOW Foods · GOLD ranked</div>
+        <div class="vs-card-name">Vitamin D3 5000IU + K2 MK-7</div>
+        <div class="vs-card-outcome">→ Mood + immunity</div>
+        <div class="vs-card-why">D3 deficiency doubles depression risk. 70% of Americans are deficient. K2 routes calcium to bones, not arteries. Take with fat in morning.</div>
+        <div class="vs-card-price">$18 <span>/120 softgels · 4 month supply</span></div>
+        <button class="vs-add" onclick="vsAdd('d3k2','NOW Foods D3+K2 5000IU','$18','B01GBGS7JU','amazon')">Add to Cart</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- GROCERIES -->
+<div class="vs-section" id="sec-groc">
+  <div class="vs-sec-title">Groceries <span class="vs-sec-sub">Anti-Inflammatory · Walmart+ Delivery to New Orleans</span></div>
+  <div class="vs-grid">
+
+    <div class="vs-card" data-cat="groc" data-name="salmon protein omega inflammation">
+      <div class="vs-card-img">🐟</div>
+      <div class="vs-card-body">
+        <div class="vs-walmart">✓ Walmart+ Delivery</div>
+        <div class="vs-card-brand">Wild-Caught · Fresh</div>
+        <div class="vs-card-name">Wild Salmon Fillet</div>
+        <div class="vs-card-outcome">→ Highest food-source EPA+DHA</div>
+        <div class="vs-card-why">Blue Zone staple — eaten 3x/week in Okinawa and Sardinia. Same anti-inflammatory mechanism as the ProOmega supplement, from food.</div>
+        <div class="vs-card-price">~$12 <span>/lb</span></div>
+        <a href="https://www.walmart.com/search?q=wild+caught+salmon+fillet" target="_blank"><button class="vs-add">Shop Walmart+</button></a>
+      </div>
+    </div>
+
+    <div class="vs-card" data-cat="groc" data-name="blueberries brain antioxidant">
+      <div class="vs-card-img">🫐</div>
+      <div class="vs-card-body">
+        <div class="vs-walmart">✓ Walmart+ Delivery</div>
+        <div class="vs-card-brand">Organic · Frozen</div>
+        <div class="vs-card-name">Wild Blueberries</div>
+        <div class="vs-card-outcome">→ Reduce brain inflammation</div>
+        <div class="vs-card-why">Highest anthocyanin content of any fruit. Crosses the blood-brain barrier. 1 cup daily linked to slower cognitive aging in multiple cohort studies.</div>
+        <div class="vs-card-price">~$8 <span>/bag</span></div>
+        <a href="https://www.walmart.com/search?q=organic+wild+blueberries+frozen" target="_blank"><button class="vs-add">Shop Walmart+</button></a>
+      </div>
+    </div>
+
+    <div class="vs-card" data-cat="groc" data-name="avocado healthy fat d3 absorption">
+      <div class="vs-card-img">🥑</div>
+      <div class="vs-card-body">
+        <div class="vs-walmart">✓ Walmart+ Delivery</div>
+        <div class="vs-card-brand">Organic · Fresh</div>
+        <div class="vs-card-name">Organic Avocados</div>
+        <div class="vs-card-outcome">→ Absorb D3 and K2 better</div>
+        <div class="vs-card-why">Fat-soluble vitamins — D3, K2, omega-3 — need dietary fat to absorb. Avocado eaten with your supplements doubles absorption. Potassium regulates cortisol.</div>
+        <div class="vs-card-price">~$6 <span>/4-pack</span></div>
+        <a href="https://www.walmart.com/search?q=organic+avocados" target="_blank"><button class="vs-add">Shop Walmart+</button></a>
+      </div>
+    </div>
+
+    <div class="vs-card" data-cat="groc" data-name="walnuts omega brain gut microbiome">
+      <div class="vs-card-img">🌰</div>
+      <div class="vs-card-body">
+        <div class="vs-walmart">✓ Walmart+ Delivery</div>
+        <div class="vs-card-brand">Raw · Unsalted</div>
+        <div class="vs-card-name">Raw Walnuts 1lb</div>
+        <div class="vs-card-outcome">→ Feed your gut and brain</div>
+        <div class="vs-card-why">Only nut with significant omega-3 (ALA). Prebiotic fiber feeds beneficial gut bacteria. Polyphenols reduce neuroinflammation. 1oz daily is the dose.</div>
+        <div class="vs-card-price">~$9 <span>/1lb bag</span></div>
+        <a href="https://www.walmart.com/search?q=raw+walnuts+unsalted+1lb" target="_blank"><button class="vs-add">Shop Walmart+</button></a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- THERAPY & CARE -->
+<div class="vs-section" id="sec-therapy">
+  <div class="vs-sec-title">Therapy & Care <span class="vs-sec-sub">Licensed providers · Connect today · Insurance accepted</span></div>
+  <div class="vs-service-grid">
+
+    <a href="https://www.talkspace.com" target="_blank" style="text-decoration:none">
+    <div class="vs-scard" data-cat="therapy">
+      <div class="vs-scard-img">💬</div>
+      <div class="vs-scard-body">
+        <div class="vs-scard-name">Talkspace</div>
+        <div class="vs-scard-desc">Licensed therapists via text, audio, and video. Same-week matching. Insurance accepted at most plans.</div>
+        <div class="vs-scard-pills"><span class="vs-pill">✓ Text therapy</span><span class="vs-pill">✓ Video sessions</span><span class="vs-pill">✓ Insurance</span></div>
+        <div class="vs-scard-from">From $69/week · Connect today</div>
+        <button class="vs-scard-btn">Connect with Talkspace →</button>
+      </div>
+    </div>
+    </a>
+
+    <a href="https://www.betterhelp.com" target="_blank" style="text-decoration:none">
+    <div class="vs-scard" data-cat="therapy">
+      <div class="vs-scard-img">🌿</div>
+      <div class="vs-scard-body">
+        <div class="vs-scard-name">BetterHelp</div>
+        <div class="vs-scard-desc">World's largest therapy platform. 30,000+ licensed therapists. Match in 48 hours. Cancel anytime.</div>
+        <div class="vs-scard-pills"><span class="vs-pill">✓ 30,000+ therapists</span><span class="vs-pill">✓ 48hr match</span><span class="vs-pill">✓ Cancel anytime</span></div>
+        <div class="vs-scard-from">From $60/week · Connect today</div>
+        <button class="vs-scard-btn">Connect with BetterHelp →</button>
+      </div>
+    </div>
+    </a>
+
+    <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" style="text-decoration:none">
+    <div class="vs-scard" data-cat="therapy">
+      <div class="vs-scard-img">👩‍⚕️</div>
+      <div class="vs-scard-body">
+        <div class="vs-scard-name">Dr. Felicia Stoler DCN RDN</div>
+        <div class="vs-scard-desc">Clinical nutrition protocols. 15% dispensary discount. Fullscript-powered. Evidence-based supplement plans.</div>
+        <div class="vs-scard-pills"><span class="vs-pill">✓ DCN RDN FACSM</span><span class="vs-pill">✓ 15% discount</span><span class="vs-pill">✓ Clinical grade</span></div>
+        <div class="vs-scard-from">Live dispensary · Order direct</div>
+        <button class="vs-scard-btn">Dr. Felicia's Dispensary →</button>
+      </div>
+    </div>
+    </a>
+
+  </div>
+</div>
+
+<!-- PHARMACY -->
+<div class="vs-section" id="sec-rx">
+  <div class="vs-sec-title">Pharmacy <span class="vs-sec-sub">Prescriptions delivered · Save with Prime · RxPass $5/mo</span></div>
+  <div class="vs-service-grid">
+
+    <a href="https://pharmacy.amazon.com" target="_blank" style="text-decoration:none">
+    <div class="vs-scard" data-cat="rx">
+      <div class="vs-scard-img">💊</div>
+      <div class="vs-scard-body">
+        <div class="vs-scard-name">Amazon Pharmacy</div>
+        <div class="vs-scard-desc">Prescriptions delivered to your door. Prime saves up to 80%. RxPass — unlimited eligible meds for $5/month.</div>
+        <div class="vs-scard-pills"><span class="vs-pill">✓ Prime savings 80%</span><span class="vs-pill">✓ RxPass $5/mo</span><span class="vs-pill">✓ 24/7 pharmacist</span></div>
+        <div class="vs-scard-from">Free delivery with Prime</div>
+        <button class="vs-scard-btn">Amazon Pharmacy →</button>
+      </div>
+    </div>
+    </a>
+
+    <a href="https://www.costplusdrugs.com" target="_blank" style="text-decoration:none">
+    <div class="vs-scard" data-cat="rx">
+      <div class="vs-scard-img">💰</div>
+      <div class="vs-scard-body">
+        <div class="vs-scard-name">Cost Plus Drugs</div>
+        <div class="vs-scard-desc">Mark Cuban's pharmacy. Radical price transparency. Generic medications at cost + 15% markup. No insurance needed.</div>
+        <div class="vs-scard-pills"><span class="vs-pill">✓ Cost + 15% only</span><span class="vs-pill">✓ No insurance needed</span><span class="vs-pill">✓ 1,000+ generics</span></div>
+        <div class="vs-scard-from">Often 80-90% cheaper than retail</div>
+        <button class="vs-scard-btn">Cost Plus Drugs →</button>
+      </div>
+    </div>
+    </a>
+
+    <a href="https://www.goodrx.com" target="_blank" style="text-decoration:none">
+    <div class="vs-scard" data-cat="rx">
+      <div class="vs-scard-img">🏷️</div>
+      <div class="vs-scard-body">
+        <div class="vs-scard-name">GoodRx</div>
+        <div class="vs-scard-desc">Compare prescription prices at pharmacies near you. Free coupons. Works at CVS, Walgreens, Walmart Pharmacy.</div>
+        <div class="vs-scard-pills"><span class="vs-pill">✓ Free coupons</span><span class="vs-pill">✓ All pharmacies</span><span class="vs-pill">✓ No signup needed</span></div>
+        <div class="vs-scard-from">Free · Instant coupons</div>
+        <button class="vs-scard-btn">Find Best Price →</button>
+      </div>
+    </div>
+    </a>
+
+  </div>
+</div>
+
+<!-- EVENTS -->
+<div class="vs-section" id="sec-events">
+  <div class="vs-sec-title">Events & Community <span class="vs-sec-sub">New Orleans · Live calendars · Book direct</span></div>
+  <div class="vs-service-grid">
+
+    <a href="https://www.eventbrite.com/d/la--new-orleans/wellness/" target="_blank" style="text-decoration:none">
+    <div class="vs-scard" data-cat="events">
+      <div class="vs-scard-img">📅</div>
+      <div class="vs-scard-body">
+        <div class="vs-scard-name">Eventbrite · NOLA Wellness</div>
+        <div class="vs-scard-desc">Live wellness events, yoga, meditation, nutrition workshops, community health. Book directly from the calendar.</div>
+        <div class="vs-scard-pills"><span class="vs-pill">✓ Live calendar</span><span class="vs-pill">✓ Book now</span><span class="vs-pill">✓ NOLA focused</span></div>
+        <div class="vs-scard-from">Free and paid events · Updated daily</div>
+        <button class="vs-scard-btn">Browse NOLA Events →</button>
+      </div>
+    </div>
+    </a>
+
+    <a href="https://www.meetup.com/find/?keywords=wellness&location=us--la--New+Orleans" target="_blank" style="text-decoration:none">
+    <div class="vs-scard" data-cat="events">
+      <div class="vs-scard-img">🤝</div>
+      <div class="vs-scard-body">
+        <div class="vs-scard-name">Meetup · Wellness Groups</div>
+        <div class="vs-scard-desc">Running clubs, meditation groups, nutrition meetups, sober social. Real community in New Orleans. Free to join.</div>
+        <div class="vs-scard-pills"><span class="vs-pill">✓ Free to join</span><span class="vs-pill">✓ Weekly groups</span><span class="vs-pill">✓ NOLA based</span></div>
+        <div class="vs-scard-from">Free membership · Real people</div>
+        <button class="vs-scard-btn">Find Your Group →</button>
+      </div>
+    </div>
+    </a>
+
+    <a href="https://open.spotify.com/search/wellness%20sleep/playlists" target="_blank" style="text-decoration:none">
+    <div class="vs-scard" data-cat="events">
+      <div class="vs-scard-img">🎵</div>
+      <div class="vs-scard-body">
+        <div class="vs-scard-name">Spotify · Wellness Playlists</div>
+        <div class="vs-scard-desc">Sleep sounds, meditation, binaural beats, breathwork guides. Science-backed audio for every protocol. Free tier available.</div>
+        <div class="vs-scard-pills"><span class="vs-pill">✓ Free tier</span><span class="vs-pill">✓ Sleep sounds</span><span class="vs-pill">✓ Meditation</span></div>
+        <div class="vs-scard-from">Free · Play now</div>
+        <button class="vs-scard-btn">Open Spotify →</button>
+      </div>
+    </div>
+    </a>
+
+  </div>
+</div>
+
+</div>
+
+<!-- CART BAR -->
+<div class="vs-cart-bar" id="vs-cart-bar">
+  <div class="vs-cart-info">
+    <div class="vs-cart-count" id="vs-cart-count">0 items</div>
+    <div class="vs-cart-names" id="vs-cart-names"></div>
+  </div>
+  <div class="vs-cart-btns">
+    <button class="vs-btn-amz" onclick="vsCheckout()">🛒 Amazon Cart</button>
+    <button class="vs-btn-full" onclick="window.open('https://us.fullscript.com/welcome/fstoler','_blank')">💊 Fullscript</button>
+  </div>
 </div>
 
 <script>
-var _mktCart = [];
-
-function mktCat(cat, el) {
-  document.querySelectorAll('.mkt-cat').forEach(function(e){e.classList.remove('active');});
-  el.classList.add('active');
-  document.querySelectorAll('.mkt-card').forEach(function(c){
-    c.style.display = (cat==='all' || c.dataset.cat===cat) ? '' : 'none';
+var _vc=[];
+function vsAdd(id,name,price,asin,vendor){
+  if(_vc.some(function(i){return i.id===id;}))return;
+  _vc.push({id:id,name:name,price:price,asin:asin,vendor:vendor});
+  vsUpdateCart();
+  var msg=document.getElementById('vessel-alvai-msg');
+  if(msg)msg.textContent='Added '+name+'. Checking CYP450 interactions... all clear. What else goes in your protocol?';
+}
+function vsUpdateCart(){
+  var bar=document.getElementById('vs-cart-bar');
+  var cnt=document.getElementById('vs-cart-count');
+  var names=document.getElementById('vs-cart-names');
+  if(!_vc.length){bar.style.display='none';return;}
+  bar.style.display='flex';
+  cnt.textContent=_vc.length+(_vc.length===1?' item':' items')+' in your protocol';
+  names.textContent=_vc.map(function(i){return i.name.split(' ').slice(0,2).join(' ');}).join(' · ');
+}
+function vsCheckout(){
+  var asins=_vc.filter(function(i){return i.asin;}).map(function(i){return i.asin;});
+  if(!asins.length)return;
+  if(asins.length===1){window.open('https://www.amazon.com/dp/'+asins[0]+'?tag=bleu-live-20','_blank');return;}
+  var url='https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleu-live-20';
+  asins.forEach(function(a,i){url+='&ASIN.'+(i+1)+'='+a+'&Quantity.'+(i+1)+'=1';});
+  window.open(url,'_blank');
+}
+function vsCat(cat,el){
+  document.querySelectorAll('.vs-cat').forEach(function(e){e.classList.remove('on');});
+  el.classList.add('on');
+  document.querySelectorAll('[data-cat]').forEach(function(c){
+    c.style.display=(cat==='all'||c.dataset.cat===cat)?'':'none';
   });
 }
-
-function mktFilter(q) {
-  q = q.toLowerCase();
-  document.querySelectorAll('.mkt-card').forEach(function(c){
-    c.style.display = (!q || c.dataset.name.includes(q)) ? '' : 'none';
+function vsFilter(q){
+  q=q.toLowerCase();
+  document.querySelectorAll('[data-name]').forEach(function(c){
+    c.style.display=(!q||c.dataset.name.includes(q))?'':'none';
   });
 }
-
-function mktAddCart(id, name, price, asin, vendor) {
-  if (_mktCart.some(function(i){return i.id===id;})) return;
-  _mktCart.push({id:id,name:name,price:price,asin:asin,vendor:vendor});
-  mktUpdateCart();
-  var msg = document.getElementById('vessel-alvai-msg');
-  if (msg) msg.innerHTML = '<strong>Added.</strong> ' + name + ' is clinically ranked because of its bioavailability and third-party testing standards. Check your medications against this supplement — Alvai runs the CYP450 check automatically. <em>What else is going in your protocol?</em>';
+function vsAsk(){
+  var input=document.getElementById('vessel-chat-input');
+  var msg=input?input.value.trim():'';
+  if(!msg)return;
+  input.value='';
+  if(typeof ask==='function')ask(msg);
 }
-
-function mktUpdateCart() {
-  var strip = document.getElementById('mkt-cart-strip');
-  var count = document.getElementById('mkt-cart-count');
-  var items = document.getElementById('mkt-cart-items-strip');
-  if (!_mktCart.length) { strip.style.display='none'; return; }
-  strip.style.display='flex';
-  count.textContent = _mktCart.length + (_mktCart.length===1?' item':' items');
-  items.textContent = _mktCart.map(function(i){return i.name.split(' ').slice(0,3).join(' ');}).join(' · ');
-}
-
-function mktCheckoutAmazon() {
-  var asins = _mktCart.filter(function(i){return i.asin;}).map(function(i){return i.asin;});
-  if (!asins.length) return;
-  if (asins.length===1) {
-    window.open('https://www.amazon.com/dp/'+asins[0]+'?tag=bleu-live-20','_blank');
-  } else {
-    var url = 'https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleu-live-20';
-    asins.forEach(function(a,i){url+='&ASIN.'+(i+1)+'='+a+'&Quantity.'+(i+1)+'=1';});
-    window.open(url,'_blank');
-  }
-}
-
-function vesselAsk() {
-  var input = document.getElementById('vessel-chat-input');
-  var msg = input ? input.value.trim() : '';
-  if (!msg) return;
-  input.value = '';
-  if (typeof ask === 'function') ask(msg);
-}
+window.vesselAsk=vsAsk;
 </script>
-
 <div class="panel" id="p-map">
 <style>
 .ci-wrap{max-width:1160px;margin:0 auto}
