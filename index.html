@@ -2310,8 +2310,9 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 <!-- ═══════════════════════ VESSEL ═══════════════════════ -->
 <div class="panel" id="p-vessel">
 <style>
-.vs{max-width:1200px;margin:0 auto;padding:0 0 100px}
-.vs-hero{background:linear-gradient(135deg,#0a1628 0%,#0e1f3a 100%);padding:28px 24px 20px;margin-bottom:0}
+#p-vessel{padding:0 !important;max-width:100% !important;}
+.vs{max-width:100%;margin:0;padding:0 0 100px}
+.vs-hero{background:linear-gradient(135deg,#0a1628 0%,#0e1f3a 100%);padding:20px 24px 16px;margin-bottom:0}
 .vs-hello{font-size:22px;color:#e2e8f0;font-weight:300;margin-bottom:4px}
 .vs-hello strong{color:#c9a84c;font-weight:700}
 .vs-sub{font-size:13px;color:#5a6f87;margin-bottom:16px}
@@ -2370,7 +2371,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 
 <!-- HERO + SEARCH -->
 <div class="vs-hero">
-  <div class="vs-hello">Hello, <strong>Felicia</strong> 👋</div>
+  <div class="vs-hello" id="vs-hello-name">Hello 👋</div>
   <div class="vs-sub">Your clinical marketplace — supplements, groceries, therapy, services. Alvai checks your medications before every recommendation.</div>
   <div class="vs-search">
     <select>
@@ -2770,6 +2771,14 @@ function vsFilter(q){
     c.style.display=(!q||c.dataset.name.includes(q))?'':'none';
   });
 }
+function vsSetName(){
+  var name = (window.currentUser && window.currentUser.user_metadata && window.currentUser.user_metadata.full_name)
+    ? window.currentUser.user_metadata.full_name.split(' ')[0]
+    : '';
+  var el = document.getElementById('vs-hello-name');
+  if(el && name) el.innerHTML = 'Hello, <strong>'+name+'</strong> 👋';
+}
+setTimeout(vsSetName, 500);
 function vsAsk(){
   var input=document.getElementById('vessel-chat-input');
   var msg=input?input.value.trim():'';
