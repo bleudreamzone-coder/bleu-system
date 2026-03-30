@@ -2362,15 +2362,12 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 <div class="mkt-wrap">
 
 <!-- ALVAI INTELLIGENCE BANNER -->
-<div class="mkt-alvai-banner">
-  <div class="mkt-alvai-icon">🧬</div>
-  <div class="mkt-alvai-text">
-    <div class="mkt-alvai-label">Alvai · Clinical Intelligence Layer</div>
-    <div class="mkt-alvai-msg" id="vessel-alvai-msg">Tell me what you need. I check your medications before recommending anything, route to the right vendor at the right price, and explain why each product fits your protocol. Amazon can't do that. I can.</div>
-    <div class="mkt-alvai-input">
-      <input class="mkt-alvai-q" id="vessel-chat-input" placeholder="e.g. I can't sleep and take metformin..." onkeydown="if(event.key==='Enter')vesselAsk()">
-      <button class="mkt-alvai-send" onclick="vesselAsk()">Ask Alvai →</button>
-    </div>
+<div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.25);border-radius:12px;padding:20px 24px;margin-bottom:24px">
+  <div style="font-size:9px;font-family:monospace;color:rgba(201,168,76,.7);letter-spacing:3px;margin-bottom:8px">ALVAI · CLINICAL INTELLIGENCE LAYER</div>
+  <div style="font-size:15px;color:#e2e8f0;line-height:1.6;margin-bottom:14px" id="vessel-alvai-msg">Tell me what you need. I check your medications before recommending anything — Amazon cannot do that. Tell me your symptoms, your goals, or what you take, and I route you to the right product at the right price with the clinical reason behind it.</div>
+  <div style="display:flex;gap:10px">
+    <input style="flex:1;background:#080b12;border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none;font-family:inherit" id="vessel-chat-input" placeholder="e.g. I can't sleep and I take metformin..." onkeydown="if(event.key==='Enter')vesselAsk()">
+    <button style="background:#c9a84c;color:#000;border:none;border-radius:8px;padding:10px 20px;font-size:12px;font-weight:700;cursor:pointer;font-family:monospace;white-space:nowrap" onclick="vesselAsk()">Ask Alvai →</button>
   </div>
 </div>
 
@@ -2390,15 +2387,18 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 </div>
 
 <!-- SUPPLEMENTS — DR. FELICIA RANKED -->
-<div class="mkt-section-title" id="sec-supplements">💊 Supplements — Dr. Felicia Ranked · Clinical Grade</div>
+<div class="mkt-section-title" id="sec-supplements">💊 Supplements — Shop by What You Need · Dr. Felicia Ranked</div>
 <div class="mkt-grid" id="grid-supplements">
 
   <div class="mkt-card" data-cat="supplements" data-name="magnesium glycinate sleep">
-    <div class="mkt-card-img-placeholder">🧲</div>
+    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+      <div style="font-size:36px">😴</div>
+      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">DEEP SLEEP</div>
+    </div>
     <div class="mkt-card-body">
       <div class="mkt-card-brand">NOW Foods <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">Magnesium Glycinate 400mg · 240 tabs</div>
-      <div class="mkt-card-why">Only brand to pass independent lab testing for true chelated glycinate form. Albion Minerals. Crosses blood-brain barrier. Supports GABA for deep sleep.</div>
+      <div class="mkt-card-name">Magnesium Glycinate 400mg</div>
+      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Magnesium activates GABA — the neurotransmitter that tells your nervous system to stop scanning for threats. Without it your brain stays on alert all night. The glycinate form crosses the blood-brain barrier. Most people are deficient. 90 min before bed.</div>
       <div class="mkt-card-bottom">
         <span class="mkt-card-price">~$17</span>
         <a href="https://www.amazon.com/dp/B0CB984SHQ?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('mag-glycinate','NOW Foods Magnesium Glycinate 400mg','~$17','B0CB984SHQ','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
@@ -2407,11 +2407,14 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
   </div>
 
   <div class="mkt-card" data-cat="supplements" data-name="l-theanine anxiety calm">
-    <div class="mkt-card-img-placeholder">🍃</div>
+    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+      <div style="font-size:36px">🧘</div>
+      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">CALM WITHOUT SEDATION</div>
+    </div>
     <div class="mkt-card-body">
       <div class="mkt-card-brand">NOW Foods <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">L-Theanine 200mg · 120 caps</div>
-      <div class="mkt-card-why">Raises alpha wave activity in 30 min. Promotes calm without sedation. Paired with magnesium for the complete sleep protocol. GMP certified.</div>
+      <div class="mkt-card-name">L-Theanine 200mg</div>
+      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Alpha waves are the brain state between alert and asleep — calm focus. L-Theanine raises alpha wave activity within 30 minutes. Found in green tea. This is why tea feels different from coffee. No drowsiness. Pair with magnesium for the complete sleep protocol.</div>
       <div class="mkt-card-bottom">
         <span class="mkt-card-price">~$18</span>
         <a href="https://www.amazon.com/dp/B00GQV9YX6?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('l-theanine','NOW Foods L-Theanine 200mg','~$18','B00GQV9YX6','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
@@ -2420,11 +2423,14 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
   </div>
 
   <div class="mkt-card" data-cat="supplements" data-name="omega-3 fish oil inflammation mood">
-    <div class="mkt-card-img-placeholder">🐟</div>
+    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+      <div style="font-size:36px">🔥</div>
+      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">REDUCE INFLAMMATION</div>
+    </div>
     <div class="mkt-card-body">
       <div class="mkt-card-brand">Nordic Naturals <span class="mkt-card-badge badge-gold">GOLD</span></div>
-      <div class="mkt-card-name">ProOmega 2000 · 120 softgels</div>
-      <div class="mkt-card-why">IFOS 5-star certified. Triglyceride form for superior absorption. 2000mg EPA+DHA. 23 RCTs for inflammation and mood. No fishy aftertaste.</div>
+      <div class="mkt-card-name">ProOmega 2000 · EPA+DHA</div>
+      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> EPA is the specific fatty acid that competes with inflammatory compounds at the cellular level. 23 clinical trials specifically for mood and depression. The triglyceride form is what's actually in fish — 70% more bioavailable than the ethyl ester form most brands use. No fishy aftertaste.</div>
       <div class="mkt-card-bottom">
         <span class="mkt-card-price">~$55</span>
         <a href="https://www.amazon.com/dp/B01HQPYHDC?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('omega3','Nordic Naturals ProOmega 2000','~$55','B01HQPYHDC','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
@@ -2433,11 +2439,14 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
   </div>
 
   <div class="mkt-card" data-cat="supplements" data-name="ashwagandha anxiety cortisol stress">
-    <div class="mkt-card-img-placeholder">🌿</div>
+    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+      <div style="font-size:36px">⚡</div>
+      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">LOWER CORTISOL</div>
+    </div>
     <div class="mkt-card-body">
       <div class="mkt-card-brand">Jarrow Formulas <span class="mkt-card-badge badge-gold">GOLD</span></div>
       <div class="mkt-card-name">KSM-66 Ashwagandha 300mg</div>
-      <div class="mkt-card-why">The specific extract from 22 clinical trials. Standardized to 5% withanolides. Proven cortisol reduction. Full-spectrum root extract.</div>
+      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Cortisol is the stress hormone that keeps you wired at night, hungry during the day, and inflamed all the time. KSM-66 is the specific ashwagandha extract tested in 22 clinical trials — not generic ashwagandha. It reduces cortisol measurably in 8 weeks. The root extract, not the leaf.</div>
       <div class="mkt-card-bottom">
         <span class="mkt-card-price">~$18</span>
         <a href="https://www.amazon.com/dp/B01D7YKVWQ?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('ashwagandha','Jarrow KSM-66 Ashwagandha','~$18','B01D7YKVWQ','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
@@ -2446,11 +2455,14 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
   </div>
 
   <div class="mkt-card" data-cat="supplements" data-name="berberine metabolic blood sugar">
-    <div class="mkt-card-img-placeholder">🌱</div>
+    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+      <div style="font-size:36px">🩺</div>
+      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">BLOOD SUGAR BALANCE</div>
+    </div>
     <div class="mkt-card-body">
       <div class="mkt-card-brand">Thorne <span class="mkt-card-badge badge-gold">GOLD</span></div>
       <div class="mkt-card-name">Berberine-500 · NSF Certified</div>
-      <div class="mkt-card-why">NSF certified. Activates AMPK — same pathway as metformin. Pharmaceutical-grade HCl form. Clean label. No fillers. The metabolic reset foundation.</div>
+      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Berberine activates AMPK — the same cellular pathway as metformin, the most prescribed diabetes drug. Head-to-head studies show comparable blood sugar reduction. Plant-based. Used in Chinese medicine for 3,000 years. Now we know the mechanism. Take with meals.</div>
       <div class="mkt-card-bottom">
         <span class="mkt-card-price">~$38</span>
         <a href="https://www.amazon.com/dp/B00IRL5VX4?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('berberine','Thorne Berberine-500','~$38','B00IRL5VX4','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
@@ -2459,11 +2471,14 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
   </div>
 
   <div class="mkt-card" data-cat="supplements" data-name="zinc immune picolinate">
-    <div class="mkt-card-img-placeholder">⚡</div>
+    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+      <div style="font-size:36px">🛡️</div>
+      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">IMMUNE STRENGTH</div>
+    </div>
     <div class="mkt-card-body">
       <div class="mkt-card-brand">Thorne <span class="mkt-card-badge badge-gold">GOLD</span></div>
       <div class="mkt-card-name">Zinc Picolinate 30mg · NSF</div>
-      <div class="mkt-card-why">NSF Certified. Picolinate is the highest bioavailability zinc form. The form that actually reaches immune cells. No unnecessary excipients.</div>
+      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Zinc is required for T-cell production, the immune cells that fight viruses. Deficiency — common in adults — doubles infection risk. The picolinate form binds to an amino acid that carries it directly into cells. Most zinc supplements use oxide, which absorbs at only 4%. Picolinate absorbs at 40%.</div>
       <div class="mkt-card-bottom">
         <span class="mkt-card-price">~$18</span>
         <a href="https://www.amazon.com/dp/B004O89XFS?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('zinc','Thorne Zinc Picolinate 30mg','~$18','B004O89XFS','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
@@ -2472,11 +2487,14 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
   </div>
 
   <div class="mkt-card" data-cat="supplements" data-name="ubiquinol coq10 energy mitochondria">
-    <div class="mkt-card-img-placeholder">🔋</div>
+    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+      <div style="font-size:36px">🔋</div>
+      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">CELLULAR ENERGY</div>
+    </div>
     <div class="mkt-card-body">
       <div class="mkt-card-brand">Jarrow Formulas <span class="mkt-card-badge badge-gold">GOLD</span></div>
       <div class="mkt-card-name">QH-absorb Ubiquinol 200mg</div>
-      <div class="mkt-card-why">The original ubiquinol. 8x more bioavailable than ubiquinone. Softgel form absorbs best. Clinical research behind it. Mitochondrial fuel for energy and longevity.</div>
+      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> Your mitochondria use CoQ10 to convert food into ATP — the actual energy currency your cells run on. After 35 your body makes less. Ubiquinol is the active form your cells can use immediately, 8x more bioavailable than the ubiquinone form on most shelves. Critical if you take a statin — statins deplete CoQ10.</div>
       <div class="mkt-card-bottom">
         <span class="mkt-card-price">~$40</span>
         <a href="https://www.amazon.com/dp/B000VL1BMS?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('ubiquinol','Jarrow QH-absorb Ubiquinol 200mg','~$40','B000VL1BMS','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
@@ -2485,11 +2503,14 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
   </div>
 
   <div class="mkt-card" data-cat="supplements" data-name="vitamin d3 k2 immune bone">
-    <div class="mkt-card-img-placeholder">☀️</div>
+    <div class="mkt-card-img-placeholder" style="background:linear-gradient(135deg,#0a1628,#0e1f3a);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+      <div style="font-size:36px">☀️</div>
+      <div style="font-size:10px;font-family:monospace;color:#c9a84c;letter-spacing:2px">MOOD + IMMUNITY</div>
+    </div>
     <div class="mkt-card-body">
       <div class="mkt-card-brand">NOW Foods <span class="mkt-card-badge badge-gold">GOLD</span></div>
       <div class="mkt-card-name">Vitamin D3 5000IU + K2 MK-7</div>
-      <div class="mkt-card-why">D3 deficiency doubles depression risk and compromises immunity. K2 MK-7 routes calcium to bones not arteries. The immune and longevity foundation pair.</div>
+      <div class="mkt-card-why"><strong style="color:#e2e8f0">Why it works:</strong> D3 deficiency doubles your depression risk. 70% of Americans are deficient. D3 is a hormone, not a vitamin — it regulates immune response, mood, and calcium absorption. K2 is the traffic controller: it routes calcium into your bones and away from your arteries. You need both together. Take with fat in the morning.</div>
       <div class="mkt-card-bottom">
         <span class="mkt-card-price">~$18</span>
         <a href="https://www.amazon.com/dp/B01GBGS7JU?tag=bleu-live-20" target="_blank"><button class="mkt-add-btn" onclick="mktAddCart('d3k2','NOW Foods D3+K2 5000IU','~$18','B01GBGS7JU','amazon')">Add <span class="badge-prime mkt-card-badge">Prime</span></button></a>
