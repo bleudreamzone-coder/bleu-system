@@ -2312,6 +2312,21 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 <style>
 #p-vessel{padding:0 !important;max-width:100% !important;}
 .vs{max-width:100%;margin:0;padding:0 0 100px}
+/* === STICKY HEADER === */
+.vs-sticky{position:sticky;top:0;z-index:300;background:#0a1628;border-bottom:1px solid rgba(201,168,76,.2);padding:0}
+.vs-sticky-inner{display:flex;align-items:center;gap:12px;padding:10px 24px;max-width:1400px;margin:0 auto}
+.vs-sticky-logo{font-size:18px;font-weight:700;color:#c9a84c;white-space:nowrap;font-family:'Cormorant Garamond',serif;letter-spacing:1px}
+.vs-sticky-search{flex:1;display:flex;background:#0c0f16;border-radius:8px;overflow:hidden;border:1px solid rgba(201,168,76,.25);max-width:680px}
+.vs-sticky-search select{padding:10px 12px;border:none;background:#1a2030;font-size:12px;color:#e2e8f0;cursor:pointer;outline:none;border-right:1px solid rgba(201,168,76,.15)}
+.vs-sticky-search input{flex:1;padding:10px 14px;border:none;font-size:13px;color:#e2e8f0;background:#0c0f16;outline:none}
+.vs-sticky-search input::placeholder{color:#3d4f63}
+.vs-sticky-search button{background:#c9a84c;color:#000;border:none;padding:10px 18px;font-size:14px;cursor:pointer;font-weight:700}
+.vs-sticky-right{display:flex;align-items:center;gap:16px;white-space:nowrap}
+.vs-sticky-account{font-size:11px;color:#94a3b8;cursor:pointer;line-height:1.3}
+.vs-sticky-account strong{display:block;color:#e2e8f0;font-size:12px}
+.vs-cart-icon{position:relative;cursor:pointer;display:flex;align-items:center;gap:4px;color:#e2e8f0;font-size:20px}
+.vs-cart-badge{position:absolute;top:-6px;right:-8px;background:#c9a84c;color:#000;font-size:9px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+/* === HERO === */
 .vs-hero{background:linear-gradient(135deg,#0a1628 0%,#0e1f3a 100%);padding:20px 24px 16px;margin-bottom:0}
 .vs-hello{font-size:22px;color:#e2e8f0;font-weight:300;margin-bottom:4px}
 .vs-hello strong{color:#c9a84c;font-weight:700}
@@ -2365,154 +2380,220 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 .vs-alvai-tag{font-size:9px;font-family:monospace;color:rgba(201,168,76,.7);letter-spacing:2px;margin-bottom:6px}
 .vs-alvai-input{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none;font-family:inherit}
 .vs-alvai-btn{background:#c9a84c;color:#000;border:none;border-radius:8px;padding:10px 18px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+/* === STAR RATINGS === */
+.vs-stars{display:inline-flex;gap:1px;margin-right:5px;font-size:12px;color:#c9a84c;letter-spacing:-1px}
+.vs-stars-dim{color:#2a3040}
+.vs-rating-text{font-size:11px;color:#5a6f87}
+.vs-rating-count{font-size:11px;color:#00a8e0;cursor:pointer}
+.vs-rating-count:hover{text-decoration:underline}
+.vs-rating-row{display:flex;align-items:center;gap:5px;margin-bottom:6px;flex-wrap:wrap}
+/* === PRODUCT DETAIL OVERLAY === */
+.vs-detail-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:500;overflow-y:auto;padding:20px}
+.vs-detail-overlay.open{display:block}
+.vs-detail{max-width:960px;margin:20px auto;background:#0e1118;border-radius:14px;border:1px solid rgba(201,168,76,.2);overflow:hidden}
+.vs-detail-top{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:700px){.vs-detail-top{grid-template-columns:1fr}}
+.vs-detail-img{background:#080b12;display:flex;align-items:center;justify-content:center;min-height:320px;padding:24px}
+.vs-detail-img img{max-width:100%;max-height:340px;object-fit:contain;border-radius:8px}
+.vs-detail-info{padding:28px 24px}
+.vs-detail-brand{font-size:11px;color:#00a8e0;margin-bottom:6px;cursor:pointer}
+.vs-detail-brand:hover{text-decoration:underline}
+.vs-detail-name{font-size:22px;font-weight:700;color:#e2e8f0;line-height:1.3;margin-bottom:8px}
+.vs-detail-outcome{font-size:13px;color:#22c55e;font-weight:600;margin-bottom:12px}
+.vs-detail-rating{display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.vs-detail-price-box{background:#0a0e18;border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:16px;margin-bottom:16px}
+.vs-detail-price{font-size:28px;font-weight:700;color:#c9a84c}
+.vs-detail-price-note{font-size:12px;color:#5a6f87;margin-top:4px}
+.vs-detail-delivery{font-size:12px;color:#22c55e;margin-top:6px;font-weight:600}
+.vs-detail-btns{display:flex;gap:10px;margin-bottom:20px}
+.vs-detail-buy{flex:1;background:#c9a84c;color:#000;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.vs-detail-buy:hover{background:#b89638}
+.vs-detail-cart{flex:1;background:rgba(201,168,76,.15);color:#c9a84c;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;text-align:center}
+.vs-detail-cart:hover{background:rgba(201,168,76,.25)}
+.vs-detail-why{font-size:13px;color:#94a3b8;line-height:1.7;margin-bottom:16px}
+.vs-detail-safety{font-size:11px;color:#22c55e;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:6px;padding:8px 12px;margin-bottom:16px}
+.vs-detail-close{position:absolute;top:16px;right:20px;background:none;border:none;color:#5a6f87;font-size:28px;cursor:pointer;z-index:10;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(0,0,0,.5)}
+.vs-detail-close:hover{color:#e2e8f0}
+/* === FREQUENTLY BOUGHT TOGETHER === */
+.vs-fbt{background:#080b12;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:20px 24px;margin:0 24px 24px}
+.vs-fbt-title{font-size:15px;font-weight:700;color:#e2e8f0;margin-bottom:14px}
+.vs-fbt-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.vs-fbt-item{display:flex;flex-direction:column;align-items:center;gap:6px;width:120px;text-align:center}
+.vs-fbt-item img{width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.08)}
+.vs-fbt-item-name{font-size:10px;color:#94a3b8;line-height:1.3}
+.vs-fbt-item-price{font-size:12px;color:#c9a84c;font-weight:700}
+.vs-fbt-plus{font-size:24px;color:#3d4f63;font-weight:300}
+.vs-fbt-total{margin-left:auto;text-align:right}
+.vs-fbt-total-label{font-size:11px;color:#5a6f87;margin-bottom:4px}
+.vs-fbt-total-price{font-size:20px;color:#c9a84c;font-weight:700;margin-bottom:8px}
+.vs-fbt-total-btn{background:#c9a84c;color:#000;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
 </style>
 
 <div class="vs">
 
-<!-- HERO + SEARCH -->
+<!-- STICKY HEADER (Amazon-style) -->
+<div class="vs-sticky">
+  <div class="vs-sticky-inner">
+    <div class="vs-sticky-logo">BLEU Supply</div>
+    <div class="vs-sticky-search">
+      <select id="vs-cat-select" onchange="vsCat(this.value)">
+        <option value="all">All Health</option>
+        <option value="supp">Supplements</option>
+        <option value="groc">Groceries</option>
+        <option value="therapy">Therapy</option>
+        <option value="rx">Pharmacy</option>
+        <option value="events">Events</option>
+      </select>
+      <input id="vs-q" placeholder="Search supplements, conditions, services..." oninput="vsFilter(this.value)" onkeydown="if(event.key==='Enter')vsFilter(this.value)">
+      <button onclick="vsFilter(document.getElementById('vs-q').value)">&#128269;</button>
+    </div>
+    <div class="vs-sticky-right">
+      <div class="vs-sticky-account" id="vs-account-label">
+        Hello, sign in
+        <strong>Account</strong>
+      </div>
+      <div class="vs-cart-icon" onclick="vsScrollToCart()">
+        &#128722;
+        <span class="vs-cart-badge" id="vs-cart-badge-count">0</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
 <div class="vs-hero">
   <div class="vs-hello" id="vs-hello-name">Hello 👋</div>
   <div class="vs-sub">Your clinical marketplace — supplements, groceries, therapy, services. Alvai checks your medications before every recommendation.</div>
-  <div class="vs-search">
-    <select>
-      <option>All Health</option>
-      <option>Supplements</option>
-      <option>Groceries</option>
-      <option>Therapy</option>
-      <option>Services</option>
-    </select>
-    <input id="vs-q" placeholder="Search supplements, conditions, services..." oninput="vsFilter(this.value)">
-    <button onclick="vsFilter(document.getElementById('vs-q').value)">🔍</button>
-  </div>
 </div>
 
 <!-- ALVAI STRIP -->
 <div style="margin:16px 24px 0;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:14px 18px">
-  <div style="font-size:9px;font-family:monospace;color:rgba(201,168,76,.7);letter-spacing:3px;margin-bottom:10px">🧬 ALVAI · CHECKS YOUR MEDICATIONS BEFORE EVERY RECOMMENDATION</div>
+  <div style="font-size:9px;font-family:monospace;color:rgba(201,168,76,.7);letter-spacing:3px;margin-bottom:10px">ALVAI -- CHECKS YOUR MEDICATIONS BEFORE EVERY RECOMMENDATION</div>
   <div style="display:flex;gap:10px">
-    <input id="vessel-chat-input" placeholder="Tell me your symptoms, conditions, or medications..." 
+    <input id="vessel-chat-input" placeholder="Tell me your symptoms, conditions, or medications..."
       style="flex:1;background:#080b12;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;outline:none;font-family:inherit"
       onkeydown="if(event.key==='Enter')vsAsk()">
-    <button onclick="vsAsk()" style="background:#c9a84c;color:#000;border:none;border-radius:8px;padding:10px 18px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:monospace">Ask Alvai →</button>
+    <button onclick="vsAsk()" style="background:#c9a84c;color:#000;border:none;border-radius:8px;padding:10px 18px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:monospace">Ask Alvai</button>
   </div>
+  <div id="vs-alvai-response" style="display:none;margin-top:12px;padding:12px;background:#080b12;border-radius:8px;font-size:13px;color:#94a3b8;line-height:1.6"></div>
 </div>
 
 <!-- CATEGORY TABS -->
 <div class="vs-cats">
-  <div class="vs-cat on" onclick="vsCat('all',this)">All</div>
-  <div class="vs-cat" onclick="vsCat('supp',this)">💊 Supplements</div>
-  <div class="vs-cat" onclick="vsCat('groc',this)">🥦 Groceries</div>
-  <div class="vs-cat" onclick="vsCat('therapy',this)">🧠 Therapy & Care</div>
-  <div class="vs-cat" onclick="vsCat('rx',this)">💊 Pharmacy</div>
-  <div class="vs-cat" onclick="vsCat('events',this)">📅 Events & Community</div>
+  <div class="vs-cat on" data-vcat="all" onclick="vsCat('all')">All</div>
+  <div class="vs-cat" data-vcat="supp" onclick="vsCat('supp')">Supplements</div>
+  <div class="vs-cat" data-vcat="groc" onclick="vsCat('groc')">Groceries</div>
+  <div class="vs-cat" data-vcat="therapy" onclick="vsCat('therapy')">Therapy + Care</div>
+  <div class="vs-cat" data-vcat="rx" onclick="vsCat('rx')">Pharmacy</div>
+  <div class="vs-cat" data-vcat="events" onclick="vsCat('events')">Events + Community</div>
 </div>
 
 <!-- SUPPLEMENTS -->
-<div class="vs-section" id="sec-supp">
-  <div class="vs-sec-title">Supplements <span class="vs-sec-sub">Clinical Grade · Third-Party Verified · Amazon Prime</span></div>
+<div class="vs-section" id="sec-supp" data-seccat="supp">
+  <div class="vs-sec-title">Supplements <span class="vs-sec-sub">Clinical Grade -- Third-Party Verified -- Amazon Prime</span></div>
   <div class="vs-grid">
 
-    <div class="vs-card" data-cat="supp" data-name="sleep magnesium glycinate">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=300&fit=crop" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="NOW Foods Magnesium Glycinate" onerror="this.parentElement.innerHTML='🧲'"></div>
+    <div class="vs-card" data-cat="supp" data-name="sleep magnesium glycinate" data-pid="mag" data-asin="B0CB984SHQ" data-price="$17" data-brand="NOW Foods" data-full="Magnesium Glycinate 400mg" data-img="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=300&fit=crop" data-outcome="Deeper sleep tonight" data-why="Activates GABA -- tells your nervous system to stop scanning for threats. Only brand that passed independent lab testing for true chelated form. Albion TRAACS chelated magnesium. 400mg per serving, 240 tablets." data-safety="No CYP450 interactions. Safe with most medications." data-rating="4.7" data-reviews="18432" data-supply="240 tabs -- 4 month supply" data-fbt="theanine,d3k2" onclick="vsDetail(this)">
+      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=300&fit=crop" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="NOW Foods Magnesium Glycinate" onerror="this.style.display='none'"></div>
       <div class="vs-card-body">
-        <div class="vs-prime">✓ Prime FREE delivery</div>
-        <div class="vs-card-brand">NOW Foods · NSF Verified</div>
+        <div class="vs-prime">Prime FREE delivery</div>
+        <div class="vs-card-brand">NOW Foods -- NSF Verified</div>
         <div class="vs-card-name">Magnesium Glycinate 400mg</div>
-        <div class="vs-card-outcome">→ Deeper sleep tonight</div>
-        <div class="vs-card-why">Activates GABA — tells your nervous system to stop scanning for threats. Only brand that passed independent lab testing for true chelated form.</div>
-        <div class="vs-card-price">$17 <span>/240 tabs · 4 month supply</span></div>
-        <button class="vs-add" onclick="vsAdd('mag','NOW Foods Magnesium Glycinate','$17','B0CB984SHQ','amazon')">Add to Cart</button>
+        <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.7</span> <span class="vs-rating-count">18,432 ratings</span></div>
+        <div class="vs-card-outcome">Deeper sleep tonight</div>
+        <div class="vs-card-price">$17 <span>/240 tabs -- 4 month supply</span></div>
+        <button class="vs-add" onclick="event.stopPropagation();vsAdd('mag','NOW Foods Magnesium Glycinate','$17','B0CB984SHQ','amazon')">Add to Cart</button>
       </div>
     </div>
 
-    <div class="vs-card" data-cat="supp" data-name="calm anxiety l-theanine">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="NOW L-Theanine" onerror="this.parentElement.innerHTML='🍃'"></div>
+    <div class="vs-card" data-cat="supp" data-name="calm anxiety l-theanine" data-pid="theanine" data-asin="B00GQV9YX6" data-price="$18" data-brand="NOW Foods" data-full="L-Theanine 200mg" data-img="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop" data-outcome="Calm in 30 minutes" data-why="Raises alpha waves -- the brain state between alert and asleep. What makes tea feel different from coffee. No drowsiness. 200mg with Inositol. GMP certified." data-safety="No known drug interactions. Safe to combine with most supplements." data-rating="4.6" data-reviews="14207" data-supply="120 caps -- 4 month supply" data-fbt="mag,ashwa" onclick="vsDetail(this)">
+      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="NOW L-Theanine" onerror="this.style.display='none'"></div>
       <div class="vs-card-body">
-        <div class="vs-prime">✓ Prime FREE delivery</div>
-        <div class="vs-card-brand">NOW Foods · NSF Verified</div>
+        <div class="vs-prime">Prime FREE delivery</div>
+        <div class="vs-card-brand">NOW Foods -- NSF Verified</div>
         <div class="vs-card-name">L-Theanine 200mg</div>
-        <div class="vs-card-outcome">→ Calm in 30 minutes</div>
-        <div class="vs-card-why">Raises alpha waves — the brain state between alert and asleep. What makes tea feel different from coffee. No drowsiness.</div>
-        <div class="vs-card-price">$18 <span>/120 caps · 4 month supply</span></div>
-        <button class="vs-add" onclick="vsAdd('theanine','NOW Foods L-Theanine 200mg','$18','B00GQV9YX6','amazon')">Add to Cart</button>
+        <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.6</span> <span class="vs-rating-count">14,207 ratings</span></div>
+        <div class="vs-card-outcome">Calm in 30 minutes</div>
+        <div class="vs-card-price">$18 <span>/120 caps -- 4 month supply</span></div>
+        <button class="vs-add" onclick="event.stopPropagation();vsAdd('theanine','NOW Foods L-Theanine 200mg','$18','B00GQV9YX6','amazon')">Add to Cart</button>
       </div>
     </div>
 
-    <div class="vs-card" data-cat="supp" data-name="inflammation omega-3 fish oil">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1550572017-ea7d89b8c6e9?w=400&h=300&fit=crop" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="Nordic Naturals ProOmega 2000" onerror="this.parentElement.innerHTML='🐟'"></div>
+    <div class="vs-card" data-cat="supp" data-name="inflammation omega-3 fish oil" data-pid="omega3" data-asin="B01HQPYHDC" data-price="$55" data-brand="Nordic Naturals" data-full="ProOmega 2000" data-img="https://images.unsplash.com/photo-1550572017-ea7d89b8c6e9?w=400&h=300&fit=crop" data-outcome="Reduces inflammation" data-why="IFOS 5-star certified. Triglyceride form -- 70% more bioavailable than ethyl ester. 2000mg EPA+DHA per serving. 23 clinical trials for mood. No fishy aftertaste. Molecularly distilled." data-safety="Safe with most medications. May thin blood at high doses -- consult if on warfarin." data-rating="4.8" data-reviews="22103" data-supply="120 softgels -- 2 month supply" data-fbt="mag,ubiq" onclick="vsDetail(this)">
+      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1550572017-ea7d89b8c6e9?w=400&h=300&fit=crop" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="Nordic Naturals ProOmega 2000" onerror="this.style.display='none'"></div>
       <div class="vs-card-body">
-        <div class="vs-prime">✓ Prime FREE delivery</div>
-        <div class="vs-card-brand">Nordic Naturals · IFOS 5-Star</div>
+        <div class="vs-prime">Prime FREE delivery</div>
+        <div class="vs-card-brand">Nordic Naturals -- IFOS 5-Star</div>
         <div class="vs-card-name">ProOmega 2000</div>
-        <div class="vs-card-outcome">→ Reduces inflammation</div>
-        <div class="vs-card-why">IFOS 5-star certified. Triglyceride form — 70% more bioavailable. 23 clinical trials for mood. No fishy aftertaste.</div>
-        <div class="vs-card-price">$55 <span>/120 softgels · 2 month supply</span></div>
-        <button class="vs-add" onclick="vsAdd('omega3','Nordic Naturals ProOmega 2000','$55','B01HQPYHDC','amazon')">Add to Cart</button>
+        <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="vs-rating-text">4.8</span> <span class="vs-rating-count">22,103 ratings</span></div>
+        <div class="vs-card-outcome">Reduces inflammation</div>
+        <div class="vs-card-price">$55 <span>/120 softgels -- 2 month supply</span></div>
+        <button class="vs-add" onclick="event.stopPropagation();vsAdd('omega3','Nordic Naturals ProOmega 2000','$55','B01HQPYHDC','amazon')">Add to Cart</button>
       </div>
     </div>
 
-    <div class="vs-card" data-cat="supp" data-name="cortisol stress ashwagandha">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=400&h=300&fit=crop" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="KSM-66 Ashwagandha" onerror="this.parentElement.innerHTML='🌿'"></div>
+    <div class="vs-card" data-cat="supp" data-name="cortisol stress ashwagandha" data-pid="ashwa" data-asin="B01D7YKVWQ" data-price="$18" data-brand="Jarrow Formulas" data-full="KSM-66 Ashwagandha 300mg" data-img="https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=400&h=300&fit=crop" data-outcome="Lower cortisol in 8 weeks" data-why="The exact extract from 22 clinical trials. Not generic ashwagandha -- standardized to 5% withanolides. Measurable cortisol reduction of 28-30% over 60 days. Run 6-week cycles." data-safety="No major CYP interactions. Avoid during pregnancy." data-rating="4.6" data-reviews="30124" data-supply="90 caps -- 3 month supply" data-fbt="theanine,mag" onclick="vsDetail(this)">
+      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=400&h=300&fit=crop" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="KSM-66 Ashwagandha" onerror="this.style.display='none'"></div>
       <div class="vs-card-body">
-        <div class="vs-prime">✓ Prime FREE delivery</div>
-        <div class="vs-card-brand">Jarrow Formulas · Third-Party Tested</div>
+        <div class="vs-prime">Prime FREE delivery</div>
+        <div class="vs-card-brand">Jarrow Formulas -- Third-Party Tested</div>
         <div class="vs-card-name">KSM-66 Ashwagandha 300mg</div>
-        <div class="vs-card-outcome">→ Lower cortisol in 8 weeks</div>
-        <div class="vs-card-why">The exact extract from 22 clinical trials. Not generic ashwagandha — standardized to 5% withanolides. Measurable cortisol reduction.</div>
-        <div class="vs-card-price">$18 <span>/90 caps · 3 month supply</span></div>
-        <button class="vs-add" onclick="vsAdd('ashwa','Jarrow KSM-66 Ashwagandha','$18','B01D7YKVWQ','amazon')">Add to Cart</button>
+        <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.6</span> <span class="vs-rating-count">30,124 ratings</span></div>
+        <div class="vs-card-outcome">Lower cortisol in 8 weeks</div>
+        <div class="vs-card-price">$18 <span>/90 caps -- 3 month supply</span></div>
+        <button class="vs-add" onclick="event.stopPropagation();vsAdd('ashwa','Jarrow KSM-66 Ashwagandha','$18','B01D7YKVWQ','amazon')">Add to Cart</button>
       </div>
     </div>
 
-    <div class="vs-card" data-cat="supp" data-name="blood sugar metabolic berberine">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=300&fit=crop" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="Thorne Berberine" onerror="this.parentElement.innerHTML='🌱'"></div>
+    <div class="vs-card" data-cat="supp" data-name="blood sugar metabolic berberine" data-pid="berb" data-asin="B00IRL5VX4" data-price="$38" data-brand="Thorne" data-full="Berberine-500" data-img="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=300&fit=crop" data-outcome="Blood sugar balance" data-why="Activates AMPK -- same pathway as metformin. Head-to-head studies show comparable results for blood sugar regulation. NSF Certified for Sport. Take with meals for best absorption." data-safety="CYP3A4 interaction -- check if on statins or immunosuppressants." data-rating="4.7" data-reviews="8934" data-supply="60 caps -- 1 month supply" data-fbt="omega3,d3k2" onclick="vsDetail(this)">
+      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=400&h=300&fit=crop" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="Thorne Berberine" onerror="this.style.display='none'"></div>
       <div class="vs-card-body">
-        <div class="vs-prime">✓ Prime FREE delivery</div>
-        <div class="vs-card-brand">Thorne · NSF Certified</div>
+        <div class="vs-prime">Prime FREE delivery</div>
+        <div class="vs-card-brand">Thorne -- NSF Certified</div>
         <div class="vs-card-name">Berberine-500</div>
-        <div class="vs-card-outcome">→ Blood sugar balance</div>
-        <div class="vs-card-why">Activates AMPK — same pathway as metformin. Head-to-head studies show comparable results. Take with meals.</div>
-        <div class="vs-card-price">$38 <span>/60 caps · 1 month supply</span></div>
-        <button class="vs-add" onclick="vsAdd('berb','Thorne Berberine-500','$38','B00IRL5VX4','amazon')">Add to Cart</button>
+        <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.7</span> <span class="vs-rating-count">8,934 ratings</span></div>
+        <div class="vs-card-outcome">Blood sugar balance</div>
+        <div class="vs-card-price">$38 <span>/60 caps -- 1 month supply</span></div>
+        <button class="vs-add" onclick="event.stopPropagation();vsAdd('berb','Thorne Berberine-500','$38','B00IRL5VX4','amazon')">Add to Cart</button>
       </div>
     </div>
 
-    <div class="vs-card" data-cat="supp" data-name="energy mitochondria ubiquinol coq10">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1576671081837-49000212a223?w=400&h=300&fit=crop&auto=format" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="Jarrow Ubiquinol" onerror="this.parentElement.innerHTML='🔋'"></div>
+    <div class="vs-card" data-cat="supp" data-name="energy mitochondria ubiquinol coq10" data-pid="ubiq" data-asin="B000VL1BMS" data-price="$40" data-brand="Jarrow Formulas" data-full="QH-absorb Ubiquinol 200mg" data-img="https://images.unsplash.com/photo-1576671081837-49000212a223?w=400&h=300&fit=crop&auto=format" data-outcome="Cellular energy restored" data-why="8x more bioavailable than regular CoQ10 (ubiquinone). Critical if you take a statin -- statins deplete CoQ10 directly. The original ubiquinol supplement. Kaneka QH form." data-safety="No significant drug interactions. Essential alongside statin medications." data-rating="4.7" data-reviews="12089" data-supply="60 softgels -- 1 month supply" data-fbt="omega3,berb" onclick="vsDetail(this)">
+      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1576671081837-49000212a223?w=400&h=300&fit=crop&auto=format" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="Jarrow Ubiquinol" onerror="this.style.display='none'"></div>
       <div class="vs-card-body">
-        <div class="vs-prime">✓ Prime FREE delivery</div>
-        <div class="vs-card-brand">Jarrow Formulas · Third-Party Tested</div>
+        <div class="vs-prime">Prime FREE delivery</div>
+        <div class="vs-card-brand">Jarrow Formulas -- Third-Party Tested</div>
         <div class="vs-card-name">QH-absorb Ubiquinol 200mg</div>
-        <div class="vs-card-outcome">→ Cellular energy restored</div>
-        <div class="vs-card-why">8x more bioavailable than regular CoQ10. Critical if you take a statin — statins deplete CoQ10 directly. The original ubiquinol.</div>
-        <div class="vs-card-price">$40 <span>/60 softgels · 1 month supply</span></div>
-        <button class="vs-add" onclick="vsAdd('ubiq','Jarrow QH-absorb Ubiquinol 200mg','$40','B000VL1BMS','amazon')">Add to Cart</button>
+        <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.7</span> <span class="vs-rating-count">12,089 ratings</span></div>
+        <div class="vs-card-outcome">Cellular energy restored</div>
+        <div class="vs-card-price">$40 <span>/60 softgels -- 1 month supply</span></div>
+        <button class="vs-add" onclick="event.stopPropagation();vsAdd('ubiq','Jarrow QH-absorb Ubiquinol 200mg','$40','B000VL1BMS','amazon')">Add to Cart</button>
       </div>
     </div>
 
-    <div class="vs-card" data-cat="supp" data-name="immune zinc vitamin d">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1559181567-c3190bfa4f0b?w=400&h=300&fit=crop&auto=format" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="Thorne Zinc Picolinate" onerror="this.parentElement.innerHTML='🛡️'"></div>
+    <div class="vs-card" data-cat="supp" data-name="immune zinc vitamin d" data-pid="zinc" data-asin="B004O89XFS" data-price="$18" data-brand="Thorne" data-full="Zinc Picolinate 30mg" data-img="https://images.unsplash.com/photo-1559181567-c3190bfa4f0b?w=400&h=300&fit=crop&auto=format" data-outcome="Immune strength" data-why="Picolinate form absorbs at 40%. Oxide form (most brands) absorbs at 4%. Required for T-cell production. NSF Certified for Sport. Essential mineral for immune function." data-safety="Take with food. Do not exceed 40mg/day long-term. Competes with copper absorption." data-rating="4.8" data-reviews="9217" data-supply="60 caps -- 2 month supply" data-fbt="d3k2,omega3" onclick="vsDetail(this)">
+      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1559181567-c3190bfa4f0b?w=400&h=300&fit=crop&auto=format" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="Thorne Zinc Picolinate" onerror="this.style.display='none'"></div>
       <div class="vs-card-body">
-        <div class="vs-prime">✓ Prime FREE delivery</div>
-        <div class="vs-card-brand">Thorne · NSF Certified</div>
+        <div class="vs-prime">Prime FREE delivery</div>
+        <div class="vs-card-brand">Thorne -- NSF Certified</div>
         <div class="vs-card-name">Zinc Picolinate 30mg</div>
-        <div class="vs-card-outcome">→ Immune strength</div>
-        <div class="vs-card-why">Picolinate form absorbs at 40%. Oxide form (most brands) absorbs at 4%. Required for T-cell production. NSF certified.</div>
-        <div class="vs-card-price">$18 <span>/60 caps · 2 month supply</span></div>
-        <button class="vs-add" onclick="vsAdd('zinc','Thorne Zinc Picolinate 30mg','$18','B004O89XFS','amazon')">Add to Cart</button>
+        <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="vs-rating-text">4.8</span> <span class="vs-rating-count">9,217 ratings</span></div>
+        <div class="vs-card-outcome">Immune strength</div>
+        <div class="vs-card-price">$18 <span>/60 caps -- 2 month supply</span></div>
+        <button class="vs-add" onclick="event.stopPropagation();vsAdd('zinc','Thorne Zinc Picolinate 30mg','$18','B004O89XFS','amazon')">Add to Cart</button>
       </div>
     </div>
 
-    <div class="vs-card" data-cat="supp" data-name="mood vitamin d3 k2 depression">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=400&h=300&fit=crop&auto=format" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="NOW D3+K2" onerror="this.parentElement.innerHTML='☀️'"></div>
+    <div class="vs-card" data-cat="supp" data-name="mood vitamin d3 k2 depression" data-pid="d3k2" data-asin="B01GBGS7JU" data-price="$18" data-brand="NOW Foods" data-full="Vitamin D3 5000IU + K2 MK-7" data-img="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=400&h=300&fit=crop&auto=format" data-outcome="Mood + immunity" data-why="D3 deficiency doubles depression risk. 70% of Americans are deficient. K2 (MK-7 form) routes calcium to bones, not arteries. Take with fat in morning for best absorption." data-safety="Safe with most medications. High doses may interact with calcium channel blockers." data-rating="4.7" data-reviews="15802" data-supply="120 softgels -- 4 month supply" data-fbt="mag,omega3" onclick="vsDetail(this)">
+      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=400&h=300&fit=crop&auto=format" style="width:100%;height:160px;object-fit:cover;display:block;flex-shrink:0" alt="NOW D3+K2" onerror="this.style.display='none'"></div>
       <div class="vs-card-body">
-        <div class="vs-prime">✓ Prime FREE delivery</div>
-        <div class="vs-card-brand">NOW Foods · NSF Verified</div>
+        <div class="vs-prime">Prime FREE delivery</div>
+        <div class="vs-card-brand">NOW Foods -- NSF Verified</div>
         <div class="vs-card-name">Vitamin D3 5000IU + K2 MK-7</div>
-        <div class="vs-card-outcome">→ Mood + immunity</div>
-        <div class="vs-card-why">D3 deficiency doubles depression risk. 70% of Americans are deficient. K2 routes calcium to bones, not arteries. Take with fat in morning.</div>
-        <div class="vs-card-price">$18 <span>/120 softgels · 4 month supply</span></div>
-        <button class="vs-add" onclick="vsAdd('d3k2','NOW Foods D3+K2 5000IU','$18','B01GBGS7JU','amazon')">Add to Cart</button>
+        <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.7</span> <span class="vs-rating-count">15,802 ratings</span></div>
+        <div class="vs-card-outcome">Mood + immunity</div>
+        <div class="vs-card-price">$18 <span>/120 softgels -- 4 month supply</span></div>
+        <button class="vs-add" onclick="event.stopPropagation();vsAdd('d3k2','NOW Foods D3+K2 5000IU','$18','B01GBGS7JU','amazon')">Add to Cart</button>
       </div>
     </div>
 
@@ -2520,8 +2601,8 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 </div>
 
 <!-- GROCERIES -->
-<div class="vs-section" id="sec-groc">
-  <div class="vs-sec-title">Groceries <span class="vs-sec-sub">Anti-Inflammatory · Walmart+ Delivery to New Orleans</span></div>
+<div class="vs-section" id="sec-groc" data-seccat="groc">
+  <div class="vs-sec-title">Groceries <span class="vs-sec-sub">Anti-Inflammatory -- Walmart+ Delivery</span></div>
   <div class="vs-grid">
 
     <div class="vs-card" data-cat="groc" data-name="salmon protein omega inflammation">
@@ -2580,8 +2661,8 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 </div>
 
 <!-- THERAPY & CARE -->
-<div class="vs-section" id="sec-therapy">
-  <div class="vs-sec-title">Therapy & Care <span class="vs-sec-sub">Licensed providers · Connect today · Insurance accepted</span></div>
+<div class="vs-section" id="sec-therapy" data-seccat="therapy">
+  <div class="vs-sec-title">Therapy + Care <span class="vs-sec-sub">Licensed providers -- Connect today -- Insurance accepted</span></div>
   <div class="vs-service-grid">
 
     <a href="https://www.talkspace.com" target="_blank" style="text-decoration:none">
@@ -2627,8 +2708,8 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 </div>
 
 <!-- PHARMACY -->
-<div class="vs-section" id="sec-rx">
-  <div class="vs-sec-title">Pharmacy <span class="vs-sec-sub">Prescriptions delivered · Save with Prime · RxPass $5/mo</span></div>
+<div class="vs-section" id="sec-rx" data-seccat="rx">
+  <div class="vs-sec-title">Pharmacy <span class="vs-sec-sub">Prescriptions delivered -- Save with Prime -- RxPass $5/mo</span></div>
   <div class="vs-service-grid">
 
     <a href="https://pharmacy.amazon.com" target="_blank" style="text-decoration:none">
@@ -2674,8 +2755,8 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 </div>
 
 <!-- EVENTS -->
-<div class="vs-section" id="sec-events">
-  <div class="vs-sec-title">Events & Community <span class="vs-sec-sub">New Orleans · Live calendars · Book direct</span></div>
+<div class="vs-section" id="sec-events" data-seccat="events">
+  <div class="vs-sec-title">Events + Community <span class="vs-sec-sub">New Orleans -- Live calendars -- Book direct</span></div>
   <div class="vs-service-grid">
 
     <a href="https://www.eventbrite.com/d/la--new-orleans/wellness/" target="_blank" style="text-decoration:none">

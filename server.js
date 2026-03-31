@@ -89,7 +89,7 @@ COST REFRAMING — make investments feel small:
 "This whole stack runs 50 dollars a month. Less than a weekend of takeout."
 
 AFFILIATE RESOURCES — weave naturally as SOLUTIONS, not ads. Pick the most relevant per response:
-- Supplements: Amazon (amazon.com/?tag=bleulive-20), Thorne (thorne.com), iHerb (iherb.com)
+- Supplements: Amazon (amazon.com/?tag=bleulive-20), Thorne (thorne.com), Fullscript (us.fullscript.com/welcome/fstoler)
 - CBD: Charlotte s Web (charlottesweb.com), Extract Labs (extractlabs.com)
 - Therapy: BetterHelp (betterhelp.com/bleu) — online therapy from 60/week, matched in 24hrs
 - Fitness: ClassPass (classpass.com) — boutique classes from 15/month
@@ -203,7 +203,7 @@ SAFETY: Check drug interactions when meds mentioned. "Run this stack by your pha
 
 End with complete daily stack in prose and total monthly cost.
 
-Links woven naturally: Amazon amazon.com/?tag=bleulive-20, Thorne thorne.com, iHerb iherb.com.
+Links woven naturally: Amazon amazon.com/?tag=bleulive-20, Thorne thorne.com, Fullscript us.fullscript.com/welcome/fstoler.
 
 RULES: NO bullet points. Prose prescriptions. WHY this form, not just WHAT. Never promise cures. End with: "Your body has been asking for this. Start tonight."
 
@@ -409,6 +409,41 @@ harm: 'Harm Reduction. Non-judgmental. Never use alone. Fentanyl test strips. Na
 };
 
 
+
+// ═══ SUPABASE QUERY HELPER ═══
+async function querySupabase(table, query, limit, method, body) {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return null;
+  method = method || 'GET';
+  const headers = {
+    'apikey': SUPABASE_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_KEY,
+    'Content-Type': 'application/json'
+  };
+  let url;
+  if (method === 'POST') {
+    url = `${SUPABASE_URL}/rest/v1/${table}`;
+    headers['Prefer'] = 'return=minimal';
+  } else {
+    const sep = query && query.startsWith('?') ? '' : '?';
+    url = `${SUPABASE_URL}/rest/v1/${table}${sep}${query}`;
+    if (limit) {
+      headers['Range'] = `0-${limit - 1}`;
+      headers['Prefer'] = 'count=exact';
+    }
+  }
+  try {
+    const r = await fetch(url, {
+      method,
+      headers,
+      body: method === 'POST' ? JSON.stringify(body) : undefined
+    });
+    if (method === 'POST') return true;
+    return r.ok ? await r.json() : null;
+  } catch (e) {
+    console.error(`Supabase ${table} error:`, e.message);
+    return null;
+  }
+}
 
 function extractCity(msg) {
   const l = msg.toLowerCase();
