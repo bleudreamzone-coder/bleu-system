@@ -806,8 +806,28 @@ const server = http.createServer((req, res) => {
       try {
         const p = JSON.parse(b);
         if (!p.message?.trim()) return json(res, 400, { error: 'Message required' });
-        const r = await callAI(p.message, p.history||[], p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety');
-        json(res, 200, { response: r.text, text: r.text, reply: r.text, model: r.model, tokens: r.tokens, mode: p.mode });
+        const model = pickModel(p.message, p.mode||'general');
+        const sys = await buildPrompt(p.message, p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety');
+        const messages = [{ role: 'system', content: sys }];
+        if (p.history?.length) messages.push(...p.history.slice(-12));
+        messages.push({ role: 'user', content: p.message });
+        const ar = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model, messages, max_completion_tokens: model === 'gpt-5' ? 4000 : 2000, temperature: 1, stream: true })
+        });
+        res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
+        const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '', full = '';
+        while (true) {
+          const { done, value } = await rd.read(); if (done) break;
+          buf += dc.decode(value, { stream: true }); const ls = buf.split('\n'); buf = ls.pop()||'';
+          for (const ln of ls) {
+            if (!ln.startsWith('data: ')) continue; const d = ln.slice(6).trim();
+            if (d === '[DONE]') continue;
+            try { const j = JSON.parse(d); const t = j.choices?.[0]?.delta?.content; if (t) { full += t; res.write('data: ' + JSON.stringify({text:t}) + '\n\n'); } } catch {}
+          }
+        }
+        res.write('data: [DONE]\n\n');
+        res.end();
       } catch (e) { console.error('Chat:', e.message); json(res, 500, { error: e.message }); }
     })(); });
     return;

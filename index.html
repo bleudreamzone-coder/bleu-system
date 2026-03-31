@@ -2897,8 +2897,17 @@ async function vsAsk(){
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+(typeof ANON!=='undefined'?ANON:'')},
       body:JSON.stringify({message:msg,session:typeof getSession==='function'?getSession():'vessel',mode:'vessel',history:[]})
     });
-    var data=await r.json();
-    var full=data.response||data.text||data.reply||data.content||'';
+    var reader=r.body.getReader(),decoder=new TextDecoder(),full='',buffer='';
+    res.innerHTML='';
+    while(true){
+      var chunk=await reader.read();if(chunk.done)break;
+      buffer+=decoder.decode(chunk.value,{stream:true});var lines=buffer.split('\n');buffer=lines.pop()||'';
+      for(var li=0;li<lines.length;li++){
+        var line=lines[li];if(!line.startsWith('data: '))continue;var d=line.slice(6).trim();
+        if(d==='[DONE]')continue;
+        try{var p=JSON.parse(d);if(p.text){full+=p.text;res.innerHTML=(typeof fmt==='function'?fmt(full):full)+'<span class="alvai-cursor"></span>';}}catch(e){}
+      }
+    }
     res.innerHTML=typeof fmt==='function'?fmt(full):full;
     if(typeof detectAndWireProtocol==='function')detectAndWireProtocol(full,res);
   }catch(e){
@@ -9399,7 +9408,17 @@ async function send(tab){
   if(typeof getActiveJourney==='function'){const _aj=getActiveJourney();if(_aj){if(tab==='passport')body.mode=_aj.alvaiMode;body.journey_context='[ACTIVE JOURNEY: '+_aj.name+'] '+_aj.alvaiContext;}}
   try{
     const res=await fetch(ALVAI,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON},body:JSON.stringify(body)})
-    const data=await res.json();const full=data.response||data.text||data.reply||data.content||'';
+    const reader=res.body.getReader(),decoder=new TextDecoder();let full='',buffer=''
+    aDiv.innerHTML=''
+    while(true){
+      const{done,value}=await reader.read();if(done)break
+      buffer+=decoder.decode(value,{stream:true});const lines=buffer.split('\n');buffer=lines.pop()||''
+      for(const line of lines){
+        if(!line.startsWith('data: '))continue;const d=line.slice(6).trim()
+        if(d==='[DONE]')continue
+        try{const p=JSON.parse(d);if(p.text){full+=p.text;aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}
+      }
+    }
     aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);chatHistories[tab].push({role:'assistant',content:full})
     const journeyKey=detectJourney(msg,full);
     if(journeyKey){renderJourney(aDiv,journeyKey);}
@@ -12302,8 +12321,14 @@ window.runSafetyCheck = function() {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({message:msg,mode:'vessel',session:'safety-check'})
-  }).then(function(r){return r.json();}).then(function(data){
-    var full=data.response||data.text||data.reply||data.content||'';
+  }).then(function(r){return r.text();}).then(function(text){
+    var full='';
+    text.split('\n').forEach(function(line){
+      if(!line.startsWith('data: '))return;var d=line.slice(6).trim();
+      if(d==='[DONE]')return;
+      try{var p=JSON.parse(d);if(p.text)full+=p.text;}catch(e){}
+    });
+    if(!full){try{var j=JSON.parse(text);full=j.response||j.text||j.content||text;}catch(e){full=text;}}
 
     var res = document.getElementById('safety-result');
     var hasCaution = full.toLowerCase().includes('caution');
