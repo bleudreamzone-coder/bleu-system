@@ -4302,16 +4302,36 @@ document.addEventListener('DOMContentLoaded', function(){
 Find Events</button>
   </div>
   <div id="comm-events" style="display:grid;gap:10px"></div>
-  <!-- Platform links if no API -->
-  <div id="comm-platforms" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px">
-    <a href="#" onclick="openGateway('meetup');return false" style="background:rgba(255,64,129,0.08);border:1px solid rgba(255,64,129,0.15);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px">
-      <span style="font-size:24px">👥</span>
-      <div><div style="font-size:13px;font-weight:700;color:#e2e8f0">Meetup</div><div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">Find health groups near you</div></div>
-    </a>
-    <a href="javascript:void(0)" onclick="engageCard('community','Find me local health and wellness events in New Orleans this week — what is happening near me?','https://eventbrite.com/d/local/health--events/')" target="_blank" style="background:rgba(240,103,48,0.08);border:1px solid rgba(240,103,48,0.15);border-radius:10px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px">
-      <span style="font-size:24px">🎟️</span>
-      <div><div style="font-size:13px;font-weight:700;color:#e2e8f0">Eventbrite</div><div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">Local wellness events</div></div>
-    </a>
+  <!-- Embedded NOLA wellness events — inline, no cold exits -->
+  <div id="comm-embedded-events" style="margin-top:16px">
+    <div style="font-size:9px;letter-spacing:3px;color:rgba(78,205,196,.5);margin-bottom:10px">NEW ORLEANS WELLNESS — THIS WEEK</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div onclick="engageCard('community','Tell me about yoga classes and meditation groups meeting in New Orleans this week. What would be good for a beginner?','https://www.eventbrite.com/d/la--new-orleans/yoga/')" style="background:rgba(78,205,196,.04);border:1px solid rgba(78,205,196,.12);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(78,205,196,.4)'" onmouseout="this.style.borderColor='rgba(78,205,196,.12)'">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:24px">🧘</span><div><div style="font-size:13px;font-weight:700;color:#4ecdc4">Yoga + Meditation</div><div style="font-size:10px;color:#5a6374">Classes, retreats, sound baths</div></div></div>
+        <div style="font-size:11px;color:#8fa4b0;line-height:1.6">Studios across NOLA. Free outdoor sessions in parks. Sound healing circles. ALVAI matches your level.</div>
+      </div>
+      <div onclick="engageCard('community','What running clubs and fitness groups are active in New Orleans? I want to join something consistent.','https://www.meetup.com/find/?keywords=fitness&location=us--la--New+Orleans')" style="background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.12);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(34,197,94,.4)'" onmouseout="this.style.borderColor='rgba(34,197,94,.12)'">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:24px">🏃</span><div><div style="font-size:13px;font-weight:700;color:#22c55e">Run Clubs + Fitness</div><div style="font-size:10px;color:#5a6374">Weekly groups, free to join</div></div></div>
+        <div style="font-size:11px;color:#8fa4b0;line-height:1.6">November Project, NOLA Run Club, Crescent City CrossFit community. Social exercise reduces mortality 50%.</div>
+      </div>
+      <div onclick="engageCard('community','Find me recovery support groups and sober social events in New Orleans. AA meetings, recovery community, anything.','https://www.meetup.com/find/?keywords=recovery+sober&location=us--la--New+Orleans')" style="background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.12);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(167,139,250,.4)'" onmouseout="this.style.borderColor='rgba(167,139,250,.12)'">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:24px">💜</span><div><div style="font-size:13px;font-weight:700;color:#a78bfa">Recovery + Sober Social</div><div style="font-size:10px;color:#5a6374">Meetings, communities, support</div></div></div>
+        <div style="font-size:11px;color:#8fa4b0;line-height:1.6">AA, NA, SMART Recovery, sober social events. New Orleans has 200+ weekly meetings. ALVAI knows them.</div>
+      </div>
+      <div onclick="engageCard('community','What nutrition workshops and farmers markets are happening in New Orleans? I want to eat better and learn from local experts.','https://www.eventbrite.com/d/la--new-orleans/nutrition/')" style="background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(201,168,76,.4)'" onmouseout="this.style.borderColor='rgba(201,168,76,.12)'">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:24px">🥗</span><div><div style="font-size:13px;font-weight:700;color:#c9a84c">Nutrition + Markets</div><div style="font-size:10px;color:#5a6374">Farmers markets, workshops</div></div></div>
+        <div style="font-size:11px;color:#8fa4b0;line-height:1.6">Crescent City Farmers Market, Hollygrove Market, nutrition education. Fresh food is the first protocol.</div>
+      </div>
+      <div onclick="engageCard('community','What health education and wellness workshops are happening in New Orleans? Community health events, free screenings, anything.','https://www.eventbrite.com/d/la--new-orleans/health/')" style="background:rgba(251,146,60,.04);border:1px solid rgba(251,146,60,.12);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(251,146,60,.4)'" onmouseout="this.style.borderColor='rgba(251,146,60,.12)'">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:24px">🏥</span><div><div style="font-size:13px;font-weight:700;color:#fb923c">Health + Screenings</div><div style="font-size:10px;color:#5a6374">Free clinics, health fairs</div></div></div>
+        <div style="font-size:11px;color:#8fa4b0;line-height:1.6">Community health events, free screenings, vaccination drives, health education workshops across NOLA.</div>
+      </div>
+      <div onclick="engageCard('community','What live music, second line parades, and cultural healing events are happening in New Orleans this week?','https://www.eventbrite.com/d/la--new-orleans/music-wellness/')" style="background:rgba(255,107,138,.04);border:1px solid rgba(255,107,138,.12);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(255,107,138,.4)'" onmouseout="this.style.borderColor='rgba(255,107,138,.12)'">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:24px">🎺</span><div><div style="font-size:13px;font-weight:700;color:#ff6b8a">Music + Culture</div><div style="font-size:10px;color:#5a6374">Second lines, live music, culture</div></div></div>
+        <div style="font-size:11px;color:#8fa4b0;line-height:1.6">Second line Sundays, brass bands, cultural healing. New Orleans heals through music. ALVAI knows the schedule.</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:12px;font-size:10px;color:rgba(255,255,255,.2)">Every event routes through Alvai first — clinical context before you go.</div>
   </div>
 </div>
 <style>
