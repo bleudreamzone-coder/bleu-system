@@ -9519,6 +9519,27 @@ async function send(tab){
       }
     }
     aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);chatHistories[tab].push({role:'assistant',content:full})
+    // ── AUTO-EMBED: one piece of media tied to intent, already playing ──
+    (function(){
+      var ml=msg.toLowerCase();
+      var embed=null;
+      if(/sleep|insomnia|can't sleep|tired|exhausted|restless/.test(ml))embed={type:'spotify',id:'37i9dQZF1DWZd79rJ6a7lp',label:'Sleep Healing Playlist'};
+      else if(/anxious|anxiety|panic|stress|overwhelm|breathing|calm/.test(ml))embed={type:'youtube',id:'tEmt1Znux58',label:'4-7-8 Breathing Exercise'};
+      else if(/pain|hurt|chronic|inflammation|ache|sore/.test(ml))embed={type:'spotify',id:'37i9dQZF1DX5tplxeuIRsQ',label:'Healing Frequencies'};
+      else if(/sad|depressed|empty|numb|hopeless/.test(ml))embed={type:'spotify',id:'37i9dQZF1DX3Iu6J11lw51',label:'Peaceful Piano'};
+      else if(/energy|fatigue|motivation|drained/.test(ml))embed={type:'spotify',id:'37i9dQZF1DWZeKCadgRdKQ',label:'Morning Energy'};
+      else if(/focus|concentrate|scattered|adhd/.test(ml))embed={type:'spotify',id:'37i9dQZF1DWZeKCadgRdKQ',label:'Deep Focus'};
+      else if(/meditat|mindful|breathe|yoga/.test(ml))embed={type:'youtube',id:'inpok4MKVLM',label:'10-Minute Guided Meditation'};
+      if(embed){
+        var eDiv=document.createElement('div');
+        eDiv.style.cssText='margin-top:12px;border-radius:10px;overflow:hidden;border:1px solid rgba(201,168,76,.15)';
+        eDiv.innerHTML='<div style="font-size:9px;letter-spacing:2px;color:rgba(201,168,76,.5);padding:8px 12px 4px;font-family:monospace">'+embed.label.toUpperCase()+'</div>'
+          +(embed.type==='spotify'
+            ?'<iframe src="https://open.spotify.com/embed/playlist/'+embed.id+'?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay;clipboard-write;encrypted-media;fullscreen;picture-in-picture" loading="lazy" style="border:none;border-radius:0 0 10px 10px"></iframe>'
+            :'<iframe src="https://www.youtube.com/embed/'+embed.id+'?autoplay=1&rel=0" width="100%" height="200" frameBorder="0" allow="autoplay;encrypted-media" allowfullscreen style="border:none;border-radius:0 0 10px 10px"></iframe>');
+        aDiv.appendChild(eDiv);
+      }
+    })();
     const journeyKey=detectJourney(msg,full);
     if(journeyKey){renderJourney(aDiv,journeyKey);}
     else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];
