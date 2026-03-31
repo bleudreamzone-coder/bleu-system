@@ -807,7 +807,8 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(b);
         if (!p.message?.trim()) return json(res, 400, { error: 'Message required' });
         const model = pickModel(p.message, p.mode||'general');
-        const sys = await buildPrompt(p.message, p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety');
+        let sys = await buildPrompt(p.message, p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety');
+        if (p.passport_context) sys = 'PASSPORT CONTEXT: ' + p.passport_context + '. Personalize every response to this specific user\'s city, conditions, and medication profile.\n\n' + sys;
         const messages = [{ role: 'system', content: sys }];
         if (p.history?.length) messages.push(...p.history.slice(-12));
         messages.push({ role: 'user', content: p.message });
@@ -978,6 +979,116 @@ const server = http.createServer((req, res) => {
     })();
     return;
   }
+  // ═══════ YOUTUBE WELLNESS VIDEOS ═══════
+  if (pn === '/api/youtube' && req.method === 'GET') {
+    const condition = url.searchParams.get('condition') || 'sleep';
+    const YT_KEY = process.env.YOUTUBE_API_KEY;
+    const fallbacks = {
+      sleep:['dqT-URKDI04','H_QBZn-V7GI','MIr3RsUWrdo'],
+      anxiety:['O-6f5wTMOyA','aEqlQvczMJQ','inpok4MKVLM'],
+      gut:['FszKuqCDLo0','_TgtNHnF3m4'],
+      energy:['dqT-URKDI04','O-6f5wTMOyA'],
+      pain:['H_QBZn-V7GI','MIr3RsUWrdo'],
+      depression:['O-6f5wTMOyA','inpok4MKVLM'],
+      default:['dqT-URKDI04','O-6f5wTMOyA']
+    };
+    if (!YT_KEY) {
+      const ids = fallbacks[condition] || fallbacks.default;
+      return json(res, 200, { videos: ids.map(id => ({videoId:id,title:condition+' wellness',thumbnail:'https://img.youtube.com/vi/'+id+'/mqdefault.jpg',channelTitle:'BLEU Curated'})), source:'fallback' });
+    }
+    (async () => { try {
+      const r = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(condition+' wellness health')}&type=video&maxResults=6&key=${YT_KEY}`);
+      const d = await r.json();
+      const videos = (d.items||[]).map(i => ({videoId:i.id.videoId,title:i.snippet.title,thumbnail:i.snippet.thumbnails?.medium?.url||'',channelTitle:i.snippet.channelTitle}));
+      json(res, 200, { videos, source:'youtube_api' });
+    } catch(e) {
+      const ids = fallbacks[condition] || fallbacks.default;
+      json(res, 200, { videos: ids.map(id => ({videoId:id,title:condition+' wellness',thumbnail:'https://img.youtube.com/vi/'+id+'/mqdefault.jpg',channelTitle:'BLEU Curated'})), source:'fallback' });
+    } })();
+    return;
+  }
+
+  // ═══════ SPOTIFY PLAYLISTS ══���════
+  if (pn === '/api/spotify' && req.method === 'GET') {
+    const condition = url.searchParams.get('condition') || 'sleep';
+    const SP_ID = process.env.SPOTIFY_CLIENT_ID, SP_SEC = process.env.SPOTIFY_CLIENT_SECRET;
+    const fallbacks = {
+      sleep:'37i9dQZF1DWZd79rJ6a7lp',anxiety:'37i9dQZF1DX3Iu6J11lw51',
+      energy:'37i9dQZF1DWZeKCadgRdKQ',pain:'37i9dQZF1DX5tplxeuIRsQ',
+      focus:'37i9dQZF1DWZeKCadgRdKQ',meditation:'37i9dQZF1DWZqd5JICZI0u',
+      default:'37i9dQZF1DWZd79rJ6a7lp'
+    };
+    if (!SP_ID || !SP_SEC) {
+      const pid = fallbacks[condition] || fallbacks.default;
+      return json(res, 200, { playlists: [{playlistId:pid,name:condition+' wellness',imageUrl:''}], source:'fallback' });
+    }
+    (async () => { try {
+      const tkr = await fetch('https://accounts.spotify.com/api/token', {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded','Authorization':'Basic '+Buffer.from(SP_ID+':'+SP_SEC).toString('base64')},body:'grant_type=client_credentials'});
+      const tk = await tkr.json();
+      const sr = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(condition+' wellness')}&type=playlist&limit=4`,{headers:{'Authorization':'Bearer '+tk.access_token}});
+      const sd = await sr.json();
+      const playlists = (sd.playlists?.items||[]).map(p => ({playlistId:p.id,name:p.name,imageUrl:p.images?.[0]?.url||''}));
+      json(res, 200, { playlists, source:'spotify_api' });
+    } catch(e) {
+      const pid = fallbacks[condition] || fallbacks.default;
+      json(res, 200, { playlists: [{playlistId:pid,name:condition+' wellness',imageUrl:''}], source:'fallback' });
+    } })();
+    return;
+  }
+
+  // ═══════ EVENTBRITE EVENTS ═══════
+  if (pn === '/api/events' && req.method === 'GET') {
+    const city = url.searchParams.get('city') || 'New Orleans';
+    const EB_KEY = process.env.EVENTBRITE_API_KEY;
+    const staticEvents = [
+      {id:'s1',name:'NOLA Yoga in the Park',start:'Saturday 9:00 AM',venue:'City Park',city:'New Orleans',price:'Free',category:'yoga',description:'Free community yoga every Saturday morning'},
+      {id:'s2',name:'Meditation & Sound Bath',start:'Wednesday 7:00 PM',venue:'Healing Center',city:'New Orleans',price:'$15',category:'meditation',description:'Guided meditation and crystal sound bath healing'},
+      {id:'s3',name:'Recovery Community Meetup',start:'Friday 6:00 PM',venue:'Tremé Community Center',city:'New Orleans',price:'Free',category:'recovery',description:'Open recovery support group and sober social'},
+      {id:'s4',name:'Farmers Market Nutrition Walk',start:'Sunday 10:00 AM',venue:'Crescent City Market',city:'New Orleans',price:'Free',category:'nutrition',description:'Guided nutrition walk through the farmers market with a dietitian'}
+    ];
+    if (!EB_KEY) return json(res, 200, { events: staticEvents, source:'static' });
+    (async () => { try {
+      const r = await fetch(`https://www.eventbriteapi.com/v3/events/search/?location.address=${encodeURIComponent(city)}&categories=107&expand=venue&page_size=12&token=${EB_KEY}`);
+      const d = await r.json();
+      const events = (d.events||[]).map(e => ({id:e.id,name:e.name?.text||'',start:e.start?.local||'',venue:e.venue?.name||'',city:e.venue?.address?.city||city,price:e.is_free?'Free':(e.ticket_availability?.minimum_ticket_price?.display||'See event'),category:'wellness',url:e.url,logoUrl:e.logo?.url||''}));
+      json(res, 200, { events: events.length ? events : staticEvents, source: events.length ? 'eventbrite_api' : 'static' });
+    } catch(e) { json(res, 200, { events: staticEvents, source:'static' }); } })();
+    return;
+  }
+
+  // ═══════ YELP WELLNESS BUSINESSES ═══════
+  if (pn === '/api/yelp' && req.method === 'GET') {
+    const term = url.searchParams.get('term') || 'wellness';
+    const city = url.searchParams.get('city') || 'New Orleans';
+    const YELP_KEY = process.env.YELP_API_KEY;
+    if (!YELP_KEY) return json(res, 200, { businesses: [], source:'no_key' });
+    (async () => { try {
+      const r = await fetch(`https://api.yelp.com/v3/businesses/search?term=${encodeURIComponent(term)}&location=${encodeURIComponent(city)}&limit=6&categories=health`,{headers:{'Authorization':'Bearer '+YELP_KEY}});
+      const d = await r.json();
+      const businesses = (d.businesses||[]).map(b => ({name:b.name,rating:b.rating,reviewCount:b.review_count,address:b.location?.address1||'',city:b.location?.city||'',phone:b.phone||'',imageUrl:b.image_url||'',url:b.url||'',categories:(b.categories||[]).map(c=>c.title)}));
+      json(res, 200, { businesses, source:'yelp_api' });
+    } catch(e) { json(res, 200, { businesses: [], source:'error' }); } })();
+    return;
+  }
+
+  // ═══════ PASSPORT PERSONALIZATION ═══════
+  if (pn === '/api/personalize' && req.method === 'POST') {
+    let b=''; req.on('data',c=>b+=c);
+    req.on('end', ()=>{ (async()=>{
+      try {
+        const p = JSON.parse(b);
+        if (!p.user_id || !SUPABASE_URL || !SUPABASE_KEY) return json(res, 200, {city:'New Orleans',conditions:['sleep'],goals:['rest better'],medications:[]});
+        const prof = await querySupabase('profiles', `?id=eq.${p.user_id}&select=city,wellness_goals,medications,conditions`, 1);
+        if (prof && prof.length) {
+          json(res, 200, {city:prof[0].city||'New Orleans',conditions:prof[0].conditions||prof[0].wellness_goals||['sleep'],goals:prof[0].wellness_goals||['rest better'],medications:prof[0].medications||[]});
+        } else {
+          json(res, 200, {city:'New Orleans',conditions:['sleep'],goals:['rest better'],medications:[]});
+        }
+      } catch(e) { json(res, 200, {city:'New Orleans',conditions:['sleep'],goals:['rest better'],medications:[]}); }
+    })(); });
+    return;
+  }
+
   if (pn === '/stripe-webhook' && req.method === 'POST') { handleStripeWebhook(req, res); return; }
 
   if (pn === '/api/stats') return json(res, 200, { version:'4.0', modes: Object.keys(MODE_PROMPTS).length, therapy: Object.keys(THERAPY_MODES).length, recovery: Object.keys(RECOVERY_MODES).length });
