@@ -2897,21 +2897,8 @@ async function vsAsk(){
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+(typeof ANON!=='undefined'?ANON:'')},
       body:JSON.stringify({message:msg,session:typeof getSession==='function'?getSession():'vessel',mode:'vessel',history:[]})
     });
-    var reader=r.body.getReader(),decoder=new TextDecoder(),full='',buffer='';
-    res.innerHTML='';
-    while(true){
-      var chunk=await reader.read();
-      if(chunk.done)break;
-      buffer+=decoder.decode(chunk.value,{stream:true});
-      var lines=buffer.split('\n');buffer=lines.pop()||'';
-      for(var li=0;li<lines.length;li++){
-        var line=lines[li];
-        if(!line.startsWith('data: '))continue;
-        var d=line.slice(6).trim();
-        if(d==='[DONE]')continue;
-        try{var p=JSON.parse(d);if(p.text||p.content){full+=(p.text||p.content);res.innerHTML=(typeof fmt==='function'?fmt(full):full)+'<span class="alvai-cursor"></span>';}}catch(e){}
-      }
-    }
+    var data=await r.json();
+    var full=data.response||data.text||data.reply||data.content||'';
     res.innerHTML=typeof fmt==='function'?fmt(full):full;
     if(typeof detectAndWireProtocol==='function')detectAndWireProtocol(full,res);
   }catch(e){
@@ -9412,32 +9399,15 @@ async function send(tab){
   if(typeof getActiveJourney==='function'){const _aj=getActiveJourney();if(_aj){if(tab==='passport')body.mode=_aj.alvaiMode;body.journey_context='[ACTIVE JOURNEY: '+_aj.name+'] '+_aj.alvaiContext;}}
   try{
     const res=await fetch(ALVAI,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON},body:JSON.stringify(body)})
-    if(true){
-      const reader=res.body.getReader(),decoder=new TextDecoder();let full='',buffer=''
-      aDiv.innerHTML=''
-      while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split('\n');buffer=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const p=JSON.parse(d);if(p.text||p.content){full+=(p.text||p.content);aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}}}
-      aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);chatHistories[tab].push({role:'assistant',content:full})
-      // Rufus 360: detect full journey first, fallback to single products
-      const journeyKey=detectJourney(msg,full);
-      if(journeyKey){renderJourney(aDiv,journeyKey);}
-      else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];
-        const injuryWords=['swollen','knuckle','sprain','fracture','broken','bruise','bruising','fight','got hit','injured','injury','urgent care','emergency room','er ','torn','ligament'];
-        const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));
-        const isInjury=injuryWords.some(w=>(msg+full).toLowerCase().includes(w));
-        if(!isDistress&&!isInjury&&!['therapy','recovery'].includes(tab)){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
-    }else{const data=await res.json();const reply=data.response||data.text||data.reply||data.error||'Try again.';aDiv.innerHTML=fmt(reply);detectAndWireProtocol(reply,aDiv);
-      const journeyKey2=detectJourney(msg,reply);
-      if(journeyKey2){renderJourney(aDiv,journeyKey2);}
-      else{const distressWords2=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];const isDistress2=distressWords2.some(w=>msg.toLowerCase().includes(w));if(!isDistress2){const rufusIds=detectRufusProducts(msg,reply);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
-      chatHistories[tab].push({role:'assistant',content:reply});
-      // Add session feedback to Alvai response
-      if(!['home'].includes(tab)){
-        const fbDiv=document.createElement('div');
-        fbDiv.style.cssText='display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.04)';
-        fbDiv.innerHTML='<span style="font-size:9px;color:#3d4458;letter-spacing:0.15em">HELPFUL?</span><button onclick="submitAlvaiFeedback(1,\''+tab+'\');this.parentElement.innerHTML=\'<span style=\"font-size:10px;color:#22c55e\">✓ Good</span>\'" style="background:none;border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:2px 7px;font-size:11px;cursor:pointer">👍</button><button onclick="submitAlvaiFeedback(-1,\''+tab+'\');this.parentElement.innerHTML=\'<span style=\"font-size:10px;color:#8fa4b0\">✓ Noted</span>\'" style="background:none;border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:2px 7px;font-size:11px;cursor:pointer">👎</button>';
-        aDiv.appendChild(fbDiv);
-      }
-      }
+    const data=await res.json();const full=data.response||data.text||data.reply||data.content||'';
+    aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);chatHistories[tab].push({role:'assistant',content:full})
+    const journeyKey=detectJourney(msg,full);
+    if(journeyKey){renderJourney(aDiv,journeyKey);}
+    else{const distressWords=['crisis','emergency','suicide','hurt myself','end it','want to die','hopeless','worthless'];
+      const injuryWords=['swollen','knuckle','sprain','fracture','broken','bruise','bruising','fight','got hit','injured','injury','urgent care','emergency room','er ','torn','ligament'];
+      const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));
+      const isInjury=injuryWords.some(w=>(msg+full).toLowerCase().includes(w));
+      if(!isDistress&&!isInjury&&!['therapy','recovery'].includes(tab)){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
     if(currentUser){saveConvo(tab,chatHistories[tab]).catch(()=>{});updateBleScore(tab).catch(()=>{})}
   }catch(e){aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again in a moment.</em>'}
   box.scrollTop=box.scrollHeight
@@ -12332,19 +12302,8 @@ window.runSafetyCheck = function() {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({message:msg,mode:'vessel',session:'safety-check'})
-  }).then(function(r){return r.text();}).then(function(text){
-    // Parse SSE or JSON
-    var full='';
-    if(text.includes('data: ')){
-      text.split('\n').forEach(function(line){
-        if(!line.startsWith('data: '))return;
-        var d=line.slice(6).trim();
-        if(d==='[DONE]')return;
-        try{var p=JSON.parse(d);if(p.text||p.content)full+=(p.text||p.content);}catch(e){}
-      });
-    } else {
-      try{var j=JSON.parse(text);full=j.response||j.text||j.content||text;}catch(e){full=text;}
-    }
+  }).then(function(r){return r.json();}).then(function(data){
+    var full=data.response||data.text||data.reply||data.content||'';
 
     var res = document.getElementById('safety-result');
     var hasCaution = full.toLowerCase().includes('caution');
