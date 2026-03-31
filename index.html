@@ -7951,8 +7951,8 @@ function buildStack()  {
   const prompt = `Build me a personalized supplement stack for: ${goal}. My current medications: ${meds}. Include: specific product recommendations with Thorne, Fullscript, or Charlotte\'s Web links, exact dosing schedule, any interaction warnings, estimated monthly cost, and what to expect in weeks 1-4.`;
   go('vessel');
   setTimeout(() => {
-    const inp = document.getElementById('in-vessel');
-    if (inp) { inp.value = prompt; send('vessel'); }
+    const inp = document.getElementById('vessel-chat-input');
+    if (inp) { inp.value = prompt; vsAsk(); }
   }, 100);
 }
 
@@ -9397,7 +9397,10 @@ async function send(tab){
     user_state:JSON.stringify(_userState),
     orchestration:JSON.stringify(_orchestration)
   };
-  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-8),mode:tab==='home'?'alvai':['therapy','recovery','finance','ecsiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai'].includes(tab)?tab:'general',user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null,
+  var _modeMap={home:'alvai',ecsiq:'cannaiq',sleep:'vessel',spirit:'community',enterprise:'general'};
+  var _knownModes=['therapy','recovery','finance','cannaiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai','general'];
+  var _sendMode=_modeMap[tab]||((_knownModes.indexOf(tab)>-1)?tab:'general');
+  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-8),mode:_sendMode,user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null,
       journey_context:(()=>{
         const cm=["lets go","book it","give me everything","all of it","total plan","put it together","im ready","lets do this","sign me up","i want all","give me all","transform me","time travel","years back","take me back","total system","full plan","assemble all","all resources"];
         const isCommit=cm.some(w=>msg.toLowerCase().includes(w));
