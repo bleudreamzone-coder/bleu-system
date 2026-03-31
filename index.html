@@ -2882,12 +2882,41 @@ function vsSetName(){
   if(el && name) el.innerHTML = 'Hello, <strong>'+name+'</strong> 👋';
 }
 setTimeout(vsSetName, 500);
-function vsAsk(){
+async function vsAsk(){
   var input=document.getElementById('vessel-chat-input');
   var msg=input?input.value.trim():'';
   if(!msg)return;
   input.value='';
-  if(typeof ask==='function')ask(msg);
+  var res=document.getElementById('vs-alvai-response');
+  if(!res)return;
+  res.style.display='block';
+  res.innerHTML='<span class="alvai-cursor"></span>';
+  try{
+    var r=await fetch(ALVAI||'https://bleu-system.onrender.com/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+(typeof ANON!=='undefined'?ANON:'')},
+      body:JSON.stringify({message:msg,session:typeof getSession==='function'?getSession():'vessel',mode:'vessel',history:[]})
+    });
+    var reader=r.body.getReader(),decoder=new TextDecoder(),full='',buffer='';
+    res.innerHTML='';
+    while(true){
+      var chunk=await reader.read();
+      if(chunk.done)break;
+      buffer+=decoder.decode(chunk.value,{stream:true});
+      var lines=buffer.split('\n');buffer=lines.pop()||'';
+      for(var li=0;li<lines.length;li++){
+        var line=lines[li];
+        if(!line.startsWith('data: '))continue;
+        var d=line.slice(6).trim();
+        if(d==='[DONE]')continue;
+        try{var p=JSON.parse(d);if(p.text||p.content){full+=(p.text||p.content);res.innerHTML=(typeof fmt==='function'?fmt(full):full)+'<span class="alvai-cursor"></span>';}}catch(e){}
+      }
+    }
+    res.innerHTML=typeof fmt==='function'?fmt(full):full;
+    if(typeof detectAndWireProtocol==='function')detectAndWireProtocol(full,res);
+  }catch(e){
+    res.innerHTML='Connection issue — try again in a moment. If you need help now: call 988 or text HOME to 741741.';
+  }
 }
 window.vesselAsk=vsAsk;
 </script>
