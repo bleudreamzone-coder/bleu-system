@@ -1089,4 +1089,5 @@ server.listen(PORT, () => {
   console.log(`  Modes: ${Object.keys(MODE_PROMPTS).length} tabs | ${Object.keys(THERAPY_MODES).length} therapy | ${Object.keys(RECOVERY_MODES).length} recovery`);
   console.log(`  Supabase: ${!!(SUPABASE_URL&&SUPABASE_KEY)?'CONNECTED':'NOT CONFIGURED'}`);
   console.log(`  Key: ${!!OPENAI_KEY?'LOADED':'MISSING'}`);
+  console.log(`  Stripe: ${(STRIPE_SECRET&&STRIPE_WEBHOOK_SECRET)?'configured':'missing keys — payments will not unlock protocols'}`);
 });
