@@ -828,6 +828,15 @@ const server = http.createServer((req, res) => {
         }
         res.write('data: [DONE]\n\n');
         res.end();
+        // Write conversation memory (fire and forget)
+        if (SUPABASE_URL && SUPABASE_KEY && full) {
+          const ts = new Date().toISOString();
+          const sid = p.session || 'anonymous';
+          const uid = p.user_id || null;
+          const m = p.mode || 'general';
+          querySupabase('conversation_memory', '', 0, 'POST', { user_id: uid, session_id: sid, role: 'user', content: p.message, mode: m, created_at: ts }).catch(()=>{});
+          querySupabase('conversation_memory', '', 0, 'POST', { user_id: uid, session_id: sid, role: 'assistant', content: full.substring(0, 4000), mode: m, created_at: ts }).catch(()=>{});
+        }
       } catch (e) { console.error('Chat:', e.message); json(res, 500, { error: e.message }); }
     })(); });
     return;
