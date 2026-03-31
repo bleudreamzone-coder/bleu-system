@@ -828,8 +828,24 @@ const server = http.createServer((req, res) => {
         }
         res.write('data: [DONE]\n\n');
         res.end();
-        // Write conversation memory (fire and forget)
+        // Write conversation memory + CI record (fire and forget)
         if (SUPABASE_URL && SUPABASE_KEY && full) {
+          // CI scoring — Identity Stability Index research pipeline
+          const ml = p.message.toLowerCase();
+          let bc = 0.5, ic = 0.6, nc = 0.5, sc = 0.5;
+          if (/sleep|nutrition|exercise|walking|running|yoga|meditat/i.test(ml)) bc += 0.1;
+          if (/pain|illness|sick|disease|chronic|hurt|injury/i.test(ml)) bc -= 0.1;
+          if (/i feel|i notice|i sense/i.test(ml)) ic += 0.1;
+          if (/i am (broken|worthless|hopeless|nothing|stupid|failure)/i.test(ml)) ic -= 0.1;
+          if (/what can i|how do i|i want to|plan|goal|next step|future/i.test(ml)) nc += 0.1;
+          if (/nothing works|too late|can't|give up|no point|hopeless/i.test(ml)) nc -= 0.1;
+          const ci = ((bc + ic + nc + sc) / 4).toFixed(3);
+          querySupabase('user_coherence', '', 0, 'POST', {
+            user_id: p.user_id || null, session_id: p.session || 'anonymous',
+            bc_score: Math.max(0, Math.min(1, bc)), ic_score: Math.max(0, Math.min(1, ic)),
+            nc_score: Math.max(0, Math.min(1, nc)), sc_score: Math.max(0, Math.min(1, sc)),
+            ci_composite: parseFloat(ci), mode: p.mode || 'general', created_at: new Date().toISOString()
+          }).catch(()=>{});
           const ts = new Date().toISOString();
           const sid = p.session || 'anonymous';
           const uid = p.user_id || null;
