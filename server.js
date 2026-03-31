@@ -806,9 +806,21 @@ const server = http.createServer((req, res) => {
       try {
         const p = JSON.parse(b);
         if (!p.message?.trim()) return json(res, 400, { error: 'Message required' });
+        function buildOpeningLine(message) {
+          const m = message.toLowerCase();
+          if(/sleep|insomnia|can't sleep|tired|exhausted/.test(m)) return "Your system is wired right now. Not broken — just stuck.";
+          if(/anxious|anxiety|panic|stress|overwhelm|worry/.test(m)) return "Your mind is running ahead of you. Let's slow it down.";
+          if(/pain|hurt|chronic|inflammation|ache/.test(m)) return "Your body is signaling, not failing. Let's listen to it.";
+          if(/sad|depressed|empty|numb|hopeless/.test(m)) return "I hear you. Stay with me for a minute.";
+          if(/lost|confused|don't know|overwhelmed/.test(m)) return "Too much noise. Let's simplify this.";
+          if(/money|finances|debt|afford/.test(m)) return "Financial stress hits the body the same as physical pain. Let's address both.";
+          return null;
+        }
         const model = pickModel(p.message, p.mode||'general');
         let sys = await buildPrompt(p.message, p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety');
         if (p.passport_context) sys = 'PASSPORT CONTEXT: ' + p.passport_context + '. Personalize every response to this specific user\'s city, conditions, and medication profile.\n\n' + sys;
+        const opening = buildOpeningLine(p.message);
+        if (opening) sys += '\n\nFIRST LINE ALREADY WRITTEN — start your response with exactly this, then continue naturally without repeating it:\n"' + opening + '"';
         const messages = [{ role: 'system', content: sys }];
         if (p.history?.length) messages.push(...p.history.slice(-12));
         messages.push({ role: 'user', content: p.message });
