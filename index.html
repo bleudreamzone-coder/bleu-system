@@ -769,7 +769,7 @@ button[type="submit"],
 @keyframes hBlink{50%{border-color:transparent}}
 </style>
 
-<script>window.BLEU_CONFIG={ALVAI_URL:"https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai",SUPABASE_URL:"https://sqyzboesdpdussiwqpzk.supabase.co",SUPABASE_ANON:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw"};</script>
+<script>window.BLEU_CONFIG={ALVAI_URL:"https://bleu-system.onrender.com/api/chat",SUPABASE_URL:"https://sqyzboesdpdussiwqpzk.supabase.co",SUPABASE_ANON:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw"};</script>
 <script defer data-domain="bleu.live" src="https://plausible.io/js/script.js"></script>
 <style id="alvai-readability-fix">
 .alvai-msg-bubble,.msg.ai,.bub.ai,[class*="alvai"] [class*="bubble"]{font-size:15px!important;line-height:1.85!important;letter-spacing:0.01em!important;max-width:92%!important;padding:18px 22px!important}
@@ -6647,7 +6647,7 @@ function getDepthLevel(score){
 }
 async function updateBleScore(tab){if(!sbClient||!currentUser)return;try{const{data:p}=await sbClient.from('profiles').select('bleu_score,conversations_count').eq('id',currentUser.id).single();const delta=_TAB_SCORE_WEIGHT[tab]||2;const newScore=Math.min(100,(p?.bleu_score||0)+delta);const newCount=(p?.conversations_count||0)+1;await sbClient.from('profiles').update({bleu_score:newScore,conversations_count:newCount,updated_at:new Date().toISOString()}).eq('id',currentUser.id);_passportCache=null;const el=document.getElementById('stat-score');if(el)el.textContent=newScore;const el2=document.getElementById('stat-convos');if(el2)el2.textContent=newCount}catch(e){}}
 
-const ALVAI='https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai'
+const ALVAI='https://bleu-system.onrender.com/api/chat'
 const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw'
 const tabs=['home','alvai','dashboard','directory','vessel','map','protocols','learn','community','passport','therapy','finance','missions','recovery','ecsiq','sleep','enterprise','spirit','why','terms','privacy']
 const chatHistories={},chatModes={therapy:'talk',recovery:'sobriety'}
@@ -12351,7 +12351,7 @@ async function startVoice(tab) {
         const inp = document.getElementById('in-' + tab);
         if (inp) inp.value = '🎤 Transcribing...';
         try {
-          const ALVAI_URL = typeof supabaseUrl !== 'undefined' ? supabaseUrl.replace('supabase.co','supabase.co/functions/v1/alvai') : 'https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai';
+          const ALVAI_URL = typeof supabaseUrl !== 'undefined' ? supabaseUrl.replace('supabase.co','supabase.co/functions/v1/alvai') : 'https://bleu-system.onrender.com/api/chat';
           const r = await fetch(ALVAI_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'apikey': typeof supabaseKey !== 'undefined' ? supabaseKey : '' },
@@ -12385,7 +12385,7 @@ async function uploadImage(event, tab) {
     const b64 = reader.result.split(',')[1];
     const userContext = typeof currentUser !== 'undefined' && currentUser ? JSON.stringify({ user_id: currentUser.id }) : '';
     try {
-      const ALVAI_URL = 'https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai';
+      const ALVAI_URL = 'https://bleu-system.onrender.com/api/chat';
       const r = await fetch(ALVAI_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': typeof supabaseKey !== 'undefined' ? supabaseKey : '' },
