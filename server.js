@@ -806,27 +806,60 @@ const server = http.createServer((req, res) => {
       try {
         const p = JSON.parse(b);
         if (!p.message?.trim()) return json(res, 400, { error: 'Message required' });
-        function buildOpeningLine(message) {
+
+        // ── GREETING CACHE — instant response, zero API calls ──
+        const GREET_CACHE = {
+          'hello':["You found us. What's going on right now?","I'm here. What brought you in tonight?","Hey. Talk to me."],
+          'hi':["Hi. What do you need right now?","Hey — tell me what's happening.","Hi. Start wherever you are."],
+          'hey':["Hey. I'm here. What's going on?","Hey — come on in. What do you need?","Hey. Talk to me."],
+          'help':["I'm here. What's the main thing hitting you right now?","Okay. Start with the hardest part.","Tell me what you're dealing with."],
+          'help me':["I got you. What's happening?","Tell me what you're dealing with.","I'm here. What do you need help with first?"],
+          'i need help':["I'm here. What's the main thing right now?","Okay. Start with the hardest part.","Tell me what's happening."],
+          'start':["Good. Tell me what's going on.","Let's go. What do you need?","I'm ready. What's happening?"],
+          'what is bleu':["BLEU listens for what your system needs and assembles the next right move.","BLEU helps you notice what's happening, understand it fast, and take the next step.","BLEU is your health decision layer — it figures out what matters and what to do next."],
+          'what can you do':["I listen. I search 855,000 practitioners. I check your medications. I find what you need tonight.","Tell me what you need and I'll show you. That's faster than a list.","Everything from supplements to therapy to finding the right doctor near you. Start with what hurts."]
+        };
+        const greetKey = p.message.toLowerCase().trim();
+        if (GREET_CACHE[greetKey] && (p.mode==='general'||p.mode==='alvai'||!p.mode)) {
+          const variants = GREET_CACHE[greetKey];
+          const reply = variants[Math.floor(Date.now()/60000) % variants.length];
+          res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-cache','Connection':'keep-alive','Access-Control-Allow-Origin':'*'});
+          res.write('data: '+JSON.stringify({text:reply})+'\n\n');
+          res.write('data: [DONE]\n\n');
+          res.end();
+          return;
+        }
+
+        // ── OPENING LINE INJECTION — Diamond Framework SEE step ──
+        function detectOpening(message) {
           const m = message.toLowerCase();
-          if(/sleep|insomnia|can't sleep|tired|exhausted/.test(m)) return "Your system is wired right now. Not broken — just stuck.";
-          if(/anxious|anxiety|panic|stress|overwhelm|worry/.test(m)) return "Your mind is running ahead of you. Let's slow it down.";
-          if(/pain|hurt|chronic|inflammation|ache/.test(m)) return "Your body is signaling, not failing. Let's listen to it.";
-          if(/sad|depressed|empty|numb|hopeless/.test(m)) return "I hear you. Stay with me for a minute.";
-          if(/lost|confused|don't know|overwhelmed/.test(m)) return "Too much noise. Let's simplify this.";
-          if(/money|finances|debt|afford/.test(m)) return "Financial stress hits the body the same as physical pain. Let's address both.";
+          if(/sleep|insomnia|can't sleep|tired|exhausted|restless/.test(m)) return "Your system is wired right now. Not broken — just stuck.";
+          if(/anxious|anxiety|panic|stress|overwhelm|racing mind|worry/.test(m)) return "Your mind is running ahead of your body. Let's slow it down.";
+          if(/pain|hurt|chronic|inflammation|ache|sore/.test(m)) return "Your body is signaling, not failing. Let's listen to it.";
+          if(/sad|depressed|empty|numb|hopeless|crying/.test(m)) return "I hear you. Stay with me for a minute.";
+          if(/focus|can't concentrate|scattered|adhd|distracted/.test(m)) return "Too much signal open right now. Let's simplify.";
+          if(/energy|no motivation|drained|fatigue/.test(m)) return "Your system is depleted. Let's build it back.";
+          if(/money|finances|debt|afford|bills/.test(m)) return "Financial stress hits the body the same as physical pain. Let's address both.";
+          if(/recovery|sober|drinking|drugs|addiction|relapse/.test(m)) return "You're still here. That matters. Let's take this one step.";
           return null;
         }
-        const model = pickModel(p.message, p.mode||'general');
-        let sys = await buildPrompt(p.message, p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety');
+
+        // ── TOKEN CAPS by mode ──
+        const mode = p.mode||'general';
+        const TOKEN_CAPS = {general:600,community:600,learn:600,spirit:600,map:600,therapy:1000,recovery:1000,vessel:800,protocols:800,cannaiq:800,finance:800,dashboard:600,alvai:600,directory:600,missions:600,passport:600};
+        const maxTokens = TOKEN_CAPS[mode] || 800;
+
+        const model = pickModel(p.message, mode);
+        let sys = await buildPrompt(p.message, mode, p.therapy_mode||'talk', p.recovery_mode||'sobriety');
         if (p.passport_context) sys = 'PASSPORT CONTEXT: ' + p.passport_context + '. Personalize every response to this specific user\'s city, conditions, and medication profile.\n\n' + sys;
-        const opening = buildOpeningLine(p.message);
-        if (opening) sys += '\n\nFIRST LINE ALREADY WRITTEN — start your response with exactly this, then continue naturally without repeating it:\n"' + opening + '"';
+        const opening = detectOpening(p.message);
+        if (opening) sys += '\n\nFIRST LINE LOCKED — begin your response with exactly this sentence, then continue naturally without repeating it:\n"' + opening + '"\n\nDo not rephrase it. Do not add a preamble. Start with it and move forward.';
         const messages = [{ role: 'system', content: sys }];
         if (p.history?.length) messages.push(...p.history.slice(-12));
         messages.push({ role: 'user', content: p.message });
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model, messages, max_completion_tokens: model === 'gpt-5' ? 4000 : 2000, temperature: 1, stream: true })
+          body: JSON.stringify({ model, messages, max_completion_tokens: maxTokens, temperature: 1, stream: true })
         });
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '', full = '';
@@ -1207,6 +1240,8 @@ function handleStripeWebhook(req, res) {
 }
 
 const PORT = process.env.PORT || 8080;
+server.keepAliveTimeout = 65000;
+server.headersTimeout = 66000;
 server.listen(PORT, () => {
   console.log(`✦ ALVAI v4.0 — THE TOTAL OVERHAUL — port ${PORT}`);
   console.log(`  Modes: ${Object.keys(MODE_PROMPTS).length} tabs | ${Object.keys(THERAPY_MODES).length} therapy | ${Object.keys(RECOVERY_MODES).length} recovery`);
