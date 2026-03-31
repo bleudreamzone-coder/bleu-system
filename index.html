@@ -57,24 +57,44 @@ function _vShow(id){
   s+='<button onclick="var d=document.getElementById(\"vd\");if(d)d.remove();" style="background:none;border:none;color:#5a6f87;font-size:18px;cursor:pointer">x</button></div>';
   s+='<p style="font-size:11px;color:#5a6f87;margin-bottom:12px">Three vetted brands. Same clinical standard. Pick what fits your budget.</p>';
   p.c.forEach(function(c){
-    s+='<div style="background:#0c0f16;border:1px solid #1a2030;border-radius:6px;padding:14px;margin-bottom:10px">';
+    var imgUrl='https://images-na.ssl-images-amazon.com/images/P/'+c[4]+'.01._SX300_.jpg';
+    s+='<div style="background:#0c0f16;border:1px solid #1a2030;border-radius:6px;padding:14px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start">';
+    s+='<div style="min-width:72px;width:72px;height:72px;border-radius:6px;overflow:hidden;background:#111520;display:flex;align-items:center;justify-content:center;flex-shrink:0">';
+    s+='<img src="'+imgUrl+'" alt="'+c[1]+'" style="width:100%;height:100%;object-fit:contain" onerror="this.outerHTML=\'<div style=padding:8px;text-align:center><div style=color:#c9a84c;font-size:10px;font-weight:700;line-height:1.3>'+c[1].replace(/'/g,'&#39;')+'</div></div>\'">';
+    s+='</div><div style="flex:1;min-width:0">';
     s+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">';
     s+='<span style="font-family:monospace;font-size:9px;font-weight:700;letter-spacing:1px;color:'+mc[c[0]]+'">'+c[0]+'</span>';
     s+='<span style="font-size:12px;font-weight:700;color:#e2e8f0">'+c[1]+'</span></div>';
     s+='<p style="font-size:11px;color:#5a6f87;line-height:1.6;margin-bottom:8px">'+c[2]+'</p>';
-    s+='<div style="display:flex;align-items:center;justify-content:space-between">';
+    s+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
     s+='<span style="font-size:12px;color:#c9a84c;font-weight:700">'+c[3]+'</span>';
-    s+='<a href="https://www.amazon.com/dp/'+c[4]+'?tag=bleu-live-20" target="_blank"';
+    s+='<button data-pid="'+id+'" data-brand="'+c[1]+'" data-asin="'+c[4]+'" class="vd-cart-btn" style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e;padding:5px 12px;border-radius:3px;font-size:10px;font-weight:700;cursor:pointer">+ Add to Cart</button>';
+    s+='<a href="https://www.amazon.com/dp/'+c[4]+'?tag=bleulive-20" target="_blank"';
     s+=' data-pid="'+id+'" data-brand="'+c[1]+'" data-asin="'+c[4]+'"';
     s+=' class="vd-buy-btn"';
-    s+=' style="background:#c9a84c;color:#000;padding:6px 14px;border-radius:3px;font-size:11px;font-weight:700;text-decoration:none">Buy Amazon</a>';
-    s+='</div></div>';
+    s+=' style="background:#c9a84c;color:#000;padding:5px 12px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none">Buy Amazon</a>';
+    s+='</div></div></div>';
   });
   s+='</div>';
   var card=document.getElementById("proto-"+id);
   if(card){card.insertAdjacentHTML("afterend",s);}
-  // Wire buy buttons via event delegation
+  // Wire buy + cart buttons via event delegation
   document.getElementById("vd").addEventListener("click",function(e){
+    var cartBtn=e.target.closest(".vd-cart-btn");
+    if(cartBtn){
+      var as=cartBtn.dataset.asin,br=cartBtn.dataset.brand,pid=cartBtn.dataset.pid;
+      // Map ASIN to PRODUCT_MASTER key or create dynamic entry
+      var pmKey=null;
+      if(typeof PRODUCT_MASTER!=='undefined'){
+        for(var k in PRODUCT_MASTER){if(PRODUCT_MASTER[k].asin===as){pmKey=k;break;}}
+        if(!pmKey){pmKey='vp-'+as;PRODUCT_MASTER[pmKey]={name:br,dose:'',price:parseInt(((_vp[pid]||{}).c||[]).find(function(c){return c[4]===as;})?.[3]?.replace(/[^0-9]/g,'')||'0'),asin:as,emoji:'💊'};}
+      }
+      if(pmKey&&typeof addToCart==='function')addToCart(pmKey);
+      cartBtn.textContent='✓ In Cart';cartBtn.style.background='rgba(34,197,94,.25)';cartBtn.style.borderColor='#22c55e';
+      var m=document.getElementById("vessel-alvai-msg");
+      if(m)m.innerHTML="<strong>Added to your stack.</strong><br><br>"+br+": "+(_vp[pid]||{c:[]}).c.find(function(c){return c[4]===as;})?.[2]||''+"<br><br><em>Keep building or open your cart to check out.</em>";
+      return;
+    }
     var btn=e.target.closest(".vd-buy-btn");
     if(!btn)return;
     var pid=btn.dataset.pid,br=btn.dataset.brand,as=btn.dataset.asin;
@@ -103,7 +123,7 @@ function _vUpd(){
   }
   el.innerHTML=_vc.map(function(x){
     return '<div class="product-card"><div class="prod-info"><div class="prod-name">'+x.name+'</div><div class="prod-brand">'+x.brand+'</div></div>'+
-    '<div class="prod-actions"><a href="https://www.amazon.com/dp/'+x.asin+'?tag=bleu-live-20" target="_blank" class="prod-buy">Buy Amazon</a>'+
+    '<div class="prod-actions"><a href="https://www.amazon.com/dp/'+x.asin+'?tag=bleulive-20" target="_blank" class="prod-buy">Buy Amazon</a>'+
     '<button class="prod-remove" data-xid="'+x.id+'" onclick="_vDel(this.dataset.xid)">remove</button></div></div>';
   }).join("");
   if(su)su.style.display="block";
@@ -2606,7 +2626,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
   <div class="vs-grid">
 
     <div class="vs-card" data-cat="groc" data-name="salmon protein omega inflammation">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images-na.ssl-images-amazon.com/images/P/B0CB984SHQ.01._SX300_.jpg" style="width:100%;height:160px;object-fit:cover" alt="Wild Salmon" onerror="this.parentElement.innerHTML='🐟'"></div>
+      <div class="vs-card-img" style="background:#080b12;display:flex;align-items:center;justify-content:center;font-size:64px;height:160px">🐟</div>
       <div class="vs-card-body">
         <div class="vs-walmart">✓ Walmart+ Delivery</div>
         <div class="vs-card-brand">Wild-Caught · Fresh</div>
@@ -2619,7 +2639,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     </div>
 
     <div class="vs-card" data-cat="groc" data-name="blueberries brain antioxidant">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images-na.ssl-images-amazon.com/images/P/B00GQV9YX6.01._SX300_.jpg" style="width:100%;height:160px;object-fit:cover" alt="Wild Blueberries" onerror="this.parentElement.innerHTML='🫐'"></div>
+      <div class="vs-card-img" style="background:#080b12;display:flex;align-items:center;justify-content:center;font-size:64px;height:160px">🫐</div>
       <div class="vs-card-body">
         <div class="vs-walmart">✓ Walmart+ Delivery</div>
         <div class="vs-card-brand">Organic · Frozen</div>
@@ -2632,7 +2652,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     </div>
 
     <div class="vs-card" data-cat="groc" data-name="avocado healthy fat d3 absorption">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images-na.ssl-images-amazon.com/images/P/B01HQPYHDC.01._SX300_.jpg" style="width:100%;height:160px;object-fit:cover" alt="Organic Avocados" onerror="this.parentElement.innerHTML='🥑'"></div>
+      <div class="vs-card-img" style="background:#080b12;display:flex;align-items:center;justify-content:center;font-size:64px;height:160px">🥑</div>
       <div class="vs-card-body">
         <div class="vs-walmart">✓ Walmart+ Delivery</div>
         <div class="vs-card-brand">Organic · Fresh</div>
@@ -2645,7 +2665,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     </div>
 
     <div class="vs-card" data-cat="groc" data-name="walnuts omega brain gut microbiome">
-      <div class="vs-card-img" style="background:#080b12;padding:0"><img src="https://images-na.ssl-images-amazon.com/images/P/B01D7YKVWQ.01._SX300_.jpg" style="width:100%;height:160px;object-fit:cover" alt="Raw Walnuts" onerror="this.parentElement.innerHTML='🌰'"></div>
+      <div class="vs-card-img" style="background:#080b12;display:flex;align-items:center;justify-content:center;font-size:64px;height:160px">🌰</div>
       <div class="vs-card-body">
         <div class="vs-walmart">✓ Walmart+ Delivery</div>
         <div class="vs-card-brand">Raw · Unsalted</div>
@@ -2836,8 +2856,8 @@ function vsUpdateCart(){
 function vsCheckout(){
   var asins=_vc.filter(function(i){return i.asin;}).map(function(i){return i.asin;});
   if(!asins.length)return;
-  if(asins.length===1){window.open('https://www.amazon.com/dp/'+asins[0]+'?tag=bleu-live-20','_blank');return;}
-  var url='https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleu-live-20';
+  if(asins.length===1){window.open('https://www.amazon.com/dp/'+asins[0]+'?tag=bleulive-20','_blank');return;}
+  var url='https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleulive-20';
   asins.forEach(function(a,i){url+='&ASIN.'+(i+1)+'='+a+'&Quantity.'+(i+1)+'=1';});
   window.open(url,'_blank');
 }
@@ -12165,16 +12185,116 @@ window.checkoutAmazon = function() {
   var items = getCart();
   var asins = items.map(function(id){return PRODUCT_MASTER[id]&&PRODUCT_MASTER[id].asin;}).filter(Boolean);
   if(!asins.length) {alert('No Amazon products in your stack yet.'); return;}
-  
-  // Build multi-ASIN Amazon cart URL
-  var url = 'https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleu-live-20';
-  asins.forEach(function(asin,i){
-    url += '&ASIN.'+(i+1)+'='+asin+'&Qty.'+(i+1)+'=1';
+
+  // Show ALVAI safety check modal first
+  var names = items.map(function(id){return PRODUCT_MASTER[id]?PRODUCT_MASTER[id].name:'';}).filter(Boolean);
+  showSafetyCheck(asins, names, items);
+};
+
+function showSafetyCheck(asins, names, items) {
+  var existing = document.getElementById('alvai-safety-modal');
+  if(existing) existing.remove();
+
+  var modal = document.createElement('div');
+  modal.id = 'alvai-safety-modal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML = '<div style="background:#0d1520;border:1px solid rgba(201,168,76,.3);border-radius:16px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;padding:28px">'
+    +'<div style="font-size:9px;letter-spacing:3px;color:rgba(201,168,76,.7);margin-bottom:4px">ALVAI SAFETY CHECK</div>'
+    +'<div style="font-size:16px;font-weight:700;color:#e2e8f0;margin-bottom:16px">Before you check out</div>'
+    +'<div style="font-size:12px;color:#8fa4b0;line-height:1.6;margin-bottom:16px">Your stack: <strong style="color:#e2e8f0">'+names.join(', ')+'</strong></div>'
+    +'<div style="font-size:12px;color:#8fa4b0;margin-bottom:8px">Are you currently taking any medications?</div>'
+    +'<input id="safety-meds-input" placeholder="e.g. metformin, lisinopril, lexapro (or type none)" style="width:100%;padding:12px;background:#111820;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#e2e8f0;font-size:13px;margin-bottom:12px;box-sizing:border-box" />'
+    +'<div id="safety-result" style="display:none;margin-bottom:16px;padding:14px;border-radius:10px;font-size:12px;line-height:1.7;color:#e2e8f0"></div>'
+    +'<div style="display:flex;gap:10px">'
+    +'<button id="safety-check-btn" onclick="runSafetyCheck()" style="flex:1;padding:12px;background:linear-gradient(135deg,#c9a84c,#b8943c);border:none;border-radius:10px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer">Check Interactions</button>'
+    +'<button id="safety-skip-btn" onclick="proceedToAmazon()" style="flex:1;padding:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:rgba(255,255,255,.4);font-size:12px;cursor:pointer">No meds — proceed</button>'
+    +'</div>'
+    +'<button onclick="document.getElementById(\'alvai-safety-modal\').remove()" style="width:100%;margin-top:10px;padding:8px;background:none;border:none;color:rgba(255,255,255,.25);font-size:11px;cursor:pointer">Cancel</button>'
+    +'</div>';
+  document.body.appendChild(modal);
+  modal.addEventListener('click',function(e){if(e.target===modal)modal.remove();});
+
+  // Store for later use
+  window._safetyAsins = asins;
+  window._safetyItems = items;
+  window._safetyNames = names;
+}
+
+window.runSafetyCheck = function() {
+  var meds = document.getElementById('safety-meds-input').value.trim();
+  if(!meds) return;
+  if(meds.toLowerCase()==='none'||meds.toLowerCase()==='no'){proceedToAmazon();return;}
+
+  var btn = document.getElementById('safety-check-btn');
+  btn.textContent = 'Checking...';
+  btn.disabled = true;
+
+  var supplements = window._safetyNames.join(', ');
+  var msg = 'SAFETY CHECK ONLY. User takes: '+meds+'. They want to buy: '+supplements+'. For each supplement, respond with CLEAR, MONITOR, or CAUTION and a one-line reason. Be specific about CYP450 pathways. Keep it concise.';
+
+  fetch('https://bleu-system.onrender.com/api/chat',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({message:msg,mode:'vessel',session:'safety-check'})
+  }).then(function(r){return r.text();}).then(function(text){
+    // Parse SSE or JSON
+    var full='';
+    if(text.includes('data: ')){
+      text.split('\n').forEach(function(line){
+        if(!line.startsWith('data: '))return;
+        var d=line.slice(6).trim();
+        if(d==='[DONE]')return;
+        try{var p=JSON.parse(d);if(p.text||p.content)full+=(p.text||p.content);}catch(e){}
+      });
+    } else {
+      try{var j=JSON.parse(text);full=j.response||j.text||j.content||text;}catch(e){full=text;}
+    }
+
+    var res = document.getElementById('safety-result');
+    var hasCaution = full.toLowerCase().includes('caution');
+    res.style.display = 'block';
+    res.style.background = hasCaution ? 'rgba(239,68,68,.1)' : 'rgba(34,197,94,.1)';
+    res.style.border = '1px solid '+(hasCaution?'rgba(239,68,68,.3)':'rgba(34,197,94,.3)');
+    res.innerHTML = (typeof fmt==='function'?fmt(full):full.replace(/\n/g,'<br>'));
+
+    btn.textContent = 'Check Again';
+    btn.disabled = false;
+
+    var skipBtn = document.getElementById('safety-skip-btn');
+    if(skipBtn){
+      skipBtn.textContent = hasCaution ? 'Proceed with caution →' : 'All clear — checkout →';
+      skipBtn.style.background = hasCaution ? 'rgba(239,68,68,.08)' : 'rgba(34,197,94,.12)';
+      skipBtn.style.borderColor = hasCaution ? 'rgba(239,68,68,.3)' : 'rgba(34,197,94,.3)';
+      skipBtn.style.color = hasCaution ? '#ef4444' : '#22c55e';
+    }
+  }).catch(function(){
+    btn.textContent = 'Check Interactions';
+    btn.disabled = false;
+    proceedToAmazon();
   });
-  
+};
+
+window.proceedToAmazon = function() {
+  var asins = window._safetyAsins || [];
+  var items = window._safetyItems || [];
+  if(!asins.length) return;
+
+  var url;
+  if(asins.length === 1) {
+    url = 'https://www.amazon.com/dp/'+asins[0]+'?tag=bleulive-20';
+  } else {
+    url = 'https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleulive-20';
+    asins.forEach(function(asin,i){
+      url += '&ASIN.'+(i+1)+'='+asin+'&Qty.'+(i+1)+'=1';
+    });
+  }
+
   if(typeof bleuSignal==='function') bleuSignal('cart_checkout_amazon',{items:items.length,asins:asins.length,total:calcTotal(items)});
   if(typeof recordAffiliateTransaction==='function') recordAffiliateTransaction('amazon-cart','Amazon Stack Checkout','cart_checkout',{items:asins});
-  
+
+  var modal = document.getElementById('alvai-safety-modal');
+  if(modal) modal.remove();
+
   window.open(url,'_blank');
 };
 
