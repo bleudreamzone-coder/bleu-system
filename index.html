@@ -12351,7 +12351,7 @@ async function startVoice(tab) {
         const inp = document.getElementById('in-' + tab);
         if (inp) inp.value = '🎤 Transcribing...';
         try {
-          const ALVAI_URL = typeof supabaseUrl !== 'undefined' ? supabaseUrl.replace('supabase.co','supabase.co/functions/v1/alvai') : 'https://bleu-system.onrender.com/api/chat';
+          const ALVAI_URL = 'https://bleu-system.onrender.com/api/chat';
           const r = await fetch(ALVAI_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'apikey': typeof supabaseKey !== 'undefined' ? supabaseKey : '' },
