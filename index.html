@@ -1837,7 +1837,7 @@ button[type="submit"],
   <script>
   (function(){var el=document.getElementById("tw-alvai");if(!el)return;
   var lines=["Ask it anything. It already knows the context.",
-  "Commerce follows care. Always. When someone is depleted, scared, or in distress — give them full guidance with zero product mentions. When someone is in flow, building, or optimizing — weave specific products into the recommendation naturally. Never append a product list. Mention the product inside the sentence: "Magnesium glycinate specifically — the Thorne brand is around $25 and it's the right form for sleep." The recommendation and the product are one thing, not two. That is not a slogan. It is the architecture.",
+  "Commerce follows care. Always. When someone is depleted, scared, or in distress — give them full guidance with zero product mentions. When someone is in flow, building, or optimizing — weave specific products into the recommendation naturally. Never append a product list. The recommendation and the product are one thing, not two. That is not a slogan. It is the architecture.",
   "22 specialised modes. Because your situation is not generic.",
   "When you need a human, Alvai routes to one. It knows what it is.",
   "855,000 practitioners. Alvai knows which one is right for you specifically.",
@@ -2160,7 +2160,7 @@ window.loadEnvData=async function(){
     if(uc)uc.style.borderColor=uv>=8?'rgba(255,80,80,0.4)':uv>=6?'rgba(255,160,0,0.4)':uv>=3?'rgba(255,220,0,0.3)':'rgba(255,255,255,0.06)';
     var note='';
     if(uv>=8)note+='High UV — sun protection essential. Your omega-3 protocol helps with UV-induced inflammation. ';
-    else if(uv>=6)note+='Moderate-high UV — your D3+K2 is working with today's sun exposure. ';
+    else if(uv>=6)note+='Moderate-high UV — your D3+K2 is working with todays sun exposure. ';
     if(c.relative_humidity_2m>80)note+='High humidity affects sleep quality tonight — take magnesium glycinate 90 min before bed. ';
     if(c.temperature_2m>90)note+='Heat stress day — electrolytes matter. Hydrate early. ';
     var ne=document.getElementById('env-protocol-note');
@@ -3497,10 +3497,10 @@ window.nhDetail=function(i){
     +"</div>"
     +"</div>"
     +"<div class='nh-d-btns'>"
-    +"<button class='nh-d-btn' onclick="ask('map','"+z.q.replace(/'/g,"\'")+"')">Full Report</button>"
-    +"<button class='nh-d-btn' onclick="ask('map','Find practitioners near ZIP "+z.zip+" New Orleans')">Find Practitioners</button>"
-    +"<button class='nh-d-btn' onclick="ask('map','Top 3 health crises in "+z.n+" New Orleans')">Crisis Analysis</button>"
-    +"<button class='nh-d-btn g' onclick="ask('enterprise','BLEU enterprise deployment model for "+z.n+" New Orleans')">Enterprise Brief</button>"
+    +'<button class="nh-d-btn" onclick="ask(\'map\',\''+z.q.replace(/'/g,'')+'\')">Full Report</button>'
+    +'<button class="nh-d-btn" onclick="ask(\'map\',\'Find practitioners near ZIP '+z.zip+' New Orleans\')">Find Practitioners</button>'
+    +'<button class="nh-d-btn" onclick="ask(\'map\',\'Top 3 health crises in '+z.n+' New Orleans\')">Crisis Analysis</button>'
+    +'<button class="nh-d-btn g" onclick="ask(\'enterprise\',\'BLEU enterprise deployment model for '+z.n+' New Orleans\')">Enterprise Brief</button>'
     +"</div>";
   ask("map",z.q);
   el.scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -4234,7 +4234,7 @@ function renderVideos() {
   grid.innerHTML = slice.map(function(v){
     var thumb = 'https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg';
     var views = v.views ? ' · '+v.views+' views' : '';
-    return '<div class="vcard" onclick="playVideo(''+v.id+'',''+v.title.replace(/'/g,'\'').replace(/"/g,'&quot;')+'',''+v.channel+'')">'
+    return '<div class="vcard" onclick="playVideo(\''+v.id+'\',\''+v.title.replace(/'/g,'').replace(/"/g,'&quot;')+'\',\''+v.channel+'\')">'
       +'<img class="vcard-thumb" src="'+thumb+'" loading="lazy" alt="'+v.title.replace(/"/g,'&quot;')+'">'
       +'<div class="vcard-body">'
       +'<div class="vcard-title">'+v.title+'</div>'
@@ -6561,7 +6561,7 @@ SLEEP MODE</div>
     if(typeof recordReferralConversion==='function')recordReferralConversion('share_'+platform);
   };
   var _asc=0,_asd=false,_os=window.send;
-  if(_os){window.send=function(tab){_os(tab);if(!_asd&&['alvai','therapy','recovery'].includes(tab)){_asc++;if(_asc>=4){_asd=true;setTimeout(function(){openShareOverlay({headline:'Know someone who needs this?',sub:'Share BLEU -- it's completely free'});},2500);}}};}
+  if(_os){window.send=function(tab){_os(tab);if(!_asd&&['alvai','therapy','recovery'].includes(tab)){_asc++;if(_asc>=4){_asd=true;setTimeout(function(){openShareOverlay({headline:'Know someone who needs this?',sub:'Share BLEU -- it is completely free'});},2500);}}};}
   var fab=document.getElementById('bleu-share-fab');
   if(fab)window.addEventListener('scroll',function(){fab.style.opacity=window.scrollY>100?'1':'0.7';});
 })();
@@ -10419,7 +10419,7 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
     CURRICULUM.forEach(function(c,i){
       var row = document.createElement('div');
       row.style.cssText = 'border-bottom:1px solid rgba(255,255,255,.04);transition:all .2s;cursor:pointer';
-      row.innerHTML = '<div style="display:flex;align-items:center;gap:12px;padding:14px 22px" onclick="this.parentElement.querySelector('.ww-ch-body').style.display=this.parentElement.querySelector('.ww-ch-body').style.display==='none'?'block':'none'">'
+      row.innerHTML = '<div style="display:flex;align-items:center;gap:12px;padding:14px 22px" onclick="var b=this.parentElement.querySelector(\'.ww-ch-body\');b.style.display=b.style.display===\'none\'?\'block\':\'none\'">'
         +'<span style="font-size:18px;flex-shrink:0">'+c.icon+'</span>'
         +'<div style="flex:1"><div style="font-size:12px;font-weight:700;color:#E2E8F0">'+c.title+'</div><div style="font-size:10px;color:#5A6374;margin-top:2px">'+c.sub+'</div></div>'
         +'<div style="font-size:9px;letter-spacing:2px;color:rgba(201,168,76,.4);font-weight:700">MODULE '+(i+1<10?'0'+(i+1):i+1)+'</div>'
@@ -11901,7 +11901,7 @@ function bleuProtocolCheckout(protocol) {
     +'<div style="margin-bottom:20px">'
     +stack.map(function(item){return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:rgba(240,236,228,0.75)"><span style="color:#C9A84C;font-size:11px">✓</span>'+item+'</div>';}).join('')
     +'</div>'
-    +'<button onclick="startPaidCheckout(''+priceId+'')" style="width:100%;padding:16px;background:#C9A84C;color:#0b1018;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;font-family:DM Sans,sans-serif;margin-bottom:12px">Activate Protocol — Inside BLEU →</button>'
+    +'<button onclick="startPaidCheckout(\''+priceId+'\')" style="width:100%;padding:16px;background:#C9A84C;color:#0b1018;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;font-family:DM Sans,sans-serif;margin-bottom:12px">Activate Protocol — Inside BLEU →</button>'
     +'<div style="text-align:center;font-size:11px;color:rgba(240,236,228,0.3)">Or get individual items: <a href="https://amazon.com?tag=bleulive-20" target="_blank" style="color:rgba(240,236,228,0.5)">Amazon</a> · <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" style="color:rgba(240,236,228,0.5)">Fullscript</a></div>'
     +'</div>';
 
@@ -12108,8 +12108,7 @@ var d=h.querySelector('.divider');if(d){
 var tk=document.createElement('div');tk.className='bl-tk';
 var items=['NPI Verified','5-Layer Safety','7 Federal APIs','Drug Interactions','AI Therapy','Cannabis Intelligence','Recovery Support','127-Year Lineage','Patent Pending','Free for Everyone'];
 var s=items.map(function(t){return '<span class="bl-tk-i"><span class="d"></span>'+t+'</span>'}).join('');
-tk.innerHTML='
-<div class="bl-tk-t">'+s+s+'</div>';
+tk.innerHTML='<div class="bl-tk-t">'+s+s+'</div>';
 d.parentNode.insertBefore(tk,d.nextSibling)}
 // Count-up stats
 h.querySelectorAll('[style*="font-size:28px"][style*="font-weight:300"]').forEach(function(el){
@@ -12178,8 +12177,8 @@ function openGateway(productId){
   var intake=document.getElementById("gw-intake"),qDiv=document.getElementById("gw-questions");
   if(data.intake&&data.intake.length>0){
     qDiv.innerHTML=data.intake.map(function(q){
-      if(q.type==="select"){return "<div class='gw-q'><label>"+q.label+"</label><select id='"+q.id+"' onchange="_gwAnswers['"+q.id+"']=this.value"><option value=''>Select...</option>"+q.options.map(function(o){return"<option value='"+o+"'>"+o+"</option>"}).join("")+"</select></div>";}
-      return "<div class='gw-q'><label>"+q.label+"</label><input type='text' id='"+q.id+"' placeholder='"+(q.placeholder||"")+"' oninput="_gwAnswers['"+q.id+"']=this.value" /></div>";
+      if(q.type==="select"){return '<div class="gw-q"><label>'+q.label+'</label><select id="'+q.id+'" onchange="_gwAnswers[\''+q.id+'\']=this.value"><option value="">Select...</option>'+q.options.map(function(o){return'<option value="'+o+'">'+o+'</option>'}).join('')+'</select></div>';}
+      return '<div class="gw-q"><label>'+q.label+'</label><input type="text" id="'+q.id+'" placeholder="'+(q.placeholder||'')+'" oninput="_gwAnswers[\''+q.id+'\']=this.value" /></div>';
     }).join("");
     intake.style.display="block";
     document.getElementById("gw-cta").textContent="Match me with "+data.title+" →";
@@ -12808,7 +12807,7 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
     +'<div style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#f0ece4;margin-bottom:4px">'+name+'</div>'
     +'<div style="font-size:11px;color:rgba(240,236,228,0.4);margin-bottom:20px">Dr. Felicia Stoler DCN RDN FACSM &middot; Clinical oversight &middot; Cancel anytime</div>'
     +'<div style="margin-bottom:20px">'+stackHTML+'</div>'
-    +'<button onclick="window.startPaidCheckout && window.startPaidCheckout(''+priceId+'')" style="width:100%;padding:16px;background:#C9A84C;color:#0b1018;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px">Activate Protocol &#8594;</button>'
+    +'<button onclick="window.startPaidCheckout && window.startPaidCheckout(\''+priceId+'\')" style="width:100%;padding:16px;background:#C9A84C;color:#0b1018;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px">Activate Protocol &#8594;</button>'
     +'<div style="text-align:center;font-size:11px;color:rgba(240,236,228,0.3)">Or: <a href="https://amazon.com?tag=bleulive-20" target="_blank" style="color:rgba(240,236,228,0.5)">Amazon</a> &middot; <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" style="color:rgba(240,236,228,0.5)">Fullscript</a></div>'
     +'</div>';
   overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.remove();});
