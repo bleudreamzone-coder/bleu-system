@@ -819,10 +819,15 @@ const server = http.createServer((req, res) => {
           'i need help':["I'm here. What's the main thing right now?","Okay. Start with the hardest part.","Tell me what's happening."],
           'start':["Good. Tell me what's going on.","Let's go. What do you need?","I'm ready. What's happening?"],
           'what is bleu':["BLEU listens for what your system needs and assembles the next right move.","BLEU helps you notice what's happening, understand it fast, and take the next step.","BLEU is your health decision layer — it figures out what matters and what to do next."],
-          'what can you do':["I listen. I search 855,000 practitioners. I check your medications. I find what you need tonight.","Tell me what you need and I'll show you. That's faster than a list.","Everything from supplements to therapy to finding the right doctor near you. Start with what hurts."]
+          'what can you do':["I listen. I search 855,000 practitioners. I check your medications. I find what you need tonight.","Tell me what you need and I'll show you. That's faster than a list.","Everything from supplements to therapy to finding the right doctor near you. Start with what hurts."],
+          'hey there':["Hey. I'm here. What's going on?","Hey — talk to me. What do you need?"],
+          'hi there':["Hi. What do you need right now?","Hi. Start wherever you are."],
+          'hello there':["You found us. What's going on right now?","Hey. Talk to me."],
+          'helo':["Hey. I'm here. What's going on?"],
+          'hola':["Hola. I'm here. Tell me what you need."]
         };
         const greetKey = p.message.toLowerCase().trim();
-        if (GREET_CACHE[greetKey] && (p.mode==='general'||p.mode==='alvai'||!p.mode)) {
+        if (GREET_CACHE[greetKey] && (p.mode==='general'||p.mode==='alvai'||p.mode==='home'||!p.mode)) {
           const variants = GREET_CACHE[greetKey];
           const reply = variants[Math.floor(Date.now()/60000) % variants.length];
           res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-cache','Connection':'keep-alive','Access-Control-Allow-Origin':'*'});
