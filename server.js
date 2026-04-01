@@ -876,7 +876,18 @@ const server = http.createServer((req, res) => {
             try { const j = JSON.parse(d); const t = j.choices?.[0]?.delta?.content || j.delta?.content || j.text || j.output; if (t) { full += t; res.write('data: ' + JSON.stringify({text:t}) + '\n\n'); } else if (chunkCount <= 2) { console.log('STREAM_CHUNK_'+chunkCount+':', JSON.stringify(j).substring(0,300)); } } catch {}
           }
         }
-        if (!full) console.error('EMPTY STREAM: model='+model+' chunks='+chunkCount+' msgLen='+p.message.length+' sysLen='+messages[0].content.length);
+        // Fallback: if streaming returned empty, retry non-streaming
+        if (!full) {
+          console.error('EMPTY STREAM: model='+model+' chunks='+chunkCount+' sysLen='+messages[0].content.length+' — retrying non-stream');
+          try {
+            const fb = await fetch('https://api.openai.com/v1/chat/completions', {
+              method:'POST', headers:{'Authorization':'Bearer '+OPENAI_KEY,'Content-Type':'application/json'},
+              body: JSON.stringify({model, messages, max_completion_tokens:2000, temperature:1})
+            });
+            const fd = await fb.json();
+            if (fd.choices?.[0]?.message?.content) { full = fd.choices[0].message.content; res.write('data: '+JSON.stringify({text:full})+'\n\n'); }
+          } catch(fe) { console.error('Fallback also failed:', fe.message); }
+        }
         res.write('data: [DONE]\n\n');
         res.end();
         // Write conversation memory + CI record (fire and forget)
