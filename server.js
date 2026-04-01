@@ -874,7 +874,7 @@ const server = http.createServer((req, res) => {
             try { const j = JSON.parse(d); const t = j.choices?.[0]?.delta?.content || j.delta?.content || j.text || j.output; if (t) { full += t; res.write('data: ' + JSON.stringify({text:t}) + '\n\n'); } else if (chunkCount <= 2) { console.log('STREAM_CHUNK_'+chunkCount+':', JSON.stringify(j).substring(0,300)); } } catch {}
           }
         }
-        if (!full) console.error('EMPTY STREAM: model='+model+' chunks='+chunkCount+' msgLen='+p.message.length+' sysLen='+messages[0].content.length);
+        if (!full) { console.error('EMPTY STREAM: model='+model+' chunks='+chunkCount+' msgLen='+p.message.length+' sysLen='+messages[0].content.length); res.write('data: '+JSON.stringify({text:'[BLEU DEBUG: empty stream, model='+model+', chunks='+chunkCount+', sysLen='+messages[0].content.length+']'})+'\n\n'); }
         res.write('data: [DONE]\n\n');
         res.end();
         // Write conversation memory + CI record (fire and forget)
