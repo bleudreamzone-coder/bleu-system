@@ -2951,6 +2951,7 @@ async function vsAsk(){
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+(typeof ANON!=='undefined'?ANON:'')},
       body:JSON.stringify({message:msg,session:typeof getSession==='function'?getSession():'vessel',mode:'vessel',history:[]})
     });
+    if(!r.ok) throw new Error('HTTP '+r.status);
     var reader=r.body.getReader(),decoder=new TextDecoder(),full='',buffer='';
     res.innerHTML='';
     while(true){
@@ -9508,6 +9509,7 @@ async function send(tab){
   if(typeof getActiveJourney==='function'){const _aj=getActiveJourney();if(_aj){if(tab==='passport')body.mode=_aj.alvaiMode;body.journey_context='[ACTIVE JOURNEY: '+_aj.name+'] '+_aj.alvaiContext;}}
   try{
     const res=await fetch(ALVAI,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON},body:JSON.stringify(body)})
+    if(!res.ok) throw new Error('HTTP '+res.status);
     const reader=res.body.getReader(),decoder=new TextDecoder();let full='',buffer=''
     aDiv.innerHTML=''
     while(true){
