@@ -1154,7 +1154,7 @@ const server = http.createServer((req, res) => {
 
   if (pn === '/api/stats') return json(res, 200, { version:'4.0', modes: Object.keys(MODE_PROMPTS).length, therapy: Object.keys(THERAPY_MODES).length, recovery: Object.keys(RECOVERY_MODES).length });
 
-  if (pn === '/' || pn === '/index.html') { fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,{'Content-Type':'text/html'});res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,{'Content-Type':'text/html'});res.end(d);} }); return; }
+  if (pn === '/' || pn === '/index.html') { const noCacheHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'}; fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,noCacheHeaders);res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,noCacheHeaders);res.end(d);} }); return; }
 
   const ext = path.extname(pn);
   const mime = {'.css':'text/css','.js':'application/javascript','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon','.json':'application/json'};
