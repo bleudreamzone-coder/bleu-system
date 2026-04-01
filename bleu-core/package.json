@@ -1,0 +1,14 @@
+{
+  "name": "bleu-core",
+  "version": "1.0.0",
+  "description": "BLEU Core Engine — CI/ISI/trajectory/state/ALVAI loop",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/loop.test.js",
+    "validate": "node --check core/ci.js && node --check core/isi.js && node --check core/state.js && node --check core/trajectory.js && node --check core/alvai.js && node --check core/eventLogger.js && node --check server.js && echo 'All files valid.'"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

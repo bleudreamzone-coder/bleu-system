@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BLEU Core</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#090d16;color:#e2e8f0;font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+.header{padding:16px 24px;border-bottom:1px solid rgba(201,168,76,.15);display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:700;color:#c9a84c;letter-spacing:2px}
+.state-bar{display:flex;gap:12px;font-size:10px;font-family:monospace;color:#5a6f87}
+.state-bar .s{display:flex;flex-direction:column;align-items:center;gap:2px}
+.state-bar .sv{font-size:14px;font-weight:700;color:#c9a84c}
+.state-bar .sl{letter-spacing:1px;text-transform:uppercase;font-size:8px}
+.chat{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:12px;max-width:720px;width:100%;margin:0 auto}
+.msg{padding:14px 18px;border-radius:14px;font-size:14px;line-height:1.7;max-width:85%;animation:fadeIn .3s ease}
+.msg.user{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);align-self:flex-end;color:#e8d5b0}
+.msg.ai{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);align-self:flex-start;color:#c8c0b4}
+.msg-state{display:flex;gap:8px;font-size:9px;font-family:monospace;color:#3d4f63;margin-top:6px;flex-wrap:wrap}
+.msg-state span{background:rgba(255,255,255,.03);padding:2px 6px;border-radius:4px}
+.input-row{padding:16px 24px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:10px;max-width:720px;width:100%;margin:0 auto}
+.input-row input{flex:1;background:#0e1118;border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:12px 16px;color:#e2e8f0;font-size:14px;outline:none;font-family:inherit}
+.input-row input:focus{border-color:rgba(201,168,76,.5)}
+.input-row button{background:#c9a84c;color:#0a1628;border:none;border-radius:10px;padding:12px 20px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+.cursor{display:inline-block;width:2px;height:14px;background:#c9a84c;animation:blink 1s infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">BLEU CORE</div>
+  <div class="state-bar" id="state-bar">
+    <div class="s"><div class="sv" id="h-ci">--</div><div class="sl">CI</div></div>
+    <div class="s"><div class="sv" id="h-isi">--</div><div class="sl">ISI</div></div>
+    <div class="s"><div class="sv" id="h-fusion">--</div><div class="sl">Fusion</div></div>
+    <div class="s"><div class="sv" id="h-traj">--</div><div class="sl">Trajectory</div></div>
+    <div class="s"><div class="sv" id="h-tier">--</div><div class="sl">Tier</div></div>
+  </div>
+</div>
+
+<div class="chat" id="chat"></div>
+
+<div class="input-row">
+  <input id="input" placeholder="Tell me what's going on..." autocomplete="off">
+  <button onclick="send()">Send</button>
+</div>
+
+<script>
+var history = [];
+
+document.getElementById('input').addEventListener('keydown', function(e) { if (e.key === 'Enter') send(); });
+
+async function send() {
+  var input = document.getElementById('input');
+  var msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  var chat = document.getElementById('chat');
+
+  // User message
+  var uDiv = document.createElement('div');
+  uDiv.className = 'msg user';
+  uDiv.textContent = msg;
+  chat.appendChild(uDiv);
+
+  // AI message placeholder
+  var aDiv = document.createElement('div');
+  aDiv.className = 'msg ai';
+  aDiv.innerHTML = '<span class="cursor"></span>';
+  chat.appendChild(aDiv);
+  chat.scrollTop = chat.scrollHeight;
+
+  history.push({ role: 'user', content: msg });
+
+  try {
+    var res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg, history: history.slice(-8) })
+    });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var buf = '', full = '';
+    aDiv.innerHTML = '';
+
+    while (true) {
+      var chunk = await reader.read();
+      if (chunk.done) break;
+      buf += decoder.decode(chunk.value, { stream: true });
+      var lines = buf.split('\n');
+      buf = lines.pop() || '';
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (!line.startsWith('data: ')) continue;
+        var d = line.slice(6).trim();
+        if (d === '[DONE]') continue;
+        try {
+          var p = JSON.parse(d);
+          if (p.text) {
+            full += p.text;
+            aDiv.innerHTML = fmt(full) + '<span class="cursor"></span>';
+            chat.scrollTop = chat.scrollHeight;
+          }
+          if (p.state) updateStateBar(p.state);
+        } catch (e) {}
+      }
+    }
+
+    aDiv.innerHTML = fmt(full);
+    if (full) history.push({ role: 'assistant', content: full });
+
+    // State bar under response
+    var stateEl = document.getElementById('_last_state');
+    if (stateEl) {
+      var sd = document.createElement('div');
+      sd.className = 'msg-state';
+      sd.innerHTML = stateEl.innerHTML;
+      aDiv.appendChild(sd);
+    }
+
+  } catch (e) {
+    aDiv.innerHTML = '<em style="color:#5a6f87">Connection issue. Try again.</em>';
+  }
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function updateStateBar(s) {
+  if (s.ci != null) document.getElementById('h-ci').textContent = s.ci;
+  if (s.isi != null) document.getElementById('h-isi').textContent = s.isi;
+  if (s.fusion != null) document.getElementById('h-fusion').textContent = s.fusion;
+  if (s.trajectory) document.getElementById('h-traj').textContent = s.trajectory.replace('_', ' ');
+  if (s.confidence_tier) document.getElementById('h-tier').textContent = s.confidence_tier;
+
+  // Store for inline display
+  var el = document.getElementById('_last_state');
+  if (!el) { el = document.createElement('div'); el.id = '_last_state'; el.style.display = 'none'; document.body.appendChild(el); }
+  el.innerHTML = '<span>CI:' + (s.ci || '--') + '</span><span>ISI:' + (s.isi || '--') + '</span><span>F:' + (s.fusion || '--') + '</span><span>' + (s.trajectory || '') + '</span><span>' + (s.confidence_tier || '') + '</span>';
+}
+
+function fmt(t) {
+  if (!t) return '';
+  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  t = t.replace(/\n\n/g, '<br><br>');
+  t = t.replace(/\n/g, '<br>');
+  return t;
+}
+</script>
+</body>
+</html>
