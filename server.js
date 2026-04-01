@@ -859,7 +859,7 @@ const server = http.createServer((req, res) => {
         messages.push({ role: 'user', content: p.message });
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model, messages, max_completion_tokens: maxTokens, temperature: 1, stream: true })
+          body: JSON.stringify({ model, messages, max_completion_tokens: 2000, temperature: 1, stream: true })
         });
         if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI error:', ar.status, errBody.substring(0,500)); return json(res, 500, {error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model}); }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
