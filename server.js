@@ -863,16 +863,18 @@ const server = http.createServer((req, res) => {
         });
         if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI error:', ar.status, errBody.substring(0,500)); return json(res, 500, {error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model}); }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
-        const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '', full = '';
+        const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '', full = '', chunkCount = 0;
         while (true) {
           const { done, value } = await rd.read(); if (done) break;
           buf += dc.decode(value, { stream: true }); const ls = buf.split('\n'); buf = ls.pop()||'';
           for (const ln of ls) {
             if (!ln.startsWith('data: ')) continue; const d = ln.slice(6).trim();
             if (d === '[DONE]') continue;
-            try { const j = JSON.parse(d); const t = j.choices?.[0]?.delta?.content; if (t) { full += t; res.write('data: ' + JSON.stringify({text:t}) + '\n\n'); } } catch {}
+            chunkCount++;
+            try { const j = JSON.parse(d); const t = j.choices?.[0]?.delta?.content || j.delta?.content || j.text || j.output; if (t) { full += t; res.write('data: ' + JSON.stringify({text:t}) + '\n\n'); } else if (chunkCount <= 2) { console.log('STREAM_CHUNK_'+chunkCount+':', JSON.stringify(j).substring(0,300)); } } catch {}
           }
         }
+        if (!full) console.error('EMPTY STREAM: model='+model+' chunks='+chunkCount+' msgLen='+p.message.length+' sysLen='+messages[0].content.length);
         res.write('data: [DONE]\n\n');
         res.end();
         // Write conversation memory + CI record (fire and forget)
