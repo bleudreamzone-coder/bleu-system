@@ -9441,6 +9441,7 @@ async function send(tab){
   if(!input||!box)return
   const msg=input.value.trim();if(!msg)return;input.value=''
   const uDiv=document.createElement('div');uDiv.className='msg user';uDiv.textContent=msg;box.appendChild(uDiv)
+  console.log('[BLEU DEBUG] user push — currentTab:', currentTab, 'type:', typeof chatHistories[currentTab], 'isArray:', Array.isArray(chatHistories[currentTab]), 'value:', chatHistories[currentTab]);
   if(!Array.isArray(chatHistories[currentTab]))chatHistories[currentTab]=[];
   chatHistories[currentTab].push({role:'user',content:msg})
   const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
@@ -9533,6 +9534,7 @@ async function send(tab){
       }
     }
     aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);
+    console.log('[BLEU DEBUG] assistant push — currentTab:', currentTab, 'type:', typeof chatHistories[currentTab], 'isArray:', Array.isArray(chatHistories[currentTab]), 'value:', chatHistories[currentTab]);
     if(!Array.isArray(chatHistories[currentTab]))chatHistories[currentTab]=[];
     chatHistories[currentTab].push({role:'assistant',content:full})
     // ── AUTO-EMBED: one piece of media tied to intent, already playing ──
