@@ -12741,16 +12741,6 @@ async function uploadImage(event, tab) {
 
 
 <script>
-// BLEU PWA — Service Worker Registration
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(function(reg) {
-      console.log('BLEU SW registered:', reg.scope);
-    }).catch(function(err) {
-      console.log('SW registration failed (non-critical):', err);
-    });
-  });
-}
 
 // Install prompt — show "Add to Home Screen" 
 let deferredPrompt;
