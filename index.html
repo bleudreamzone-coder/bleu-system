@@ -9441,7 +9441,7 @@ async function send(tab){
   if(!input||!box)return
   const msg=input.value.trim();if(!msg)return;input.value=''
   const uDiv=document.createElement('div');uDiv.className='msg user';uDiv.textContent=msg;box.appendChild(uDiv)
-  if(!Array.isArray(chatHistories[tab]))chatHistories[tab]=[];chatHistories[tab].push({role:'user',content:msg})
+  if(!Array.isArray(chatHistories[tab]))chatHistories[tab]=[];if(!Array.isArray(chatHistories[tab]))chatHistories[tab]=[];chatHistories[tab].push({role:'user',content:msg})
   const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
   box.scrollTop=box.scrollHeight
 
@@ -9531,7 +9531,7 @@ async function send(tab){
         try{const p=JSON.parse(d);if(p.text){full+=p.text;aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}
       }
     }
-    aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);chatHistories[tab].push({role:'assistant',content:full})
+    aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);if(!Array.isArray(chatHistories[tab]))chatHistories[tab]=[];chatHistories[tab].push({role:'assistant',content:full})
     // ── AUTO-EMBED: one piece of media tied to intent, already playing ──
     (function(){
       var ml=msg.toLowerCase();
