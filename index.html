@@ -9436,20 +9436,21 @@ function bleuShareToast(msg) {
 }
 // ── END BLEU SHARE ENGINE ──────────────────────────────────
 async function send(tab){
-  const input=document.getElementById('in-'+tab),box=document.getElementById('chat-'+tab)
+  const currentTab=tab;
+  const input=document.getElementById('in-'+currentTab),box=document.getElementById('chat-'+currentTab)
   if(!input||!box)return
   const msg=input.value.trim();if(!msg)return;input.value=''
   const uDiv=document.createElement('div');uDiv.className='msg user';uDiv.textContent=msg;box.appendChild(uDiv)
-  if(!Array.isArray(chatHistories[tab]))chatHistories[tab]=[];
-  chatHistories[tab].push({role:'user',content:msg})
+  if(!Array.isArray(chatHistories[currentTab]))chatHistories[currentTab]=[];
+  chatHistories[currentTab].push({role:'user',content:msg})
   const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
   box.scrollTop=box.scrollHeight
 
   // TOURIST GATE -- 3 free exchanges then soft passport prompt
   if(!currentUser){
-    if(!touristMsgCount[tab])touristMsgCount[tab]=0;
-    touristMsgCount[tab]++;
-    if(touristMsgCount[tab]===4){
+    if(!touristMsgCount[currentTab])touristMsgCount[currentTab]=0;
+    touristMsgCount[currentTab]++;
+    if(touristMsgCount[currentTab]===4){
       aDiv.innerHTML=`<div style="background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.25);border-radius:14px;padding:18px 20px;margin-top:4px"><div style="color:#4ecdc4;font-size:11px;letter-spacing:0.2em;margin-bottom:8px">* YOUR WELLNESS PASSPORT</div><div style="color:#e8d5b0;font-size:14px;line-height:1.7;margin-bottom:14px">I can keep going but everything we covered disappears when you close this tab. Take 20 seconds to save your Passport and I will remember your goals and pick up right where we left off.</div><button onclick="go('passport')" style="background:linear-gradient(135deg,#4ecdc4,#7fb285);color:#0a1628;border:none;padding:10px 22px;border-radius:100px;font-size:12px;cursor:pointer;font-weight:600">Save My Passport</button><span onclick="send_tourist_continue(tab)" style="color:#8fa4b0;font-size:11px;margin-left:14px;cursor:pointer;text-decoration:underline">Continue without saving</span>
 <div class="chat-box chat-area" id="chat-privacy" style="min-height:20px"></div>
 <input type="hidden" id="in-privacy"/></div>`;
@@ -9460,7 +9461,7 @@ async function send(tab){
 
   const passport=await getUserContext().catch(()=>null)
   const depthInfo=passport?getDepthLevel(passport.bleu_score||0):null;
-  const _userState = deriveUserState(msg, tab);
+  const _userState = deriveUserState(msg, currentTab);
   const _orchestration = {
     lead_mode: _userState.guidance_mode,
     commercial_gate: _userState.commercial_readiness,
@@ -9505,18 +9506,18 @@ async function send(tab){
   };
   var _modeMap={home:'alvai',ecsiq:'cannaiq',sleep:'vessel',spirit:'community',enterprise:'general'};
   var _knownModes=['therapy','recovery','finance','cannaiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai','general'];
-  var _sendMode=_modeMap[tab]||((_knownModes.indexOf(tab)>-1)?tab:'general');
-  const body={message:msg,session:getSession(),history:chatHistories[tab].slice(-8),mode:_sendMode,user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null,
+  var _sendMode=_modeMap[currentTab]||((_knownModes.indexOf(currentTab)>-1)?currentTab:'general');
+  const body={message:msg,session:getSession(),history:chatHistories[currentTab].slice(-8),mode:_sendMode,user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null,
       journey_context:(()=>{
         const cm=["lets go","book it","give me everything","all of it","total plan","put it together","im ready","lets do this","sign me up","i want all","give me all","transform me","time travel","years back","take me back","total system","full plan","assemble all","all resources"];
         const isCommit=cm.some(w=>msg.toLowerCase().includes(w));
         if(isCommit)return'COMMITMENT MOMENT DETECTED: This person has said YES. Do not ask clarifying questions. ASSEMBLE the total system immediately. Name every resource. Link every product. Deliver everything in one response. They are ready. Do not make them wait.';
         return null;
       })()}
-  if(tab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
-  if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
+  if(currentTab==='therapy')body.therapy_mode=chatModes.therapy||'talk'
+  if(currentTab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
   if(window._passport){body.passport_context='User is in '+(_passport.city||'New Orleans')+', conditions: '+(_passport.conditions||[]).join(',')+', medications: '+(_passport.medications||[]).join(',');}
-  if(typeof getActiveJourney==='function'){const _aj=getActiveJourney();if(_aj){if(tab==='passport')body.mode=_aj.alvaiMode;body.journey_context='[ACTIVE JOURNEY: '+_aj.name+'] '+_aj.alvaiContext;}}
+  if(typeof getActiveJourney==='function'){const _aj=getActiveJourney();if(_aj){if(currentTab==='passport')body.mode=_aj.alvaiMode;body.journey_context='[ACTIVE JOURNEY: '+_aj.name+'] '+_aj.alvaiContext;}}
   try{
     const res=await fetch(ALVAI,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON},body:JSON.stringify(body)})
     if(!res.ok) throw new Error('HTTP '+res.status);
@@ -9532,8 +9533,8 @@ async function send(tab){
       }
     }
     aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);
-    if(!Array.isArray(chatHistories[tab]))chatHistories[tab]=[];
-    chatHistories[tab].push({role:'assistant',content:full})
+    if(!Array.isArray(chatHistories[currentTab]))chatHistories[currentTab]=[];
+    chatHistories[currentTab].push({role:'assistant',content:full})
     // ── AUTO-EMBED: one piece of media tied to intent, already playing ──
     (function(){
       var ml=msg.toLowerCase();
@@ -9561,8 +9562,8 @@ async function send(tab){
       const injuryWords=['swollen','knuckle','sprain','fracture','broken','bruise','bruising','fight','got hit','injured','injury','urgent care','emergency room','er ','torn','ligament'];
       const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));
       const isInjury=injuryWords.some(w=>(msg+full).toLowerCase().includes(w));
-      if(!isDistress&&!isInjury&&!['therapy','recovery'].includes(tab)){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
-    if(currentUser){saveConvo(tab,chatHistories[tab]).catch(()=>{});updateBleScore(tab).catch(()=>{})}
+      if(!isDistress&&!isInjury&&!['therapy','recovery'].includes(currentTab)){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
+    if(currentUser){saveConvo(currentTab,chatHistories[currentTab]).catch(()=>{});updateBleScore(currentTab).catch(()=>{})}
   }catch(e){console.error(e);aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again in a moment.</em>'}
   box.scrollTop=box.scrollHeight
 }
