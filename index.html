@@ -2975,6 +2975,7 @@ async function vsAsk(){
     res.innerHTML=typeof fmt==='function'?fmt(full):full;
     if(typeof detectAndWireProtocol==='function')detectAndWireProtocol(full,res);
   }catch(e){
+    console.error(e);
     res.innerHTML='Connection issue — try again in a moment. If you need help now: call 988 or text HOME to 741741.';
   }
 }
