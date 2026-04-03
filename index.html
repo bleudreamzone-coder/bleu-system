@@ -9560,7 +9560,7 @@ async function send(tab){
       const isInjury=injuryWords.some(w=>(msg+full).toLowerCase().includes(w));
       if(!isDistress&&!isInjury&&!['therapy','recovery'].includes(tab)){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
     if(currentUser){saveConvo(tab,chatHistories[tab]).catch(()=>{});updateBleScore(tab).catch(()=>{})}
-  }catch(e){aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again in a moment.</em>'}
+  }catch(e){console.error(e);aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again in a moment.</em>'}
   box.scrollTop=box.scrollHeight
 }
 
