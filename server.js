@@ -796,6 +796,11 @@ function cors(res) { res.setHeader('Access-Control-Allow-Origin','*'); res.setHe
 
 const server = http.createServer((req, res) => {
   cors(res);
+  if (req.headers['x-forwarded-proto'] !== 'https') {
+    res.writeHead(301, { Location: 'https://' + req.headers.host + req.url });
+    res.end();
+    return;
+  }
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pn = url.pathname;
   if (req.method === 'OPTIONS') return json(res, 200, {});
