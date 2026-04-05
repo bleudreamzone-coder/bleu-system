@@ -9535,6 +9535,10 @@ async function send(tab){
     }
     aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);
     console.log('[BLEU DEBUG] assistant push — currentTab:', currentTab, 'type:', typeof chatHistories[currentTab], 'isArray:', Array.isArray(chatHistories[currentTab]), 'value:', chatHistories[currentTab]);
+    if(!Array.isArray(chatHistories[currentTab])){
+      if(typeof chatHistories[currentTab]==='object')chatHistories[currentTab]=Object.values(chatHistories[currentTab]);
+      else chatHistories[currentTab]=[];
+    }
     if(!Array.isArray(chatHistories[currentTab]))chatHistories[currentTab]=[];
     chatHistories[currentTab].push({role:'assistant',content:full})
     // ── AUTO-EMBED: one piece of media tied to intent, already playing ──
