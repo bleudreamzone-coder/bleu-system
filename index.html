@@ -9540,7 +9540,7 @@ async function send(tab){
       else chatHistories[currentTab]=[];
     }
     if(!Array.isArray(chatHistories[currentTab]))chatHistories[currentTab]=[];
-    chatHistories[currentTab].push({role:'assistant',content:full})
+    try{chatHistories[currentTab].push({role:'assistant',content:full})}catch(e){chatHistories[currentTab]=[];chatHistories[currentTab].push({role:'assistant',content:full})}
     // ── AUTO-EMBED: one piece of media tied to intent, already playing ──
     (function(){
       var ml=msg.toLowerCase();
