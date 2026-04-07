@@ -1117,6 +1117,27 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ═══════ MEETUP EVENTS ═══════
+  if (pn === '/api/meetup-events' && req.method === 'GET') {
+    const city = url.searchParams.get('city') || 'New Orleans';
+    const MU_KEY = process.env.MEETUP_API_KEY;
+    const staticEvents = [
+      {id:'m1',name:'NOLA Sunday Run Club',day:'Sunday 7:00 AM',venue:'Audubon Park',city:'New Orleans',category:'fitness',description:'Free weekly 5K run club — all paces welcome',url:'https://www.meetup.com/topics/running/us/la/new_orleans/'},
+      {id:'m2',name:'Crescent City Meditation Circle',day:'Tuesday 6:30 PM',venue:'Healing Center',city:'New Orleans',category:'meditation',description:'Guided mindfulness and breathwork — drop-ins welcome',url:'https://www.meetup.com/topics/meditation/us/la/new_orleans/'},
+      {id:'m3',name:'NOLA Recovery Support Group',day:'Thursday 7:00 PM',venue:'Tremé Community Center',city:'New Orleans',category:'recovery',description:'Open peer recovery and sober social meetup',url:'https://www.meetup.com/topics/addiction-recovery/us/la/new_orleans/'}
+    ];
+    if (!MU_KEY) return json(res, 200, { events: staticEvents, source:'static' });
+    (async () => { try {
+      const query = `query($city:String!){keywordSearch(filter:{query:"wellness",lat:0,lon:0,source:EVENTS,city:$city},input:{first:12}){edges{node{id,title,dateTime,venue{name,city},eventUrl,going,group{name}}}}}`;
+      const r = await fetch('https://api.meetup.com/gql',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+MU_KEY},body:JSON.stringify({query,variables:{city}})});
+      const d = await r.json();
+      const edges = d.data?.keywordSearch?.edges || [];
+      const events = edges.map(e => {const n=e.node; return {id:n.id,name:n.title||'',start:n.dateTime||'',venue:n.venue?.name||'',city:n.venue?.city||city,category:'wellness',url:n.eventUrl||'',going:n.going||0,group:n.group?.name||''};});
+      json(res, 200, { events: events.length ? events : staticEvents, source: events.length ? 'meetup_api' : 'static' });
+    } catch(e) { json(res, 200, { events: staticEvents, source:'static' }); } })();
+    return;
+  }
+
   // ═══════ YELP WELLNESS BUSINESSES ═══════
   if (pn === '/api/yelp' && req.method === 'GET') {
     const term = url.searchParams.get('term') || 'wellness';
