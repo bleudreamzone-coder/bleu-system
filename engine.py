@@ -1049,7 +1049,6 @@ def run_full():
     scrape_youtube()
     scrape_reddit()
     scrape_amazon()
-    scrape_iherb()
     scrape_product_skus()
     scrape_samhsa()
     scrape_hrsa()
@@ -1074,6 +1073,6 @@ if __name__ == "__main__":
         cities,_ = get_cities()
         {"npi":lambda:scrape_npi(cities),"fda":scrape_fda,"google":lambda:scrape_google(cities),
          "youtube":scrape_youtube,"reddit":scrape_reddit,"amazon":scrape_amazon,"samhsa":scrape_samhsa,"hrsa":scrape_hrsa,"environmental":scrape_environmental,"skus":scrape_product_skus,
-         "iherb":scrape_iherb,"pubmed":scrape_pubmed,"food":scrape_food,
+         "pubmed":scrape_pubmed,"food":scrape_food,
          "yelp":lambda:scrape_yelp(cities)}.get(src, lambda:print(f"Unknown: {src}"))()
     else: run_full()
