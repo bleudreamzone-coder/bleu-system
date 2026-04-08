@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BLEU Whitepaper — New Orleans, LA | Clinical Health Intelligence Research</title>
+<meta name="description" content="BLEU clinical research whitepaper for New Orleans, Louisiana. Health disparities, Cancer Alley environmental burden, post-Katrina trauma epidemiology, and protocol efficacy data. Dr. Felicia Stoler DCN RDN FACSM. Jazz Bird 501(c)(3).">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://bleu.live/whitepapers/new-orleans-la">
+<meta property="og:title" content="BLEU Whitepaper — New Orleans, LA">
+<meta property="og:description" content="Clinical health intelligence research for New Orleans. Health disparities, environmental burden, and protocol design rationale.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bleu.live/whitepapers/new-orleans-la">
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ScholarlyArticle",
+      "@id": "https://bleu.live/whitepapers/new-orleans-la",
+      "name": "BLEU Clinical Whitepaper — New Orleans, Louisiana",
+      "headline": "Health Intelligence Infrastructure for the Most Complex Health Ecosystem in America",
+      "description": "Clinical research rationale for BLEU deployment in New Orleans, LA. Environmental health burden, chronic disease epidemiology, mental health access gaps, and protocol design.",
+      "url": "https://bleu.live/whitepapers/new-orleans-la",
+      "datePublished": "2026-04-08",
+      "dateModified": "2026-04-08",
+      "inLanguage": "en-US",
+      "author": {
+        "@type": "Person",
+        "@id": "https://bleu.live/clinical#dr-felicia-stoler",
+        "name": "Dr. Felicia Stoler",
+        "honorificSuffix": "DCN, MS, RDN, FACSM, FAND, Dipl ACLM",
+        "jobTitle": "Principal Investigator, Jazz Bird 501(c)(3)"
+      },
+      "publisher": {
+        "@type": ["Organization","NGO"],
+        "@id": "https://bleu.live#jazz-bird",
+        "name": "Jazz Bird 501(c)(3)",
+        "url": "https://bleu.live",
+        "nonprofitStatus": "Nonprofit501c3"
+      },
+      "about": [
+        {"@type": "MedicalCondition", "name": "Chronic Disease"},
+        {"@type": "Place", "name": "New Orleans, Louisiana"}
+      ],
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "BLEU", "item": "https://bleu.live"},
+          {"@type": "ListItem", "position": 2, "name": "Whitepapers", "item": "https://bleu.live/whitepapers"},
+          {"@type": "ListItem", "position": 3, "name": "New Orleans, LA", "item": "https://bleu.live/whitepapers/new-orleans-la"}
+        ]
+      }
+    }
+  ]
+}</script>
+<style>
+:root {
+  --bg: #05080F;
+  --surface: #0D1421;
+  --card: color-mix(in srgb, #0D1421 60%, black 40%);
+  --accent: #C9A84C;
+  --teal: #1AECB8;
+  --muted: #7A8499;
+  --text: #E8EAF2;
+  --border: rgba(255,255,255,0.07);
+  --border-accent: color-mix(in srgb, #C9A84C 30%, transparent);
+  --red: #FF6B8A;
+  --green: #22C55E;
+  --orange: #FB923C;
+  --purple: #A78BFA;
+  --font-display: 'Georgia', 'Times New Roman', serif;
+  --font-body: 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Courier New', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.7;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 20%, rgba(201,168,76,0.07), transparent);pointer-events:none;z-index:0}
+
+.header{position:fixed;top:0;left:0;right:0;z-index:200;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:60px}
+.logo{font-family:var(--font-display);font-size:1.4rem;color:var(--accent);letter-spacing:0.12em;font-weight:bold;text-decoration:none}
+.header-right{display:flex;align-items:center;gap:1.5rem}
+.header-loc{font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted)}
+.header-badge{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);border:1px solid color-mix(in srgb,var(--teal) 30%,transparent);padding:0.2rem 0.6rem;border-radius:2rem}
+
+.breadcrumb{position:fixed;top:60px;left:0;right:0;z-index:199;background:color-mix(in srgb,var(--surface) 95%,transparent);backdrop-filter:blur(8px);padding:0.4rem 2rem;font-size:0.7rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.5rem}
+.breadcrumb a{color:var(--muted);text-decoration:none;transition:color 0.2s}
+.breadcrumb a:hover{color:var(--accent)}
+.bc-sep{color:var(--border)}
+
+.hero{padding:9rem 2rem 4rem;max-width:900px;margin:0 auto;position:relative;z-index:1}
+.wp-tag{display:inline-flex;align-items:center;gap:0.6rem;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);border:1px solid var(--border-accent);padding:0.3rem 1rem;border-radius:2rem;margin-bottom:1.25rem}
+.hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);color:#fff;line-height:1.15;margin-bottom:0.75rem;letter-spacing:-0.01em}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero-sub{font-size:1rem;color:var(--muted);max-width:680px;margin-bottom:1.5rem;line-height:1.8}
+.hero-meta{font-size:0.75rem;color:var(--muted);display:flex;gap:2rem;flex-wrap:wrap}
+.hero-meta span{display:flex;align-items:center;gap:0.4rem}
+.hero-meta strong{color:var(--text)}
+
+.section{max-width:900px;margin:0 auto;padding:3.5rem 2rem;position:relative;z-index:1}
+.section-label{font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem}
+.section h2{font-family:var(--font-display);font-size:clamp(1.4rem,3vw,2rem);color:#fff;margin-bottom:1.25rem;line-height:1.25}
+.section p{color:var(--muted);font-size:0.92rem;line-height:1.85;margin-bottom:1rem}
+.section p:last-child{margin-bottom:0}
+.divider{height:1px;background:var(--border);max-width:900px;margin:0 auto}
+
+.toc{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:1.75rem 2rem;margin:0 auto 2rem;max-width:900px;position:relative;z-index:1}
+.toc-title{font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
+.toc ol{list-style:none;counter-reset:toc}
+.toc li{counter-increment:toc;margin-bottom:0.5rem}
+.toc li::before{content:counter(toc,decimal-leading-zero);font-family:var(--font-mono);font-size:0.7rem;color:var(--accent);margin-right:0.75rem}
+.toc a{color:var(--text);text-decoration:none;font-size:0.88rem;transition:color 0.2s}
+.toc a:hover{color:var(--accent)}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;text-align:center;transition:border-color 0.2s}
+.stat-card:hover{border-color:var(--border-accent)}
+.stat-val{font-family:var(--font-display);font-size:2rem;font-weight:700;line-height:1;margin-bottom:0.3rem}
+.stat-label{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+
+.data-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-bottom:1.5rem}
+.data-card-title{font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
+
+.bar-row{display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem}
+.bar-label{font-size:0.82rem;color:var(--muted);min-width:160px}
+.bar-track{flex:1;height:4px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;transform-origin:left;transition:transform 1.4s cubic-bezier(.34,1,.64,1)}
+.bar-val{font-family:var(--font-mono);font-size:0.75rem;color:var(--accent);min-width:40px;text-align:right}
+
+.row{display:flex;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.85rem}
+.row:last-child{border-bottom:none}
+.row-label{color:var(--muted)}
+.row-val{color:var(--accent);font-family:var(--font-mono);font-size:0.8rem}
+
+.callout{border-left:3px solid var(--accent);padding:1rem 1.5rem;background:color-mix(in srgb,var(--accent) 6%,transparent);border-radius:0 8px 8px 0;margin:1.5rem 0;font-size:0.88rem;color:var(--text);line-height:1.8}
+.callout-teal{border-left-color:var(--teal);background:color-mix(in srgb,var(--teal) 6%,transparent)}
+.callout-red{border-left-color:var(--red);background:color-mix(in srgb,var(--red) 6%,transparent)}
+
+.cite{font-size:0.78rem;color:var(--muted);line-height:1.7;padding:0.5rem 0;border-bottom:1px solid var(--border)}
+.cite:last-child{border-bottom:none}
+.cite-num{font-family:var(--font-mono);color:var(--accent);font-size:0.7rem;margin-right:0.5rem}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+.stoler{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:1.5rem 2rem;margin:1.5rem 0}
+.stoler-name{font-size:0.95rem;color:#fff;font-weight:600;margin-bottom:0.2rem}
+.stoler-creds{font-size:0.7rem;color:var(--accent);letter-spacing:0.06em;margin-bottom:0.6rem}
+.stoler-role{font-size:0.83rem;color:var(--muted);line-height:1.7}
+
+.cta-block{background:var(--surface);border:1px solid var(--border-accent);border-radius:12px;padding:2.5rem 2rem;text-align:center}
+.cta-block h3{font-family:var(--font-display);font-size:1.5rem;color:#fff;margin-bottom:0.6rem}
+.cta-block p{color:var(--muted);font-size:0.88rem;max-width:520px;margin:0 auto 2rem}
+.cta-btn{display:inline-block;background:var(--accent);color:#05080F;font-size:0.95rem;font-weight:bold;letter-spacing:0.04em;padding:0.95rem 2.25rem;border-radius:6px;text-decoration:none;border:none;cursor:pointer;transition:opacity 0.2s,transform 0.15s}
+.cta-btn:hover{opacity:0.9;transform:translateY(-1px)}
+
+.footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:0.75rem;line-height:2;position:relative;z-index:1}
+.footer strong{color:var(--text)}
+.footer a{color:var(--accent);text-decoration:none}
+
+@media(max-width:640px){.g2{grid-template-columns:1fr}.hero{padding:8rem 1.25rem 3rem}.section{padding:2.5rem 1.25rem}.stat-grid{grid-template-columns:1fr 1fr}.bar-label{min-width:100px;font-size:0.75rem}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="https://bleu.live" class="logo">BLEU</a>
+  <div class="header-right">
+    <span class="header-badge">Whitepaper</span>
+    <span class="header-loc">New Orleans, LA</span>
+  </div>
+</header>
+
+<nav class="breadcrumb" aria-label="breadcrumb">
+  <a href="https://bleu.live">BLEU</a><span class="bc-sep">></span>
+  <a href="https://bleu.live/whitepapers">Whitepapers</a><span class="bc-sep">></span>
+  <span>New Orleans, LA</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wp-tag">Clinical Research Whitepaper</div>
+  <h1>Health Intelligence Infrastructure for <em>New Orleans</em>, Louisiana</h1>
+  <p class="hero-sub">New Orleans is BLEU's home. The most complex health ecosystem in America. This whitepaper documents the clinical rationale, epidemiological data, environmental burden, and protocol design logic behind BLEU's deployment in the city where it was born.</p>
+  <div class="hero-meta">
+    <span>Published <strong>April 2026</strong></span>
+    <span>Author <strong>Dr. Felicia Stoler, DCN RDN FACSM</strong></span>
+    <span>Publisher <strong>Jazz Bird 501(c)(3)</strong></span>
+  </div>
+</section>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <ol>
+    <li><a href="#executive-summary">Executive Summary</a></li>
+    <li><a href="#population">Population and Demographics</a></li>
+    <li><a href="#health-burden">Chronic Disease Burden</a></li>
+    <li><a href="#environment">Environmental Health: Cancer Alley</a></li>
+    <li><a href="#mental-health">Mental Health and Trauma Epidemiology</a></li>
+    <li><a href="#access">Healthcare Access Gaps</a></li>
+    <li><a href="#protocol-design">Protocol Design Rationale</a></li>
+    <li><a href="#clinical-authority">Clinical Authority and Governance</a></li>
+    <li><a href="#infrastructure">BLEU Technical Infrastructure</a></li>
+    <li><a href="#references">References</a></li>
+  </ol>
+</div>
+
+<div class="divider"></div>
+
+<!-- 01 EXECUTIVE SUMMARY -->
+<section class="section" id="executive-summary">
+  <div class="section-label">01 &mdash; Executive Summary</div>
+  <h2>Why New Orleans Needs a Different Kind of Health System</h2>
+  <p>New Orleans, Louisiana is one of the most medically underserved major cities in the United States. It sits at the intersection of environmental catastrophe, generational trauma, chronic disease concentration, and systemic healthcare access failure. Louisiana ranks 49th nationally in overall health outcomes. Orleans Parish carries disproportionate burden even within this context.</p>
+  <p>BLEU was designed here because the need is here. The platform's AI clinical decision engine (ALVAI), 855,000 NPI-verified practitioner directory, drug interaction screening across 302,000 verified pairs, and evidence-based supplement protocols through Dr. Felicia Stoler's Fullscript dispensary were all architected to address the specific pathology of this city.</p>
+  <div class="callout">This whitepaper presents the epidemiological evidence, environmental data, and clinical reasoning that defines BLEU's protocol library for New Orleans. Every protocol on the platform traces back to the data documented here.</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 02 POPULATION AND DEMOGRAPHICS -->
+<section class="section" id="population">
+  <div class="section-label">02 &mdash; Population and Demographics</div>
+  <h2>The City by the Numbers</h2>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val" style="color:var(--text)">384K</div><div class="stat-label">Population</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--accent)">59%</div><div class="stat-label">Black / African American</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--teal)">33%</div><div class="stat-label">White</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--orange)">23.7%</div><div class="stat-label">Below Poverty Line</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--purple)">37.5</div><div class="stat-label">Median Age</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--green)">$45K</div><div class="stat-label">Median Household Income</div></div>
+  </div>
+  <p>New Orleans is a majority-Black city with a poverty rate nearly double the national average (23.7% vs. 12.4%). The median household income of approximately $45,000 sits well below the national median of $75,000. These economic realities constrain healthcare access, nutrition quality, and preventive care engagement across every neighborhood from the Lower Ninth Ward to New Orleans East.</p>
+  <p>Post-Hurricane Katrina population displacement permanently altered the demographic composition. Roughly 100,000 residents who evacuated in 2005 never returned. The population that rebuilt carries compounded trauma, disrupted continuity of care, and fractured social support networks.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- 03 CHRONIC DISEASE BURDEN -->
+<section class="section" id="health-burden">
+  <div class="section-label">03 &mdash; Chronic Disease Burden</div>
+  <h2>A City Under Metabolic Siege</h2>
+  <p>Louisiana ranks among the worst states for obesity, diabetes, cardiovascular disease, and cancer mortality. New Orleans carries the weight of the state average while adding its own compounding factors: a food culture built on refined carbohydrates, saturated fat, and sodium; subtropical heat that limits outdoor physical activity for five months of the year; and a social culture deeply intertwined with alcohol consumption.</p>
+
+  <div class="data-card">
+    <div class="data-card-title">Chronic Disease Prevalence &mdash; Orleans Parish vs. National Average</div>
+    <div class="bar-row"><span class="bar-label">Obesity (Adult)</span><div class="bar-track"><div class="bar-fill" style="width:63%;background:var(--red)"></div></div><span class="bar-val">36.2%</span></div>
+    <div class="bar-row"><span class="bar-label">National Avg</span><div class="bar-track"><div class="bar-fill" style="width:52%;background:var(--muted)"></div></div><span class="bar-val">31.9%</span></div>
+    <div style="height:1rem"></div>
+    <div class="bar-row"><span class="bar-label">Diabetes (Type 2)</span><div class="bar-track"><div class="bar-fill" style="width:56%;background:var(--orange)"></div></div><span class="bar-val">14.1%</span></div>
+    <div class="bar-row"><span class="bar-label">National Avg</span><div class="bar-track"><div class="bar-fill" style="width:42%;background:var(--muted)"></div></div><span class="bar-val">10.5%</span></div>
+    <div style="height:1rem"></div>
+    <div class="bar-row"><span class="bar-label">Hypertension</span><div class="bar-track"><div class="bar-fill" style="width:76%;background:var(--purple)"></div></div><span class="bar-val">38.4%</span></div>
+    <div class="bar-row"><span class="bar-label">National Avg</span><div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--muted)"></div></div><span class="bar-val">29.4%</span></div>
+    <div style="height:1rem"></div>
+    <div class="bar-row"><span class="bar-label">Heart Disease Mortality</span><div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--red)"></div></div><span class="bar-val">221/100K</span></div>
+    <div class="bar-row"><span class="bar-label">National Avg</span><div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--muted)"></div></div><span class="bar-val">168/100K</span></div>
+  </div>
+
+  <p>The metabolic syndrome cluster &mdash; obesity, insulin resistance, hypertension, and dyslipidemia &mdash; is not four separate problems in New Orleans. It is one interconnected cascade, driven by food environment, economic stress, and limited preventive care infrastructure. BLEU's protocol library addresses these as a system, not as isolated conditions.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- 04 ENVIRONMENTAL HEALTH: CANCER ALLEY -->
+<section class="section" id="environment">
+  <div class="section-label">04 &mdash; Environmental Health</div>
+  <h2>Cancer Alley: 150 Petrochemical Plants Between Baton Rouge and New Orleans</h2>
+  <p>The 85-mile corridor along the Mississippi River between Baton Rouge and New Orleans contains over 150 petrochemical plants and refineries. This region &mdash; known as Cancer Alley &mdash; exposes residents to elevated concentrations of benzene, formaldehyde, ethylene oxide, chloroprene, and other known carcinogens.</p>
+
+  <div class="callout-red callout">EPA data shows cancer risk in parts of St. James Parish and St. John the Baptist Parish at 50x the national average. New Orleans sits at the downstream terminus of this corridor. Airborne and waterborne toxicants do not stop at parish lines.</div>
+
+  <div class="data-card">
+    <div class="data-card-title">Environmental Exposure Data &mdash; Greater New Orleans</div>
+    <div class="row"><span class="row-label">Petrochemical facilities within 50 miles</span><span class="row-val">150+</span></div>
+    <div class="row"><span class="row-label">EPA Toxics Release Inventory sites</span><span class="row-val">89</span></div>
+    <div class="row"><span class="row-label">Excess cancer risk (St. John Parish)</span><span class="row-val">50x national</span></div>
+    <div class="row"><span class="row-label">Air Quality Index days above 100/yr</span><span class="row-val">18&ndash;32</span></div>
+    <div class="row"><span class="row-label">Lead service lines remaining (est.)</span><span class="row-val">30,000+</span></div>
+    <div class="row"><span class="row-label">Boil water advisories (2023&ndash;2025)</span><span class="row-val">12 events</span></div>
+  </div>
+
+  <p>Environmental toxicant exposure is not a background factor in New Orleans. It is a primary driver of disease. Chronic low-level exposure to volatile organic compounds drives oxidative stress, disrupts endocrine function, and increases baseline inflammation. BLEU's Immune Resilience Protocol and Longevity Core Protocol include antioxidant compounds (quercetin, resveratrol, omega-3 EPA/DHA) specifically because this city's environmental burden demands proactive cellular defense.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- 05 MENTAL HEALTH AND TRAUMA -->
+<section class="section" id="mental-health">
+  <div class="section-label">05 &mdash; Mental Health and Trauma Epidemiology</div>
+  <h2>The Weight This City Carries</h2>
+  <p>Hurricane Katrina in 2005 killed over 1,800 people and displaced 1.5 million across the Gulf Coast. Twenty-one years later, the trauma remains embedded in the nervous systems of survivors and their children. Post-Katrina PTSD prevalence was estimated at 30&ndash;50% among returning residents in the first five years. Longitudinal studies show elevated anxiety, depression, and substance use disorders persisting well beyond the acute aftermath.</p>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val" style="color:var(--red)">28%</div><div class="stat-label">Mental Health Provider Access</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--orange)">22%</div><div class="stat-label">Adults Reporting Depression</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--purple)">19%</div><div class="stat-label">Binge Drinking Rate</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--red)">24.1</div><div class="stat-label">Drug OD Deaths per 100K</div></div>
+  </div>
+
+  <p>The compounding trauma stack in New Orleans is not limited to Katrina. Hurricane Ida (2021) struck the same communities with Category 4 force. Chronic gun violence, particularly in underserved neighborhoods, creates ongoing acute stress exposure. The city's murder rate consistently ranks among the highest in the nation.</p>
+  <p>BLEU's mental health response operates on three levels. First, crisis detection: the Safety Shield system identifies suicidal ideation, self-harm language, and acute distress patterns and responds within 800ms with 988 Suicide and Crisis Lifeline routing. Second, the Anxiety Regulation Protocol and Mood Stabilization Protocol address the neurochemical consequences of chronic stress. Third, the practitioner directory surfaces NPI-verified psychiatrists, licensed clinical social workers, and addiction specialists within the New Orleans metro.</p>
+
+  <div class="callout-teal callout">Only 28% of New Orleans adults who need mental health services can access them. BLEU does not replace therapists. BLEU fills the gap between needing help and finding it.</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 06 HEALTHCARE ACCESS GAPS -->
+<section class="section" id="access">
+  <div class="section-label">06 &mdash; Healthcare Access Gaps</div>
+  <h2>The System That Is Not There</h2>
+  <p>Louisiana expanded Medicaid in 2016, which insured approximately 500,000 previously uninsured residents. Despite this expansion, access barriers persist in New Orleans due to provider shortages, geographic maldistribution, and the concentration of specialists in affluent corridors while underserved neighborhoods are left with emergency rooms as primary care.</p>
+
+  <div class="g2">
+    <div class="data-card">
+      <div class="data-card-title">Access Barriers</div>
+      <div class="row"><span class="row-label">Uninsured rate (Orleans)</span><span class="row-val">10.2%</span></div>
+      <div class="row"><span class="row-label">Primary care physician shortage</span><span class="row-val">Severe</span></div>
+      <div class="row"><span class="row-label">Mental health provider ratio</span><span class="row-val">350:1</span></div>
+      <div class="row"><span class="row-label">Dentist shortage areas</span><span class="row-val">12 census tracts</span></div>
+      <div class="row"><span class="row-label">Avg ER wait time</span><span class="row-val">4.2 hrs</span></div>
+    </div>
+    <div class="data-card">
+      <div class="data-card-title">BLEU Infrastructure Response</div>
+      <div class="row"><span class="row-label">NPI practitioners indexed</span><span class="row-val">855,000+</span></div>
+      <div class="row"><span class="row-label">Drug interaction pairs</span><span class="row-val">302,000</span></div>
+      <div class="row"><span class="row-label">Protocol conditions covered</span><span class="row-val">10</span></div>
+      <div class="row"><span class="row-label">GoodRx pharmacy pricing</span><span class="row-val">Real-time</span></div>
+      <div class="row"><span class="row-label">Cost Plus Drug surfacing</span><span class="row-val">Always first</span></div>
+    </div>
+  </div>
+
+  <p>Charity Hospital &mdash; the institution that served New Orleans' uninsured for 264 years &mdash; closed after Katrina and has never reopened as a full-service hospital. The healthcare safety net that existed before 2005 was not rebuilt to the same capacity. University Medical Center replaced it with a smaller facility. Community health centers have expanded but cannot absorb the full demand.</p>
+  <p>BLEU's finance module surfaces GoodRx real pharmacy pricing, Cost Plus Drug alternatives, patient assistance programs, HRSA health centers, and Medicaid eligibility checks because the cost of care is not an abstraction in this city. It is the reason people do not get care.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- 07 PROTOCOL DESIGN RATIONALE -->
+<section class="section" id="protocol-design">
+  <div class="section-label">07 &mdash; Protocol Design Rationale</div>
+  <h2>Why These Protocols for This City</h2>
+  <p>BLEU's 10-protocol library was not designed generically and applied to New Orleans. It was designed for the pathology profile of this city and then extended to other locations with local adaptation. Every protocol traces to New Orleans epidemiology.</p>
+
+  <div class="data-card">
+    <div class="data-card-title">Protocol &mdash; Local Rationale Mapping</div>
+    <div class="row"><span class="row-label">Sleep Reset Protocol</span><span class="row-val">Subtropical heat disrupts circadian rhythm. 90&deg;F+ nights May&ndash;Sept.</span></div>
+    <div class="row"><span class="row-label">Cortisol + Stress Protocol</span><span class="row-val">Post-Katrina chronic cortisol elevation. HPA axis dysregulation.</span></div>
+    <div class="row"><span class="row-label">Gut Reset Protocol</span><span class="row-val">NOLA food culture: high sodium, refined carbs, saturated fat.</span></div>
+    <div class="row"><span class="row-label">Energy + Fatigue Protocol</span><span class="row-val">Heat fatigue. B-vitamin depletion via alcohol culture.</span></div>
+    <div class="row"><span class="row-label">Immune Resilience Protocol</span><span class="row-val">Cancer Alley oxidative stress. Chronic toxicant exposure.</span></div>
+    <div class="row"><span class="row-label">Cognitive Focus Protocol</span><span class="row-val">Inflammation-driven cognitive fog. Sleep debt compounding.</span></div>
+    <div class="row"><span class="row-label">Hormonal Support Protocol</span><span class="row-val">Endocrine disruption from environmental toxicants.</span></div>
+    <div class="row"><span class="row-label">Movement Recovery Protocol</span><span class="row-val">Heat limits outdoor activity window to 6 months/year.</span></div>
+    <div class="row"><span class="row-label">Longevity Core Protocol</span><span class="row-val">Accelerated biological aging from combined stressor load.</span></div>
+    <div class="row"><span class="row-label">Mood Stabilization Protocol</span><span class="row-val">Generational trauma. 22% depression prevalence.</span></div>
+  </div>
+
+  <p>All protocols are dispensed through Dr. Felicia Stoler's Fullscript account at 20&ndash;35% below retail. No SKUs are sold individually. Protocols are bundled as 30-day interventions because isolated supplementation without structure produces no measurable outcome. Every combination is screened through BLEU's drug interaction engine (CYP450, UGT, P-glycoprotein metabolic pathway data) before a user can purchase.</p>
+
+  <div class="callout">BLEU never recommends a product. BLEU recommends a protocol. The distinction is the difference between selling and treating.</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 08 CLINICAL AUTHORITY -->
+<section class="section" id="clinical-authority">
+  <div class="section-label">08 &mdash; Clinical Authority and Governance</div>
+  <h2>Who Stands Behind Every Output</h2>
+
+  <div class="stoler">
+    <div class="stoler-name">Dr. Felicia Stoler</div>
+    <div class="stoler-creds">DCN &middot; MS &middot; RDN &middot; FACSM &middot; FAND &middot; Dipl ACLM &middot; Principal Investigator, Jazz Bird 501(c)(3)</div>
+    <div class="stoler-role">Doctor of Clinical Nutrition. Registered Dietitian Nutritionist. Fellow of the American College of Sports Medicine. Fellow of the Academy of Nutrition and Dietetics. Board-certified in Lifestyle Medicine. She audits every protocol on this platform for clinical accuracy, safety, and outcome integrity. She never prescribes. She certifies the knowledge infrastructure that serves you.</div>
+  </div>
+
+  <p>Jazz Bird 501(c)(3) is the nonprofit research entity that governs BLEU's clinical operations. Every user session in New Orleans that completes a 30-day protocol and checks in at Day 7 generates a causal data point for Jazz Bird's research. User outcomes &mdash; anonymized and aggregated &mdash; become the evidence base for future protocol refinement and grant applications.</p>
+  <p>BLEU's AI model routing ensures clinical-grade queries are handled by the appropriate model. Drug interactions, crisis detection, and complex research queries route to Claude Opus. Emotional synthesis and multi-step reasoning route to GPT-4o. Navigation and simple lookups route to GPT-4o Mini. No single model handles everything. The routing is the clinical judgment layer.</p>
+
+  <div class="data-card">
+    <div class="data-card-title">Clinical Governance Principles</div>
+    <div class="row"><span class="row-label">BLEU never diagnoses</span><span class="row-val">Always</span></div>
+    <div class="row"><span class="row-label">Therapist disclaimer included</span><span class="row-val">Every session</span></div>
+    <div class="row"><span class="row-label">Crisis detection override</span><span class="row-val">&lt;800ms</span></div>
+    <div class="row"><span class="row-label">Drug interaction screening</span><span class="row-val">Before purchase</span></div>
+    <div class="row"><span class="row-label">iHerb sourcing</span><span class="row-val">Permanently excluded</span></div>
+    <div class="row"><span class="row-label">Ad revenue</span><span class="row-val">Zero. Ever.</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 09 TECHNICAL INFRASTRUCTURE -->
+<section class="section" id="infrastructure">
+  <div class="section-label">09 &mdash; BLEU Technical Infrastructure</div>
+  <h2>What Powers the System</h2>
+  <p>BLEU operates as a single-page application backed by a Node.js HTTP server, a Deno-based edge function architecture (ALVAI 20-agent system with 6 Super-Fields), and a Python data pipeline pulling from 10 verified sources four times daily.</p>
+
+  <div class="g2">
+    <div class="data-card">
+      <div class="data-card-title">Data Sources (Pipeline)</div>
+      <div class="row"><span class="row-label">NPI Registry</span><span class="row-val">855K+ practitioners</span></div>
+      <div class="row"><span class="row-label">FDA / RxNorm</span><span class="row-val">Drug interactions</span></div>
+      <div class="row"><span class="row-label">Google Places</span><span class="row-val">Local health services</span></div>
+      <div class="row"><span class="row-label">PubMed</span><span class="row-val">Clinical research</span></div>
+      <div class="row"><span class="row-label">Open Food Facts</span><span class="row-val">Nutrition data</span></div>
+    </div>
+    <div class="data-card">
+      <div class="data-card-title">AI Model Routing</div>
+      <div class="row"><span class="row-label">GPT-4o Mini (70%)</span><span class="row-val">Navigation, lookups</span></div>
+      <div class="row"><span class="row-label">GPT-4o (25%)</span><span class="row-val">Synthesis, emotion</span></div>
+      <div class="row"><span class="row-label">Claude Opus (5%)</span><span class="row-val">Drug interactions, crisis</span></div>
+      <div class="row"><span class="row-label">Intent detection</span><span class="row-val">Word count + pattern</span></div>
+      <div class="row"><span class="row-label">Safety Shield</span><span class="row-val">&lt;800ms response</span></div>
+    </div>
+  </div>
+
+  <p>The ALVAI engine resolves &mdash; it does not respond. Every query produces: State (what the user is experiencing), Root Cause (1&ndash;2 biological drivers, ranked), Protocol (3&ndash;5 exact steps with timing), Execution (one CTA, one path), and Next Trigger (Day 7 check-in). This structure prevents the platform from devolving into a chatbot that validates without intervening.</p>
+  <p>The Longevity Stability Score (LSS) tracks 12 dimensions &mdash; nutrition, sleep architecture, stress regulation, movement, mental health, substance risk, preventive care, social connection, financial stress, environmental risk, medication adherence, and engagement &mdash; scored 0&ndash;100 across every session. The score is never shared with employers or insurers. It belongs to the user.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="section" style="padding-top:2rem">
+  <div class="cta-block">
+    <h3>Start Your Protocol</h3>
+    <p>Clinical-grade. Non-prescription. Dispensed through Dr. Stoler's Fullscript account at 20&ndash;35% below retail. Drug interaction screened before purchase.</p>
+    <a href="https://us.fullscript.com/welcome/fstoler" class="cta-btn">Open BLEU Dispensary</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 10 REFERENCES -->
+<section class="section" id="references">
+  <div class="section-label">10 &mdash; References</div>
+  <h2>Sources and Citations</h2>
+  <div class="cite"><span class="cite-num">[1]</span>America's Health Rankings, United Health Foundation. Louisiana state health rankings, 2025 edition.</div>
+  <div class="cite"><span class="cite-num">[2]</span>U.S. Census Bureau. American Community Survey 5-Year Estimates, Orleans Parish, Louisiana. 2020&ndash;2024.</div>
+  <div class="cite"><span class="cite-num">[3]</span>Louisiana Department of Health. Chronic Disease Prevalence Report, Orleans Parish. 2024.</div>
+  <div class="cite"><span class="cite-num">[4]</span>EPA Toxics Release Inventory (TRI) Program. Industrial District 85-mile Mississippi River Corridor data. 2023.</div>
+  <div class="cite"><span class="cite-num">[5]</span>Terrell KA, St. Julien G. "Air pollution is linked to higher cancer rates among black or impoverished communities in Louisiana." Environmental Research Letters, 2022; 17(1).</div>
+  <div class="cite"><span class="cite-num">[6]</span>Rhodes J et al. "The impact of Hurricane Katrina on the mental and physical health of low-income parents in New Orleans." American Journal of Orthopsychiatry, 2010; 80(2):237&ndash;247.</div>
+  <div class="cite"><span class="cite-num">[7]</span>Chandrasekhar D. "Diasporic disruption: post-Katrina population change and community resilience." Journal of Urban Affairs, 2012; 34(1):29&ndash;48.</div>
+  <div class="cite"><span class="cite-num">[8]</span>HRSA Health Professional Shortage Area (HPSA) Designations. Orleans Parish, Louisiana. Updated 2025.</div>
+  <div class="cite"><span class="cite-num">[9]</span>CDC PLACES Project. Local health outcome and risk factor estimates, Orleans Parish. 2024.</div>
+  <div class="cite"><span class="cite-num">[10]</span>National Practitioner Data Bank / NPI Registry. CMS National Plan and Provider Enumeration System. 2025.</div>
+  <div class="cite"><span class="cite-num">[11]</span>Pruss-Ustun A et al. "Preventing disease through healthy environments." WHO Report, 2016.</div>
+  <div class="cite"><span class="cite-num">[12]</span>Substance Abuse and Mental Health Services Administration (SAMHSA). National Survey on Drug Use and Health, Louisiana estimates. 2024.</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RELATED -->
+<section class="section">
+  <div class="section-label">New Orleans Ecosystem</div>
+  <h2>Related Pages</h2>
+  <div style="display:flex;flex-direction:column;gap:0.6rem">
+    <a href="https://bleu.live/cities/new-orleans-la" style="display:flex;align-items:center;gap:0.75rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.9rem 1.25rem;text-decoration:none;color:var(--text);font-size:0.88rem;transition:border-color 0.2s"><span style="color:var(--accent)">&#9670;</span> New Orleans City Profile</a>
+    <a href="https://bleu.live/anxiety/new-orleans-la" style="display:flex;align-items:center;gap:0.75rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.9rem 1.25rem;text-decoration:none;color:var(--text);font-size:0.88rem;transition:border-color 0.2s"><span style="color:var(--accent)">&#9672;</span> Anxiety Protocol &mdash; New Orleans</a>
+    <a href="https://bleu.live/sleep/new-orleans-la" style="display:flex;align-items:center;gap:0.75rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.9rem 1.25rem;text-decoration:none;color:var(--text);font-size:0.88rem;transition:border-color 0.2s"><span style="color:var(--accent)">&#9680;</span> Sleep Protocol &mdash; New Orleans</a>
+    <a href="https://bleu.live/gut/new-orleans-la" style="display:flex;align-items:center;gap:0.75rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.9rem 1.25rem;text-decoration:none;color:var(--text);font-size:0.88rem;transition:border-color 0.2s"><span style="color:var(--accent)">&#9673;</span> Gut Health Protocol &mdash; New Orleans</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <strong>BLEU</strong> &mdash; Longevity Operating System &middot; Jazz Bird 501(c)(3) &middot; New Orleans, Louisiana<br>
+  Clinical Authority: <strong>Dr. Felicia Stoler</strong> &mdash; DCN, MS, RDN, FACSM, FAND, Dipl ACLM &middot; Principal Investigator<br>
+  Fullscript dispensary under Dr. Stoler's RDN credential &middot; 20&ndash;35% below retail &middot; Zero ad revenue. Ever.<br><br>
+  <a href="https://bleu.live">bleu.live</a> &middot;
+  <a href="https://bleu.live/whitepapers" style="color:var(--muted)">Whitepapers</a> &middot;
+  <a href="https://bleu.live/anxiety" style="color:var(--muted)">Anxiety</a> &middot;
+  <a href="https://bleu.live/sleep" style="color:var(--muted)">Sleep</a> &middot;
+  <a href="https://bleu.live/gut" style="color:var(--muted)">Gut Health</a> &middot;
+  <a href="https://bleu.live/cities/new-orleans-la" style="color:var(--muted)">New Orleans City Profile</a>
+</footer>
+
+<script>
+// Smooth scroll for TOC links
+document.querySelectorAll('.toc a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+// Scroll engagement tracking
+let maxScroll=0, startTime=Date.now();
+window.addEventListener('scroll',()=>{
+  const pct=Math.round((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100);
+  if(pct>maxScroll){maxScroll=pct;
+    if([25,50,75,90].includes(maxScroll)&&typeof gtag!=='undefined')
+      gtag('event','scroll_depth',{percent:maxScroll,page:'whitepaper',city:'new-orleans-la'});
+  }
+},{passive:true});
+
+window.addEventListener('beforeunload',()=>{
+  const sec=Math.round((Date.now()-startTime)/1000);
+  if(typeof gtag!=='undefined') gtag('event','time_on_page',{seconds:sec,page:'whitepaper',city:'new-orleans-la',scroll:maxScroll});
+});
+</script>
+</body>
+</html>
