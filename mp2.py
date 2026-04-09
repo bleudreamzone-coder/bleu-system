@@ -12,7 +12,7 @@ g3="display:grid;grid-template-columns:repeat(3,1fr);gap:14px"
 g4="display:grid;grid-template-columns:repeat(4,1fr);gap:12px"
 
 def P(n,u,t,p,q,ih=None):
-    lnk=f'<a href="https://www.amazon.com/s?k={q}&tag=bleulive-20" target="_blank" style="background:linear-gradient(135deg,#d4af37,#b8962e);color:#0a1628;padding:7px 16px;border-radius:22px;font-weight:700;font-size:12px;text-decoration:none">Amazon</a>'
+    lnk=f'<a href="https://www.amazon.com/s?k={q}&tag=bleulive20-20" target="_blank" style="background:linear-gradient(135deg,#d4af37,#b8962e);color:#0a1628;padding:7px 16px;border-radius:22px;font-weight:700;font-size:12px;text-decoration:none">Amazon</a>'
     if ih: lnk+=f' <a href="https://www.iherb.com/search?kw={ih}" target="_blank" style="border:1px solid #4ecdc4;color:#4ecdc4;padding:6px 14px;border-radius:22px;font-size:12px;text-decoration:none">iHerb</a>'
     return f'<div style="{c}"><div style="color:#d4af37;font-weight:700;font-size:16px">{n}</div><div style="color:#a0b4c0;font-size:13px;line-height:1.5;margin:8px 0">{u}<br><strong style="color:#e8d5b0">Take:</strong> {t}</div><div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center"><span style="color:#4ecdc4;font-weight:700;font-size:18px">{p}</span>{lnk}</div></div>'
 

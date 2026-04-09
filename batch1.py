@@ -36,11 +36,11 @@ v+=abtn('&#129657; Pain','ask('+Q+'vessel'+Q+','+Q+'What natural supplements hel
 v+='</div>'
 v+=hdr('CURATED SUPPLEMENTS')
 v+='<div style="'+g2+'">'
-v+=prod('Magnesium Glycinate 400mg','GABA-A receptor modulation. Gold standard for sleep + muscle recovery. Take 1hr before bed.','Amazon $14.99','tag=bleulive-20','&#9989; No common interactions',pill('SLEEP','t')+pill('RECOVERY','g'),'t')
-v+=prod('Ashwagandha KSM-66 600mg','Cortisol reduction up to 30%. Adaptogen for chronic stress. 6-week cycle recommended.','Amazon $22.99','tag=bleulive-20','&#9888; Avoid with thyroid meds',pill('STRESS','t')+pill('HORMONES','g'),'g')
+v+=prod('Magnesium Glycinate 400mg','GABA-A receptor modulation. Gold standard for sleep + muscle recovery. Take 1hr before bed.','Amazon $14.99','tag=bleulive20-20','&#9989; No common interactions',pill('SLEEP','t')+pill('RECOVERY','g'),'t')
+v+=prod('Ashwagandha KSM-66 600mg','Cortisol reduction up to 30%. Adaptogen for chronic stress. 6-week cycle recommended.','Amazon $22.99','tag=bleulive20-20','&#9888; Avoid with thyroid meds',pill('STRESS','t')+pill('HORMONES','g'),'g')
 v+=prod('Omega-3 Fish Oil 2000mg','EPA/DHA for inflammation, brain health, cardiovascular. Molecular-distilled, 3rd party tested.','iHerb $18.50','via affiliate','&#9989; Safe with most medications',pill('BRAIN','t')+pill('HEART','g'),'t')
-v+=prod('L-Theanine 200mg','Alpha brain wave promotion. Calm focus without drowsiness. Stacks well with caffeine.','Amazon $12.99','tag=bleulive-20','&#9989; No known interactions',pill('FOCUS','t')+pill('CALM','g'),'g')
-v+=prod('Vitamin D3 + K2 5000IU','Immune support + calcium metabolism. 42% of Americans deficient. Take with fatty meal.','Amazon $16.99','tag=bleulive-20','&#9888; Check with blood thinners',pill('IMMUNE','t')+pill('BONES','g'),'t')
+v+=prod('L-Theanine 200mg','Alpha brain wave promotion. Calm focus without drowsiness. Stacks well with caffeine.','Amazon $12.99','tag=bleulive20-20','&#9989; No known interactions',pill('FOCUS','t')+pill('CALM','g'),'g')
+v+=prod('Vitamin D3 + K2 5000IU','Immune support + calcium metabolism. 42% of Americans deficient. Take with fatty meal.','Amazon $16.99','tag=bleulive20-20','&#9888; Check with blood thinners',pill('IMMUNE','t')+pill('BONES','g'),'t')
 v+=prod('CBD Oil Tincture 1500mg','Full-spectrum. 5-HT1A serotonin pathway. Sublingual 15-45 min onset. Start 10mg.','Charlotte'+Q+'s Web $59.99','affiliate','&#9888; CYP450 interactions — check meds',pill('ANXIETY','r')+pill('PAIN','g'),'g')
 v+='</div>'
 v+=hdr('TRUSTED PARTNERS')

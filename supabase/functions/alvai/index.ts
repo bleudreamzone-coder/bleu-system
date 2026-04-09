@@ -1952,7 +1952,7 @@ async function runSemanticSearch(query: string, userLocation: string = ""): Prom
 // 2. Thorne (thorne.com) — NSF Certified for Sport, Dr. Felicia approved, 15-20%
 // 3. Pure Encapsulations (pureencapsulations.com) — hypoallergenic, no fillers, 10-15%
 // 4. Vitacost (vitacost.com) — direct pricing, 8-12%
-// 5. Amazon (amazon.com/?tag=bleulive-20) — HSA-eligible products, 4-8%
+// 5. Amazon (amazon.com/?tag=bleulive20-20) — HSA-eligible products, 4-8%
 // METABOLIC AFFILIATES:
 // Function Health (functionhealth.com) — 100+ biomarkers, $499/yr, 15-20%
 // InsideTracker (insidetracker.com) — biological age, 15-20%

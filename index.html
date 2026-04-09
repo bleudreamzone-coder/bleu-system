@@ -70,7 +70,7 @@ function _vShow(id){
     s+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
     s+='<span style="font-size:12px;color:#c9a84c;font-weight:700">'+c[3]+'</span>';
     s+='<button data-pid="'+id+'" data-brand="'+c[1]+'" data-asin="'+c[4]+'" class="vd-cart-btn" style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e;padding:5px 12px;border-radius:3px;font-size:10px;font-weight:700;cursor:pointer">+ Add to Cart</button>';
-    s+='<a href="https://www.amazon.com/dp/'+c[4]+'?tag=bleulive-20" target="_blank"';
+    s+='<a href="https://www.amazon.com/dp/'+c[4]+'?tag=bleulive20-20" target="_blank"';
     s+=' data-pid="'+id+'" data-brand="'+c[1]+'" data-asin="'+c[4]+'"';
     s+=' class="vd-buy-btn"';
     s+=' style="background:#c9a84c;color:#000;padding:5px 12px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none">Buy Amazon</a>';
@@ -124,7 +124,7 @@ function _vUpd(){
   }
   el.innerHTML=_vc.map(function(x){
     return '<div class="product-card"><div class="prod-info"><div class="prod-name">'+x.name+'</div><div class="prod-brand">'+x.brand+'</div></div>'+
-    '<div class="prod-actions"><a href="https://www.amazon.com/dp/'+x.asin+'?tag=bleulive-20" target="_blank" class="prod-buy">Buy Amazon</a>'+
+    '<div class="prod-actions"><a href="https://www.amazon.com/dp/'+x.asin+'?tag=bleulive20-20" target="_blank" class="prod-buy">Buy Amazon</a>'+
     '<button class="prod-remove" data-xid="'+x.id+'" onclick="_vDel(this.dataset.xid)">remove</button></div></div>';
   }).join("");
   if(su)su.style.display="block";
@@ -1584,7 +1584,7 @@ button[type="submit"],
     <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px">
       <a href="https://betterhelp.com/bleu" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(167,139,250,.2);color:#a78bfa;background:rgba(167,139,250,.05);text-decoration:none;white-space:nowrap">&#128172; BetterHelp</a>
       <a href="javascript:void(0)" onclick="engageCard('supply','Tell me about Thorne supplements — which products from their line would be right for my health goals?','https://thorne.com')" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(212,175,55,.2);color:#d4af37;background:rgba(212,175,55,.05);text-decoration:none;white-space:nowrap">&#128138; Thorne</a>
-      <a href="https://amazon.com/?tag=bleulive-20" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(78,205,196,.2);color:#4ecdc4;background:rgba(78,205,196,.05);text-decoration:none;white-space:nowrap">&#128230; Amazon</a>
+      <a href="https://amazon.com/?tag=bleulive20-20" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(78,205,196,.2);color:#4ecdc4;background:rgba(78,205,196,.05);text-decoration:none;white-space:nowrap">&#128230; Amazon</a>
       <a href="https://charlottesweb.com?utm_source=bleu&utm_medium=affiliate&utm_campaign=wellness" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(78,205,140,.2);color:#4ecd8c;background:rgba(78,205,140,.05);text-decoration:none;white-space:nowrap">&#127807; Charlotte's Web</a>
       <a href="javascript:void(0)" onclick="engageCard('home','Tell me about the Oura Ring for sleep and recovery tracking — is it right for my wellness goals?','https://ouraring.com')" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(212,175,55,.2);color:#d4af37;background:rgba(212,175,55,.05);text-decoration:none;white-space:nowrap">&#9201; Oura</a>
       <a href="javascript:void(0)" onclick="engageCard('finance','Help me use GoodRx to find the best prices on my prescriptions right now','https://goodrx.com')" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(78,205,196,.2);color:#4ecdc4;background:rgba(78,205,196,.05);text-decoration:none;white-space:nowrap">&#128176; GoodRx</a>
@@ -3017,8 +3017,8 @@ function vsUpdateCart(){
 function vsCheckout(){
   var asins=_vc.filter(function(i){return i.asin;}).map(function(i){return i.asin;});
   if(!asins.length)return;
-  if(asins.length===1){window.open('https://www.amazon.com/dp/'+asins[0]+'?tag=bleulive-20','_blank');return;}
-  var url='https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleulive-20';
+  if(asins.length===1){window.open('https://www.amazon.com/dp/'+asins[0]+'?tag=bleulive20-20','_blank');return;}
+  var url='https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleulive20-20';
   asins.forEach(function(a,i){url+='&ASIN.'+(i+1)+'='+a+'&Quantity.'+(i+1)+'=1';});
   window.open(url,'_blank');
 }
@@ -3745,7 +3745,7 @@ var fi=0;
         <div style="font-size:9px;color:#8fa4b0">Direct pricing · wide catalog</div>
         <div style="font-size:9px;color:#5A6374;margin-top:3px">8–12% commission</div>
       </a>
-      <a href="https://www.amazon.com/?tag=bleulive-20" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px;text-align:center;transition:all .2s" onmouseover="this.style.borderColor='rgba(45,138,158,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+      <a href="https://www.amazon.com/?tag=bleulive20-20" target="_blank" style="text-decoration:none;display:block;background:rgba(25,50,68,.4);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px;text-align:center;transition:all .2s" onmouseover="this.style.borderColor='rgba(45,138,158,.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
         <div style="font-size:11px;color:#2DD4A8;font-weight:600;margin-bottom:3px">Amazon</div>
         <div style="font-size:9px;color:#8fa4b0">HSA-eligible products</div>
         <div style="font-size:9px;color:#5A6374;margin-top:3px">bleu-live-20 · 4–8%</div>
@@ -6578,7 +6578,7 @@ SLEEP MODE</div>
           <div style="background:rgba(78,205,196,0.1);color:#4ecdc4;font-size:10px;padding:2px 8px;border-radius:6px">Tier 1</div>
         </div>
         <div style="color:#8fa4b0;font-size:12px;line-height:1.6;margin-bottom:10px;font-weight:300">50mg 1hr before bed. Chamomile-derived. Binds GABA-A receptors. Huberman Protocol. Reduces anxiety and improves sleep onset.</div>
-        <a href="https://www.amazon.com/dp/B09XPRTPP4?tag=bleulive-20" target="_blank" rel="noopener" style="display:inline-block;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:6px 12px;color:#d4af37;font-size:11px;font-weight:600;text-decoration:none;margin-right:6px">Amazon &#8594;</a>
+        <a href="https://www.amazon.com/dp/B09XPRTPP4?tag=bleulive20-20" target="_blank" rel="noopener" style="display:inline-block;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:6px 12px;color:#d4af37;font-size:11px;font-weight:600;text-decoration:none;margin-right:6px">Amazon &#8594;</a>
         <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" rel="noopener" style="display:inline-block;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.2);border-radius:8px;padding:6px 12px;color:#4ecdc4;font-size:11px;font-weight:600;text-decoration:none">Fullscript &#8594;</a>
       </div>
       <div style="background:rgba(28,45,58,0.6);border:1px solid rgba(154,205,50,0.1);border-radius:14px;padding:16px">
@@ -7025,10 +7025,10 @@ function renderAffStrip() {
   const focuses = [];
   try { focuses.push(...JSON.parse(localStorage.getItem('bleu_focuses') || '[]')); } catch(e) {}
   const affiliates = [
-    {key:'sleep',label:'💊 Magnesium',url:'https://amazon.com/dp/B00YXTHZXE?tag=bleulive-20',color:'#4ecdc4'},
-    {key:'anxiety',label:'🌿 Ashwagandha',url:'https://amazon.com/dp/B01N0A5XEJ?tag=bleulive-20',color:'#7fb285'},
-    {key:'energy',label:'☀️ Vitamin D3+K2',url:'https://amazon.com/dp/B01GBGS7JU?tag=bleulive-20',color:'#d4af37'},
-    {key:'weight',label:'🔥 Berberine',url:'https://amazon.com/dp/B07BG2CNKD?tag=bleulive-20',color:'#c9a84c'},
+    {key:'sleep',label:'💊 Magnesium',url:'https://amazon.com/dp/B00YXTHZXE?tag=bleulive20-20',color:'#4ecdc4'},
+    {key:'anxiety',label:'🌿 Ashwagandha',url:'https://amazon.com/dp/B01N0A5XEJ?tag=bleulive20-20',color:'#7fb285'},
+    {key:'energy',label:'☀️ Vitamin D3+K2',url:'https://amazon.com/dp/B01GBGS7JU?tag=bleulive20-20',color:'#d4af37'},
+    {key:'weight',label:'🔥 Berberine',url:'https://amazon.com/dp/B07BG2CNKD?tag=bleulive20-20',color:'#c9a84c'},
     {key:'therapy',label:'🧠 BetterHelp',url:'https://betterhelp.com/bleu',color:'#4ecdc4'},
     {key:'fitness',label:'🏃 ClassPass',url:'https://classpass.com',color:'#7fb285'},
     {key:'grocery',label:'🛒 Groceries',url:'https://www.instacart.com/?utm_source=bleu&utm_medium=affiliate',color:'#4ecdc4'},
@@ -7950,7 +7950,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/magnesium-bisglycinate', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00X5OFUQK?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00X5OFUQK?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'L-Theanine 200mg', brand: 'Thorne', price: '$18', score: 91, emoji: '',
       why: 'Alpha wave induction. Reduces sleep latency without sedation. Stacks perfectly with magnesium.',
@@ -7958,14 +7958,14 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/theanine', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00F8I5XFO?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00F8I5XFO?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'Phosphatidylserine 100mg', brand: 'Thorne', price: '$32', score: 88, emoji: '',
       why: 'Lowers cortisol before bed. Blunts HPA axis hyperactivation. Clinically proven in stressed adults.',
       safety: '! May interact with blood thinners', tag: 'Cortisol blocker',
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/phosphatidyl-serine', color: '#e8d5b0' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B000FGXQF0?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B000FGXQF0?tag=bleulive20-20', color: '#d4af37' }
       ]}
   ],
   stress: [
@@ -7975,7 +7975,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/botanicals/ashwagandha', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00HTGUECG?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00HTGUECG?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'Rhodiola Rosea 500mg', brand: 'Thorne', price: '$26', score: 89, emoji: '',
       why: 'SHR-5 extract. Reduces burnout, improves cognitive performance under stress. Stimulating -- take AM only.',
@@ -7983,14 +7983,14 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/botanicals/rhodiola', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00CQ7HKTI?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00CQ7HKTI?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'CBD Oil 17mg', brand: "Charlotte\'s Web", price: '$54', score: 87, emoji: '',
       why: '5-HT1A agonism. CB1/CB2 modulation. Reduces anxiety in open-label and RCT data. Start 10mg sublingual.',
       safety: '! CYP450 -- check all meds before use', tag: 'ECS support',
       links: [
         { store: "Charlotte\'s Web", url: 'https://www.charlottesweb.com/17mg-cbd-oil-calm', color: '#7ab87a' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B07ZF3YRLZ?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B07ZF3YRLZ?tag=bleulive20-20', color: '#d4af37' }
       ]}
   ],
   energy: [
@@ -8000,7 +8000,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/b12', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B000Z2CSHE?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B000Z2CSHE?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'CoQ10 100mg', brand: 'Thorne', price: '$34', score: 92, emoji: '',
       why: 'ATP synthesis cofactor. Declines with age and statins. Ubiquinol form = 2x absorption. Cardio + brain energy.',
@@ -8008,14 +8008,14 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/q-best-100', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00F8I5XFO?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00F8I5XFO?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'Iron Bisglycinate 25mg', brand: 'Thorne', price: '$24', score: 88, emoji: '',
       why: 'Most common deficiency causing fatigue. Bisglycinate = 4x more absorbable, no GI upset. Get tested first.',
       safety: '! Do not take without confirmed deficiency', tag: 'Fatigue root cause',
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/ferrasorb', color: '#e8d5b0' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B0013OQG5K?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B0013OQG5K?tag=bleulive20-20', color: '#d4af37' }
       ]}
   ],
   pain: [
@@ -8025,7 +8025,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/super-epa-pro', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B002VLZHLS?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B002VLZHLS?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'Curcumin Phytosome', brand: 'Thorne', price: '$38', score: 90, emoji: '',
       why: 'Meriva phytosome = 29x better absorption than turmeric. NF-B inhibition. Joint + systemic inflammation.',
@@ -8033,7 +8033,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/curcumin-phytosome-sustained-release', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00VSVKJ8I?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00VSVKJ8I?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'CBD Muscle Recovery Cream', brand: "Charlotte\'s Web", price: '$49', score: 85, emoji: '',
       why: 'Topical CB1/CB2 activation at site. No systemic absorption -- zero drug interactions. Menthol + hemp.',
@@ -8049,7 +8049,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/vitamin-d-k2-liquid', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00YJZBTMK?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00YJZBTMK?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'Zinc Picolinate 30mg', brand: 'Thorne', price: '$18', score: 91, emoji: '',
       why: 'Thymulin production. T-cell activation. Picolinate = best absorption. Common deficiency in plant-based diets.',
@@ -8057,7 +8057,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/zinc-picolinate-30-mg', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00064G2EI?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00064G2EI?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'Vitamin C 1000mg', brand: 'Thorne', price: '$26', score: 89, emoji: '',
       why: 'Ascorbate form. Neutrophil function, interferon production, collagen synthesis. Buffered = no GI upset.',
@@ -8065,7 +8065,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/vitamin-c-with-flavonoids', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B000GG87WY?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B000GG87WY?tag=bleulive20-20', color: '#d4af37' }
       ]}
   ],
   gut: [
@@ -8075,7 +8075,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/fp-gut-health', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00Y1DJ9RO?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00Y1DJ9RO?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'Digestive Enzymes', brand: 'Thorne', price: '$34', score: 88, emoji: '',
       why: 'Amylase, protease, lipase, lactase. Complete macronutrient breakdown. Reduces bloating within 2 weeks.',
@@ -8083,7 +8083,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/bio-gest', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B0013OQGO0?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B0013OQGO0?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'L-Glutamine 5g', brand: 'Thorne', price: '$28', score: 86, emoji: '',
       why: 'Enterocyte fuel. Repairs leaky gut barrier. 5g/day reduces intestinal permeability markers in RCTs.',
@@ -8091,7 +8091,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/glutamine-powder', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B000GFSVYM?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B000GFSVYM?tag=bleulive20-20', color: '#d4af37' }
       ]}
   ],
   cannabis: [
@@ -8100,7 +8100,7 @@ const VESSEL_PRODUCTS = {
       safety: '! CYP2C19 -- check all prescription meds first', tag: 'Flagship CBD',
       links: [
         { store: "Charlotte\'s Web", url: 'https://www.charlottesweb.com/17mg-cbd-oil-calm', color: '#7ab87a' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B07ZF3YRLZ?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B07ZF3YRLZ?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'CBD Sleep Gummies', brand: "Charlotte\'s Web", price: '$44', score: 88, emoji: '',
       why: 'CBD + melatonin + valerian. Timed release. Clinical study: 58% better sleep quality. Non-habit forming.',
@@ -8113,7 +8113,7 @@ const VESSEL_PRODUCTS = {
       safety: ' Topical -- zero systemic interaction risk', tag: 'Athletic recovery',
       links: [
         { store: "Charlotte\'s Web", url: 'https://www.charlottesweb.com/hemp-infused-topical-cream', color: '#7ab87a' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B07TBCWKV4?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B07TBCWKV4?tag=bleulive20-20', color: '#d4af37' }
       ]}
   ],
   foundation: [
@@ -8123,7 +8123,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/basic-nutrients-2-day', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00B1V6Z6U?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00B1V6Z6U?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'Omega-3 2000mg', brand: 'Thorne', price: '$44', score: 95, emoji: '',
       why: 'EPA/DHA in clinical doses. SPMs resolve inflammation. Third-party purity tested. Foundational for brain, heart, joints.',
@@ -8131,7 +8131,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/super-epa-pro', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B002VLZHLS?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B002VLZHLS?tag=bleulive20-20', color: '#d4af37' }
       ]},
     { name: 'Vitamin D3+K2 5000IU', brand: 'Thorne', price: '$24', score: 96, emoji: '*',
       why: 'Non-negotiable. 42% deficient. Affects 200+ genes. Immune, mood, bone, cardiovascular. K2 ensures calcium goes to bones.',
@@ -8139,7 +8139,7 @@ const VESSEL_PRODUCTS = {
       links: [
         { store: 'Thorne', url: 'https://www.thorne.com/products/dp/vitamin-d-k2-liquid', color: '#e8d5b0' },
         { store: 'Fullscript', url: 'https://us.fullscript.com/welcome/fstoler', color: '#4ecdc4' },
-        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00YJZBTMK?tag=bleulive-20', color: '#d4af37' }
+        { store: 'Amazon', url: 'https://www.amazon.com/dp/B00YJZBTMK?tag=bleulive20-20', color: '#d4af37' }
       ]}
   ]
 };
@@ -8526,9 +8526,9 @@ function fmt(t){
 // ===============================================
 
 const RUFUS_PRODUCTS = {
-  'thorne-mag': {n:'Thorne Magnesium Bisglycinate',i:'',p:'$25',u:'60 caps',r:' 4.8 . 12K',why:"The GABA-A pathway activator. Glycinate form crosses the blood-brain barrier -- oxide doesn\'t. Take 400mg 1hr before bed. Thorne is NSF Certified, no fillers.",sf:' No CYP450 interactions',url:'https://amazon.com/dp/B07RY37KGB?tag=bleulive-20',label:'Buy on Amazon'},
-  'omega3': {n:'Nordic Naturals Ultimate Omega',i:'',p:'$28',u:'60 softgels',r:' 4.7 . 22K',why:"Triglyceride form -- 70% better absorbed than ethyl ester. EPA is the anti-inflammatory molecule. Target 2:1 EPA:DHA ratio. Take with your fattiest meal.",sf:' Safe with most meds',url:'https://amazon.com/dp/B002CQU564?tag=bleulive-20',label:'Buy on Amazon'},
-  'ashwa': {n:'NOW Ashwagandha KSM-66 450mg',i:'',p:'$12',u:'90 caps',r:' 4.6 . 30K',why:"KSM-66 is the only extract with 22 completed clinical trials. Reduces cortisol 28-30% over 60 days. Run 6-week cycles -- don\'t take continuously.",sf:' No major CYP interactions',url:'https://amazon.com/dp/B01N0A5XEJ?tag=bleulive-20',label:'Buy on Amazon'},
+  'thorne-mag': {n:'Thorne Magnesium Bisglycinate',i:'',p:'$25',u:'60 caps',r:' 4.8 . 12K',why:"The GABA-A pathway activator. Glycinate form crosses the blood-brain barrier -- oxide doesn\'t. Take 400mg 1hr before bed. Thorne is NSF Certified, no fillers.",sf:' No CYP450 interactions',url:'https://amazon.com/dp/B07RY37KGB?tag=bleulive20-20',label:'Buy on Amazon'},
+  'omega3': {n:'Nordic Naturals Ultimate Omega',i:'',p:'$28',u:'60 softgels',r:' 4.7 . 22K',why:"Triglyceride form -- 70% better absorbed than ethyl ester. EPA is the anti-inflammatory molecule. Target 2:1 EPA:DHA ratio. Take with your fattiest meal.",sf:' Safe with most meds',url:'https://amazon.com/dp/B002CQU564?tag=bleulive20-20',label:'Buy on Amazon'},
+  'ashwa': {n:'NOW Ashwagandha KSM-66 450mg',i:'',p:'$12',u:'90 caps',r:' 4.6 . 30K',why:"KSM-66 is the only extract with 22 completed clinical trials. Reduces cortisol 28-30% over 60 days. Run 6-week cycles -- don\'t take continuously.",sf:' No major CYP interactions',url:'https://amazon.com/dp/B01N0A5XEJ?tag=bleulive20-20',label:'Buy on Amazon'},
   'ltheanine': {n:'L-Theanine 200mg',i:'',p:'$13',u:'100 caps',r:' 4.6 . 18K',why:"Crosses blood-brain barrier in 30 min. Raises alpha waves -- same brain state as eyes-closed meditation. Pairs with morning coffee to eliminate jitters.",sf:' No known interactions',url:'https://us.fullscript.com/welcome/fstoler',label:'Buy on Fullscript'},
   'cw-cbd': {n:"Charlotte\'s Web CBD Oil",i:'',p:'$45',u:'60mL',r:' 4.5 . 15K',why:"Full-spectrum, USDA organic. 5-HT1A pathway -- same as SSRIs but gentler. Start at 10mg sublingual, hold 60 seconds. 11pm timing for sleep.",sf:'! CYP3A4 + CYP2C19 -- check meds',url:'https://us.fullscript.com/welcome/fstoler',label:'Buy on Fullscript'},
   'betterhelp': {n:'BetterHelp -- Licensed Therapy',i:'',p:'$65/wk',u:'Online',r:' 4.3 . 2M',why:"Matched with a licensed therapist in 48 hours. More affordable than most in-office copays. CBT, DBT, trauma, grief, couples -- full specialization.",sf:' Licensed professionals',url:'https://betterhelp.com/bleu',label:'Start Therapy ='},
@@ -8537,21 +8537,21 @@ const RUFUS_PRODUCTS = {
   'costplus': {n:'Mark Cuban Cost Plus Drugs',i:'',p:'At cost',u:'Online pharmacy',r:' 4.6 . 200K',why:"Manufacturing cost + 15% + $3 pharmacist fee. Metformin $5. Generic statins $3. Lisinopril $1. Life-changing if you\'re uninsured or underinsured.",sf:' Transparent pricing',url:'https://costplusdrugs.com',label:'Check Your Drug ='},
   'dollarfor': {n:'Dollar For -- Medical Bill Help',i:'',p:'100% Free',u:'Nonprofit',r:' 4.9 . 10K',why:"Submit your medical bill. They negotiate elimination with the hospital\'s charity care program. $5.4 billion in debt eliminated. Completely free -- they\'re a nonprofit.",sf:' Free nonprofit service',url:'https://dollarfor.org',label:'Submit Your Bill ='},
   'classpass': {n:'ClassPass -- Every Studio',i:'',p:'$19/mo',u:'800+ studios',r:' 4.5 . 1M',why:"Boxing, yoga, pilates, cycling, swim -- every studio in your city on one membership. First month discounted. No gym contract.",sf:' No interactions',url:'https://classpass.com',label:'Start Free ='},
-  'oura': {n:'Oura Ring Gen 3',i:'',p:'$299',u:'+ $5.99/mo',r:' 4.5 . 50K',why:"Sleep staging, HRV, readiness score, cycle tracking. The only wearable that tracks sleep architecture objectively. Invisible on your finger. No screen.",sf:' No interactions',url:'https://amazon.com/dp/B09Q2JY797?tag=bleulive-20',label:'Buy on Amazon'},
+  'oura': {n:'Oura Ring Gen 3',i:'',p:'$299',u:'+ $5.99/mo',r:' 4.5 . 50K',why:"Sleep staging, HRV, readiness score, cycle tracking. The only wearable that tracks sleep architecture objectively. Invisible on your finger. No screen.",sf:' No interactions',url:'https://amazon.com/dp/B09Q2JY797?tag=bleulive20-20',label:'Buy on Amazon'},
   'insighttimer': {n:'Insight Timer -- Free Meditation',i:'',p:'Free',u:'App',r:' 4.8 . 1M',why:"200,000+ free guided meditations. Best free meditation app period. Sleep, anxiety, PTSD-specific sessions from world-class teachers.",sf:' Free forever',url:'https://insighttimer.com',label:'Download Free ='},
   'weedmaps': {n:'Weedmaps -- Find Dispensaries',i:'',p:'Free',u:'App',r:' 4.3 . 2M',why:"Real-time menus, deals, lab-tested products. Read reviews from actual patients. Compare prices across dispensaries. Delivery or pickup.",sf:'! Check your state law',url:'https://weedmaps.com',label:'Find Dispensary ='},
   'leafly': {n:'Leafly -- Strain Intelligence',i:'',p:'Free',u:'App',r:' 4.4 . 1M',why:"2,500+ strain profiles with terpene breakdowns. Myrcene = sedative. Limonene = mood. Caryophyllene = inflammation. Pinene = memory. Match strain to symptom.",sf:'! CYP450 if on medications',url:'https://leafly.com',label:'Find Your Strain ='},
   'endel': {n:'Endel -- AI Soundscapes for Sleep',i:'',p:'$50/yr',u:'App',r:' 4.6 . 50K',why:"AI soundscapes that adapt to your heart rate, time of day, location. Scientifically validated to reduce cortisol. Better than white noise or music.",sf:' No interactions',url:'https://endel.io',label:'Try Free ='},
-  'creatine': {n:'Momentous Creatine Monohydrate',i:'',p:'$30',u:'30 servings',r:' 4.6 . 5K',why:"Most studied supplement in existence. 5g/day, every day. Muscle, brain, energy. No loading needed. Informed Sport certified. Takes 4 weeks to fully saturate.",sf:' No significant interactions',url:'https://amazon.com/dp/B0BGVB8T84?tag=bleulive-20',label:'Buy on Amazon'},
+  'creatine': {n:'Momentous Creatine Monohydrate',i:'',p:'$30',u:'30 servings',r:' 4.6 . 5K',why:"Most studied supplement in existence. 5g/day, every day. Muscle, brain, energy. No loading needed. Informed Sport certified. Takes 4 weeks to fully saturate.",sf:' No significant interactions',url:'https://amazon.com/dp/B0BGVB8T84?tag=bleulive20-20',label:'Buy on Amazon'},
   // === GLP-1 / WEIGHT LOSS PRESCRIBERS ===
   'hims-weight': {n:'Hims -- GLP-1 Weight Loss',i:'',p:'from $199/mo',u:'Telehealth',r:' 4.5 . 200K',why:"Telehealth prescriber for semaglutide (Ozempic/Wegovy equivalent) and tirzepatide. Requires bloodwork first -- they handle the prescription, medication delivery, and ongoing monitoring. 95% of people qualify.",sf:'! Bloodwork required first -- A1C, metabolic panel',url:'https://forhims.com/weight-loss?utm_source=bleu&utm_medium=affiliate',label:'Check Eligibility ='},
   'ro-body': {n:'Ro Body -- GLP-1 Program',i:'',p:'from $145/mo',u:'Telehealth',r:' 4.4 . 150K',why:"Prescribes compounded semaglutide with physician oversight. Often $100-200/mo less than brand-name. Includes nutrition coaching and metabolic health tracking. No insurance needed.",sf:'! Not for Type 1 diabetes, pancreatitis history',url:'https://ro.co/weight-loss?utm_source=bleu&utm_medium=affiliate',label:'Check Eligibility ='},
   'found-weight': {n:'Found -- Metabolic Health',i:'',p:'from $99/mo',u:'Online program',r:' 4.3 . 100K',why:"GLP-1 AND non-GLP-1 paths -- they match you to what works for your biology. Works with most insurance plans. Includes behavioral coaching, nutrition, movement plan.",sf:'! Medical evaluation required',url:'https://joinfound.com?utm_source=bleu&utm_medium=affiliate',label:'Start Assessment ='},
   'calibrate': {n:'Calibrate -- Year-Long Reset',i:'',p:'$1,649/yr',u:'Online program',r:' 4.2 . 30K',why:"GLP-1 + 1-year metabolic coaching. Works with insurance -- average out-of-pocket $0-200. Hormones, sleep, food, movement all addressed. For people serious about systemic change.",sf:'! Insurance pre-auth required',url:'https://joincalibrate.com?utm_source=bleu&utm_medium=affiliate',label:'Check Insurance ='},
   // === GLP-1 SUPPORT STACK ===
-  'berberine': {n:'Berberine HCl 1200mg',i:'',p:'$20/mo',u:'60 caps',r:' 4.5 . 45K',why:"Natural GLP-1 sensitizer. Reduces fasting glucose comparably to Metformin in multiple RCTs. $20/month vs $200+ for prescriptions. Stack with magnesium and protein. Take 600mg twice daily with meals.",sf:'! CYP3A4 interaction -- check meds. Lower dose if on Metformin.',url:'https://amazon.com/dp/B07BG2CNKD?tag=bleulive-20',label:'Buy on Amazon'},
-  'protein-powder': {n:'Momentous Essential Protein',i:'',p:'$55',u:'30 servings',r:' 4.7 . 8K',why:"On GLP-1, muscle loss is the #1 risk. Target 0.7g/lb bodyweight. Informed Sport certified, NSF Certified -- one of the only proteins tested for everything. Whey isolate, 20g/serving.",sf:' NSF Certified',url:'https://amazon.com/dp/B09KQDQBYW?tag=bleulive-20',label:'Buy on Amazon'},
-  'b12-methyl': {n:'Methylcobalamin B12 1000mcg',i:'',p:'$8',u:'100 lozenges',r:' 4.7 . 25K',why:"GLP-1 medications deplete B12 -- it\'s a known side effect almost nobody warns you about. Methylcobalamin (not cyanocobalamin) is the active form your body actually uses. Sublingual dissolves better.",sf:' No significant interactions',url:'https://amazon.com/dp/B06XFMLTTM?tag=bleulive-20',label:'Buy on Amazon'},
+  'berberine': {n:'Berberine HCl 1200mg',i:'',p:'$20/mo',u:'60 caps',r:' 4.5 . 45K',why:"Natural GLP-1 sensitizer. Reduces fasting glucose comparably to Metformin in multiple RCTs. $20/month vs $200+ for prescriptions. Stack with magnesium and protein. Take 600mg twice daily with meals.",sf:'! CYP3A4 interaction -- check meds. Lower dose if on Metformin.',url:'https://amazon.com/dp/B07BG2CNKD?tag=bleulive20-20',label:'Buy on Amazon'},
+  'protein-powder': {n:'Momentous Essential Protein',i:'',p:'$55',u:'30 servings',r:' 4.7 . 8K',why:"On GLP-1, muscle loss is the #1 risk. Target 0.7g/lb bodyweight. Informed Sport certified, NSF Certified -- one of the only proteins tested for everything. Whey isolate, 20g/serving.",sf:' NSF Certified',url:'https://amazon.com/dp/B09KQDQBYW?tag=bleulive20-20',label:'Buy on Amazon'},
+  'b12-methyl': {n:'Methylcobalamin B12 1000mcg',i:'',p:'$8',u:'100 lozenges',r:' 4.7 . 25K',why:"GLP-1 medications deplete B12 -- it\'s a known side effect almost nobody warns you about. Methylcobalamin (not cyanocobalamin) is the active form your body actually uses. Sublingual dissolves better.",sf:' No significant interactions',url:'https://amazon.com/dp/B06XFMLTTM?tag=bleulive20-20',label:'Buy on Amazon'},
   // === BLOODWORK / LABS ===
   'function-health': {n:'Function Health -- 100+ Biomarkers',i:'',p:'$499/yr',u:'2 panels/yr',r:' 4.8 . 20K',why:"100+ biomarkers twice a year -- metabolic, hormonal, inflammatory, nutritional. Know your baseline BEFORE starting GLP-1 or any peptide. Results in 48hrs, reviewed by licensed practitioners. The gold standard.",sf:' Diagnostic only -- no treatments',url:'https://functionhealth.com',label:'Order Your Panel ='},
   'labcorp-demand': {n:'LabCorp OnDemand -- Self-Order Labs',i:'',p:'varies',u:'2,000 locations',r:' 4.4 . 50K',why:"Order your own bloodwork without a doctor\'s order. Pay per test. A1C ($30), fasting insulin ($40), full metabolic panel ($80). Results to your phone in 24-48hrs. Thousands of draw locations.",sf:' Diagnostic only',url:'https://ondemand.labcorp.com',label:'Order Labs ='},
@@ -9073,8 +9073,8 @@ function checkRetentionTriggers() {
 }
 
 function _reorderUrl(pathway) {
-  const m = {sleep_gaba:'https://amazon.com/dp/B00YXTHZXE?tag=bleulive-20',sleep_cortisol:'https://amazon.com/dp/B01N0A5XEJ?tag=bleulive-20',anxiety_cortisol:'https://us.fullscript.com/welcome/fstoler',inflammation:'https://amazon.com/dp/B002CQU564?tag=bleulive-20',energy_mitochondria:'https://us.fullscript.com/welcome/fstoler',mood:'https://amazon.com/dp/B002CQU564?tag=bleulive-20',metabolic:'https://amazon.com/dp/B07BG2CNKD?tag=bleulive-20'};
-  return m[pathway] || 'https://amazon.com/dp/B00YXTHZXE?tag=bleulive-20';
+  const m = {sleep_gaba:'https://amazon.com/dp/B00YXTHZXE?tag=bleulive20-20',sleep_cortisol:'https://amazon.com/dp/B01N0A5XEJ?tag=bleulive20-20',anxiety_cortisol:'https://us.fullscript.com/welcome/fstoler',inflammation:'https://amazon.com/dp/B002CQU564?tag=bleulive20-20',energy_mitochondria:'https://us.fullscript.com/welcome/fstoler',mood:'https://amazon.com/dp/B002CQU564?tag=bleulive20-20',metabolic:'https://amazon.com/dp/B07BG2CNKD?tag=bleulive20-20'};
+  return m[pathway] || 'https://amazon.com/dp/B00YXTHZXE?tag=bleulive20-20';
 }
 
 function _fireRetentionMsg(message, milestoneKey) {
@@ -10834,7 +10834,7 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(201,168,76,.04);border-radius:8px">
               <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Amazon Pharmacy</div><div style="font-size:10px;color:#5A6374">Prime Rx · same-day delivery</div></div>
-              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="https://pharmacy.amazon.com?tag=bleulive-20" target="_blank" style="font-size:9px;color:#C8A951;text-decoration:none">Shop →</a></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="https://pharmacy.amazon.com?tag=bleulive20-20" target="_blank" style="font-size:9px;color:#C8A951;text-decoration:none">Shop →</a></div>
             </div>
           </div>
         </div>
@@ -10872,7 +10872,7 @@ setTimeout(function(){ if(typeof ptCalc === 'function') ptCalc(400); }, 800);
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(96,165,250,.04);border-radius:8px">
               <div><div style="font-size:12px;font-weight:700;color:#E2E8F0">Amazon Wellness</div><div style="font-size:10px;color:#5A6374">HSA store · tag: bleu-live-20</div></div>
-              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="https://www.amazon.com/hsa-fsa-eligible/s?k=hsa+fsa+eligible&tag=bleulive-20" target="_blank" style="font-size:9px;color:#60A5FA;text-decoration:none">Shop →</a></div>
+              <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:#22c55e">FSA ✓ HSA ✓</div><a href="https://www.amazon.com/hsa-fsa-eligible/s?k=hsa+fsa+eligible&tag=bleulive20-20" target="_blank" style="font-size:9px;color:#60A5FA;text-decoration:none">Shop →</a></div>
             </div>
           </div>
         </div>
@@ -11946,9 +11946,9 @@ Inner Governance</h2>
       <a href="https://www.calm.com?utm_source=bleu&utm_medium=affiliate" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(78,205,196,.2);color:#4ecdc4;background:rgba(78,205,196,.05);text-decoration:none">🌊 Calm</a>
       <a href="javascript:void(0)" onclick="engageCard('spirit','Tell me about Headspace for mindfulness and meditation — how would it complement what I am already doing?','https://www.headspace.com?utm_source=bleu&utm_medium=affiliate')" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(167,139,250,.2);color:#a78bfa;background:rgba(167,139,250,.05);text-decoration:none">🟠 Headspace</a>
       <a href="javascript:void(0)" onclick="engageCard('spirit','Tell me about DailyOM online wellness courses — what would be right for where I am in my journey right now?','https://www.dailyom.com')" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(201,168,76,.2);color:#d4af37;background:rgba(201,168,76,.05);text-decoration:none">☀️ DailyOM</a>
-      <a href="https://www.amazon.com/dp/B08L4KVTG8?tag=bleulive-20" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(212,175,55,.2);color:#d4af37;background:rgba(212,175,55,.05);text-decoration:none">💎 Crystals</a>
-      <a href="https://www.amazon.com/dp/B07C3DG1LV?tag=bleulive-20" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(201,168,76,.2);color:#d4af37;background:rgba(201,168,76,.05);text-decoration:none">🪑 Cushion</a>
-      <a href="https://www.amazon.com/dp/B07GYPFNZD?tag=bleulive-20" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(78,205,196,.2);color:#4ecdc4;background:rgba(78,205,196,.05);text-decoration:none">🎵 Singing Bowl</a>
+      <a href="https://www.amazon.com/dp/B08L4KVTG8?tag=bleulive20-20" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(212,175,55,.2);color:#d4af37;background:rgba(212,175,55,.05);text-decoration:none">💎 Crystals</a>
+      <a href="https://www.amazon.com/dp/B07C3DG1LV?tag=bleulive20-20" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(201,168,76,.2);color:#d4af37;background:rgba(201,168,76,.05);text-decoration:none">🪑 Cushion</a>
+      <a href="https://www.amazon.com/dp/B07GYPFNZD?tag=bleulive20-20" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(78,205,196,.2);color:#4ecdc4;background:rgba(78,205,196,.05);text-decoration:none">🎵 Singing Bowl</a>
     </div>
   </div>
 
@@ -12065,7 +12065,7 @@ function bleuProtocolCheckout(protocol) {
     +stack.map(function(item){return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:rgba(240,236,228,0.75)"><span style="color:#C9A84C;font-size:11px">✓</span>'+item+'</div>';}).join('')
     +'</div>'
     +'<button onclick="startPaidCheckout(\''+priceId+'\')" style="width:100%;padding:16px;background:#C9A84C;color:#0b1018;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.04em;font-family:DM Sans,sans-serif;margin-bottom:12px">Activate Protocol — Inside BLEU →</button>'
-    +'<div style="text-align:center;font-size:11px;color:rgba(240,236,228,0.3)">Or get individual items: <a href="https://amazon.com?tag=bleulive-20" target="_blank" style="color:rgba(240,236,228,0.5)">Amazon</a> · <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" style="color:rgba(240,236,228,0.5)">Fullscript</a></div>'
+    +'<div style="text-align:center;font-size:11px;color:rgba(240,236,228,0.3)">Or get individual items: <a href="https://amazon.com?tag=bleulive20-20" target="_blank" style="color:rgba(240,236,228,0.5)">Amazon</a> · <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" style="color:rgba(240,236,228,0.5)">Fullscript</a></div>'
     +'</div>';
 
   overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
@@ -12643,9 +12643,9 @@ window.proceedToAmazon = function() {
 
   var url;
   if(asins.length === 1) {
-    url = 'https://www.amazon.com/dp/'+asins[0]+'?tag=bleulive-20';
+    url = 'https://www.amazon.com/dp/'+asins[0]+'?tag=bleulive20-20';
   } else {
-    url = 'https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleulive-20';
+    url = 'https://www.amazon.com/gp/aws/cart/add.html?AssociateTag=bleulive20-20';
     asins.forEach(function(asin,i){
       url += '&ASIN.'+(i+1)+'='+asin+'&Qty.'+(i+1)+'=1';
     });
@@ -12961,7 +12961,7 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
     +'<div style="font-size:11px;color:rgba(240,236,228,0.4);margin-bottom:20px">Dr. Felicia Stoler DCN RDN FACSM &middot; Clinical oversight &middot; Cancel anytime</div>'
     +'<div style="margin-bottom:20px">'+stackHTML+'</div>'
     +'<button onclick="window.startPaidCheckout && window.startPaidCheckout(\''+priceId+'\')" style="width:100%;padding:16px;background:#C9A84C;color:#0b1018;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px">Activate Protocol &#8594;</button>'
-    +'<div style="text-align:center;font-size:11px;color:rgba(240,236,228,0.3)">Or: <a href="https://amazon.com?tag=bleulive-20" target="_blank" style="color:rgba(240,236,228,0.5)">Amazon</a> &middot; <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" style="color:rgba(240,236,228,0.5)">Fullscript</a></div>'
+    +'<div style="text-align:center;font-size:11px;color:rgba(240,236,228,0.3)">Or: <a href="https://amazon.com?tag=bleulive20-20" target="_blank" style="color:rgba(240,236,228,0.5)">Amazon</a> &middot; <a href="https://us.fullscript.com/welcome/fstoler" target="_blank" style="color:rgba(240,236,228,0.5)">Fullscript</a></div>'
     +'</div>';
   overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.remove();});
   document.body.appendChild(overlay);

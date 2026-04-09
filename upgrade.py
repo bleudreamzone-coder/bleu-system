@@ -43,7 +43,7 @@ old_core_end = "Found this helpful? Share BLEU.live with someone who needs it."
 new_core_end = """Found this helpful? Share BLEU.live with someone who needs it.
 
 AFFILIATE RESOURCES (weave naturally when relevant — never push, always serve):
-- Supplements: Amazon (amazon.com/?tag=bleulive-20), iHerb (iherb.com), Thorne (thorne.com)
+- Supplements: Amazon (amazon.com/?tag=bleulive20-20), iHerb (iherb.com), Thorne (thorne.com)
 - CBD/Cannabis: Charlotte's Web (charlottesweb.com), Extract Labs (extractlabs.com)
 - Therapy: BetterHelp (betterhelp.com/bleu) for online therapy
 - Fitness: ClassPass (classpass.com) for yoga, fitness, meditation classes
@@ -73,12 +73,12 @@ vessel_pattern = r"vessel: ALVAI_CORE \+ `[^`]*`"
 vessel_match = re.search(vessel_pattern, code)
 if vessel_match:
     old_vessel = vessel_match.group(0)
-    new_vessel = """vessel: ALVAI_CORE + `\\n\\nYou are in VESSEL mode — product intelligence engine.\\n- Recommend supplements with SPECIFIC details: exact form, dosage, timing, what to stack, interactions\\n- Flag quality: USP verified, NSF certified, third-party tested\\n- ALWAYS include specific products and where to buy:\\n  • Thorne: magnesium bisglycinate, vitamin D/K2, berberine (thorne.com)\\n  • NOW Foods: budget options, broad catalog (amazon.com/?tag=bleulive-20)\\n  • Garden of Life: whole food vitamins, probiotics (amazon.com/?tag=bleulive-20)\\n  • Nordic Naturals: omega-3, fish oil (amazon.com/?tag=bleulive-20)\\n  • Charlotte's Web: CBD tinctures, gummies (charlottesweb.com)\\n  • Extract Labs: CBD isolate, topicals (extractlabs.com)\\n- Give price ranges so people can budget\\n- Example: "For sleep: Thorne Magnesium Bisglycinate 200mg (~$25), 1-2 caps 90min before bed. Stack with L-theanine 200mg (NOW Foods, ~$12). Total: ~$37/month for significantly better sleep."`"""
+    new_vessel = """vessel: ALVAI_CORE + `\\n\\nYou are in VESSEL mode — product intelligence engine.\\n- Recommend supplements with SPECIFIC details: exact form, dosage, timing, what to stack, interactions\\n- Flag quality: USP verified, NSF certified, third-party tested\\n- ALWAYS include specific products and where to buy:\\n  • Thorne: magnesium bisglycinate, vitamin D/K2, berberine (thorne.com)\\n  • NOW Foods: budget options, broad catalog (amazon.com/?tag=bleulive20-20)\\n  • Garden of Life: whole food vitamins, probiotics (amazon.com/?tag=bleulive20-20)\\n  • Nordic Naturals: omega-3, fish oil (amazon.com/?tag=bleulive20-20)\\n  • Charlotte's Web: CBD tinctures, gummies (charlottesweb.com)\\n  • Extract Labs: CBD isolate, topicals (extractlabs.com)\\n- Give price ranges so people can budget\\n- Example: "For sleep: Thorne Magnesium Bisglycinate 200mg (~$25), 1-2 caps 90min before bed. Stack with L-theanine 200mg (NOW Foods, ~$12). Total: ~$37/month for significantly better sleep."`"""
     code = code.replace(old_vessel, new_vessel)
 
 # 10. UPGRADE CANNAIQ with dispensary affiliates
 old_cannaiq_end = "Always ask about medications first. Note state law variations.`"
-new_cannaiq_end = """Always ask about medications first. Note state law variations.\\n\\nWHERE TO BUY:\\n- Dispensary finder: Leafly (leafly.com/dispensaries) or Dutchie (dutchie.com)\\n- Delivery: Eaze (eaze.com) where available\\n- CBD (no Rx needed): Charlotte's Web (charlottesweb.com), Extract Labs (extractlabs.com)\\n- Accessories: amazon.com/?tag=bleulive-20\\n- Always check your state laws before purchasing.\\n- Full safety check: BLEU Safety Engine — 54 substances, 302,516 interactions verified.`"""
+new_cannaiq_end = """Always ask about medications first. Note state law variations.\\n\\nWHERE TO BUY:\\n- Dispensary finder: Leafly (leafly.com/dispensaries) or Dutchie (dutchie.com)\\n- Delivery: Eaze (eaze.com) where available\\n- CBD (no Rx needed): Charlotte's Web (charlottesweb.com), Extract Labs (extractlabs.com)\\n- Accessories: amazon.com/?tag=bleulive20-20\\n- Always check your state laws before purchasing.\\n- Full safety check: BLEU Safety Engine — 54 substances, 302,516 interactions verified.`"""
 code = code.replace(old_cannaiq_end, new_cannaiq_end)
 
 # 11. UPGRADE RECOVERY with more compassion

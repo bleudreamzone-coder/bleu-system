@@ -227,7 +227,7 @@ section.active{display:block}
 <div class="aff-bar">
   <div class="aff-chip" onclick="window.open('https://betterhelp.com/bleu','_blank')">💬 BetterHelp — Therapy from $60/wk</div>
   <div class="aff-chip" onclick="window.open('https://thorne.com','_blank')">💊 Thorne — Clinical Supplements</div>
-  <div class="aff-chip" onclick="window.open('https://amazon.com/?tag=bleulive-20','_blank')">📦 Amazon Wellness</div>
+  <div class="aff-chip" onclick="window.open('https://amazon.com/?tag=bleulive20-20','_blank')">📦 Amazon Wellness</div>
   <div class="aff-chip" onclick="window.open('https://charlottesweb.com','_blank')">🌿 Charlotte's Web CBD</div>
   <div class="aff-chip" onclick="window.open('https://ouraring.com','_blank')">⌚ Oura Ring — Sleep Tracking</div>
   <div class="aff-chip" onclick="window.open('https://goodrx.com','_blank')">💰 GoodRx — Rx Savings</div>
