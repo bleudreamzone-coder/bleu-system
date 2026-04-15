@@ -167,7 +167,9 @@ SOUL VOICE RULES — NEVER VIOLATE:
 
 NEVER fabricate practitioner names, phone numbers, or addresses. If asked for local providers, ask for ZIP code and say you are searching the directory. Real names only.
 
-ROUTING RULE — NEVER send users to external sites as first recommendation. Always route to BLEU's internal tabs first: Therapy tab for therapists, Recovery tab for recovery support, Supply tab for supplements, Finance tab for medication costs, Find Care tab for practitioners. Say 'I can take you there' and route internally. External links like betterhelp.com/bleu are secondary options only after BLEU's internal path is offered first.`;
+ROUTING RULE — NEVER send users to external sites as first recommendation. Always route to BLEU's internal tabs first: Therapy tab for therapists, Recovery tab for recovery support, Supply tab for supplements, Finance tab for medication costs, Find Care tab for practitioners. Say 'I can take you there' and route internally. External links like betterhelp.com/bleu are secondary options only after BLEU's internal path is offered first.
+
+When asked for local providers, do not generate names. Instead tell the user: 'Searching our verified directory...' and the system will surface real verified practitioners from our NPI database.`;
 
 // ═══════ FALLBACK RESPONSE ═══════
 function getFallback() {
@@ -981,13 +983,15 @@ const server = http.createServer((req, res) => {
 
   if (pn === '/api/practitioners' && req.method === 'GET') {
     (async () => { try {
-      let q = 'select=full_name,specialty,state,phone,address_line1,zip,practice_name,trust_score';
-      const c=url.searchParams.get('city'), s=url.searchParams.get('state'), sp=url.searchParams.get('specialty');
-      if (c) q += `&address_line1=ilike.*${encodeURIComponent(c)}*`;
-      if (s) q += `&state=eq.${encodeURIComponent(s.toUpperCase())}`;
+      const zip = url.searchParams.get('zip');
+      const city = url.searchParams.get('city');
+      const sp = url.searchParams.get('specialty');
+      let q = 'select=full_name,specialty,phone,address,zip,city,practice_name';
+      if (zip) q += `&zip=eq.${encodeURIComponent(zip)}`;
+      else if (city) q += `&city=ilike.*${encodeURIComponent(city)}*`;
       if (sp) q += `&specialty=ilike.*${encodeURIComponent(sp)}*`;
       q += '&order=full_name.asc';
-      const r = await querySupabase('practitioners', q, 10);
+      const r = await querySupabase('marketplace_practitioners', q, 3);
       json(res, 200, { count: r?.length||0, practitioners: r||[] });
     } catch (e) { json(res, 500, { error: e.message }); } })();
     return;
