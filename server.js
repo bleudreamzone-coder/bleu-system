@@ -530,10 +530,10 @@ const DEEP_MODES = ['therapy','recovery','crisis','cannaiq','directory'];
 const DEEP_TRIGGERS = ['feeling','anxious','depressed','therapy','struggling','grief','trauma','suicidal','panic','addiction','relapse','drug','medication','serotonin','withdrawal','overdose','crisis','scared','hopeless','hurt myself','nightmares','ptsd','abuse','eating disorder','self harm','lonely','cbd','thc','cannabis','strain','terpene','practitioner','therapist','psychiatrist','find me'];
 
 function pickModel(msg, mode) {
-  if (/suicid|kill myself|end it|self.harm|overdose|dying/i.test(msg)) return 'gpt-5';
+  if (/suicid|kill myself|end it|self.harm|overdose|dying/i.test(msg)) return 'gpt-4o';
   const light = ['community','map','missions','dashboard','learn','passport'];
-  if (light.includes(mode)) return 'gpt-5-mini';
-  return 'gpt-5';
+  if (light.includes(mode)) return 'gpt-4o-mini';
+  return 'gpt-4o';
 }
 
 
@@ -784,7 +784,7 @@ async function callAI(msg, hist, mode, tm, rm) {
   try {
     r = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model, messages, max_completion_tokens: model === 'gpt-5' ? 4000 : 2000, temperature: 1 }),
+      body: JSON.stringify({ model, messages, max_completion_tokens: model === 'gpt-4o' ? 4000 : 2000, temperature: 1 }),
       signal: ctl.signal
     });
   } finally { clearTimeout(tmr); }
@@ -944,7 +944,7 @@ const server = http.createServer((req, res) => {
         const tmr2 = setTimeout(() => ctl2.abort(), 30000);
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model, messages: msgs, max_completion_tokens: model==='gpt-5'?4000:2000, temperature: 1, stream: true }),
+          body: JSON.stringify({ model, messages: msgs, max_completion_tokens: model==='gpt-4o'?4000:2000, temperature: 1, stream: true }),
           signal: ctl2.signal
         }).finally(() => clearTimeout(tmr2));
         if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI stream error:', ar.status, errBody.substring(0,500)); res.writeHead(500,{'Content-Type':'application/json'}); return res.end(JSON.stringify({error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model})); }
