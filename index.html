@@ -9588,9 +9588,7 @@ async function send(tab){
   if(!input||!box)return
   const msg=input.value.trim();if(!msg)return;input.value=''
   const uDiv=document.createElement('div');uDiv.className='msg user';uDiv.textContent=msg;box.appendChild(uDiv)
-  console.log('[BLEU DEBUG] user push — currentTab:', currentTab, 'type:', typeof chatHistories[currentTab], 'isArray:', Array.isArray(chatHistories[currentTab]), 'value:', chatHistories[currentTab]);
   if(!Array.isArray(chatHistories[currentTab]))chatHistories[currentTab]=[];
-  chatHistories[currentTab].push({role:'user',content:msg})
   const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
   box.scrollTop=box.scrollHeight
 
@@ -9655,7 +9653,7 @@ async function send(tab){
   var _modeMap={home:'alvai',ecsiq:'cannaiq',sleep:'vessel',spirit:'community',enterprise:'general'};
   var _knownModes=['therapy','recovery','finance','cannaiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai','general'];
   var _sendMode=_modeMap[currentTab]||((_knownModes.indexOf(currentTab)>-1)?currentTab:'general');
-  const body={message:msg,session:getSession(),history:chatHistories[currentTab].slice(-8),mode:_sendMode,user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null,
+  const body={message:msg,session:getSession(),history:[...chatHistories[currentTab],{role:'user',content:msg}].slice(-8),mode:_sendMode,user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null,
       journey_context:(()=>{
         const cm=["lets go","book it","give me everything","all of it","total plan","put it together","im ready","lets do this","sign me up","i want all","give me all","transform me","time travel","years back","take me back","total system","full plan","assemble all","all resources"];
         const isCommit=cm.some(w=>msg.toLowerCase().includes(w));
@@ -9681,9 +9679,9 @@ async function send(tab){
       }
     }
     aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);
-    console.log('[BLEU DEBUG] assistant push — currentTab:', currentTab, 'type:', typeof chatHistories[currentTab], 'isArray:', Array.isArray(chatHistories[currentTab]), 'value:', chatHistories[currentTab]);
     const _hist = Array.isArray(chatHistories[currentTab]) ? chatHistories[currentTab] : [];
     chatHistories[currentTab] = _hist;
+    _hist.push({role:'user',content:msg});
     _hist.push({role:'assistant',content:full});
     // ── AUTO-EMBED: one piece of media tied to intent, already playing ──
     (function(){
