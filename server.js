@@ -1171,6 +1171,27 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (pn === '/api/reorder-reminder' && req.method === 'POST') {
+    let b=''; req.on('data',c=>b+=c);
+    req.on('end', ()=>{ (async()=>{
+      try {
+        const p = JSON.parse(b||'{}');
+        if (!p.last_purchase_date || !p.protocol_name || !p.reorder_target_date) return json(res, 400, {error:'Missing fields'});
+        if (!SUPABASE_URL || !SUPABASE_KEY) return json(res, 200, {ok:true, persisted:false});
+        await querySupabase('user_coherence', '', 0, 'POST', {
+          user_id: p.user_id || null,
+          session_id: p.session_id || 'anonymous',
+          last_purchase_date: p.last_purchase_date,
+          protocol_name: p.protocol_name,
+          reorder_target_date: p.reorder_target_date,
+          recorded_at: new Date().toISOString()
+        });
+        json(res, 200, {ok:true, persisted:true, reorder_target_date:p.reorder_target_date});
+      } catch(e) { json(res, 500, {error:'reorder-reminder failed', detail:String(e.message||e)}); }
+    })(); });
+    return;
+  }
+
   if (pn === '/stripe-webhook' && req.method === 'POST') { handleStripeWebhook(req, res); return; }
 
   if (pn === '/api/stats') return json(res, 200, { version:'4.0', modes: Object.keys(MODE_PROMPTS).length, therapy: Object.keys(THERAPY_MODES).length, recovery: Object.keys(RECOVERY_MODES).length });
