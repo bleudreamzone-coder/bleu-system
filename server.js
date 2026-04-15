@@ -874,6 +874,27 @@ const server = http.createServer((req, res) => {
         if (p.passport_context) sys = 'PASSPORT CONTEXT: ' + p.passport_context + '. Personalize every response to this specific user\'s city, conditions, and medication profile.\n\n' + sys;
         const opening = detectOpening(p.message);
         if (opening) sys += '\n\nFIRST LINE LOCKED — begin your response with exactly this sentence, then continue naturally without repeating it:\n"' + opening + '"\n\nDo not rephrase it. Do not add a preamble. Start with it and move forward.';
+
+        // ── DIRECTORY LOOKUP — when user asks for local providers, inject real verified rows ──
+        if (/therapist|doctor|practitioner|find me|near me|in new orleans|\b\d{5}\b/i.test(p.message)) {
+          const zipMatch = p.message.match(/\b(\d{5})\b/);
+          const zip = zipMatch ? zipMatch[1] : null;
+          const { city, spec } = extractCity(p.message);
+          let dq = 'select=full_name,specialty,phone,address,zip,city,practice_name';
+          if (zip) dq += `&zip=eq.${zip}`;
+          else if (city) dq += `&city=ilike.*${encodeURIComponent(city)}*`;
+          if (spec) dq += `&specialty=ilike.*${encodeURIComponent(spec)}*`;
+          dq += '&order=full_name.asc';
+          const rows = await querySupabase('marketplace_practitioners', dq, 3);
+          const where = zip ? `ZIP ${zip}` : (city || 'that area');
+          if (rows && rows.length) {
+            const formatted = rows.map(x => `${x.full_name||'Unnamed'} — ${x.specialty||'Practitioner'} at ${x.practice_name||'Independent Practice'}, ${x.address||''}${x.city?', '+x.city:''}${x.zip?' '+x.zip:''}. Phone: ${x.phone||'on request'}.`).join('\n');
+            sys = `VERIFIED DIRECTORY RESULTS — use only these real practitioners in your response:\n${formatted}\n\n` + sys;
+          } else {
+            sys = `DIRECTORY LOOKUP — no verified practitioners returned for ${where}. Tell the user the directory search returned no results for that area, then offer BetterHelp (betterhelp.com/bleu) as a backup so they can talk to someone tonight. Do NOT invent local names.\n\n` + sys;
+          }
+        }
+
         const messages = [{ role: 'system', content: sys }];
         if (p.history?.length) messages.push(...p.history.slice(-12));
         const ctl1 = new AbortController();
