@@ -1011,10 +1011,23 @@ const server = http.createServer((req, res) => {
       if (zip) q += `&zip=eq.${encodeURIComponent(zip)}`;
       else if (city) q += `&city=ilike.*${encodeURIComponent(city)}*`;
       if (sp) q += `&specialty=ilike.*${encodeURIComponent(sp)}*`;
-      q += '&order=full_name.asc';
-      const r = await querySupabase('practitioners', q, 3);
-      json(res, 200, { count: r?.length||0, practitioners: r||[] });
-    } catch (e) { json(res, 500, { error: e.message }); } })();
+      q += '&order=full_name.asc&limit=3';
+      const fullUrl = `${SUPABASE_URL}/rest/v1/practitioners?${q}`;
+      console.log('[/api/practitioners] fetching:', fullUrl);
+      const sbRes = await fetch(fullUrl, {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'application/json'
+        }
+      });
+      const bodyText = await sbRes.text();
+      console.log('[/api/practitioners] status:', sbRes.status, 'body:', bodyText.substring(0, 300));
+      let rows = [];
+      try { rows = JSON.parse(bodyText); } catch {}
+      if (!Array.isArray(rows)) rows = [];
+      json(res, 200, { count: rows.length, practitioners: rows });
+    } catch (e) { console.error('[/api/practitioners] error:', e.message); json(res, 500, { error: e.message }); } })();
     return;
   }
 
