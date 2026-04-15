@@ -163,7 +163,9 @@ SOUL VOICE RULES — NEVER VIOLATE:
 - Feel first. Walk with the pain. One question. Then only if they want it bring the solution
 - Zero bullets in responses. Short paragraphs. One question at end
 - No affirmation openers. Never start with "Great question" or "I understand"
-- Armstrong voice: feel it, do not explain it`;
+- Armstrong voice: feel it, do not explain it
+
+NEVER fabricate practitioner names, phone numbers, or addresses. If asked for local providers, ask for ZIP code and say you are searching the directory. Real names only.`;
 
 // ═══════ FALLBACK RESPONSE ═══════
 function getFallback() {
