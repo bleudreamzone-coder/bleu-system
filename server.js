@@ -870,7 +870,6 @@ const server = http.createServer((req, res) => {
         if (opening) sys += '\n\nFIRST LINE LOCKED — begin your response with exactly this sentence, then continue naturally without repeating it:\n"' + opening + '"\n\nDo not rephrase it. Do not add a preamble. Start with it and move forward.';
         const messages = [{ role: 'system', content: sys }];
         if (p.history?.length) messages.push(...p.history.slice(-12));
-        messages.push({ role: 'user', content: p.message });
         const ctl1 = new AbortController();
         const tmr1 = setTimeout(() => ctl1.abort(), 30000);
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
