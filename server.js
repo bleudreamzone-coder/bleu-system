@@ -778,10 +778,16 @@ async function callAI(msg, hist, mode, tm, rm) {
   const messages = [{ role: 'system', content: sys }];
   if (hist?.length) messages.push(...hist.slice(-12));
   messages.push({ role: 'user', content: msg });
-  const r = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model, messages, max_completion_tokens: model === 'gpt-5' ? 4000 : 2000, temperature: 1 })
-  });
+  const ctl = new AbortController();
+  const tmr = setTimeout(() => ctl.abort(), 30000);
+  let r;
+  try {
+    r = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model, messages, max_completion_tokens: model === 'gpt-5' ? 4000 : 2000, temperature: 1 }),
+      signal: ctl.signal
+    });
+  } finally { clearTimeout(tmr); }
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
   return { text: d.choices[0].message.content, model, tokens: d.usage };
@@ -865,10 +871,13 @@ const server = http.createServer((req, res) => {
         const messages = [{ role: 'system', content: sys }];
         if (p.history?.length) messages.push(...p.history.slice(-12));
         messages.push({ role: 'user', content: p.message });
+        const ctl1 = new AbortController();
+        const tmr1 = setTimeout(() => ctl1.abort(), 30000);
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model, messages, max_completion_tokens: 2000, temperature: 1, stream: true })
-        });
+          body: JSON.stringify({ model, messages, max_completion_tokens: 2000, temperature: 1, stream: true }),
+          signal: ctl1.signal
+        }).finally(() => clearTimeout(tmr1));
         if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI error:', ar.status, errBody.substring(0,500)); return json(res, 500, {error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model}); }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
@@ -932,11 +941,14 @@ const server = http.createServer((req, res) => {
         const sys = await buildPrompt(p.message||'', p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety');
         const msgs = [{ role: 'system', content: sys }];
         if (p.history?.length) msgs.push(...p.history.slice(-12));
-        msgs.push({ role: 'user', content: p.message });
+        const ctl2 = new AbortController();
+        const tmr2 = setTimeout(() => ctl2.abort(), 30000);
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model, messages: msgs, max_completion_tokens: model==='gpt-5'?4000:2000, temperature: 1, stream: true })
-        });
+          body: JSON.stringify({ model, messages: msgs, max_completion_tokens: model==='gpt-5'?4000:2000, temperature: 1, stream: true }),
+          signal: ctl2.signal
+        }).finally(() => clearTimeout(tmr2));
+        if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI stream error:', ar.status, errBody.substring(0,500)); res.writeHead(500,{'Content-Type':'application/json'}); return res.end(JSON.stringify({error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model})); }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '';
@@ -952,9 +964,12 @@ const server = http.createServer((req, res) => {
     const sub = url.searchParams.get('substances')||'';
     if (!sub) return json(res, 400, { error: 'substances param required' });
     (async () => { try {
+      const ctl3 = new AbortController();
+      const tmr3 = setTimeout(() => ctl3.abort(), 30000);
       const r = await fetch('https://api.openai.com/v1/chat/completions', { method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'system', content: `Pharmacology safety engine. Analyze: ${sub}\nCheck: CYP450, serotonin syndrome, sedation, UGT, BP.\nJSON: {"substances":[],"risk_level":"LOW|MODERATE|HIGH|CRITICAL","interactions":[{"pair":"","mechanism":"","severity":"","recommendation":""}],"summary":"","disclaimer":"Consult healthcare provider"}` }], max_completion_tokens: 1000, temperature: 0.2 })
-      });
+        body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'system', content: `Pharmacology safety engine. Analyze: ${sub}\nCheck: CYP450, serotonin syndrome, sedation, UGT, BP.\nJSON: {"substances":[],"risk_level":"LOW|MODERATE|HIGH|CRITICAL","interactions":[{"pair":"","mechanism":"","severity":"","recommendation":""}],"summary":"","disclaimer":"Consult healthcare provider"}` }], max_completion_tokens: 1000, temperature: 0.2 }),
+        signal: ctl3.signal
+      }).finally(() => clearTimeout(tmr3));
       const d = await r.json(); const t = d.choices[0].message.content;
       try { json(res, 200, JSON.parse(t)); } catch { json(res, 200, { raw: t }); }
     } catch (e) { json(res, 500, { error: e.message }); } })();
