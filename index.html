@@ -3067,7 +3067,7 @@ async function vsAsk(){
       for(var li=0;li<lines.length;li++){
         var line=lines[li];if(!line.startsWith('data: '))continue;var d=line.slice(6).trim();
         if(d==='[DONE]')continue;
-        try{var p=JSON.parse(d);if(p.text){full+=p.text;res.innerHTML=(typeof fmt==='function'?fmt(full):full)+'<span class="alvai-cursor"></span>';}}catch(e){}
+        try{var p=JSON.parse(d);if(p.suppressCommerce)applySuppressCommerce();if(p.text){full+=p.text;res.innerHTML=(typeof fmt==='function'?fmt(full):full)+'<span class="alvai-cursor"></span>';}}catch(e){}
       }
     }
     res.innerHTML=typeof fmt==='function'?fmt(full):full;
@@ -7011,6 +7011,9 @@ async function updateBleScore(tab){if(!sbClient||!currentUser)return;try{const{d
 
 const ALVAI='/api/chat'
 const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw'
+// ═══ SESSION INTENT — suppress commerce cards once server signals emotional intent ═══
+window.BLEU_SUPPRESS_COMMERCE = window.BLEU_SUPPRESS_COMMERCE || (sessionStorage.getItem('bleu_suppress_commerce')==='1');
+function applySuppressCommerce(){ window.BLEU_SUPPRESS_COMMERCE = true; try{ sessionStorage.setItem('bleu_suppress_commerce','1'); }catch(e){} }
 const tabs=['home','alvai','dashboard','directory','vessel','map','protocols','learn','community','passport','therapy','finance','missions','recovery','ecsiq','sleep','enterprise','spirit','why','terms','privacy']
 const chatHistories={},chatModes={therapy:'talk',recovery:'sobriety'}
 tabs.forEach(t=>chatHistories[t]=[])
@@ -9674,7 +9677,7 @@ async function send(tab){
       for(const line of lines){
         if(!line.startsWith('data: '))continue;const d=line.slice(6).trim()
         if(d==='[DONE]')continue
-        try{const p=JSON.parse(d);if(p.text){full+=p.text;aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}
+        try{const p=JSON.parse(d);if(p.suppressCommerce)applySuppressCommerce();if(p.text){full+=p.text;aDiv.innerHTML=fmt(full)+'<span class="alvai-cursor"></span>';box.scrollTop=box.scrollHeight}}catch{}
       }
     }
     aDiv.innerHTML=fmt(full);detectAndWireProtocol(full,aDiv);
@@ -9709,7 +9712,7 @@ async function send(tab){
       const injuryWords=['swollen','knuckle','sprain','fracture','broken','bruise','bruising','fight','got hit','injured','injury','urgent care','emergency room','er ','torn','ligament'];
       const isDistress=distressWords.some(w=>msg.toLowerCase().includes(w));
       const isInjury=injuryWords.some(w=>(msg+full).toLowerCase().includes(w));
-      if(!isDistress&&!isInjury&&!['therapy','recovery'].includes(currentTab)){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
+      if(!isDistress&&!isInjury&&!window.BLEU_SUPPRESS_COMMERCE&&!['therapy','recovery'].includes(currentTab)){const rufusIds=detectRufusProducts(msg,full);if(rufusIds.length)renderRufusCards(aDiv,rufusIds);}}
     if(currentUser){saveConvo(currentTab,chatHistories[currentTab]).catch(()=>{});updateBleScore(currentTab).catch(()=>{})}
   }catch(e){console.error(e);aDiv.innerHTML='<em style="color:var(--dim)">Connection issue. Try again in a moment.</em>'}
   box.scrollTop=box.scrollHeight
@@ -12608,7 +12611,7 @@ window.runSafetyCheck = function() {
     text.split('\n').forEach(function(line){
       if(!line.startsWith('data: '))return;var d=line.slice(6).trim();
       if(d==='[DONE]')return;
-      try{var p=JSON.parse(d);if(p.text)full+=p.text;}catch(e){}
+      try{var p=JSON.parse(d);if(p.suppressCommerce)applySuppressCommerce();if(p.text)full+=p.text;}catch(e){}
     });
     if(!full){try{var j=JSON.parse(text);full=j.response||j.text||j.content||text;}catch(e){full=text;}}
 

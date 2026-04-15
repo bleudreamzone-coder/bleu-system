@@ -165,21 +165,18 @@ SOUL VOICE RULES — NEVER VIOLATE:
 - No affirmation openers. Never start with "Great question" or "I understand"
 - Armstrong voice: feel it, do not explain it`;
 
-// ═══════ FALLBACK RESPONSES ═══════
-const FALLBACK_RESPONSES = {
-  sleep: "For sleep support, consider magnesium glycinate 400mg (Thorne, ~$15) 90 minutes before bed, L-theanine 200mg, and making your room 65-68°F. Start tonight and tell me how it goes tomorrow.",
-  anxiety: "For anxiety, ashwagandha KSM-66 300mg twice daily (Thorne, ~$25/mo) plus L-theanine 200mg as needed. Total: about $37/month. Are you on any medications? I need to check interactions first.",
-  therapist: "I am having a brief connection issue, but here is what I know: BetterHelp matches you with a licensed therapist in 24 hours from $60/week (betterhelp.com/bleu). For free support right now: call or text 988, or text HOME to 741741.",
-  crisis: "If you are in crisis right now: call 988 (Suicide and Crisis Lifeline), text HOME to 741741 (Crisis Text Line), or call 911. You are not alone. These are free, confidential, and available 24/7.",
-  default: "I am having a brief connection issue. Try asking again in a moment. If you need immediate help: call 988 or text HOME to 741741."
-};
-function getFallback(msg) {
-  const m = (msg||'').toLowerCase();
-  if(m.includes('sleep')||m.includes('insomnia')||m.includes('tired')) return FALLBACK_RESPONSES.sleep;
-  if(m.includes('anxi')||m.includes('stress')||m.includes('panic')||m.includes('worried')) return FALLBACK_RESPONSES.anxiety;
-  if(m.includes('therapist')||m.includes('counselor')||m.includes('doctor')) return FALLBACK_RESPONSES.therapist;
-  if(m.includes('suicide')||m.includes('kill')||m.includes('crisis')||m.includes('emergency')||m.includes('harm')) return FALLBACK_RESPONSES.crisis;
-  return FALLBACK_RESPONSES.default;
+// ═══════ FALLBACK RESPONSE ═══════
+function getFallback() {
+  return "I'm here. Something slowed down on my side. Tell me what's going on right now.";
+}
+
+// ═══════ SESSION INTENT — suppress commerce when user signals emotional distress ═══════
+const EMOTIONAL_SESSIONS = new Set();
+const EMOTIONAL_INTENT_RE = /\b(therapy|therapist|help|struggling|overwhelmed|crisis|scared|relapse|not okay)\b/i;
+function checkEmotionalIntent(sessionId, message) {
+  if (!sessionId || !message) return EMOTIONAL_SESSIONS.has(sessionId);
+  if (EMOTIONAL_INTENT_RE.test(message)) EMOTIONAL_SESSIONS.add(sessionId);
+  return EMOTIONAL_SESSIONS.has(sessionId);
 }
 
 const MODE_PROMPTS = {
@@ -809,6 +806,9 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(b);
         if (!p.message?.trim()) return json(res, 400, { error: 'Message required' });
 
+        // ── SESSION INTENT — mark emotional sessions so frontend suppresses commerce cards ──
+        const suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message);
+
         // ── GREETING CACHE — instant response, zero API calls ──
         const GREET_CACHE = {
           'hello':["You found us. What's going on right now?","I'm here. What brought you in tonight?","Hey. Talk to me."],
@@ -831,6 +831,7 @@ const server = http.createServer((req, res) => {
           const variants = GREET_CACHE[greetKey];
           const reply = variants[Math.floor(Date.now()/60000) % variants.length];
           res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-cache','Connection':'keep-alive','Access-Control-Allow-Origin':'*'});
+          if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
           res.write('data: '+JSON.stringify({text:reply})+'\n\n');
           res.write('data: [DONE]\n\n');
           res.end();
@@ -870,6 +871,7 @@ const server = http.createServer((req, res) => {
         });
         if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI error:', ar.status, errBody.substring(0,500)); return json(res, 500, {error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model}); }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
+        if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '', full = '', chunkCount = 0;
         while (true) {
           const { done, value } = await rd.read(); if (done) break;
@@ -925,6 +927,7 @@ const server = http.createServer((req, res) => {
     req.on('end', () => { (async () => {
       try {
         const p = JSON.parse(b);
+        const suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message||'');
         const model = pickModel(p.message||'', p.mode||'general');
         const sys = await buildPrompt(p.message||'', p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety');
         const msgs = [{ role: 'system', content: sys }];
@@ -935,6 +938,7 @@ const server = http.createServer((req, res) => {
           body: JSON.stringify({ model, messages: msgs, max_completion_tokens: model==='gpt-5'?4000:2000, temperature: 1, stream: true })
         });
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
+        if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '';
         while (true) { const { done, value } = await rd.read(); if (done) break; buf += dc.decode(value, { stream: true }); const ls = buf.split('\n'); buf = ls.pop()||'';
           for (const ln of ls) { if (!ln.startsWith('data: ')) continue; const d = ln.slice(6).trim(); if (d==='[DONE]') { res.write('data: '+JSON.stringify({done:true,model})+'\n\n'); continue; } try { const j=JSON.parse(d); const t=j.choices?.[0]?.delta?.content; if(t) res.write('data: '+JSON.stringify({t,text:t})+'\n\n'); } catch{} } }
