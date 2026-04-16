@@ -180,9 +180,11 @@ function getFallback() {
 const EMOTIONAL_SESSIONS = new Set();
 const EMOTIONAL_INTENT_RE = /\b(therapy|therapist|help|struggling|overwhelmed|crisis|scared|relapse|not okay)\b/i;
 function checkEmotionalIntent(sessionId, message) {
-  if (!sessionId || !message) return EMOTIONAL_SESSIONS.has(sessionId);
-  if (EMOTIONAL_INTENT_RE.test(message)) EMOTIONAL_SESSIONS.add(sessionId);
-  return EMOTIONAL_SESSIONS.has(sessionId);
+  if (!message) return sessionId ? EMOTIONAL_SESSIONS.has(sessionId) : false;
+  const hit = EMOTIONAL_INTENT_RE.test(message);
+  if (hit && sessionId) EMOTIONAL_SESSIONS.add(sessionId);
+  if (sessionId) return EMOTIONAL_SESSIONS.has(sessionId);
+  return hit;
 }
 
 const MODE_PROMPTS = {
