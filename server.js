@@ -13,6 +13,27 @@ const OPENAI_KEY = process.env.OPENAI_API_KEY || '';
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
 
+const TWILIO_SID  = process.env.TWILIO_ACCOUNT_SID  || '';
+const TWILIO_AUTH = process.env.TWILIO_AUTH_TOKEN    || '';
+const TWILIO_FROM = process.env.TWILIO_PHONE_NUMBER  || '';
+
+async function sendSMS(to, body) {
+  if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
+  const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`;
+  const params = new URLSearchParams({ To: to, From: TWILIO_FROM, Body: body });
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + Buffer.from(`${TWILIO_SID}:${TWILIO_AUTH}`).toString('base64')
+    },
+    body: params.toString()
+  });
+  const data = await resp.json();
+  if (!resp.ok) throw new Error(data.message || `Twilio error ${resp.status}`);
+  return data;
+}
+
 const ALVAI_CORE = `You are Alvai — the AI soul of BLEU.live, The Longevity Operating System.
 
 BLEU means Believe, Love, Evolve, Unite. That is not a slogan. It is a promise to every person who finds this platform.
@@ -1251,6 +1272,50 @@ const server = http.createServer((req, res) => {
         json(res, 200, {ok:true, persisted:true, reorder_target_date:p.reorder_target_date});
       } catch(e) { json(res, 500, {error:'reorder-reminder failed', detail:String(e.message||e)}); }
     })(); });
+    return;
+  }
+
+  // ═══════ SEND REORDER REMINDERS (cron / manual trigger) ═══════
+  if (pn === '/api/send-reorder-reminders' && req.method === 'POST') {
+    (async () => {
+      try {
+        if (!SUPABASE_URL || !SUPABASE_KEY) return json(res, 500, {error:'Supabase not configured'});
+        if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) return json(res, 500, {error:'Twilio not configured'});
+        const today = new Date().toISOString().slice(0, 10);
+        const rows = await querySupabase('user_coherence', `reorder_target_date=eq.${today}&phone=not.is.null&select=phone,protocol_name`, 500);
+        if (!rows || !Array.isArray(rows) || rows.length === 0) return json(res, 200, {sent:0, message:'No reminders due today'});
+        let sent = 0, errors = [];
+        for (const row of rows) {
+          if (!row.phone) continue;
+          try {
+            const msg = `Your ${row.protocol_name} is running low — about a week left. Same protocol? Reply YES to reorder at bleu.live`;
+            await sendSMS(row.phone, msg);
+            sent++;
+          } catch(e) { errors.push({phone:row.phone, error:String(e.message||e)}); }
+        }
+        json(res, 200, {sent, errors: errors.length ? errors : undefined});
+      } catch(e) { json(res, 500, {error:'send-reorder-reminders failed', detail:String(e.message||e)}); }
+    })();
+    return;
+  }
+
+  // ═══════ TWILIO INBOUND REPLY WEBHOOK ═══════
+  if (pn === '/twilio-reply' && req.method === 'POST') {
+    let b=''; req.on('data',c=>b+=c);
+    req.on('end', ()=>{
+      try {
+        const params = new URLSearchParams(b);
+        const body = params.get('Body') || '';
+        let twiml;
+        if (/yes/i.test(body)) {
+          twiml = '<?xml version="1.0" encoding="UTF-8"?><Response><Message>Your protocol is ready. Tap here to reorder: bleu.live/supply — your stack is waiting.</Message></Response>';
+        } else {
+          twiml = '<?xml version="1.0" encoding="UTF-8"?><Response><Message>No worries — reply YES anytime when you are ready to restock.</Message></Response>';
+        }
+        res.writeHead(200, {'Content-Type':'text/xml'});
+        res.end(twiml);
+      } catch(e) { res.writeHead(500); res.end('error'); }
+    });
     return;
   }
 
