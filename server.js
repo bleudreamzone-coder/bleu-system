@@ -1288,6 +1288,13 @@ const server = http.createServer((req, res) => {
           phone: p.phone || null,
           recorded_at: new Date().toISOString()
         });
+        if (p.user_id) {
+          await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${p.user_id}`, {
+            method: 'PATCH',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ last_protocol: p.protocol_name, last_protocol_date: p.last_purchase_date })
+          });
+        }
         json(res, 200, {ok:true, persisted:true, reorder_target_date:p.reorder_target_date});
       } catch(e) { json(res, 500, {error:'reorder-reminder failed', detail:String(e.message||e)}); }
     })(); });
