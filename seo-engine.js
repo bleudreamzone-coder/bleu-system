@@ -477,10 +477,22 @@ ${cityList.map(c => `
       { loc: DOMAIN + '/safety-check', priority: '0.9', freq: 'monthly' },
     ];
 
-    // Add dynamic pages
+    // Add city hub pages from CITY_META
+    for (const slug of Object.keys(CITY_META)) {
+      urls.push({ loc: `${DOMAIN}/${slug}`, priority: '0.8', freq: 'weekly' });
+      for (const cond of CONDITIONS) {
+        urls.push({ loc: `${DOMAIN}/${slug}/${cond}`, priority: '0.7', freq: 'weekly' });
+      }
+    }
+
+    // Add dynamic pages from seo_pages cache (skip duplicates)
+    const seen = new Set(urls.map(u => u.loc));
     for (const p of list) {
+      const loc = `${DOMAIN}/${p.slug}`;
+      if (seen.has(loc)) continue;
+      seen.add(loc);
       urls.push({
-        loc: `${DOMAIN}/${p.slug}`,
+        loc,
         priority: p.slug.includes('/') ? '0.7' : '0.8',
         freq: 'weekly',
         lastmod: p.published_at ? p.published_at.substring(0, 10) : undefined

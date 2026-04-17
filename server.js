@@ -203,9 +203,11 @@ const EMOTIONAL_INTENT_RE = /\b(therapy|therapist|help|struggling|overwhelmed|cr
 function checkEmotionalIntent(sessionId, message) {
   if (!message) return sessionId ? EMOTIONAL_SESSIONS.has(sessionId) : false;
   const hit = EMOTIONAL_INTENT_RE.test(message);
-  if (hit && sessionId) EMOTIONAL_SESSIONS.add(sessionId);
-  if (sessionId) return EMOTIONAL_SESSIONS.has(sessionId);
-  return hit;
+  if (hit) {
+    if (sessionId) EMOTIONAL_SESSIONS.add(sessionId);
+    return true;
+  }
+  return sessionId ? EMOTIONAL_SESSIONS.has(sessionId) : false;
 }
 
 const MODE_PROMPTS = {
