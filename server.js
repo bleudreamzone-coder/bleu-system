@@ -822,6 +822,22 @@ async function callAI(msg, hist, mode, tm, rm) {
   return { text: d.choices[0].message.content, model, tokens: d.usage };
 }
 
+// ═══ SEO ENGINE ═══
+const seoEngine = require('./seo-engine')({
+  sb: {
+    query: (table, q) => querySupabase(table, q, 1000),
+    upsert: (table, rows) => querySupabase(table, '', 0, 'POST', rows)
+  },
+  ENV: process.env,
+  fetchJSON,
+  log: console.log
+});
+const SEO_CITY_SLUGS = new Set([
+  'new-orleans','austin','denver','portland','nashville','seattle','miami',
+  'san-francisco','los-angeles','chicago','new-york','phoenix','philadelphia',
+  'san-antonio','san-diego','dallas','atlanta','minneapolis','charlotte','tampa'
+]);
+
 // ═══ SERVER ═══
 function json(res, code, data) { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); }
 function cors(res) { res.setHeader('Access-Control-Allow-Origin','*'); res.setHeader('Access-Control-Allow-Methods','GET,POST,OPTIONS'); res.setHeader('Access-Control-Allow-Headers','Content-Type,Authorization'); }
@@ -1323,6 +1339,24 @@ const server = http.createServer((req, res) => {
   if (pn === '/stripe-webhook' && req.method === 'POST') { handleStripeWebhook(req, res); return; }
 
   if (pn === '/api/stats') return json(res, 200, { version:'4.0', modes: Object.keys(MODE_PROMPTS).length, therapy: Object.keys(THERAPY_MODES).length, recovery: Object.keys(RECOVERY_MODES).length });
+
+  // ═══════ SEO ENGINE — city pages, sitemap, robots.txt ═══════
+  if (req.method === 'GET') {
+    const seoRoute = pn.replace(/^\//, '').replace(/\/$/, '');
+    const firstSeg = seoRoute.split('/')[0];
+    if (seoRoute === 'sitemap.xml' || seoRoute === 'robots.txt' || seoRoute === 'safety-check' || seoRoute === 'cities' || seoRoute.startsWith('practitioner/') || SEO_CITY_SLUGS.has(firstSeg)) {
+      (async () => {
+        try {
+          const result = await seoEngine.handleRoute(seoRoute);
+          if (!result) return json(res, 404, {error:'Page not found'});
+          const types = {html:'text/html', xml:'application/xml', text:'text/plain'};
+          res.writeHead(200, {'Content-Type': types[result.type] || 'text/html', 'Cache-Control':'public, max-age=3600'});
+          res.end(result.content);
+        } catch(e) { console.error('SEO engine error:', e); json(res, 500, {error:'SEO render failed'}); }
+      })();
+      return;
+    }
+  }
 
   if ((pn === '/' || pn === '/index.html') && !url.searchParams.has('v')) { res.writeHead(302, {'Location':'/?v=20260403','Cache-Control':'no-store'}); res.end(); return; }
   if (pn === '/' || pn === '/index.html') { const noCacheHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'}; fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,noCacheHeaders);res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,noCacheHeaders);res.end(d);} }); return; }
