@@ -8,7 +8,7 @@
 
 module.exports = function({ sb, ENV, fetchJSON, log }) {
 
-  const DOMAIN = 'https://bleu.live';
+  const DOMAIN = 'https://bleu-system.onrender.com';
   const BRAND = 'BLEU.LIVE';
 
   // ═══════════════════════════════════════════════════════════════
@@ -43,6 +43,15 @@ module.exports = function({ sb, ENV, fetchJSON, log }) {
     'minneapolis': { lat: 44.98, lng: -93.27, soul: 'Nordic discipline meets progressive wellness policy. Lake culture, cold therapy.', pop: '429K' },
     'charlotte': { lat: 35.23, lng: -80.84, soul: 'Banking capital with Southern warmth. Growing wellness infrastructure.', pop: '879K' },
     'tampa': { lat: 27.95, lng: -82.46, soul: 'Gulf coast healing. Retirement wellness meets young family energy.', pop: '384K' },
+    'baton-rouge': { lat: 30.45, lng: -91.15, soul: 'Cajun country capital — swampy heat, LSU pride, soul food as medicine.', pop: '228K' },
+    'houston': { lat: 29.76, lng: -95.37, soul: 'Medical City powerhouse — largest med center on earth, Gulf humidity, global kitchens.', pop: '2.3M' },
+    'jackson': { lat: 32.30, lng: -90.18, soul: 'Blues birthplace, civil rights ground — slow-living healing in the heart of Mississippi.', pop: '153K' },
+    'mobile': { lat: 30.70, lng: -88.04, soul: 'Gulf Coast soul — oak-lined streets, Mardi Gras roots, Southern maritime wellness.', pop: '187K' },
+    'boston': { lat: 42.36, lng: -71.06, soul: 'Academic medicine, New England grit, world-class hospitals and walking-city rhythm.', pop: '675K' },
+    'boulder': { lat: 40.01, lng: -105.27, soul: 'Flatirons views, trail-run culture, psychedelic research and Buddhist centers.', pop: '108K' },
+    'sedona': { lat: 34.87, lng: -111.76, soul: 'Red rock vortexes, energy healers — the spiritual capital of the American Southwest.', pop: '10K' },
+    'asheville': { lat: 35.60, lng: -82.55, soul: 'Blue Ridge mountains, craft beer and craft healing — plant medicine meets Appalachian folk wisdom.', pop: '94K' },
+    'santa-fe': { lat: 35.69, lng: -105.94, soul: 'High desert capital — Native and Hispanic healing traditions, adobe quiet, thin air.', pop: '85K' },
   };
 
   const CONDITIONS = [

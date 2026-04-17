@@ -837,7 +837,8 @@ const seoEngine = require('./seo-engine')({
 const SEO_CITY_SLUGS = new Set([
   'new-orleans','austin','denver','portland','nashville','seattle','miami',
   'san-francisco','los-angeles','chicago','new-york','phoenix','philadelphia',
-  'san-antonio','san-diego','dallas','atlanta','minneapolis','charlotte','tampa'
+  'san-antonio','san-diego','dallas','atlanta','minneapolis','charlotte','tampa',
+  'baton-rouge','houston','jackson','mobile','boston','boulder','sedona','asheville','santa-fe'
 ]);
 
 // ═══ SERVER ═══
