@@ -13038,6 +13038,10 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
       </div>
       <iframe id="fsModalFrame" src="about:blank" style="flex:1;width:100%;border:0;background:#fff" allow="payment; clipboard-write"></iframe>
       <div style="padding:12px 14px;background:linear-gradient(0deg,rgba(34,197,94,.08),rgba(34,197,94,0));border-top:1px solid rgba(34,197,94,.2)">
+        <div id="fsPhoneRow" style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <label for="fsPhoneInput" style="font-size:12px;color:#bff5d0;white-space:nowrap;font-weight:600">Get a restock reminder?</label>
+          <input id="fsPhoneInput" type="tel" placeholder="(555) 555-1234" style="flex:1;padding:8px 10px;background:rgba(255,255,255,.06);border:1px solid rgba(34,197,94,.3);border-radius:8px;color:#fff;font-size:13px;outline:none" />
+        </div>
         <button id="fsOrderPlaced" style="width:100%;padding:12px;background:rgba(34,197,94,.18);border:1px solid rgba(34,197,94,.45);border-radius:10px;color:#22c55e;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:.5px">I placed my order ✓</button>
         <div id="fsOrderConfirm" style="display:none;margin-top:8px;padding:10px 12px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);border-radius:10px;color:#bff5d0;font-size:12px;line-height:1.5;text-align:center"></div>
       </div>
@@ -13059,6 +13063,8 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
         orderBtn.textContent = 'I placed my order ✓';
         orderConfirm.style.display = 'none';
         orderConfirm.textContent = '';
+        document.getElementById('fsPhoneInput').value = '';
+        document.getElementById('fsPhoneRow').style.display = 'flex';
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
       };
@@ -13084,7 +13090,8 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
             session_id: (window.bleuSession) || localStorage.getItem('bleu_session') || 'anonymous',
             last_purchase_date: iso(today),
             protocol_name: currentPlanUrl,
-            reorder_target_date: iso(reorder)
+            reorder_target_date: iso(reorder),
+            phone: document.getElementById('fsPhoneInput').value.trim() || null
           })
         }).then(function(r){ return r.json().catch(function(){ return {}; }); }).then(function(){
           var human = reorder.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});

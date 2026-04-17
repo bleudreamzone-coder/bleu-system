@@ -1267,6 +1267,7 @@ const server = http.createServer((req, res) => {
           last_purchase_date: p.last_purchase_date,
           protocol_name: p.protocol_name,
           reorder_target_date: p.reorder_target_date,
+          phone: p.phone || null,
           recorded_at: new Date().toISOString()
         });
         json(res, 200, {ok:true, persisted:true, reorder_target_date:p.reorder_target_date});
