@@ -142,6 +142,7 @@ window.vesselShowPicker=_vShow;
 window.vesselRemoveFromCart=_vDel;
 window.vesselUpdateCart=_vUpd;
 window.vesselAsk=function(){var i=document.getElementById("vessel-chat-input");if(i&&i.value.trim()&&typeof ask==="function"){ask(i.value.trim());i.value="";}};
+window.vsAddToStack=function(pid,name,price,asin){if(typeof PRODUCT_MASTER!=='undefined'&&typeof addToCart==='function'){var key='vs-'+pid;if(!PRODUCT_MASTER[key]){PRODUCT_MASTER[key]={name:name,dose:'',price:parseInt((price||'0').replace(/[^0-9]/g,'')),asin:asin,emoji:'💊',p:price,url:'https://amazon.com/dp/'+asin+'?tag=bleulive20-20',why:'Added from your Supply tab'};}addToCart(key);if(typeof toggleCart==='function')toggleCart();}};
 </script>
 
 <script>
@@ -2524,7 +2525,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
         <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.7</span> <span class="vs-rating-count">18,432 ratings</span></div>
         <div class="vs-card-outcome">Deeper sleep tonight</div>
         <div class="vs-card-price">$17 <span>/240 tabs -- 4 month supply</span></div>
-        <button class="vs-add" onclick="event.stopPropagation();vesselShowPicker('mag','NOW Foods Magnesium Glycinate','$17','B0CB984SHQ','amazon')">Choose Brand →</button>
+        <button class="vs-add" onclick="event.stopPropagation();vsAddToStack('mag','NOW Foods Magnesium Glycinate','$17','B0CB984SHQ')">+ Add to Stack</button>
         <a href="javascript:void(0)" data-fs="https://us.fullscript.com/plans/fstoler-felicia-stoler-sleep-restoration" onclick="event.stopPropagation()" style="display:block;margin-top:6px;background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);border-radius:6px;padding:6px;font-size:10px;font-weight:700;text-align:center;text-decoration:none;font-family:monospace;letter-spacing:.5px">💊 Full Sleep Restoration Protocol →</a>
       </div>
     </div>
@@ -2538,7 +2539,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
         <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.6</span> <span class="vs-rating-count">14,207 ratings</span></div>
         <div class="vs-card-outcome">Calm in 30 minutes</div>
         <div class="vs-card-price">$18 <span>/120 caps -- 4 month supply</span></div>
-        <button class="vs-add" onclick="event.stopPropagation();vesselShowPicker('theanine','NOW Foods L-Theanine 200mg','$18','B00GQV9YX6','amazon')">Choose Brand →</button>
+        <button class="vs-add" onclick="event.stopPropagation();vsAddToStack('theanine','NOW Foods L-Theanine 200mg','$18','B00GQV9YX6')">+ Add to Stack</button>
       </div>
     </div>
 
@@ -2551,7 +2552,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
         <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="vs-rating-text">4.8</span> <span class="vs-rating-count">22,103 ratings</span></div>
         <div class="vs-card-outcome">Reduces inflammation</div>
         <div class="vs-card-price">$55 <span>/120 softgels -- 2 month supply</span></div>
-        <button class="vs-add" onclick="event.stopPropagation();vesselShowPicker('omega3','Nordic Naturals ProOmega 2000','$55','B01HQPYHDC','amazon')">Choose Brand →</button>
+        <button class="vs-add" onclick="event.stopPropagation();vsAddToStack('omega3','Nordic Naturals ProOmega 2000','$55','B01HQPYHDC')">+ Add to Stack</button>
       </div>
     </div>
 
@@ -2564,7 +2565,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
         <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.6</span> <span class="vs-rating-count">30,124 ratings</span></div>
         <div class="vs-card-outcome">Lower cortisol in 8 weeks</div>
         <div class="vs-card-price">$18 <span>/90 caps -- 3 month supply</span></div>
-        <button class="vs-add" onclick="event.stopPropagation();vesselShowPicker('ashwa','Jarrow KSM-66 Ashwagandha','$18','B01D7YKVWQ','amazon')">Choose Brand →</button>
+        <button class="vs-add" onclick="event.stopPropagation();vsAddToStack('ashwa','Jarrow KSM-66 Ashwagandha','$18','B01D7YKVWQ')">+ Add to Stack</button>
       </div>
     </div>
 
@@ -2577,7 +2578,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
         <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.7</span> <span class="vs-rating-count">8,934 ratings</span></div>
         <div class="vs-card-outcome">Blood sugar balance</div>
         <div class="vs-card-price">$38 <span>/60 caps -- 1 month supply</span></div>
-        <button class="vs-add" onclick="event.stopPropagation();vesselShowPicker('berb','Thorne Berberine-500','$38','B00IRL5VX4','amazon')">Choose Brand →</button>
+        <button class="vs-add" onclick="event.stopPropagation();vsAddToStack('berb','Thorne Berberine-500','$38','B00IRL5VX4')">+ Add to Stack</button>
         <a href="javascript:void(0)" data-fs="https://us.fullscript.com/plans/fstoler-metabolic-reset" onclick="event.stopPropagation()" style="display:block;margin-top:6px;background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);border-radius:6px;padding:6px;font-size:10px;font-weight:700;text-align:center;text-decoration:none;font-family:monospace;letter-spacing:.5px">💊 Full Metabolic Protocol →</a>
       </div>
     </div>
@@ -2591,7 +2592,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
         <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.7</span> <span class="vs-rating-count">12,089 ratings</span></div>
         <div class="vs-card-outcome">Cellular energy restored</div>
         <div class="vs-card-price">$40 <span>/60 softgels -- 1 month supply</span></div>
-        <button class="vs-add" onclick="event.stopPropagation();vesselShowPicker('ubiq','Jarrow QH-absorb Ubiquinol 200mg','$40','B000VL1BMS','amazon')">Choose Brand →</button>
+        <button class="vs-add" onclick="event.stopPropagation();vsAddToStack('ubiq','Jarrow QH-absorb Ubiquinol 200mg','$40','B000VL1BMS')">+ Add to Stack</button>
         <a href="javascript:void(0)" data-fs="https://us.fullscript.com/plans/fstoler-longevity-protocol" onclick="event.stopPropagation()" style="display:block;margin-top:6px;background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);border-radius:6px;padding:6px;font-size:10px;font-weight:700;text-align:center;text-decoration:none;font-family:monospace;letter-spacing:.5px">💊 Full Longevity Protocol →</a>
       </div>
     </div>
@@ -2605,7 +2606,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
         <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="vs-rating-text">4.8</span> <span class="vs-rating-count">9,217 ratings</span></div>
         <div class="vs-card-outcome">Immune strength</div>
         <div class="vs-card-price">$18 <span>/60 caps -- 2 month supply</span></div>
-        <button class="vs-add" onclick="event.stopPropagation();vesselShowPicker('zinc','Thorne Zinc Picolinate 30mg','$18','B004O89XFS','amazon')">Choose Brand →</button>
+        <button class="vs-add" onclick="event.stopPropagation();vsAddToStack('zinc','Thorne Zinc Picolinate 30mg','$18','B004O89XFS')">+ Add to Stack</button>
       </div>
     </div>
 
@@ -2618,7 +2619,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
         <div class="vs-rating-row"><span class="vs-stars">&#9733;&#9733;&#9733;&#9733;<span class="vs-stars-dim">&#9733;</span></span> <span class="vs-rating-text">4.7</span> <span class="vs-rating-count">15,802 ratings</span></div>
         <div class="vs-card-outcome">Mood + immunity</div>
         <div class="vs-card-price">$18 <span>/120 softgels -- 4 month supply</span></div>
-        <button class="vs-add" onclick="event.stopPropagation();vesselShowPicker('d3k2','NOW Foods D3+K2 5000IU','$18','B01GBGS7JU','amazon')">Choose Brand →</button>
+        <button class="vs-add" onclick="event.stopPropagation();vsAddToStack('d3k2','NOW Foods D3+K2 5000IU','$18','B01GBGS7JU')">+ Add to Stack</button>
       </div>
     </div>
 
