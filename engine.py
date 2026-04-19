@@ -72,6 +72,31 @@ ZONES = [
    {"city":"Sedona","state":"AZ","lat":34.8697,"lng":-111.761},
    {"city":"Asheville","state":"NC","lat":35.5951,"lng":-82.5515},
    {"city":"Santa Fe","state":"NM","lat":35.687,"lng":-105.9378}],
+  [{"city":"Las Vegas","state":"NV","lat":36.17,"lng":-115.14},
+   {"city":"Salt Lake City","state":"UT","lat":40.76,"lng":-111.89},
+   {"city":"Kansas City","state":"MO","lat":39.10,"lng":-94.58},
+   {"city":"Columbus","state":"OH","lat":39.96,"lng":-82.99},
+   {"city":"Indianapolis","state":"IN","lat":39.77,"lng":-86.16},
+   {"city":"Louisville","state":"KY","lat":38.25,"lng":-85.76},
+   {"city":"Cleveland","state":"OH","lat":41.50,"lng":-81.69},
+   {"city":"Detroit","state":"MI","lat":42.33,"lng":-83.05},
+   {"city":"Milwaukee","state":"WI","lat":43.04,"lng":-87.91},
+   {"city":"Memphis","state":"TN","lat":35.15,"lng":-90.05},
+   {"city":"Oklahoma City","state":"OK","lat":35.47,"lng":-97.52},
+   {"city":"El Paso","state":"TX","lat":31.76,"lng":-106.49},
+   {"city":"Sacramento","state":"CA","lat":38.58,"lng":-121.49},
+   {"city":"Oakland","state":"CA","lat":37.80,"lng":-122.27},
+   {"city":"San Jose","state":"CA","lat":37.34,"lng":-121.89},
+   {"city":"Raleigh","state":"NC","lat":35.78,"lng":-78.64},
+   {"city":"Jacksonville","state":"FL","lat":30.33,"lng":-81.66},
+   {"city":"Orlando","state":"FL","lat":28.54,"lng":-81.38},
+   {"city":"Honolulu","state":"HI","lat":21.31,"lng":-157.86},
+   {"city":"Boise","state":"ID","lat":43.61,"lng":-116.20},
+   {"city":"Spokane","state":"WA","lat":47.66,"lng":-117.43},
+   {"city":"Tucson","state":"AZ","lat":32.22,"lng":-110.97},
+   {"city":"Albuquerque","state":"NM","lat":35.08,"lng":-106.65},
+   {"city":"Pittsburgh","state":"PA","lat":40.44,"lng":-79.99},
+   {"city":"Richmond","state":"VA","lat":37.54,"lng":-77.43}],
 ]
 
 def p(m): print(f"    {m}")
@@ -120,7 +145,7 @@ def get_cities():
     sf = "ripple_state.json"
     s = json.load(open(sf)) if os.path.exists(sf) else {"start":datetime.now().isoformat(),"runs":0}
     d = s.get("runs",0)
-    z = 0 if d<7 else 1 if d<14 else 2 if d<30 else 3 if d<60 else 4
+    z = 0 if d<7 else 1 if d<14 else 2 if d<30 else 3 if d<60 else 4 if d<120 else 5
     c = []
     for i in range(min(z+1,len(ZONES))): c.extend(ZONES[i])
     s["runs"]=d+1; s["last"]=datetime.now().isoformat(); s["zone"]=z
