@@ -12671,89 +12671,141 @@ window.checkoutAmazon = function() {
   var items = getCart();
   var asins = items.map(function(id){return PRODUCT_MASTER[id]&&PRODUCT_MASTER[id].asin;}).filter(Boolean);
   if(!asins.length) {alert('No Amazon products in your stack yet.'); return;}
-
-  // Show ALVAI safety check modal first
   var names = items.map(function(id){return PRODUCT_MASTER[id]?PRODUCT_MASTER[id].name:'';}).filter(Boolean);
-  showSafetyCheck(asins, names, items);
-};
 
-function showSafetyCheck(asins, names, items) {
-  var existing = document.getElementById('alvai-safety-modal');
-  if(existing) existing.remove();
-
-  var modal = document.createElement('div');
-  modal.id = 'alvai-safety-modal';
-  modal.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:20px';
-  modal.innerHTML = '<div style="background:#0d1520;border:1px solid rgba(201,168,76,.3);border-radius:16px;max-width:480px;width:100%;max-height:80vh;overflow-y:auto;padding:28px">'
-    +'<div style="font-size:9px;letter-spacing:3px;color:rgba(201,168,76,.7);margin-bottom:4px">ALVAI SAFETY CHECK</div>'
-    +'<div style="font-size:16px;font-weight:700;color:#e2e8f0;margin-bottom:16px">Before you check out</div>'
-    +'<div style="font-size:12px;color:#8fa4b0;line-height:1.6;margin-bottom:16px">Your stack: <strong style="color:#e2e8f0">'+names.join(', ')+'</strong></div>'
-    +'<div style="font-size:12px;color:#8fa4b0;margin-bottom:8px">Are you currently taking any medications?</div>'
-    +'<input id="safety-meds-input" placeholder="e.g. metformin, lisinopril, lexapro (or type none)" style="width:100%;padding:12px;background:#111820;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#e2e8f0;font-size:13px;margin-bottom:12px;box-sizing:border-box" />'
-    +'<div id="safety-result" style="display:none;margin-bottom:16px;padding:14px;border-radius:10px;font-size:12px;line-height:1.7;color:#e2e8f0"></div>'
-    +'<div style="display:flex;gap:10px">'
-    +'<button id="safety-check-btn" onclick="runSafetyCheck()" style="flex:1;padding:12px;background:linear-gradient(135deg,#c9a84c,#b8943c);border:none;border-radius:10px;color:#0a1628;font-weight:700;font-size:13px;cursor:pointer">Check Interactions</button>'
-    +'<button id="safety-skip-btn" onclick="proceedToAmazon()" style="flex:1;padding:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:rgba(255,255,255,.4);font-size:12px;cursor:pointer">No meds — proceed</button>'
-    +'</div>'
-    +'<button onclick="document.getElementById(\'alvai-safety-modal\').remove()" style="width:100%;margin-top:10px;padding:8px;background:none;border:none;color:rgba(255,255,255,.25);font-size:11px;cursor:pointer">Cancel</button>'
-    +'</div>';
-  document.body.appendChild(modal);
-  modal.addEventListener('click',function(e){if(e.target===modal)modal.remove();});
-
-  // Store for later use
   window._safetyAsins = asins;
   window._safetyItems = items;
   window._safetyNames = names;
+
+  // Step 1 — check if any cart item carries a safety/interaction flag. Supplements
+  // are assumed to have interaction potential by default, so if there is at least
+  // one item in cart (there always is at this point) we run the intercept.
+  var flagged = items.some(function(id){
+    var p = PRODUCT_MASTER[id] || {};
+    return p.safety || p.interactions || p.dataSafety || p['data-safety'];
+  });
+  if (!flagged && items.length === 0) { proceedToAmazon(); return; }
+
+  showCartSafetyModal();
+};
+
+function showCartSafetyModal() {
+  var existing = document.getElementById('cart-safety-modal');
+  if (existing) existing.remove();
+  var m = document.createElement('div');
+  m.id = 'cart-safety-modal';
+  m.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Georgia,\'Times New Roman\',serif';
+  m.innerHTML =
+    '<div id="cart-safety-card" style="background:#0d1520;border:1px solid rgba(201,168,76,0.25);border-radius:18px;max-width:420px;width:100%;padding:30px 26px;box-shadow:0 20px 60px rgba(0,0,0,0.6);color:#e8e4d6">' +
+      '<div style="font-family:system-ui,sans-serif;font-size:10px;letter-spacing:0.22em;color:#c9a84c;text-transform:uppercase;margin-bottom:10px">Safety Check</div>' +
+      '<div style="font-size:19px;line-height:1.4;color:#f0e6d0;margin-bottom:10px;font-family:Georgia,serif">Are you taking any prescription medications?</div>' +
+      '<div style="font-family:system-ui,sans-serif;font-size:12px;color:rgba(232,228,214,0.55);line-height:1.55;margin-bottom:22px">A quick check before you buy — supplements can interact with some prescriptions.</div>' +
+      '<button id="csm-yes" type="button" style="width:100%;padding:14px;background:#162231;border:1px solid rgba(78,205,196,0.4);color:#4ecdc4;border-radius:10px;font-size:14px;cursor:pointer;font-family:system-ui,sans-serif;font-weight:600;margin-bottom:10px">Yes — check interactions</button>' +
+      '<button id="csm-no" type="button" style="width:100%;padding:14px;background:#c9a84c;color:#0d1520;border:0;border-radius:10px;font-size:14px;cursor:pointer;font-family:system-ui,sans-serif;font-weight:700">No medications — proceed to checkout</button>' +
+      '<div style="text-align:center;margin-top:14px"><a id="csm-close" style="font-family:system-ui,sans-serif;font-size:11px;color:rgba(232,228,214,0.4);cursor:pointer;letter-spacing:0.04em">Cancel</a></div>' +
+    '</div>';
+  document.body.appendChild(m);
+  document.getElementById('csm-yes').onclick = showCartSafetyInput;
+  document.getElementById('csm-no').onclick = function(){ closeCartSafetyModal(); proceedToAmazon(); };
+  document.getElementById('csm-close').onclick = closeCartSafetyModal;
+  m.addEventListener('click', function(e){ if (e.target === m) closeCartSafetyModal(); });
 }
 
-window.runSafetyCheck = function() {
-  var meds = document.getElementById('safety-meds-input').value.trim();
-  if(!meds) return;
-  if(meds.toLowerCase()==='none'||meds.toLowerCase()==='no'){proceedToAmazon();return;}
+function showCartSafetyInput() {
+  var card = document.getElementById('cart-safety-card');
+  if (!card) return;
+  card.innerHTML =
+    '<div style="font-family:system-ui,sans-serif;font-size:10px;letter-spacing:0.22em;color:#c9a84c;text-transform:uppercase;margin-bottom:10px">Medication Check</div>' +
+    '<div style="font-size:19px;line-height:1.4;color:#f0e6d0;margin-bottom:8px;font-family:Georgia,serif">What are you taking?</div>' +
+    '<div style="font-family:system-ui,sans-serif;font-size:12px;color:rgba(232,228,214,0.55);line-height:1.55;margin-bottom:16px">List your prescriptions, separated by commas. Not stored — used once for this check.</div>' +
+    '<textarea id="csm-meds" placeholder="e.g. sertraline, lisinopril, metformin" style="width:100%;padding:12px;background:#162231;border:1px solid rgba(201,168,76,0.18);border-radius:10px;color:#e8e4d6;font-size:14px;font-family:Georgia,serif;box-sizing:border-box;min-height:80px;resize:vertical;margin-bottom:16px;outline:none"></textarea>' +
+    '<button id="csm-run" type="button" style="width:100%;padding:14px;background:#c9a84c;color:#0d1520;border:0;border-radius:10px;font-size:14px;cursor:pointer;font-family:system-ui,sans-serif;font-weight:700">Run safety check →</button>' +
+    '<div style="text-align:center;margin-top:14px"><a id="csm-close" style="font-family:system-ui,sans-serif;font-size:11px;color:rgba(232,228,214,0.4);cursor:pointer;letter-spacing:0.04em">Cancel</a></div>';
+  document.getElementById('csm-run').onclick = runCartSafetyCheck;
+  document.getElementById('csm-close').onclick = closeCartSafetyModal;
+  setTimeout(function(){ var t = document.getElementById('csm-meds'); if (t) t.focus(); }, 60);
+}
 
-  var btn = document.getElementById('safety-check-btn');
-  btn.textContent = 'Checking...';
-  btn.disabled = true;
+function runCartSafetyCheck() {
+  var medsEl = document.getElementById('csm-meds');
+  var meds = medsEl ? medsEl.value.trim() : '';
+  if (!meds) return;
+  var names = window._safetyNames || [];
+  var btn = document.getElementById('csm-run');
+  if (btn) { btn.textContent = 'Checking…'; btn.disabled = true; btn.style.opacity = '0.6'; }
 
-  var supplements = window._safetyNames.join(', ');
-  var msg = 'SAFETY CHECK ONLY. User takes: '+meds+'. They want to buy: '+supplements+'. For each supplement, respond with CLEAR, MONITOR, or CAUTION and a one-line reason. Be specific about CYP450 pathways. Keep it concise.';
+  var msg = 'Quick safety check before purchase: user is buying ' + names.join(', ') +
+            ' and takes ' + meds +
+            '. Flag any CYP450 interactions or contraindications in one sentence. Return: CLEAR, CAUTION: [reason], or FLAG: [reason]';
 
-  fetch('https://bleu-system.onrender.com/api/chat',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({message:msg,mode:'vessel',session:'safety-check'})
-  }).then(function(r){return r.text();}).then(function(text){
-    var full='';
+  fetch('https://bleu-system.onrender.com/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: msg, mode: 'cannaiq', session: 'cart-safety' })
+  }).then(function(r){ return r.text(); }).then(function(text){
+    var full = '';
     text.split('\n').forEach(function(line){
-      if(!line.startsWith('data: '))return;var d=line.slice(6).trim();
-      if(d==='[DONE]')return;
-      try{var p=JSON.parse(d);if(p.suppressCommerce)applySuppressCommerce();if(p.text)full+=p.text;}catch(e){}
+      if (!line.startsWith('data: ')) return;
+      var d = line.slice(6).trim();
+      if (d === '[DONE]') return;
+      try { var p = JSON.parse(d); if (p.text) full += p.text; } catch(e) {}
     });
-    if(!full){try{var j=JSON.parse(text);full=j.response||j.text||j.content||text;}catch(e){full=text;}}
-
-    var res = document.getElementById('safety-result');
-    var hasCaution = full.toLowerCase().includes('caution');
-    res.style.display = 'block';
-    res.style.background = hasCaution ? 'rgba(239,68,68,.1)' : 'rgba(34,197,94,.1)';
-    res.style.border = '1px solid '+(hasCaution?'rgba(239,68,68,.3)':'rgba(34,197,94,.3)');
-    res.innerHTML = (typeof fmt==='function'?fmt(full):full.replace(/\n/g,'<br>'));
-
-    btn.textContent = 'Check Again';
-    btn.disabled = false;
-
-    var skipBtn = document.getElementById('safety-skip-btn');
-    if(skipBtn){
-      skipBtn.textContent = hasCaution ? 'Proceed with caution →' : 'All clear — checkout →';
-      skipBtn.style.background = hasCaution ? 'rgba(239,68,68,.08)' : 'rgba(34,197,94,.12)';
-      skipBtn.style.borderColor = hasCaution ? 'rgba(239,68,68,.3)' : 'rgba(34,197,94,.3)';
-      skipBtn.style.color = hasCaution ? '#ef4444' : '#22c55e';
-    }
+    if (!full) { try { var j = JSON.parse(text); full = j.response || j.text || j.content || text; } catch(e) { full = text; } }
+    renderCartSafetyResult(full);
   }).catch(function(){
-    btn.textContent = 'Check Interactions';
-    btn.disabled = false;
-    proceedToAmazon();
+    renderCartSafetyResult('CAUTION: Could not reach the safety engine. Review this combination with a healthcare provider before purchasing.');
   });
-};
+}
+
+function renderCartSafetyResult(text) {
+  var raw = (text || '').trim();
+  var verdict = 'CLEAR';
+  if (/\bFLAG\b/i.test(raw)) verdict = 'FLAG';
+  else if (/\bCAUTION\b/i.test(raw)) verdict = 'CAUTION';
+  else if (/\bCLEAR\b/i.test(raw)) verdict = 'CLEAR';
+
+  var card = document.getElementById('cart-safety-card');
+  if (!card) return;
+
+  var color    = verdict === 'CLEAR' ? '#22c55e' : verdict === 'CAUTION' ? '#fb923c' : '#ef4444';
+  var label    = verdict === 'CLEAR' ? 'Clear'    : verdict === 'CAUTION' ? 'Caution'   : 'Flag';
+  var subtitle = verdict === 'CLEAR' ? 'No known interactions. You can proceed.' :
+                 verdict === 'CAUTION' ? 'Possible interaction — read below before you proceed.' :
+                 'Please review this combination with a healthcare provider before purchasing.';
+
+  var safeText = raw.replace(/[<>]/g, function(c){ return c === '<' ? '&lt;' : '&gt;'; });
+
+  var html =
+    '<div style="font-family:system-ui,sans-serif;font-size:10px;letter-spacing:0.22em;color:' + color + ';text-transform:uppercase;margin-bottom:10px">Safety Result</div>' +
+    '<div style="font-size:30px;line-height:1.15;color:#f0e6d0;margin-bottom:8px;font-family:Georgia,serif">' + label + '</div>' +
+    '<div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.6;color:rgba(232,228,214,0.75);margin-bottom:16px">' + subtitle + '</div>' +
+    '<div style="font-family:system-ui,sans-serif;font-size:13px;line-height:1.65;color:#e8e4d6;background:#162231;border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px;margin-bottom:20px;white-space:pre-wrap">' + (safeText || 'No detail returned.') + '</div>';
+
+  if (verdict === 'CLEAR') {
+    html += '<button id="csm-proceed" type="button" style="width:100%;padding:14px;background:#c9a84c;color:#0d1520;border:0;border-radius:10px;font-size:14px;cursor:pointer;font-family:system-ui,sans-serif;font-weight:700">Proceed to checkout →</button>';
+  } else if (verdict === 'CAUTION') {
+    html += '<button id="csm-proceed" type="button" style="width:100%;padding:14px;background:rgba(251,146,60,0.14);color:#fb923c;border:1px solid rgba(251,146,60,0.45);border-radius:10px;font-size:13px;cursor:pointer;font-family:system-ui,sans-serif;font-weight:700;margin-bottom:10px">I understand — still proceed</button>' +
+            '<button id="csm-back" type="button" style="width:100%;padding:14px;background:#162231;border:1px solid rgba(78,205,196,0.3);color:#4ecdc4;border-radius:10px;font-size:13px;cursor:pointer;font-family:system-ui,sans-serif;font-weight:600">Cancel — review with a provider</button>';
+  } else {
+    html += '<div style="font-family:system-ui,sans-serif;font-size:12px;line-height:1.6;color:rgba(239,68,68,0.85);background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px;margin-bottom:14px">Checkout blocked for this combination.</div>' +
+            '<button id="csm-back" type="button" style="width:100%;padding:14px;background:#162231;border:1px solid rgba(239,68,68,0.4);color:#ef4444;border-radius:10px;font-size:13px;cursor:pointer;font-family:system-ui,sans-serif;font-weight:700">Close</button>';
+  }
+
+  html += '<div style="text-align:center;margin-top:14px"><a id="csm-close" style="font-family:system-ui,sans-serif;font-size:11px;color:rgba(232,228,214,0.4);cursor:pointer;letter-spacing:0.04em">Close</a></div>';
+  card.innerHTML = html;
+
+  var pr = document.getElementById('csm-proceed');
+  if (pr) pr.onclick = function(){ closeCartSafetyModal(); proceedToAmazon(); };
+  var bk = document.getElementById('csm-back');
+  if (bk) bk.onclick = closeCartSafetyModal;
+  var cl = document.getElementById('csm-close');
+  if (cl) cl.onclick = closeCartSafetyModal;
+}
+
+function closeCartSafetyModal() {
+  var m = document.getElementById('cart-safety-modal');
+  if (m) m.remove();
+}
 
 window.proceedToAmazon = function() {
   var asins = window._safetyAsins || [];
@@ -12773,7 +12825,7 @@ window.proceedToAmazon = function() {
   if(typeof bleuSignal==='function') bleuSignal('cart_checkout_amazon',{items:items.length,asins:asins.length,total:calcTotal(items)});
   if(typeof recordAffiliateTransaction==='function') recordAffiliateTransaction('amazon-cart','Amazon Stack Checkout','cart_checkout',{items:asins});
 
-  var modal = document.getElementById('alvai-safety-modal');
+  var modal = document.getElementById('cart-safety-modal');
   if(modal) modal.remove();
 
   window.open(url,'_blank');
