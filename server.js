@@ -828,7 +828,11 @@ async function getClinicalPractitioners(msg) {
     const city = detected || 'new orleans';
     const specialty = (isCrisis || isTherapy) ? 'Counselor' : '';
 
-    let q = `select=full_name,specialty,address_line1,city,zip,phone,npi&city=ilike.${encodeURIComponent(city)}`;
+    const zipMap = {"new orleans":"701","houston":"770","austin":"787","dallas":"752","atlanta":"303","miami":"331","chicago":"606","los angeles":"900","new york":"100","san francisco":"941","seattle":"981","denver":"802","phoenix":"850","portland":"972","nashville":"372","baton rouge":"708","charlotte":"282","tampa":"336","memphis":"381"};
+    const zp = zipMap[city.toLowerCase()];
+    let q = `select=full_name,specialty,address_line1,city,zip,phone,npi`;
+    if (zp) q += `&zip=like.${zp}*`;
+    else q += `&address_line1=ilike.*${encodeURIComponent(city)}*`;
     if (specialty) q += `&specialty=ilike.*${encodeURIComponent(specialty)}*`;
     q += '&order=full_name.asc';
 
