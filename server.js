@@ -807,16 +807,61 @@ async function enrichWithData(msg, mode) {
 }
 
 
+// Clinical threshold — prepend verified local practitioners when the user signals
+// crisis, therapy need, or an explicit practitioner search. Falls back to New
+// Orleans when no city is detected. Wrapped in try/catch so a DB hiccup never
+// blocks the OpenAI call.
+async function getClinicalPractitioners(msg) {
+  try {
+    const CRISIS_RE  = /\b(suicid|self[\s-]?harm|overdose|kill myself|end it)\b/i;
+    const THERAPY_RE = /\b(therapist|psychiatrist|counselor|mental health|depression|anxiety disorder|PTSD|trauma|grief)\b/i;
+    const SEARCH_RE  = /\b(find a doctor|find a practitioner|need a doctor|looking for a therapist|need help near|provider near me|doctor in|therapist in)\b/i;
+
+    const isCrisis  = CRISIS_RE.test(msg);
+    const isTherapy = THERAPY_RE.test(msg);
+    const isSearch  = SEARCH_RE.test(msg);
+    if (!isCrisis && !isTherapy && !isSearch) return '';
+
+    console.log('Clinical threshold: routing to verified practitioners');
+
+    const { city: detected } = extractCity(msg);
+    const city = detected || 'new orleans';
+    const specialty = (isCrisis || isTherapy) ? 'Counselor' : '';
+
+    let q = `select=full_name,specialty,address_line1,city,zip,phone,npi&city=ilike.${encodeURIComponent(city)}`;
+    if (specialty) q += `&specialty=ilike.*${encodeURIComponent(specialty)}*`;
+    q += '&order=full_name.asc';
+
+    const rows = await querySupabase('practitioners', q, 5);
+    if (!rows?.length) return '';
+
+    let out = 'VERIFIED LOCAL PRACTITIONERS — NPI confirmed:\n';
+    rows.forEach((p, i) => {
+      out += `${i+1}. ${p.full_name || 'Provider'} — ${p.specialty || 'Practitioner'}\n`;
+      out += `   ${p.address_line1 || ''}, ${p.city || city}, ${p.zip || ''}\n`;
+      out += `   Phone: ${p.phone || 'N/A'}\n`;
+      if (p.npi) out += `   Profile: https://bleu.live/practitioner/${p.npi}\n`;
+    });
+    out += '\nUse these real verified providers by name when the user asks for help — do not give generic redirects.\n\n';
+    return out;
+  } catch (e) {
+    console.log('Clinical threshold query failed:', e.message);
+    return '';
+  }
+}
+
 async function buildPrompt(msg, mode, tm, rm) {
   let p = MODE_PROMPTS[mode] || MODE_PROMPTS.general;
   if (mode === 'therapy' && THERAPY_MODES[tm]) p += `\n\nACTIVE: ${tm.toUpperCase()}\n${THERAPY_MODES[tm]}`;
   if (mode === 'recovery' && RECOVERY_MODES[rm]) p += `\n\nACTIVE: ${rm.toUpperCase()}\n${RECOVERY_MODES[rm]}`;
-  // Fire data enrichment + practitioner/location lookups in parallel
-  const [enrichment, practitioners, locations] = await Promise.all([
+  // Fire data enrichment + practitioner/location lookups + clinical threshold in parallel
+  const [clinicalBlock, enrichment, practitioners, locations] = await Promise.all([
+    getClinicalPractitioners(msg),
     enrichWithData(msg, mode),
     (/therapist|doctor|counselor|psychiatr|practitioner|find.*help|need.*someone|provider|clinic|dispensar|mental|behavioral|sliding|sober|rehab|treatment/i.test(msg)) ? getPractitioners(msg) : Promise.resolve(''),
     (['community','map'].includes(mode)) ? getLocations(msg) : Promise.resolve('')
   ]);
+  if (clinicalBlock) p = clinicalBlock + p;
   p += practitioners + locations + enrichment;
   // Cap system prompt to prevent model context overflow — enrichment gets truncated first
   if (p.length > 12000) p = p.substring(0, 12000) + '\n[Enrichment truncated for context window]';
