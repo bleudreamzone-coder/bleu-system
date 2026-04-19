@@ -97,6 +97,69 @@ ZONES = [
    {"city":"Albuquerque","state":"NM","lat":35.08,"lng":-106.65},
    {"city":"Pittsburgh","state":"PA","lat":40.44,"lng":-79.99},
    {"city":"Richmond","state":"VA","lat":37.54,"lng":-77.43}],
+  [{"city":"Minneapolis","state":"MN","lat":44.98,"lng":-93.27},
+   {"city":"Philadelphia","state":"PA","lat":39.95,"lng":-75.17},
+   {"city":"San Antonio","state":"TX","lat":29.42,"lng":-98.49},
+   {"city":"San Diego","state":"CA","lat":32.72,"lng":-117.16},
+   {"city":"Tampa","state":"FL","lat":27.95,"lng":-82.46},
+   {"city":"Cincinnati","state":"OH","lat":39.10,"lng":-84.51},
+   {"city":"St Louis","state":"MO","lat":38.63,"lng":-90.20},
+   {"city":"Fort Worth","state":"TX","lat":32.75,"lng":-97.33},
+   {"city":"Virginia Beach","state":"VA","lat":36.85,"lng":-75.98},
+   {"city":"Omaha","state":"NE","lat":41.26,"lng":-95.94},
+   {"city":"Colorado Springs","state":"CO","lat":38.83,"lng":-104.82},
+   {"city":"Tulsa","state":"OK","lat":36.15,"lng":-95.99},
+   {"city":"Charlotte","state":"NC","lat":35.23,"lng":-80.84},
+   {"city":"Wichita","state":"KS","lat":37.69,"lng":-97.34},
+   {"city":"Buffalo","state":"NY","lat":42.89,"lng":-78.88},
+   {"city":"Fort Lauderdale","state":"FL","lat":26.12,"lng":-80.14},
+   {"city":"St Petersburg","state":"FL","lat":27.77,"lng":-82.64},
+   {"city":"Scottsdale","state":"AZ","lat":33.49,"lng":-111.92},
+   {"city":"Chandler","state":"AZ","lat":33.30,"lng":-111.84},
+   {"city":"Gilbert","state":"AZ","lat":33.35,"lng":-111.79},
+   {"city":"Tempe","state":"AZ","lat":33.43,"lng":-111.94},
+   {"city":"Mesa","state":"AZ","lat":33.42,"lng":-111.83},
+   {"city":"Glendale","state":"AZ","lat":33.58,"lng":-112.24},
+   {"city":"Henderson","state":"NV","lat":36.04,"lng":-114.98},
+   {"city":"Reno","state":"NV","lat":39.53,"lng":-119.81},
+   {"city":"Stockton","state":"CA","lat":37.96,"lng":-121.29},
+   {"city":"Long Beach","state":"CA","lat":33.77,"lng":-118.19},
+   {"city":"Fresno","state":"CA","lat":36.74,"lng":-119.77},
+   {"city":"Bakersfield","state":"CA","lat":35.37,"lng":-119.02},
+   {"city":"Modesto","state":"CA","lat":37.64,"lng":-120.99},
+   {"city":"Fontana","state":"CA","lat":34.09,"lng":-117.43},
+   {"city":"Tacoma","state":"WA","lat":47.25,"lng":-122.44},
+   {"city":"Spokane","state":"WA","lat":47.66,"lng":-117.43},
+   {"city":"Eugene","state":"OR","lat":44.05,"lng":-123.09},
+   {"city":"Bend","state":"OR","lat":44.06,"lng":-121.31},
+   {"city":"Boise","state":"ID","lat":43.61,"lng":-116.20},
+   {"city":"Billings","state":"MT","lat":45.78,"lng":-108.50},
+   {"city":"Fargo","state":"ND","lat":46.88,"lng":-96.79},
+   {"city":"Sioux Falls","state":"SD","lat":43.54,"lng":-96.73},
+   {"city":"Des Moines","state":"IA","lat":41.59,"lng":-93.62},
+   {"city":"Little Rock","state":"AR","lat":34.75,"lng":-92.29},
+   {"city":"Birmingham","state":"AL","lat":33.52,"lng":-86.80},
+   {"city":"Memphis","state":"TN","lat":35.15,"lng":-90.05},
+   {"city":"Knoxville","state":"TN","lat":35.96,"lng":-83.92},
+   {"city":"Chattanooga","state":"TN","lat":35.05,"lng":-85.31},
+   {"city":"Lexington","state":"KY","lat":38.04,"lng":-84.50},
+   {"city":"Louisville","state":"KY","lat":38.25,"lng":-85.76},
+   {"city":"Columbus","state":"OH","lat":39.96,"lng":-82.99},
+   {"city":"Pittsburgh","state":"PA","lat":40.44,"lng":-79.99},
+   {"city":"Providence","state":"RI","lat":41.82,"lng":-71.41},
+   {"city":"Hartford","state":"CT","lat":41.76,"lng":-72.68},
+   {"city":"Savannah","state":"GA","lat":32.08,"lng":-81.10},
+   {"city":"Jacksonville","state":"FL","lat":30.33,"lng":-81.66},
+   {"city":"Tallahassee","state":"FL","lat":30.44,"lng":-84.28},
+   {"city":"Gainesville","state":"FL","lat":29.65,"lng":-82.32},
+   {"city":"Norfolk","state":"VA","lat":36.85,"lng":-76.29},
+   {"city":"Richmond","state":"VA","lat":37.54,"lng":-77.43},
+   {"city":"Shreveport","state":"LA","lat":32.52,"lng":-93.75},
+   {"city":"Lafayette","state":"LA","lat":30.22,"lng":-92.02},
+   {"city":"Lake Charles","state":"LA","lat":30.23,"lng":-93.22},
+   {"city":"Gulfport","state":"MS","lat":30.37,"lng":-89.09},
+   {"city":"Anchorage","state":"AK","lat":61.22,"lng":-149.90},
+   {"city":"Honolulu","state":"HI","lat":21.31,"lng":-157.86}],
 ]
 
 def p(m): print(f"    {m}")
@@ -144,11 +207,10 @@ def log_scrape(source, found, saved, dur=0, cities=None, notes=""):
 def get_cities():
     sf = "ripple_state.json"
     s = json.load(open(sf)) if os.path.exists(sf) else {"start":datetime.now().isoformat(),"runs":0}
-    d = s.get("runs",0)
-    z = 0 if d<7 else 1 if d<14 else 2 if d<30 else 3 if d<60 else 4 if d<120 else 5
+    z = 5
     c = []
-    for i in range(min(z+1,len(ZONES))): c.extend(ZONES[i])
-    s["runs"]=d+1; s["last"]=datetime.now().isoformat(); s["zone"]=z
+    for i in range(len(ZONES)): c.extend(ZONES[i])
+    s["runs"] = s.get("runs",0)+1; s["last"] = datetime.now().isoformat(); s["zone"] = z
     with open(sf,"w") as f: json.dump(s,f)
     return c, z
 
