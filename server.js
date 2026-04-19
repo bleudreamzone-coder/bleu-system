@@ -858,7 +858,20 @@ const SEO_CITY_SLUGS = new Set([
   'new-orleans','austin','denver','portland','nashville','seattle','miami',
   'san-francisco','los-angeles','chicago','new-york','phoenix','philadelphia',
   'san-antonio','san-diego','dallas','atlanta','minneapolis','charlotte','tampa',
-  'baton-rouge','houston','jackson','mobile','boston','boulder','sedona','asheville','santa-fe'
+  'baton-rouge','houston','jackson','mobile','boston','boulder','sedona','asheville','santa-fe',
+  'las-vegas','salt-lake-city','albuquerque','tucson','kansas-city','st-louis','memphis',
+  'new-orleans-east','richmond','pittsburgh','columbus','indianapolis','louisville','cincinnati',
+  'cleveland','detroit','milwaukee','omaha','des-moines','tulsa','oklahoma-city','el-paso',
+  'fort-worth','sacramento','fresno','bakersfield','long-beach','oakland','san-jose','raleigh',
+  'virginia-beach','jacksonville','orlando','fort-lauderdale','st-petersburg','jersey-city',
+  'newark','hartford','providence','buffalo','rochester','albany','new-haven','worcester',
+  'springfield-ma','richmond-va','norfolk','birmingham','montgomery','little-rock','shreveport',
+  'baton-rouge-east','lafayette-la','lake-charles','gulfport','tallahassee','gainesville',
+  'savannah','columbia-sc','greenville-sc','knoxville','chattanooga','lexington','springfield-mo',
+  'columbia-mo','wichita','sioux-falls','fargo','bismarck','rapid-city','billings','boise',
+  'spokane','tacoma','olympia','eugene','bend','reno','henderson','paradise-nv','anchorage',
+  'honolulu','richmond-ca','stockton','modesto','fontana','moreno-valley','glendale-ca',
+  'scottsdale','gilbert','chandler','tempe','mesa','peoria-az'
 ]);
 
 async function warmCache() {
