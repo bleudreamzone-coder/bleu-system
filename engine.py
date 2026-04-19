@@ -210,9 +210,16 @@ def get_cities():
     z = 5
     c = []
     for i in range(len(ZONES)): c.extend(ZONES[i])
+    seen = set()
+    deduped = []
+    for city in c:
+        key = city["city"] + city["state"]
+        if key not in seen:
+            seen.add(key)
+            deduped.append(city)
     s["runs"] = s.get("runs",0)+1; s["last"] = datetime.now().isoformat(); s["zone"] = z
     with open(sf,"w") as f: json.dump(s,f)
-    return c, z
+    return deduped, z
 
 # ═══════════════════════════════════════════════════════════
 # 1. NPI
