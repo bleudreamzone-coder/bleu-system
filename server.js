@@ -841,6 +841,24 @@ const SEO_CITY_SLUGS = new Set([
   'baton-rouge','houston','jackson','mobile','boston','boulder','sedona','asheville','santa-fe'
 ]);
 
+async function warmCache() {
+  try {
+    console.log(`✦ SEO cache warm starting — ${SEO_CITY_SLUGS.size} city slugs`);
+    for (const slug of SEO_CITY_SLUGS) {
+      try {
+        const result = await seoEngine.handleRoute(slug);
+        console.log(`  warm /${slug} → ${result ? `${result.type} ${result.content?.length || 0}b` : 'miss'}`);
+      } catch (e) {
+        console.log(`  warm /${slug} → error: ${e.message}`);
+      }
+      await new Promise(r => setTimeout(r, 1500));
+    }
+    console.log('✦ SEO cache warm complete');
+  } catch (e) {
+    console.log(`✦ SEO cache warm aborted: ${e.message}`);
+  }
+}
+
 // ═══ SERVER ═══
 function json(res, code, data) { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); }
 function cors(res) { res.setHeader('Access-Control-Allow-Origin','*'); res.setHeader('Access-Control-Allow-Methods','GET,POST,OPTIONS'); res.setHeader('Access-Control-Allow-Headers','Content-Type,Authorization'); }
@@ -1479,4 +1497,5 @@ server.listen(PORT, () => {
   console.log(`  Supabase: ${!!(SUPABASE_URL&&SUPABASE_KEY)?'CONNECTED':'NOT CONFIGURED'}`);
   console.log(`  Key: ${!!OPENAI_KEY?'LOADED':'MISSING'}`);
   console.log(`  Stripe: ${(STRIPE_SECRET&&STRIPE_WEBHOOK_SECRET)?'configured':'missing keys — payments will not unlock protocols'}`);
+  warmCache();
 });
