@@ -13239,64 +13239,118 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
   </div>
   <script>
     (function(){
-      var modal = document.getElementById('fsModal');
-      var frame = document.getElementById('fsModalFrame');
-      var closeBtn = document.getElementById('fsModalClose');
-      var orderBtn = document.getElementById('fsOrderPlaced');
-      var orderConfirm = document.getElementById('fsOrderConfirm');
-      var currentPlanUrl = '';
-      window.fsOpen = function(url){
-        currentPlanUrl = url;
-        frame.src = url;
-        orderBtn.style.display = 'block';
-        orderBtn.disabled = false;
-        orderBtn.textContent = 'I placed my order ✓';
-        orderConfirm.style.display = 'none';
-        orderConfirm.textContent = '';
-        document.getElementById('fsPhoneInput').value = '';
-        document.getElementById('fsPhoneRow').style.display = 'flex';
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-      };
-      function fsClose(){
-        modal.style.display = 'none';
-        frame.src = 'about:blank';
-        document.body.style.overflow = '';
+      function extractPlan(url){
+        try {
+          var parts = (url || '').split('?')[0].split('#')[0].split('/').filter(Boolean);
+          return parts[parts.length - 1] || url || '';
+        } catch(e) { return url || ''; }
       }
-      closeBtn.addEventListener('click', fsClose);
-      modal.addEventListener('click', function(e){ if(e.target === modal) fsClose(); });
-      document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modal.style.display === 'flex') fsClose(); });
-      orderBtn.addEventListener('click', function(){
-        orderBtn.disabled = true;
-        orderBtn.textContent = 'Saving…';
-        var today = new Date();
-        var reorder = new Date(today.getTime() + 28*24*60*60*1000);
-        var iso = function(d){ return d.toISOString().slice(0,10); };
-        fetch('/api/reorder-reminder', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({
-            user_id: (window.bleuUser && window.bleuUser.id) || null,
-            session_id: (window.bleuSession) || localStorage.getItem('bleu_session') || 'anonymous',
-            last_purchase_date: iso(today),
-            protocol_name: currentPlanUrl,
-            reorder_target_date: iso(reorder),
-            phone: document.getElementById('fsPhoneInput').value.trim() || null
-          })
-        }).then(function(r){ return r.json().catch(function(){ return {}; }); }).then(function(){
-          var human = reorder.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
-          orderBtn.style.display = 'none';
-          orderConfirm.textContent = 'Reorder reminder set for ' + human + '. Your protocol is saved to your Passport.';
-          orderConfirm.style.display = 'block';
-        }).catch(function(){
-          orderBtn.disabled = false;
-          orderBtn.textContent = 'Try again — connection issue';
-        });
-      });
-      // Capture phase so links with onclick="event.stopPropagation()" still trigger the modal
+
+      function openFs(url){
+        try { window.open(url, '_blank', 'noopener'); } catch(e) {}
+      }
+
+      function saveReminder(phone, url){
+        try {
+          var today = new Date();
+          var reorder = new Date(today.getTime() + 28*24*60*60*1000);
+          var iso = function(d){ return d.toISOString().slice(0,10); };
+          fetch('/api/reorder-reminder', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+              phone: phone,
+              protocol_name: extractPlan(url),
+              last_purchase_date: iso(today),
+              reorder_target_date: iso(reorder)
+            })
+          }).catch(function(){});
+        } catch(e) {}
+      }
+
+      function closeModal(){
+        try {
+          var m = document.getElementById('fs-reminder-modal');
+          if (m) m.remove();
+        } catch(e) {}
+      }
+
+      function showModal(url){
+        try {
+          closeModal();
+          var m = document.createElement('div');
+          m.id = 'fs-reminder-modal';
+          m.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Georgia,\'Times New Roman\',serif';
+          m.innerHTML =
+            '<div style="background:#0d1520;border:1px solid rgba(201,168,76,0.25);border-radius:18px;max-width:420px;width:100%;padding:30px 26px;box-shadow:0 20px 60px rgba(0,0,0,0.6);color:#e8e4d6">' +
+              '<div style="font-family:system-ui,sans-serif;font-size:10px;letter-spacing:0.22em;color:#c9a84c;text-transform:uppercase;margin-bottom:10px">Reorder Reminder</div>' +
+              '<div style="font-size:19px;line-height:1.4;color:#f0e6d0;margin-bottom:10px;font-family:Georgia,serif">What\'s the best number to send your reorder reminder?</div>' +
+              '<div style="font-family:system-ui,sans-serif;font-size:12px;color:rgba(232,228,214,0.55);line-height:1.55;margin-bottom:18px">One text in 28 days so you don\'t run out mid-protocol.</div>' +
+              '<input id="fsr-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(555) 555-1234" style="width:100%;padding:12px;background:#162231;border:1px solid rgba(201,168,76,0.18);border-radius:10px;color:#e8e4d6;font-size:15px;font-family:Georgia,serif;box-sizing:border-box;outline:none;margin-bottom:16px" />' +
+              '<button id="fsr-save" type="button" style="width:100%;padding:14px;background:#c9a84c;color:#0d1520;border:0;border-radius:10px;font-size:14px;cursor:pointer;font-family:system-ui,sans-serif;font-weight:700;margin-bottom:10px">Save &amp; Open Protocol →</button>' +
+              '<button id="fsr-skip" type="button" style="width:100%;padding:14px;background:#162231;border:1px solid rgba(78,205,196,0.3);color:#4ecdc4;border-radius:10px;font-size:13px;cursor:pointer;font-family:system-ui,sans-serif;font-weight:600">Skip — open without reminder</button>' +
+              '<div style="text-align:center;margin-top:14px"><a id="fsr-close" style="font-family:system-ui,sans-serif;font-size:11px;color:rgba(232,228,214,0.4);cursor:pointer;letter-spacing:0.04em">Cancel</a></div>' +
+            '</div>';
+          document.body.appendChild(m);
+
+          var input = document.getElementById('fsr-phone');
+          if (input) setTimeout(function(){ try { input.focus(); } catch(e){} }, 60);
+
+          document.getElementById('fsr-save').onclick = function(){
+            try {
+              var phone = (document.getElementById('fsr-phone').value || '').trim();
+              if (phone) {
+                try { localStorage.setItem('bleu_phone', phone); } catch(e){}
+                saveReminder(phone, url);
+              }
+            } catch(e) {}
+            closeModal();
+            openFs(url);
+          };
+          document.getElementById('fsr-skip').onclick = function(){
+            closeModal();
+            openFs(url);
+          };
+          document.getElementById('fsr-close').onclick = function(){
+            closeModal();
+            openFs(url);
+          };
+          m.addEventListener('click', function(e){
+            if (e.target === m) { closeModal(); openFs(url); }
+          });
+          document.addEventListener('keydown', function onEsc(e){
+            if (e.key === 'Escape') {
+              document.removeEventListener('keydown', onEsc);
+              closeModal();
+              openFs(url);
+            }
+          });
+        } catch(e) {
+          openFs(url);
+        }
+      }
+
+      window.fsOpen = function(url){
+        try {
+          var stored = null;
+          try { stored = localStorage.getItem('bleu_phone'); } catch(e) {}
+          if (stored) {
+            try { saveReminder(stored, url); } catch(e) {}
+            openFs(url);
+            return;
+          }
+          showModal(url);
+        } catch(e) {
+          openFs(url);
+        }
+      };
+
+      // Capture phase so links with onclick="event.stopPropagation()" still trigger
       document.addEventListener('click', function(e){
-        var a = e.target.closest && e.target.closest('a[data-fs]');
-        if(a){ e.preventDefault(); fsOpen(a.getAttribute('data-fs')); }
+        try {
+          var a = e.target && e.target.closest ? e.target.closest('a[data-fs]') : null;
+          if (a) { e.preventDefault(); fsOpen(a.getAttribute('data-fs')); }
+        } catch(err) {}
       }, true);
     })();
   </script>
