@@ -142,7 +142,7 @@ window.vesselShowPicker=_vShow;
 window.vesselRemoveFromCart=_vDel;
 window.vesselUpdateCart=_vUpd;
 window.vesselAsk=function(){var i=document.getElementById("vessel-chat-input");if(i&&i.value.trim()&&typeof ask==="function"){ask(i.value.trim());i.value="";}};
-window.vsAddToStack=function(pid,name,price,asin){if(typeof PRODUCT_MASTER!=='undefined'&&typeof addToCart==='function'){var key='vs-'+pid;if(!PRODUCT_MASTER[key]){PRODUCT_MASTER[key]={name:name,dose:'',price:parseInt((price||'0').replace(/[^0-9]/g,'')),asin:asin,emoji:'💊',p:price,url:'https://amazon.com/dp/'+asin+'?tag=bleulive20-20',why:'Added from your Supply tab'};}addToCart(key);if(typeof toggleCart==='function')toggleCart();}};
+window.vsAddToStack=function(pid,name,price,asin){if(typeof PRODUCT_MASTER!=='undefined'&&typeof addToCart==='function'){var key='vs-'+pid;if(!PRODUCT_MASTER[key]){PRODUCT_MASTER[key]={name:name,dose:'',price:parseInt((price||'0').replace(/[^0-9]/g,'')),asin:asin,emoji:'💊',p:price,url:'https://amazon.com/dp/'+asin+'?tag=bleulive20-20',why:'Added from your Supply tab'};}addToCart(key);try{if(typeof plausible==='function')plausible('stack_add',{props:{product:name}});}catch(e){}if(typeof toggleCart==='function')toggleCart();}};
 </script>
 
 <script>
@@ -1129,6 +1129,7 @@ button[type="submit"],
   </div>
 </div>
 <script>
+window.bleuPlausible = function(name, opts){ try { if (typeof plausible === 'function') plausible(name, opts); } catch(e) {} };
 (function(){
   try { if (sessionStorage.getItem('bleu_isi_done')) return; } catch(e) { return; }
   var questions = [
@@ -1190,6 +1191,7 @@ button[type="submit"],
       sessionStorage.setItem('bleu_isi_state', state);
       sessionStorage.setItem('bleu_isi_done', '1');
     } catch(e) {}
+    try { if (typeof plausible === 'function') plausible('ISI_complete', {props:{state:state, score:total}}); } catch(e) {}
     var card = document.getElementById('isi-card');
     card.innerHTML =
       '<div style="font-family:system-ui,sans-serif;font-size:10px;letter-spacing:0.22em;color:#c9a84c;text-transform:uppercase;margin-bottom:12px">ISI Reading</div>' +
@@ -8003,6 +8005,7 @@ async function runDirSearch() {
 
 // -- PRACTITIONER BOOKING MODAL -----------------------------------------------
 function showPractitionerOptions(name, city, phone, telehealth) {
+  try { if (typeof plausible === 'function') plausible('practitioner_click', {props:{mode:'directory'}}); } catch(e) {}
   const existing = document.getElementById('pp-practitioner-modal');
   if (existing) existing.remove();
   const modal = document.createElement('div');
@@ -9703,6 +9706,11 @@ async function send(tab){
   const input=document.getElementById('in-'+currentTab),box=document.getElementById('chat-'+currentTab)
   if(!input||!box)return
   const msg=input.value.trim();if(!msg)return;input.value=''
+  try {
+    if (/\b(weight loss|GLP-?1|semaglutide|ozempic|wegovy|tirzepatide|mounjaro|metabolism|blood sugar|insulin|berberine|metabolic|appetite|cravings|binge|compulsive eating|emotional eating|can'?t stop eating)\b/i.test(msg)) {
+      if (typeof plausible === 'function') plausible('IRI_trigger');
+    }
+  } catch(e) {}
   const uDiv=document.createElement('div');uDiv.className='msg user';uDiv.textContent=msg;box.appendChild(uDiv)
   if(!Array.isArray(chatHistories[currentTab]))chatHistories[currentTab]=[];
   const aDiv=document.createElement('div');aDiv.className='msg ai';aDiv.innerHTML='<span class="alvai-cursor"></span>';box.appendChild(aDiv)
@@ -12733,6 +12741,7 @@ function runCartSafetyCheck() {
   var names = window._safetyNames || [];
   var btn = document.getElementById('csm-run');
   if (btn) { btn.textContent = 'Checking…'; btn.disabled = true; btn.style.opacity = '0.6'; }
+  try { if (typeof plausible === 'function') plausible('safety_check_run', {props:{verdict:'pending'}}); } catch(e) {}
 
   var msg = 'Quick safety check before purchase: user is buying ' + names.join(', ') +
             ' and takes ' + meds +
@@ -12763,6 +12772,8 @@ function renderCartSafetyResult(text) {
   if (/\bFLAG\b/i.test(raw)) verdict = 'FLAG';
   else if (/\bCAUTION\b/i.test(raw)) verdict = 'CAUTION';
   else if (/\bCLEAR\b/i.test(raw)) verdict = 'CLEAR';
+
+  try { if (typeof plausible === 'function') plausible('safety_check_result', {props:{verdict:verdict}}); } catch(e) {}
 
   var card = document.getElementById('cart-safety-card');
   if (!card) return;
@@ -12857,7 +12868,10 @@ window.toggleCart = function() {
   var d = document.getElementById('bleu-cart-drawer');
   if(d) {
     d.classList.toggle('open');
-    if(d.classList.contains('open')) renderCart();
+    if(d.classList.contains('open')) {
+      renderCart();
+      try { if (typeof plausible === 'function') plausible('cart_open', {props:{items: (typeof BLEU_CART !== 'undefined' ? BLEU_CART.length : 0)}}); } catch(e) {}
+    }
   }
 };
 
@@ -12870,7 +12884,15 @@ window.closeCart = function() {
 document.addEventListener('DOMContentLoaded', function(){
   renderCart();
   updateCartTrigger();
-  
+
+  // Track clicks on Fullscript affiliate links
+  document.addEventListener('click', function(e){
+    try {
+      var a = e.target && e.target.closest ? e.target.closest('[data-fs]') : null;
+      if (a && typeof plausible === 'function') plausible('fullscript_click', {props:{plan: a.getAttribute('data-fs')}});
+    } catch(err) {}
+  }, true);
+
   // Close cart on backdrop click
   document.addEventListener('click', function(e){
     var d = document.getElementById('bleu-cart-drawer');
