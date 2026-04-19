@@ -198,6 +198,18 @@ ${body}
       .sort((a, b) => b[1] - a[1])
       .map(([spec, count]) => ({ name: spec, slug: specialtySlug(spec), count }));
 
+    // Top 10 featured practitioners in this city (ordered by full_name)
+    const featured = await sb.query('practitioners',
+      `select=full_name,specialty,address_line1,city,zip,phone,npi&city=ilike.${encodeURIComponent(cityName)}&state=eq.${state}&order=full_name.asc&limit=10`
+    );
+    const featuredList = Array.isArray(featured) ? featured : [];
+
+    // Recent research — 5 most recent pubmed studies
+    const studies = await sb.query('pubmed_studies',
+      `select=title,journal,published_date,url&order=published_date.desc.nullslast&limit=5`
+    );
+    const studyList = Array.isArray(studies) ? studies : [];
+
     const description = `Find ${totalPract}+ verified wellness practitioners in ${cityName}, ${state}. Psychologists, therapists, acupuncturists, nutritionists — all verified against the federal NPI Registry.`;
 
     const body = `
@@ -227,6 +239,30 @@ ${specialtyLinks.map(s => `
 <span class="tag tag-g">NPI Verified</span>
 </a>`).join('')}
 </div>
+
+${featuredList.length ? `
+<h2>Featured Practitioners in ${cityName}</h2>
+<div class="grid">
+${featuredList.map(p => `
+<div class="card">
+<h3><a href="/practitioner/${p.npi}">${p.full_name || 'Verified Practitioner'}</a></h3>
+${p.specialty ? `<div class="card-spec">${p.specialty}</div>` : ''}
+<div class="card-addr">${[p.address_line1, p.city, p.zip].filter(Boolean).join(', ')}</div>
+${p.phone ? `<div class="card-meta" style="margin-top:6px">📞 ${p.phone}</div>` : ''}
+<div style="margin-top:8px"><span class="tag tag-g">NPI #${p.npi}</span></div>
+</div>`).join('')}
+</div>` : ''}
+
+${studyList.length ? `
+<h2>Recent Research</h2>
+<div class="grid">
+${studyList.map(s => `
+<div class="card">
+<h3><a href="${s.url}" target="_blank" rel="noopener">${s.title}</a></h3>
+${s.journal ? `<div class="card-spec">${s.journal}</div>` : ''}
+${s.published_date ? `<div class="card-meta" style="margin-top:6px">${s.published_date}</div>` : ''}
+</div>`).join('')}
+</div>` : ''}
 
 <h2>Explore Other Cities</h2>
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">
@@ -278,6 +314,12 @@ ${Object.entries(CITY_META).filter(([s]) => s !== slug).slice(0, 12).map(([s]) =
 
     if (list.length === 0) return null; // Don't generate empty pages
 
+    // Recent research — 5 most recent pubmed studies
+    const studies = await sb.query('pubmed_studies',
+      `select=title,journal,published_date,url&order=published_date.desc.nullslast&limit=5`
+    );
+    const studyList = Array.isArray(studies) ? studies : [];
+
     const aiContent = await generateContent(
       `Write 2 paragraphs about finding a ${specialty} in ${cityName}, ${state}. There are ${list.length} verified ${specialty}s here. What should someone look for when choosing a ${specialty}? What makes ${cityName} unique for this type of care? Keep it warm, specific, actionable.`
     );
@@ -311,6 +353,17 @@ ${p.phone ? `<div class="card-meta" style="margin-top:6px">📞 ${p.phone}</div>
 <p>Before your appointment, check if your supplements interact with your medications. 54 substances. 5 pharmacological layers. Free.</p>
 <a href="/safety-check" class="cta" style="margin-top:12px;display:inline-block">Run a Safety Check →</a>
 </div>
+
+${studyList.length ? `
+<h2>Recent Research</h2>
+<div class="grid">
+${studyList.map(s => `
+<div class="card">
+<h3><a href="${s.url}" target="_blank" rel="noopener">${s.title}</a></h3>
+${s.journal ? `<div class="card-spec">${s.journal}</div>` : ''}
+${s.published_date ? `<div class="card-meta" style="margin-top:6px">${s.published_date}</div>` : ''}
+</div>`).join('')}
+</div>` : ''}
 
 <h2>Other Specialties in ${cityName}</h2>
 <div style="display:flex;gap:8px;flex-wrap:wrap">
