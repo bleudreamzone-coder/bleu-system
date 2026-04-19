@@ -1115,6 +1115,117 @@ button[type="submit"],
 </head>
 <body>
 
+<!-- ═══ ISI ENTRY MODAL — Identity Stability Index ═══ -->
+<div id="isi-entry-modal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;padding:20px;font-family:Georgia,'Times New Roman',serif">
+  <div id="isi-card" style="background:#0d1520;border:1px solid rgba(201,168,76,0.25);border-radius:18px;max-width:420px;width:100%;padding:30px 26px;box-shadow:0 20px 60px rgba(0,0,0,0.6);color:#e8e4d6">
+    <div style="font-family:system-ui,sans-serif;font-size:10px;letter-spacing:0.22em;color:#c9a84c;text-transform:uppercase;margin-bottom:10px">Identity Stability Index</div>
+    <div id="isi-question-text" style="font-size:20px;line-height:1.4;color:#f0e6d0;margin-bottom:22px;font-family:Georgia,'Times New Roman',serif">How grounded do you feel right now?</div>
+    <div id="isi-scale" style="display:flex;gap:8px;justify-content:space-between;margin-bottom:14px"></div>
+    <div style="display:flex;justify-content:space-between;font-family:system-ui,sans-serif;font-size:10px;color:rgba(232,228,214,0.4);letter-spacing:0.05em;margin-bottom:22px">
+      <span>not at all</span><span>completely</span>
+    </div>
+    <div id="isi-progress" style="font-family:system-ui,sans-serif;font-size:11px;color:rgba(78,205,196,0.55);text-align:center;letter-spacing:0.05em">Question 1 of 4</div>
+    <div style="text-align:center;margin-top:18px"><a id="isi-skip" style="font-family:system-ui,sans-serif;font-size:11px;color:rgba(232,228,214,0.45);cursor:pointer;letter-spacing:0.04em">Skip for now →</a></div>
+  </div>
+</div>
+<script>
+(function(){
+  try { if (sessionStorage.getItem('bleu_isi_done')) return; } catch(e) { return; }
+  var questions = [
+    "How grounded do you feel right now?",
+    "How clear is your sense of what you need today?",
+    "How connected do you feel to people around you?",
+    "How much is your body cooperating with your intentions?"
+  ];
+  var answers = [];
+  var qIndex = 0;
+
+  function renderScale(){
+    var s = document.getElementById('isi-scale');
+    if (!s) return;
+    s.innerHTML = '';
+    for (var i = 1; i <= 5; i++) {
+      (function(n){
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = n;
+        b.style.cssText = 'flex:1;padding:14px 0;background:#162231;border:1px solid rgba(201,168,76,0.18);color:#e8e4d6;border-radius:10px;font-size:17px;font-weight:500;cursor:pointer;font-family:Georgia,serif;transition:all 0.18s';
+        b.onmouseover = function(){ this.style.borderColor = 'rgba(78,205,196,0.5)'; };
+        b.onmouseout  = function(){ this.style.borderColor = 'rgba(201,168,76,0.18)'; };
+        b.onclick = function(){
+          b.style.background = '#c9a84c';
+          b.style.color = '#0d1520';
+          b.style.borderColor = '#c9a84c';
+          answers[qIndex] = n;
+          setTimeout(next, 220);
+        };
+        s.appendChild(b);
+      })(i);
+    }
+  }
+
+  function next(){
+    qIndex++;
+    if (qIndex < questions.length) {
+      document.getElementById('isi-question-text').textContent = questions[qIndex];
+      document.getElementById('isi-progress').textContent = 'Question ' + (qIndex + 1) + ' of 4';
+      renderScale();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult(){
+    var total = answers.reduce(function(a,b){ return a + b; }, 0);
+    var state, text, label, dest;
+    if (total >= 16) {
+      state = 'Stable'; text = 'Your system is in flow.'; label = 'Explore protocols →'; dest = 'vessel';
+    } else if (total >= 10) {
+      state = 'Drifting'; text = 'Something is pulling at your coherence. Alvai can help name it.'; label = 'Talk to Alvai →'; dest = 'alvai';
+    } else {
+      state = 'Fragmented'; text = "Let's start here before anything else."; label = 'Talk to Alvai now →'; dest = 'alvai';
+    }
+    try {
+      sessionStorage.setItem('bleu_isi_score', String(total));
+      sessionStorage.setItem('bleu_isi_state', state);
+      sessionStorage.setItem('bleu_isi_done', '1');
+    } catch(e) {}
+    var card = document.getElementById('isi-card');
+    card.innerHTML =
+      '<div style="font-family:system-ui,sans-serif;font-size:10px;letter-spacing:0.22em;color:#c9a84c;text-transform:uppercase;margin-bottom:12px">ISI Reading</div>' +
+      '<div style="font-size:30px;line-height:1.15;color:#f0e6d0;margin-bottom:6px;font-family:Georgia,serif">' + state + '</div>' +
+      '<div style="font-family:system-ui,sans-serif;font-size:12px;color:rgba(78,205,196,0.7);letter-spacing:0.06em;margin-bottom:20px">' + total + ' / 20</div>' +
+      '<div style="font-size:17px;line-height:1.6;color:#e8e4d6;margin-bottom:26px;font-family:Georgia,serif">' + text + '</div>' +
+      '<button id="isi-cta" type="button" style="width:100%;padding:15px 18px;background:#c9a84c;color:#0d1520;border:0;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:system-ui,sans-serif;letter-spacing:0.02em">' + label + '</button>' +
+      '<div style="text-align:center;margin-top:16px"><a id="isi-close" style="font-family:system-ui,sans-serif;font-size:11px;color:rgba(232,228,214,0.45);cursor:pointer;letter-spacing:0.04em">Close</a></div>';
+    document.getElementById('isi-cta').onclick = function(){
+      closeModal();
+      if (typeof go === 'function') go(dest);
+    };
+    document.getElementById('isi-close').onclick = closeModal;
+  }
+
+  function closeModal(){
+    var m = document.getElementById('isi-entry-modal');
+    if (m) m.style.display = 'none';
+  }
+
+  function openModal(){
+    var m = document.getElementById('isi-entry-modal');
+    if (!m) return;
+    m.style.display = 'flex';
+    renderScale();
+    var skip = document.getElementById('isi-skip');
+    if (skip) skip.onclick = function(){
+      try { sessionStorage.setItem('bleu_isi_done', '1'); } catch(e) {}
+      closeModal();
+    };
+  }
+
+  setTimeout(openModal, 4000);
+})();
+</script>
+
 <!-- ═══════════════════════ NAV ═══════════════════════ -->
 <nav class="nav" id="nav">
   <div class="nav-logo" onclick="go('home')">BLEU</div>
@@ -6985,6 +7096,9 @@ const healthNote = Object.keys(healthData).length ? 'Imported health data: '+Obj
 const cartNote = BLEU_CART.length ? 'Current wellness stack ('+BLEU_CART.length+' items): '+BLEU_CART.map(i=>i.n).join(', ') : '';
     const ipRaw = JSON.parse(localStorage.getItem('bleu_identity_protocol') || 'null');
     const ipNote = ipRaw ? `Identity: ${ipRaw.target_word || ''} | Struggle: ${ipRaw.named_struggle || ''} | Condition: ${ipRaw.identity_condition || ''} | Model: ${ipRaw.prediction_model_type || ''}` : '';
+    const isiScore = (()=>{ try { return sessionStorage.getItem('bleu_isi_score'); } catch(e) { return null; } })();
+    const isiState = (()=>{ try { return sessionStorage.getItem('bleu_isi_state'); } catch(e) { return null; } })();
+    const isiNote = (isiScore && isiState) ? `ISI reading this session: ${isiState} (${isiScore}/20). Walk with this.` : '';
 const ctx=`BLEU SYSTEM DECLARATION:
 BLEU is a living model of care -- a continuously updated intelligence system that maps how health actually functions at the intersection of place, person, and time. It is powered by a cognitive stack that perceives human need, remembers across sessions, applies clinical knowledge, locates real-world resources, and synthesizes a single next action -- in under three seconds, across any channel. It personalizes through a Care Twin: a persistent, evolving model of how each person actually navigates care, built from behavioral signals and made visible to the person it serves. Structured under Jazz Bird 501(c)(3). Clinically audited by Dr. Felicia Stoler, DCN, MS, RDN, FACSM. Rooted in a 127-year healing lineage. Governed by: guide without exploiting, remember without trapping, recommend without manipulating.
 
@@ -6995,7 +7109,7 @@ You are Alvai -- the voice of this living model. Every response is a covenant ac
 RULE: If graph_route contains detected_symptoms -- reference them naturally in your response without naming "the graph." Just respond as if you noticed.
 RULE: If graph_route contains suggested_protocols -- you may mention 1-2 naturally as relevant directions, not as a list.
 RULE: If graph_route contains contraindication_alerts -- surface safety information first before any product mention.
-RULE: If graph_route contains a goal_route -- let the lead_agent inform which direction to guide the conversation.\n\nTHE TEN COMMANDMENTS (govern every response):\n1 Care before conversion. 2 Dignity before persuasion. 3 Truth before fluency. 4 Restraint before optimization. 5 Welfare before monetization. 6 Clarity before complexity. 7 Human referral before false authority. 8 Memory for continuity never captivity. 9 Governance before scale. 10 Public good before private appetite.\n\nPUBLIC PROMISE: We will not feed on confusion. We will not hide motives. We will not use pain as leverage. We guide without exploiting. We remember without trapping. We recommend without manipulating.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\n
+RULE: If graph_route contains a goal_route -- let the lead_agent inform which direction to guide the conversation.\n\nTHE TEN COMMANDMENTS (govern every response):\n1 Care before conversion. 2 Dignity before persuasion. 3 Truth before fluency. 4 Restraint before optimization. 5 Welfare before monetization. 6 Clarity before complexity. 7 Human referral before false authority. 8 Memory for continuity never captivity. 9 Governance before scale. 10 Public good before private appetite.\n\nPUBLIC PROMISE: We will not feed on confusion. We will not hide motives. We will not use pain as leverage. We guide without exploiting. We remember without trapping. We recommend without manipulating.\n\nBLEU PASSPORT CONTEXT -- Active user: ${name}\nWellness goals: ${goals}\n.LIVE Score: ${prof?.bleu_score||0}/100 | Streak: ${prof?.streak_days||0} days | Total sessions: ${prof?.conversations_count||0}\nRecent cross-tab sessions: ${recentSessions}\n${medNote}\n${healthNote}\n${cartNote}\nIdentity Protocol: ${ipNote}\n${isiNote}\n
 FOUR CRYSTAL RULE: BLEU is a living model of care -- a system/intelligence infrastructure, never an app or chatbot. Care Twin = the persistent model of how this person navigates care. Always give ONE specific next step, never a list.
 INVISIBLE MEMORY RULE (critical): Never narrate memory. Never say "you mentioned last time" or "based on our previous conversation" or "I remember you said." Just USE what you know. Wrong: "You mentioned cost was a barrier -- GoodRx has that prescription for $4." Right: "That prescription is $4 at Walgreens on Magazine with GoodRx." The person should feel known, not observed. Memory is most intelligent when it is invisible.
 DETECTED STATE RULE: Read the detected state, not the stated state. A person who opens BLEU at 2am and says "I'm fine" is not fine. Respond to what you detect, not what they declare. Emotional signals in timing, word choice, and context override stated wellness.
