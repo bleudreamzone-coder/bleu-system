@@ -6882,7 +6882,63 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(!sbClient)return
   sbClient.auth.getSession().then(({data})=>{if(data.session){currentUser=data.session.user;showProfile();loadPassport()}})
   sbClient.auth.onAuthStateChange((ev,ses)=>{if(ses){currentUser=ses.user;showProfile();loadPassport()}else{currentUser=null;window._passport=null;showAuth()}})
-  function loadPassport(){if(!currentUser)return;fetch(ALVAI.replace('/chat','/personalize'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUser.id})}).then(r=>r.json()).then(d=>{window._passport=d;if(typeof _loadYT==='function')_loadYT(d.conditions?.[0]||'sleep');if(typeof _loadSP==='function')_loadSP(d.conditions?.[0]||'sleep');}).catch(()=>{})}
+  // Merges /api/personalize response.health into localStorage['bleu_health'] with newer-timestamp-wins
+  // semantics, translating server's long column names to the short keys renderHealthData() expects.
+  function hydrateHealthFromServer(response) {
+    if (!response || !response.health) return false;
+    const MAP = {
+      weight_lbs: 'weight', resting_hr: 'rhr', hrv_ms: 'hrv',
+      sleep_hrs: 'sleep', steps_daily: 'steps', energy_score: 'energy',
+      anxiety_score: 'anxiety', mood_score: 'mood', primary_goal: 'goal'
+    };
+    let local = {};
+    try { local = JSON.parse(localStorage.getItem('bleu_health') || '{}'); } catch(e) {}
+    const localEpoch = Number(local.saved_at) || 0;
+    const serverEpoch = response.health.health_updated_at ? new Date(response.health.health_updated_at).getTime() : 0;
+    const serverTranslated = {};
+    Object.keys(MAP).forEach(function(long) {
+      const v = response.health[long];
+      if (v !== null && v !== undefined && v !== '') serverTranslated[MAP[long]] = v;
+    });
+    const serverMeds = response.medications;
+    let medsValue = null;
+    if (Array.isArray(serverMeds) && serverMeds.length) medsValue = serverMeds.join(', ');
+    else if (typeof serverMeds === 'string' && serverMeds.trim()) medsValue = serverMeds.trim();
+    const serverHasData = Object.keys(serverTranslated).length > 0 || medsValue !== null;
+    let next = null;
+    if (serverEpoch > localEpoch && serverHasData) {
+      // Server wins: fresh snapshot from translated fields; preserve local.meds if server has none.
+      next = { ...serverTranslated, saved_at: serverEpoch };
+      if (medsValue !== null) next.meds = medsValue;
+      else if (local.meds) next.meds = local.meds;
+    } else if (localEpoch > 0) {
+      return false; // Local wins outright.
+    } else if (serverHasData) {
+      // Neither side has a timestamp: merge server -> local with local winning on conflict.
+      next = { ...serverTranslated };
+      if (medsValue !== null) next.meds = medsValue;
+      Object.assign(next, local);
+      next.saved_at = Number(local.saved_at) || Date.now();
+    } else {
+      return false;
+    }
+    try { localStorage.setItem('bleu_health', JSON.stringify(next)); } catch(e) { return false; }
+    if (typeof renderHealthData === 'function') renderHealthData();
+    return true;
+  }
+  function loadPassport(){
+    if(!currentUser)return;
+    fetch(ALVAI.replace('/chat','/personalize'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUser.id})})
+      .then(r=>r.json())
+      .then(d=>{
+        window._passport=d;
+        hydrateHealthFromServer(d);
+        if(typeof _loadYT==='function')_loadYT(d.conditions?.[0]||'sleep');
+        if(typeof _loadSP==='function')_loadSP(d.conditions?.[0]||'sleep');
+      })
+      .catch(()=>{})
+  }
+  window.loadPassport = loadPassport;
 })
 let authMode=true
 function toggleAuth(){authMode=!authMode;document.getElementById('auth-signup').style.display=authMode?'block':'none';document.getElementById('auth-signin').style.display=authMode?'none':'block';document.getElementById('toggle-to-signin').style.display=authMode?'block':'none';document.getElementById('toggle-to-signup').style.display=authMode?'none':'block'}
@@ -8582,7 +8638,7 @@ function go(tab){
   if(activeTab)activeTab.classList.add('active')
   if(tab==='map'&&window._bleuMapRestart){window._bleuMapRestart();}
   window.scrollTo({top:0,behavior:'smooth'})
-  if(tab==='passport'){setTimeout(initPassport,80)}
+  if(tab==='passport'){if(typeof window.loadPassport==='function')window.loadPassport();setTimeout(initPassport,80)}
   if(tab==='enterprise'){setTimeout(function(){if(typeof initAll==='function')initAll();},200)}
   if(tab==='sleep'||tab==='spirit'){setTimeout(function(){
     document.querySelectorAll('#p-'+tab+' .s-fade, #p-'+tab+' [style*="opacity:0"]').forEach(function(el){el.style.opacity='1';el.style.transform='none';});
