@@ -17,6 +17,10 @@ const TWILIO_SID  = process.env.TWILIO_ACCOUNT_SID  || '';
 const TWILIO_AUTH = process.env.TWILIO_AUTH_TOKEN    || '';
 const TWILIO_FROM = process.env.TWILIO_PHONE_NUMBER  || '';
 
+// Hard cap on the recall block injected into the system prompt.
+// Roughly ~1500 tokens at ~4 chars/token.
+const RECALL_CHAR_BUDGET = 6000;
+
 async function sendSMS(to, body) {
   if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
   const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`;
@@ -522,6 +526,125 @@ async function querySupabase(table, query, limit, method, body) {
     console.error(`Supabase ${table} error:`, e.message);
     return null;
   }
+}
+
+// ═══ MEMORY HELPERS (conversation_history + pgvector recall) ═══
+
+// Call a Supabase stored function (RPC endpoint) with service-role auth.
+async function callSupabaseRPC(fnName, body) {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return null;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fnName}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) {
+      const t = await r.text();
+      console.error(`[memory] RPC ${fnName} ${r.status}:`, t.substring(0, 200));
+      return null;
+    }
+    return await r.json();
+  } catch (e) {
+    console.error(`[memory] RPC ${fnName} error:`, e.message);
+    return null;
+  }
+}
+
+// text-embedding-3-small → 1536-dim vector, matches the column and the ivfflat index.
+async function embedText(text) {
+  if (!OPENAI_KEY || !text) return null;
+  try {
+    const r = await fetch('https://api.openai.com/v1/embeddings', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'text-embedding-3-small', input: String(text).slice(0, 8000) })
+    });
+    if (!r.ok) {
+      console.error('[memory] embedText status', r.status);
+      return null;
+    }
+    const d = await r.json();
+    return d?.data?.[0]?.embedding || null;
+  } catch (e) {
+    console.error('[memory] embedText error:', e.message);
+    return null;
+  }
+}
+
+// Resolve the caller's identity. user_id is text NOT NULL in conversation_history,
+// so anonymous users get their conversation_id as their user_id (within-session
+// continuity only — cross-session recall is authenticated-only).
+function resolveIdentity(p) {
+  const convId = p.conversation_id || p.session || 'anonymous';
+  if (p.user_id && typeof p.user_id === 'string' && p.user_id.length > 0) {
+    return { userId: p.user_id, convId, source: 'supabase_auth' };
+  }
+  return { userId: convId, convId, source: 'anonymous_session' };
+}
+
+// Write one turn to conversation_history. Fire-and-forget at the call site.
+async function storeConversationTurn(identity, role, content, embedding) {
+  if (!SUPABASE_URL || !SUPABASE_KEY || !content) return;
+  console.log(`[memory] store user=${identity.userId} conv=${identity.convId} source=${identity.source} role=${role} len=${content.length} embed=${embedding ? 'yes' : 'no'}`);
+  const row = {
+    user_id: identity.userId,
+    session_id: identity.convId,
+    role,
+    content: String(content).substring(0, 8000),
+    embedding,
+    created_at: new Date().toISOString()
+  };
+  try {
+    await querySupabase('conversation_history', '', 0, 'POST', row);
+  } catch (e) {
+    console.error('[memory] store failed:', e.message);
+  }
+}
+
+// Recent turns from the CURRENT conversation, oldest→newest, for prompt context.
+async function loadShortTermHistory(convId, limit) {
+  if (!SUPABASE_URL || !SUPABASE_KEY || !convId) return [];
+  const n = Math.max(1, Math.min(limit || 12, 24));
+  const q = `select=role,content,created_at&session_id=eq.${encodeURIComponent(convId)}&deleted_at=is.null&order=created_at.desc`;
+  const rows = await querySupabase('conversation_history', q, n);
+  if (!Array.isArray(rows) || !rows.length) return [];
+  return rows.reverse().map(r => ({ role: r.role, content: r.content }));
+}
+
+// Anonymous users (identity.source === 'anonymous_session') get their conversation_id
+// used as user_id. Their writes persist but cannot be retrieved semantically by this
+// function — anonymous rows are effectively write-only until an anonymous→authenticated
+// migration promotes them to the user's auth UUID. See backlog: "anon→auth memory merge".
+// Semantic recall across the SAME user's PRIOR sessions. Authenticated users only.
+async function loadSemanticRecall(identity, queryEmbedding, threshold, count) {
+  if (!queryEmbedding) return [];
+  if (identity.source !== 'supabase_auth') return [];
+  const rows = await callSupabaseRPC('match_conversation_history', {
+    p_query_embedding: queryEmbedding,
+    p_user_id: identity.userId,
+    p_exclude_session: identity.convId,
+    p_min_similarity: typeof threshold === 'number' ? threshold : 0.75,
+    p_match_count: typeof count === 'number' ? count : 5
+  });
+  return Array.isArray(rows) ? rows : [];
+}
+
+// Format recall rows for prompt injection, capped at RECALL_CHAR_BUDGET.
+// Preserves top-ranked matches first; stops once the budget is exhausted.
+function buildRecallBlock(recall) {
+  if (!recall || !recall.length) return '';
+  let block = '';
+  for (const r of recall) {
+    const line = `[prior session] ${r.role}: ${String(r.content).substring(0, 400)}`;
+    if (block.length + line.length + 1 > RECALL_CHAR_BUDGET) break;
+    block += (block ? '\n' : '') + line;
+  }
+  return block;
 }
 
 function extractCity(msg) {
@@ -1037,8 +1160,34 @@ const server = http.createServer((req, res) => {
           }
         }
 
+        // ── MEMORY: server-authoritative short-term history + semantic recall ──
+        const identity = resolveIdentity(p);
+        // Only embed for authenticated users — anonymous users can't be retrieved
+        // across sessions, so embedding them wastes latency and API spend.
+        const userEmbedding = identity.source === 'supabase_auth'
+          ? await embedText(p.message || '')
+          : null;
+        const [shortTerm, recall] = await Promise.all([
+          loadShortTermHistory(identity.convId, 12),
+          loadSemanticRecall(identity, userEmbedding, 0.75, 5)
+        ]);
+        const recallBlock = buildRecallBlock(recall);
+        if (recallBlock) {
+          sys += `\n\nRELEVANT CONTEXT FROM THIS USER'S PRIOR CONVERSATIONS — real things this user said to you or you said to them before. Use only if clearly relevant to the current question. Do NOT paraphrase as if they just said it now:\n${recallBlock}`;
+        }
+
         const messages = [{ role: 'system', content: sys }];
-        if (p.history?.length) messages.push(...p.history.slice(-12));
+        if (shortTerm.length) {
+          messages.push(...shortTerm);
+          // shortTerm contains turns 1..N-1 (DB read happens BEFORE this request writes).
+          // Current turn N is appended here so the model sees it.
+          messages.push({ role: 'user', content: p.message });
+        } else if (p.history?.length) {
+          // Fallback: trust client-provided history (assumed to include current turn last).
+          messages.push(...p.history.slice(-12));
+        } else {
+          messages.push({ role: 'user', content: p.message });
+        }
         const ctl1 = new AbortController();
         const tmr1 = setTimeout(() => ctl1.abort(), 30000);
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -1088,9 +1237,25 @@ const server = http.createServer((req, res) => {
             ci_composite: parseFloat(ci), mode: p.mode || 'general', created_at: new Date().toISOString()
           }).catch(()=>{});
           const ts = new Date().toISOString();
-          const sid = p.session || 'anonymous';
-          const uid = p.user_id || null;
+          const sid = identity.convId;
+          const uid = identity.userId;
           const m = p.mode || 'general';
+
+          // Primary store: conversation_history with embeddings (powers semantic recall).
+          // Anonymous turns persist without embeddings; backfill on anon→auth migration.
+          (async () => {
+            try {
+              await storeConversationTurn(identity, 'user', p.message, userEmbedding);
+              const assistantEmbedding = identity.source === 'supabase_auth'
+                ? await embedText(full)
+                : null;
+              await storeConversationTurn(identity, 'assistant', full, assistantEmbedding);
+            } catch (e) {
+              console.error('[memory] /api/chat write failed:', e.message);
+            }
+          })();
+
+          // TODO: remove after conversation_memory migration — audit readers first.
           querySupabase('conversation_memory', '', 0, 'POST', { user_id: uid, session_id: sid, role: 'user', content: p.message, mode: m, created_at: ts }).catch(()=>{});
           querySupabase('conversation_memory', '', 0, 'POST', { user_id: uid, session_id: sid, role: 'assistant', content: full.substring(0, 4000), mode: m, created_at: ts }).catch(()=>{});
         }
@@ -1106,9 +1271,32 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(b);
         const suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message||'');
         const model = pickModel(p.message||'', p.mode||'general');
-        const sys = await buildPrompt(p.message||'', p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety');
+        let sys = await buildPrompt(p.message||'', p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety');
+
+        // ── MEMORY: server-authoritative short-term history + semantic recall ──
+        const identity = resolveIdentity(p);
+        const userEmbedding = identity.source === 'supabase_auth'
+          ? await embedText(p.message || '')
+          : null;
+        const [shortTerm, recall] = await Promise.all([
+          loadShortTermHistory(identity.convId, 12),
+          loadSemanticRecall(identity, userEmbedding, 0.75, 5)
+        ]);
+        const recallBlock = buildRecallBlock(recall);
+        if (recallBlock) {
+          sys += `\n\nRELEVANT CONTEXT FROM THIS USER'S PRIOR CONVERSATIONS — real things this user said to you or you said to them before. Use only if clearly relevant to the current question. Do NOT paraphrase as if they just said it now:\n${recallBlock}`;
+        }
+
         const msgs = [{ role: 'system', content: sys }];
-        if (p.history?.length) msgs.push(...p.history.slice(-12));
+        if (shortTerm.length) {
+          msgs.push(...shortTerm);
+          // shortTerm contains turns 1..N-1; current turn N is appended here.
+          if (p.message) msgs.push({ role: 'user', content: p.message });
+        } else if (p.history?.length) {
+          msgs.push(...p.history.slice(-12));
+        } else if (p.message) {
+          msgs.push({ role: 'user', content: p.message });
+        }
         const ctl2 = new AbortController();
         const tmr2 = setTimeout(() => ctl2.abort(), 30000);
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -1119,10 +1307,29 @@ const server = http.createServer((req, res) => {
         if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI stream error:', ar.status, errBody.substring(0,500)); res.writeHead(500,{'Content-Type':'application/json'}); return res.end(JSON.stringify({error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model})); }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
-        const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '';
+        const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = ''; let full = '';
         while (true) { const { done, value } = await rd.read(); if (done) break; buf += dc.decode(value, { stream: true }); const ls = buf.split('\n'); buf = ls.pop()||'';
-          for (const ln of ls) { if (!ln.startsWith('data: ')) continue; const d = ln.slice(6).trim(); if (d==='[DONE]') { res.write('data: '+JSON.stringify({done:true,model})+'\n\n'); continue; } try { const j=JSON.parse(d); const t=j.choices?.[0]?.delta?.content; if(t) res.write('data: '+JSON.stringify({t,text:t})+'\n\n'); } catch{} } }
+          for (const ln of ls) { if (!ln.startsWith('data: ')) continue; const d = ln.slice(6).trim(); if (d==='[DONE]') { res.write('data: '+JSON.stringify({done:true,model})+'\n\n'); continue; } try { const j=JSON.parse(d); const t=j.choices?.[0]?.delta?.content; if(t){ full+=t; res.write('data: '+JSON.stringify({t,text:t})+'\n\n'); } } catch{} } }
         res.end();
+
+        // Memory: write turns to conversation_history (fire-and-forget).
+        // Guard against partial writes on client disconnect — require a minimum
+        // assistant length so aborted streams don't pollute recall with fragments.
+        if (SUPABASE_URL && SUPABASE_KEY && p.message && full && full.length >= 20) {
+          (async () => {
+            try {
+              await storeConversationTurn(identity, 'user', p.message, userEmbedding);
+              const assistantEmbedding = identity.source === 'supabase_auth'
+                ? await embedText(full)
+                : null;
+              await storeConversationTurn(identity, 'assistant', full, assistantEmbedding);
+            } catch (e) {
+              console.error('[memory] /api/chat/stream write failed:', e.message);
+            }
+          })();
+        } else if (p.message) {
+          console.log(`[memory] stream aborted before usable assistant turn (len=${full ? full.length : 0}), skipping write`);
+        }
       } catch (e) { res.writeHead(500,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
     })(); });
     return;

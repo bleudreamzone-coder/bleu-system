@@ -3182,7 +3182,7 @@ async function vsAsk(){
     var r=await fetch(ALVAI,{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+(typeof ANON!=='undefined'?ANON:'')},
-      body:JSON.stringify({message:msg,session:typeof getSession==='function'?getSession():'vessel',mode:'vessel',history:[]})
+      body:JSON.stringify({message:msg,session:typeof getSession==='function'?getSession():'vessel',conversation_id:typeof getConversationId==='function'?getConversationId():'vessel_conv',mode:'vessel',history:[]})
     });
     if(!r.ok) throw new Error('HTTP '+r.status);
     var reader=r.body.getReader(),decoder=new TextDecoder(),full='',buffer='';
@@ -9788,7 +9788,7 @@ async function send(tab){
   var _modeMap={home:'alvai',ecsiq:'cannaiq',sleep:'vessel',spirit:'community',enterprise:'general'};
   var _knownModes=['therapy','recovery','finance','cannaiq','directory','vessel','protocols','learn','community','passport','map','missions','dashboard','alvai','general'];
   var _sendMode=_modeMap[currentTab]||((_knownModes.indexOf(currentTab)>-1)?currentTab:'general');
-  const body={message:msg,session:getSession(),history:[...chatHistories[currentTab],{role:'user',content:msg}].slice(-8),mode:_sendMode,user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null,
+  const body={message:msg,session:getSession(),conversation_id:getConversationId(),history:[...chatHistories[currentTab],{role:'user',content:msg}].slice(-8),mode:_sendMode,user_context:JSON.stringify(enrichedContext),user_id:currentUser?.id||null,
       journey_context:(()=>{
         const cm=["lets go","book it","give me everything","all of it","total plan","put it together","im ready","lets do this","sign me up","i want all","give me all","transform me","time travel","years back","take me back","total system","full plan","assemble all","all resources"];
         const isCommit=cm.some(w=>msg.toLowerCase().includes(w));
@@ -9905,6 +9905,15 @@ function getSession(){
   let s=localStorage.getItem('bleu_session');
   if(!s){s='bleu_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);localStorage.setItem('bleu_session',s);}
   return s;
+}
+// ======= CONVERSATION IDENTITY =======
+// Session-scoped — resets per tab/reload. Marks a single "conversation" for
+// server-side short-term history keying. Distinct from bleu_session (device-scoped,
+// persists in localStorage).
+function getConversationId(){
+  let c=sessionStorage.getItem('bleu_conversation_id');
+  if(!c){c='conv_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);sessionStorage.setItem('bleu_conversation_id',c);}
+  return c;
 }
 // ======= ANALYTICS PING =======
 function ping(p){fetch(ALVAI.replace('/chat','/ping')+'?p='+encodeURIComponent(p)+'&s='+getSession()).catch(()=>{});}
