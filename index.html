@@ -2154,11 +2154,11 @@ if(cg){CONNS.forEach(function(c){
       <div>
         <div id="bhi-dim-bars"></div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
-          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(163,45,45,.1);color:#a32d2d;border:1px solid rgba(163,45,45,.18)">0–299 Critical</span>
-          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(186,117,23,.1);color:#ba7517;border:1px solid rgba(186,117,23,.18)">300–499 Developing</span>
-          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(45,138,158,.1);color:#2D8A9E;border:1px solid rgba(45,138,158,.18)">500–699 Active</span>
-          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(29,158,117,.1);color:#1d9e75;border:1px solid rgba(29,158,117,.18)">700–849 Thriving</span>
-          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.18)">850+ Apex</span>
+          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(163,45,45,.1);color:#a32d2d;border:1px solid rgba(163,45,45,.18)">0–30 Foundations</span>
+          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(186,117,23,.1);color:#ba7517;border:1px solid rgba(186,117,23,.18)">31–50 Building</span>
+          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(45,138,158,.1);color:#2D8A9E;border:1px solid rgba(45,138,158,.18)">51–70 Thriving</span>
+          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(29,158,117,.1);color:#1d9e75;border:1px solid rgba(29,158,117,.18)">71–85 Flourishing</span>
+          <span style="font-size:9px;padding:2px 9px;border-radius:9px;background:rgba(201,168,76,.1);color:#C9A84C;border:1px solid rgba(201,168,76,.18)">86–100 Optimal</span>
         </div>
       </div>
     </div>
@@ -2166,40 +2166,7 @@ if(cg){CONNS.forEach(function(c){
       <button onclick="ask('dashboard','Calculate my BLEU Health Index across all 7 systems -- sleep, community, finance, therapy, nutrition, ECS, recovery. Give me my BHI score, what tier I am in, and the single highest-leverage action to raise it this week.')" style="padding:10px 22px;border-radius:10px;border:1px solid rgba(201,168,76,.28);background:rgba(201,168,76,.07);color:#C9A84C;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;transition:all .2s" onmouseover="this.style.background='rgba(201,168,76,.15)'" onmouseout="this.style.background='rgba(201,168,76,.07)'">Calculate My BHI with Alvai →</button>
     </div>
   </div>
-  <script>
-  (function(){
-    var dims=[
-      {l:'Sleep',c:'#2DD4A8',score:62},
-      {l:'Community',c:'#a78bfa',score:44},
-      {l:'Finance',c:'#C9A84C',score:38},
-      {l:'Therapy',c:'#f97316',score:55},
-      {l:'Nutrition',c:'#1d9e75',score:50},
-      {l:'ECS',c:'#2D8A9E',score:30},
-      {l:'Recovery',c:'#ef4444',score:47},
-    ];
-    var bhi=Math.round(dims.reduce(function(s,d){return s+d.score;},0)/dims.length*10);
-    var numEl=document.getElementById('bhi-num');
-    if(numEl){
-      var c=0,ti=setInterval(function(){
-        c+=Math.ceil(bhi/36);if(c>=bhi){c=bhi;clearInterval(ti);}
-        numEl.textContent=c;
-        numEl.style.color=c<300?'#a32d2d':c<500?'#ba7517':c<700?'#2D8A9E':c<850?'#1d9e75':'#C9A84C';
-      },28);
-    }
-    var tl=document.getElementById('bhi-tier-lbl');
-    if(tl)tl.textContent=bhi<300?'Critical':bhi<500?'Developing':bhi<700?'Active':bhi<850?'Thriving':'Apex';
-    var bars=document.getElementById('bhi-dim-bars');
-    if(bars){
-      dims.forEach(function(d){
-        var r=document.createElement('div');r.style.marginBottom='6px';
-        r.innerHTML='<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span style="color:#7B8DA6">'+d.l+'</span><span style="color:'+d.c+';font-family:DM Mono,monospace">'+d.score+'</span></div>'
-          +'<div style="height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden"><div style="height:100%;border-radius:2px;background:'+d.c+';width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1)" data-w="'+d.score+'%"></div></div>';
-        bars.appendChild(r);
-      });
-      setTimeout(function(){bars.querySelectorAll('[data-w]').forEach(function(b){b.style.width=b.dataset.w;});},200);
-    }
-  })();
-  </script>
+<!-- BHI IIFE removed in wire 5; rendering now handled by renderDashboardBHI() in the main script block -->
 
 
 
@@ -6934,6 +6901,7 @@ window.addEventListener('DOMContentLoaded',()=>{
         window._passport=d;
         hydrateHealthFromServer(d);
         if(typeof renderDimensionTiles==='function')renderDimensionTiles();
+        if(typeof renderDashboardBHI==='function')renderDashboardBHI();
         if(typeof _loadYT==='function')_loadYT(d.conditions?.[0]||'sleep');
         if(typeof _loadSP==='function')_loadSP(d.conditions?.[0]||'sleep');
       })
@@ -7862,6 +7830,52 @@ const TILE_LABEL_MAP = {
   ecs: 'ECS'
 };
 
+// Five-band tier naming for the BLEU Health Index.
+// Labels chosen for dignity across the range — Foundations is early
+// work, not failure; Optimal is achievable, not superlative.
+// See docs/bhi-migration-20260422.md for the rationale.
+const TIER_BANDS = [
+  { min: 0,  max: 30,  label: 'Foundations' },
+  { min: 31, max: 50,  label: 'Building' },
+  { min: 51, max: 70,  label: 'Thriving' },
+  { min: 71, max: 85,  label: 'Flourishing' },
+  { min: 86, max: 100, label: 'Optimal' }
+];
+
+// Per-dimension colors for the Dashboard BHI mini-bars.
+// Palette locked in wire 5 — matches Passport tile semantics.
+const TILE_COLOR_MAP = {
+  sleep:     '#2DD4A8',  // teal — restorative, cool
+  mind:      '#a78bfa',  // lavender — cognitive, calm
+  movement:  '#f97316',  // orange — energetic, active
+  nutrition: '#1d9e75',  // deep green — growth, fuel
+  social:    '#60a5fa',  // sky blue — connection, openness
+  finance:   '#C9A84C',  // muted gold — stability, substance
+  spirit:    '#e879f9',  // magenta — transcendence, depth
+  recovery:  '#ef4444',  // red — healing, warmth
+  ecs:       '#84cc16'   // lime — plant medicine, life
+};
+
+function computeBHI(dimensionScores) {
+  // v1 formula: clamped mean of 9 dimension scores on 0-100 scale.
+  // Pending clinical review by Dr. Felicia Stoler — swap this function
+  // body to replace with weighted/validated formulas. Registry and
+  // renderer contracts stay stable.
+  const keys = Object.keys(dimensionScores).filter(k => k !== '_version');
+  if (keys.length === 0) return { bhi: 0, tier: 'Foundations' };
+  let sum = 0, count = 0;
+  for (const k of keys) {
+    const v = dimensionScores[k];
+    if (typeof v === 'number' && Number.isFinite(v)) {
+      sum += v;
+      count++;
+    }
+  }
+  const bhi = count > 0 ? Math.max(0, Math.min(100, Math.round(sum / count))) : 0;
+  const band = TIER_BANDS.find(b => bhi >= b.min && bhi <= b.max) || TIER_BANDS[0];
+  return { bhi, tier: band.label };
+}
+
 // Numeric parse helpers (defensive — handle missing/malformed inputs)
 function _n(v) { const n = parseInt(v, 10); return Number.isFinite(n) ? n : null; }
 function _f(v) { const n = parseFloat(v);    return Number.isFinite(n) ? n : null; }
@@ -8085,10 +8099,75 @@ function renderDimensionTiles() {
   });
 }
 
+function renderDashboardBHI() {
+  const numEl = document.getElementById('bhi-num');
+  if (!numEl) return; // dashboard not rendered yet
+
+  const scores = computeDimensionScores();
+  const { bhi, tier } = computeBHI(scores);
+
+  // Counting-up animation preserved from old IIFE
+  let c = 0;
+  const step = Math.max(1, Math.ceil(bhi / 36));
+  const ti = setInterval(function() {
+    c += step;
+    if (c >= bhi) { c = bhi; clearInterval(ti); }
+    numEl.textContent = c;
+    // Color thresholds on 0-100 scale (was 0-1000 in old IIFE)
+    numEl.style.color = c < 30 ? '#a32d2d'
+                      : c < 50 ? '#ba7517'
+                      : c < 70 ? '#2D8A9E'
+                      : c < 85 ? '#1d9e75'
+                      : '#C9A84C';
+  }, 28);
+
+  // Tier label
+  const tl = document.getElementById('bhi-tier-lbl');
+  if (tl) tl.textContent = tier;
+
+  // Dimension bars — re-render all 9 dimensions
+  const bars = document.getElementById('bhi-dim-bars');
+  if (bars) {
+    bars.innerHTML = ''; // clear any previous content
+    Object.keys(TILE_LABEL_MAP).forEach(function(dim) {
+      const label = TILE_LABEL_MAP[dim];
+      const color = TILE_COLOR_MAP[dim] || '#C9A84C';
+      const score = scores[dim];
+      if (typeof score !== 'number') return;
+      const r = document.createElement('div');
+      r.style.marginBottom = '6px';
+      r.innerHTML = '<div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px">'
+        + '<span style="color:#7B8DA6">' + label + '</span>'
+        + '<span style="color:' + color + ';font-family:DM Mono,monospace">' + score + '</span>'
+        + '</div>'
+        + '<div style="height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden">'
+        + '<div style="height:100%;border-radius:2px;background:' + color + ';width:0;transition:width 1.4s cubic-bezier(.16,1,.3,1)" data-w="' + score + '%"></div>'
+        + '</div>';
+      bars.appendChild(r);
+    });
+    // Fade-in animation preserved from old IIFE
+    setTimeout(function() {
+      bars.querySelectorAll('[data-w]').forEach(function(b) {
+        b.style.width = b.dataset.w;
+      });
+    }, 200);
+  }
+
+  // Persist to Supabase — fire-and-forget
+  if (typeof sbClient !== 'undefined' && sbClient && typeof currentUser !== 'undefined' && currentUser) {
+    sbClient.from('profiles')
+      .update({ bhi_score: bhi, bhi_updated_at: new Date().toISOString() })
+      .eq('id', currentUser.id)
+      .then(function() {}).catch(function() {});
+  }
+}
+
 // Expose the renderer so loadPassport can call it
 if (typeof window !== 'undefined') {
   window.renderDimensionTiles = renderDimensionTiles;
   window.computeDimensionScores = computeDimensionScores;
+  window.computeBHI = computeBHI;
+  window.renderDashboardBHI = renderDashboardBHI;
 }
 
 function initPassport() {
@@ -8113,6 +8192,7 @@ function initPassport() {
   if(typeof renderJourneyHeader==='function')renderJourneyHeader();
   if(typeof renderJourneyMetrics==='function')renderJourneyMetrics();
   if(typeof renderDimensionTiles==='function')renderDimensionTiles();
+  if(typeof renderDashboardBHI==='function')renderDashboardBHI();
   // Restore focus chips
   let focuses = [];
   try { focuses = JSON.parse(localStorage.getItem('bleu_focuses') || '[]'); } catch(e) {}
@@ -8907,6 +8987,7 @@ function go(tab){
   if(tab==='map'&&window._bleuMapRestart){window._bleuMapRestart();}
   window.scrollTo({top:0,behavior:'smooth'})
   if(tab==='passport'){if(typeof window.loadPassport==='function')window.loadPassport();setTimeout(initPassport,80)}
+  if(tab==='dashboard'){if(typeof window.renderDashboardBHI==='function')window.renderDashboardBHI();}
   if(tab==='enterprise'){setTimeout(function(){if(typeof initAll==='function')initAll();},200)}
   if(tab==='sleep'||tab==='spirit'){setTimeout(function(){
     document.querySelectorAll('#p-'+tab+' .s-fade, #p-'+tab+' [style*="opacity:0"]').forEach(function(el){el.style.opacity='1';el.style.transform='none';});
