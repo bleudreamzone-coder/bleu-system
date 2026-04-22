@@ -6848,7 +6848,31 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(!sbClient&&window.supabase)sbClient=window.supabase.createClient(SB,SB_ANON)
   if(!sbClient)return
   sbClient.auth.getSession().then(({data})=>{if(data.session){currentUser=data.session.user;showProfile();loadPassport()}})
-  sbClient.auth.onAuthStateChange((ev,ses)=>{if(ses){currentUser=ses.user;showProfile();loadPassport()}else{currentUser=null;window._passport=null;showAuth()}})
+  sbClient.auth.onAuthStateChange((ev, ses) => {
+    if (ses) {
+      currentUser = ses.user;
+      showProfile();
+      loadPassport();
+      // Anon→auth merge: prompt on fresh signin if pre-auth conversation exists
+      if (ev === 'SIGNED_IN' && ses?.user?.id) {
+        const anonId = sessionStorage.getItem('bleu_conversation_id');
+        const alreadyPrompted = sessionStorage.getItem('bleu_merge_prompted');
+        const hasChatContent = (typeof chatHistories !== 'undefined' &&
+                                chatHistories &&
+                                typeof currentTab !== 'undefined' &&
+                                currentTab &&
+                                chatHistories[currentTab] &&
+                                chatHistories[currentTab].length > 0);
+        if (anonId && /^(conv_|bleu_)/.test(anonId) && !alreadyPrompted && hasChatContent) {
+          setTimeout(() => promptAnonMerge(anonId), 400);
+        }
+      }
+    } else {
+      currentUser = null;
+      window._passport = null;
+      showAuth();
+    }
+  })
   // Merges /api/personalize response.health into localStorage['bleu_health'] with newer-timestamp-wins
   // semantics, translating server's long column names to the short keys renderHealthData() expects.
   function hydrateHealthFromServer(response) {
@@ -7615,6 +7639,102 @@ async function updateStreak() {
 }
 
 // -- IDENTITY PROTOCOL STORAGE ------------------------------------------------
+function promptAnonMerge(anonConvId) {
+  // Build modal dynamically — matches showIdentityOnboarding pattern.
+  // Overlay + card + content, removed via modal.remove() on dismiss.
+
+  // Mark as prompted immediately to prevent re-prompt from TOKEN_REFRESHED
+  sessionStorage.setItem('bleu_merge_prompted', '1');
+
+  // Overlay
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+
+  // Card
+  const card = document.createElement('div');
+  card.style.cssText = 'background:#12151c;border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:32px;max-width:420px;width:100%;position:relative';
+
+  // Eyebrow
+  const eyebrow = document.createElement('div');
+  eyebrow.style.cssText = 'font-size:10px;letter-spacing:3px;color:rgba(201,168,76,0.6);margin-bottom:8px;text-transform:uppercase';
+  eyebrow.textContent = 'Welcome';
+
+  // Headline
+  const headline = document.createElement('div');
+  headline.style.cssText = 'font-family:Georgia,serif;font-size:22px;color:#e8d5b0;margin-bottom:8px;line-height:1.3';
+  headline.textContent = "Keep your conversation?";
+
+  // Body
+  const body = document.createElement('div');
+  body.style.cssText = 'font-size:13px;color:#8fa4b0;line-height:1.7;margin-bottom:20px';
+  body.textContent = 'We noticed a prior conversation on this device. Add it to your account so it stays with you?';
+
+  // Primary CTA
+  const yesBtn = document.createElement('button');
+  yesBtn.style.cssText = 'width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px;margin-bottom:10px';
+  yesBtn.textContent = "Yes, it's mine";
+
+  // Secondary dim link
+  const noBtn = document.createElement('div');
+  noBtn.style.cssText = 'font-size:11px;color:#3d4458;cursor:pointer;text-align:center;padding:4px';
+  noBtn.textContent = 'No, skip it';
+
+  // Assemble
+  card.appendChild(eyebrow);
+  card.appendChild(headline);
+  card.appendChild(body);
+  card.appendChild(yesBtn);
+  card.appendChild(noBtn);
+  modal.appendChild(card);
+  document.body.appendChild(modal);
+  document.body.style.overflow = 'hidden';
+
+  const closeModal = () => {
+    modal.remove();
+    document.body.style.overflow = '';
+  };
+
+  yesBtn.onclick = async () => {
+    try {
+      const { data: { session } } = await sbClient.auth.getSession();
+      if (!session?.access_token) {
+        closeModal();
+        return;
+      }
+      const res = await fetch('/api/memory/merge-anon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          anon_conv_id: anonConvId,
+          access_token: session.access_token
+        })
+      });
+      const data = await res.json();
+      closeModal();
+      if (data.ok && data.merged_count > 0) {
+        showCartToast('Your conversation has been added');
+        sessionStorage.removeItem('bleu_conversation_id');
+      } else if (data.ok && data.merged_count === 0) {
+        // Idempotent — already merged or empty. Silent success.
+        sessionStorage.removeItem('bleu_conversation_id');
+      } else {
+        showCartToast('Could not merge conversation — please try again later', 'error');
+      }
+    } catch (e) {
+      closeModal();
+      showCartToast('Could not merge conversation — please try again later', 'error');
+    }
+  };
+
+  noBtn.onclick = () => {
+    // Preserve anon rows in DB (no delete, no user_id change)
+    // Just disassociate this device's session
+    sessionStorage.removeItem('bleu_conversation_id');
+    closeModal();
+  };
+}
+window.promptAnonMerge = promptAnonMerge;
+
 function showIdentityOnboarding() {
   const existing = document.getElementById('bleu-onboarding-modal');
   if (existing) return;

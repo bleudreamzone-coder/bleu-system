@@ -12,6 +12,11 @@ const path = require('path');
 const OPENAI_KEY = process.env.OPENAI_API_KEY || '';
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
+// Public anon key used only as the gateway `apikey` header on Supabase Auth
+// verification calls (principle of least privilege — the user's Bearer token
+// is what identifies them; the apikey just gates the gateway). Value matches
+// the SUPABASE_ANON string embedded in index.html (public, not a secret).
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || '';
 
 const TWILIO_SID  = process.env.TWILIO_ACCOUNT_SID  || '';
 const TWILIO_AUTH = process.env.TWILIO_AUTH_TOKEN    || '';
@@ -1434,6 +1439,87 @@ const server = http.createServer((req, res) => {
     })(); });
     return;
   }
+
+  // ═══════ MEMORY: ANON → AUTH MERGE ═══════
+  // First auth-verified endpoint in the platform. Template for future sensitive
+  // endpoints (clinical notes, payment updates, private health data). Key
+  // properties:
+  //   - Bearer access_token is verified server-side via Supabase /auth/v1/user
+  //   - Server uses the token-derived user id; NEVER trusts a user_id from the body
+  //   - apikey on the auth-verification call is SUPABASE_ANON_KEY (least privilege)
+  //   - PATCH to conversation_history continues to use SUPABASE_KEY (needs service-role)
+  //   - Idempotent: re-calls with the same anon_conv_id match zero rows second time
+  //   - No rate limiting in v1 (low-value target, low row count). Future copies of
+  //     this template handling payments, clinical notes, or PHI should add per-user
+  //     rate limiting before deploying.
+  if (pn === '/api/memory/merge-anon' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { (async () => {
+      try {
+        // 0. Misconfiguration guard — fail loud, not silent at the gateway
+        if (!SUPABASE_URL || !SUPABASE_KEY) {
+          return json(res, 500, { error: 'Supabase not configured (SUPABASE_URL or SUPABASE_SERVICE_KEY missing)' });
+        }
+        if (!SUPABASE_ANON_KEY) {
+          return json(res, 500, { error: 'SUPABASE_ANON_KEY not configured — auth verification unavailable' });
+        }
+
+        const p = JSON.parse(b);
+
+        // 1. Validate input shape
+        if (!p.anon_conv_id || typeof p.anon_conv_id !== 'string') {
+          return json(res, 400, { error: 'anon_conv_id required' });
+        }
+        if (!p.access_token || typeof p.access_token !== 'string') {
+          return json(res, 401, { error: 'access_token required' });
+        }
+
+        // 2. Sanity-check: anon_conv_id must match anon format. Prevents someone
+        //    from passing a real auth UUID and hijacking that user's rows.
+        if (!/^(conv_|bleu_)/.test(p.anon_conv_id)) {
+          return json(res, 400, { error: 'anon_conv_id does not match anon format' });
+        }
+
+        // 3. Verify the access_token by asking Supabase who it belongs to.
+        //    Server uses the token-derived user id, NEVER a user_id from the body.
+        const authRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + p.access_token
+          }
+        });
+        if (!authRes.ok) return json(res, 401, { error: 'invalid access_token' });
+        const authUser = await authRes.json();
+        if (!authUser?.id) return json(res, 401, { error: 'access_token missing user id' });
+
+        // 4. Execute the UPDATE via PostgREST PATCH with return=representation
+        //    so the server can count affected rows and report them back.
+        const patchRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/conversation_history?user_id=eq.${encodeURIComponent(p.anon_conv_id)}`,
+          {
+            method: 'PATCH',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_KEY,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({ user_id: authUser.id })
+          }
+        );
+        if (!patchRes.ok) {
+          const t = await patchRes.text();
+          return json(res, 500, { error: 'merge update failed', detail: t.substring(0, 200) });
+        }
+        const merged = await patchRes.json();
+        return json(res, 200, { ok: true, merged_count: Array.isArray(merged) ? merged.length : 0 });
+      } catch (e) {
+        return json(res, 500, { error: 'merge-anon failed', detail: String(e.message || e) });
+      }
+    })(); });
+    return;
+  }
+
   // ═══ DEBUG: Test data enrichment ═══
   if (pn === '/api/debug/enrich' && req.method === 'GET') {
     const msg = url.searchParams.get('q') || 'I take lexapro and want to try CBD';
