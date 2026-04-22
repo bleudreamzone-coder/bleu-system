@@ -6933,6 +6933,7 @@ window.addEventListener('DOMContentLoaded',()=>{
       .then(d=>{
         window._passport=d;
         hydrateHealthFromServer(d);
+        if(typeof renderDimensionTiles==='function')renderDimensionTiles();
         if(typeof _loadYT==='function')_loadYT(d.conditions?.[0]||'sleep');
         if(typeof _loadSP==='function')_loadSP(d.conditions?.[0]||'sleep');
       })
@@ -7824,6 +7825,272 @@ async function bleuVerifyStamp(stamp) {
   } catch(e) { return false; }
 }
 
+// ═══════════════════════════════════════════════════════════════
+// BLEU DIMENSION SCORING ENGINE
+// ═══════════════════════════════════════════════════════════════
+// VERSION: v1-heuristic-pending-clinical-review
+// Authored: BLEU engineering, 2026-04-22
+// Clinical reviewer: Dr. Felicia Stoler (FACSM, FAND, Dipl. ACLM)
+//
+// This is the v1 placeholder scoring layer. Each scorer is a pure
+// function that takes a userData object and returns a 0-100 integer.
+// Scorers tolerate missing data by returning a neutral default (50)
+// rather than null or 0 — absence of signal ≠ absence of wellness.
+//
+// To swap in clinically-reviewed formulas: replace the function body
+// of the relevant scorer in DIMENSION_SCORERS below. No other code
+// changes required. The engine contract (inputs, output range,
+// tile integration) is stable.
+//
+// Data signals used per dimension are documented in each scorer's
+// comment block. Signals currently pending (marked v2):
+//   - Finance: citizen_tier, last_purchase_date, affiliate_transactions
+//     (all require /api/personalize extension)
+// ═══════════════════════════════════════════════════════════════
+
+const DIMENSION_SCORING_VERSION = 'v1-heuristic-pending-clinical-review';
+
+const TILE_LABEL_MAP = {
+  sleep: 'Sleep',
+  mind: 'Mind',
+  movement: 'Movement',
+  nutrition: 'Nutrition',
+  social: 'Social',
+  finance: 'Finance',
+  spirit: 'Spirit',
+  recovery: 'Recovery',
+  ecs: 'ECS'
+};
+
+// Numeric parse helpers (defensive — handle missing/malformed inputs)
+function _n(v) { const n = parseInt(v, 10); return Number.isFinite(n) ? n : null; }
+function _f(v) { const n = parseFloat(v);    return Number.isFinite(n) ? n : null; }
+
+// ─── Individual scorers ───────────────────────────────────────
+// Each: takes userData, returns 0-100 integer
+// Neutral default: 50 (absence of signal, not absence of wellness)
+
+function scoreSleep(data) {
+  // v1 signal: sleep_hrs. Optimal 7-9 hrs. Graduated scoring outside that band.
+  // Missing: return 50 (neutral)
+  const h = _f(data.health.sleep);
+  if (h === null) return 50;
+  if (h >= 7 && h <= 9) return 90;
+  if (h >= 6 && h < 7)  return 70;
+  if (h > 9  && h <= 10) return 75;
+  if (h >= 5 && h < 6)  return 50;
+  if (h > 10 && h <= 11) return 55;
+  if (h >= 4 && h < 5)  return 30;
+  return 15;
+}
+
+function scoreMind(data) {
+  // v1 signals: inverted anxiety_score, mood_score, conversations_count (engagement)
+  // Composite scoring. Missing anxiety AND mood returns 50.
+  const anx = _n(data.health.anxiety); // 0-100 scale, higher = worse
+  const mood = _n(data.health.mood);   // 0-100 scale, higher = better
+  const convs = _n(data.conversations_count) || 0;
+  if (anx === null && mood === null) return 50;
+  let score = 50;
+  if (anx !== null) score += (50 - anx) * 0.4;  // invert: low anxiety raises, high lowers
+  if (mood !== null) score += (mood - 50) * 0.4;
+  if (convs >= 5) score += 10;  // engagement bonus
+  else if (convs >= 1) score += 5;
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+function scoreMovement(data) {
+  // v1 signal: steps_daily. 10K+ optimal, <3K concerning, graduated.
+  const steps = _n(data.health.steps);
+  if (steps === null) return 50;
+  if (steps >= 10000) return 90;
+  if (steps >= 7500)  return 75;
+  if (steps >= 5000)  return 60;
+  if (steps >= 3000)  return 45;
+  if (steps >= 1000)  return 30;
+  return 15;
+}
+
+function scoreNutrition(data) {
+  // v1 signals: primary_goal presence + wellness_goals nutrition terms
+  const nutritionTerms = ['nutrition', 'eating', 'diet', 'food', 'weight', 'metabolic'];
+  const hasNutritionGoal = data.goals && data.goals.some(g =>
+    nutritionTerms.some(t => String(g).toLowerCase().includes(t))
+  );
+  const hasPrimaryGoal = data.health.goal && String(data.health.goal).trim().length > 0;
+  let score = 50;
+  if (hasPrimaryGoal) score += 15;
+  if (hasNutritionGoal) score += 20;
+  return Math.max(0, Math.min(100, score));
+}
+
+function scoreSocial(data) {
+  // v1 signals: conversations_count + streak_days
+  const convs = _n(data.conversations_count) || 0;
+  const streak = _n(data.streak_days) || 0;
+  let score = 40;
+  if (convs >= 20) score += 25;
+  else if (convs >= 10) score += 15;
+  else if (convs >= 3) score += 8;
+  if (streak >= 30) score += 25;
+  else if (streak >= 14) score += 15;
+  else if (streak >= 7) score += 10;
+  else if (streak >= 3) score += 5;
+  return Math.max(0, Math.min(100, score));
+}
+
+function scoreFinance(data) {
+  // v1 signals: bleu_protocol presence, bleu_cart item count, 'financial' in bleu_focuses
+  // v2 upgrade path: extend /api/personalize to include citizen_tier, last_purchase_date,
+  //                  affiliate_transactions count. These give richer financial-wellness signal.
+  // Financial wellness is a recognized pillar of lifestyle medicine (ACSM/ACLM).
+  let score = 50;
+  if (data.activeProtocol) score += 15;
+  if (data.cart && data.cart.length > 0) score += 10;
+  if (data.focuses && data.focuses.includes('financial')) score += 15;
+  return Math.max(0, Math.min(100, score));
+}
+
+function scoreSpirit(data) {
+  // v1 signal: bleu_focuses containing spirit/meditation/mindfulness terms
+  const spiritTerms = ['meditation', 'mindfulness', 'breathwork', 'spiritual', 'spirit', 'prayer', 'yoga'];
+  if (!data.focuses || data.focuses.length === 0) return 40;
+  const hits = data.focuses.filter(f =>
+    spiritTerms.some(t => String(f).toLowerCase().includes(t))
+  ).length;
+  if (hits >= 3) return 85;
+  if (hits === 2) return 70;
+  if (hits === 1) return 60;
+  return 40;
+}
+
+function scoreRecovery(data) {
+  // v1 signals: streak_days (consistency), recovery-related focuses
+  // Streak captures "staying with the work" which is the recovery pillar
+  const streak = _n(data.streak_days) || 0;
+  const recoveryTerms = ['recovery', 'sobriety', 'addiction', 'healing', 'trauma'];
+  const hasRecoveryFocus = data.focuses && data.focuses.some(f =>
+    recoveryTerms.some(t => String(f).toLowerCase().includes(t))
+  );
+  let score = 45;
+  if (streak >= 30) score += 30;
+  else if (streak >= 14) score += 20;
+  else if (streak >= 7) score += 12;
+  else if (streak >= 3) score += 6;
+  if (hasRecoveryFocus) score += 10;
+  return Math.max(0, Math.min(100, score));
+}
+
+function scoreEcs(data) {
+  // v1 signals: bleu_cannabis_sessions count, cannabis-related wellness_goals, cart cannabis items
+  const cannabisTerms = ['cannabis', 'cbd', 'thc', 'hemp', 'marijuana', 'mmj'];
+  const sessions = data.cannabisSessionCount || 0;
+  const hasCannabisGoal = data.goals && data.goals.some(g =>
+    cannabisTerms.some(t => String(g).toLowerCase().includes(t))
+  );
+  const hasCannabisCart = data.cart && data.cart.some(c =>
+    cannabisTerms.some(t => String(c.n || c.name || c).toLowerCase().includes(t))
+  );
+  let score = 45;
+  if (sessions >= 10) score += 25;
+  else if (sessions >= 3) score += 15;
+  else if (sessions >= 1) score += 8;
+  if (hasCannabisGoal) score += 15;
+  if (hasCannabisCart) score += 10;
+  return Math.max(0, Math.min(100, score));
+}
+
+// ─── Registry ────────────────────────────────────────────────
+const DIMENSION_SCORERS = {
+  sleep: scoreSleep,
+  mind: scoreMind,
+  movement: scoreMovement,
+  nutrition: scoreNutrition,
+  social: scoreSocial,
+  finance: scoreFinance,
+  spirit: scoreSpirit,
+  recovery: scoreRecovery,
+  ecs: scoreEcs
+};
+
+// ─── Data aggregator ─────────────────────────────────────────
+function collectUserData() {
+  let health = {};
+  try { health = JSON.parse(localStorage.getItem('bleu_health') || '{}'); } catch(e) {}
+  let focuses = [];
+  try { focuses = JSON.parse(localStorage.getItem('bleu_focuses') || '[]'); } catch(e) {}
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('bleu_cart') || '[]'); } catch(e) {}
+  let cannabisSessionCount = 0;
+  try {
+    const sessions = JSON.parse(localStorage.getItem('bleu_cannabis_sessions') || '[]');
+    cannabisSessionCount = Array.isArray(sessions) ? sessions.length : 0;
+  } catch(e) {}
+  const activeProtocol = (typeof getActiveProtocol === 'function') ? getActiveProtocol() : null;
+
+  // DOM reads for profile values (populated by showProfile)
+  const scoreEl = document.getElementById('stat-score');
+  const streakEl = document.getElementById('stat-streak');
+  const convsEl = document.getElementById('stat-convos');
+
+  const passport = window._passport || {};
+
+  return {
+    health: health,
+    focuses: focuses,
+    cart: cart,
+    cannabisSessionCount: cannabisSessionCount,
+    activeProtocol: activeProtocol,
+    bleu_score: scoreEl ? _n(scoreEl.textContent) : null,
+    streak_days: streakEl ? _n(streakEl.textContent) : null,
+    conversations_count: convsEl ? _n(convsEl.textContent) : null,
+    goals: passport.goals || passport.conditions || [],
+    city: passport.city || null
+  };
+}
+
+// ─── Orchestrator ────────────────────────────────────────────
+function computeDimensionScores(userData) {
+  const data = userData || collectUserData();
+  const result = { _version: DIMENSION_SCORING_VERSION };
+  for (const [dim, scorer] of Object.entries(DIMENSION_SCORERS)) {
+    try {
+      result[dim] = scorer(data);
+    } catch (e) {
+      console.warn('Dimension scorer error for ' + dim + ':', e);
+      result[dim] = 50; // neutral fallback on scorer crash
+    }
+  }
+  return result;
+}
+
+// ─── Renderer ────────────────────────────────────────────────
+function renderDimensionTiles() {
+  // Gate: if a journey is active, renderJourneyMetrics owns the grid — skip
+  if (typeof getActiveJourney === 'function' && getActiveJourney()) return;
+  const grid = document.querySelector('.pp-life-grid');
+  if (!grid) return;
+  const scores = computeDimensionScores();
+  const tiles = grid.querySelectorAll('.pp-life-item');
+  tiles.forEach(tile => {
+    const nameEl = tile.querySelector('.pp-li-name');
+    const valEl = tile.querySelector('.pp-li-val');
+    if (!nameEl || !valEl) return;
+    const tileLabel = nameEl.textContent.trim();
+    // Find the dimension key whose label matches this tile
+    const dim = Object.entries(TILE_LABEL_MAP).find(([k, v]) => v === tileLabel)?.[0];
+    if (!dim) return;
+    const score = scores[dim];
+    valEl.textContent = (score !== null && score !== undefined) ? String(score) : '—';
+  });
+}
+
+// Expose the renderer so loadPassport can call it
+if (typeof window !== 'undefined') {
+  window.renderDimensionTiles = renderDimensionTiles;
+  window.computeDimensionScores = computeDimensionScores;
+}
+
 function initPassport() {
   renderAffStrip();
   // Identity Protocol onboarding -- fire once for new citizens
@@ -7845,6 +8112,7 @@ function initPassport() {
   if(typeof renderReferralStats==='function')renderReferralStats();
   if(typeof renderJourneyHeader==='function')renderJourneyHeader();
   if(typeof renderJourneyMetrics==='function')renderJourneyMetrics();
+  if(typeof renderDimensionTiles==='function')renderDimensionTiles();
   // Restore focus chips
   let focuses = [];
   try { focuses = JSON.parse(localStorage.getItem('bleu_focuses') || '[]'); } catch(e) {}
