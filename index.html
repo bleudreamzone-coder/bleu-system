@@ -7058,6 +7058,60 @@ function logRufusAction(productId, action) {
   }
 }
 
+function showCartToast(message, type) {
+  // type: undefined | 'success' | 'error' | 'info'
+  // Default: success. Matches the visual language of the platform:
+  // dark card, gold/teal border, brief fade-in, auto-dismiss after 3s.
+  const existing = document.getElementById('bleu-cart-toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'bleu-cart-toast';
+
+  const borderColor = type === 'error'
+    ? 'rgba(232, 73, 73, 0.5)'
+    : 'rgba(45, 212, 168, 0.5)';
+  const textColor = type === 'error'
+    ? '#e84949'
+    : '#2dd4a8';
+
+  toast.style.cssText = `
+    position:fixed;
+    bottom:32px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:#12151c;
+    border:1px solid ${borderColor};
+    border-radius:12px;
+    padding:12px 20px;
+    color:${textColor};
+    font-size:13px;
+    font-family:'DM Sans',sans-serif;
+    z-index:10000;
+    opacity:0;
+    transition:opacity 0.25s ease, transform 0.25s ease;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+    max-width:90vw;
+    text-align:center;
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  // Trigger fade-in on next frame
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+  });
+
+  // Auto-dismiss after 3s
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(20px)';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+window.showCartToast = showCartToast;
+
 function autoAddRecommendedProducts(responseText) {
   if (!responseText || !RUFUS_PRODUCTS) return;
   const text = responseText.toLowerCase().replace(/<[^>]+>/g, ' ');
