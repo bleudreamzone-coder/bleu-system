@@ -1566,16 +1566,38 @@ const server = http.createServer((req, res) => {
   if (pn === '/api/personalize' && req.method === 'POST') {
     let b=''; req.on('data',c=>b+=c);
     req.on('end', ()=>{ (async()=>{
+      const NULL_HEALTH = {
+        weight_lbs: null, resting_hr: null, hrv_ms: null, sleep_hrs: null,
+        steps_daily: null, energy_score: null, anxiety_score: null,
+        mood_score: null, primary_goal: null, health_updated_at: null
+      };
       try {
         const p = JSON.parse(b);
-        if (!p.user_id || !SUPABASE_URL || !SUPABASE_KEY) return json(res, 200, {city:'New Orleans',conditions:['sleep'],goals:['rest better'],medications:[]});
-        const prof = await querySupabase('profiles', `?id=eq.${p.user_id}&select=city,wellness_goals,medications,conditions`, 1);
+        if (!p.user_id || !SUPABASE_URL || !SUPABASE_KEY) return json(res, 200, {city:'New Orleans',conditions:['sleep'],goals:['rest better'],medications:[],health:NULL_HEALTH});
+        const prof = await querySupabase('profiles', `?id=eq.${p.user_id}&select=city,wellness_goals,medications,conditions,weight_lbs,resting_hr,hrv_ms,sleep_hrs,steps_daily,energy_score,anxiety_score,mood_score,primary_goal,health_updated_at`, 1);
         if (prof && prof.length) {
-          json(res, 200, {city:prof[0].city||'New Orleans',conditions:prof[0].conditions||prof[0].wellness_goals||['sleep'],goals:prof[0].wellness_goals||['rest better'],medications:prof[0].medications||[]});
+          json(res, 200, {
+            city:        prof[0].city        || 'New Orleans',
+            conditions:  prof[0].conditions  || prof[0].wellness_goals || ['sleep'],
+            goals:       prof[0].wellness_goals || ['rest better'],
+            medications: prof[0].medications || [],
+            health: {
+              weight_lbs:        prof[0].weight_lbs        ?? null,
+              resting_hr:        prof[0].resting_hr        ?? null,
+              hrv_ms:            prof[0].hrv_ms            ?? null,
+              sleep_hrs:         prof[0].sleep_hrs         ?? null,
+              steps_daily:       prof[0].steps_daily       ?? null,
+              energy_score:      prof[0].energy_score      ?? null,
+              anxiety_score:     prof[0].anxiety_score     ?? null,
+              mood_score:        prof[0].mood_score        ?? null,
+              primary_goal:      prof[0].primary_goal      ?? null,
+              health_updated_at: prof[0].health_updated_at ?? null
+            }
+          });
         } else {
-          json(res, 200, {city:'New Orleans',conditions:['sleep'],goals:['rest better'],medications:[]});
+          json(res, 200, {city:'New Orleans',conditions:['sleep'],goals:['rest better'],medications:[],health:NULL_HEALTH});
         }
-      } catch(e) { json(res, 200, {city:'New Orleans',conditions:['sleep'],goals:['rest better'],medications:[]}); }
+      } catch(e) { json(res, 200, {city:'New Orleans',conditions:['sleep'],goals:['rest better'],medications:[],health:NULL_HEALTH}); }
     })(); });
     return;
   }
