@@ -6902,6 +6902,7 @@ window.addEventListener('DOMContentLoaded',()=>{
         hydrateHealthFromServer(d);
         if(typeof renderDimensionTiles==='function')renderDimensionTiles();
         if(typeof renderDashboardBHI==='function')renderDashboardBHI();
+        if(typeof renderDashboardStats==='function')renderDashboardStats();
         if(typeof _loadYT==='function')_loadYT(d.conditions?.[0]||'sleep');
         if(typeof _loadSP==='function')_loadSP(d.conditions?.[0]||'sleep');
       })
@@ -8162,12 +8163,45 @@ function renderDashboardBHI() {
   }
 }
 
+function renderDashboardStats() {
+  // Gate: early return if stat row doesn't exist
+  const row = document.querySelector('.stat-row');
+  if (!row) return;
+
+  const scores = computeDimensionScores();
+  const boxes = row.querySelectorAll('.stat-box');
+
+  boxes.forEach(box => {
+    const labelEl = box.querySelector('.label');
+    const numEl = box.querySelector('.num');
+    if (!labelEl || !numEl) return;
+    const label = labelEl.textContent.trim();
+
+    if (label === 'BLEU Score') {
+      // Box 1: read from profiles.bleu_score via the existing #stat-score element
+      const statScoreEl = document.getElementById('stat-score');
+      if (statScoreEl) {
+        const val = statScoreEl.textContent.trim();
+        if (val && val !== '--' && val !== '') numEl.textContent = val;
+      }
+      return;
+    }
+
+    // Boxes 2-5: match label to dimension via TILE_LABEL_MAP
+    const dim = Object.entries(TILE_LABEL_MAP).find(([k, v]) => v === label)?.[0];
+    if (!dim) return;
+    const score = scores[dim];
+    if (typeof score === 'number') numEl.textContent = String(score);
+  });
+}
+
 // Expose the renderer so loadPassport can call it
 if (typeof window !== 'undefined') {
   window.renderDimensionTiles = renderDimensionTiles;
   window.computeDimensionScores = computeDimensionScores;
   window.computeBHI = computeBHI;
   window.renderDashboardBHI = renderDashboardBHI;
+  window.renderDashboardStats = renderDashboardStats;
 }
 
 function initPassport() {
@@ -8193,6 +8227,7 @@ function initPassport() {
   if(typeof renderJourneyMetrics==='function')renderJourneyMetrics();
   if(typeof renderDimensionTiles==='function')renderDimensionTiles();
   if(typeof renderDashboardBHI==='function')renderDashboardBHI();
+  if(typeof renderDashboardStats==='function')renderDashboardStats();
   // Restore focus chips
   let focuses = [];
   try { focuses = JSON.parse(localStorage.getItem('bleu_focuses') || '[]'); } catch(e) {}
@@ -8987,7 +9022,7 @@ function go(tab){
   if(tab==='map'&&window._bleuMapRestart){window._bleuMapRestart();}
   window.scrollTo({top:0,behavior:'smooth'})
   if(tab==='passport'){if(typeof window.loadPassport==='function')window.loadPassport();setTimeout(initPassport,80)}
-  if(tab==='dashboard'){if(typeof window.renderDashboardBHI==='function')window.renderDashboardBHI();}
+  if(tab==='dashboard'){if(typeof window.renderDashboardBHI==='function')window.renderDashboardBHI();if(typeof window.renderDashboardStats==='function')window.renderDashboardStats();}
   if(tab==='enterprise'){setTimeout(function(){if(typeof initAll==='function')initAll();},200)}
   if(tab==='sleep'||tab==='spirit'){setTimeout(function(){
     document.querySelectorAll('#p-'+tab+' .s-fade, #p-'+tab+' [style*="opacity:0"]').forEach(function(el){el.style.opacity='1';el.style.transform='none';});
