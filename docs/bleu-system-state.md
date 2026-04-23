@@ -275,6 +275,12 @@ Analytics ping. Writes `pageviews` table. Returns `{ok:true}`.
 ### POST /api/session  (server.js:1423)
 Session upsert. Reads/writes `sessions` table.
 
+### POST /api/memory/merge-anon  (server.js:1455)
+Anon→auth conversation memory merge (wire 1). On user signup/login, migrates `conversation_history` rows written under an anonymous `conv_id` to the authenticated `user_id`. Verifies `access_token` via Supabase `/auth/v1/user` (auth-verified template). Uses token-derived `user_id`, never trusts request body. Payload: `{anon_conv_id}`. Returns `{ok: true, merged_count: N}`. Idempotent — safe to retry. Misconfiguration guards at step 0 fail loud. No rate limiting in v1 (add per-user rate limit before this template is copied for PHI/payment endpoints).
+
+### POST /api/memory/delete-all  (server.js:1538)
+User-initiated deletion of all conversation data (wire 2, GDPR Article 17 / CCPA right-to-delete aligned). Verifies `access_token` via Supabase `/auth/v1/user` (auth-verified template, same as merge-anon). DELETEs from both `conversation_history` and `conversations` tables scoped to token-derived `user_id`. Payload: none. Returns `{ok: true, conversation_history_deleted: N, conversations_deleted: M}` on full success. On partial failure (first delete succeeds, second fails), returns 500 with `{partial: {conversation_history_deleted: N}}` to preserve retry context. Idempotent — safe to retry. Frontend caller: `confirmDeleteAllHistory()` in Passport → Settings. Misconfiguration guards at step 0 fail loud. No rate limiting in v1.
+
 ### GET /api/debug/enrich  (server.js:1617)
 Debug/monitoring endpoint. Runs `detectIntent` + `enrichWithData` on a test message and returns timing + preview. Used to verify external data freshness.
 
