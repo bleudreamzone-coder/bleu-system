@@ -163,39 +163,39 @@ RLS: cannot determine.
 
 ### profiles
 Columns: id, city, neighborhood, ci_current, ci_velocity, wellness_goals, medications, conditions, last_active, streak_days, updated_at, bleu_score, cellular_health_score, affiliate_transactions, identity_protocol, cart_items. Also: `citizenship_status`, `citizen_tier`, `citizen_since`, `active_protocol`, `protocol_started_at`, `stripe_customer_id`, `last_protocol`, `last_purchase_date` (from Stripe webhook and reorder flow).
-Writers: `server.js:1801` (reorder upsert), `server.js:1960` (Stripe webhook grants citizenship), `index.html:7479`, `7482`, `7531`, `7623`, `12327`, `12363`, `12620`.
-Readers: `server.js:1756`, `index.html:6938`, `6968`, `7477`, `7522`, `7883`, `12271`, `12359`, `12371`.
+Writers: `server.js:1801` (reorder upsert), `server.js:1960` (Stripe webhook grants citizenship), `index.html:7159` (wellness_goals), `7244` (bleu_score+conversations_count), `7584`/`7587` (upsertProfile update+insert), `7636` (streak_days), `7924` (identity_protocol), `13042` (citizenship upsert), `13078` (affiliate_transactions), `13335` (cart_items).
+Readers: `server.js:1756`, `index.html:7019` (cellular_health_score), `7031` (full profile in showProfile), `7212` (getUserContext), `7244` (bleu_score before update), `7582` (existence check), `7627` (streak check), `12986` (bleu_score display), `13074` (affiliate_transactions read).
 RLS: cannot determine. The frontend writes to `profiles` via the anon key — so profile RLS policies must exist in Supabase, but they aren't in this repo's migrations folder.
 
 ### conversations
 Columns: UNKNOWN — no writers found. Inferred from reads as `{id, title, mode, user_id, created_at, updated_at}`.
 Writers: UNKNOWN — not found in code.
-Readers: `index.html:7887` (SELECT conversations for session history display), `index.html:7105` (DELETE on clear-data).
+Readers: `index.html:7032` (SELECT conversations for session history display in `loadSessions`), `index.html:7210` (DELETE on clear-data in `clearHist`).
 RLS: cannot determine.
 **Flag:** this table is read from the frontend but nothing in this repo writes to it. Writes may happen inside the edge function `supabase/functions/alvai/index.ts` (which the audit did not fully trace) or there may be a dead-code path.
 
 ### product_feedback
 Columns: UNKNOWN — only referenced in code, no INSERT shape visible.
-Writers: `index.html:6997`.
+Writers: `index.html:7048`.
 Readers: none found.
 RLS: cannot determine.
 
 ### session_feedback
 Columns: UNKNOWN.
-Writers: `index.html:7019`.
+Writers: `index.html:7070`.
 Readers: none found.
 RLS: cannot determine.
 
 ### user_signals
 Columns: UNKNOWN. Inferred to be biomarker-like.
-Writers: `index.html:9948`.
+Writers: `index.html:10663`.
 Readers: none found.
 RLS: cannot determine.
 
 ### youtube_videos
 Columns: video_id, channel_name, channel_id, title, description, published_at, view_count, like_count, comment_count, tabs, thumbnail, embed_url, watch_url, transcript, products_mentioned, protocols_extracted.
 Writers: `engine.py:557`.
-Readers: `index.html:4437`.
+Readers: `index.html:4404`.
 RLS: cannot determine.
 
 ### protocols
@@ -433,85 +433,85 @@ Full-text audit of `index.html` surfaced these tabs. Each entry is grounded in s
 - Affiliate links to Amazon (partner tag `bleu-live-20`).
 - **State: SKELETON.** Product showcase, no user data.
 
-### Tab: passport (index.html:4950)
+### Tab: passport (index.html:4917)
 See full deep-dive in section 8.
 
 ### Tab: dashboard / "Pulse" (index.html:2091)
 - Hero + typewriter intro + animated BHI ring (0–1000 scale) + 7-dimension breakdown (Sleep, Community, Finance, Therapy, Nutrition, ECS, Recovery) + stat boxes (BLEU Score, Sleep, Movement, Nutrition, Mind) + metabolic intelligence card + live environmental widget.
-- On mount: `loadEnvData()` (line 2260) geocodes via Nominatim (line 2265), fetches Open-Meteo (line 2268). A MutationObserver re-fires on panel activation (lines 2291–2293).
-- Chat interface at line 2301.
+- On mount: `loadEnvData()` (line 2227) geocodes via Nominatim (line 2232), fetches Open-Meteo (line 2235). A MutationObserver re-fires on panel activation (line 2259).
+- Chat interface at line 2268.
 - **State: WORKING.** BHI ring animates, environment widget pulls live data, chat is wired.
 
-### Tab: directory / "Find Care" (index.html:2305)
+### Tab: directory / "Find Care" (index.html:2272)
 - Hero with NPI stats (485K+ verified) + 3-step process + 6 practitioner type cards + quick-ask buttons ("My Anxiety Won't Stop" etc.) + search inputs for specialty + city.
-- On mount: `initDirectory()` (line 8051) runs after 50ms delay.
+- On mount: `initDirectory()` (line 8765) runs after 50ms delay.
 - Search button calls `runDirSearch()`.
-- "Featured providers" section shows "Loading featured providers…" placeholder (line 2422).
+- "Featured providers" section shows "Loading featured providers…" placeholder (line 2389).
 - **State: SKELETON.** UI is production-quality, but `runDirSearch()` implementation and "featured providers" data source were not located in the audit — treat as partially wired.
 
-### Tab: vessel / "Supply" (index.html:2448)
+### Tab: vessel / "Supply" (index.html:2415)
 - Sticky category filter + supplement catalog with Gold/Silver/Bronze tier products, Amazon affiliate buttons, Add-to-Cart.
-- On mount: `showVesselCategory(currentVesselCategory||'foundation')` (line 8601).
-- Quick-ask fetch to `/api/chat` at line 3185 with `conversation_id` now (added tonight).
+- On mount: `showVesselCategory(currentVesselCategory||'foundation')` (line 9027).
+- Quick-ask fetch to `/api/chat` at line 3152 with `conversation_id` (added during Care Twin wire, `999330f`).
 - **State: FUNCTIONAL.** Cart works, product display works. No in-app checkout — carts route out to Amazon/Fullscript.
 
-### Tab: map / "City" (index.html:3208)
+### Tab: map / "City" (index.html:3175)
 - NOLA wellness map + Jazz Bird branding.
-- On mount: `_bleuMapRestart()` (line 8583) — **function not found in the audit**. Unclear if defined in external library or stub.
+- On mount: `_bleuMapRestart()` called from the tab dispatcher at line 9297 — **function definition not found in the audit**. Unclear if defined in external library or stub.
 - **State: STUB.** Infrastructure declared, implementation not visible.
 
-### Tab: learn (index.html:3956)
+### Tab: learn (index.html:3923)
 - Video search + filter chips + trending/deep-dive grids + 16-topic research library + YouTube embed modal.
-- On mount: `initVideoLibrary()` (line 4434) queries Supabase `youtube_videos` (line 4437, ordered by view_count DESC, limit 200). Falls back to hardcoded `CURATED_VIDEOS` array (lines 4379–4427).
-- `loadLearnDefaults()` populates first-open content (line 4550).
+- On mount: `initVideoLibrary()` (line 4401) queries Supabase `youtube_videos` (line 4404, ordered by view_count DESC, limit 200). Falls back to hardcoded `CURATED_VIDEOS` array (line 4346 ff.).
+- `loadLearnDefaults()` populates first-open content (line 4517).
 - **State: FUNCTIONAL.** Video library shows real data or fallback, player works, filters work.
 
-### Tab: community (index.html:4576)
+### Tab: community (index.html:4543)
 - Hero (loneliness stats) + 4-stat grid + ripple visualization + live-events section + NOLA embedded cards + recovery/mental-health/fitness community links + crisis hotlines.
-- Event fetches: `findCommunityEvents()` (line 4742), `loadLiveEvents()` (line 4719) → `/api/events`, Nominatim for geocoding (line 4751), deep links to Eventbrite/Meetup.
+- Event fetches: `findCommunityEvents()` (line 4709), `loadLiveEvents()` (line 4686) → `/api/events`, Nominatim for geocoding (line 4718), deep links to Eventbrite/Meetup.
 - **State: WORKING.** All external resource links are real and functional.
 
-### Tab: therapy (index.html:5293)
+### Tab: therapy (index.html:5261)
 - 12 sub-modes (talk, cbt, dbt, somatic, motivational, journal, crisis, couples, grief, trauma, eating).
 - Mood check-in widget (7 moods). Therapist finder (city + specialty input). Affiliate cards (Brightside, Done, Cerebral, BetterHelp, Talkspace).
-- Chat body adds `therapy_mode` (index.html:9798) sent to server for sub-mode prompt injection.
+- Chat body adds `therapy_mode` (index.html:10513) sent to server for sub-mode prompt injection.
 - **State: WORKING.** All 12 modes switch via `setMode()`. Therapist search UI is complete.
 
-### Tab: recovery (index.html:5672)
+### Tab: recovery (index.html:5640)
 - 7 sub-modes (sobriety, relapse, harm, 12step, family, mat, milestones).
-- Sobriety day counter with localStorage persistence (`bleu_sober_date`). Meeting finder via SAMHSA (lines 5787–5820). GoodRx MAT cards (Suboxone, Naltrexone, Naloxone). Crisis banner with 988.
-- Chat body adds `recovery_mode` (index.html:9799).
+- Sobriety day counter with localStorage persistence (`bleu_sober_date`). Meeting finder via SAMHSA (lines 5721-5786). GoodRx MAT cards (Suboxone, Naltrexone, Naloxone). Crisis banner with 988.
+- Chat body adds `recovery_mode` (index.html:10514).
 - **State: FULLY FUNCTIONAL.** Sobriety counter works, meeting finder hits real SAMHSA API.
 
-### Tab: finance (index.html:5526)
+### Tab: finance (index.html:5494)
 - 8-stat financial-stress grid + 5-step "Financial Health Recipe" + quick-ask chips + external links (Cost Plus Drugs, GoodRx, YNAB).
 - No calculator backend in-repo.
 - **State: INFORMATIONAL.** Pure education UI; all "calculators" are conversational (send queries to Alvai).
 
-### Tab: ecsiq (index.html:5928)
+### Tab: ecsiq (index.html:5896)
 - Endocannabinoid system intelligence. Tabbed interface, strain/product cards, "Bud Says" callouts.
 - **State: STUB.** CSS classes defined, content not populated or not visible in the audit.
 
-### Tab: sleep (index.html:6529)
-- Sleep quality calculator + score ring + sleep supplement tiers + greeting message on first open (index.html:8603).
+### Tab: sleep (index.html:6497)
+- Sleep quality calculator + score ring + sleep supplement tiers + greeting message on first open (index.html:9318).
 - **State: PARTIAL.** UI complete; actual scoring logic not located.
 
-### Tab: spirit (index.html:11910)
+### Tab: spirit (index.html:12625)
 - Spiritual tradition finder + city input + category filter + results area ("Enter your city to discover local spiritual communities").
-- `findSpiritCenters()` referenced at line 12048 but **not defined in the audit**.
-- **State: STUB.**
+- `findSpiritCenters()` defined at line 12825 (inside the spirit panel's inline script; earlier audit missed it — function does exist).
+- **State: WORKING.** (upgraded from STUB — the function is present, it delegates to `ask('spirit', …)` for a conversational answer rather than rendering a structured directory).
 
-### Tab: why / "Why BLEU" (index.html:11735)
+### Tab: why / "Why BLEU" (index.html:12450)
 - Marketing/explainer page.
 - **State: INFORMATIONAL.**
 
 ### Additional non-nav panels
-- `protocols` (index.html:3773) — accessed from other tabs, not a nav button.
+- `protocols` (index.html:3740) — accessed from other tabs, not a nav button.
 - `alvai` (index.html:1886) — legacy or internal panel.
-- `terms` (index.html:6737), `privacy` (index.html:6757) — legal.
-- `enterprise` (index.html:10077) — separate from main nav, referenced in mode map.
+- `terms` (index.html:6705), `privacy` (index.html:6725) — legal.
+- `enterprise` (index.html:10792) — separate from main nav, referenced in mode map.
 
-### Mode map and known modes (index.html:9788-9789)
+### Mode map and known modes (index.html:10504-10505)
 ```
 _modeMap = {home:'alvai', ecsiq:'cannaiq', sleep:'vessel', spirit:'community', enterprise:'general'}
 _knownModes = ['therapy','recovery','finance','cannaiq','directory','vessel','protocols',
@@ -557,7 +557,7 @@ Auth (`sbClient.auth.getSession`, `onAuthStateChange`), REST (`/rest/v1/<table>`
 
 ### 6.7 Plausible  — LIVE
 Env: none (client-side script).
-Files: `index.html:796` (script tag), 8 event-tracking points: `stack_add` (146), `ISI_complete` (1195), `practitioner_click` (8019), `IRI_trigger` (9722), `safety_check_run` (12764), `safety_check_result` (12796), `cart_open` (12893), `fullscript_click` (12912).
+Files: `index.html:796` (script tag), 8 event-tracking points: `stack_add` (146), `ISI_complete` (1195), `practitioner_click` (8733), `IRI_trigger` (10437), `safety_check_run` (13479), `safety_check_result` (13511), `cart_open` (13608), `fullscript_click` (13627).
 
 ### 6.8 Google Places  — PIPELINE-ONLY
 Env: `GOOGLE_PLACES_KEY` (engine.py:36), wired in `.github/workflows/beast.yml:27-31` via `GOOGLE_API_KEY` secret.
@@ -588,10 +588,10 @@ Env: `MEETUP_API_KEY` (server.js:1711). GraphQL.
 Env: `YELP_API_KEY` (server.js:1733, also referenced in engine.py:40 but no pipeline caller).
 
 ### 6.15 Open-Meteo  — LIVE (free, no auth)
-Called from `index.html:2268` (dashboard) and referenced in `server.js`.
+Called from `index.html:2235` (dashboard) and referenced in `server.js`.
 
 ### 6.16 Nominatim (OpenStreetMap)  — LIVE (free, no auth)
-Called from `index.html:2265`, `4751`, `5781`.
+Called from `index.html:2232`, `4718`, `5749`.
 
 ### 6.17 OpenFDA  — LIVE (free)
 `server.js:735-760`.
@@ -612,7 +612,7 @@ Called from `index.html:2265`, `4751`, `5781`.
 `server.js:819`.
 
 ### 6.23 SAMHSA Treatment Locator  — LIVE (free, client-side)
-`index.html:5787-5820`.
+`index.html:5721-5786`.
 
 ### 6.24 GoodRx — LINK-OUT (no API)
 `index.html` recovery tab MAT medication cards.
@@ -637,18 +637,18 @@ Env: `AIRNOW_API_KEY` (engine.py:1018). Found but the audit did not trace its us
 Pioneer/citizenship is a tier concept: Explorer (free), Pioneer Citizen (founding — 12 months free), PRO ($9.99/mo).
 
 ### Reads
-- `index.html:3671` — live count fetch: `fetch(SBU+"/rest/v1/profiles?citizenship_status=eq.citizen&select=count")` → displays "N Pioneer Citizens" in hero (line 3359).
-- `index.html:12369-12376` — `checkCitizenshipStatus()` reads `citizenship_status === 'citizen'` from the user's profile row and shows/hides `pp-citizen-card`.
+- `index.html:3638` — live count fetch: `fetch(SBU+"/rest/v1/profiles?citizenship_status=eq.citizen&select=count")` → displays "N Pioneer Citizens" in hero (line 3326).
+- `index.html:13084-13090` — `checkCitizenshipStatus()` reads `citizenship_status === 'citizen'` from the user's profile row and shows/hides `pp-citizen-card`.
 
 ### Writes (enforcement points)
-- `index.html:12257` — on free Pioneer claim, `startStripeCheckout()` sets `citizenship_status: 'citizen'`, `citizen_tier: 'pioneer_founding'`, `citizen_since: <now>`.
-- `index.html:12351` — records affiliate transaction `recordAffiliateTransaction('pioneer', 'citizen_pioneer_free', 0)`.
+- `index.html:12956` — on free Pioneer claim, `startStripeCheckout()` sets `citizenship_status: 'citizen'`, `citizen_tier: 'pioneer_founding'`, `citizen_since: <now>`.
+- `index.html:13066` — records affiliate transaction `recordAffiliateTransaction('pioneer', 'citizen_pioneer_free', 0)`.
 - `server.js:1960` (inside `handleStripeWebhook`) — on successful Stripe payment, patches `profiles` with the active protocol, customer ID, protocol start time. Does not directly set `citizenship_status` — that happens on the frontend.
 
 ### Decorative / marketing references
 - `index.html:239, 957, 968, 984` — Open Graph + schema.org descriptions mention "Free forever for Pioneer Citizens."
-- `index.html:5003, 5008` — Passport hero messaging.
-- `index.html:5100-5117` — Passport tier cards showing Explorer/Pioneer/PRO prices.
+- `index.html:4970, 4974` — Passport hero messaging.
+- `index.html:5067-5084` — Passport tier cards showing Explorer/Pioneer/PRO prices.
 
 ### Plain-English summary
 
@@ -658,32 +658,32 @@ Pioneer status is a **database flag with light UI gating**. Specifically:
 - Decoratively surfaced in **5+ places** (marketing copy, tier cards, schema metadata).
 - **Enforced on the backend: zero times.** No server.js endpoint checks `citizenship_status` before serving content. Pioneer tier is currently a frontend visibility flag + a payment-acknowledgement marker, not an access gate on any premium feature.
 
-The Stripe webhook writes `active_protocol` fields but does not write `citizenship_status` itself — that's handled client-side at checkout time (`index.html:12257`), which means a user who never completes the in-app flow but paid via another channel would not get the flag set.
+The Stripe webhook writes `active_protocol` fields but does not write `citizenship_status` itself — that's handled client-side at checkout time (`index.html:12956`), which means a user who never completes the in-app flow but paid via another channel would not get the flag set.
 
 ---
 
 ## 8. Passport tab deep dive
 
 ### 8.1 Location
-Markup at `index.html:4950-5287`. Mount logic at `index.html:8585` (`if(tab==='passport'){setTimeout(initPassport,80)}`). Auth listeners at `index.html:6883-6884`.
+Markup at `index.html:4917-5254`. Mount logic at `index.html:9299` (`if(tab==='passport'){setTimeout(initPassport,80)}`; `initPassport` defined at `index.html:8482`). Auth listeners at `index.html:6851-6852`.
 
 ### 8.2 Two screens
 
-**Auth screen** (`index.html:5017-5056`): email + password signup, toggle to sign-in, "Create My Passport" button calling `doSignUp()`, "Explore without an account" fallback.
+**Auth screen** (`index.html:4985-5024`): email + password signup, toggle to sign-in, "Create My Passport" button calling `doSignUp()`, "Explore without an account" fallback.
 
-**Profile screen** (`index.html:5058-5285`), shown only once `sbClient.auth.getSession()` returns a user:
-- Header card with animated BHI ring (SVG at 5063), user name (5065), tier badge (5066), session count (5069), streak counter (5070).
-- Upgrade card (5076-5117): three-tier ladder Explorer / Pioneer (free 12mo) / PRO ($9.99/mo), with `startStripeCheckout()` (line 5104) and `startPaidCheckout('price_...QN')` (line 5112) buttons.
-- Life dimensions grid (5151-5161): 9 clickable tiles — Sleep, Mind, Movement, Nutrition, Social, Finance, Spirit, Recovery, ECS — each displays "--" placeholder; clicking opens an Alvai query for that topic.
-- Wellness focus chips (5163-5172): 8 toggles (sleep/anxiety/weight/energy/longevity/recovery/pain/financial), default-active is sleep.
-- My Wellness Stack container (`pp-cart-container`, line 5188) — populated by cart JS.
-- Saved Journeys container (`pp-paths-container`, line 5192) — populated dynamically.
-- Health Data panel (5195-5247):
-  - Manual entry form (5222-5237): weight, resting HR, HRV, sleep hours, steps/day, energy 1-10, anxiety 1-10, mood 1-10, current meds, primary goal → submit `saveManualHealthData()`.
-  - File import (5239-5247): Apple Health, Oura Ring, Whoop/Garmin/Fitbit.
-  - FHIR export button (5214): "↓ Export Health Record (FHIR R4)".
-- Session history (5273-5274): refresh button + `session-list` container populated from Supabase.
-- Settings (5277-5281): `clearAllPassportData()`, `exportFullPassport()`.
+**Profile screen** (`index.html:5026-5252`), shown only once `sbClient.auth.getSession()` returns a user:
+- Header card with animated BHI ring (SVG at 5030), user name (5032), tier badge (5033), session count (5036), streak counter (5037).
+- Upgrade card (5043-5084): three-tier ladder Explorer / Pioneer (free 12mo) / PRO ($9.99/mo), with `startStripeCheckout()` (line 5071) and `startPaidCheckout('price_...QN')` (line 5079) buttons.
+- Life dimensions grid (5118-5128): 9 clickable tiles — Sleep, Mind, Movement, Nutrition, Social, Finance, Spirit, Recovery, ECS — each displays "--" placeholder; clicking opens an Alvai query for that topic.
+- Wellness focus chips (5130-5139): 8 toggles (sleep/anxiety/weight/energy/longevity/recovery/pain/financial), default-active is sleep.
+- My Wellness Stack container (`pp-cart-container`, line 5155) — populated by cart JS.
+- Saved Journeys container (`pp-paths-container`, line 5159) — populated dynamically.
+- Health Data panel (5162-5214):
+  - Manual entry form (5189-5204): weight, resting HR, HRV, sleep hours, steps/day, energy 1-10, anxiety 1-10, mood 1-10, current meds, primary goal → submit `saveManualHealthData()`.
+  - File import (5206-5214): Apple Health, Oura Ring, Whoop/Garmin/Fitbit.
+  - FHIR export button (5182): "↓ Export Health Record (FHIR R4)".
+- Session history (5240-5241): refresh button + `session-list` container populated from Supabase.
+- Settings (5244-5248): `clearAllPassportData()`, `confirmDeleteAllHistory()` (added in wire 2), `exportFullPassport()`.
 
 ### 8.3 Mount sequence
 
@@ -730,8 +730,8 @@ In plain terms: the Passport is a **conversation-history viewer with a very hand
 
 - Entry modal: `index.html:1119-1230`. Auto-opens 4 seconds into the session (line 1228). 4 Likert questions (groundedness, clarity, connection, body alignment).
 - Scoring: sum 0-20, then categorized into Stable (≥16) → Vessel tab, Drifting (10-15) → Alvai, Fragmented (<10) → Alvai with deeper opening. Logic at lines 1180-1189.
-- Persistence: **sessionStorage only** (`bleu_isi_score`, `bleu_isi_state`, `bleu_isi_done`) at lines 1191-1194. Lost on tab close.
-- Prompt injection: on chat send, read sessionStorage and append "ISI reading this session: <state> (<score>/20). Walk with this." to system prompt (line 7114).
+- Persistence: **sessionStorage only** (`bleu_isi_score`, `bleu_isi_state`, `bleu_isi_done`) at lines 1191-1193. Lost on tab close.
+- Prompt injection: on chat send, read sessionStorage and append "ISI reading this session: <state> (<score>/20). Walk with this." to system prompt (line 7219).
 - Analytics: Plausible event `ISI_complete` (line 1195).
 - Schema: `user_coherence` table has `isi_fusion_score`, `isi_language_sample` columns defined in `supabase/migrations/add_coherence_index.sql:21-22` — **nothing writes them**. ISI readings never reach the database.
 
@@ -750,7 +750,7 @@ In plain terms: the Passport is a **conversation-history viewer with a very hand
 
 - Server memory helpers: `server.js:536-649` (callSupabaseRPC, embedText, resolveIdentity, storeConversationTurn, loadShortTermHistory, loadSemanticRecall, buildRecallBlock).
 - `/api/chat` and `/api/chat/stream` now load short-term history and semantic recall before building the prompt (server.js:1169-1180, 1282-1295) and write turns to `conversation_history` after response completes (1253-1259, 1326-1337).
-- Client: `getConversationId()` in sessionStorage (`index.html:6908-6916`), sent as `conversation_id` on both the main `ask()` fetch (line 9791) and the Vessel quick-ask (line 3185).
+- Client: `getConversationId()` function defined at `index.html:10628-10632`, backing sessionStorage key `bleu_conversation_id`. Sent as `conversation_id` on both the main `ask()` fetch (line 10506) and the Vessel quick-ask (line 3152).
 - Table + RPC: `conversation_history` (user_id text, session_id text, role, content, embedding vector(1536), timestamps), RPC `match_conversation_history` locked to service_role with SECURITY DEFINER.
 
 **What works now:**
