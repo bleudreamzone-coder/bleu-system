@@ -5244,6 +5244,7 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
   <div class="pp-sect pp-anim">Settings</div>
   <div class="pp-anim" style="display:grid;gap:8px;padding-bottom:20px">
     <button onclick="clearAllPassportData()" style="background:transparent;border:1px solid rgba(255,59,48,0.3);color:rgba(255,59,48,0.7);border-radius:10px;padding:10px;font-size:12px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(255,59,48,0.6)'" onmouseout="this.style.borderColor='rgba(255,59,48,0.3)'">Clear All Passport Data</button>
+    <button onclick="confirmDeleteAllHistory()" style="background:transparent;border:1px solid rgba(255,59,48,0.3);color:rgba(255,59,48,0.7);border-radius:10px;padding:10px;font-size:12px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(255,59,48,0.6)'" onmouseout="this.style.borderColor='rgba(255,59,48,0.3)'">Delete All Conversation History</button>
     <button onclick="exportFullPassport()" style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:#c9a84c;border-radius:10px;padding:10px;font-size:12px;cursor:pointer">Export My Wellness Report</button>
   </div>
 
@@ -7734,6 +7735,106 @@ function promptAnonMerge(anonConvId) {
   };
 }
 window.promptAnonMerge = promptAnonMerge;
+
+function confirmDeleteAllHistory() {
+  // Dynamic modal matching promptAnonMerge / showIdentityOnboarding pattern.
+  // Primary CTA is gold with a red-tinted border to signal a destructive action
+  // inside an otherwise gold confirmation surface.
+
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+
+  const card = document.createElement('div');
+  card.style.cssText = 'background:#12151c;border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:32px;max-width:420px;width:100%;position:relative';
+
+  const eyebrow = document.createElement('div');
+  eyebrow.style.cssText = 'font-size:10px;letter-spacing:3px;color:rgba(232,73,73,0.7);margin-bottom:8px;text-transform:uppercase';
+  eyebrow.textContent = 'Delete Confirmation';
+
+  const headline = document.createElement('div');
+  headline.style.cssText = 'font-family:Georgia,serif;font-size:22px;color:#e8d5b0;margin-bottom:8px;line-height:1.3';
+  headline.textContent = 'Delete your entire conversation history?';
+
+  const body = document.createElement('div');
+  body.style.cssText = 'font-size:13px;color:#8fa4b0;line-height:1.7;margin-bottom:20px';
+  body.textContent = 'This permanently deletes all your conversations and session history. This cannot be undone. Your account, Passport health data, and subscriptions are not affected.';
+
+  const yesBtn = document.createElement('button');
+  yesBtn.style.cssText = 'width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#b8943c);color:#0a1628;border:1px solid rgba(232,73,73,0.3);border-radius:10px;font-weight:700;cursor:pointer;font-size:14px;margin-bottom:10px';
+  yesBtn.textContent = 'Yes, delete everything';
+
+  const noBtn = document.createElement('div');
+  noBtn.style.cssText = 'font-size:11px;color:#3d4458;cursor:pointer;text-align:center;padding:4px';
+  noBtn.textContent = 'Cancel, keep my history';
+
+  card.appendChild(eyebrow);
+  card.appendChild(headline);
+  card.appendChild(body);
+  card.appendChild(yesBtn);
+  card.appendChild(noBtn);
+  modal.appendChild(card);
+  document.body.appendChild(modal);
+  document.body.style.overflow = 'hidden';
+
+  const closeModal = () => {
+    modal.remove();
+    document.body.style.overflow = '';
+  };
+
+  yesBtn.onclick = async () => {
+    try {
+      const { data: { session } } = await sbClient.auth.getSession();
+      if (!session?.access_token) {
+        closeModal();
+        showCartToast('You must be signed in to delete history', 'error');
+        return;
+      }
+      const res = await fetch('/api/memory/delete-all', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ access_token: session.access_token })
+      });
+      const data = await res.json();
+      closeModal();
+      if (data.ok) {
+        // Local mirrors: wipe in-memory chat history, session ids, and invalidate
+        // the passport context cache so the next Alvai turn rebuilds from a
+        // now-empty backing store instead of stale cached session summaries.
+        try { for (const k in chatHistories) chatHistories[k] = []; } catch(e) {}
+        try { currentConvoIds = {}; } catch(e) {}
+        try { _passportCache = null; _passportCacheTime = 0; } catch(e) {}
+        try { if (typeof loadSessions === 'function') loadSessions(); } catch(e) {}
+        // Clear visible chat DOM in all tabs — data is gone from backing
+        // stores and in-memory arrays, DOM nodes from prior turns would
+        // otherwise stay rendered until page refresh (the "button lies
+        // to the user" class of bug we guarded against at the endpoint
+        // and loadSessions layers).
+        try {
+          document.querySelectorAll('[id^="chat-"]').forEach(el => {
+            el.innerHTML = '';
+          });
+        } catch(e) {}
+
+        const total = (data.conversation_history_deleted || 0) + (data.conversations_deleted || 0);
+        if (total === 0) {
+          showCartToast('Your conversation history is clear');
+        } else {
+          showCartToast('Deleted ' + total + ' conversations from your account');
+        }
+      } else {
+        showCartToast('Could not delete history — please try again later', 'error');
+      }
+    } catch (e) {
+      closeModal();
+      showCartToast('Could not delete history — please try again later', 'error');
+    }
+  };
+
+  noBtn.onclick = () => {
+    closeModal();
+  };
+}
+window.confirmDeleteAllHistory = confirmDeleteAllHistory;
 
 function showIdentityOnboarding() {
   const existing = document.getElementById('bleu-onboarding-modal');

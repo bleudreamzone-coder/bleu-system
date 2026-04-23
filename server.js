@@ -1520,6 +1520,99 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ═══════ MEMORY: DELETE ALL USER HISTORY ═══════
+  // Second auth-verified endpoint in the platform. Copies the wire 1 template.
+  // GDPR Article 17 / CCPA right-to-delete aligned.
+  //   - Bearer access_token is verified server-side via Supabase /auth/v1/user
+  //   - Server uses the token-derived user id; NEVER trusts a user_id from the body
+  //   - apikey on the auth-verification call is SUPABASE_ANON_KEY (least privilege)
+  //   - DELETE on conversation_history and conversations uses SUPABASE_KEY (needs service-role)
+  //   - Scope is both tables: conversation_history (pgvector semantic recall) AND
+  //     conversations (per-session JSON displayed in Passport → Session History).
+  //     The button label promises full deletion; a narrow delete would leave
+  //     session rows intact and the continuity signal still referencing them.
+  //   - Idempotent: re-calls delete zero rows, same clean 200 return
+  //   - No rate limiting in v1 (low-value target, deletion is user-initiated not abuse surface).
+  //     If future patterns emerge where delete endpoints are called adversarially, add
+  //     per-user rate limiting at that time.
+  if (pn === '/api/memory/delete-all' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { (async () => {
+      try {
+        // 0. Misconfiguration guards
+        if (!SUPABASE_URL || !SUPABASE_KEY) {
+          return json(res, 500, { error: 'Supabase not configured (SUPABASE_URL or SUPABASE_SERVICE_KEY missing)' });
+        }
+        if (!SUPABASE_ANON_KEY) {
+          return json(res, 500, { error: 'SUPABASE_ANON_KEY not configured — auth verification unavailable' });
+        }
+
+        const p = JSON.parse(b);
+
+        // 1. Validate input
+        if (!p.access_token || typeof p.access_token !== 'string') {
+          return json(res, 401, { error: 'access_token required' });
+        }
+
+        // 2. Verify the access_token — server uses the token-derived user id
+        const authRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + p.access_token
+          }
+        });
+        if (!authRes.ok) return json(res, 401, { error: 'invalid access_token' });
+        const authUser = await authRes.json();
+        if (!authUser?.id) return json(res, 401, { error: 'access_token missing user id' });
+
+        const delHeaders = {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Prefer': 'return=representation'
+        };
+        const uid = encodeURIComponent(authUser.id);
+
+        // 3a. DELETE conversation_history (pgvector semantic recall store)
+        const chRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/conversation_history?user_id=eq.${uid}`,
+          { method: 'DELETE', headers: delHeaders }
+        );
+        if (!chRes.ok) {
+          const t = await chRes.text();
+          return json(res, 500, { error: 'conversation_history delete failed', detail: t.substring(0, 200) });
+        }
+        const chDeleted = await chRes.json();
+
+        // 3b. DELETE conversations (per-session JSON shown in Passport). If this
+        //     fails after 3a succeeded, the caller sees a partial-delete error and
+        //     can retry — 3a is already idempotent (zero rows on retry) so the retry
+        //     converges to the intended end state.
+        const cRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/conversations?user_id=eq.${uid}`,
+          { method: 'DELETE', headers: delHeaders }
+        );
+        if (!cRes.ok) {
+          const t = await cRes.text();
+          return json(res, 500, {
+            error: 'conversations delete failed',
+            detail: t.substring(0, 200),
+            partial: { conversation_history_deleted: Array.isArray(chDeleted) ? chDeleted.length : 0 }
+          });
+        }
+        const cDeleted = await cRes.json();
+
+        return json(res, 200, {
+          ok: true,
+          conversation_history_deleted: Array.isArray(chDeleted) ? chDeleted.length : 0,
+          conversations_deleted: Array.isArray(cDeleted) ? cDeleted.length : 0
+        });
+      } catch (e) {
+        return json(res, 500, { error: 'delete-all failed', detail: String(e.message || e) });
+      }
+    })(); });
+    return;
+  }
+
   // ═══ DEBUG: Test data enrichment ═══
   if (pn === '/api/debug/enrich' && req.method === 'GET') {
     const msg = url.searchParams.get('q') || 'I take lexapro and want to try CBD';
