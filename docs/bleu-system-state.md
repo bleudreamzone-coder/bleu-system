@@ -55,13 +55,13 @@ RLS status is almost uniformly **"cannot determine from code"** — the service-
 ### practitioners
 Columns: npi, first_name, last_name, full_name, credential, gender, specialty, taxonomy_code, taxonomy_description, practice_name, address_line1, city, state, zip, county, phone, lat, lng, source, source_id, source_url, trust_score, credentials_verified, license_verified, validation_status.
 Writers: `engine.py:261`, `engine.py:965`, `engine.py:1005`.
-Readers: `server.js:675`, `server.js:962`, `server.js:1153`, `supabase/functions/alvai/index.ts:319`, `supabase/functions/alvai/index.ts:1932`, `alvai-v3.ts:223`.
+Readers: `server.js:680`, `server.js:967`, `server.js:1158`, `supabase/functions/alvai/index.ts:319`, `supabase/functions/alvai/index.ts:1932`, `alvai-v3.ts:223`.
 RLS: cannot determine.
 
 ### locations
 Columns: name, type, address, address_line1, city, state, zip, phone, website, latitude, longitude, avg_rating, review_count, price_level, source, source_id, source_url, trust_score, validation_status.
 Writers: `engine.py:336`, `engine.py:796`.
-Readers: `server.js:695`.
+Readers: `server.js:700`.
 RLS: cannot determine.
 
 ### products
@@ -72,21 +72,21 @@ RLS: cannot determine.
 
 ### conversation_history (the Care Twin table, added earlier in April)
 Columns (authoritative from schema verified during tonight's build): `id uuid`, `user_id text NOT NULL`, `session_id text`, `role text`, `content text`, `embedding vector(1536)`, `created_at timestamptz`, `updated_at timestamptz`, `deleted_at timestamptz`. Note: the Supabase-tables research agent initially guessed `user_id` as `uuid?` — that is wrong. Verified column type is `text`.
-Writers: `server.js:1248`, `server.js:1252` (chat), `server.js:1321`, `server.js:1325` (stream).
-Readers: `server.js:614` (short-term history SELECT by session_id), `server.js:627` (RPC `match_conversation_history` for semantic recall across prior sessions).
+Writers: `server.js:1253`, `server.js:1257` (chat), `server.js:1326`, `server.js:1330` (stream).
+Readers: `server.js:619` (short-term history SELECT by session_id), `server.js:632` (RPC `match_conversation_history` for semantic recall across prior sessions).
 RLS: service-role key writes/reads from server. RPC function itself is locked to service_role (verified in the SQL from tonight's work — REVOKE from public/anon/authenticated, GRANT to service_role).
 
 ### conversation_memory (legacy, being migrated away from)
 Columns: user_id, session_id, role, content, mode, created_at.
-Writers: `server.js:1259`, `server.js:1260`.
-Readers: none found.
-RLS: cannot determine. `server.js:1258` carries a TODO comment to remove this dual-write after the `conversation_history` migration and after readers are audited.
+Writers: `server.js:1264`, `server.js:1265` (in `/api/chat` only — asymmetric; `/api/chat/stream` does NOT dual-write to this table).
+Readers: none found (confirmed April 23, 2026 — see `docs/wire-3-conversation-memory-audit-20260423.md` for the full grep-audit artifact across server.js, index.html, edge functions, SQL migrations, config files, and documentation).
+RLS: cannot determine from repo. `server.js:1263` carries a TODO comment to remove this dual-write after reader audit and Supabase dashboard check (triggers, views, policies — see the audit doc's "Next Steps for Wire 4" section).
 
 ### user_coherence
 Columns: id, user_id, recorded_at, pc_score, bc_score, ic_score, nc_score, sc_score, ci_raw, ci_adjusted, ci_display, ci_composite, velocity_3d, velocity_7d, velocity_class, al_proxy, al_ceiling, circadian_phase, isi_fusion_score, isi_language_sample, bifurcation_proximity, quantum_cognition_eligible, confidence, sessions_used, oura_connected, session_id, mode, tab_context, city, neighborhood. Also includes reorder fields: reorder_target_date, protocol_name, phone (used by SMS reorder flow).
 Schema file: `supabase/migrations/add_coherence_index.sql`.
-Writers: `server.js:1233` (CI scoring after every chat), `server.js:1590` (reorder-reminder upsert).
-Readers: `server.js:1619` (SELECT phone, protocol_name WHERE reorder_target_date = today).
+Writers: `server.js:1238` (CI scoring after every chat), `server.js:1791` (reorder-reminder upsert).
+Readers: `server.js:1820` (SELECT phone, protocol_name WHERE reorder_target_date = today).
 RLS: cannot determine. Only one migration file in the repo and it defines columns, not policies.
 
 ### user_arcs
@@ -145,26 +145,26 @@ RLS: cannot determine. The `marketplace_approved` + `dr_felicia_reviewed` boolea
 
 ### clicks
 Columns: partner, source_tab, product_or_service, session_id, city, timestamp.
-Writers: `server.js:1391`.
+Writers: `server.js:1396`.
 Readers: none found.
 RLS: cannot determine. Fire-and-forget analytics.
 
 ### pageviews
 Columns: path, session_id, timestamp.
-Writers: `server.js:1414`.
+Writers: `server.js:1419`.
 Readers: none found.
 RLS: cannot determine.
 
 ### sessions
 Columns: session_id, city, conversation_count, created_at, last_active.
-Writers: `server.js:1430`.
-Readers: `server.js:1424`.
+Writers: `server.js:1435`.
+Readers: `server.js:1429`.
 RLS: cannot determine.
 
 ### profiles
 Columns: id, city, neighborhood, ci_current, ci_velocity, wellness_goals, medications, conditions, last_active, streak_days, updated_at, bleu_score, cellular_health_score, affiliate_transactions, identity_protocol, cart_items. Also: `citizenship_status`, `citizen_tier`, `citizen_since`, `active_protocol`, `protocol_started_at`, `stripe_customer_id`, `last_protocol`, `last_purchase_date` (from Stripe webhook and reorder flow).
-Writers: `server.js:1600` (reorder upsert), `server.js:1759` (Stripe webhook grants citizenship), `index.html:7479`, `7482`, `7531`, `7623`, `12327`, `12363`, `12620`.
-Readers: `server.js:1572`, `index.html:6938`, `6968`, `7477`, `7522`, `7883`, `12271`, `12359`, `12371`.
+Writers: `server.js:1801` (reorder upsert), `server.js:1960` (Stripe webhook grants citizenship), `index.html:7479`, `7482`, `7531`, `7623`, `12327`, `12363`, `12620`.
+Readers: `server.js:1756`, `index.html:6938`, `6968`, `7477`, `7522`, `7883`, `12271`, `12359`, `12371`.
 RLS: cannot determine. The frontend writes to `profiles` via the anon key — so profile RLS policies must exist in Supabase, but they aren't in this repo's migrations folder.
 
 ### conversations
@@ -247,72 +247,72 @@ RLS: cannot determine.
 
 Every HTTP handler in `server.js`, in file order. 25 total — 19 API endpoints and 6 SEO/static routes.
 
-### GET /health  (server.js:1077)
+### GET /health  (server.js:1082)
 Health check. Returns `{status, hasKey, hasSupabase, engine, version, modes}`. No tables, no external APIs.
 
-### POST /api/chat  (server.js:1079)
+### POST /api/chat  (server.js:1084)
 Primary chat endpoint. Returns Server-Sent Events stream.
-- Tables: `conversation_history` (write user+assistant turns with embeddings, lines 1248/1252), `conversation_memory` (legacy dual-write, 1259/1260), `user_coherence` (CI scoring after each turn, 1233), `practitioners` (directory injection when message mentions local providers, 1153).
-- External: OpenAI chat completions (line 1193), OpenAI embeddings (line 562 via `embedText`), FDA, RxNorm, DailyMed, PubMed, USDA, ClinicalTrials, Open-Meteo (all via `enrichWithData` around lines 730–841).
+- Tables: `conversation_history` (write user+assistant turns with embeddings, lines 1253/1257), `conversation_memory` (legacy dual-write, 1264/1265), `user_coherence` (CI scoring after each turn, 1238), `practitioners` (directory injection when message mentions local providers, 1158).
+- External: OpenAI chat completions (line 1198), OpenAI embeddings (line 567 via `embedText`), FDA, RxNorm, DailyMed, PubMed, USDA, ClinicalTrials, Open-Meteo (all via `enrichWithData` around lines 735–846).
 - Helpers: `checkEmotionalIntent`, `pickModel`, `buildPrompt`, `detectOpening`, `extractCity`, `querySupabase`, `resolveIdentity`, `embedText`, `loadShortTermHistory`, `loadSemanticRecall`, `buildRecallBlock`, `storeConversationTurn`.
 - Body: `{message, mode?, session?, conversation_id?, user_id?, therapy_mode?, recovery_mode?, history?, passport_context?, user_context?, journey_context?}`.
 
-### POST /api/chat/stream  (server.js:1267)
-Streaming variant of `/api/chat`. Functionally similar, same memory wiring. **Not called by the current frontend** (every browser fetch hits `/api/chat`) — this endpoint exists for future clients or external integrations.
+### POST /api/chat/stream  (server.js:1272)
+Streaming variant of `/api/chat`. Functionally similar — but memory wiring is NOT identical: this endpoint writes only to `conversation_history` via `storeConversationTurn` (lines 1326/1330), never to the legacy `conversation_memory` dual-write. The asymmetry was not documented until the wire 3 audit surfaced it; see `docs/wire-3-conversation-memory-audit-20260423.md` for the full finding. **Not called by the current frontend** (every browser fetch hits `/api/chat`) — this endpoint exists for future clients or external integrations.
 
-### GET /api/safety-check  (server.js:1338)
+### GET /api/safety-check  (server.js:1343)
 Drug interaction and CYP450 analyzer. Calls GPT-4o with the substance list, returns structured JSON `{risk_level, interactions, summary, disclaimer}`. No tables.
 
-### GET /api/practitioners  (server.js:1354)
+### GET /api/practitioners  (server.js:1359)
 Directory lookup. Reads `practitioners` table, filtered by zip/city/specialty. Returns `{count, practitioners:[]}`.
 
-### GET /api/track  (server.js:1384)
+### GET /api/track  (server.js:1389)
 Affiliate click logger + 302 redirect. Writes `clicks` table, then redirects to partner URL (BetterHelp, Amazon, Thorne, etc.).
 
-### GET /api/ping  (server.js:1411)
+### GET /api/ping  (server.js:1416)
 Analytics ping. Writes `pageviews` table. Returns `{ok:true}`.
 
-### POST /api/session  (server.js:1418)
+### POST /api/session  (server.js:1423)
 Session upsert. Reads/writes `sessions` table.
 
-### GET /api/debug/enrich  (server.js:1438)
+### GET /api/debug/enrich  (server.js:1617)
 Debug/monitoring endpoint. Runs `detectIntent` + `enrichWithData` on a test message and returns timing + preview. Used to verify external data freshness.
 
-### GET /api/youtube  (server.js:1453)
+### GET /api/youtube  (server.js:1632)
 Wellness video search. Calls YouTube Data API. Falls back to hardcoded video IDs if the key is missing.
 
-### GET /api/spotify  (server.js:1482)
+### GET /api/spotify  (server.js:1661)
 Wellness playlist search. Calls Spotify Search API with Client-Credentials OAuth. Falls back to hardcoded playlist IDs.
 
-### GET /api/events  (server.js:1510)
+### GET /api/events  (server.js:1689)
 Wellness events. Calls Eventbrite. Falls back to hardcoded NOLA events.
 
-### GET /api/meetup-events  (server.js:1530)
+### GET /api/meetup-events  (server.js:1709)
 Community events via Meetup GraphQL. Falls back to static events.
 
-### GET /api/yelp  (server.js:1551)
+### GET /api/yelp  (server.js:1730)
 Local business search. Calls Yelp Fusion.
 
-### POST /api/personalize  (server.js:1566)
+### POST /api/personalize  (server.js:1745)
 Loads user profile data (city, conditions, goals, medications) from `profiles`. Returns defaults if not found. **Called by the Passport tab on mount.**
 
-### POST /api/reorder-reminder  (server.js:1583)
-Stores a supplement reorder reminder. Writes `user_coherence` (line 1590) and upserts `profiles` via direct PATCH (line 1600).
+### POST /api/reorder-reminder  (server.js:1784)
+Stores a supplement reorder reminder. Writes `user_coherence` (line 1791) and upserts `profiles` via direct PATCH (line 1801).
 
-### POST /api/send-reorder-reminders  (server.js:1613)
+### POST /api/send-reorder-reminders  (server.js:1814)
 Batch SMS sender. Reads `user_coherence` WHERE `reorder_target_date = today AND phone IS NOT NULL`, calls `sendSMS` on each. Returns `{sent, errors?}`.
 **Flag:** nothing in the repo triggers this endpoint on a schedule. It must be hit by an external cron (Render scheduled job, GitHub Actions, or manual). No scheduler found in-repo.
 
-### POST /twilio-reply  (server.js:1637)
+### POST /twilio-reply  (server.js:1838)
 Inbound SMS webhook. Parses Twilio's form-encoded reply, responds with TwiML.
 
-### POST /stripe-webhook  (server.js:1656)
+### POST /stripe-webhook  (server.js:1857)
 Stripe payment webhook. Verifies signature, maps Stripe price ID to protocol name, writes `profiles` with `citizenship_status`, `active_protocol`, `protocol_started_at`, `stripe_customer_id`.
 
-### GET /api/stats  (server.js:1658)
+### GET /api/stats  (server.js:1859)
 Metadata about the server (version, mode counts). No tables.
 
-### SEO/static routes (server.js:1664 handles them all via `seoEngine.handleRoute`)
+### SEO/static routes (server.js:1868 handles them all via `seoEngine.handleRoute`)
 - `GET /sitemap.xml` — SEO sitemap.
 - `GET /robots.txt` — SEO robots.
 - `GET /<city-slug>` — one landing page per city (86 cities in SEO_CITY_SLUGS).
@@ -320,7 +320,7 @@ Metadata about the server (version, mode counts). No tables.
 - `GET /cities` — directory of city pages.
 - `GET /practitioner/<npi>` — per-practitioner SEO profile.
 
-### GET / (root)  (server.js:1678) and static file fallback (server.js:1681)
+### GET / (root)  (server.js:1880) and static file fallback (server.js:1884)
 Root serves `index.html`. Fallback serves static assets (CSS/JS/PNG/JPG/SVG/ICO/JSON) from disk.
 
 ---
@@ -329,94 +329,94 @@ Root serves `index.html`. Fallback serves static assets (CSS/JS/PNG/JPG/SVG/ICO/
 
 Every top-level function, in declaration order.
 
-### sendSMS  (server.js:24)
+### sendSMS  (server.js:29)
 Posts a Twilio SMS. Reads `TWILIO_SID`, `TWILIO_AUTH`, `TWILIO_FROM`. Throws if creds missing.
 
-### querySupabase  (server.js:497)
+### querySupabase  (server.js:502)
 Generic REST wrapper for Supabase tables. Handles GET with query string + POST with JSON body. Returns parsed JSON on GET, `true` on POST (fire-and-forget).
 
-### callSupabaseRPC  (server.js:534)
+### callSupabaseRPC  (server.js:539)
 Calls a Supabase stored function (`/rest/v1/rpc/<name>`) with service-role auth. Added tonight for `match_conversation_history`.
 
-### embedText  (server.js:559)
+### embedText  (server.js:564)
 text-embedding-3-small → 1536-dim vector via OpenAI embeddings API. Returns null on failure. Added tonight.
 
-### resolveIdentity  (server.js:582)
+### resolveIdentity  (server.js:587)
 Returns `{userId, convId, source}`. Source is `'supabase_auth'` when `p.user_id` is present, else `'anonymous_session'`. For anonymous users, `userId` falls back to `conversation_id`. Added tonight.
 
-### storeConversationTurn  (server.js:591)
+### storeConversationTurn  (server.js:596)
 Fire-and-forget INSERT to `conversation_history` with `{user_id, session_id, role, content, embedding, created_at}`. Logs the identity source to stdout. Added tonight.
 
-### loadShortTermHistory  (server.js:610)
+### loadShortTermHistory  (server.js:615)
 SELECT role, content, created_at from `conversation_history` WHERE session_id = convId AND deleted_at IS NULL, ordered oldest→newest, capped at 24 rows. Added tonight.
 
-### loadSemanticRecall  (server.js:624)
+### loadSemanticRecall  (server.js:629)
 Calls RPC `match_conversation_history` with `{p_query_embedding, p_user_id, p_exclude_session, p_min_similarity:0.75, p_match_count:5}`. Short-circuits for anonymous sessions. Added tonight.
 
-### buildRecallBlock  (server.js:639)
+### buildRecallBlock  (server.js:644)
 Formats recall rows into a text block, capped at 6000 chars (`RECALL_CHAR_BUDGET`). Top-ranked matches first; stops at budget. Added tonight.
 
-### checkEmotionalIntent  (server.js:227)
+### checkEmotionalIntent  (server.js:232)
 Scans a message against `EMOTIONAL_INTENT_RE` (therapy, crisis, panic, etc.). Adds the session ID to an in-memory Set; subsequent chat turns in that session will get `suppressCommerce:true` prepended to the SSE stream so the frontend hides upsell cards.
 
-### pickModel  (server.js:706)
+### pickModel  (server.js:711)
 Routes between `gpt-4o-mini` (light queries) and `gpt-4o` (depth, crisis, emotion, finance). No clinical pattern in this router invokes Claude despite CLAUDE.md's "5% → Claude Opus" claim — see section 6 item 9.
 
-### extractCity  (server.js:650)
+### extractCity  (server.js:655)
 Parses free-text message against a hardcoded city list and specialty lookup, returns `{city, spec}`. Used by practitioner/location lookups.
 
-### getPractitioners  (server.js:665)
+### getPractitioners  (server.js:670)
 Returns a formatted string block of verified NPI practitioners near the user's city + specialty. Broadens the specialty if fewer than 4 hits (chiropractor → physical therapy, etc.).
 
-### getLocations  (server.js:692)
+### getLocations  (server.js:697)
 Returns a formatted block of locations (pharmacies, studios, dispensaries) for the city.
 
-### fetchJSON  (server.js:719)
+### fetchJSON  (server.js:724)
 Generic GET with a 4-second timeout. Used by every external (non-OpenAI, non-Supabase) API call.
 
-### fdaDrugLookup  (server.js:730)
+### fdaDrugLookup  (server.js:735)
 OpenFDA — drug label, adverse events, recalls for a named drug.
 
-### rxNormInteraction  (server.js:757)
+### rxNormInteraction  (server.js:762)
 RxNav — normalize two drugs, check pairwise interaction severity.
 
-### dailyMedLookup  (server.js:779)
+### dailyMedLookup  (server.js:784)
 NLM DailyMed drug label fetch.
 
-### pubmedSearch  (server.js:788)
+### pubmedSearch  (server.js:793)
 NIH eUtils — esearch + esummary for research articles.
 
-### nutritionLookup  (server.js:804)
+### nutritionLookup  (server.js:809)
 USDA FoodData Central — macro/micro nutrients for a food name.
 
-### clinicalTrials  (server.js:814)
+### clinicalTrials  (server.js:819)
 ClinicalTrials.gov API — active trials for a condition.
 
-### getWeather  (server.js:828)
+### getWeather  (server.js:833)
 Open-Meteo — current temperature, humidity, UV for a city. Hardcoded city→lat/lon map.
 
-### detectIntent  (server.js:844)
+### detectIntent  (server.js:849)
 Parses a message and returns `{drugs, supplements, conditions, foods, needsResearch, needsWeather}` — which external APIs to call.
 
-### enrichWithData  (server.js:874)
+### enrichWithData  (server.js:879)
 Master orchestrator. Calls `detectIntent`, then fires FDA/RxNorm/DailyMed/PubMed/USDA/ClinicalTrials/Open-Meteo in parallel. Returns a concatenated string capped at 12,000 chars for prompt injection.
 
-### getClinicalPractitioners  (server.js:937)
+### getClinicalPractitioners  (server.js:942)
 Crisis/therapy/search-triggered practitioner block injected into the system prompt.
 
-### buildPrompt  (server.js:980)
+### buildPrompt  (server.js:985)
 Assembles the final system prompt: mode-specific base + therapy/recovery sub-mode + clinical practitioner block + data enrichment + location block. Capped at 12,000 chars.
 
-### callAI  (server.js:998)
+### callAI  (server.js:1003)
 Non-streaming wrapper around OpenAI chat completions. Used by older code paths; most endpoints now stream.
 
-### warmCache  (server.js:1049)
+### warmCache  (server.js:1054)
 On boot, calls `seoEngine.handleRoute` for every city slug (86 cities) with a 1.5-second delay between calls. Improves first-hit latency on SEO pages.
 
-### json, cors  (server.js:1068-1069)
+### json, cors  (server.js:1073-1074)
 Tiny utilities for writing JSON responses and CORS headers.
 
-### handleStripeWebhook  (server.js:1703)
+### handleStripeWebhook  (server.js:1904)
 Verifies Stripe signature, parses the event, maps price ID to protocol name, writes `profiles`.
 
 **Total: 38 top-level helpers.**
@@ -526,8 +526,8 @@ _knownModes = ['therapy','recovery','finance','cannaiq','directory','vessel','pr
 26 external services referenced in code. Grouped by status.
 
 ### 6.1 Stripe  — LIVE
-Env: `STRIPE_SECRET_KEY` (server.js:1691), `STRIPE_WEBHOOK_SECRET` (server.js:1692).
-Files: `supabase/functions/stripe-checkout/index.ts` (creates checkout sessions), `server.js:1703-1780` (webhook).
+Env: `STRIPE_SECRET_KEY` (server.js:1892), `STRIPE_WEBHOOK_SECRET` (server.js:1893).
+Files: `supabase/functions/stripe-checkout/index.ts` (creates checkout sessions), `server.js:1904-1979` (webhook).
 Webhook verifies signature, maps price ID to protocol, writes `profiles`.
 
 ### 6.2 Fullscript  — LIVE (link-out, no API)
@@ -541,8 +541,8 @@ Files: `engine.py:631-645` (curated supplement searches with affiliate-tagged UR
 Scheduled run via BEAST workflow.
 
 ### 6.4 Twilio  — LIVE (endpoint + webhook; no in-repo scheduler)
-Env: `TWILIO_ACCOUNT_SID` (server.js:16), `TWILIO_AUTH_TOKEN` (server.js:17), `TWILIO_PHONE_NUMBER` (server.js:18).
-Files: `server.js:24-39` (sendSMS), `server.js:1613-1634` (batch reminder sender), `server.js:1637-1654` (inbound reply webhook).
+Env: `TWILIO_ACCOUNT_SID` (server.js:21), `TWILIO_AUTH_TOKEN` (server.js:22), `TWILIO_PHONE_NUMBER` (server.js:23).
+Files: `server.js:29-44` (sendSMS), `server.js:1814-1836` (batch reminder sender), `server.js:1838-1855` (inbound reply webhook).
 **Flag:** `/api/send-reorder-reminders` exists but nothing in the repo triggers it on a schedule. Must be externally cronned; no evidence in-repo that this is happening.
 
 ### 6.5 OpenAI  — LIVE
@@ -570,22 +570,22 @@ Files: `engine.py:522-556` (YouTube transcript → products + protocols extracti
 **Flag vs. CLAUDE.md claim:** CLAUDE.md states "5% → Claude Opus (drug interactions, crisis, research)." The audit did not find any runtime call to Claude in `server.js` — the safety-check endpoint uses `gpt-4o`, not Claude. Claude runs only in the pipeline.
 
 ### 6.10 YouTube Data API  — LIVE (runtime) + PIPELINE
-Env: `YOUTUBE_API_KEY` (server.js:1455, engine.py:37).
-Files: `server.js:1452-1477` (`/api/youtube` with fallback), `engine.py:478-569`.
+Env: `YOUTUBE_API_KEY` (server.js:1634, engine.py:37).
+Files: `server.js:1632-1658` (`/api/youtube` with fallback), `engine.py:478-569`.
 
 ### 6.11 Spotify  — LIVE (with fallback)
-Env: `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` (server.js:1484).
+Env: `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` (server.js:1663).
 Client-credentials OAuth. Falls back to hardcoded playlist IDs if creds missing.
 
 ### 6.12 Eventbrite  — LIVE (with fallback)
-Env: `EVENTBRITE_API_KEY` (server.js:1512).
+Env: `EVENTBRITE_API_KEY` (server.js:1691).
 Static NOLA events if key missing.
 
 ### 6.13 Meetup  — LIVE (with fallback)
-Env: `MEETUP_API_KEY` (server.js:1532). GraphQL.
+Env: `MEETUP_API_KEY` (server.js:1711). GraphQL.
 
 ### 6.14 Yelp  — LIVE (runtime only)
-Env: `YELP_API_KEY` (server.js:1554, also referenced in engine.py:40 but no pipeline caller).
+Env: `YELP_API_KEY` (server.js:1733, also referenced in engine.py:40 but no pipeline caller).
 
 ### 6.15 Open-Meteo  — LIVE (free, no auth)
 Called from `index.html:2268` (dashboard) and referenced in `server.js`.
@@ -594,22 +594,22 @@ Called from `index.html:2268` (dashboard) and referenced in `server.js`.
 Called from `index.html:2265`, `4751`, `5781`.
 
 ### 6.17 OpenFDA  — LIVE (free)
-`server.js:730-755`.
+`server.js:735-760`.
 
 ### 6.18 RxNav/RxNorm  — LIVE (free)
-`server.js:757-777`.
+`server.js:762-782`.
 
 ### 6.19 DailyMed  — LIVE (free)
-`server.js:779`.
+`server.js:784`.
 
 ### 6.20 PubMed (NCBI eUtils)  — LIVE (free)
-`server.js:788`.
+`server.js:793`.
 
 ### 6.21 USDA FDC  — LIVE (uses `DEMO_KEY`)
-`server.js:804`.
+`server.js:809`.
 
 ### 6.22 ClinicalTrials.gov  — LIVE (free)
-`server.js:814`.
+`server.js:819`.
 
 ### 6.23 SAMHSA Treatment Locator  — LIVE (free, client-side)
 `index.html:5787-5820`.
@@ -643,7 +643,7 @@ Pioneer/citizenship is a tier concept: Explorer (free), Pioneer Citizen (foundin
 ### Writes (enforcement points)
 - `index.html:12257` — on free Pioneer claim, `startStripeCheckout()` sets `citizenship_status: 'citizen'`, `citizen_tier: 'pioneer_founding'`, `citizen_since: <now>`.
 - `index.html:12351` — records affiliate transaction `recordAffiliateTransaction('pioneer', 'citizen_pioneer_free', 0)`.
-- `server.js:1759` (inside `handleStripeWebhook`) — on successful Stripe payment, patches `profiles` with the active protocol, customer ID, protocol start time. Does not directly set `citizenship_status` — that happens on the frontend.
+- `server.js:1960` (inside `handleStripeWebhook`) — on successful Stripe payment, patches `profiles` with the active protocol, customer ID, protocol start time. Does not directly set `citizenship_status` — that happens on the frontend.
 
 ### Decorative / marketing references
 - `index.html:239, 957, 968, 984` — Open Graph + schema.org descriptions mention "Free forever for Pioneer Citizens."
@@ -735,11 +735,11 @@ In plain terms: the Passport is a **conversation-history viewer with a very hand
 - Analytics: Plausible event `ISI_complete` (line 1195).
 - Schema: `user_coherence` table has `isi_fusion_score`, `isi_language_sample` columns defined in `supabase/migrations/add_coherence_index.sql:21-22` — **nothing writes them**. ISI readings never reach the database.
 
-**Gap:** the database columns exist but nothing writes them. The more sophisticated coherence metrics in that schema (`ci_composite`, `velocity_class`, `bifurcation_proximity`, `circadian_phase`) are **defined but never populated**. The CI scoring that IS happening (`server.js:1084-1089`) is a simple keyword heuristic on each message, not what the schema was designed for.
+**Gap:** the database columns exist but nothing writes them. The more sophisticated coherence metrics in that schema (`ci_composite`, `velocity_class`, `bifurcation_proximity`, `circadian_phase`) are **defined but never populated**. The CI scoring that IS happening (`server.js:1230-1240`, inside the `/api/chat` post-response fire-and-forget block) is a simple keyword heuristic on each message, not what the schema was designed for.
 
 ### 9.2 IRI (Impulse Regulation Index) — **PROMPT-ONLY, no code enforcement**
 
-- Defined as prompt instructions in `server.js:176-194`: trigger keywords (weight loss, GLP-1, semaglutide, binge eating, etc.), 4-question behavioral intake, 3-path routing (Lifestyle / Regulation / Pharmacological Consideration).
+- Defined as prompt instructions in `server.js:181-196`: trigger keywords (weight loss, GLP-1, semaglutide, binge eating, etc.), 4-question behavioral intake, 3-path routing (Lifestyle / Regulation / Pharmacological Consideration).
 - Language rules: "metabolic load" not "obese/overweight"; never recommend GLP-1 without intake; no shame framing.
 - GLP-1 product stack in edge function: `supabase/functions/alvai/index.ts:1068, 1121` (magnesium glycinate, B12, berberine, protein calc; Hims Weight / Ro Body / Found telehealth links).
 - Routing: `supabase/functions/alvai/index.ts:1291` pattern match on weight/GLP keywords adds "metabolic" to paths.
@@ -748,8 +748,8 @@ In plain terms: the Passport is a **conversation-history viewer with a very hand
 
 ### 9.3 Care Twin — **NEWLY LIVE (commit 999330f, shipped tonight)**
 
-- Server memory helpers: `server.js:531-648` (callSupabaseRPC, embedText, resolveIdentity, storeConversationTurn, loadShortTermHistory, loadSemanticRecall, buildRecallBlock).
-- `/api/chat` and `/api/chat/stream` now load short-term history and semantic recall before building the prompt (server.js:1164-1175, 1277-1290) and write turns to `conversation_history` after response completes (1248-1254, 1321-1332).
+- Server memory helpers: `server.js:536-649` (callSupabaseRPC, embedText, resolveIdentity, storeConversationTurn, loadShortTermHistory, loadSemanticRecall, buildRecallBlock).
+- `/api/chat` and `/api/chat/stream` now load short-term history and semantic recall before building the prompt (server.js:1169-1180, 1282-1295) and write turns to `conversation_history` after response completes (1253-1259, 1326-1337).
 - Client: `getConversationId()` in sessionStorage (`index.html:6908-6916`), sent as `conversation_id` on both the main `ask()` fetch (line 9791) and the Vessel quick-ask (line 3185).
 - Table + RPC: `conversation_history` (user_id text, session_id text, role, content, embedding vector(1536), timestamps), RPC `match_conversation_history` locked to service_role with SECURITY DEFINER.
 
@@ -761,7 +761,7 @@ In plain terms: the Passport is a **conversation-history viewer with a very hand
 
 **Known gaps:**
 - Anonymous → authenticated memory merge: backlogged, not implemented.
-- Dual-write to legacy `conversation_memory` still happening (`server.js:1258` TODO).
+- Dual-write to legacy `conversation_memory` still happening (`server.js:1263` TODO).
 - No reader surface yet — recall is injected into the model prompt but never displayed to the user (no "remembering…" UI).
 - Recall quality hasn't been validated against real traffic — we will see after Render redeploys.
 
@@ -798,18 +798,19 @@ Every `process.env.X` and `os.getenv(X)` reference found in audited files.
 | OPENAI_API_KEY | server.js:12 | OpenAI chat + embeddings |
 | SUPABASE_URL | server.js:13 | Supabase project URL |
 | SUPABASE_SERVICE_KEY | server.js:14 | Service-role DB access |
-| TWILIO_ACCOUNT_SID | server.js:16 | Twilio SMS |
-| TWILIO_AUTH_TOKEN | server.js:17 | Twilio SMS |
-| TWILIO_PHONE_NUMBER | server.js:18 | Twilio SMS sender |
-| YOUTUBE_API_KEY | server.js:1455 | `/api/youtube` runtime |
-| SPOTIFY_CLIENT_ID | server.js:1484 | `/api/spotify` |
-| SPOTIFY_CLIENT_SECRET | server.js:1484 | `/api/spotify` |
-| EVENTBRITE_API_KEY | server.js:1512 | `/api/events` |
-| MEETUP_API_KEY | server.js:1532 | `/api/meetup-events` |
-| YELP_API_KEY | server.js:1554 | `/api/yelp` |
-| STRIPE_SECRET_KEY | server.js:1691 | Stripe webhook signing |
-| STRIPE_WEBHOOK_SECRET | server.js:1692 | Stripe webhook verification |
-| PORT | server.js:1780 | Server listen port (default 8080) |
+| SUPABASE_ANON_KEY | server.js:19 | Auth-verification gateway apikey (least-privilege) |
+| TWILIO_ACCOUNT_SID | server.js:21 | Twilio SMS |
+| TWILIO_AUTH_TOKEN | server.js:22 | Twilio SMS |
+| TWILIO_PHONE_NUMBER | server.js:23 | Twilio SMS sender |
+| YOUTUBE_API_KEY | server.js:1634 | `/api/youtube` runtime |
+| SPOTIFY_CLIENT_ID | server.js:1663 | `/api/spotify` |
+| SPOTIFY_CLIENT_SECRET | server.js:1663 | `/api/spotify` |
+| EVENTBRITE_API_KEY | server.js:1691 | `/api/events` |
+| MEETUP_API_KEY | server.js:1711 | `/api/meetup-events` |
+| YELP_API_KEY | server.js:1733 | `/api/yelp` |
+| STRIPE_SECRET_KEY | server.js:1892 | Stripe webhook signing |
+| STRIPE_WEBHOOK_SECRET | server.js:1893 | Stripe webhook verification |
+| PORT | server.js:1981 | Server listen port (default 8080) |
 
 ### Data pipeline (engine.py)
 | Variable | File:line | Purpose |
@@ -838,7 +839,7 @@ Searched every `.js`, `.ts`, `.py`, `.html`, `.sql` file in the repo for TODO/FI
 
 | File:line | Marker | Text |
 |---|---|---|
-| server.js:1258 | TODO | `// TODO: remove after conversation_memory migration — audit readers first.` (added tonight; gates removal of the legacy dual-write) |
+| server.js:1263 | TODO | `// TODO: remove after conversation_memory migration — audit readers first.` (reader audit completed April 23, 2026 — see `docs/wire-3-conversation-memory-audit-20260423.md`; dual-write removal now gated only by Supabase dashboard check) |
 | bleu-total-repair.py:256 | NOTE (SQL comment) | `-- Format phones to (XXX) XXX-XXXX` (inside a one-shot migration script; not runtime) |
 | engine.py:464 | section marker | `# ── BIOHACKING + QUANTIFIED SELF (dashboard, vessel) ──` (code organization, not a todo) |
 
