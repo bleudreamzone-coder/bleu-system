@@ -516,6 +516,21 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .nav-tab[data-tab="ecsiq"].active{color:rgba(34,197,94,.95);text-shadow:0 0 16px rgba(34,197,94,.35);border-color:rgba(34,197,94,.18);background:rgba(34,197,94,.07)}
 .nav-tab[data-tab="sleep"].active{color:rgba(126,184,247,.95);text-shadow:0 0 14px rgba(126,184,247,.3);border-color:rgba(126,184,247,.15);background:rgba(126,184,247,.06)}
 .nav-tab[data-tab="spirit"].active{color:rgba(232,213,176,.95);text-shadow:0 0 16px rgba(232,213,176,.25);border-color:rgba(232,213,176,.12);background:rgba(232,213,176,.05)}
+
+/* ── ACCESSIBILITY — respect prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .card, .msg, .panel, .stat-box, .hero-title, .hero-sub,
+  .nav-tab, .quick-row, .mode-bar, .chat-box {
+    animation: none !important;
+    transition: none !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
