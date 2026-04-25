@@ -5289,6 +5289,7 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
     <button onclick="clearAllPassportData()" style="background:transparent;border:1px solid rgba(255,59,48,0.3);color:rgba(255,59,48,0.7);border-radius:10px;padding:10px;font-size:12px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(255,59,48,0.6)'" onmouseout="this.style.borderColor='rgba(255,59,48,0.3)'">Clear All Passport Data</button>
     <button onclick="confirmDeleteAllHistory()" style="background:transparent;border:1px solid rgba(255,59,48,0.3);color:rgba(255,59,48,0.7);border-radius:10px;padding:10px;font-size:12px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(255,59,48,0.6)'" onmouseout="this.style.borderColor='rgba(255,59,48,0.3)'">Delete All Conversation History</button>
     <button onclick="exportFullPassport()" style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:#c9a84c;border-radius:10px;padding:10px;font-size:12px;cursor:pointer">Export My Wellness Report</button>
+    <button onclick="doSignOut()" style="background:transparent;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);border-radius:10px;padding:10px;font-size:12px;cursor:pointer;transition:.2s" onmouseover="this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='rgba(255,255,255,0.75)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.5)'">Sign Out</button>
   </div>
 
   <div style="text-align:center;padding:10px 0 20px;font-size:10px;color:rgba(255,255,255,0.15);letter-spacing:2px">BLEU · THE LONGEVITY OPERATING SYSTEM · PATENT PENDING</div>
@@ -7019,7 +7020,7 @@ async function doGoogleAuth(){
     sErr('Sign-in failed. Please try email/password instead.');
   }
 }
-async function doSignOut(){if(sbClient)await sbClient.auth.signOut();currentUser=null;currentConvoIds={};showAuth()}
+async function doSignOut(){if(sbClient)await sbClient.auth.signOut();currentUser=null;currentConvoIds={};sMsg("Signed out. Come back when you're ready.");showAuth()}
 function sErr(m){const e=document.getElementById('auth-error');e.textContent=m;e.style.display='block'}
 function hErr(){document.getElementById('auth-error').style.display='none'}
 function siErr(m){const e=document.getElementById('si-error');e.textContent=m;e.style.display='block'}
