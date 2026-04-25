@@ -4223,7 +4223,7 @@ function mkCard(v){
   d.className="vc";d.dataset.cat=v.cat;
   var thumbDiv=document.createElement("div");thumbDiv.className="vt";
   var img=document.createElement("img");
-  img.src="https://img.youtube.com/vi/"+v.id+"/mqdefault.jpg";
+  img.src="https://img.youtube.com/vi/"+v.id+"/hqdefault.jpg";
   img.alt=v.t;img.loading="lazy";
   var ov=document.createElement("div");ov.className="vt-ov";
   var btn=document.createElement("div");btn.className="vbtn";btn.textContent="";
@@ -4477,7 +4477,7 @@ function renderVideos() {
   var grid = document.getElementById('video-grid');
   if(!grid) return;
   grid.innerHTML = slice.map(function(v){
-    var thumb = 'https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg';
+    var thumb = 'https://img.youtube.com/vi/'+v.id+'/hqdefault.jpg';
     var views = v.views ? ' · '+v.views+' views' : '';
     return '<div class="vcard" onclick="playVideo(\''+v.id+'\',\''+v.title.replace(/'/g,'').replace(/"/g,'&quot;')+'\',\''+v.channel+'\')">'
       +'<img class="vcard-thumb" src="'+thumb+'" loading="lazy" alt="'+v.title.replace(/"/g,'&quot;')+'">'
@@ -4564,7 +4564,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if(grid.innerHTML.trim().length > 50) return;
     grid.innerHTML = LEARN_DEFAULTS.map(function(v){
       return '<div style="background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;cursor:pointer" onclick="document.getElementById(\'video-iframe\').src=\'https://www.youtube.com/embed/'+v.id+'?autoplay=1\'">'
-        +'<img src="https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block">'
+        +'<img src="https://img.youtube.com/vi/'+v.id+'/hqdefault.jpg" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block">'
         +'<div style="padding:10px 12px"><div style="font-size:12px;color:var(--bleu-ink);font-weight:600;margin-bottom:3px">'+v.title+'</div>'
         +'<div style="font-size:10px;color:#5a6f87;font-family:monospace">'+v.channel+'</div></div>'
         +'</div>';
