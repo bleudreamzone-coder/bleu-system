@@ -548,6 +548,15 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   0%, 100% { opacity: 0.4; transform: scale(1); }
   50%      { opacity: 1.0; transform: scale(1.1); }
 }
+
+/* ── PHASE 3.3 — BHI RING BREATH (additive; original .pp-ring rule at line 4978 unchanged) ── */
+@keyframes bhi-breath {
+  0%, 100% { transform: scale(1.0); }
+  50%      { transform: scale(1.03); }
+}
+.pp-ring {
+  animation: bhi-breath 5000ms ease-in-out infinite;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
