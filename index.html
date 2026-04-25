@@ -255,7 +255,8 @@ window.vsAddToStack=function(pid,name,price,asin){if(typeof PRODUCT_MASTER!=='un
 <title>BLEU — Trusted Intelligence for Health, Place &amp; Opportunity</title>
 <meta name="description" content="BLEU validates every practitioner, product, and study against federal databases. Therapy. Recovery. Finance. ECS Intelligence. The most trusted wellness system ever built.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#080E1A;--surface:#0C1829;--card:#111F36;--card2:#162846;--border:rgba(45,138,158,.15);--border2:rgba(201,168,76,.12);
@@ -263,6 +264,31 @@ window.vsAddToStack=function(pid,name,price,asin){if(typeof PRODUCT_MASTER!=='un
   --teal:#2D8A9E;--teal-glow:rgba(45,138,158,.15);--gold:#C9A84C;--gold-glow:rgba(201,168,76,.12);
   --sage:#7A9E7E;--ember:#C75B39;--rose:#9E5A6D;--lavender:#7E6A9E;--sky:#5A8E9E;
   --white:#FFFFFF;--red:#DC2626;--green:#16A34A;
+
+  /* ── BLEU.LIVE METAMORPHOSIS — Phase 1 Locked Palette ── */
+  --bleu-cream-base:#F8F5EE;
+  --bleu-cream-elevated:#FDFBF6;
+  --bleu-ink:#1A1A1C;
+  --bleu-muted:#6B6B6E;
+  --bleu-purple:#4B1E82;
+  --bleu-gold:#C9A227;
+  --bleu-terracotta:#C87E5F;
+  --bleu-moss:#7A8471;
+  --bleu-dusk:#8B6F9E;
+  --bleu-border:#DDD6C4;
+
+  /* ── Legacy aliases — re-point existing variable names to the locked palette ── */
+  --gold:var(--bleu-gold);
+  --text:var(--bleu-ink);
+  --dim:var(--bleu-muted);
+  --muted:var(--bleu-muted);
+  --border:var(--bleu-border);
+  --surface:var(--bleu-cream-elevated);
+  --card:var(--bleu-cream-elevated);
+  --card2:var(--bleu-cream-elevated);
+  --white:var(--bleu-cream-elevated);
+  --teal:var(--bleu-purple);
+  --sage:var(--bleu-moss);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
