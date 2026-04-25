@@ -4563,7 +4563,7 @@ document.addEventListener('DOMContentLoaded', function(){
     // Only load defaults if grid is empty
     if(grid.innerHTML.trim().length > 50) return;
     grid.innerHTML = LEARN_DEFAULTS.map(function(v){
-      return '<div style="background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;cursor:pointer" onclick="document.getElementById('video-iframe').src='https://www.youtube.com/embed/'+v.id+'?autoplay=1'">'
+      return '<div style="background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;cursor:pointer" onclick="document.getElementById(\'video-iframe\').src=\'https://www.youtube.com/embed/'+v.id+'?autoplay=1\'">'
         +'<img src="https://img.youtube.com/vi/'+v.id+'/mqdefault.jpg" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block">'
         +'<div style="padding:10px 12px"><div style="font-size:12px;color:var(--bleu-ink);font-weight:600;margin-bottom:3px">'+v.title+'</div>'
         +'<div style="font-size:10px;color:#5a6f87;font-family:monospace">'+v.channel+'</div></div>'
