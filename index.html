@@ -959,6 +959,18 @@ button[type="submit"],
   border-color: rgba(45,138,158,.35) !important;
   box-shadow: 0 8px 24px rgba(26,26,28,0.06);
 }
+
+/* PATTERN 16: Empty States — responsive + hover */
+@media (max-width: 640px) {
+  .bleu-empty-state { margin: 56px auto !important; }
+  .bleu-empty-state > div:first-child { font-size: 22px !important; }
+  .bleu-empty-state > div:nth-child(2) { font-size: 15px !important; }
+}
+.bleu-empty-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 168, 76, 0.25);
+}
+.bleu-empty-state.is-hidden { display: none !important; }
 </style>
 
 <script type="application/ld+json">
@@ -5016,6 +5028,12 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
 </div>
 
 <div class="panel" id="p-passport">
+<!-- ═══════════ PATTERN 16: PASSPORT EMPTY STATE ═══════════ -->
+<div class="bleu-empty-state bleu-empty-passport" style="max-width:560px;margin:80px auto;padding:0 24px;text-align:center">
+  <div style="font-family:Fraunces,'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:28px;line-height:1.3;letter-spacing:-0.01em;color:#1A1A1C;margin-bottom:16px">Your passport is waiting.</div>
+  <div style="font-family:Inter,'DM Sans',system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.6;color:rgba(26,26,28,0.6);max-width:480px;margin:0 auto 32px">Once you check in, score, or save anything, it lives here. A record of your becoming. Nothing is saved without your knowing.</div>
+  <button class="bleu-empty-cta" onclick="ask('alvai','I want to start my passport — guide me through what matters most right now.')" style="font-family:Inter,'DM Sans',system-ui,sans-serif;font-weight:500;font-size:14px;letter-spacing:0.02em;padding:14px 28px;background:#C9A84C;color:#1A1A1C;border:none;border-radius:999px;cursor:pointer;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s cubic-bezier(.16,1,.3,1)">Speak to Alvai →</button>
+</div>
 <style>
 .pp-ring{position:relative;width:120px;height:120px;margin:0 auto 12px}
 .pp-ring svg{transform:rotate(-90deg)}
@@ -5361,6 +5379,12 @@ if(stored){var inp=document.getElementById('comm-zip');if(inp)inp.value=stored;}
 </div>
 <!-- ═══════════════════════ THERAPY ═══════════════════════ -->
 <div class="panel" id="p-therapy">
+<!-- ═══════════ PATTERN 16: THERAPY EMPTY STATE ═══════════ -->
+<div class="bleu-empty-state bleu-empty-therapy" style="max-width:560px;margin:80px auto;padding:0 24px;text-align:center">
+  <div style="font-family:Fraunces,'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:28px;line-height:1.3;letter-spacing:-0.01em;color:#1A1A1C;margin-bottom:16px">No sessions yet.</div>
+  <div style="font-family:Inter,'DM Sans',system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.6;color:rgba(26,26,28,0.6);max-width:480px;margin:0 auto 32px">When you talk with Alvai, the conversation is yours to keep — or to delete. Nothing is saved without your knowing.</div>
+  <button class="bleu-empty-cta" onclick="ask('alvai','I want to begin a therapy session — I am here to talk about what is on my mind.')" style="font-family:Inter,'DM Sans',system-ui,sans-serif;font-weight:500;font-size:14px;letter-spacing:0.02em;padding:14px 28px;background:#C9A84C;color:#1A1A1C;border:none;border-radius:999px;cursor:pointer;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s cubic-bezier(.16,1,.3,1)">Begin a session →</button>
+</div>
   <div class="section-label">Evidence-based therapeutic intelligence.</div>
   <h1 class="hero-title"> <span class="teal">Therapy</span> -- <span class="accent">12 Modes</span></h1>
 <div id="tw-therapy-wrap" style="height:26px;overflow:hidden;margin:-8px 0 18px;text-align:center">
