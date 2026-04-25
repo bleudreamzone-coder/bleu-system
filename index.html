@@ -533,22 +533,6 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
   }
 }
 
-/* ── PHASE 3.1 — ALVAI PRESENCE DOT ── */
-.alvai-presence-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: var(--bleu-gold);
-  border-radius: 50%;
-  margin-right: 8px;
-  vertical-align: middle;
-  animation: alvai-presence-pulse 1500ms ease-in-out infinite;
-}
-@keyframes alvai-presence-pulse {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50%      { opacity: 1.0; transform: scale(1.1); }
-}
-
 /* ── PHASE 3.3 — BHI RING BREATH (additive; original .pp-ring rule at line 4978 unchanged) ── */
 @keyframes bhi-breath {
   0%, 100% { transform: scale(1.0); }
@@ -14007,48 +13991,6 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
     updateCart();
   } else if(typeof renderProtocols === 'function') {
     setTimeout(vesselLateInit, 200);
-  }
-})();
-
-// Phase 3.1 — Alvai presence dot (additive MutationObserver, does not modify existing renderer)
-(function alvaiPresenceDotInit(){
-  var CONTAINER_SELECTORS = ['.chat-messages', '.chat-area'];
-  var ALVAI_MESSAGE_SELECTOR = '.msg.ai';
-
-  function addPresenceDot(msgNode){
-    if (!msgNode || msgNode.querySelector('.alvai-presence-dot')) return;
-    var dot = document.createElement('span');
-    dot.className = 'alvai-presence-dot';
-    dot.setAttribute('aria-hidden', 'true');
-    msgNode.prepend(dot);
-  }
-
-  var observer = new MutationObserver(function(mutations){
-    for (var i = 0; i < mutations.length; i++){
-      var added = mutations[i].addedNodes;
-      for (var j = 0; j < added.length; j++){
-        var node = added[j];
-        if (node.nodeType !== 1) continue;
-        if (node.matches && node.matches(ALVAI_MESSAGE_SELECTOR)){
-          addPresenceDot(node);
-        }
-      }
-    }
-  });
-
-  function attach(){
-    for (var s = 0; s < CONTAINER_SELECTORS.length; s++){
-      var nodes = document.querySelectorAll(CONTAINER_SELECTORS[s]);
-      for (var n = 0; n < nodes.length; n++){
-        observer.observe(nodes[n], { childList: true, subtree: true });
-      }
-    }
-  }
-
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', attach);
-  } else {
-    attach();
   }
 })();
 </script>
