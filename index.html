@@ -944,6 +944,21 @@ button[type="submit"],
   #bleu-breath-overlay { transition: none !important; }
   #bleu-breath-overlay .breath-word { transition: none !important; }
 }
+
+/* PATTERN 4: Four-Card Routing — responsive grid */
+@media (max-width: 719px) {
+  .bleu-router { grid-template-columns: repeat(2, 1fr) !important; gap: 16px !important; }
+  .bleu-router-heading { font-size: 16px !important; margin-bottom: 20px !important; }
+  .bleu-router-card div:first-child { font-size: 20px !important; }
+  .bleu-router-card div:last-child { font-size: 12px !important; }
+}
+@media (max-width: 479px) {
+  .bleu-router { grid-template-columns: 1fr !important; }
+}
+.bleu-router-card:hover {
+  border-color: rgba(45,138,158,.35) !important;
+  box-shadow: 0 8px 24px rgba(26,26,28,0.06);
+}
 </style>
 
 <script type="application/ld+json">
@@ -1356,6 +1371,29 @@ window.bleuPlausible = function(name, opts){ try { if (typeof plausible === 'fun
           <span style="color:rgba(212,175,55,.7)">Always free for Citizens. The infrastructure wellness was always missing.</span>
         </p>
       </div>
+
+<!-- ═══════════ PATTERN 4: FOUR-CARD ROUTING ═══════════ -->
+<div class="bleu-router-wrap" style="max-width:960px;margin:48px auto 32px;padding:0 24px">
+  <div class="bleu-router-heading" style="font-family:Fraunces,'Cormorant Garamond',Georgia,serif;font-weight:400;font-style:italic;font-size:18px;color:rgba(26,26,28,0.6);text-align:center;margin-bottom:24px">Where do you want to begin?</div>
+  <div class="bleu-router" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+    <div class="bleu-router-card" onclick="ask('alvai','I want to talk about my body — what is not working, what hurts, what I am trying to heal.')" style="background:#FDFBF6;border:1px solid rgba(45,138,158,.15);border-radius:16px;padding:28px 24px;text-align:center;cursor:pointer">
+      <div style="font-family:Fraunces,'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:22px;color:#1A1A1C;margin-bottom:8px;letter-spacing:-0.01em">Body</div>
+      <div style="font-family:Inter,'DM Sans',system-ui,sans-serif;font-weight:400;font-size:13px;color:rgba(26,26,28,0.55);line-height:1.45">Sleep, pain, energy, the physical</div>
+    </div>
+    <div class="bleu-router-card" onclick="ask('alvai','I want to talk about my mind — anxiety, racing thoughts, mood, what I am carrying.')" style="background:#FDFBF6;border:1px solid rgba(45,138,158,.15);border-radius:16px;padding:28px 24px;text-align:center;cursor:pointer">
+      <div style="font-family:Fraunces,'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:22px;color:#1A1A1C;margin-bottom:8px;letter-spacing:-0.01em">Mind</div>
+      <div style="font-family:Inter,'DM Sans',system-ui,sans-serif;font-weight:400;font-size:13px;color:rgba(26,26,28,0.55);line-height:1.45">Anxiety, focus, mood, the mental</div>
+    </div>
+    <div class="bleu-router-card" onclick="ask('alvai','I want to talk about money — the stress, the weight, what is making it hard to breathe.')" style="background:#FDFBF6;border:1px solid rgba(45,138,158,.15);border-radius:16px;padding:28px 24px;text-align:center;cursor:pointer">
+      <div style="font-family:Fraunces,'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:22px;color:#1A1A1C;margin-bottom:8px;letter-spacing:-0.01em">Money</div>
+      <div style="font-family:Inter,'DM Sans',system-ui,sans-serif;font-weight:400;font-size:13px;color:rgba(26,26,28,0.55);line-height:1.45">Stress, debt, security, the financial</div>
+    </div>
+    <div class="bleu-router-card" onclick="ask('alvai','I want to talk about spirit — meaning, purpose, the parts of me that need something deeper.')" style="background:#FDFBF6;border:1px solid rgba(45,138,158,.15);border-radius:16px;padding:28px 24px;text-align:center;cursor:pointer">
+      <div style="font-family:Fraunces,'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:22px;color:#1A1A1C;margin-bottom:8px;letter-spacing:-0.01em">Spirit</div>
+      <div style="font-family:Inter,'DM Sans',system-ui,sans-serif;font-weight:400;font-size:13px;color:rgba(26,26,28,0.55);line-height:1.45">Meaning, purpose, the unseen</div>
+    </div>
+  </div>
+</div>
 
       <div class="hf4" style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:36px">
         <div style="background:rgba(78,205,196,.06);border:1px solid rgba(78,205,196,.15);border-radius:10px;padding:10px 18px;text-align:center;min-width:100px">
