@@ -935,6 +935,15 @@ button[type="submit"],
 .gw-skip{display:block;text-align:center;font-size:11px;color:rgba(255,255,255,0.3);cursor:pointer;text-decoration:underline;margin-top:6px}
 .gw-skip:hover{color:rgba(255,255,255,0.6)}
 .gw-disclosure{font-size:9px;color:rgba(255,255,255,0.2);text-align:center;margin-top:14px;line-height:1.4}
+
+/* PATTERN 1: Opening Breath — responsive + accessibility */
+@media (max-width: 640px) {
+  #bleu-breath-overlay .breath-text { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #bleu-breath-overlay { transition: none !important; }
+  #bleu-breath-overlay .breath-word { transition: none !important; }
+}
 </style>
 
 <script type="application/ld+json">
@@ -1162,6 +1171,13 @@ button[type="submit"],
 </script>
 </head>
 <body>
+
+<!-- ═══════════ PATTERN 1: OPENING BREATH MOMENT ═══════════ -->
+<div id="bleu-breath-overlay" role="dialog" aria-label="Welcome moment" style="display:none;position:fixed;inset:0;z-index:100000;background:#1A1A1C;align-items:center;justify-content:center;padding:32px;opacity:0;transition:opacity 2000ms cubic-bezier(.4,0,.2,1)">
+  <div class="breath-text" style="font-family:Fraunces,'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:32px;line-height:1.4;letter-spacing:-0.01em;text-align:center;color:#FDFBF6;max-width:600px">
+    Before we begin — take a <span class="breath-word" style="display:inline-block;color:#FDFBF6;transition:color 800ms cubic-bezier(.4,0,.2,1)">breath</span>.
+  </div>
+</div>
 
 <!-- ═══ ISI ENTRY MODAL — Identity Stability Index ═══ -->
 <div id="isi-entry-modal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;padding:20px;font-family:Georgia,'Times New Roman',serif">
@@ -14136,6 +14152,56 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
       }, true);
     })();
   </script>
+
+<!-- ═══════════ PATTERN 1: OPENING BREATH SCRIPT ═══════════ -->
+<script>
+(function(){
+  var STORAGE_KEY = 'bleu_breath_shown';
+  var FORCE = new URLSearchParams(window.location.search).has('breath');
+  var seen  = (function(){ try { return localStorage.getItem(STORAGE_KEY) === '1'; } catch(e){ return false; } })();
+  if (seen && !FORCE) return;
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var overlay = document.getElementById('bleu-breath-overlay');
+    if (!overlay) return;
+    var word = overlay.querySelector('.breath-word');
+    var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function dismiss(immediate){
+      if (immediate) {
+        overlay.style.opacity = '0';
+        overlay.style.display = 'none';
+      } else {
+        overlay.style.transition = 'opacity 1200ms cubic-bezier(.4,0,.2,1)';
+        overlay.style.opacity = '0';
+        setTimeout(function(){ overlay.style.display = 'none'; document.body.style.overflow = ''; }, 1200);
+      }
+      try { localStorage.setItem(STORAGE_KEY, '1'); } catch(e){}
+      document.removeEventListener('keydown', escHandler);
+    }
+
+    function escHandler(e){ if (e.key === 'Escape') dismiss(true); }
+    document.addEventListener('keydown', escHandler);
+
+    document.body.style.overflow = 'hidden';
+    overlay.style.display = 'flex';
+
+    if (prefersReduced) {
+      overlay.style.opacity = '1';
+      word.style.color = '#C9A84C';
+      setTimeout(function(){ word.style.color = '#FDFBF6'; }, 800);
+      setTimeout(function(){ dismiss(true); document.body.style.overflow = ''; }, 2500);
+    } else {
+      requestAnimationFrame(function(){
+        setTimeout(function(){ overlay.style.opacity = '1'; }, 50);
+        setTimeout(function(){ word.style.color = '#C9A84C'; }, 1500);
+        setTimeout(function(){ word.style.color = '#FDFBF6'; }, 2300);
+        setTimeout(function(){ dismiss(false); }, 4000);
+      });
+    }
+  });
+})();
+</script>
 
 </body>
 </html>
