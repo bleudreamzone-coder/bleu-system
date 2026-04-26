@@ -1353,6 +1353,11 @@ window.bleuPlausible = function(name, opts){ try { if (typeof plausible === 'fun
   <div data-tab="spirit" class="nav-tab" onclick="go('spirit')">Spirit</div>
   <div data-tab="why" class="nav-tab" onclick="go('why')" style="color:rgba(201,168,76,.6)">Why BLEU</div>
   <div onclick="toggleCart()" style="margin-left:auto;padding:0 12px;cursor:pointer;display:flex;align-items:center;gap:4px;color:#c9a84c;font-size:13px;font-weight:700;white-space:nowrap;flex-shrink:0">🧬 <span id="nav-cart-count" style="background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:1px 7px;font-size:10px">0</span></div>
+  <button id="bleu-stack-toggle" class="bleu-stack-indicator" aria-label="Open your Stack" type="button">
+    <span class="bleu-stack-icon" aria-hidden="true">⬡</span>
+    <span class="bleu-stack-label">Stack</span>
+    <span class="bleu-stack-count" id="bleu-stack-count">0</span>
+  </button>
 </nav>
 
 <!-- ═══════════════════════ HOME ═══════════════════════ -->
@@ -14338,6 +14343,243 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
       var saved = sessionStorage.getItem('bleu_vessel_section');
       if (saved && saved !== 'browse') window.bleuSwitchSection(saved);
     } catch(e){}
+  });
+})();
+</script>
+
+<!-- ═══════════════════════ PHASE 5.2-CART-A : STACK SCAFFOLDING ═══════════════════════ -->
+<style>
+.bleu-stack-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #FDFBF6;
+  border: 1px solid rgba(45,138,158,.18);
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1A1A1C;
+  transition: all .18s ease;
+}
+.bleu-stack-indicator:hover {
+  border-color: rgba(201,168,76,.5);
+  background: #FFFCF4;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(201,168,76,.12);
+}
+.bleu-stack-icon {
+  font-size: 16px;
+  color: #C9A84C;
+  line-height: 1;
+}
+.bleu-stack-label {
+  letter-spacing: .02em;
+}
+.bleu-stack-count {
+  display: inline-block;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  background: #1A2B4A;
+  color: #FDFBF6;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 22px;
+}
+.bleu-stack-count.has-items {
+  background: #C9A84C;
+  color: #1A1A1C;
+}
+.bleu-stack-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s linear .28s;
+}
+.bleu-stack-drawer.is-open {
+  pointer-events: auto;
+  visibility: visible;
+  transition: visibility 0s linear 0s;
+}
+.bleu-stack-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26,43,74,.34);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.bleu-stack-drawer.is-open .bleu-stack-backdrop { opacity: 1; }
+.bleu-stack-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(420px, 92vw);
+  background: #FDFBF6;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .32s cubic-bezier(.2,.8,.2,1);
+  box-shadow: -12px 0 40px rgba(26,43,74,.18);
+}
+.bleu-stack-drawer.is-open .bleu-stack-panel {
+  transform: translateX(0);
+}
+.bleu-stack-header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid rgba(45,138,158,.12);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.bleu-stack-title {
+  margin: 0 0 4px;
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1A2B4A;
+  letter-spacing: -.01em;
+}
+.bleu-stack-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #5B6470;
+  line-height: 1.4;
+}
+.bleu-stack-close {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(45,138,158,.18);
+  background: #FFFCF4;
+  border-radius: 999px;
+  font-size: 22px;
+  line-height: 1;
+  color: #5B6470;
+  cursor: pointer;
+  font-family: inherit;
+}
+.bleu-stack-close:hover {
+  color: #1A1A1C;
+  border-color: rgba(201,168,76,.5);
+}
+.bleu-stack-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+.bleu-stack-empty {
+  text-align: center;
+  padding: 48px 16px 24px;
+}
+.bleu-stack-empty-mark {
+  font-size: 56px;
+  color: rgba(201,168,76,.4);
+  margin-bottom: 16px;
+}
+.bleu-stack-empty-title {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1A2B4A;
+}
+.bleu-stack-empty-copy {
+  margin: 0 0 24px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #5B6470;
+}
+.bleu-stack-empty-cta {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #C9A84C;
+  color: #1A1A1C;
+  border: 0;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: .01em;
+  transition: all .18s ease;
+}
+.bleu-stack-empty-cta:hover {
+  background: #D4B65E;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(201,168,76,.3);
+}
+.bleu-stack-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(45,138,158,.12);
+  background: #FAFAF6;
+}
+.bleu-stack-footer-note {
+  margin: 0;
+  font-size: 12px;
+  color: #5B6470;
+  text-align: center;
+  line-height: 1.4;
+  font-style: italic;
+}
+</style>
+
+<aside id="bleu-stack-drawer" class="bleu-stack-drawer" aria-hidden="true" aria-label="Your Stack">
+  <div class="bleu-stack-backdrop" id="bleu-stack-backdrop"></div>
+  <div class="bleu-stack-panel" role="dialog" aria-modal="true">
+    <header class="bleu-stack-header">
+      <div>
+        <h2 class="bleu-stack-title">Your Stack</h2>
+        <p class="bleu-stack-subtitle">Clinical commerce, organized by protocol.</p>
+      </div>
+      <button class="bleu-stack-close" id="bleu-stack-close" aria-label="Close Stack" type="button">×</button>
+    </header>
+    <div class="bleu-stack-body" id="bleu-stack-body">
+      <div class="bleu-stack-empty">
+        <div class="bleu-stack-empty-mark">⬡</div>
+        <h3 class="bleu-stack-empty-title">Your Stack is empty.</h3>
+        <p class="bleu-stack-empty-copy">Browse Supply or talk to ALVAI to get started. Every product you add gets safety-checked against your Passport before it reaches checkout.</p>
+        <button class="bleu-stack-empty-cta" onclick="bleuStackClose(); document.querySelector('#alvai-input,#chat-input,#home-input')?.focus();" type="button">Talk to ALVAI</button>
+      </div>
+    </div>
+    <footer class="bleu-stack-footer">
+      <p class="bleu-stack-footer-note">Reviewed protocols carry Dr. Felicia Stoler's clinical badge.</p>
+    </footer>
+  </div>
+</aside>
+
+<script>
+(function(){
+  const toggle   = document.getElementById('bleu-stack-toggle');
+  const drawer   = document.getElementById('bleu-stack-drawer');
+  const backdrop = document.getElementById('bleu-stack-backdrop');
+  const closeBtn = document.getElementById('bleu-stack-close');
+  if (!toggle || !drawer) return;
+
+  window.bleuStackOpen = function(){
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  };
+  window.bleuStackClose = function(){
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  };
+
+  toggle.addEventListener('click', window.bleuStackOpen);
+  backdrop.addEventListener('click', window.bleuStackClose);
+  closeBtn.addEventListener('click', window.bleuStackClose);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+      window.bleuStackClose();
+    }
   });
 })();
 </script>
