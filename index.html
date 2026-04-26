@@ -2754,6 +2754,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 </div>
 
 <!-- SUPPLEMENTS -->
+<div class="bleu-supply-legacy-hidden" data-reason="awaiting 5.2-RENDERER (Supabase products table)">
 <div class="vs-section" id="sec-supp" data-seccat="supp">
   <div class="vs-sec-title">Supplements <span class="vs-sec-sub">Clinical Grade -- Third-Party Verified -- Amazon Prime</span></div>
   <div class="vs-grid">
@@ -2866,6 +2867,7 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
     </div>
 
   </div>
+</div>
 </div>
 
 <!-- FULLSCRIPT PROTOCOLS -->
@@ -3188,9 +3190,11 @@ if(p){var ob=new MutationObserver(function(ms){ms.forEach(function(m){if(m.targe
 <!-- WELLNESS MEDIA — YouTube + Spotify embedded -->
 <div class="vs-section" id="sec-media" data-seccat="events">
   <div class="vs-sec-title">Wellness Media <span class="vs-sec-sub">Videos + Playlists — plays inside BLEU</span></div>
+  <div class="bleu-supply-legacy-hidden" data-reason="awaiting 5.2-RENDERER (Supabase products table)">
   <div id="bleu-yt-section" style="margin-bottom:20px">
     <div style="font-size:9px;letter-spacing:3px;color:rgba(201,168,76,.6);margin-bottom:10px">YOUTUBE — CURATED WELLNESS</div>
     <div id="bleu-yt-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px"></div>
+  </div>
   </div>
   <div id="bleu-sp-section">
     <div style="font-size:9px;letter-spacing:3px;color:rgba(30,215,96,.6);margin-bottom:10px">SPOTIFY — HEALING PLAYLISTS</div>
@@ -14349,6 +14353,7 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
 
 <!-- ═══════════════════════ PHASE 5.2-CART-A : STACK SCAFFOLDING ═══════════════════════ -->
 <style>
+.bleu-supply-legacy-hidden { display: none !important; }
 .bleu-stack-indicator {
   display: inline-flex;
   align-items: center;
