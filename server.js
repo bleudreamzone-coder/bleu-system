@@ -1844,8 +1844,56 @@ const server = http.createServer((req, res) => {
         let twiml;
         if (/yes/i.test(body)) {
           twiml = '<?xml version="1.0" encoding="UTF-8"?><Response><Message>Your protocol is ready. Tap here to reorder: bleu.live/supply — your stack is waiting.</Message></Response>';
+          // Fire-and-forget telemetry write to outcome_events. Failures must not block the Twilio response.
+          fetch(`${SUPABASE_URL}/rest/v1/outcome_events`, {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_KEY,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+              user_id: null,
+              session_id: params.get('MessageSid') || null,
+              event_type: 'sms_reply_yes',
+              protocol_name: null,
+              source: 'twilio_reply',
+              payload: {
+                from_phone: params.get('From') || null,
+                to_phone: params.get('To') || null,
+                message_sid: params.get('MessageSid') || null,
+                body_text: body || null,
+                account_sid: params.get('AccountSid') || null
+              }
+            })
+          }).catch(e => console.error('outcome_events insert failed:', e));
         } else {
           twiml = '<?xml version="1.0" encoding="UTF-8"?><Response><Message>No worries — reply YES anytime when you are ready to restock.</Message></Response>';
+          // Fire-and-forget telemetry write to outcome_events. Failures must not block the Twilio response.
+          fetch(`${SUPABASE_URL}/rest/v1/outcome_events`, {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_KEY,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+              user_id: null,
+              session_id: params.get('MessageSid') || null,
+              event_type: 'sms_reply_other',
+              protocol_name: null,
+              source: 'twilio_reply',
+              payload: {
+                from_phone: params.get('From') || null,
+                to_phone: params.get('To') || null,
+                message_sid: params.get('MessageSid') || null,
+                body_text: body || null,
+                account_sid: params.get('AccountSid') || null
+              }
+            })
+          }).catch(e => console.error('outcome_events insert failed:', e));
         }
         res.writeHead(200, {'Content-Type':'text/xml'});
         res.end(twiml);
