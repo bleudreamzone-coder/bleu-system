@@ -1393,7 +1393,7 @@ const server = http.createServer((req, res) => {
     const session = url.searchParams.get('session') || '';
     const city = url.searchParams.get('city') || '';
     // Log to Supabase (fire and forget)
-    querySupabase('clicks', '', 0, 'POST', {partner, source_tab: source, product_or_service: product, session_id: session, city, timestamp: new Date().toISOString()}).catch(()=>{});
+    querySupabase('affiliate_clicks', '', 0, 'POST', {partner, source_tab: source, product_or_service: product, session_id: session, city, timestamp: new Date().toISOString()}).catch(()=>{});
     // Redirect to partner
     const urls = {
       betterhelp:'https://betterhelp.com/bleu',
