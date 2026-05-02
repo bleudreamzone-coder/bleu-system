@@ -1968,6 +1968,30 @@ function handleStripeWebhook(req, res) {
             body: JSON.stringify(updateData)
           });
           console.log(`Protocol ${protocol} activated`);
+          // Fire-and-forget telemetry write to outcome_events. Failures must not block the webhook response.
+          fetch(`${SUPABASE_URL}/rest/v1/outcome_events`, {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_KEY,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+              user_id: userId || null,
+              session_id: session.id || null,
+              event_type: 'stripe_checkout_completed',
+              protocol_name: protocol,
+              source: 'stripe_webhook',
+              payload: {
+                price_id: priceId || null,
+                customer: session.customer || null,
+                email: email || null,
+                amount_total: session.amount_total || null,
+                currency: session.currency || null
+              }
+            })
+          }).catch(e => console.error('outcome_events insert failed:', e));
         } catch(e) {
           console.error('Supabase update failed:', e.message);
         }
