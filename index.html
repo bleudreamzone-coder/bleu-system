@@ -13184,6 +13184,8 @@ async function startPaidCheckout(priceId) {
       successUrl: window.location.origin + '/?checkout=success&tier=' + (priceId === 'price_1TBPtAK4cATmIFboFVb9m0QN' ? 'citizen' : 'pro'),
       cancelUrl: window.location.origin + '/?checkout=cancel',
       customerEmail: currentUser.email || undefined,
+      clientReferenceId: (currentUser && currentUser.id) || undefined,
+      metadata: { price_id: priceId }
     });
     if (result.error) {
       console.error('Stripe error:', result.error.message);
