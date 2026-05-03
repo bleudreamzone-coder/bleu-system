@@ -1,0 +1,4050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  ============================================================
+  BLEU.LIVE · A LIVING MODEL OF CARE
+  Patent Pending · © 2026 Fleur de BleuDream LLC
+  ============================================================
+  Created by:  Bleu Michael Garner
+  President:   Dr. Felicia Stoler · DCN, MS, RDN, FACSM, FAND, Dipl. ACLM
+  Lineage:     127-year intergenerational healing · Onondaga Bleu Clan
+               Jessie 1898 → Timothy 1950 → Bleu Michael 1985 → Dakota 2010
+  Foundational credential: 10M+ medical marijuana patients since 1998
+
+  ============================================================
+  ARCHITECTURE (v3 redesign · May 3, 2026)
+  ============================================================
+  Six surfaces · Arc as home · Pebble Palette · Library is the depth
+
+    HOME      — the 60-second arc · Tonight entry · Witness Card
+    VESSEL    — ALVAI · Pulse · Passport · Stack · Safety Check
+    CARE      — Practitioners · Supplements · Pharmacy · Therapy · Events
+    CITY      — 222-City Model · 12 neighborhoods · 32 crises matrix
+    LIBRARY   — Learn · Community · Therapy · Recovery · Sleep · Spirit
+                Finance · ECSIQ · Why BLEU
+    YOU       — Passport · Stack · Account · Sign Out
+
+  Persistent: drawer (top-left) · stack button (top-right)
+
+  ============================================================
+  IRON RULES
+  ============================================================
+  · No commerce before safety gate (V3 doctrine)
+  · Diamond Framework: SEE → NAME → SHIFT → RELEASE
+  · Five-Voice Doctrine: Witness · Lineage · Clinical · Friend · Ancestor
+  · Evidence Tiers: Established / Emerging / Experimental / Narrative
+  · Crisis resources always one tap away (988 / 911 / SAMHSA / Trevor)
+  · Anchor sentence: "BLEU is the private memory layer for human recovery"
+  · Vodou/Orisha treated with same dignity as Buddhism
+  · 911/Narcan instructions are harm reduction · do not edit
+  · /neworleans.bleu.live is path-routed, do not regenerate
+  · No fake precision · confidence labels required on all measurements
+  · Behavior change: Seen → Named → Guided → Remembered → Shared → Reinforced
+  · Anchor: BLEU is the private memory layer for human recovery
+  ============================================================
+-->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0f1c2e" />
+<title>bleu.live</title>
+<meta name="description" content="A place to be heard. Sleep, anxiety, pain, money stress, recovery, community, care — one safe next step at a time. Always free for citizens. Made with love in New Orleans." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;450;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   PEBBLE PALETTE — design tokens
+   Stage 1 + Pass 1 + the rgba audit Claude Code surfaced.
+   No legacy --gold alias. Gold is reserved for trust signals only:
+     · breath-gate dot
+     · evidence-tier badges
+     · lineage anchor lines
+     · ALVAI eyebrow (the Witness voice signature)
+   Everything else flows from pebble + cream + ink + navy.
+   ============================================================ */
+:root {
+  /* PEBBLE — primary brand color */
+  --pebble-50:  #f4f7fa;
+  --pebble-100: #e6edf5;
+  --pebble-200: #c9d8e8;
+  --pebble-300: #9eb6cf;
+  --pebble-400: #6e8eb0;
+  --pebble-500: #4a6f95;   /* core pebble */
+  --pebble-600: #355478;
+  --pebble-700: #243d5b;
+  --pebble-800: #182a42;
+  --pebble-900: #0f1c2e;
+
+  /* TEAL — secondary, ALVAI surfaces, gradient with pebble */
+  --teal-100: #d9efe9;
+  --teal-300: #6fb8b3;
+  --teal-500: #2f8a83;
+  --teal-700: #1a5e58;
+
+  /* GOLD — accent, reserved for trust signals only */
+  --gold-100: #f5e8c1;
+  --gold-300: #e6cb74;
+  --gold-500: #c9a227;
+  --gold-700: #8e7113;
+
+  /* INK — writing color */
+  --ink:        #181714;
+  --ink-soft:   #4b4942;
+  --ink-faint:  #807a6f;
+
+  /* CREAM — page surfaces */
+  --cream:       #faf6ee;
+  --cream-warm:  #f3ecde;
+  --cream-deep:  #e5d8bf;
+  --paper:       #fffaf1;
+
+  /* PURPLE — used only for "heal" italic and Spirit accent */
+  --purple:      #4B1E82;
+  --purple-soft: #6a3da8;
+
+  /* CRISIS — never decorative, only when crisis content shown */
+  --crisis-bg:    #fcebeb;
+  --crisis-fg:    #501313;
+  --crisis-mid:   #a32d2d;
+  --crisis-line:  #f7c1c1;
+
+  /* Type system */
+  --display: 'Fraunces', 'Times New Roman', Georgia, serif;
+  --body:    'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Layout */
+  --max-w: 1280px;
+  --gutter: clamp(20px, 4vw, 36px);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --shadow-soft: 0 12px 40px -16px rgba(15, 28, 46, 0.15);
+  --shadow-card: 0 18px 50px -22px rgba(15, 28, 46, 0.22);
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--body);
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: transparent; color: inherit; }
+input, textarea, select { font-family: inherit; }
+img { max-width: 100%; display: block; }
+
+::selection { background: var(--pebble-200); color: var(--pebble-900); }
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   TYPOGRAPHY UTILITIES
+   ============================================================ */
+.eyebrow {
+  font-family: var(--body);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold-700);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--gold-500);
+  flex-shrink: 0;
+}
+
+.display-xl {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(40px, 7vw, 88px);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 144;
+}
+.display-lg {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.028em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 96;
+}
+.display-md {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.display em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--purple);
+}
+
+.deck {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(18px, 2.2vw, 24px);
+  line-height: 1.5;
+  color: var(--ink-soft);
+  letter-spacing: -0.01em;
+}
+
+.body-lg { font-size: 18px; line-height: 1.65; color: var(--ink-soft); }
+.body-md { font-size: 16px; line-height: 1.6; color: var(--ink-soft); }
+.body-sm { font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
+.body-xs { font-size: 12px; line-height: 1.5; color: var(--ink-faint); }
+
+.serif-quote {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: -0.005em;
+}
+
+/* ============================================================
+   GLOBAL CHROME — drawer button, wordmark, top nav, stack
+   Persistent across all six surfaces.
+   ============================================================ */
+.chrome {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250, 246, 238, 0.94);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  border-bottom: 0.5px solid var(--cream-deep);
+}
+.chrome-row {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 16px var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.drawer-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-radius: 50%;
+  transition: background 0.18s var(--ease);
+}
+.drawer-btn:hover { background: var(--cream-warm); }
+.drawer-btn span {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: var(--ink);
+  transition: transform 0.2s var(--ease);
+}
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  cursor: pointer;
+}
+.wordmark-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  letter-spacing: -0.01em;
+}
+/* The dot — same glowing blue pebble DNA as the breath gate, miniature */
+.wordmark-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 28%,
+    #b8d4ff 0%,
+    #5A8FFF 30%,
+    var(--pebble-500) 65%,
+    var(--pebble-700) 100%
+  );
+  box-shadow:
+    0 0 12px 2px rgba(90, 143, 255, 0.6),
+    0 0 4px 1px rgba(90, 143, 255, 0.85),
+    0 0 0 0.5px rgba(255, 255, 255, 0.2) inset;
+  animation: wordmarkPulse 5000ms ease-in-out infinite;
+  position: relative;
+  bottom: 0;
+  flex-shrink: 0;
+}
+@keyframes wordmarkPulse {
+  0%   { transform: scale(1);    box-shadow: 0 0 12px 2px rgba(90,143,255,0.6),  0 0 4px 1px rgba(90,143,255,0.85), 0 0 0 0.5px rgba(255,255,255,0.2) inset; }
+  40%  { transform: scale(1.25); box-shadow: 0 0 20px 4px rgba(90,143,255,0.85), 0 0 8px 2px rgba(90,143,255,1),    0 0 0 0.5px rgba(255,255,255,0.3) inset; }
+  60%  { transform: scale(1.25); box-shadow: 0 0 20px 4px rgba(90,143,255,0.85), 0 0 8px 2px rgba(90,143,255,1),    0 0 0 0.5px rgba(255,255,255,0.3) inset; }
+  100% { transform: scale(1);    box-shadow: 0 0 12px 2px rgba(90,143,255,0.6),  0 0 4px 1px rgba(90,143,255,0.85), 0 0 0 0.5px rgba(255,255,255,0.2) inset; }
+}
+.wordmark:hover .wordmark-dot {
+  animation-duration: 2500ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wordmark-dot { animation: none; }
+}
+.wordmark-sub {
+  font-family: var(--body);
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+  font-style: italic;
+  font-family: var(--display);
+}
+.wordmark-sub::before {
+  content: '·';
+  margin-right: 10px;
+  color: var(--pebble-400);
+  font-style: normal;
+  font-family: var(--body);
+}
+
+.top-nav {
+  display: flex;
+  gap: 2px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.top-nav a {
+  color: var(--ink-soft);
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition: all 0.18s var(--ease);
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+}
+.top-nav a:hover { color: var(--ink); background: var(--cream-warm); }
+.top-nav a.active {
+  color: var(--cream);
+  background: var(--pebble-700);
+}
+
+.stack-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--pebble-500);
+  color: white;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: all 0.2s var(--ease);
+}
+.stack-btn:hover { background: var(--pebble-600); transform: translateY(-1px); }
+.stack-btn-hex {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: white;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+@media (max-width: 920px) {
+  .top-nav { display: none; }
+  .wordmark-sub { display: none; }
+}
+
+/* ============================================================
+   LAYOUT PRIMITIVES
+   ============================================================ */
+.wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter); }
+.surface { padding: clamp(40px, 7vw, 96px) 0; }
+.surface-tight { padding: clamp(28px, 4vw, 56px) 0; }
+.divider { border: none; height: 0.5px; background: var(--cream-deep); margin: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* The hidden-tab system: only one .surface-page is visible at a time.
+   Surfaces are not separate documents — they're sections inside one SPA. */
+.surface-page { display: none; }
+.surface-page.is-active { display: block; }
+
+</style>
+<style>
+/* ============================================================
+   COMPONENT — buttons
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: all 0.2s var(--ease);
+  white-space: nowrap;
+}
+.btn-primary { background: var(--ink); color: var(--cream); }
+.btn-primary:hover { background: var(--pebble-700); transform: translateY(-1px); }
+
+.btn-ghost { background: transparent; color: var(--ink); border: 0.5px solid var(--ink-faint); }
+.btn-ghost:hover { background: var(--cream-warm); border-color: var(--ink-soft); }
+
+.btn-pebble { background: var(--pebble-500); color: white; }
+.btn-pebble:hover { background: var(--pebble-600); transform: translateY(-1px); }
+
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+.btn-lg { padding: 14px 28px; font-size: 15px; }
+
+/* ============================================================
+   COMPONENT — chips (Pattern 7: dimension chip rail)
+   Used as secondary nav under each surface header.
+   ============================================================ */
+.chip-rail-wrap {
+  position: sticky;
+  top: 73px;
+  z-index: 50;
+  background: rgba(250, 246, 238, 0.94);
+  backdrop-filter: saturate(140%) blur(12px);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
+  border-bottom: 0.5px solid var(--cream-deep);
+}
+.chip-rail {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 12px var(--gutter);
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.chip-rail::-webkit-scrollbar { display: none; }
+
+.chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 0.5px solid var(--pebble-200);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.18s var(--ease);
+  white-space: nowrap;
+}
+.chip:hover {
+  border-color: var(--pebble-400);
+  color: var(--ink);
+  background: var(--cream-warm);
+}
+.chip.is-active {
+  background: var(--pebble-700);
+  color: var(--cream);
+  border-color: var(--pebble-700);
+}
+.chip-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* ============================================================
+   COMPONENT — cards
+   ============================================================ */
+.card {
+  background: var(--paper);
+  border: 0.5px solid var(--cream-deep);
+  border-radius: var(--radius-lg);
+  padding: 28px 26px;
+  transition: all 0.25s var(--ease);
+}
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); border-color: var(--pebble-200); }
+
+.card-warm { background: var(--cream-warm); border-color: transparent; }
+.card-pebble { background: var(--pebble-800); color: var(--cream); border-color: transparent; }
+.card-pebble .card-title { color: var(--cream); }
+.card-pebble .card-body { color: rgba(250, 246, 238, 0.78); }
+
+.card-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.card-title em { font-style: italic; color: var(--purple); }
+.card-body { font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 16px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+.card-meta span + span::before {
+  content: '·';
+  margin-right: 12px;
+  color: var(--cream-deep);
+}
+
+/* ============================================================
+   COMPONENT — stat row
+   ============================================================ */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 24px;
+  padding: 28px 0;
+  border-top: 0.5px solid var(--cream-deep);
+  border-bottom: 0.5px solid var(--cream-deep);
+}
+.stat {
+  text-align: left;
+}
+.stat-n {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(28px, 3.5vw, 36px);
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 96;
+}
+.stat-l {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   COMPONENT — pull quote
+   ============================================================ */
+.pull-quote {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(22px, 3vw, 32px);
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  border-left: 2px solid var(--gold-500);
+  padding-left: 24px;
+  max-width: 680px;
+}
+.pull-quote em { font-style: italic; color: var(--purple); }
+.pull-quote-cite {
+  display: block;
+  font-family: var(--body);
+  font-style: normal;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  margin-top: 16px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   ALVAI CONVERSATION — the front door
+   She speaks first. You speak back. The relationship begins here.
+   The pebble pulses next to her name — her presence, her breath.
+   ============================================================ */
+.alvai-presence {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 0.5px solid var(--cream-deep);
+}
+.alvai-presence-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #b8d4ff 0%, #5A8FFF 30%, var(--pebble-500) 65%, var(--pebble-700) 100%);
+  box-shadow:
+    0 0 18px 3px rgba(90, 143, 255, 0.65),
+    0 0 6px 1px rgba(90, 143, 255, 0.9),
+    0 0 0 0.5px rgba(255, 255, 255, 0.2) inset;
+  animation: wordmarkPulse 5000ms ease-in-out infinite;
+  flex-shrink: 0;
+}
+.alvai-presence-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.alvai-presence-status {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--pebble-600);
+  margin-left: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .alvai-presence-dot { animation: none; }
+}
+
+/* Conversation thread */
+.alvai-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 26px;
+  min-height: 200px;
+}
+
+.msg {
+  max-width: 92%;
+  animation: msgIn 0.5s var(--ease) both;
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.msg-alvai {
+  align-self: flex-start;
+}
+.msg-alvai-body {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(20px, 2.6vw, 26px);
+  line-height: 1.4;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 96;
+}
+.msg-alvai-body em { font-style: italic; color: var(--purple); font-weight: 400; }
+
+.msg-alvai-meta {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--pebble-600);
+  font-weight: 500;
+  margin-bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.msg-alvai-meta::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: var(--pebble-400);
+}
+
+.msg-user {
+  align-self: flex-end;
+  background: var(--pebble-700);
+  color: var(--cream);
+  padding: 14px 20px;
+  border-radius: 22px 22px 6px 22px;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 450;
+  box-shadow: 0 8px 22px -10px rgba(15, 28, 46, 0.3);
+}
+
+/* Typing indicator — three dots, the pebble's breath caught between */
+.msg-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+}
+.msg-typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pebble-400);
+  animation: typingDot 1.4s ease-in-out infinite;
+}
+.msg-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.msg-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingDot {
+  0%, 60%, 100% { opacity: 0.3; transform: scale(0.85); }
+  30%           { opacity: 1;   transform: scale(1.15); background: var(--pebble-600); }
+}
+
+/* The user's input — feels like talking, not filling a form */
+.alvai-reply {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: var(--paper);
+  border: 0.5px solid var(--cream-deep);
+  border-radius: 999px;
+  transition: all 0.25s var(--ease);
+  margin-bottom: 18px;
+}
+.alvai-reply:focus-within {
+  border-color: var(--pebble-400);
+  box-shadow: 0 0 0 3px rgba(90, 143, 255, 0.12), 0 8px 24px -10px rgba(90, 143, 255, 0.3);
+}
+.alvai-reply-input {
+  flex: 1;
+  padding: 14px 22px;
+  border: none;
+  background: transparent;
+  font-size: 15.5px;
+  color: var(--ink);
+  outline: none;
+  font-family: var(--body);
+  min-width: 0;
+}
+.alvai-reply-input::placeholder {
+  color: var(--ink-faint);
+  font-style: italic;
+  font-family: var(--display);
+}
+.alvai-reply-send {
+  padding: 12px 22px;
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: all 0.2s var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.alvai-reply-send:hover { background: var(--pebble-700); transform: translateX(2px); }
+.alvai-reply-send::after {
+  content: '→';
+  font-family: var(--display);
+  font-size: 16px;
+}
+
+/* Soft suggestion chips — what she's offering you to say */
+.alvai-suggest-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.alvai-suggest-label {
+  width: 100%;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+.alvai-suggest {
+  position: relative;
+  padding: 10px 18px 10px 30px;
+  background: transparent;
+  border: 0.5px solid var(--pebble-200);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  transition: all 0.2s var(--ease);
+  cursor: pointer;
+}
+.alvai-suggest::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pebble-300);
+  transition: all 0.25s var(--ease);
+}
+.alvai-suggest:hover {
+  border-color: var(--pebble-400);
+  background: var(--paper);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+.alvai-suggest:hover::before {
+  background: radial-gradient(circle at 32% 28%, #b8d4ff 0%, #5A8FFF 30%, var(--pebble-500) 65%, var(--pebble-700) 100%);
+  box-shadow: 0 0 8px 2px rgba(90, 143, 255, 0.6);
+  transform: translateY(-50%) scale(1.2);
+}
+.alvai-suggest-crisis {
+  border-color: var(--crisis-line);
+  color: var(--crisis-fg);
+}
+.alvai-suggest-crisis::before { background: var(--crisis-mid); }
+.alvai-suggest-crisis:hover {
+  background: var(--crisis-bg);
+  border-color: var(--crisis-mid);
+  color: var(--crisis-fg);
+}
+.alvai-suggest-crisis:hover::before { background: var(--crisis-mid); box-shadow: 0 0 8px 2px rgba(163, 45, 45, 0.5); }
+
+/* When phase advances, conversation collapses to a soft summary */
+.alvai-thread-summary {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-faint);
+  padding: 14px 18px;
+  background: var(--cream-warm);
+  border-radius: var(--radius-md);
+  margin-bottom: 22px;
+  border-left: 1px solid var(--pebble-300);
+}
+
+</style>
+<style>
+/* ============================================================
+   THE 60-SECOND ARC — home surface
+   This is the engine. Front door. Phase 1 through Phase 5.
+   ============================================================ */
+.arc-shell {
+  background: linear-gradient(180deg, var(--cream) 0%, var(--cream-warm) 100%);
+  padding: clamp(48px, 8vw, 112px) 0 clamp(40px, 6vw, 80px);
+  position: relative;
+}
+.arc-shell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(420px, 60%);
+  height: 320px;
+  background: radial-gradient(ellipse at center top, rgba(90, 143, 255, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.arc-stage {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+}
+
+.arc-phase { display: none; }
+.arc-phase.is-active { display: block; animation: arcFadeIn 0.55s var(--ease) both; }
+@keyframes arcFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.arc-tag {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--pebble-600);
+  margin-bottom: 24px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.arc-tag::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--pebble-400);
+}
+.arc-tag.tag-crisis { color: var(--crisis-mid); }
+.arc-tag.tag-crisis::before { background: var(--crisis-mid); }
+
+.arc-title {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(34px, 6vw, 60px);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+  color: var(--ink);
+  margin-bottom: 24px;
+  font-variation-settings: "opsz" 144;
+  max-width: 680px;
+}
+.arc-title em {
+  font-style: italic;
+  color: var(--purple);
+  font-weight: 400;
+}
+
+.arc-body {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  max-width: 580px;
+  margin-bottom: 28px;
+}
+
+.arc-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.arc-option {
+  position: relative;
+  padding: 18px 20px 18px 44px;
+  background: var(--paper);
+  border: 0.5px solid var(--cream-deep);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--ink);
+  transition: all 0.22s var(--ease);
+  overflow: hidden;
+}
+.arc-option::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pebble-300);
+  box-shadow: 0 0 0 0 rgba(90, 143, 255, 0);
+  transition: all 0.3s var(--ease);
+}
+.arc-option:hover {
+  border-color: var(--pebble-400);
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px -20px rgba(90, 143, 255, 0.35);
+}
+.arc-option:hover::before {
+  background: radial-gradient(circle at 32% 28%, #b8d4ff 0%, #5A8FFF 30%, var(--pebble-500) 65%, var(--pebble-700) 100%);
+  box-shadow: 0 0 14px 3px rgba(90, 143, 255, 0.7), 0 0 4px 1px rgba(90, 143, 255, 1);
+  transform: translateY(-50%) scale(1.15);
+}
+
+.arc-option-crisis {
+  background: var(--crisis-bg);
+  border-color: var(--crisis-line);
+  color: var(--crisis-fg);
+}
+.arc-option-crisis::before { background: var(--crisis-mid); }
+.arc-option-crisis:hover {
+  background: #f7c1c1;
+  border-color: var(--crisis-mid);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px -20px rgba(163, 45, 45, 0.4);
+}
+.arc-option-crisis:hover::before {
+  background: var(--crisis-mid);
+  box-shadow: 0 0 12px 2px rgba(163, 45, 45, 0.6);
+  transform: translateY(-50%) scale(1.15);
+}
+
+.arc-footnote {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin-top: 22px;
+  padding-left: 16px;
+  border-left: 1px solid var(--gold-500);
+  line-height: 1.55;
+}
+
+/* Slider in the mirror phase */
+.slider-block {
+  background: var(--paper);
+  border: 0.5px solid var(--cream-deep);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+  margin-bottom: 24px;
+}
+.slider-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 14px;
+  color: var(--ink);
+}
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.slider-anchor {
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+input[type="range"] {
+  flex: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  background: var(--cream-deep);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--pebble-500);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(15, 28, 46, 0.18);
+  transition: transform 0.15s var(--ease);
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--pebble-500);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(15, 28, 46, 0.18);
+}
+.slider-output {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 22px;
+  min-width: 28px;
+  text-align: right;
+  color: var(--ink);
+}
+
+/* ============================================================
+   WITNESS CARD — the artifact
+   Cream and gold. Diamond Framework structure. Per Bleu's spec:
+   one quote, one signal, one next action, one lineage line.
+   ============================================================ */
+.witness-card {
+  background: linear-gradient(180deg, var(--cream) 0%, var(--cream-warm) 100%);
+  border: 0.5px solid var(--cream-deep);
+  border-radius: var(--radius-xl);
+  padding: 32px 30px;
+  margin-bottom: 24px;
+  position: relative;
+  box-shadow: var(--shadow-card);
+}
+.witness-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 32px;
+  right: 32px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold-500) 50%, transparent 100%);
+}
+.witness-stamp {
+  position: absolute;
+  top: 14px;
+  right: 24px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--gold-700);
+  font-weight: 500;
+}
+.witness-tier {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--purple);
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+.witness-tier::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-500);
+}
+
+.witness-section {
+  margin-bottom: 18px;
+}
+.witness-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--gold-700);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.witness-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.015em;
+}
+.witness-signal {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.witness-num {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+}
+.witness-num-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.witness-dim {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+.witness-confidence {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.witness-shift {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink);
+  padding: 12px 16px;
+  border-left: 2px solid var(--gold-500);
+  background: rgba(201, 162, 39, 0.04);
+  margin: 0;
+}
+
+.witness-release {
+  margin: 0;
+  padding-left: 22px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.witness-release li { margin-bottom: 8px; }
+
+.witness-foot {
+  padding-top: 18px;
+  border-top: 0.5px solid var(--cream-deep);
+  margin-top: 6px;
+}
+.witness-clinical {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+.witness-lineage {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-faint);
+  line-height: 1.55;
+}
+
+/* The 24-hour follow-up promise */
+.followup {
+  background: var(--cream-warm);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+.followup-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.followup-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal-500);
+  animation: dotPulse 2.4s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.85); }
+}
+.followup-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.followup-body {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Behavior-change strip */
+.behavior-strip {
+  background: var(--paper);
+  border: 0.5px solid var(--cream-deep);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin-bottom: 18px;
+}
+.behavior-strip-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.behavior-strip-body {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Crisis routing block */
+.crisis-block {
+  background: var(--crisis-bg);
+  border: 0.5px solid var(--crisis-line);
+  border-radius: var(--radius-md);
+  padding: 26px 24px;
+  margin-bottom: 16px;
+}
+.crisis-eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--crisis-fg);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+.crisis-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--crisis-fg);
+  margin-bottom: 14px;
+  letter-spacing: -0.015em;
+}
+.crisis-body {
+  font-size: 14.5px;
+  color: var(--crisis-fg);
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+.crisis-list {
+  display: grid;
+  gap: 8px;
+}
+.crisis-link {
+  display: block;
+  padding: 14px 16px;
+  background: var(--crisis-mid);
+  color: var(--crisis-bg);
+  border-radius: var(--radius-md);
+  font-size: 14.5px;
+  font-weight: 500;
+  transition: background 0.18s var(--ease);
+}
+.crisis-link:hover { background: #791f1f; }
+.crisis-link-secondary {
+  background: transparent;
+  color: var(--crisis-fg);
+  border: 0.5px solid var(--crisis-mid);
+}
+.crisis-link-secondary:hover { background: var(--crisis-line); }
+.crisis-foot {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--crisis-fg);
+  line-height: 1.6;
+  margin-top: 18px;
+}
+
+/* Email opt-in row (post-arc, soft) */
+.email-row {
+  display: none;
+  gap: 8px;
+  background: var(--cream-warm);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.email-row.is-open { display: flex; }
+.email-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 0.5px solid var(--cream-deep);
+  border-radius: var(--radius-md);
+  font-size: 13.5px;
+  background: white;
+  color: var(--ink);
+}
+.email-row input:focus {
+  outline: none;
+  border-color: var(--pebble-400);
+}
+
+/* Two-column action row after Witness Card */
+.arc-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+@media (max-width: 540px) {
+  .arc-actions { grid-template-columns: 1fr; }
+}
+.arc-action {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.18s var(--ease);
+}
+.arc-action-primary {
+  background: var(--ink);
+  color: var(--cream);
+}
+.arc-action-primary:hover { background: var(--pebble-700); }
+.arc-action-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 0.5px solid var(--ink-faint);
+}
+.arc-action-secondary:hover { background: var(--cream-warm); border-color: var(--ink-soft); }
+
+/* ============================================================
+   BREATH GATE — Pattern 1 · the living pebble
+   The dot IS bleu. Glowing pebble-blue heartbeat.
+   Radial gradient sphere with depth, suspended in still cream,
+   concentric ripples emanating outward at parasympathetic rhythm.
+   prefers-reduced-motion respected.
+   ============================================================ */
+.breath-gate {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 42%, #ffffff 0%, var(--cream) 38%, var(--cream-warm) 100%);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 56px;
+  transition: opacity 0.7s var(--ease);
+}
+.breath-gate.is-leaving { opacity: 0; pointer-events: none; }
+
+/* The pebble — a luminous blue sphere, breathing */
+.breath-pebble-stage {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Concentric ripples — water, breath, the dot dropped in cream */
+.breath-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border-radius: 50%;
+  border: 1px solid var(--pebble-400);
+  opacity: 0;
+  animation: breathRipple 5000ms ease-out infinite;
+  pointer-events: none;
+}
+.breath-ripple.r2 { animation-delay: 1000ms; }
+.breath-ripple.r3 { animation-delay: 2000ms; }
+.breath-ripple.r4 { animation-delay: 3000ms; }
+
+@keyframes breathRipple {
+  0%   { transform: scale(0.5); opacity: 0; }
+  10%  { opacity: 0.6; }
+  100% { transform: scale(7); opacity: 0; }
+}
+
+/* The pebble itself — glowing, blue, alive */
+.breath-pebble {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 28%,
+    #b8d4ff 0%,
+    #5A8FFF 28%,
+    var(--pebble-500) 60%,
+    var(--pebble-700) 100%
+  );
+  box-shadow:
+    0 0 60px 12px rgba(90, 143, 255, 0.55),
+    0 0 24px 4px rgba(90, 143, 255, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+    0 4px 14px -2px rgba(15, 28, 46, 0.4);
+  animation: breathPulse 5000ms ease-in-out infinite;
+  z-index: 2;
+}
+
+@keyframes breathPulse {
+  0%   { transform: scale(1);    box-shadow: 0 0 60px 12px rgba(90,143,255,0.55), 0 0 24px 4px rgba(90,143,255,0.85), 0 0 0 1px rgba(255,255,255,0.15) inset, 0 4px 14px -2px rgba(15,28,46,0.4); }
+  40%  { transform: scale(1.35); box-shadow: 0 0 100px 24px rgba(90,143,255,0.75), 0 0 40px 8px rgba(90,143,255,1), 0 0 0 1px rgba(255,255,255,0.25) inset, 0 6px 20px -2px rgba(15,28,46,0.5); }
+  60%  { transform: scale(1.35); box-shadow: 0 0 100px 24px rgba(90,143,255,0.75), 0 0 40px 8px rgba(90,143,255,1), 0 0 0 1px rgba(255,255,255,0.25) inset, 0 6px 20px -2px rgba(15,28,46,0.5); }
+  100% { transform: scale(1);    box-shadow: 0 0 60px 12px rgba(90,143,255,0.55), 0 0 24px 4px rgba(90,143,255,0.85), 0 0 0 1px rgba(255,255,255,0.15) inset, 0 4px 14px -2px rgba(15,28,46,0.4); }
+}
+
+.breath-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 22px;
+  color: var(--ink-soft);
+  letter-spacing: -0.012em;
+  text-align: center;
+  max-width: 380px;
+  line-height: 1.45;
+}
+.breath-text strong {
+  font-weight: 400;
+  color: var(--pebble-600);
+  font-style: italic;
+}
+
+.breath-skip {
+  position: absolute;
+  bottom: 36px;
+  right: 36px;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-radius: 999px;
+  transition: color 0.18s var(--ease);
+  font-weight: 500;
+}
+.breath-skip:hover { color: var(--pebble-600); }
+
+@media (prefers-reduced-motion: reduce) {
+  .breath-pebble { animation: none; }
+  .breath-ripple { animation: none; opacity: 0.3; transform: scale(2); }
+}
+
+</style>
+<style>
+/* ============================================================
+   DRAWER — top-left side panel (Pattern 17)
+   Account · Specialist · Reference · Crisis
+   ============================================================ */
+.drawer {
+  position: fixed;
+  top: 0;
+  left: -440px;
+  width: 420px;
+  max-width: 92vw;
+  height: 100vh;
+  background: var(--cream);
+  border-right: 0.5px solid var(--cream-deep);
+  z-index: 150;
+  transition: left 0.35s var(--ease);
+  overflow-y: auto;
+  padding: 28px 32px 60px;
+}
+.drawer.is-open { left: 0; box-shadow: 18px 0 60px -20px rgba(15,28,46,0.25); }
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 28, 46, 0.4);
+  z-index: 140;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+.drawer-overlay.is-open { opacity: 1; pointer-events: auto; }
+
+.drawer-close {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 20px;
+  color: var(--ink-soft);
+  line-height: 1;
+  transition: background 0.18s var(--ease);
+}
+.drawer-close:hover { background: var(--cream-warm); }
+
+.drawer-section { margin-bottom: 36px; }
+.drawer-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold-700);
+  font-weight: 500;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 0.5px solid var(--cream-deep);
+}
+.drawer-list { list-style: none; }
+.drawer-list a, .drawer-list button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 0;
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 450;
+  transition: color 0.15s var(--ease);
+}
+.drawer-list a:hover, .drawer-list button:hover { color: var(--pebble-600); }
+
+.drawer-crisis-list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  background: var(--crisis-bg);
+  color: var(--crisis-fg);
+  border-radius: var(--radius-md);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+.drawer-crisis-list a:hover { background: var(--crisis-line); }
+.drawer-crisis-tag {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--crisis-mid);
+  font-weight: 500;
+}
+
+.drawer-mast {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 6px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.drawer-mast-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #b8d4ff 0%, #5A8FFF 30%, var(--pebble-500) 65%, var(--pebble-700) 100%);
+  box-shadow: 0 0 14px 2px rgba(90,143,255,0.6), 0 0 4px 1px rgba(90,143,255,0.85), 0 0 0 0.5px rgba(255,255,255,0.2) inset;
+  animation: wordmarkPulse 5000ms ease-in-out infinite;
+  flex-shrink: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .drawer-mast-dot { animation: none; }
+}
+.drawer-anchor {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 0.5px solid var(--cream-deep);
+}
+
+/* ============================================================
+   LIBRARY — editorial section grid for the 9 sub-surfaces
+   ============================================================ */
+.lib-mast {
+  padding: clamp(48px, 7vw, 88px) 0 clamp(28px, 3vw, 40px);
+  border-bottom: 0.5px solid var(--cream-deep);
+}
+.lib-trust {
+  margin-top: 32px;
+  font-size: 12px;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+}
+.lib-trust span { display: inline-flex; align-items: center; gap: 8px; }
+.lib-trust span::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--pebble-400);
+  border-radius: 50%;
+}
+.lib-trust span:first-child::before { background: var(--gold-500); }
+
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 28px;
+}
+.sec {
+  display: block;
+  padding: 30px 28px;
+  background: var(--cream-warm);
+  border: 0.5px solid transparent;
+  border-radius: var(--radius-md);
+  transition: all 0.3s var(--ease);
+  position: relative;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+}
+.sec:hover {
+  background: var(--paper);
+  border-color: var(--pebble-300);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+.sec-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--gold-700);
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+.sec-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  margin-bottom: 12px;
+  font-variation-settings: "opsz" 144;
+}
+.sec-title em { font-style: italic; color: var(--purple); }
+.sec-pull {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+}
+.sec-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 0.5px solid var(--cream-deep);
+  font-size: 13px;
+  font-weight: 500;
+}
+.sec-arrow {
+  font-family: var(--display);
+  font-size: 20px;
+  color: var(--ink-faint);
+  font-weight: 300;
+  transition: transform 0.2s var(--ease), color 0.2s var(--ease);
+}
+.sec:hover .sec-arrow { transform: translateX(4px); color: var(--pebble-600); }
+
+.sec.lg { grid-column: span 8; }
+.sec.md { grid-column: span 4; }
+.sec.sm { grid-column: span 4; }
+.sec.wide { grid-column: span 12; padding: 44px 40px; background: var(--pebble-800); }
+.sec.wide .sec-num { color: var(--gold-300); }
+.sec.wide .sec-title { color: var(--cream); font-size: 38px; }
+.sec.wide .sec-pull { color: rgba(250, 246, 238, 0.78); font-size: 17px; max-width: 720px; }
+.sec.wide .sec-foot { color: var(--cream); border-top-color: rgba(250, 246, 238, 0.18); }
+.sec.wide .sec-arrow { color: var(--gold-300); }
+.sec.wide:hover { background: var(--pebble-900); }
+
+@media (max-width: 880px) {
+  .sec.lg, .sec.md, .sec.sm, .sec.wide { grid-column: span 12; }
+  .sec.wide { padding: 32px 24px; }
+  .sec.wide .sec-title { font-size: 28px; }
+}
+
+/* ============================================================
+   VESSEL — ALVAI dialogue, BHI ring, dimension bars
+   ============================================================ */
+.alvai-card {
+  background: linear-gradient(135deg, var(--teal-100) 0%, var(--pebble-100) 100%);
+  border-radius: var(--radius-xl);
+  padding: 36px 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.alvai-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold-700);
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+.alvai-eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-500);
+}
+.alvai-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.18;
+  letter-spacing: -0.018em;
+  color: var(--pebble-900);
+  margin-bottom: 14px;
+  max-width: 640px;
+}
+.alvai-body {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--pebble-800);
+  margin-bottom: 20px;
+  max-width: 640px;
+}
+.alvai-input {
+  display: flex;
+  gap: 8px;
+  background: white;
+  border-radius: 999px;
+  padding: 4px;
+  border: 0.5px solid var(--pebble-200);
+}
+.alvai-input input {
+  flex: 1;
+  padding: 12px 18px;
+  border: none;
+  background: transparent;
+  font-size: 14.5px;
+  color: var(--ink);
+  outline: none;
+}
+.alvai-input button {
+  padding: 10px 22px;
+  background: var(--pebble-700);
+  color: white;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.alvai-input button:hover { background: var(--pebble-800); }
+
+.alvai-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.alvai-chip {
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 0.5px solid var(--pebble-200);
+  border-radius: 999px;
+  font-size: 12.5px;
+  color: var(--pebble-800);
+  font-weight: 500;
+}
+.alvai-chip:hover { background: white; }
+
+/* BHI ring (Pulse) — large circular score display */
+.bhi-card {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 36px;
+  background: var(--paper);
+  border: 0.5px solid var(--cream-deep);
+  border-radius: var(--radius-xl);
+  padding: 36px 32px;
+  align-items: center;
+}
+@media (max-width: 720px) {
+  .bhi-card { grid-template-columns: 1fr; gap: 24px; }
+}
+
+.bhi-ring-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+.bhi-ring-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.bhi-ring-track { fill: none; stroke: var(--cream-deep); stroke-width: 12; }
+.bhi-ring-prog  { fill: none; stroke: var(--pebble-500); stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 0.8s var(--ease); }
+.bhi-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.bhi-num {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 56px;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+}
+.bhi-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.bhi-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bhi-bar {
+  display: grid;
+  grid-template-columns: 100px 1fr 30px;
+  align-items: center;
+  gap: 14px;
+}
+.bhi-bar-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.bhi-bar-track {
+  height: 6px;
+  background: var(--cream-deep);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.bhi-bar-fill {
+  height: 100%;
+  background: var(--pebble-500);
+  border-radius: 3px;
+  transition: width 0.8s var(--ease);
+}
+.bhi-bar-num {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   CARE / CITY — practitioner cards, neighborhood grid
+   ============================================================ */
+.practitioner-card {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: var(--paper);
+  border: 0.5px solid var(--cream-deep);
+  border-radius: var(--radius-md);
+  transition: all 0.2s var(--ease);
+}
+.practitioner-card:hover {
+  border-color: var(--pebble-300);
+  box-shadow: var(--shadow-soft);
+}
+.practitioner-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--pebble-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--pebble-700);
+  flex-shrink: 0;
+}
+
+.neighborhood-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.neighborhood-tile {
+  padding: 18px 16px;
+  background: var(--paper);
+  border: 0.5px solid var(--cream-deep);
+  border-radius: var(--radius-md);
+  transition: all 0.2s var(--ease);
+}
+.neighborhood-tile:hover {
+  border-color: var(--pebble-300);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+.neighborhood-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.neighborhood-score {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.neighborhood-tag {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  font-weight: 500;
+  margin-top: 4px;
+}
+.neighborhood-tile.is-critical .neighborhood-score { color: var(--crisis-mid); }
+.neighborhood-tile.is-critical .neighborhood-tag { color: var(--crisis-mid); }
+
+/* Protocol bundle card (Stripe) — for Care surface */
+.protocol-card {
+  background: var(--paper);
+  border: 0.5px solid var(--cream-deep);
+  border-radius: var(--radius-lg);
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: all 0.2s var(--ease);
+}
+.protocol-card:hover {
+  border-color: var(--pebble-300);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+.protocol-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+.protocol-price {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 28px;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.protocol-price small {
+  font-size: 13px;
+  color: var(--ink-faint);
+  font-weight: 400;
+  font-family: var(--body);
+  margin-left: 2px;
+}
+.protocol-body {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  flex: 1;
+}
+.protocol-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px;
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s var(--ease);
+}
+.protocol-cta:hover { background: var(--pebble-700); transform: translateY(-1px); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: var(--pebble-900);
+  color: rgba(250, 246, 238, 0.72);
+  padding: 56px var(--gutter) 32px;
+  margin-top: 80px;
+}
+.foot-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: end;
+}
+@media (max-width: 720px) { .foot-inner { grid-template-columns: 1fr; } }
+
+.foot-mast {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  margin-bottom: 6px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.foot-mast-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #d6e6ff 0%, #7BA5FF 30%, var(--pebble-500) 70%, var(--pebble-700) 100%);
+  box-shadow: 0 0 16px 3px rgba(123,165,255,0.7), 0 0 6px 1px rgba(123,165,255,1), 0 0 0 0.5px rgba(255,255,255,0.25) inset;
+  animation: wordmarkPulse 5000ms ease-in-out infinite;
+  flex-shrink: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .foot-mast-dot { animation: none; }
+}
+.foot-anchor {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 14px;
+  color: rgba(250, 246, 238, 0.6);
+  margin-bottom: 18px;
+}
+.foot-meta {
+  font-size: 12px;
+  color: rgba(250, 246, 238, 0.5);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+.foot-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+}
+.foot-links a {
+  color: rgba(250, 246, 238, 0.7);
+  transition: color 0.18s var(--ease);
+}
+.foot-links a:hover { color: var(--gold-300); }
+
+.foot-crisis {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 0.5px solid rgba(250, 246, 238, 0.15);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(250, 246, 238, 0.55);
+}
+.foot-crisis strong { color: rgba(250, 246, 238, 0.85); font-weight: 500; }
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     BREATH GATE — Pattern 1
+     Pulses gold at 5000ms cycle (4s in, 1s hold, syncs with breathing).
+     Skippable via tap, Enter, Space, Esc.
+     prefers-reduced-motion respected.
+     ============================================================ -->
+<div id="breath-gate" class="breath-gate" role="dialog" aria-label="Take a breath before we begin" tabindex="0">
+  <div class="breath-pebble-stage" aria-hidden="true">
+    <div class="breath-ripple r1"></div>
+    <div class="breath-ripple r2"></div>
+    <div class="breath-ripple r3"></div>
+    <div class="breath-ripple r4"></div>
+    <div class="breath-pebble"></div>
+  </div>
+  <p class="breath-text">Take one breath. <br><strong>You’re right where you need to be.</strong></p>
+  <button class="breath-skip" type="button" data-action="skip-breath">enter</button>
+</div>
+
+<!-- ============================================================
+     DRAWER — top-left side panel (Pattern 17)
+     ============================================================ -->
+<div id="drawer-overlay" class="drawer-overlay" data-action="close-drawer" aria-hidden="true"></div>
+<aside id="drawer" class="drawer" aria-label="Main menu" aria-hidden="true">
+  <button class="drawer-close" type="button" data-action="close-drawer" aria-label="Close menu">×</button>
+
+  <div class="drawer-mast">bleu<span class="drawer-mast-dot" aria-hidden="true"></span>live</div>
+  <p class="drawer-anchor"><em>A place to be heard.</em></p>
+
+  <div class="drawer-section">
+    <div class="drawer-label">Account</div>
+    <ul class="drawer-list">
+      <li><button data-action="goto-surface" data-surface="you">My Passport</button></li>
+      <li><button data-action="goto-surface" data-surface="you">My Stack</button></li>
+      <li><a href="#" data-action="signin">Sign In</a></li>
+      <li><a href="#" data-action="signup">Sign Up</a></li>
+      <li><a href="#" data-action="settings">Settings</a></li>
+    </ul>
+  </div>
+
+  <div class="drawer-section">
+    <div class="drawer-label">Specialist</div>
+    <ul class="drawer-list">
+      <li><a href="#">Practitioner Portal</a></li>
+      <li><a href="#">Clinical Login</a></li>
+      <li><a href="#">Enterprise &amp; City Partnership</a></li>
+      <li><a href="#">Hotel Monteleone Pilot</a></li>
+    </ul>
+  </div>
+
+  <div class="drawer-section">
+    <div class="drawer-label">Reference</div>
+    <ul class="drawer-list">
+      <li><a href="#" data-action="goto-library" data-section="why">Patent &amp; Methodology</a></li>
+      <li><a href="#" data-action="goto-library" data-section="learn">Molecular Architecture (white paper)</a></li>
+      <li><a href="#">Press &amp; Media Kit</a></li>
+      <li><a href="#">Research Bibliography</a></li>
+      <li><a href="#">Affiliate Disclosure</a></li>
+      <li><a href="#">Terms of Service</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+    </ul>
+  </div>
+
+  <div class="drawer-section">
+    <div class="drawer-label">Crisis · always one tap away</div>
+    <ul class="drawer-list drawer-crisis-list">
+      <li><a href="tel:988">988 Suicide &amp; Crisis Lifeline <span class="drawer-crisis-tag">Call · Text</span></a></li>
+      <li><a href="sms:741741?body=HOME">Crisis Text Line <span class="drawer-crisis-tag">Text HOME</span></a></li>
+      <li><a href="tel:1-800-662-4357">SAMHSA Helpline <span class="drawer-crisis-tag">24/7</span></a></li>
+      <li><a href="tel:1-866-488-7386">Trevor Project <span class="drawer-crisis-tag">LGBTQ+</span></a></li>
+      <li><a href="tel:1-800-484-3731">Never Use Alone <span class="drawer-crisis-tag">Overdose</span></a></li>
+      <li><a href="tel:911">911 Emergency <span class="drawer-crisis-tag">Immediate</span></a></li>
+    </ul>
+  </div>
+</aside>
+
+<!-- ============================================================
+     CHROME — persistent top bar
+     ============================================================ -->
+<header class="chrome">
+  <div class="chrome-row">
+    <button class="drawer-btn" type="button" data-action="open-drawer" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="#home" class="wordmark" data-action="goto-surface" data-surface="home">
+      <span class="wordmark-text">bleu<span class="wordmark-dot" aria-hidden="true"></span>live</span>
+      <span class="wordmark-sub">A place to be heard</span>
+    </a>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="#home"    class="active" data-action="goto-surface" data-surface="home">Home</a>
+      <a href="#vessel"  data-action="goto-surface" data-surface="vessel">Vessel</a>
+      <a href="#care"    data-action="goto-surface" data-surface="care">Care</a>
+      <a href="#city"    data-action="goto-surface" data-surface="city">City</a>
+      <a href="#library" data-action="goto-surface" data-surface="library">Library</a>
+      <a href="#you"     data-action="goto-surface" data-surface="you">You</a>
+    </nav>
+    <button class="stack-btn" type="button" data-action="goto-surface" data-surface="you">
+      <span class="stack-btn-hex"></span>
+      <span>Stack <span id="stack-count">0</span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============================================================
+     HOME SURFACE — the 60-second arc
+     Phase 1: Tonight (case fork)
+     Phase 2: Safety gate
+     Phase 3: Crisis routing (only if crisis answer)
+     Phase 4: Mirror (See — Witness voice + slider)
+     Phase 5: Witness Card (Name · Signal · Shift · Release · Lineage)
+     Beneath the arc: the full home thesis preserved verbatim
+     ============================================================ -->
+<main id="surface-home" class="surface-page is-active">
+
+  <!-- THE ARC -->
+  <section class="arc-shell" id="arc">
+    <div class="arc-stage">
+
+      <!-- PHASE 1 — ALVAI opens the conversation -->
+      <div class="arc-phase is-active" data-phase="1">
+        <div class="alvai-presence">
+          <div class="alvai-presence-dot" aria-hidden="true"></div>
+          <div class="alvai-presence-name">Alvai</div>
+          <div class="alvai-presence-status">Always here</div>
+        </div>
+
+        <div class="alvai-thread" id="alvai-thread">
+          <div class="msg msg-alvai">
+            <div class="msg-alvai-meta">She speaks first</div>
+            <p class="msg-alvai-body">
+              Hi. I&rsquo;m Alvai.<br><br>
+              <em>What do you want more of?</em><br><br>
+              Deeper sleep. More energy. A quieter mind. A body you actually like being in.
+              Connection that means something. Money that breathes. More reasons to smile.<br><br>
+              Tell me. <em>I&rsquo;m good at this.</em>
+            </p>
+          </div>
+        </div>
+
+        <form class="alvai-reply" id="alvai-reply-form" onsubmit="return false;">
+          <input
+            class="alvai-reply-input"
+            id="alvai-reply-input"
+            type="text"
+            placeholder="In your own words..."
+            autocomplete="off"
+            aria-label="Tell ALVAI what is happening"
+          />
+          <button class="alvai-reply-send" type="submit" data-action="alvai-send">Send</button>
+        </form>
+
+        <div class="alvai-suggest-row">
+          <div class="alvai-suggest-label">Or tap one. Same conversation, faster start.</div>
+          <button class="alvai-suggest" type="button" data-action="alvai-quick" data-concern="thrive-sleep">Sleep deeper</button>
+          <button class="alvai-suggest" type="button" data-action="alvai-quick" data-concern="thrive-energy">More energy</button>
+          <button class="alvai-suggest" type="button" data-action="alvai-quick" data-concern="thrive-focus">A quieter mind</button>
+          <button class="alvai-suggest" type="button" data-action="alvai-quick" data-concern="thrive-body">A body I love</button>
+          <button class="alvai-suggest" type="button" data-action="alvai-quick" data-concern="thrive-connection">Deeper connection</button>
+          <button class="alvai-suggest" type="button" data-action="alvai-quick" data-concern="thrive-money">Money that breathes</button>
+          <button class="alvai-suggest" type="button" data-action="alvai-quick" data-concern="thrive-joy">More joy, more often</button>
+          <button class="alvai-suggest" type="button" data-action="alvai-quick" data-concern="curious">Just curious</button>
+          <button class="alvai-suggest" type="button" data-action="alvai-quick" data-concern="off">Something feels off</button>
+        </div>
+
+        <p class="arc-footnote">
+          No account needed. <em>Stay as long as you like.</em>
+        </p>
+      </div>
+
+      <!-- PHASE 2 — Safety gate · ALVAI continues -->
+      <div class="arc-phase" data-phase="2">
+        <div class="alvai-presence">
+          <div class="alvai-presence-dot" aria-hidden="true"></div>
+          <div class="alvai-presence-name">Alvai</div>
+          <div class="alvai-presence-status">Listening</div>
+        </div>
+
+        <div class="alvai-thread-summary" id="alvai-summary-2">You told me what you’re after.</div>
+
+        <div class="alvai-thread">
+          <div class="msg msg-alvai">
+            <div class="msg-alvai-meta">One quick check first</div>
+            <p class="msg-alvai-body">
+              Before I give you anything &mdash; <em>how are you, actually?</em><br>
+              I ask everyone. It helps me meet you in the right place.
+            </p>
+          </div>
+        </div>
+
+        <div class="alvai-suggest-row">
+          <button class="alvai-suggest" type="button" data-action="answer-safety" data-safety="safe">I&rsquo;m good. Let&rsquo;s go</button>
+          <button class="alvai-suggest" type="button" data-action="answer-safety" data-safety="meds">Good, but I&rsquo;m on meds you should know about</button>
+          <button class="alvai-suggest alvai-suggest-crisis" type="button" data-action="answer-safety" data-safety="crisis">Honestly, I&rsquo;m struggling</button>
+        </div>
+      </div>
+
+      <!-- PHASE 3 — Crisis routing -->
+      <div class="arc-phase" data-phase="3">
+        <div class="alvai-presence">
+          <div class="alvai-presence-dot" aria-hidden="true"></div>
+          <div class="alvai-presence-name">Alvai</div>
+          <div class="alvai-presence-status">With you</div>
+        </div>
+
+        <div class="msg msg-alvai" style="margin-bottom: 26px;">
+          <p class="msg-alvai-body">
+            Okay. <em>I&rsquo;m here.</em> Thank you for telling me.<br><br>
+            Sometimes the next step is a person, not a protocol. These three lines are answered by trained humans &mdash;
+            free, 24/7. You don&rsquo;t have to be sure to call. And when you&rsquo;re ready, we&rsquo;ll keep going.
+          </p>
+        </div>
+
+        <div class="crisis-block">
+          <div class="crisis-list">
+            <a href="tel:988" class="crisis-link">988 &mdash; call or text · Suicide &amp; Crisis Lifeline</a>
+            <a href="sms:741741?body=HOME" class="crisis-link">Text HOME to 741741 · Crisis Text Line</a>
+            <a href="tel:1-800-662-4357" class="crisis-link crisis-link-secondary">1-800-662-4357 · SAMHSA Helpline</a>
+          </div>
+          <p class="crisis-foot">When you’re ready — not a minute before — I’ll be here. <em>No rush.</em></p>
+        </div>
+        <button class="btn btn-ghost btn-sm" type="button" data-action="reset-arc" style="margin-top: 18px;">Go back</button>
+      </div>
+
+      <!-- PHASE 4 — ALVAI reflects, then asks for the number -->
+      <div class="arc-phase" data-phase="4">
+        <div class="alvai-presence">
+          <div class="alvai-presence-dot" aria-hidden="true"></div>
+          <div class="alvai-presence-name">Alvai</div>
+          <div class="alvai-presence-status">Listening close</div>
+        </div>
+
+        <div class="msg msg-alvai" style="margin-bottom: 28px;">
+          <div class="msg-alvai-meta">I hear you</div>
+          <p class="msg-alvai-body" id="mirror-title"></p>
+        </div>
+        <div class="msg msg-alvai" style="margin-bottom: 28px;">
+          <p class="msg-alvai-body" id="mirror-body" style="font-size: clamp(16px, 1.8vw, 18px); font-family: var(--body); font-weight: 400; line-height: 1.65; color: var(--ink-soft);"></p>
+        </div>
+
+        <div class="slider-block">
+          <label class="slider-label" id="slider-label" for="severity"></label>
+          <div class="slider-row">
+            <span class="slider-anchor" id="slider-low"></span>
+            <input type="range" id="severity" min="0" max="10" value="5" step="1" />
+            <span class="slider-anchor" id="slider-high"></span>
+            <span class="slider-output" id="slider-out">5</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" type="button" data-action="generate-witness">
+          Show me my card &rarr;
+        </button>
+      </div>
+
+      <!-- PHASE 5 — ALVAI's gift: the Witness Card -->
+      <div class="arc-phase" data-phase="5">
+        <div class="alvai-presence">
+          <div class="alvai-presence-dot" aria-hidden="true"></div>
+          <div class="alvai-presence-name">Alvai</div>
+          <div class="alvai-presence-status">Remembering this</div>
+        </div>
+
+        <div class="msg msg-alvai" style="margin-bottom: 22px;">
+          <div class="msg-alvai-meta">Here’s what I’m holding for you</div>
+          <p class="msg-alvai-body">
+            I made you a card. <em>I’ll remember this even if you don’t.</em>
+          </p>
+        </div>
+
+        <article class="witness-card" id="witness-card">
+          <div class="witness-stamp">Saved</div>
+          <div class="witness-tier" id="witness-tier">Established evidence</div>
+
+          <div class="witness-section">
+            <div class="witness-label">What I’m hearing</div>
+            <h3 class="witness-name" id="witness-name"></h3>
+          </div>
+
+          <div class="witness-section">
+            <div class="witness-label">Your signal today</div>
+            <div class="witness-signal">
+              <span class="witness-num" id="witness-num">--</span>
+              <div class="witness-num-meta">
+                <span class="witness-dim" id="witness-dim">— Pulse</span>
+                <span class="witness-confidence" id="witness-confidence">Directional read · not diagnostic</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="witness-section">
+            <div class="witness-label">A different way to see it</div>
+            <p class="witness-shift" id="witness-shift"></p>
+          </div>
+
+          <div class="witness-section">
+            <div class="witness-label">Three small moves · the next 60 minutes</div>
+            <ol class="witness-release" id="witness-release"></ol>
+          </div>
+
+          <div class="witness-foot">
+            <p class="witness-clinical">Reviewed by Dr. Felicia Stoler · DCN, MS, RDN, FACSM, FAND, Dipl. ACLM</p>
+            <p class="witness-lineage"><em>The noticing is the medicine.</em></p>
+          </div>
+        </article>
+
+        <div class="followup">
+          <div class="followup-head">
+            <span class="followup-dot" aria-hidden="true"></span>
+            <span class="followup-title">I’ll check in tomorrow night.</span>
+          </div>
+          <p class="followup-body" id="followup-body">No action without follow-up. <em>That’s how I work.</em></p>
+        </div>
+
+        <div class="arc-actions">
+          <button class="arc-action arc-action-primary" type="button" data-action="continue-alvai">Keep talking to me &rarr;</button>
+          <button class="arc-action arc-action-secondary" type="button" data-action="open-email-row">Save my Card &amp; let me check in</button>
+        </div>
+
+        <div class="email-row" id="email-row">
+          <input type="email" placeholder="email &mdash; only if you want me to check in" autocomplete="email" />
+          <button class="btn btn-pebble btn-sm" type="button" data-action="save-email">Save</button>
+        </div>
+
+        <div class="behavior-strip">
+          <div class="behavior-strip-label">How this works</div>
+          <p class="behavior-strip-body">
+            Seen &rarr; Named &rarr; Guided &rarr; Remembered &rarr; Shared &rarr; Reinforced.
+            This card is step three. My check-in tomorrow is step four. The number can move.
+            <em>That’s the relationship.</em>
+          </p>
+        </div>
+
+        <button class="btn btn-ghost btn-sm" type="button" data-action="reset-arc">Start a new conversation</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HOME — the thesis (what was the home page before)
+       Preserved verbatim from the live site.
+       Lives below the fold so the arc gets the entry moment.
+       ============================================================ -->
+  <section class="surface">
+    <div class="wrap">
+      <div class="eyebrow">A living model of care · Louisiana · 222 cities · Patent pending</div>
+      <h2 class="display-xl display" style="margin-top: 22px;">
+        Everything you need to <em>heal</em> &mdash; in one place.
+      </h2>
+      <p class="deck" style="margin-top: 18px; max-width: 720px;">
+        Practitioners. Guidance. Safety. Recovery. Finance. Cannabis. Community.<br>
+        <span style="color: var(--gold-700); font-style: normal; font-family: var(--body); font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase;">Always free for citizens. The infrastructure wellness was always missing.</span>
+      </p>
+
+      <div class="stat-row" style="margin-top: 56px;">
+        <div class="stat"><div class="stat-n">800K+</div><div class="stat-l">Practitioners</div></div>
+        <div class="stat"><div class="stat-n">302K+</div><div class="stat-l">Interactions</div></div>
+        <div class="stat"><div class="stat-n">22</div><div class="stat-l">AI modes</div></div>
+        <div class="stat"><div class="stat-n">FREE</div><div class="stat-l">For citizens</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A new category section -->
+  <section class="surface-tight">
+    <div class="wrap">
+      <div class="eyebrow" style="color: var(--purple); --gold-500: var(--purple);">A new category</div>
+      <h3 class="display-lg display" style="margin-top: 18px;">
+        This is not a wellness app. It is a <em>time machine.</em>
+      </h3>
+      <p class="body-lg" style="margin-top: 16px; max-width: 720px;">
+        There is a 17-year evidence gap between what science knows and what the average doctor practices.
+        BLEU is the surface that closes it. Every protocol, every Witness Card, every routing decision is
+        traceable to peer-reviewed evidence and tagged at one of four tiers: Established, Emerging, Experimental, Narrative.
+        No fake precision. Confidence labels required.
+      </p>
+    </div>
+  </section>
+
+  <!-- The Unified Theory -->
+  <section class="surface" style="background: var(--cream-warm);">
+    <div class="wrap">
+      <div class="eyebrow">The Unified Theory</div>
+      <h3 class="display-lg display" style="margin-top: 22px; max-width: 880px;">
+        Your genome is 50,000 years old. Your environment is 200 years old.<br>
+        <em>That gap is every chronic disease.</em>
+      </h3>
+      <p class="body-lg" style="margin-top: 22px; max-width: 720px;">
+        Sleep. Connection. Stress. ECS. Food. Meaning. Movement. These are the seven mismatches
+        between the body you were built with and the world you live in. Every chronic condition
+        traces back to one or more. Every BLEU surface addresses them by name.
+      </p>
+      <p class="serif-quote" style="font-size: 22px; margin-top: 32px; color: var(--ink); max-width: 640px;">
+        The genome has been waiting 50,000 years for this infrastructure. <em>You built it.</em>
+      </p>
+    </div>
+  </section>
+
+  <!-- Dr. Felicia pull quote -->
+  <section class="surface-tight">
+    <div class="wrap">
+      <blockquote class="pull-quote">
+        Everyone else is selling the ambulance at the bottom of the cliff.
+        BLEU.live sells the <em>fence at the top</em> &mdash; and the fence adds 8 years to your life.
+        <cite class="pull-quote-cite">Dr. Felicia Stoler · DCN, MS, RDN, FACSM, FAND, Dipl. ACLM</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- The QALY metrics -->
+  <section class="surface-tight">
+    <div class="wrap">
+      <div class="stat-row">
+        <div class="stat"><div class="stat-n">8+ years</div><div class="stat-l">Biological years recovered</div></div>
+        <div class="stat"><div class="stat-n">$830K</div><div class="stat-l">Value created per user</div></div>
+        <div class="stat"><div class="stat-n">17 yrs</div><div class="stat-l">Evidence gap closed</div></div>
+        <div class="stat"><div class="stat-n">$2.1M</div><div class="stat-l">Three-generation social value</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Routing cards -->
+  <section class="surface">
+    <div class="wrap">
+      <div class="eyebrow">Where do you go from here</div>
+      <div class="section-grid" style="margin-top: 32px;">
+        <button class="sec md" type="button" data-action="goto-surface" data-surface="vessel">
+          <div class="sec-num">→ Vessel</div>
+          <h3 class="sec-title">Talk to <em>ALVAI.</em> Find your number.</h3>
+          <p class="sec-pull">The dashboard. The dialogue. The body. Your Pulse, your Passport, your Stack &mdash; all in one place.</p>
+          <div class="sec-foot"><span>Open Vessel</span><span class="sec-arrow">→</span></div>
+        </button>
+        <button class="sec md" type="button" data-action="goto-surface" data-surface="care">
+          <div class="sec-num">→ Care</div>
+          <h3 class="sec-title">Find a <em>real practitioner.</em> NPI verified.</h3>
+          <p class="sec-pull">800,000 verified providers. Trust scores you can actually read. Therapy, supplements, pharmacy &mdash; all here.</p>
+          <div class="sec-foot"><span>Open Care</span><span class="sec-arrow">→</span></div>
+        </button>
+        <button class="sec md" type="button" data-action="goto-surface" data-surface="city">
+          <div class="sec-num">→ City</div>
+          <h3 class="sec-title">New Orleans. <em>222 cities.</em> Your neighborhood.</h3>
+          <p class="sec-pull">12 neighborhoods scored. 32 crises mapped. Where you live decides what care reaches you.</p>
+          <div class="sec-foot"><span>Open City</span><span class="sec-arrow">→</span></div>
+        </button>
+        <button class="sec md" type="button" data-action="goto-surface" data-surface="library">
+          <div class="sec-num">→ Library</div>
+          <h3 class="sec-title">The depth. The science. <em>The literature.</em></h3>
+          <p class="sec-pull">Nine rooms. Sleep, Spirit, Recovery, Therapy, Finance, ECSIQ, Community, Learn, Why BLEU.</p>
+          <div class="sec-foot"><span>Open Library</span><span class="sec-arrow">→</span></div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Vagus Nerve thread -->
+  <section class="surface-tight" style="background: var(--cream-warm);">
+    <div class="wrap">
+      <div class="eyebrow">The Vagus Nerve thread</div>
+      <p class="body-lg" style="margin-top: 22px; max-width: 720px;">
+        The 10th cranial nerve is the physical cable connecting every system in this platform.
+        Sleep talks to Mind. Mind talks to Money. Money talks to Body. The thread that runs through them all
+        is the same nerve carrying the same signal. When BLEU optimizes one dimension, the others move with it.
+      </p>
+    </div>
+  </section>
+
+  <!-- Closing line -->
+  <section class="surface">
+    <div class="wrap" style="text-align: center;">
+      <p class="display-lg display" style="max-width: 760px; margin: 0 auto;">
+        Stay as long as you like.<br><em>Healing happens while you’re here.</em>
+      </p>
+      <p class="serif-quote" style="font-size: 15px; margin-top: 28px; color: var(--ink-faint);">
+        Made with love in New Orleans
+      </p>
+    </div>
+  </section>
+
+</main>
+<!-- ============================================================
+     VESSEL SURFACE
+     ALVAI · Pulse (BHI ring + 9 dimensions) · Passport · Stack · Safety Check
+     ============================================================ -->
+<main id="surface-vessel" class="surface-page">
+
+  <!-- Vessel mast + chip rail -->
+  <section class="lib-mast">
+    <div class="wrap">
+      <div class="eyebrow">Surface 02 · The working surface</div>
+      <h1 class="display-lg display" style="margin-top: 22px;">
+        Talk to <em>ALVAI.</em> Find your number. Build your stack.
+      </h1>
+      <p class="deck" style="margin-top: 14px; max-width: 640px;">
+        The dashboard. The dialogue. The body. Everything you actually use, in one place.
+      </p>
+    </div>
+  </section>
+
+  <div class="chip-rail-wrap">
+    <nav class="chip-rail" aria-label="Vessel sections">
+      <button class="chip is-active" type="button" data-vessel-tab="alvai"><span class="chip-num">01</span>Talk to ALVAI</button>
+      <button class="chip" type="button" data-vessel-tab="pulse"><span class="chip-num">02</span>Pulse</button>
+      <button class="chip" type="button" data-vessel-tab="passport"><span class="chip-num">03</span>Passport</button>
+      <button class="chip" type="button" data-vessel-tab="stack"><span class="chip-num">04</span>Stack</button>
+      <button class="chip" type="button" data-vessel-tab="safety"><span class="chip-num">05</span>Safety Check</button>
+    </nav>
+  </div>
+
+  <!-- Vessel · ALVAI -->
+  <section class="surface" data-vessel-pane="alvai">
+    <div class="wrap">
+      <div class="alvai-card">
+        <div class="alvai-eyebrow">ALVAI</div>
+        <h2 class="alvai-title">You found this because something is not working.</h2>
+        <p class="alvai-body">
+          Sleep, pain, anxiety, money stress, a body that will not cooperate, a mind that will not quiet down.
+          Maybe all of it at once. 855,000 verified practitioners. 50,000 peer-reviewed studies. 22 clinical modes.
+          None of it matters until you tell me what is actually going on.
+        </p>
+        <p class="alvai-body" style="font-family: var(--display); font-style: italic; font-size: 19px; color: var(--pebble-900);">
+          What brought you here today?
+        </p>
+        <form class="alvai-input" onsubmit="event.preventDefault();">
+          <input type="text" placeholder="Tell me in your own words..." aria-label="Tell ALVAI what is happening" />
+          <button type="submit">Ask ALVAI</button>
+        </form>
+        <div class="alvai-chips">
+          <button class="alvai-chip" type="button">Sleep</button>
+          <button class="alvai-chip" type="button">Therapy</button>
+          <button class="alvai-chip" type="button">Recovery</button>
+          <button class="alvai-chip" type="button">Supplements</button>
+          <button class="alvai-chip" type="button">Cannabis</button>
+          <button class="alvai-chip" type="button">Directory</button>
+        </div>
+      </div>
+
+      <div class="card card-warm" style="margin-top: 28px;">
+        <div class="eyebrow">The Diamond Framework</div>
+        <h3 class="display-md display" style="margin-top: 16px;">SEE → NAME → SHIFT → RELEASE</h3>
+        <p class="body-md" style="margin-top: 14px; max-width: 640px;">
+          When something is hard, ALVAI does four things in order: notices what is happening,
+          names it clearly, offers a different way to see it, and gives one small action.
+          Grounded in affect labeling (Lieberman 2007), ACT defusion (Hayes), and logotherapy reframing (Frankl).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vessel · Pulse -->
+  <section class="surface" data-vessel-pane="pulse" style="display:none;">
+    <div class="wrap">
+      <div class="eyebrow">Your pulse, right now</div>
+      <h2 class="display-md display" style="margin-top: 16px; max-width: 720px;">
+        Every BLEU intervention raises <em>biological complexity.</em> Ary Goldberger, fractal complexity in human physiology.
+      </h2>
+
+      <div class="bhi-card" style="margin-top: 36px;">
+        <div class="bhi-ring-wrap">
+          <svg class="bhi-ring-svg" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="bhi-ring-track" cx="100" cy="100" r="86" />
+            <circle class="bhi-ring-prog" cx="100" cy="100" r="86"
+                    stroke-dasharray="540" stroke-dashoffset="286" />
+          </svg>
+          <div class="bhi-ring-center">
+            <div class="bhi-num">47</div>
+            <div class="bhi-label">BHI · Building</div>
+          </div>
+        </div>
+        <div class="bhi-bars">
+          <div class="bhi-bar"><span class="bhi-bar-label">Sleep</span><div class="bhi-bar-track"><div class="bhi-bar-fill" style="width:50%"></div></div><span class="bhi-bar-num">50</span></div>
+          <div class="bhi-bar"><span class="bhi-bar-label">Mind</span><div class="bhi-bar-track"><div class="bhi-bar-fill" style="width:50%"></div></div><span class="bhi-bar-num">50</span></div>
+          <div class="bhi-bar"><span class="bhi-bar-label">Movement</span><div class="bhi-bar-track"><div class="bhi-bar-fill" style="width:50%"></div></div><span class="bhi-bar-num">50</span></div>
+          <div class="bhi-bar"><span class="bhi-bar-label">Nutrition</span><div class="bhi-bar-track"><div class="bhi-bar-fill" style="width:50%"></div></div><span class="bhi-bar-num">50</span></div>
+          <div class="bhi-bar"><span class="bhi-bar-label">Social</span><div class="bhi-bar-track"><div class="bhi-bar-fill" style="width:40%"></div></div><span class="bhi-bar-num">40</span></div>
+          <div class="bhi-bar"><span class="bhi-bar-label">Finance</span><div class="bhi-bar-track"><div class="bhi-bar-fill" style="width:50%"></div></div><span class="bhi-bar-num">50</span></div>
+          <div class="bhi-bar"><span class="bhi-bar-label">Spirit</span><div class="bhi-bar-track"><div class="bhi-bar-fill" style="width:40%"></div></div><span class="bhi-bar-num">40</span></div>
+          <div class="bhi-bar"><span class="bhi-bar-label">Recovery</span><div class="bhi-bar-track"><div class="bhi-bar-fill" style="width:45%"></div></div><span class="bhi-bar-num">45</span></div>
+          <div class="bhi-bar"><span class="bhi-bar-label">ECS</span><div class="bhi-bar-track"><div class="bhi-bar-fill" style="width:45%"></div></div><span class="bhi-bar-num">45</span></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 32px; text-align: center;">
+        <button class="btn btn-primary" type="button">Calculate my BHI with ALVAI →</button>
+        <p class="body-xs serif-quote" style="margin-top: 14px;">directional read · not diagnostic · confidence labels required on every measurement</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vessel · Passport -->
+  <section class="surface" data-vessel-pane="passport" style="display:none;">
+    <div class="wrap">
+      <div class="eyebrow">Your health identity</div>
+      <h2 class="display-lg display" style="margin-top: 22px;">
+        Your passport is <em>waiting.</em>
+      </h2>
+      <p class="body-lg" style="margin-top: 18px; max-width: 640px;">
+        Explorer. Pioneer. PRO. Not a data point. <em>A person with a specific health story that deserves a specific response.</em>
+      </p>
+
+      <div class="card card-warm" style="margin-top: 36px;">
+        <div class="eyebrow" style="color: var(--purple); --gold-500: var(--purple);">Founding Pioneer Program</div>
+        <h3 class="display-md display" style="margin-top: 14px;">Always free. Pioneer status permanent. Unlimited access.</h3>
+        <p class="body-md" style="margin-top: 14px;">
+          Citizens who join in 2026 are Pioneers forever. Your wellness journey, remembered and enhanced:
+          supplement tracking, practitioner saves, financial wellness, progress shields, missions and streaks,
+          ALVAI remembers you.
+        </p>
+        <button class="btn btn-primary" type="button" style="margin-top: 22px;">Create my Passport →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vessel · Stack -->
+  <section class="surface" data-vessel-pane="stack" style="display:none;">
+    <div class="wrap">
+      <div class="eyebrow">Your stack</div>
+      <h2 class="display-md display" style="margin-top: 16px;">Saved Witness Cards, supplements, practitioners, protocols.</h2>
+      <p class="body-md" style="margin-top: 16px; max-width: 640px;">
+        Everything you have asked BLEU to remember. Your stack fills as you move through the platform.
+        Right now: <strong id="stack-count-mirror">0</strong> items.
+      </p>
+    </div>
+  </section>
+
+  <!-- Vessel · Safety Check -->
+  <section class="surface" data-vessel-pane="safety" style="display:none;">
+    <div class="wrap">
+      <div class="eyebrow">Drug &amp; Supplement Safety</div>
+      <h2 class="display-md display" style="margin-top: 16px;">CYP450 enzyme pathways. FDA alerts. RxNorm interactions.</h2>
+      <p class="body-md" style="margin-top: 16px; max-width: 640px;">
+        Severity ratings. What to do and what to stop. 54 substances tracked. Run before any new supplement,
+        any new prescription, any combination you are unsure about. Sources: PubMed, FDA, DDInter 2.0, Cannlytics, WHO.
+        Nutrition &amp; lifestyle oversight: Dr. Felicia Stoler.
+      </p>
+      <button class="btn btn-primary" type="button" style="margin-top: 26px;">Run a Safety Check →</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     CARE SURFACE
+     Practitioners · Supplements · Pharmacy · Therapy+Care · Events
+     ============================================================ -->
+<main id="surface-care" class="surface-page">
+
+  <section class="lib-mast">
+    <div class="wrap">
+      <div class="eyebrow">Surface 03 · Where you act</div>
+      <h1 class="display-lg display" style="margin-top: 22px;">
+        Real <em>practitioners.</em> Verified products. Honest pharmacy.
+      </h1>
+      <p class="deck" style="margin-top: 14px; max-width: 640px;">
+        Finding the right practitioner is the first real step. Not reading another article.
+        Not buying another supplement. <em>A real person who sees you.</em>
+      </p>
+    </div>
+  </section>
+
+  <div class="chip-rail-wrap">
+    <nav class="chip-rail" aria-label="Care sections">
+      <button class="chip is-active" type="button" data-care-tab="practitioners"><span class="chip-num">01</span>Practitioners</button>
+      <button class="chip" type="button" data-care-tab="supplements"><span class="chip-num">02</span>Supplements</button>
+      <button class="chip" type="button" data-care-tab="therapy"><span class="chip-num">03</span>Therapy &amp; Care</button>
+      <button class="chip" type="button" data-care-tab="pharmacy"><span class="chip-num">04</span>Pharmacy</button>
+      <button class="chip" type="button" data-care-tab="protocols"><span class="chip-num">05</span>Protocol Bundles</button>
+      <button class="chip" type="button" data-care-tab="groceries"><span class="chip-num">06</span>Groceries</button>
+    </nav>
+  </div>
+
+  <!-- Care · Practitioners -->
+  <section class="surface" data-care-pane="practitioners">
+    <div class="wrap">
+      <div class="eyebrow">How Trust Scores work</div>
+      <div class="section-grid" style="margin-top: 24px;">
+        <div class="sec md" style="cursor: default;">
+          <div class="sec-num">NPI Verification</div>
+          <h3 class="sec-title">Every practitioner is checked against the federal NPI registry.</h3>
+          <p class="sec-pull">855,000 verified records. License status visible. Real humans, real credentials.</p>
+        </div>
+        <div class="sec md" style="cursor: default;">
+          <div class="sec-num">License Status</div>
+          <h3 class="sec-title">Active. Suspended. Lapsed. <em>Visible.</em></h3>
+          <p class="sec-pull">If a license is in trouble, you see it before you book. No hidden histories.</p>
+        </div>
+        <div class="sec md" style="cursor: default;">
+          <div class="sec-num">Never Pay-to-Play</div>
+          <h3 class="sec-title">Practitioners cannot buy higher rankings. <em>Ever.</em></h3>
+          <p class="sec-pull">Trust scores are calculated, not purchased. The opposite of every other directory.</p>
+        </div>
+      </div>
+      <div style="margin-top: 36px;">
+        <button class="btn btn-primary" type="button" data-action="goto-surface" data-surface="vessel">Ask ALVAI to match me →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Care · Protocol bundles (Stripe) -->
+  <section class="surface" data-care-pane="protocols" style="display:none;">
+    <div class="wrap">
+      <div class="eyebrow">Protocol bundles · Reviewed by Dr. Felicia Stoler</div>
+      <h2 class="display-md display" style="margin-top: 16px;">Curated stacks for the four most common patterns.</h2>
+      <div class="section-grid" style="margin-top: 32px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+        <div class="protocol-card">
+          <div>
+            <div class="protocol-name">Sleep Reset</div>
+            <div class="protocol-price">$49<small>/mo</small></div>
+          </div>
+          <p class="protocol-body">Magnesium glycinate. Apigenin. L-theanine. Light-protocol guidance. The 24-hour sleep architecture, made portable.</p>
+          <a href="#" class="protocol-cta" data-stripe-price="price_1TEKQmK4cATmIFbokmkYg47S">Start Sleep Reset →</a>
+        </div>
+        <div class="protocol-card">
+          <div>
+            <div class="protocol-name">Stress Reset</div>
+            <div class="protocol-price">$45<small>/mo</small></div>
+          </div>
+          <p class="protocol-body">Adaptogens. Physiological-sigh practice. ALVAI guided sessions. The cortisol curve, reset.</p>
+          <a href="#" class="protocol-cta" data-stripe-price="price_1TEKS6K4cATmIFbo1OW7BeCW">Start Stress Reset →</a>
+        </div>
+        <div class="protocol-card">
+          <div>
+            <div class="protocol-name">Longevity Core</div>
+            <div class="protocol-price">$69<small>/mo</small></div>
+          </div>
+          <p class="protocol-body">Foundational stack for biological age. Mitochondrial support. NAD+ precursors. The fence at the top of the cliff.</p>
+          <a href="#" class="protocol-cta" data-stripe-price="price_1TEKSWK4cATmIFbojDTEJng9">Start Longevity Core →</a>
+        </div>
+        <div class="protocol-card">
+          <div>
+            <div class="protocol-name">Gut Reset</div>
+            <div class="protocol-price">$55<small>/mo</small></div>
+          </div>
+          <p class="protocol-body">Microbiome rebuild. Anti-inflammatory protocol. The gut-brain axis, named and addressed.</p>
+          <a href="#" class="protocol-cta" data-stripe-price="price_1TEKSsK4cATmIFbouxOBHtwQ">Start Gut Reset →</a>
+        </div>
+      </div>
+      <p class="body-xs serif-quote" style="margin-top: 24px; max-width: 640px;">
+        Reviewed by Dr. Felicia Stoler · DCN, MS, RDN, FACSM, FAND, Dipl. ACLM ·
+        Fullscript practitioner ID: fstoler · Powered by Stripe live billing
+      </p>
+    </div>
+  </section>
+
+  <!-- Care · Therapy + Care -->
+  <section class="surface" data-care-pane="therapy" style="display:none;">
+    <div class="wrap">
+      <div class="eyebrow">Therapy &amp; care</div>
+      <h2 class="display-md display" style="margin-top: 16px;">Online therapy, BLEU Clinical Dispensary, verified providers.</h2>
+      <div class="section-grid" style="margin-top: 32px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+        <div class="card">
+          <div class="card-title">Talkspace</div>
+          <p class="card-body">Video, text, and audio therapy. Insurance often accepted. Match with a licensed therapist in your state within 48 hours.</p>
+          <a href="#" class="btn btn-ghost btn-sm" style="margin-top: 16px;">Open Talkspace ↗</a>
+        </div>
+        <div class="card">
+          <div class="card-title">BetterHelp</div>
+          <p class="card-body">The largest network of licensed therapists online. Subscription model. Often the fastest path to a real human.</p>
+          <a href="#" class="btn btn-ghost btn-sm" style="margin-top: 16px;">Open BetterHelp ↗</a>
+        </div>
+        <div class="card card-pebble">
+          <div class="card-title" style="color: var(--cream);">BLEU Clinical Dispensary</div>
+          <p class="card-body">Dr. Felicia Stoler · Fullscript-powered. 15% discount. Free shipping over $50. Direct-to-citizen, evidence-tagged.</p>
+          <a href="#" class="btn" style="background: var(--gold-500); color: var(--ink); margin-top: 16px;">Open Dispensary →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Care · Pharmacy -->
+  <section class="surface" data-care-pane="pharmacy" style="display:none;">
+    <div class="wrap">
+      <div class="eyebrow">Pharmacy</div>
+      <h2 class="display-md display" style="margin-top: 16px;">Real prices. Three trusted routes. <em>Never pay retail.</em></h2>
+      <div class="section-grid" style="margin-top: 32px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+        <div class="card">
+          <div class="card-title">Amazon Pharmacy</div>
+          <p class="card-body">Prime members save up to 80%. Mail-order, fast.</p>
+          <a href="#" class="btn btn-ghost btn-sm" style="margin-top: 16px;">Open Amazon Pharmacy ↗</a>
+        </div>
+        <div class="card">
+          <div class="card-title">Cost Plus Drugs</div>
+          <p class="card-body">Mark Cuban&rsquo;s pharmacy. Manufacturer cost + 15%. Radically cheap on common generics.</p>
+          <a href="#" class="btn btn-ghost btn-sm" style="margin-top: 16px;">Open Cost Plus ↗</a>
+        </div>
+        <div class="card">
+          <div class="card-title">GoodRx</div>
+          <p class="card-body">Coupons that work at most pharmacies. Especially powerful for Suboxone, naltrexone, methadone.</p>
+          <a href="#" class="btn btn-ghost btn-sm" style="margin-top: 16px;">Open GoodRx ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Care · Supplements (Fullscript) -->
+  <section class="surface" data-care-pane="supplements" style="display:none;">
+    <div class="wrap">
+      <div class="eyebrow">Fullscript plans · Dr. Felicia Stoler · fstoler</div>
+      <h2 class="display-md display" style="margin-top: 16px;">Ten clinical plans. <em>Each one curated.</em></h2>
+      <div class="section-grid" style="margin-top: 32px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div class="card"><div class="card-title">Mood &amp; Mental Health</div><p class="card-body">For low days, anxious patterns, mental clarity.</p></div>
+        <div class="card"><div class="card-title">Perimenopause &amp; Menopause</div><p class="card-body">Hormone-aware, evidence-tagged, cycle-respecting.</p></div>
+        <div class="card"><div class="card-title">Sleep Restoration</div><p class="card-body">Magnesium, apigenin, L-theanine, low-dose melatonin.</p></div>
+        <div class="card"><div class="card-title">Anxiety Relief</div><p class="card-body">Adaptogens, GABA support, nervous-system calm.</p></div>
+        <div class="card"><div class="card-title">Anti-Inflammation</div><p class="card-body">Omega-3, curcumin, boswellia, vitamin D.</p></div>
+        <div class="card"><div class="card-title">Energy + Focus</div><p class="card-body">Methylated B-complex, CoQ10, lion&rsquo;s mane.</p></div>
+        <div class="card"><div class="card-title">Metabolic Reset</div><p class="card-body">Berberine, alpha-lipoic acid, chromium.</p></div>
+        <div class="card"><div class="card-title">Longevity Protocol</div><p class="card-body">NAD+ precursors, resveratrol, NMN, creatine.</p></div>
+        <div class="card"><div class="card-title">Immune Support</div><p class="card-body">Quercetin, zinc, elderberry, vitamin C.</p></div>
+        <div class="card"><div class="card-title">Daily Foundation</div><p class="card-body">The evidence-backed baseline. Multivitamin + omega-3 + D3 + creatine.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Care · Groceries (Walmart+) -->
+  <section class="surface" data-care-pane="groceries" style="display:none;">
+    <div class="wrap">
+      <div class="eyebrow">Anti-inflammatory · Walmart+ delivery</div>
+      <h2 class="display-md display" style="margin-top: 16px;">Real food. <em>Delivered.</em></h2>
+      <div class="section-grid" style="margin-top: 32px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+        <div class="card"><div class="card-title">Wild Salmon</div><p class="card-body">Omega-3 anchor. Ask for wild-caught Alaskan sockeye.</p></div>
+        <div class="card"><div class="card-title">Wild Blueberries</div><p class="card-body">Anthocyanins. Frozen is fine, often better.</p></div>
+        <div class="card"><div class="card-title">Organic Avocados</div><p class="card-body">Monounsaturated fat, fiber, potassium.</p></div>
+        <div class="card"><div class="card-title">Raw Walnuts</div><p class="card-body">Plant-based omega-3, anti-inflammatory.</p></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     CITY SURFACE
+     222-City Model · 12 neighborhoods · 32 crises matrix
+     ============================================================ -->
+<main id="surface-city" class="surface-page">
+  <section class="lib-mast">
+    <div class="wrap">
+      <div class="eyebrow">Surface 04 · The civic layer</div>
+      <h1 class="display-lg display" style="margin-top: 22px;">
+        New Orleans. <em>Every neighborhood. Every practitioner.</em>
+      </h1>
+      <p class="deck" style="margin-top: 14px; max-width: 640px;">
+        Where you live decides what care reaches you. We map it. We score it. We close it.
+      </p>
+      <div class="lib-trust">
+        <span>485K+ NPI practitioners verified</span>
+        <span>32 crises mapped</span>
+        <span>23:1 documented city ROI</span>
+        <span>222 cities mapped</span>
+        <span>AQI 47 today · UV 7 today</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="surface">
+    <div class="wrap">
+      <div class="eyebrow">12 neighborhoods · scoreboard</div>
+      <div class="neighborhood-grid" style="margin-top: 28px;">
+        <div class="neighborhood-tile"><div class="neighborhood-name">Garden District</div><div class="neighborhood-score">91</div><div class="neighborhood-tag">Strong</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">French Quarter</div><div class="neighborhood-score">87</div><div class="neighborhood-tag">Strong</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">Lakeview</div><div class="neighborhood-score">86</div><div class="neighborhood-tag">Strong</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">Uptown</div><div class="neighborhood-score">83</div><div class="neighborhood-tag">Strong</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">Marigny</div><div class="neighborhood-score">82</div><div class="neighborhood-tag">Stable</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">CBD</div><div class="neighborhood-score">79</div><div class="neighborhood-tag">Stable</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">Tremé</div><div class="neighborhood-score">78</div><div class="neighborhood-tag">Stable</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">Mid-City</div><div class="neighborhood-score">74</div><div class="neighborhood-tag">Stable</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">Gentilly</div><div class="neighborhood-score">72</div><div class="neighborhood-tag">Watch</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">Bywater</div><div class="neighborhood-score">71</div><div class="neighborhood-tag">Watch</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">Algiers</div><div class="neighborhood-score">68</div><div class="neighborhood-tag">Watch</div></div>
+        <div class="neighborhood-tile"><div class="neighborhood-name">NOLA East</div><div class="neighborhood-score">65</div><div class="neighborhood-tag">Watch</div></div>
+        <div class="neighborhood-tile is-critical"><div class="neighborhood-name">7th Ward</div><div class="neighborhood-score">38</div><div class="neighborhood-tag">Critical zone</div></div>
+        <div class="neighborhood-tile is-critical"><div class="neighborhood-name">Treme</div><div class="neighborhood-score">34</div><div class="neighborhood-tag">Critical zone</div></div>
+        <div class="neighborhood-tile is-critical"><div class="neighborhood-name">Central City</div><div class="neighborhood-score">28</div><div class="neighborhood-tag">Critical zone</div></div>
+        <div class="neighborhood-tile is-critical"><div class="neighborhood-name">9th Ward</div><div class="neighborhood-score">24</div><div class="neighborhood-tag">Critical zone</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="surface" style="background: var(--cream-warm);">
+    <div class="wrap">
+      <div class="eyebrow">The 222-City Model</div>
+      <h2 class="display-lg display" style="margin-top: 18px;">
+        Deploy BLEU in <em>your city.</em>
+      </h2>
+      <div class="stat-row" style="margin-top: 36px;">
+        <div class="stat"><div class="stat-n">$1.8M</div><div class="stat-l">Annual deployment cost</div></div>
+        <div class="stat"><div class="stat-n">$42M</div><div class="stat-l">Annual documented benefit</div></div>
+        <div class="stat"><div class="stat-n">23:1</div><div class="stat-l">Return on investment</div></div>
+      </div>
+      <div style="margin-top: 36px; display: flex; gap: 12px; flex-wrap: wrap;">
+        <button class="btn btn-primary" type="button">City Partnership Brief →</button>
+        <button class="btn btn-ghost" type="button">Hotel Monteleone Proof →</button>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- ============================================================
+     LIBRARY SURFACE
+     The 9 sub-surfaces: Learn, Community, Therapy, Recovery, Sleep,
+     Spirit, Finance, ECSIQ, Why BLEU.
+     Each gets a dedicated full surface with literature preserved verbatim.
+     ============================================================ -->
+<main id="surface-library" class="surface-page">
+
+  <section class="lib-mast">
+    <div class="wrap">
+      <div class="eyebrow">Surface 05 · The depth · The doctrine · The science</div>
+      <h1 class="display-xl display" style="margin-top: 22px;">
+        The library is where the <em>literature</em> lives.
+      </h1>
+      <p class="deck" style="margin-top: 18px; max-width: 720px;">
+        Nine surfaces. The 16 crises. The 12 therapy modes. The 16 spiritual traditions.
+        Every paper, every protocol, every pull quote &mdash; preserved exactly as written.
+      </p>
+      <div class="lib-trust">
+        <span>50,000+ peer-reviewed citations</span>
+        <span>Dr. Felicia Stoler &middot; DCN, MS, RDN, FACSM, FAND, Dipl. ACLM</span>
+        <span>Made with love in New Orleans</span>
+        <span>Patent pending</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="chip-rail-wrap">
+    <nav class="chip-rail" aria-label="Library sections">
+      <button class="chip is-active" type="button" data-lib-tab="learn"><span class="chip-num">01</span>Learn</button>
+      <button class="chip" type="button" data-lib-tab="community"><span class="chip-num">02</span>Community</button>
+      <button class="chip" type="button" data-lib-tab="therapy"><span class="chip-num">03</span>Therapy</button>
+      <button class="chip" type="button" data-lib-tab="recovery"><span class="chip-num">04</span>Recovery</button>
+      <button class="chip" type="button" data-lib-tab="sleep"><span class="chip-num">05</span>Sleep</button>
+      <button class="chip" type="button" data-lib-tab="spirit"><span class="chip-num">06</span>Spirit</button>
+      <button class="chip" type="button" data-lib-tab="finance"><span class="chip-num">07</span>Finance</button>
+      <button class="chip" type="button" data-lib-tab="ecsiq"><span class="chip-num">08</span>ECSIQ</button>
+      <button class="chip" type="button" data-lib-tab="why"><span class="chip-num">09</span>Why BLEU</button>
+    </nav>
+  </div>
+
+  <!-- Library · Learn -->
+  <section class="surface" data-lib-pane="learn">
+    <div class="wrap">
+      <h2 class="display-lg display">The medicine of 2043 exists in a journal <em>right now.</em></h2>
+      <p class="body-lg" style="margin-top: 18px; max-width: 720px;">
+        A 17-year evidence gap between what science knows and what the average doctor practices.
+        Learn is the surface that closes it &mdash; the knowledge engine, the channels, the white papers, the 16 crises mapped.
+      </p>
+      <div class="card card-warm" style="margin-top: 36px;">
+        <div class="eyebrow" style="color: var(--purple); --gold-500: var(--purple);">Featured · Peer-reviewed white paper</div>
+        <h3 class="display-md display" style="margin-top: 14px;">
+          A Living Model of Care: A Molecular Framework for Multi-System Health Optimization.
+        </h3>
+        <p class="body-md" style="margin-top: 16px;">
+          By Dr. Felicia Stoler · DCN, MS, RDN, FACSM, FAND, Dipl. ACLM · March 2026.
+          The molecular architecture underlying every BLEU intervention. How sleep, connection, finance, therapy,
+          nutrition, ECSIQ, and recovery converge on the same cellular machinery.
+        </p>
+        <div class="stat-row" style="margin-top: 24px; padding: 18px 0;">
+          <div class="stat"><div class="stat-n">50,000+</div><div class="stat-l">PubMed citations</div></div>
+          <div class="stat"><div class="stat-n">$830K</div><div class="stat-l">QALY value per user</div></div>
+          <div class="stat"><div class="stat-n">17 yrs</div><div class="stat-l">Evidence gap closed</div></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 56px;">
+        <div class="eyebrow">The 16 Crises · Research Library</div>
+        <div class="section-grid" style="margin-top: 28px;">
+          <div class="sec md" style="cursor: default;"><div class="sec-num">01</div><h3 class="sec-title">Loneliness</h3><p class="sec-pull">871K deaths annually · 9:1 social prescribing ROI · Steven Cole CTRA</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">02</div><h3 class="sec-title">Sleep Deprivation</h3><p class="sec-pull">$411B crisis · $9,100 lifetime gain per student</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">03</div><h3 class="sec-title">Men&rsquo;s Mental Health</h3><p class="sec-pull">80% of suicides male · 54% receive zero treatment</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">04</div><h3 class="sec-title">Women&rsquo;s Health</h3><p class="sec-pull">$1 trillion gap · $3 return per $1 invested</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">05</div><h3 class="sec-title">Food Prescription</h3><p class="sec-pull">$32B ignored savings · 10:1 ROI documented</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">06</div><h3 class="sec-title">Workplace Burnout</h3><p class="sec-pull">$322B clinical crisis · 5.7:1 ROI</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">07</div><h3 class="sec-title">Medical Debt</h3><p class="sec-pull">Financial toxicity kills · 56% worse cancer outcomes</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">08</div><h3 class="sec-title">New Orleans Youth</h3><p class="sec-pull">1 in 3 in poverty · Jazz Bird NOLA proof of concept</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">09</div><h3 class="sec-title">Grief</h3><p class="sec-pull">40% get zero support · $3,600 excess cost per case</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">10</div><h3 class="sec-title">Medication Non-Adherence</h3><p class="sec-pull">$500B wasted · 10:1 MTM ROI</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">11</div><h3 class="sec-title">Chronic Pain</h3><p class="sec-pull">51M undertreated Americans · 3:1 integrative ROI</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">12</div><h3 class="sec-title">Veterans</h3><p class="sec-pull">22 suicides a day · 40% without VA access</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">13</div><h3 class="sec-title">Maternal Mental Health</h3><p class="sec-pull">#1 childbirth complication · 1 in 5 mothers affected</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">14</div><h3 class="sec-title">Caregiver Burnout</h3><p class="sec-pull">$1.1T unpaid economy · 53M caregivers without support</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">15</div><h3 class="sec-title">Health Literacy</h3><p class="sec-pull">54% below 6th grade · ALVAI auto-calibrates reading level</p></div>
+          <div class="sec md" style="cursor: default;"><div class="sec-num">16</div><h3 class="sec-title">Benefits Desert</h3><p class="sec-pull">$65B unclaimed · $183B underutilized annually</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Library · Community -->
+  <section class="surface" data-lib-pane="community" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-lg display">Loneliness kills <em>871,000</em> people a year. Connection reverses every gene.</h2>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        Steven Cole, UCLA. Seventeen years of research. 102 genes that change when you feel alone.
+        <em>The people you know change what your DNA does tonight while you sleep.</em>
+      </p>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        BLEU Community is not a social network. It is a genomic intervention. Every genuine connection on this platform
+        is a biological event.
+      </p>
+      <div class="stat-row" style="margin-top: 36px;">
+        <div class="stat"><div class="stat-n">+50%</div><div class="stat-l">Longer life · strong social ties</div></div>
+        <div class="stat"><div class="stat-n">148</div><div class="stat-l">Studies · Holt-Lunstad meta-analysis</div></div>
+        <div class="stat"><div class="stat-n">29%</div><div class="stat-l">Less dementia · socially connected adults</div></div>
+        <div class="stat"><div class="stat-n">#1</div><div class="stat-l">Blue Zone factor · all 5 zones · belonging</div></div>
+      </div>
+      <div class="card card-warm" style="margin-top: 36px;">
+        <div class="eyebrow">The Ripple Effect</div>
+        <p class="display-md display" style="margin-top: 14px;">You &rarr; Home &rarr; Block &rarr; City &rarr; <em>World.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Library · Therapy -->
+  <section class="surface" data-lib-pane="therapy" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-lg display">The trauma did not break you. It became <em>you.</em></h2>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        Therapy changes your brain. Not as metaphor. Eight to twelve weeks of CBT measurably lowers NF-κB &mdash;
+        the inflammation pathway that drives heart disease, cancer, and early aging.
+        Trauma resolution rewrites epigenetic markers. Grief that goes unprocessed does not disappear &mdash;
+        it becomes cortisol, inflammation, and biological age.
+      </p>
+      <div class="stat-row" style="margin-top: 36px;">
+        <div class="stat"><div class="stat-n">8-12wk</div><div class="stat-l">CBT reduces NF-κB</div></div>
+        <div class="stat"><div class="stat-n">$32K</div><div class="stat-l">Prevented cost · maternal mood</div></div>
+        <div class="stat"><div class="stat-n">1 in 5</div><div class="stat-l">Mothers affected</div></div>
+        <div class="stat"><div class="stat-n">$3,600</div><div class="stat-l">Excess cost · untreated grief / yr</div></div>
+      </div>
+      <div style="margin-top: 36px;">
+        <div class="eyebrow">12 modes · what each one does</div>
+        <div class="section-grid" style="margin-top: 22px;">
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Talk Therapy</h3><p class="sec-pull">The foundation. A trained human, your story, your time.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">CBT</h3><p class="sec-pull">Cognitive Behavioral Therapy. Reframe, rewire, retest.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">DBT Skills</h3><p class="sec-pull">Distress tolerance, emotion regulation, interpersonal effectiveness.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Somatic</h3><p class="sec-pull">The body holds what the mind cannot say. Release at the nervous-system level.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Motivational</h3><p class="sec-pull">For ambivalence, change, the moments before the move.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Journaling</h3><p class="sec-pull">Pennebaker protocol. The cheapest therapy that works.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Crisis</h3><p class="sec-pull">988. Crisis Text Line. SAMHSA. Always free, always 24/7.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Couples</h3><p class="sec-pull">Gottman-informed. The relationship is the patient.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Grief</h3><p class="sec-pull">Worden&rsquo;s tasks. The four jobs of mourning.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Trauma</h3><p class="sec-pull">EMDR, IFS, somatic. Trauma is not a brand.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Eating &amp; Body</h3><p class="sec-pull">Disordered eating treated as the trauma response it is.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Identity &amp; Meaning</h3><p class="sec-pull">Frankl-influenced. Logotherapy. The question underneath the questions.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Library · Recovery -->
+  <section class="surface" data-lib-pane="recovery" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-lg display">Recovery is not willpower. It <em>never</em> was.</h2>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        Addiction is the brain&rsquo;s dopamine system doing exactly what it was designed to do &mdash;
+        seek relief from overwhelming stress. BLEU Recovery doesn&rsquo;t judge. It understands the neuroscience,
+        the trauma, the isolation, and the shame that precede every relapse. Whether you are 3 hours sober or
+        3 years sober or just thinking about it &mdash; you are in the right place.
+      </p>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        This was not built in a boardroom. It was built by people who know what the first 72 hours feel like, what Day 30 feels like, what Year 5 feels like.
+        It meets you where you are &mdash; with dignity, privacy, and real tools.
+      </p>
+
+      <div class="crisis-block" style="margin-top: 36px;">
+        <div class="crisis-eyebrow">If you are in crisis right now</div>
+        <h3 class="crisis-title">988 · Suicide &amp; Crisis Lifeline · Free · 24/7 · Confidential</h3>
+        <p class="crisis-body">
+          If you or someone near you is experiencing an overdose: <strong>Call 911 immediately. Administer naloxone (Narcan) if available.</strong>
+        </p>
+        <div class="crisis-list">
+          <a href="tel:988" class="crisis-link">988 · Call or text</a>
+          <a href="tel:1-800-662-4357" class="crisis-link crisis-link-secondary">SAMHSA Helpline · 1-800-662-4357</a>
+          <a href="tel:1-800-484-3731" class="crisis-link crisis-link-secondary">Never Use Alone · 1-800-484-3731</a>
+          <a href="sms:741741?body=HOME" class="crisis-link crisis-link-secondary">Crisis Text Line · text HOME to 741741</a>
+        </div>
+      </div>
+
+      <div style="margin-top: 36px;">
+        <div class="eyebrow">7 modes</div>
+        <div class="section-grid" style="margin-top: 22px;">
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Early Sobriety</h3><p class="sec-pull">Day 1. Day 30. Day 90. The first year is its own world.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Relapse Prevention</h3><p class="sec-pull">Triggers, patterns, the architecture of staying.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Harm Reduction</h3><p class="sec-pull">Narcan. Fentanyl strips. Never Use Alone. The math that saves lives.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">12-Step Companion</h3><p class="sec-pull">AA, NA, the rooms. We help you find them. We don&rsquo;t replace them.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Family &amp; Codependency</h3><p class="sec-pull">For the people who love someone in struggle. The other 53 million.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">MAT Support</h3><p class="sec-pull">Suboxone, naltrexone, methadone. GoodRx for affordability.</p></div>
+          <div class="sec md" style="cursor:default;"><h3 class="sec-title">Milestones</h3><p class="sec-pull">Day counter. Health improvements at each milestone. Savings calculator. Community celebration.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Library · Sleep -->
+  <section class="surface" data-lib-pane="sleep" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-lg display">Eight hours is not laziness. It is the most productive thing your body <em>does.</em></h2>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        One bad night raises Alzheimer&rsquo;s-linked proteins in your brain. A week of poor sleep rewrites 700 genes.
+        Chronic short sleep costs you roughly 1.7 biological years per decade.
+      </p>
+      <div class="stat-row" style="margin-top: 36px;">
+        <div class="stat"><div class="stat-n">47%</div><div class="stat-l">Less oxidative DNA damage · adequate sleep</div></div>
+        <div class="stat"><div class="stat-n">5%</div><div class="stat-l">Amyloid-beta increase · per night deprived</div></div>
+        <div class="stat"><div class="stat-n">1.7×</div><div class="stat-l">Faster telomere attrition · under 6 hours</div></div>
+        <div class="stat"><div class="stat-n">$411B</div><div class="stat-l">Annual US cost · RAND Corp</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Library · Spirit -->
+  <section class="surface" data-lib-pane="spirit" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-lg display">Viktor Frankl survived Auschwitz by finding a <em>reason to live.</em></h2>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        Purpose reduces all-cause mortality by 23%. Ikigai &mdash; the Japanese concept of a reason to rise &mdash;
+        is associated with a 7.5-year longevity extension in the Blue Zones. Spiritual engagement activates the
+        parasympathetic nervous system, reduces inflammatory biomarkers, and measurably increases telomerase activity.
+        <em>The soul is not separate from the body. It is encoded in it.</em>
+      </p>
+      <div class="stat-row" style="margin-top: 36px;">
+        <div class="stat"><div class="stat-n">+7.5 yr</div><div class="stat-l">Longer · regular practice</div></div>
+        <div class="stat"><div class="stat-n">40%</div><div class="stat-l">Less depression · Harvard study</div></div>
+        <div class="stat"><div class="stat-n">29%</div><div class="stat-l">Lower mortality · JAMA meta</div></div>
+        <div class="stat"><div class="stat-n">5</div><div class="stat-l">Blue Zones · all have faith culture</div></div>
+      </div>
+      <div style="margin-top: 36px;">
+        <div class="eyebrow">16 traditions · treated equally</div>
+        <p class="body-md" style="margin-top: 16px; max-width: 760px;">
+          Christianity &middot; Islam &middot; Judaism &middot; Hinduism &middot; Buddhism &middot; Indigenous &middot; Kabbalah &middot; Taoism &middot;
+          Sikh &middot; Jain &middot; <em>Vodou / Orisha</em> &middot; Bah&aacute;&rsquo;í &middot; Rastafari &middot; Non-Religious &middot; Interfaith &middot; New Age.
+          <em>Each treated with the same dignity.</em>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Library · Finance -->
+  <section class="surface" data-lib-pane="finance" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-lg display">Financial stress is not in your head. <em>It is in your cortisol.</em></h2>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        67% of Americans say money is their biggest source of stress. Biologically, chronic financial anxiety floods
+        your body with cortisol &mdash; linked to worse cancer outcomes, faster cellular aging, and immune suppression.
+        BLEU Finance does not give you financial advice. It gives you clarity, navigation, and the benefits you
+        are already owed but have not claimed.
+      </p>
+      <div class="stat-row" style="margin-top: 36px;">
+        <div class="stat"><div class="stat-n">2×</div><div class="stat-l">Heart disease · financial stress</div></div>
+        <div class="stat"><div class="stat-n">$65B</div><div class="stat-l">Unclaimed annually</div></div>
+        <div class="stat"><div class="stat-n">80%</div><div class="stat-l">Rx savings · GoodRx vs retail</div></div>
+        <div class="stat"><div class="stat-n">$1,800</div><div class="stat-l">Avg annual savings · BLEU user</div></div>
+      </div>
+      <div class="card card-warm" style="margin-top: 36px;">
+        <div class="eyebrow">The 4-step recipe</div>
+        <ol style="margin-top: 18px; padding-left: 22px; font-family: var(--display); font-size: 19px; line-height: 1.7; font-weight: 400;">
+          <li><strong>Know Your Number</strong> &mdash; the wellness floor. Rent + groceries + healthcare.</li>
+          <li><strong>Audit the Drain</strong> &mdash; the harming budget. Where the cortisol is hiding.</li>
+          <li><strong>Stack the Tax Wins</strong> &mdash; HSA, FSA, EAP. Most leave hundreds on the table.</li>
+          <li><strong>Slash the Rx Bill</strong> &mdash; Cost Plus, GoodRx. Up to 80% saved, every time.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Library · ECSIQ -->
+  <section class="surface" data-lib-pane="ecsiq" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-lg display">The endocannabinoid system is <em>not optional biology.</em></h2>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        529+ strains. CYP450 enzyme pathways. Terpene science. CB1/CB2 intelligence.
+        The teaching surface for the platform&rsquo;s cannabis intelligence.
+      </p>
+      <div class="card card-warm" style="margin-top: 36px;">
+        <div class="eyebrow" style="color: var(--purple); --gold-500: var(--purple);">Educational only</div>
+        <p class="body-md" style="margin-top: 14px;">
+          ECSIQ provides educational content only. Not medical advice. Always consult a licensed healthcare provider
+          before making any wellness decisions, especially if you take prescription medications. Cannabis laws vary
+          by state &mdash; know your local regulations. Data sources: PubMed, FDA, DDInter 2.0, Cannlytics, WHO.
+          Nutrition &amp; lifestyle oversight: Dr. Felicia Stoler · DCN, MS, RDN, FACSM, FAND, Dipl. ACLM.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Library · Why BLEU -->
+  <section class="surface" data-lib-pane="why" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-lg display">Why this exists.</h2>
+      <p class="body-lg" style="margin-top: 22px; max-width: 760px;">
+        Built in New Orleans by people who survived what the system failed to treat.
+        For people who want to thrive, not just survive.
+      </p>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        Dr. Felicia Stoler is a Doctor of Clinical Nutrition, author of <em>Living Skinny in Fat Genes</em>,
+        a 20-year national television health expert, and the author of the molecular framework that anchors this platform.
+        She makes sure every protocol here meets the standard she’d give her own patients.
+      </p>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        bleu.live is the fence at the top of the cliff. <em>Not the ambulance at the bottom.</em>
+      </p>
+      <p class="body-lg" style="margin-top: 18px; max-width: 760px;">
+        Not a wellness app. <em>A living model of care.</em>
+      </p>
+      <div style="margin-top: 36px;">
+        <p class="display-md display" style="max-width: 720px;">
+          BLEU is the private memory layer for <em>human recovery.</em>
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     YOU SURFACE
+     My Passport · My Stack · My Account · Sign Out
+     ============================================================ -->
+<main id="surface-you" class="surface-page">
+
+  <section class="lib-mast">
+    <div class="wrap">
+      <div class="eyebrow">Surface 06 · You</div>
+      <h1 class="display-lg display" style="margin-top: 22px;">
+        Everything BLEU has remembered <em>about you.</em>
+      </h1>
+      <p class="deck" style="margin-top: 14px; max-width: 640px;">
+        Your Passport. Your Stack. Your account. The relationship, made visible.
+      </p>
+    </div>
+  </section>
+
+  <div class="chip-rail-wrap">
+    <nav class="chip-rail" aria-label="You sections">
+      <button class="chip is-active" type="button" data-you-tab="passport"><span class="chip-num">01</span>My Passport</button>
+      <button class="chip" type="button" data-you-tab="stack"><span class="chip-num">02</span>My Stack</button>
+      <button class="chip" type="button" data-you-tab="account"><span class="chip-num">03</span>My Account</button>
+      <button class="chip" type="button" data-you-tab="signout"><span class="chip-num">04</span>Sign Out</button>
+    </nav>
+  </div>
+
+  <section class="surface" data-you-pane="passport">
+    <div class="wrap">
+      <h2 class="display-md display">Your passport is <em>waiting.</em></h2>
+      <p class="body-lg" style="margin-top: 18px; max-width: 640px;">
+        Explorer. Pioneer. PRO. Create your Passport to unlock cross-session memory, the daily check-in cadence,
+        and the Witness Library.
+      </p>
+      <button class="btn btn-primary" type="button" style="margin-top: 22px;">Create my Passport →</button>
+    </div>
+  </section>
+
+  <section class="surface" data-you-pane="stack" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-md display">Your Stack &mdash; <em>everything saved.</em></h2>
+      <p class="body-md" style="margin-top: 16px;">Witness Cards · supplements · practitioners · protocols · articles. Currently <strong id="you-stack-count">0</strong> items.</p>
+    </div>
+  </section>
+
+  <section class="surface" data-you-pane="account" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-md display">Account</h2>
+      <p class="body-md" style="margin-top: 16px;">Email, billing, Stripe subscriptions, Brevo opt-ins, notification preferences.</p>
+    </div>
+  </section>
+
+  <section class="surface" data-you-pane="signout" style="display:none;">
+    <div class="wrap">
+      <h2 class="display-md display">Until <em>next time.</em></h2>
+      <p class="body-md serif-quote" style="margin-top: 16px; font-size: 18px; max-width: 540px;">
+        See you when you return. The lineage is in no rush.
+      </p>
+      <button class="btn btn-ghost" type="button" style="margin-top: 22px;">Sign out</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="foot-mast">bleu<span class="foot-mast-dot" aria-hidden="true"></span>live</div>
+      <div class="foot-anchor"><em>A place to be heard.</em></div>
+      <div class="foot-meta">
+        Made with love in New Orleans<br>
+        Patent pending &middot; © 2026 Fleur de BleuDream LLC
+      </div>
+      <div class="foot-crisis">
+        <strong>Not medical advice. Always consult healthcare professionals.</strong><br>
+        Crisis: 988 (call/text) · 911 emergency · SAMHSA 1-800-662-4357 · Crisis Text Line text HOME to 741741 · Never Use Alone 1-800-484-3731
+      </div>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="#">Terms of Service</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Affiliate Disclosure</a>
+      <a href="#">Press &amp; Media</a>
+      <a href="#">Patent &amp; Methodology</a>
+      <a href="#">Practitioner Portal</a>
+      <a href="#">Enterprise &amp; City Partnership</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT — wiring
+     Surface routing · arc state machine · drawer · chip rails
+     ============================================================ -->
+<script>
+(function() {
+  'use strict';
+
+  // ============================================================
+  // STATE
+  // ============================================================
+  var state = {
+    surface: 'home',
+    arcPhase: 1,
+    concern: null,
+    safety: null,
+    severity: 5,
+    stackCount: 0
+  };
+
+  // ============================================================
+  // CONCERN LIBRARY — the Diamond Framework content per fork
+  // SEE → NAME → SHIFT → RELEASE
+  // Five-Voice Doctrine: Witness in mirror, Clinical on card, Lineage in close
+  // ============================================================
+  var concerns = {
+    'thrive-sleep': {
+      dim: 'Sleep',
+      seeTitle: "You want sleep that actually restores you.",
+      seeBody: "Deep sleep is when the body does its real work — clears the brain, repairs the cells, files the day. People who sleep well live longer and laugh more. You\'re already moving in the right direction by asking. Magnesium glycinate, light at the right times, a phone that lives in another room. The architecture is learnable, and I\'ll build it with you, one night at a time.",
+      sliderLabel: "Where would you put your sleep this past week?",
+      anchorLow: "Rough",
+      anchorHigh: "I sleep great",
+      nameLine: "You\'re after sleep that actually restores you — and your body is ready to learn.",
+      shiftLine: "This isn\'t about fixing what\'s broken. It\'s about giving your body what it\'s been asking for. The wins compound fast. One good night opens the next.",
+      release: [
+        "Tonight: phone across the room, not on the nightstand. Small move, big signal.",
+        "Tomorrow: 10 minutes of outdoor light within 30 minutes of waking. The most powerful sleep cue we have.",
+        "This week: 200mg magnesium glycinate 30 min before bed. Reviewed by Dr. Felicia."
+      ],
+      evidence: "Established evidence",
+      followup: "I\'ll text you tomorrow night and ask one thing: did the number move?"
+    },
+    'thrive-energy': {
+      dim: 'Energy',
+      seeTitle: "You want more energy. The kind that actually lasts.",
+      seeBody: "Real energy isn\'t about pushing harder. It\'s about your mitochondria — the tiny power plants in every cell. They thrive on movement, sunlight, real food, and recovery. When they\'re firing, you feel it — clear mornings, steady afternoons, a body that wants to be used. Let\'s wake them up.",
+      sliderLabel: "Where\'s your energy on a normal day?",
+      anchorLow: "Dragging",
+      anchorHigh: "Lit up",
+      nameLine: "You want energy that actually lasts — not the kind that crashes at 2pm.",
+      shiftLine: "Your mitochondria respond fast when you give them the right inputs. This is one of the easiest places in the body to feel a real shift in a week.",
+      release: [
+        "Morning: 5 minutes of sun in your eyes (not through glass) before screens. Wakes the system up.",
+        "This week: a 10-minute walk after lunch. Blood sugar steadies, afternoon doesn\'t crash.",
+        "Stack: creatine 3-5g daily. Cellular fuel. Reviewed by Dr. Felicia."
+      ],
+      evidence: "Established evidence",
+      followup: "Tomorrow I\'ll ask: did the afternoon feel different?"
+    },
+    'thrive-focus': {
+      dim: 'Mind',
+      seeTitle: "You want a quieter mind. One that lets you think.",
+      seeBody: "The mind isn\'t supposed to be empty. It\'s supposed to be steady. When it\'s racing, that\'s a nervous system asking for regulation. Breath, movement, time outside, real connection — these are the inputs. Eight to twelve weeks of the right practice measurably lowers the inflammation pathways tied to early aging. The biology is on your side.",
+      sliderLabel: "How steady has your mind felt this week?",
+      anchorLow: "Racing",
+      anchorHigh: "Clear",
+      nameLine: "You want a steadier mind — and your nervous system is ready to learn how.",
+      shiftLine: "This isn\'t about silencing thought. It\'s about giving your nervous system safety to land. The fastest path is borrowed regulation — a practice, a person, a protocol.",
+      release: [
+        "Right now: physiological sigh, three rounds. Two short inhales through nose, one long exhale through mouth.",
+        "This week: 10 min outside without your phone. Nervous system co-regulation.",
+        "If you want a person: BetterHelp or Talkspace, both verified, often covered by insurance."
+      ],
+      evidence: "Established evidence",
+      followup: "I\'ll check in tomorrow: was there a moment, even small, where it landed?"
+    },
+    'thrive-body': {
+      dim: 'Body',
+      seeTitle: "You want a body you actually love being in.",
+      seeBody: "A body that feels good is one that\'s been listened to. Movement that fits you, food that builds you, recovery that lets the gains stick. Inflammation drops when the inputs are right — and when it drops, energy comes back, sleep deepens, mood lifts. It\'s all one system. Let\'s tune it.",
+      sliderLabel: "How does your body feel most days?",
+      anchorLow: "Tight, off",
+      anchorHigh: "I love being in it",
+      nameLine: "You want a body you love — and the system is more responsive than most people realize.",
+      shiftLine: "The body is designed to feel good. When it doesn\'t, that\'s signal — usually inflammation, poor recovery, or something missing. Small inputs land fast.",
+      release: [
+        "This week: wild salmon, blueberries, walnuts, avocados. Real anti-inflammatory food.",
+        "Movement: 20 min walk daily. Lowest dose, biggest return.",
+        "If pain is part of it: NPI-verified physical therapist near you. We match in your zip."
+      ],
+      evidence: "Established evidence",
+      followup: "Tomorrow I\'ll ask: where did the body sit today versus yesterday?"
+    },
+    'thrive-connection': {
+      dim: 'Connection',
+      seeTitle: "You want deeper connection. That\'s biology, not luxury.",
+      seeBody: "Loneliness changes your DNA — 17 years of research, 102 genes that shift. And the reverse is also true. Real connection lowers inflammation, lengthens telomeres, adds years. The number-one longevity factor in every Blue Zone: belonging. You came at the right time.",
+      sliderLabel: "How connected do you feel right now?",
+      anchorLow: "Alone in it",
+      anchorHigh: "Held",
+      nameLine: "You\'re after deeper connection — and your DNA is wired to respond to it.",
+      shiftLine: "This isn\'t a soft want. It\'s a biological one. One genuine connection is a measurable health intervention. It counts.",
+      release: [
+        "This week: one text, one call, one in-person. To people you actually like. Small dose, real medicine.",
+        "Join one room: NAMI support, GriefShare, recovery dharma. Free, proven, evidence-based.",
+        "Host something small. A meal. A walk. Belonging is built in repetition."
+      ],
+      evidence: "Established evidence",
+      followup: "I\'ll check in tomorrow: did one connection actually happen?"
+    },
+    'thrive-money': {
+      dim: 'Finance',
+      seeTitle: "You want money that doesn\'t stress you. It\'s possible.",
+      seeBody: "$65 billion in benefits goes unclaimed in this country every year. Most people leave hundreds on the table on tax wins, prescription savings, and benefits they already qualify for. Financial calm isn\'t about earning more — it\'s about knowing your floor and stacking the wins. Let\'s build it.",
+      sliderLabel: "How heavy does money feel right now?",
+      anchorLow: "Crushing",
+      anchorHigh: "Breathing easy",
+      nameLine: "You want money that breathes — and the levers are more accessible than people think.",
+      shiftLine: "This isn\'t about earning more. It\'s about knowing your floor and stacking what\'s already yours. Cortisol drops fast when the static drops.",
+      release: [
+        "Tonight: calculate your wellness floor. Rent + groceries + healthcare. Just the number.",
+        "This week: stack the tax wins. HSA, FSA, employer EAP. Most leave hundreds on the table.",
+        "Every prescription: GoodRx or Cost Plus before paying retail. Up to 80% saved."
+      ],
+      evidence: "Established evidence",
+      followup: "I\'ll check in tomorrow: did naming the floor lower the static, even a little?"
+    },
+    'thrive-joy': {
+      dim: 'Joy',
+      seeTitle: "You want more joy, more often.",
+      seeBody: "Joy is a measurable biological state — vagus nerve up, inflammation down, longer telomeres. People who feel it regularly live longer and remember more. It\'s not luck. It\'s frequency of small inputs: laughter, awe, novelty, real food, real people, sun on your face. Let\'s stack them.",
+      sliderLabel: "How often does real joy land in a normal week?",
+      anchorLow: "Rare",
+      anchorHigh: "Often",
+      nameLine: "You want more joy, more often — and the body is wired to make more of it when given the chance.",
+      shiftLine: "Joy isn\'t a personality trait. It\'s a frequency. You can raise the frequency by changing what you do daily, in small ways. It stacks.",
+      release: [
+        "Today: do one thing that makes you laugh. A clip, a friend, a memory. Five minutes.",
+        "This week: one experience of awe. Outside, music, art. It resets the nervous system.",
+        "Stack: one daily moment of small pleasure. Coffee in the sun. A song. A stretch."
+      ],
+      evidence: "Emerging evidence",
+      followup: "I\'ll check in tomorrow: did joy show up today? Even small counts."
+    },
+    'curious': {
+      dim: 'Vitality',
+      seeTitle: "You came to look around. That\'s the smartest move.",
+      seeBody: "Most people meet healthcare at the bottom of the cliff. We built bleu.live as the fence at the top — for people who want to thrive, not just survive. You don\'t need a problem to deserve real care. Let\'s see where you are.",
+      sliderLabel: "On a normal day, how is it actually going?",
+      anchorLow: "Just getting by",
+      anchorHigh: "Thriving",
+      nameLine: "You came to explore — and the system rewards curious people first.",
+      shiftLine: "The people who do best here aren\'t the ones in crisis. They\'re the ones who started early, listened to the body, and stacked small wins over time.",
+      release: [
+        "Take the full Pulse inside Vessel. Your real number, calibrated.",
+        "Pick one Library room. Sleep, Spirit, Finance. Read one thing. Save one card.",
+        "Come back tomorrow. Watch one number move. That\'s the relationship."
+      ],
+      evidence: "Established evidence",
+      followup: "I\'ll check in tomorrow: which of the three did you actually do?"
+    },
+    'off': {
+      dim: 'Vitality',
+      seeTitle: "Something feels off. That\'s worth listening to.",
+      seeBody: "You don\'t need a diagnosis to deserve real care. Sometimes the body whispers before it shouts — and listening early is the cheapest medicine you\'ll ever practice. We built this for the people in the middle band, where most healthcare misses you. We\'ll find what\'s whispering.",
+      sliderLabel: "On a normal day, how is it actually going?",
+      anchorLow: "Rough",
+      anchorHigh: "Fine, mostly",
+      nameLine: "Something is whispering — and listening now is the smartest move.",
+      shiftLine: "The body asks quietly before it asks loudly. Most chronic disease starts in this band. Catching it here is the difference between a fence and an ambulance.",
+      release: [
+        "Take the full Pulse inside Vessel. Let\'s see what comes up.",
+        "This week: one Library room — pick what calls. Read one thing. Save one card.",
+        "Track tomorrow. One number daily. Patterns show up fast."
+      ],
+      evidence: "Established evidence",
+      followup: "I\'ll check in tomorrow: did anything sharpen for you?"
+    }
+  };
+  // Map legacy keys to thrive-equivalents for fallback
+  concerns.sleep   = concerns['thrive-sleep'];
+  concerns.anxiety = concerns['thrive-focus'];
+  concerns.pain    = concerns['thrive-body'];
+  concerns.money   = concerns['thrive-money'];
+  concerns.loved   = concerns['thrive-connection'];
+  concerns.lost    = concerns['curious'];
+
+  // ============================================================
+  // SURFACE ROUTING
+  // ============================================================
+  function gotoSurface(name) {
+    var pages = document.querySelectorAll('.surface-page');
+    for (var i = 0; i < pages.length; i++) {
+      pages[i].classList.toggle('is-active', pages[i].id === 'surface-' + name);
+    }
+    var navs = document.querySelectorAll('.top-nav a');
+    for (var j = 0; j < navs.length; j++) {
+      navs[j].classList.toggle('active', navs[j].getAttribute('data-surface') === name);
+    }
+    state.surface = name;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ============================================================
+  // ARC STATE MACHINE
+  // ============================================================
+  function gotoArcPhase(n) {
+    var phases = document.querySelectorAll('.arc-phase');
+    for (var i = 0; i < phases.length; i++) {
+      phases[i].classList.toggle('is-active', phases[i].getAttribute('data-phase') === String(n));
+    }
+    state.arcPhase = n;
+  }
+
+  function pickConcern(key) {
+    state.concern = key;
+    gotoArcPhase(2);
+  }
+
+  // ============================================================
+  // ALVAI CONVERSATION FLOW
+  // Free-text routing — map words to concerns
+  // ============================================================
+  var concernKeywords = {
+    'thrive-sleep':       ['sleep','tired','insomnia','awake','bed','night','rest','exhausted','wired','lying','sleeping'],
+    'thrive-energy':      ['energy','energized','vitality','dragging','fatigue','crash','afternoon','mitochondria','vital','wake up'],
+    'thrive-focus':       ['focus','focused','clarity','clear mind','quiet mind','anxiety','anxious','panic','overwhelmed','worry','worried','racing','spinning','mind','thinking','overthink','stress','stressed','calm','peace'],
+    'thrive-body':        ['body','strong','muscle','pain','hurt','hurting','ache','sore','back','migraine','headache','chronic','sick','breaking','breakdown','tense','tension','feel good','inflammation','movement'],
+    'thrive-connection':  ['connection','connected','lonely','loneliness','partner','spouse','child','kid','mom','dad','parent','friend','community','belong','belonging','love','loved','someone','watching'],
+    'thrive-money':       ['money','broke','rent','bills','debt','financial','afford','cant afford','poor','savings','income','job','wealth','prosperity'],
+    'thrive-joy':         ['joy','joyful','happy','happiness','smile','laugh','laughter','play','playful','fun','pleasure','delight','awe'],
+    crisis:               ['suicide','suicidal','kill myself','end it','end my life','want to die','dying','hurt myself','self harm','crisis','overdose']
+  };
+
+  function routeText(text) {
+    var t = (text || '').toLowerCase();
+    for (var key in concernKeywords) {
+      var kws = concernKeywords[key];
+      for (var i = 0; i < kws.length; i++) {
+        if (t.indexOf(kws[i]) !== -1) return key;
+      }
+    }
+    return 'curious';
+  }
+
+  // ALVAI's reply per concern — short, warm, witness voice. Two beats.
+  var alvaiReplies = {
+    'thrive-sleep':      "Mmm, I love this one. Deep sleep is the most responsive system you have. We can move your number fast. One quick check first.",
+    'thrive-energy':     "Yes. Real energy is closer than people think. Your cells are built to come alive — they\'re just waiting for the right inputs. One quick check first.",
+    'thrive-focus':      "I hear you. A quiet mind is a nervous system that finally feels safe to land. We can build that. One quick check first.",
+    'thrive-body':       "Good. Your body is designed to feel good in itself. When it doesn\'t, that\'s signal, not failure. One quick check first.",
+    'thrive-connection': "Beautiful. Connection isn\'t luxury — it\'s biology you can feel. Your whole system rewards it. One quick check first.",
+    'thrive-money':      "I love this one. Calm money is buildable — and you\'re likely leaving a lot on the table without knowing. One quick check first.",
+    'thrive-joy':        "Yes. Joy is a frequency you can raise. Small daily inputs, big body returns. One quick check first.",
+    'curious':           "I love that you\'re looking around. That\'s the right move. Most people wait too long. One quick check first.",
+    'off':               "Thank you for telling me. Listening when something whispers is the smartest move you can make. One quick check first.",
+    crisis:              "I hear you. I\'m stopping everything else right now."
+  };
+
+  function appendAlvaiMessage(text, meta) {
+    var thread = document.getElementById('alvai-thread');
+    if (!thread) return;
+    // Remove any typing indicator
+    var typing = thread.querySelector('.msg-typing-wrap');
+    if (typing) typing.parentNode.removeChild(typing);
+
+    var wrap = document.createElement('div');
+    wrap.className = 'msg msg-alvai';
+    var html = '';
+    if (meta) html += '<div class="msg-alvai-meta">' + meta + '</div>';
+    html += '<p class="msg-alvai-body">' + text + '</p>';
+    wrap.innerHTML = html;
+    thread.appendChild(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function appendUserMessage(text) {
+    var thread = document.getElementById('alvai-thread');
+    if (!thread) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'msg msg-user';
+    wrap.textContent = text;
+    thread.appendChild(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function appendTyping() {
+    var thread = document.getElementById('alvai-thread');
+    if (!thread) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'msg msg-alvai msg-typing-wrap';
+    wrap.innerHTML = '<div class="msg-typing"><span class="msg-typing-dot"></span><span class="msg-typing-dot"></span><span class="msg-typing-dot"></span></div>';
+    thread.appendChild(wrap);
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function setSummary(text) {
+    var s = document.getElementById('alvai-summary-2');
+    if (s) s.textContent = text;
+  }
+
+  function alvaiSend() {
+    var input = document.getElementById('alvai-reply-input');
+    if (!input) return;
+    var text = (input.value || '').trim();
+    if (!text) return;
+
+    // User speaks
+    appendUserMessage(text);
+    input.value = '';
+
+    // Route
+    var key = routeText(text);
+    state.concern = key;
+    state.userInput = text;
+
+    // Crisis short-circuit
+    if (key === 'crisis') {
+      setSummary('You told me you are struggling. I am stopping everything else right now.');
+      appendTyping();
+      setTimeout(function() {
+        gotoArcPhase(3);
+      }, 1200);
+      return;
+    }
+
+    // ALVAI replies after a short beat
+    appendTyping();
+    setTimeout(function() {
+      appendAlvaiMessage(alvaiReplies[key] || alvaiReplies['lost']);
+      // Update summary for phase 2
+      var summaryText = 'You said: "' + (text.length > 80 ? text.slice(0, 77) + '…' : text) + '"';
+      setSummary(summaryText);
+      // Auto-advance to safety gate after ALVAI's reply lands
+      setTimeout(function() {
+        gotoArcPhase(2);
+      }, 2200);
+    }, 900);
+  }
+
+  function alvaiQuick(key) {
+    var labels = {
+      'thrive-sleep':      "I want to sleep deeper.",
+      'thrive-energy':     "I want more energy.",
+      'thrive-focus':      "I want a quieter mind.",
+      'thrive-body':       "I want a body I love.",
+      'thrive-connection': "I want deeper connection.",
+      'thrive-money':      "I want money that doesn't stress me.",
+      'thrive-joy':        "I want more joy, more often.",
+      'curious':           "I'm just curious.",
+      'off':               "Something feels off.",
+      crisis:              "I'm struggling."
+    };
+    var input = document.getElementById('alvai-reply-input');
+    if (input) input.value = labels[key] || '';
+    alvaiSend();
+  }
+
+  function answerSafety(safety) {
+    state.safety = safety;
+    if (safety === 'crisis') {
+      gotoArcPhase(3);
+      return;
+    }
+    var c = concerns[state.concern];
+    if (!c) return;
+    document.getElementById('mirror-title').textContent = c.seeTitle;
+    document.getElementById('mirror-body').textContent = c.seeBody;
+    document.getElementById('slider-label').textContent = c.sliderLabel;
+    document.getElementById('slider-low').textContent = c.anchorLow;
+    document.getElementById('slider-high').textContent = c.anchorHigh;
+    gotoArcPhase(4);
+  }
+
+  function generateWitness() {
+    var c = concerns[state.concern];
+    if (!c) return;
+    var sev = parseInt(document.getElementById('severity').value, 10);
+    var score = Math.round(sev * 10);
+
+    document.getElementById('witness-name').textContent = c.nameLine;
+    document.getElementById('witness-shift').textContent = c.shiftLine;
+    document.getElementById('witness-num').textContent = score;
+    document.getElementById('witness-dim').textContent = c.dim + ' Pulse · ' + currentDate();
+    document.getElementById('witness-tier').textContent = c.evidence;
+    document.getElementById('followup-body').textContent = c.followup;
+
+    var confidence;
+    if (score <= 30) confidence = 'directional read · low band · not diagnostic';
+    else if (score <= 60) confidence = 'directional read · middle band · not diagnostic';
+    else confidence = 'directional read · upper band · not diagnostic';
+    document.getElementById('witness-confidence').textContent = confidence;
+
+    var list = document.getElementById('witness-release');
+    list.innerHTML = '';
+    for (var i = 0; i < c.release.length; i++) {
+      var li = document.createElement('li');
+      li.textContent = c.release[i];
+      list.appendChild(li);
+    }
+
+    state.stackCount = 1;
+    updateStackCount();
+    gotoArcPhase(5);
+  }
+
+  function resetArc() {
+    state.concern = null;
+    state.safety = null;
+    state.userInput = null;
+    document.getElementById('email-row').classList.remove('is-open');
+    // Clear the conversation, keep ALVAI's opener
+    var thread = document.getElementById('alvai-thread');
+    if (thread) {
+      thread.innerHTML =
+        '<div class="msg msg-alvai">' +
+          '<div class="msg-alvai-meta">She speaks first</div>' +
+          '<p class="msg-alvai-body">' +
+            'Hi. I&rsquo;m Alvai.<br><br>' +
+            '<em>What do you want more of?</em><br><br>' +
+            'Deeper sleep. More energy. A quieter mind. A body you actually like being in. ' +
+            'Connection that means something. Money that breathes. More reasons to smile.<br><br>' +
+            'Tell me. <em>I&rsquo;m good at this.</em>' +
+          '</p>' +
+        '</div>';
+    }
+    var input = document.getElementById('alvai-reply-input');
+    if (input) input.value = '';
+    gotoArcPhase(1);
+  }
+
+  function updateStackCount() {
+    var elements = ['stack-count', 'stack-count-mirror', 'you-stack-count'];
+    for (var i = 0; i < elements.length; i++) {
+      var el = document.getElementById(elements[i]);
+      if (el) el.textContent = String(state.stackCount);
+    }
+  }
+
+  function currentDate() {
+    var d = new Date();
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return months[d.getMonth()] + ' ' + d.getDate();
+  }
+
+  // ============================================================
+  // BREATH GATE
+  // ============================================================
+  function dismissBreathGate() {
+    var gate = document.getElementById('breath-gate');
+    if (!gate) return;
+    gate.classList.add('is-leaving');
+    setTimeout(function() {
+      gate.style.display = 'none';
+    }, 700);
+  }
+
+  // Auto-dismiss after one breath cycle (5s) if user does nothing
+  setTimeout(dismissBreathGate, 5500);
+
+  // ============================================================
+  // DRAWER
+  // ============================================================
+  function openDrawer() {
+    document.getElementById('drawer').classList.add('is-open');
+    document.getElementById('drawer-overlay').classList.add('is-open');
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('is-open');
+    document.getElementById('drawer-overlay').classList.remove('is-open');
+  }
+
+  // ============================================================
+  // CHIP RAIL ACTIVATION (Vessel, Care, Library, You)
+  // ============================================================
+  function wireChipRail(navAttr, paneAttr) {
+    var chips = document.querySelectorAll('[' + navAttr + ']');
+    for (var i = 0; i < chips.length; i++) {
+      (function(chip) {
+        chip.addEventListener('click', function() {
+          var key = chip.getAttribute(navAttr);
+          var sib = chip.parentNode.children;
+          for (var j = 0; j < sib.length; j++) sib[j].classList.remove('is-active');
+          chip.classList.add('is-active');
+          var panes = document.querySelectorAll('[' + paneAttr + ']');
+          for (var k = 0; k < panes.length; k++) {
+            panes[k].style.display = (panes[k].getAttribute(paneAttr) === key) ? '' : 'none';
+          }
+        });
+      })(chips[i]);
+    }
+  }
+
+  // ============================================================
+  // GLOBAL CLICK ROUTER
+  // ============================================================
+  document.addEventListener('click', function(e) {
+    var t = e.target;
+    while (t && t !== document.body) {
+      var action = t.getAttribute && t.getAttribute('data-action');
+      if (action) {
+        e.preventDefault();
+        if (action === 'goto-surface') {
+          gotoSurface(t.getAttribute('data-surface'));
+        } else if (action === 'open-drawer') {
+          openDrawer();
+        } else if (action === 'close-drawer') {
+          closeDrawer();
+        } else if (action === 'skip-breath') {
+          dismissBreathGate();
+        } else if (action === 'pick-concern') {
+          pickConcern(t.getAttribute('data-concern'));
+        } else if (action === 'alvai-send') {
+          alvaiSend();
+        } else if (action === 'alvai-quick') {
+          alvaiQuick(t.getAttribute('data-concern'));
+        } else if (action === 'answer-safety') {
+          answerSafety(t.getAttribute('data-safety'));
+        } else if (action === 'generate-witness') {
+          generateWitness();
+        } else if (action === 'reset-arc') {
+          resetArc();
+        } else if (action === 'open-email-row') {
+          document.getElementById('email-row').classList.add('is-open');
+        } else if (action === 'continue-alvai') {
+          gotoSurface('vessel');
+        } else if (action === 'goto-library') {
+          gotoSurface('library');
+        }
+        return;
+      }
+      t = t.parentNode;
+    }
+  });
+
+  // Severity slider live readout
+  var sev = document.getElementById('severity');
+  if (sev) {
+    sev.addEventListener('input', function() {
+      document.getElementById('slider-out').textContent = sev.value;
+      state.severity = parseInt(sev.value, 10);
+    });
+  }
+
+  // ALVAI reply form — Enter key sends message
+  var alvaiForm = document.getElementById('alvai-reply-form');
+  if (alvaiForm) {
+    alvaiForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      alvaiSend();
+    });
+  }
+
+  // Wire all chip rails
+  wireChipRail('data-vessel-tab', 'data-vessel-pane');
+  wireChipRail('data-care-tab',   'data-care-pane');
+  wireChipRail('data-lib-tab',    'data-lib-pane');
+  wireChipRail('data-you-tab',    'data-you-pane');
+
+  // Keyboard: Esc closes drawer, dismisses breath gate
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeDrawer();
+      dismissBreathGate();
+    }
+    if (e.key === 'Enter' || e.key === ' ') {
+      var gate = document.getElementById('breath-gate');
+      if (gate && !gate.classList.contains('is-leaving') && document.activeElement === document.body) {
+        e.preventDefault();
+        dismissBreathGate();
+      }
+    }
+  });
+
+  // Tap breath gate to dismiss
+  var gate = document.getElementById('breath-gate');
+  if (gate) gate.addEventListener('click', function(e) {
+    if (e.target.getAttribute && e.target.getAttribute('data-action') === 'skip-breath') return;
+    dismissBreathGate();
+  });
+
+})();
+</script>
+
+</body>
+</html>
