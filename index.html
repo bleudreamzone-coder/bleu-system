@@ -910,6 +910,8 @@ button[type="submit"],
 .msg.ai a,.bub.ai a{color:#06b6d4!important;text-decoration:underline!important}
 .alvai-cursor{display:inline-block!important;width:2px!important;height:18px!important;background:#4a7858!important;margin-left:2px!important;animation:alvai-blink 1s step-end infinite!important;vertical-align:text-bottom!important}
 @keyframes alvai-blink{50%{opacity:0}}
+/* Homepage ecosystem-card description contrast lift — cards have dark gradient backgrounds; lifts the migrated var(--bleu-muted) (#6B6B6E) to high-contrast white. Scoped to .bleu-eco-grid only. */
+.bleu-eco-grid div[style*="font-size:12px"][style*="line-height:1.65"]{color:rgba(255,255,255,.88) !important;font-weight:400 !important}
 </style>
 <style id="trust-score-fix">
 .bleu-verified-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;font-size:12px;font-weight:600;color:#22c55e;letter-spacing:0.5px}
@@ -1446,7 +1448,7 @@ window.bleuPlausible = function(name, opts){ try { if (typeof plausible === 'fun
       <div class="hf1" style="font-size:10px;letter-spacing:4px;color:rgba(212,175,55,.45);text-transform:uppercase;margin-bottom:20px;font-weight:700">A living model of care &nbsp;&middot;&nbsp; Louisiana &nbsp;&middot;&nbsp; 222 Cities &nbsp;&middot;&nbsp; Patent Pending</div>
 
       <div class="hf2" style="min-height:38px;margin-bottom:18px">
-        <span style="font-family:Georgia,serif;font-size:clamp(16px,2.8vw,22px);color:rgba(232,213,176,.65);font-weight:300;font-style:italic" id="hw-type"></span><span class="hcursor">|</span>
+        <span style="font-family:Georgia,serif;font-size:clamp(16px,2.8vw,22px);color:var(--bleu-muted);font-weight:400;font-style:italic" id="hw-type"></span><span class="hcursor">|</span>
       </div>
 <div id="tw-home" style="display:none"></div>
 
@@ -1459,7 +1461,7 @@ window.bleuPlausible = function(name, opts){ try { if (typeof plausible === 'fun
       <div class="hf3" style="margin-bottom:32px">
         <p style="font-size:clamp(13px,1.8vw,15px);color:var(--bleu-muted);line-height:1.8;max-width:580px;margin:12px auto 0;font-weight:300">
           Practitioners. Guidance. Safety. Recovery. Finance. Cannabis. Community.<br>
-          <span style="color:rgba(212,175,55,.7)">Always free for Citizens. The infrastructure wellness was always missing.</span>
+          <span style="color:var(--bleu-gold)">Always free for Citizens. The infrastructure wellness was always missing.</span>
         </p>
       </div>
 
@@ -1685,7 +1687,7 @@ window.bleuPlausible = function(name, opts){ try { if (typeof plausible === 'fun
 })();
 </script>
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:40px">
+  <div class="bleu-eco-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:40px">
 
     <div style="background:linear-gradient(135deg,rgba(25,50,68,.85),rgba(20,40,55,.9));border:1px solid rgba(78,205,196,.15);border-radius:16px;padding:22px;cursor:pointer;transition:all .3s" onclick="goAsk('alvai','I cant sleep and I feel exhausted every morning. Help me.')" onmouseover="this.style.borderColor='#4ecdc4';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='rgba(78,205,196,.15)';this.style.transform='none'">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
