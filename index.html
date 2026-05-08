@@ -322,6 +322,10 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .panel{display:none;padding:80px 24px 120px;max-width:960px;margin:0 auto;min-height:auto;position:relative;z-index:1}
 .panel.active{display:block!important;opacity:1!important;visibility:visible!important;animation:panelIn 400ms ease-out both}
 @keyframes panelIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+/* Phase 1B — stacked group panels */
+.panel.active.group-child{display:block;padding-top:32px;padding-bottom:32px;margin-bottom:48px}
+.group-section-header{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:18px;color:rgba(107,107,110,.85);text-align:center;margin:48px 0 24px 0;padding-bottom:12px;border-bottom:1px solid rgba(201,162,39,.25);letter-spacing:.05em;text-transform:uppercase}
+.group-section-header:first-child{margin-top:0}
 @keyframes goldPulse {
   0% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0); }
   17% { box-shadow: 0 0 0 8px rgba(201, 162, 39, 0.4); }
@@ -9521,8 +9525,8 @@ function calcSleepScore() {
 
 function go(tab){
   // Phase 1 (7-tab collapse) — soft alias routing.
-  // Old panel IDs still exist; we only resolve which panel to show and which
-  // parent nav tab to highlight. Content is never silently swapped.
+  // Old panel IDs still exist; we only resolve which panel(s) to show and
+  // which parent nav tab to highlight. Content is never silently swapped.
   var PARENT_DEFAULT = { 'local':'directory', 'support':'therapy', 'supply':'vessel' };
   var NAME_TO_PANEL  = { 'pulse':'dashboard', 'find-care':'directory', 'city':'map' };
   var NAV_PARENT     = {
@@ -9532,25 +9536,90 @@ function go(tab){
     'vessel':'supply', 'finance':'supply',
     'learn':'learn', 'ecsiq':'ecsiq', 'why':'why'
   };
+  // Phase 1B — multi-panel groups. Parent tabs render all children stacked
+  // with section headers. Spirit / learn / ecsiq / why render alone.
+  var GROUP = {
+    'home':    ['home', 'dashboard', 'passport'],
+    'local':   ['directory', 'map', 'community'],
+    'support': ['therapy', 'recovery', 'sleep'],
+    'supply':  ['vessel', 'finance']
+  };
+  var GROUP_LABELS = {
+    'home':'Home', 'dashboard':'Pulse', 'passport':'Passport',
+    'directory':'Find Care', 'map':'City', 'community':'Community',
+    'therapy':'Therapy', 'recovery':'Recovery', 'sleep':'Sleep',
+    'vessel':'Supply', 'finance':'Finance'
+  };
+
   var panelId = PARENT_DEFAULT[tab] || NAME_TO_PANEL[tab] || tab;
   var navTab  = NAV_PARENT[panelId] || tab;
 
+  // Determine group: parent name OR resolved panel is child of a group.
+  // Keyed off tab/panelId, NOT navTab — so /#spirit renders alone even
+  // though spirit's nav highlight is Home.
+  var groupKey = null;
+  if (GROUP[tab]) groupKey = tab;
+  else { for (var pk in GROUP) { if (GROUP[pk].indexOf(panelId) !== -1) { groupKey = pk; break; } } }
+  var panelsToShow = groupKey ? GROUP[groupKey] : [panelId];
+  var isGroup = !!groupKey && panelsToShow.length > 1;
+
   window._currentTab = tab;
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'))
-  const panel=document.getElementById('p-'+panelId)
-  if(panel)panel.classList.add('active')
-  var activeTab=document.querySelector('.nav-tab[data-tab="'+navTab+'"]');
-  if(activeTab)activeTab.classList.add('active')
-  if(panelId==='map'&&window._bleuMapRestart){window._bleuMapRestart();}
-  window.scrollTo({top:0,behavior:'smooth'})
-  if(panelId==='passport'){if(typeof window.loadPassport==='function')window.loadPassport();setTimeout(initPassport,80)}
-  if(panelId==='dashboard'){if(typeof window.renderDashboardBHI==='function')window.renderDashboardBHI();if(typeof window.renderDashboardStats==='function')window.renderDashboardStats();}
-  if(panelId==='enterprise'){setTimeout(function(){if(typeof initAll==='function')initAll();},200)}
-  if(panelId==='sleep'||panelId==='spirit'){setTimeout(function(){
-    document.querySelectorAll('#p-'+panelId+' .s-fade, #p-'+panelId+' [style*="opacity:0"]').forEach(function(el){el.style.opacity='1';el.style.transform='none';});
-  },100);}
-  setTimeout(()=>{document.querySelectorAll('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('visible')})},100)
+
+  // Clear active states, group markers, and previously injected headers.
+  document.querySelectorAll('.panel').forEach(function(p){
+    p.classList.remove('active');
+    p.classList.remove('group-child');
+  });
+  document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.group-section-header').forEach(function(h){
+    if (h.id && h.id.indexOf('-section-header') !== -1) h.remove();
+  });
+
+  // Activate panels (and inject headers when rendering a group).
+  panelsToShow.forEach(function(name){
+    var pEl = document.getElementById('p-' + name);
+    if (!pEl) return;
+    pEl.classList.add('active');
+    if (isGroup) {
+      pEl.classList.add('group-child');
+      var header = document.createElement('div');
+      header.className = 'group-section-header';
+      header.id = name + '-section-header';
+      header.textContent = GROUP_LABELS[name] || name;
+      pEl.insertBefore(header, pEl.firstChild);
+    }
+  });
+
+  // Highlight parent nav tab.
+  var activeTab = document.querySelector('.nav-tab[data-tab="' + navTab + '"]');
+  if (activeTab) activeTab.classList.add('active');
+
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  // Run init for every visible panel.
+  panelsToShow.forEach(function(name){
+    if (name === 'map' && window._bleuMapRestart) { window._bleuMapRestart(); }
+    if (name === 'passport') {
+      if (typeof window.loadPassport === 'function') window.loadPassport();
+      setTimeout(initPassport, 80);
+    }
+    if (name === 'dashboard') {
+      if (typeof window.renderDashboardBHI === 'function') window.renderDashboardBHI();
+      if (typeof window.renderDashboardStats === 'function') window.renderDashboardStats();
+    }
+    if (name === 'enterprise') {
+      setTimeout(function(){ if(typeof initAll==='function') initAll(); }, 200);
+    }
+    if (name === 'sleep' || name === 'spirit') {
+      setTimeout(function(){
+        document.querySelectorAll('#p-'+name+' .s-fade, #p-'+name+' [style*="opacity:0"]').forEach(function(el){
+          el.style.opacity='1'; el.style.transform='none';
+        });
+      }, 100);
+    }
+  });
+
+  setTimeout(()=>{document.querySelectorAll('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('visible')})},100);
 }
 
 function setMode(tab,mode,el){
@@ -14168,24 +14237,41 @@ window.bleuProtocolCheckout = window.bleuProtocolCheckout || function(protocol) 
   }
 
   function handleHash() {
-    // Phase 1 (7-tab collapse) — self-healing URL.
-    // If the user lands on a legacy hash (e.g. /#recovery), rewrite the URL
-    // to the canonical parent (/#support) but still route to the original
-    // panel. go() will highlight the parent nav tab.
+    // Phase 1B — self-healing URL + sub-section scroll.
+    // Legacy hash → URL self-heals to canonical parent, group renders,
+    // page scrolls to the matching section header inside the group.
     var URL_PARENT = {
-      'dashboard':'home','pulse':'home',
+      'dashboard':'home','pulse':'home','passport':'home',
       'directory':'local','find-care':'local','map':'local','city':'local','community':'local',
       'therapy':'support','recovery':'support','sleep':'support',
       'finance':'supply'
     };
+    var SECTION_MAP = {
+      'pulse':'dashboard','dashboard':'dashboard','passport':'passport',
+      'find-care':'directory','directory':'directory',
+      'city':'map','map':'map',
+      'community':'community',
+      'therapy':'therapy','recovery':'recovery','sleep':'sleep',
+      'finance':'finance'
+    };
     var hash = window.location.hash.replace('#', '').toLowerCase().trim();
-    if (!hash) return;
+    if (!hash) { setTimeout(function(){ if(typeof window.go==='function') window.go('home'); }, 150); return; }
+
+    var targetSection = null;
     if (URL_PARENT[hash]) {
       try { history.replaceState(null, '', '#' + URL_PARENT[hash]); } catch(e) {}
+      targetSection = SECTION_MAP[hash];
     }
+
     setTimeout(function() {
       if (typeof window.go === 'function') window.go(hash);
       else openTab(hash);
+      if (targetSection) {
+        setTimeout(function(){
+          var header = document.getElementById(targetSection + '-section-header');
+          if (header) header.scrollIntoView({behavior:'smooth', block:'start'});
+        }, 300);
+      }
     }, 150);
   }
 
