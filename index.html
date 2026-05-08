@@ -326,6 +326,21 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .panel.active.group-child{display:block;padding-top:32px;padding-bottom:32px;margin-bottom:48px}
 .group-section-header{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:18px;color:rgba(107,107,110,.85);text-align:center;margin:48px 0 24px 0;padding-bottom:12px;border-bottom:1px solid rgba(201,162,39,.25);letter-spacing:.05em;text-transform:uppercase}
 .group-section-header:first-child{margin-top:0}
+/* Phase 2A — Local tab interior */
+.local-hero{text-align:center;padding:64px 24px 32px;max-width:720px;margin:0 auto}
+.local-hero-line{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:400;font-size:36px;color:var(--bleu-ink,#1A1A1C);margin-bottom:16px;line-height:1.2}
+.local-hero-subtitle{font-family:'Calibri',system-ui,sans-serif;font-size:18px;font-weight:400;color:var(--bleu-muted,#6B6B6E);line-height:1.5;margin-bottom:24px}
+.local-city-pill{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--bleu-gold,#C9A227);border:1px solid rgba(201,162,39,.3);padding:6px 14px;border-radius:20px}
+.local-preview-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:720px;margin:0 auto 48px;padding:0 24px}
+@media (max-width:640px){.local-hero-line{font-size:28px}.local-hero-subtitle{font-size:16px}.local-preview-row{grid-template-columns:1fr;gap:12px}}
+.local-preview-card{padding:20px 18px;background:rgba(255,255,255,.6);border:1px solid rgba(201,162,39,.2);border-radius:12px;cursor:pointer;transition:all 250ms ease-out;text-align:center}
+.local-preview-card:hover{border-color:rgba(201,162,39,.5);transform:translateY(-2px);box-shadow:0 4px 12px rgba(26,26,28,.08)}
+.local-preview-card-title{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:16px;color:#4B1E82;margin-bottom:6px}
+.local-preview-card-meta{font-size:12px;color:var(--bleu-muted,#6B6B6E);line-height:1.4}
+.local-tagline{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:16px;color:var(--bleu-muted,#6B6B6E);text-align:center;margin:-12px 0 32px;padding:0 24px}
+.local-sticky-cta{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:100;background:#4B1E82;color:#FFFFFF;padding:14px 28px;border-radius:32px;font-family:'Calibri',system-ui,sans-serif;font-weight:600;font-size:15px;border:none;cursor:pointer;box-shadow:0 6px 20px rgba(75,30,130,.3);transition:opacity 250ms ease-out,transform 250ms ease-out,box-shadow 250ms ease-out;display:none;opacity:0}
+.local-sticky-cta.visible{display:inline-block;opacity:1}
+.local-sticky-cta:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 8px 24px rgba(75,30,130,.4)}
 @keyframes goldPulse {
   0% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0); }
   17% { box-shadow: 0 0 0 8px rgba(201, 162, 39, 0.4); }
@@ -1775,7 +1790,7 @@ window.bleuPlausible = function(name, opts){ try { if (typeof plausible === 'fun
         <span style="font-size:9px;padding:3px 8px;border-radius:8px;background:rgba(78,205,196,.1);color:var(--bleu-purple);letter-spacing:1px;font-weight:700">DIRECTORY</span>
       </div>
       <div style="color:var(--bleu-purple);font-weight:600;font-size:15px;margin-bottom:6px">Find a Doctor</div>
-      <div style="color:var(--bleu-muted);font-size:12px;line-height:1.65;font-weight:300">800K+ NPI-verified. Back pain, hormones, mental health, pain management. Real addresses. Real numbers.</div>
+      <div style="color:rgba(232,213,176,.92);font-size:12px;line-height:1.65;font-weight:400">800K+ NPI-verified. Back pain, hormones, mental health, pain management. Real addresses. Real numbers.</div>
       <div style="margin-top:14px;display:flex;gap:5px;flex-wrap:wrap">
         <span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(78,205,196,.08);color:var(--bleu-purple)">Directory</span>
         <span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(78,205,196,.08);color:var(--bleu-purple)">NPI Verified</span>
@@ -1886,7 +1901,7 @@ window.bleuPlausible = function(name, opts){ try { if (typeof plausible === 'fun
 
   <!-- AFFILIATE TRUST BAR -->
   <div style="background:rgba(10,12,16,.4);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:16px 20px;margin-bottom:16px">
-    <div style="font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.2);text-align:center;margin-bottom:12px">TRUSTED PARTNERS &mdash; VETTED, NEVER PAID PLACEMENT</div>
+    <div style="font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.2);text-align:center;margin-bottom:12px">AUDITED PARTNERS &mdash; CLINICALLY REVIEWED, NEVER PAID PLACEMENT</div>
     <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px">
       <a href="https://betterhelp.com/bleu" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(167,139,250,.2);color:var(--bleu-dusk);background:rgba(167,139,250,.05);text-decoration:none;white-space:nowrap">&#128172; BetterHelp</a>
       <a href="javascript:void(0)" onclick="engageCard('supply','Tell me about Thorne supplements — which products from their line would be right for my health goals?','https://thorne.com')" target="_blank" style="flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:11px;border:1px solid rgba(212,175,55,.2);color:var(--bleu-gold);background:rgba(212,175,55,.05);text-decoration:none;white-space:nowrap">&#128138; Thorne</a>
@@ -6417,7 +6432,7 @@ if(stored){var inp=document.getElementById('samhsa-zip');if(inp)inp.value=stored
 <!-- SECTION: COMMERCE                    -->
 <!-- ════════════════════════════════════ -->
 <div id="eq-commerce" class="eq-sec">
-  <div class="eq-lbl" style="color:#22c55e;margin-top:32px">TRUSTED PARTNERS -- 51 VETTED AFFILIATES</div>
+  <div class="eq-lbl" style="color:#22c55e;margin-top:32px">AUDITED PARTNERS -- 51 CLINICALLY REVIEWED AFFILIATES</div>
   <h2 class="eq-h">Bud recommends. <em style="color:#22c55e">BLEU earns. You save.</em></h2>
   <p style="font-size:13px;color:var(--bleu-muted);margin-bottom:6px;line-height:1.8">Every partner is vetted for third-party testing, clean ingredients, and compliance. <strong style="color:var(--bleu-ink)">Affiliate disclosure: CannaIQ earns a small commission through partner links.</strong> Commerce follows care -- Bud runs safety check first, always.</p>
   <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;margin-top:20px" class="eq-g2">
@@ -9590,6 +9605,88 @@ function go(tab){
     }
   });
 
+  // Phase 2A — Local tab interior injection.
+  // Always start fresh: remove any prior Local-specific elements. This
+  // handles Local→Local re-renders where Phase 1B resets section-headers
+  // and would otherwise orphan the hero/preview/taglines below them.
+  document.querySelectorAll('.local-hero, .local-preview-row, .local-tagline').forEach(function(el){ el.remove(); });
+
+  if (navTab === 'local' && isGroup) {
+    var directoryPanel = document.getElementById('p-directory');
+    if (directoryPanel) {
+      var hero = document.createElement('div');
+      hero.className = 'local-hero';
+      hero.innerHTML =
+        '<div class="local-hero-line">Help near you.</div>' +
+        '<div class="local-hero-subtitle">' +
+          'Practitioners, places, and people — ' +
+          'evidence-based, mapped, and connected to your care.' +
+        '</div>' +
+        (window.BLEU_CITY
+          ? '<div class="local-city-pill">' + window.BLEU_CITY + '</div>'
+          : '');
+
+      var previewRow = document.createElement('div');
+      previewRow.className = 'local-preview-row';
+      previewRow.innerHTML =
+        '<div class="local-preview-card" onclick="document.getElementById(\'directory-section-header\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">' +
+          '<div class="local-preview-card-title">Find Care</div>' +
+          '<div class="local-preview-card-meta">855K+ practitioners</div>' +
+        '</div>' +
+        '<div class="local-preview-card" onclick="document.getElementById(\'map-section-header\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">' +
+          '<div class="local-preview-card-title">City</div>' +
+          '<div class="local-preview-card-meta">Your parish + 332 cities</div>' +
+        '</div>' +
+        '<div class="local-preview-card" onclick="document.getElementById(\'community-section-header\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">' +
+          '<div class="local-preview-card-title">Community</div>' +
+          '<div class="local-preview-card-meta">Local Citizens here</div>' +
+        '</div>';
+
+      var existingHeader = directoryPanel.querySelector('.group-section-header');
+      if (existingHeader) {
+        directoryPanel.insertBefore(hero, existingHeader);
+        directoryPanel.insertBefore(previewRow, existingHeader);
+      } else {
+        directoryPanel.insertBefore(hero, directoryPanel.firstChild);
+        directoryPanel.insertBefore(previewRow, hero.nextSibling);
+      }
+    }
+
+    // Inject taglines AFTER each section header.
+    var taglines = {
+      'directory-section-header': 'Real practitioners. Cost shown.',
+      'map-section-header': 'Your parish, mapped.',
+      'community-section-header': 'You are not alone here.'
+    };
+    Object.keys(taglines).forEach(function(headerId){
+      var hdr = document.getElementById(headerId);
+      if (!hdr) return;
+      var t = document.createElement('div');
+      t.className = 'local-tagline';
+      t.textContent = taglines[headerId];
+      hdr.parentNode.insertBefore(t, hdr.nextSibling);
+    });
+
+    // Sticky CTA — created once, reused across re-renders, body-scoped.
+    var stickyCta = document.getElementById('local-sticky-cta');
+    if (!stickyCta) {
+      stickyCta = document.createElement('button');
+      stickyCta.id = 'local-sticky-cta';
+      stickyCta.className = 'local-sticky-cta';
+      stickyCta.textContent = 'Save this care plan to Passport';
+      stickyCta.onclick = function(){
+        // Phase 2A placeholder — real save logic in Phase 2B.
+        stickyCta.textContent = 'Saved to Passport ✓';
+        setTimeout(function(){ stickyCta.textContent = 'Save this care plan to Passport'; }, 2400);
+      };
+      document.body.appendChild(stickyCta);
+    }
+    setTimeout(function(){ stickyCta.classList.add('visible'); }, 400);
+  } else {
+    var stickyCtaHide = document.getElementById('local-sticky-cta');
+    if (stickyCtaHide) stickyCtaHide.classList.remove('visible');
+  }
+
   // Highlight parent nav tab.
   var activeTab = document.querySelector('.nav-tab[data-tab="' + navTab + '"]');
   if (activeTab) activeTab.classList.add('active');
@@ -11402,7 +11499,7 @@ function exportFHIR() {
     </div>
     <!-- AFFILIATE TRUST RAIL -->
     <div class="e-fade">
-      <div class="e-lbl" style="color:rgba(200,169,81,.4);margin-bottom:14px">ENTERPRISE WELLNESS ECOSYSTEM -- TRUSTED PARTNERS</div>
+      <div class="e-lbl" style="color:rgba(200,169,81,.4);margin-bottom:14px">ENTERPRISE WELLNESS ECOSYSTEM -- AUDITED PARTNERS</div>
       <div style="display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:6px">
         <a href="https://www.betterhelp.com" target="_blank" style="flex-shrink:0;padding:12px 18px;border-radius:10px;border:1px solid rgba(167,139,250,.2);background:rgba(167,139,250,.04);text-decoration:none;text-align:center;min-width:110px;transition:all .2s" onmouseover="this.style.borderColor='rgba(167,139,250,.5)'" onmouseout="this.style.borderColor='rgba(167,139,250,.2)'"><div style="font-size:18px;margin-bottom:6px">&#129504;</div><div style="font-size:10px;font-weight:700;color:var(--bleu-dusk);margin-bottom:2px">BetterHelp</div><div style="font-size:9px;color:var(--bleu-muted)">EAP Therapy</div></a>
         <a href="https://www.talkspace.com/business" target="_blank" style="flex-shrink:0;padding:12px 18px;border-radius:10px;border:1px solid rgba(45,212,168,.2);background:rgba(45,212,168,.04);text-decoration:none;text-align:center;min-width:110px;transition:all .2s" onmouseover="this.style.borderColor='rgba(45,212,168,.5)'" onmouseout="this.style.borderColor='rgba(45,212,168,.2)'"><div style="font-size:18px;margin-bottom:6px">&#128172;</div><div style="font-size:10px;font-weight:700;color:var(--bleu-purple);margin-bottom:2px">Talkspace</div><div style="font-size:9px;color:var(--bleu-muted)">Business Mental Health</div></a>
