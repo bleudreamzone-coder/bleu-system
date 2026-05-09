@@ -1960,6 +1960,19 @@ const server = http.createServer((req, res) => {
     }
   }
 
+  // ── SEVEN SEAS — local, support, learn, supply, ecsiq, why ──
+  {
+    const seaMatch = pn.match(/^\/(local|support|learn|supply|ecsiq|why)\/?$/);
+    if (seaMatch) {
+      const seaHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'};
+      fs.readFile(path.join(__dirname, seaMatch[1] + '.html'), (e, d) => {
+        if (e) return json(res, 404, { error: 'Sea not found' });
+        res.writeHead(200, seaHeaders); res.end(d);
+      });
+      return;
+    }
+  }
+
   if ((pn === '/' || pn === '/index.html') && !url.searchParams.has('v')) { res.writeHead(302, {'Location':'/?v=20260403','Cache-Control':'no-store'}); res.end(); return; }
   if (pn === '/' || pn === '/index.html') { const noCacheHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'}; fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,noCacheHeaders);res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,noCacheHeaders);res.end(d);} }); return; }
 
@@ -1979,7 +1992,7 @@ const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 const PROTOCOL_MAP = {
   'price_1TEKQmK4cATmIFbokmkYg47S': { name: 'sleep_reset',    mode: 'subscription' },
   'price_1TEKS6K4cATmIFbo1OW7BeCW': { name: 'stress_reset',   mode: 'subscription' },
-  'price_1TEKSWKcATmIFbojDTEJng9':  { name: 'longevity_core', mode: 'subscription' },
+  'price_1TEKSWK4cATmIFbojDTEJng9': { name: 'longevity_core', mode: 'subscription' },
   'price_1TEKSsK4cATmIFbouxOBHtwQ': { name: 'gut_reset',      mode: 'subscription' },
   'price_1TBPtAK4cATmIFboFVb9m0QN': { name: 'pro',            mode: 'subscription' }
 };

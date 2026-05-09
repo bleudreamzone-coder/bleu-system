@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#fcf8ef" />
+
+<title>bleu.live — Local · care that meets you where you are</title>
+
+<meta name="description" content="Care that meets you where you are. The local sea — clinics, peer support, urgent care, food, pharmacy, transportation, mental health, maternal care, crisis lines — by your block, your parish, your state." />
+<meta name="author" content="Bleu Garner · Dr. Felicia Stoler, DCN" />
+<meta property="og:title" content="bleu.live — Local · care that meets you where you are" />
+<meta property="og:description" content="Care that meets you where you are." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://bleu.live/local" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* =========================================================================
+   bleu.live — Local (Sea ii) · DEEP BUILD
+   v2 · Co-Founder + CCO + President signed pending preview
+   The opening line: "Care that meets you where you are."
+   The four tiers: Self · Support · Clinical · Crisis.
+   The ripple is the spine: you → block → city → parish → state.
+   ECS rule held. Wall held. Fifth-grade bar throughout.
+   ========================================================================= */
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#fcf8ef;color:#181714;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;overflow-x:hidden;
+}
+
+.bh{
+  --ink:#181714;--ink-soft:#4b4942;--ink-faint:#807a6f;--ink-whisper:#a8a299;
+  --cream:#faf6ee;--cream-warm:#f4ecd9;--cream-deep:#e8dcc0;--paper:#fffaf1;
+  --blue:#3878E0;--blue-soft:#5B9BFF;--blue-deep:#2156A8;
+  --gold:#c9a227;--gold-soft:#e6cb74;
+  --purple:#4B1E82;--teal:#2f8a83;--coral:#c95f4a;--moss:#5b8c7b;
+  --display:'Fraunces',Georgia,serif;
+  --body:'Inter',-apple-system,sans-serif;
+  position:relative;min-height:100vh;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(91,155,255,.08),transparent 55%),
+    radial-gradient(ellipse at 80% 60%,rgba(201,162,39,.04),transparent 60%),
+    linear-gradient(180deg,#fcf8ef 0%,#f6eedb 40%,#f0e4c7 70%,#fcf8ef 100%);
+  color:var(--ink);font-family:var(--body);line-height:1.6;
+}
+
+/* RIPPLE FIELD — continuous through the whole page */
+.bh-ripple-field{
+  position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+}
+.bh-ripple-field svg{
+  position:absolute;left:50%;top:30%;transform:translate(-50%,-50%);
+  width:140vw;max-width:1600px;height:auto;opacity:.5;
+}
+
+.bh::before{
+  content:"";position:fixed;inset:0;
+  background:radial-gradient(ellipse 800px 400px at var(--mx,50%) var(--my,30%),rgba(91,155,255,.08),transparent 70%);
+  pointer-events:none;transition:background 1.4s ease;z-index:1;
+}
+.bh-aura{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(91,155,255,.06) 0%,transparent 35%),
+    radial-gradient(circle at 70% 60%,rgba(47,138,131,.03) 0%,transparent 40%);
+  animation:drift 28s ease-in-out infinite alternate;
+}
+@keyframes drift{
+  0%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-2%,1%) scale(1.02)}
+  100%{transform:translate(1%,-1%) scale(.99)}
+}
+.bh-content{position:relative;z-index:2}
+
+/* CHROME */
+.bh-chrome{
+  position:sticky;top:0;z-index:40;
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(252,248,239,0);backdrop-filter:blur(0px);
+  transition:all .8s ease;border-bottom:0.5px solid transparent;gap:14px;
+}
+.bh-chrome.scrolled{
+  background:rgba(252,248,239,.85);
+  backdrop-filter:saturate(140%) blur(20px);
+  -webkit-backdrop-filter:saturate(140%) blur(20px);
+  border-bottom:0.5px solid rgba(232,220,192,.6);
+}
+.bh-mark-group{display:flex;align-items:center;gap:14px;min-width:0;flex-shrink:0}
+.bh-mark{
+  font-family:var(--display);font-size:18px;font-weight:300;letter-spacing:-.02em;
+  color:var(--ink);position:relative;cursor:pointer;
+  text-decoration:none;transition:.4s ease;
+}
+.bh-mark .heartbeat{
+  display:inline-block;color:var(--blue);font-weight:400;
+  animation:heartbeat 4s ease-in-out infinite;
+}
+@keyframes heartbeat{
+  0%,40%,100%{transform:scale(1);text-shadow:0 0 0 rgba(56,120,224,0)}
+  50%{transform:scale(1.18);text-shadow:0 0 18px rgba(56,120,224,.55)}
+  60%{transform:scale(1.05);text-shadow:0 0 8px rgba(56,120,224,.3)}
+}
+.bh-context{
+  font-size:10px;color:var(--ink-whisper);font-weight:400;letter-spacing:.16em;
+  text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  opacity:0;animation:rise .9s ease-out .2s forwards;cursor:pointer;
+  background:none;border:0;font-family:inherit;
+}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.bh-context-dot{
+  width:4px;height:4px;border-radius:50%;background:var(--blue);opacity:.7;
+  animation:contextPulse 4s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes contextPulse{0%,100%{opacity:.4}50%{opacity:.9}}
+.bh-context:hover{color:var(--ink-soft)}
+
+.bh-numerals{
+  display:flex;gap:2px;align-items:center;
+  font-family:var(--display);font-style:italic;font-size:11px;
+  color:var(--ink-faint);font-weight:400;letter-spacing:.04em;
+}
+.bh-numeral{
+  background:none;border:0;color:var(--ink-faint);
+  font-family:inherit;font-size:inherit;font-style:inherit;
+  font-weight:inherit;letter-spacing:inherit;
+  padding:5px 8px;cursor:pointer;border-radius:50%;
+  transition:.4s ease;width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.bh-numeral:hover{color:var(--ink);background:rgba(232,220,192,.5)}
+.bh-numeral.active{color:var(--blue);font-weight:500}
+.bh-numeral.active::after{
+  content:"";position:absolute;bottom:1px;left:50%;
+  transform:translateX(-50%);width:3px;height:3px;
+  border-radius:50%;background:var(--blue);opacity:.6;
+}
+.bh-numeral-tip{
+  position:absolute;top:32px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--cream);padding:5px 10px;border-radius:6px;
+  font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  font-style:normal;white-space:nowrap;opacity:0;pointer-events:none;
+  transition:.3s ease;z-index:50;
+}
+.bh-numeral:hover .bh-numeral-tip{opacity:1;transform:translateX(-50%) translateY(2px)}
+.bh-numeral-tip::before{
+  content:"";position:absolute;top:-4px;left:50%;transform:translateX(-50%);
+  border-left:4px solid transparent;border-right:4px solid transparent;
+  border-bottom:4px solid var(--ink);
+}
+
+.bh-chrome-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.bh-signin{
+  font-family:var(--body);font-size:11px;color:var(--ink-soft);
+  font-weight:500;letter-spacing:.06em;background:none;border:0;
+  cursor:pointer;padding:6px 10px;border-radius:999px;transition:.4s ease;
+}
+.bh-signin:hover{color:var(--ink);background:rgba(232,220,192,.45)}
+.bh-create{
+  font-family:var(--body);font-size:11px;font-weight:500;letter-spacing:.06em;
+  cursor:pointer;padding:7px 14px;border-radius:999px;
+  background:var(--ink);color:var(--cream);border:0;transition:.4s ease;
+  white-space:nowrap;
+}
+.bh-create:hover{background:var(--purple);transform:translateY(-1px)}
+.bh-held{
+  display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-soft);
+  letter-spacing:.06em;cursor:pointer;padding:6px 12px;border-radius:999px;
+  background:rgba(255,250,241,.45);border:0.5px solid rgba(232,220,192,.5);
+  transition:.4s ease;font-family:var(--body);
+}
+.bh-held:hover{background:rgba(255,250,241,.85);border-color:var(--cream-deep)}
+.bh-held-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.7}
+.bh-held-dot.pulse{animation:heldPulse 1.6s ease-out}
+@keyframes heldPulse{
+  0%{transform:scale(1);opacity:.7}
+  30%{transform:scale(2.4);opacity:1;box-shadow:0 0 0 3px rgba(201,162,39,.2)}
+  100%{transform:scale(1);opacity:.7}
+}
+
+/* HERO */
+.bh-surface{padding:36px 22px 22px;text-align:center;position:relative}
+.bh-sea-id{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--display);font-style:italic;
+  font-size:12px;color:var(--gold);font-weight:400;
+  letter-spacing:.04em;margin-bottom:12px;
+  opacity:0;animation:rise 1s ease-out .3s forwards;
+  position:relative;z-index:3;
+}
+.bh-sea-id::before,.bh-sea-id::after{
+  content:"";width:18px;height:0.5px;background:var(--gold);opacity:.5;
+}
+.bh-bigmark{
+  font-family:var(--display);font-weight:200;
+  font-size:clamp(26px,4vw,40px);letter-spacing:-.04em;line-height:1;
+  color:var(--ink-soft);position:relative;z-index:3;margin-bottom:14px;
+  opacity:0;animation:rise 1s ease-out .35s forwards;
+}
+.bh-bigmark .dot{
+  color:var(--blue);font-weight:300;display:inline-block;
+  animation:dotbreath 5s ease-in-out infinite;
+}
+.bh-bigmark .end{color:var(--ink-soft)}
+@keyframes dotbreath{
+  0%,100%{opacity:.85;transform:scale(1);text-shadow:0 0 18px rgba(56,120,224,.3)}
+  50%{opacity:1;transform:scale(1.1);text-shadow:0 0 38px rgba(56,120,224,.55)}
+}
+
+.bh-opening{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(17px,2.4vw,22px);line-height:1.45;
+  color:var(--ink);max-width:600px;margin:0 auto 22px;
+  letter-spacing:-.005em;position:relative;z-index:3;
+  opacity:0;animation:rise 1s ease-out .45s forwards;
+}
+.bh-opening em{font-style:italic;color:var(--purple);font-weight:400}
+
+/* CITY CARD — heart of Local */
+.bh-city-card{
+  max-width:580px;margin:0 auto 22px;padding:18px 22px;
+  background:linear-gradient(135deg,rgba(255,250,241,.92),rgba(244,236,217,.6));
+  border:0.5px solid rgba(91,155,255,.35);border-radius:18px;
+  display:flex;align-items:center;gap:16px;
+  box-shadow:0 16px 36px -22px rgba(56,120,224,.3);
+  position:relative;z-index:3;
+  opacity:0;animation:rise 1s ease-out .55s forwards;
+}
+.bh-city-pin{
+  width:40px;height:40px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#8ABDFF,#3878E0 60%,#2156A8 100%);
+  position:relative;flex-shrink:0;
+  box-shadow:0 4px 14px -2px rgba(56,120,224,.55),inset 0 1px 1px rgba(255,255,255,.4);
+}
+.bh-city-pin::after{
+  content:"";position:absolute;inset:-5px;border-radius:50%;
+  border:0.5px solid rgba(91,155,255,.45);
+  animation:pinHalo 4s ease-in-out infinite;
+}
+.bh-city-pin::before{
+  content:"";position:absolute;inset:-12px;border-radius:50%;
+  border:0.5px solid rgba(91,155,255,.25);
+  animation:pinHalo2 4s ease-in-out infinite;
+}
+@keyframes pinHalo{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:.1}}
+@keyframes pinHalo2{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.45);opacity:0}}
+.bh-city-text{flex:1;text-align:left;min-width:0}
+.bh-city-label{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:3px;
+}
+.bh-city-name{
+  font-family:var(--display);font-weight:380;font-size:24px;
+  letter-spacing:-.02em;color:var(--ink);line-height:1.1;
+}
+.bh-city-name em{font-style:italic;color:var(--blue-deep);font-weight:400}
+.bh-city-sub{
+  font-size:11.5px;color:var(--ink-faint);font-weight:400;
+  letter-spacing:.02em;margin-top:4px;line-height:1.45;
+}
+.bh-city-actions{display:flex;flex-direction:column;gap:5px;flex-shrink:0;align-items:flex-end}
+.bh-city-change{
+  font-family:var(--body);font-size:11px;font-weight:500;letter-spacing:.04em;
+  background:transparent;color:var(--ink-soft);
+  border:0.5px solid rgba(232,220,192,.7);padding:8px 14px;border-radius:999px;
+  cursor:pointer;transition:.3s ease;white-space:nowrap;
+}
+.bh-city-change:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.bh-city-hub{
+  font-size:9.5px;color:var(--blue);font-weight:500;letter-spacing:.06em;
+  text-decoration:none;
+}
+.bh-city-hub:hover{color:var(--purple)}
+
+.bh-input-shell{
+  position:relative;z-index:3;width:100%;max-width:620px;margin:0 auto;
+  opacity:0;animation:rise 1s ease-out .8s forwards;
+}
+.bh-input-wrap{position:relative}
+.bh-input{
+  width:100%;padding:18px 56px 18px 24px;
+  border:0.5px solid rgba(232,220,192,.7);border-radius:999px;
+  background:rgba(255,250,241,.94);backdrop-filter:blur(8px);
+  font-size:16px;line-height:1.6;color:var(--ink);
+  font-family:var(--body);font-weight:400;outline:none;
+  transition:.5s cubic-bezier(.2,.8,.3,1);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 16px 40px -28px rgba(15,28,46,.18);
+}
+.bh-input::placeholder{color:var(--ink-faint);font-style:italic;font-weight:300}
+.bh-input:focus{
+  border-color:rgba(56,120,224,.45);background:rgba(255,250,241,1);
+  box-shadow:
+    0 0 0 5px rgba(56,120,224,.07),
+    0 1px 0 rgba(255,255,255,.7) inset,
+    0 24px 56px -28px rgba(56,120,224,.22);
+}
+.bh-input-go{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:38px;height:38px;border-radius:50%;
+  background:var(--ink);color:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:0;transition:.4s ease;
+}
+.bh-input-go:hover{background:var(--purple);transform:translateY(-50%) scale(1.06)}
+
+.bh-chips{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:14px;
+  opacity:0;animation:rise 1s ease-out 1.05s forwards;
+}
+.bh-chip{
+  font-family:var(--body);font-size:12.5px;font-weight:400;color:var(--ink-soft);
+  background:rgba(255,250,241,.55);
+  border:0.5px solid rgba(232,220,192,.6);border-radius:999px;
+  padding:8px 14px;cursor:pointer;
+  transition:.35s cubic-bezier(.2,.8,.3,1);
+  white-space:nowrap;letter-spacing:.005em;
+}
+.bh-chip:hover{
+  background:var(--ink);color:var(--cream);border-color:var(--ink);
+  transform:translateY(-2px);box-shadow:0 12px 24px -14px rgba(15,28,46,.4);
+}
+.bh-chip-quiet{color:var(--ink-faint);font-style:italic}
+.bh-chip-quiet:hover{font-style:normal}
+
+.bh-trust-row{
+  display:flex;justify-content:center;align-items:center;gap:14px;
+  margin-top:18px;flex-wrap:wrap;
+  font-size:10.5px;color:var(--ink-faint);font-weight:500;letter-spacing:.06em;
+  opacity:0;animation:rise 1s ease-out 1.3s forwards;
+}
+.bh-trust-row .tdot{width:3px;height:3px;border-radius:50%;background:var(--ink-faint);opacity:.5}
+.bh-trust-strong{color:var(--ink-soft);font-weight:500}
+
+/* WHISPERS */
+.bh-whispers-band{
+  max-width:780px;margin:24px auto 0;min-height:46px;
+  display:flex;align-items:center;justify-content:center;padding:0 22px;
+  opacity:0;animation:rise 1s ease-out 1.55s forwards;
+}
+.bh-whisper{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:13.5px;line-height:1.5;letter-spacing:-.005em;
+  color:var(--ink-faint);text-align:center;max-width:560px;
+  opacity:0;transition:opacity 1.4s ease;
+}
+.bh-whisper.show{opacity:1}
+.bh-whisper-tag{
+  font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-right:9px;opacity:.7;
+}
+.bh-whisper-tag.physician{color:var(--gold)}
+.bh-whisper-tag.monk{color:var(--purple)}
+.bh-whisper-tag.science{color:var(--teal)}
+.bh-whisper-tag.lineage{color:var(--coral)}
+.bh-whisper-tag.wisdom{color:var(--moss)}
+
+/* LIVE COUNTS BAR — what's near you, right now */
+.bh-livebar{
+  max-width:1080px;margin:24px auto 0;padding:18px 22px;
+  background:rgba(255,250,241,.6);
+  border:0.5px solid rgba(232,220,192,.55);border-radius:14px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  position:relative;z-index:2;
+  opacity:0;animation:rise 1s ease-out 1.8s forwards;
+}
+.bh-live-stat{
+  text-align:center;padding:0 12px;
+  border-right:0.5px solid rgba(232,220,192,.4);
+}
+.bh-live-stat:last-child{border-right:0}
+.bh-live-num{
+  font-family:var(--display);font-weight:400;font-size:22px;
+  letter-spacing:-.02em;color:var(--ink);line-height:1;
+}
+.bh-live-num em{font-style:italic;color:var(--blue);font-weight:400}
+.bh-live-label{
+  font-size:9.5px;color:var(--ink-faint);font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;margin-top:6px;line-height:1.3;
+}
+
+.bh-flow{padding:0 22px}
+.bh-section{max-width:1080px;margin:0 auto;padding:48px 0 24px}
+.bh-section-frame{text-align:center;margin-bottom:28px}
+.bh-zone-label{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;
+  display:inline-flex;align-items:center;gap:14px;
+}
+.bh-zone-label::before,.bh-zone-label::after{
+  content:"";width:24px;height:0.5px;background:var(--gold);opacity:.5;
+}
+.bh-zone-prompt{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(18px,2.6vw,26px);line-height:1.3;letter-spacing:-.015em;
+  color:var(--ink);max-width:600px;margin:0 auto;
+}
+.bh-zone-prompt em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-zone-sub{
+  font-family:var(--body);font-size:13px;color:var(--ink-faint);
+  max-width:560px;margin:10px auto 0;line-height:1.55;
+}
+
+/* FOUR TIERS — flowing river, not cards */
+.bh-tiers-river{
+  position:relative;margin-top:32px;
+}
+.bh-tiers-river::before{
+  content:"";position:absolute;left:5%;right:5%;top:50%;height:1px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(91,155,255,.4) 15%,
+    rgba(91,155,255,.4) 65%,
+    rgba(201,95,74,.4) 80%,
+    rgba(201,95,74,.4) 95%,
+    transparent 100%);
+  z-index:0;
+}
+.bh-tiers{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+  position:relative;z-index:1;
+}
+.bh-tier{
+  background:rgba(255,250,241,.85);
+  padding:24px 18px 20px;text-align:left;
+  font-family:var(--body);transition:.4s ease;cursor:pointer;
+  border:0.5px solid rgba(232,220,192,.55);border-radius:16px;
+  position:relative;
+  box-shadow:0 14px 32px -24px rgba(15,28,46,.18);
+}
+.bh-tier:hover{
+  background:var(--paper);transform:translateY(-3px);
+  box-shadow:0 20px 40px -22px rgba(15,28,46,.28);
+}
+.bh-tier-num{
+  font-family:var(--display);font-style:italic;font-weight:400;
+  font-size:11px;color:var(--gold);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.bh-tier-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--gold);
+  position:relative;flex-shrink:0;
+}
+.bh-tier-dot::after{
+  content:"";position:absolute;inset:-3px;border-radius:50%;
+  border:0.5px solid rgba(201,162,39,.5);
+  animation:tierHalo 4s ease-in-out infinite;
+}
+@keyframes tierHalo{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.6);opacity:0}}
+.bh-tier.support .bh-tier-dot{background:var(--moss)}
+.bh-tier.support .bh-tier-dot::after{border-color:rgba(91,140,123,.5)}
+.bh-tier.support .bh-tier-num{color:var(--moss)}
+.bh-tier.clinical .bh-tier-dot{background:var(--blue)}
+.bh-tier.clinical .bh-tier-dot::after{border-color:rgba(56,120,224,.5)}
+.bh-tier.clinical .bh-tier-num{color:var(--blue)}
+.bh-tier.crisis .bh-tier-dot{background:var(--coral)}
+.bh-tier.crisis .bh-tier-dot::after{border-color:rgba(201,95,74,.5)}
+.bh-tier.crisis .bh-tier-num{color:var(--coral)}
+.bh-tier-name{
+  font-family:var(--display);font-weight:380;font-size:20px;
+  letter-spacing:-.022em;color:var(--ink);margin-bottom:6px;line-height:1.15;
+}
+.bh-tier-line{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:13px;line-height:1.45;color:var(--ink-soft);margin-bottom:12px;
+}
+.bh-tier-examples{
+  font-size:11px;color:var(--ink-faint);font-weight:400;
+  line-height:1.55;letter-spacing:.01em;
+  padding-top:10px;border-top:0.5px solid rgba(232,220,192,.5);
+}
+.bh-tier-examples strong{color:var(--ink-soft);font-weight:500}
+.bh-tier-time{
+  display:inline-flex;align-items:center;gap:5px;margin-top:8px;
+  font-size:9.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--moss);
+}
+.bh-tier-time::before{
+  content:"";width:5px;height:5px;border-radius:50%;background:var(--moss);opacity:.7;
+}
+.bh-tier.crisis .bh-tier-time{color:var(--coral)}
+.bh-tier.crisis .bh-tier-time::before{background:var(--coral)}
+
+/* DIRECTORY — eight categories with live counts and time-distance */
+.bh-directory{
+  max-width:1080px;margin:0 auto;padding:48px 0 24px;
+}
+.bh-dir-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:rgba(232,220,192,.5);
+  border:0.5px solid rgba(232,220,192,.5);
+  border-radius:18px;overflow:hidden;
+  margin-top:8px;
+}
+.bh-dir{
+  background:rgba(255,250,241,.7);padding:22px 18px;text-align:left;
+  font-family:var(--body);transition:.4s ease;cursor:pointer;border:0;
+  display:flex;flex-direction:column;justify-content:space-between;min-height:170px;
+}
+.bh-dir:hover{background:var(--paper)}
+.bh-dir-top{flex:1}
+.bh-dir-label{
+  font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.bh-dir-label::before{
+  content:"";width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.7;
+}
+.bh-dir-name{
+  font-family:var(--display);font-weight:380;font-size:16px;
+  letter-spacing:-.018em;color:var(--ink);margin-bottom:5px;line-height:1.2;
+}
+.bh-dir-desc{
+  font-size:11px;line-height:1.5;color:var(--ink-faint);
+  font-weight:400;margin-bottom:12px;
+}
+.bh-dir-foot{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:10px;border-top:0.5px solid rgba(232,220,192,.5);
+  gap:10px;
+}
+.bh-dir-count{
+  font-size:10.5px;font-weight:500;letter-spacing:.04em;
+  color:var(--ink-soft);
+  display:inline-flex;align-items:center;gap:5px;
+}
+.bh-dir-count::before{
+  content:"";width:5px;height:5px;border-radius:50%;
+  background:var(--moss);opacity:.7;
+}
+.bh-dir-count strong{color:var(--ink);font-weight:500}
+.bh-dir-arrow{
+  font-family:var(--display);font-size:14px;color:var(--ink-faint);
+  transition:.4s ease;
+}
+.bh-dir:hover .bh-dir-arrow{transform:translateX(4px);color:var(--blue)}
+
+/* PARISH RIPPLE — the spine visualization */
+.bh-parish-ripple{
+  max-width:780px;margin:48px auto 24px;padding:36px 22px;text-align:center;
+  position:relative;
+}
+.bh-ripple-svg{
+  display:block;margin:0 auto 22px;max-width:380px;width:100%;
+}
+.bh-ripple-prompt{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:15px;line-height:1.55;color:var(--ink-soft);
+  max-width:560px;margin:0 auto;
+}
+.bh-ripple-prompt em{font-style:italic;color:var(--purple);font-weight:400}
+
+/* WHO SHOWS UP — populations served, RHTCF voice */
+.bh-populations{
+  max-width:920px;margin:0 auto;padding:48px 22px 24px;
+}
+.bh-populations-head{text-align:center;margin-bottom:28px}
+.bh-pop-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;
+}
+.bh-pop{
+  background:rgba(255,250,241,.55);
+  border:0.5px solid rgba(232,220,192,.55);border-radius:14px;
+  padding:18px 20px;
+  display:flex;gap:14px;align-items:flex-start;
+}
+.bh-pop-num{
+  font-family:var(--display);font-style:italic;font-weight:400;
+  font-size:13px;color:var(--gold);flex-shrink:0;
+  min-width:18px;line-height:1.5;
+}
+.bh-pop-text{
+  font-family:var(--body);font-size:13px;line-height:1.55;
+  color:var(--ink-soft);
+}
+.bh-pop-text strong{color:var(--ink);font-weight:500}
+
+/* LOUISIANA CURRENT — RHTCF deployment surface */
+.bh-louisiana{
+  max-width:1080px;margin:48px auto 0;padding:36px 28px;
+  background:linear-gradient(135deg,rgba(255,250,241,.7),rgba(244,236,217,.5));
+  border:0.5px solid rgba(201,162,39,.3);border-radius:24px;
+  position:relative;overflow:hidden;
+  box-shadow:0 24px 60px -40px rgba(201,162,39,.25);
+}
+.bh-louisiana::before{
+  content:"";position:absolute;top:-30%;right:-5%;width:340px;height:340px;
+  border-radius:50%;background:radial-gradient(circle,rgba(201,162,39,.08),transparent 60%);
+  pointer-events:none;
+}
+.bh-louisiana-inner{position:relative;z-index:1}
+.bh-louisiana-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:14px;
+  display:inline-flex;align-items:center;gap:14px;
+}
+.bh-louisiana-eyebrow::before{
+  content:"";width:24px;height:0.5px;background:var(--gold);opacity:.6;
+}
+.bh-louisiana-title{
+  font-family:var(--display);font-weight:300;font-size:clamp(22px,3vw,28px);
+  letter-spacing:-.025em;line-height:1.2;color:var(--ink);margin-bottom:14px;
+  max-width:680px;
+}
+.bh-louisiana-title em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-louisiana-body{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:15.5px;line-height:1.6;color:var(--ink-soft);
+  max-width:680px;margin-bottom:22px;
+}
+.bh-louisiana-body em{font-style:italic;color:var(--ink);font-weight:400}
+.bh-louisiana-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:rgba(201,162,39,.25);
+  border-radius:14px;overflow:hidden;
+  margin-bottom:18px;
+}
+.bh-la-stat{
+  background:rgba(255,250,241,.85);padding:18px 14px;text-align:center;
+}
+.bh-la-num{
+  font-family:var(--display);font-weight:400;font-size:22px;
+  letter-spacing:-.02em;color:var(--ink);line-height:1;
+}
+.bh-la-num em{font-style:italic;color:var(--coral);font-weight:400}
+.bh-la-label{
+  font-size:10px;color:var(--ink-faint);font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;margin-top:6px;line-height:1.4;
+}
+.bh-louisiana-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;font-size:11px;color:var(--ink-faint);letter-spacing:.04em;
+}
+.bh-louisiana-foot a{color:var(--blue);text-decoration:none;font-weight:500}
+.bh-louisiana-foot a:hover{color:var(--purple)}
+
+/* DOCK */
+.bh-dock{max-width:1080px;margin:48px auto 0;padding:32px 0 24px;text-align:center}
+.bh-dock-prompt{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(19px,2.6vw,26px);line-height:1.3;letter-spacing:-.015em;
+  color:var(--ink);max-width:600px;margin:0 auto 22px;
+}
+.bh-dock-prompt em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-dock-row{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:0;
+  border-top:0.5px solid rgba(232,220,192,.5);
+  border-bottom:0.5px solid rgba(232,220,192,.5);
+}
+.bh-sea{
+  flex:1;min-width:118px;padding:20px 12px;cursor:pointer;
+  background:transparent;border:0;
+  border-right:0.5px solid rgba(232,220,192,.4);
+  font-family:var(--body);transition:.4s ease;
+  text-align:center;position:relative;overflow:hidden;
+}
+.bh-sea:last-child{border-right:0}
+.bh-sea::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent,rgba(91,155,255,.05));
+  opacity:0;transition:.5s ease;
+}
+.bh-sea:hover::before{opacity:1}
+.bh-sea:hover{background:rgba(255,250,241,.5)}
+.bh-sea.current{background:rgba(232,220,192,.3)}
+.bh-sea-num{
+  font-family:var(--display);font-style:italic;font-size:10px;
+  color:var(--gold);opacity:.6;margin-bottom:5px;position:relative;z-index:1;
+}
+.bh-sea-name{
+  font-family:var(--display);font-weight:380;font-size:17px;
+  letter-spacing:-.018em;color:var(--ink);margin-bottom:3px;
+  position:relative;z-index:1;
+}
+.bh-sea-line{
+  font-size:9.5px;color:var(--ink-faint);font-weight:400;
+  letter-spacing:.04em;line-height:1.4;position:relative;z-index:1;
+}
+
+/* CRISIS PRESERVATION */
+.bh-preservation{max-width:640px;margin:0 auto;padding:28px 22px 24px;text-align:center}
+.bh-preservation-text{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:14.5px;line-height:1.6;color:var(--ink-soft);margin-bottom:14px;
+}
+.bh-preservation-text em{font-style:italic;color:var(--ink);font-weight:400}
+.bh-crisis{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
+.bh-crisis a{
+  text-decoration:none;font-size:10px;font-weight:500;letter-spacing:.06em;
+  color:var(--ink-soft);padding:5px 11px;border-radius:999px;
+  background:rgba(255,250,241,.5);
+  border:0.5px solid rgba(232,220,192,.5);
+  transition:.4s ease;
+}
+.bh-crisis a:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+
+/* FOOTER */
+.bh-floor{
+  padding:26px 22px 22px;
+  border-top:0.5px solid rgba(232,220,192,.4);
+  display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+  flex-wrap:wrap;font-size:10px;color:var(--ink-faint);letter-spacing:.04em;
+}
+.bh-floor-mark{
+  font-family:var(--display);font-size:13px;font-weight:300;
+  color:var(--ink-soft);letter-spacing:-.02em;
+}
+.bh-floor-mark .dot{color:var(--blue)}
+.bh-floor-meta{text-align:right;line-height:1.7;font-size:9.5px;letter-spacing:.05em}
+
+/* PRESENCE */
+.bh-presence{
+  position:fixed;bottom:18px;right:18px;z-index:50;
+  display:flex;align-items:center;gap:0;cursor:pointer;
+  background:transparent;border:0;font-family:var(--body);padding:0;
+  transition:.5s ease;
+}
+.bh-orb{
+  width:42px;height:42px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#8ABDFF,#3878E0 60%,#2156A8 100%);
+  position:relative;flex-shrink:0;
+  box-shadow:0 12px 36px -12px rgba(56,120,224,.5),inset 0 1px 1px rgba(255,255,255,.4);
+  transition:.4s ease;
+}
+.bh-orb::before{
+  content:"";position:absolute;inset:-7px;border-radius:50%;
+  border:0.5px solid rgba(91,155,255,.3);
+  animation:halo1 5s ease-in-out infinite;
+}
+.bh-orb::after{
+  content:"";position:absolute;inset:-14px;border-radius:50%;
+  border:0.5px solid rgba(91,155,255,.18);
+  animation:halo2 5s ease-in-out infinite;
+}
+@keyframes halo1{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.25);opacity:.1}}
+@keyframes halo2{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.4);opacity:0}}
+.bh-presence-label{
+  margin-left:0;padding:0;font-size:0;overflow:hidden;
+  color:var(--ink-soft);font-weight:400;letter-spacing:.04em;
+  white-space:nowrap;transition:.5s cubic-bezier(.2,.8,.3,1);opacity:0;
+}
+.bh-presence:hover .bh-presence-label{font-size:12px;padding:0 14px 0 11px;opacity:1}
+.bh-presence:hover .bh-orb{transform:scale(1.05)}
+
+/* CITY MODAL */
+.bh-modal{
+  position:fixed;inset:0;z-index:60;display:none;
+  align-items:center;justify-content:center;padding:24px;
+  background:rgba(15,28,46,0);transition:background .5s ease;
+}
+.bh-modal.open{
+  display:flex;background:rgba(15,28,46,.55);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.bh-modal-card{
+  background:var(--paper);border-radius:24px;max-width:520px;width:100%;
+  padding:32px 28px 24px;
+  box-shadow:0 40px 100px -20px rgba(15,28,46,.4);
+  transform:translateY(20px);opacity:0;
+  transition:.5s cubic-bezier(.2,.8,.3,1);position:relative;
+  max-height:88vh;overflow-y:auto;
+}
+.bh-modal.open .bh-modal-card{transform:translateY(0);opacity:1}
+.bh-modal-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:14px;text-align:center;
+}
+.bh-modal-title{
+  font-family:var(--display);font-weight:300;font-size:26px;
+  letter-spacing:-.025em;line-height:1.15;color:var(--ink);
+  text-align:center;margin-bottom:8px;
+}
+.bh-modal-title em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-modal-sub{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:13.5px;color:var(--ink-soft);text-align:center;
+  margin-bottom:18px;line-height:1.5;
+}
+.bh-city-search{
+  width:100%;padding:13px 18px;
+  border:0.5px solid rgba(232,220,192,.8);border-radius:12px;
+  background:var(--cream);font-size:14px;color:var(--ink);
+  font-family:var(--body);outline:none;transition:.4s ease;margin-bottom:14px;
+}
+.bh-city-search:focus{
+  border-color:var(--blue);background:var(--paper);
+  box-shadow:0 0 0 4px rgba(56,120,224,.07);
+}
+.bh-city-section{
+  font-size:9.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin:14px 4px 6px;opacity:.7;
+}
+.bh-city-list{display:flex;flex-direction:column;gap:2px}
+.bh-city-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;border-radius:8px;cursor:pointer;
+  transition:.2s ease;background:transparent;border:0;
+  font-family:var(--body);font-size:13.5px;color:var(--ink);text-align:left;
+}
+.bh-city-row:hover{background:rgba(232,220,192,.4)}
+.bh-city-row.sacred{background:rgba(201,162,39,.08)}
+.bh-city-row.sacred:hover{background:rgba(201,162,39,.15)}
+.bh-city-row-name{font-weight:500;display:flex;align-items:center;gap:8px}
+.bh-city-row-state{font-size:10.5px;color:var(--ink-faint);letter-spacing:.06em;text-transform:uppercase}
+.bh-city-row-tag{
+  font-size:9px;color:var(--gold);font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.bh-modal-close{
+  position:absolute;top:14px;right:14px;background:none;border:0;cursor:pointer;
+  color:var(--ink-faint);font-size:18px;width:30px;height:30px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;transition:.3s ease;
+}
+.bh-modal-close:hover{background:rgba(232,220,192,.5);color:var(--ink)}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* RESPONSIVE */
+@media(max-width:880px){
+  .bh-tiers{grid-template-columns:repeat(2,1fr)}
+  .bh-tiers-river::before{display:none}
+  .bh-dir-grid{grid-template-columns:repeat(2,1fr)}
+  .bh-livebar{grid-template-columns:repeat(2,1fr)}
+  .bh-live-stat:nth-child(2){border-right:0}
+  .bh-live-stat:nth-child(-n+2){border-bottom:0.5px solid rgba(232,220,192,.4);padding-bottom:14px}
+  .bh-live-stat:nth-child(n+3){padding-top:14px}
+  .bh-louisiana-stats{grid-template-columns:repeat(2,1fr)}
+  .bh-pop-grid{grid-template-columns:1fr}
+  .bh-sea{min-width:33%;border-bottom:0.5px solid rgba(232,220,192,.4)}
+  .bh-context,.bh-signin{display:none}
+  .bh-bigmark{font-size:24px}
+  .bh-city-card{flex-wrap:wrap;text-align:center}
+  .bh-city-text{text-align:center;width:100%}
+  .bh-city-actions{align-items:center;width:100%}
+}
+@media(max-width:560px){
+  .bh-tiers{grid-template-columns:1fr}
+  .bh-dir-grid{grid-template-columns:1fr}
+  .bh-livebar{grid-template-columns:1fr;gap:8px}
+  .bh-live-stat{border-right:0;border-bottom:0.5px solid rgba(232,220,192,.3);padding-bottom:10px}
+  .bh-live-stat:last-child{border-bottom:0;padding-bottom:0}
+  .bh-louisiana-stats{grid-template-columns:1fr}
+  .bh-sea{min-width:50%}
+  .bh-input{padding:15px 50px 15px 19px;font-size:15px}
+  .bh-presence-label{display:none}
+  .bh-numerals{display:none}
+  .bh-bigmark{font-size:22px}
+  .bh-modal-card{padding:24px 20px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="bh">
+  <div class="bh-aura"></div>
+  <div class="bh-ripple-field" aria-hidden="true">
+    <svg viewBox="0 0 1600 800" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="rg-field" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#5B9BFF" stop-opacity="0.18"/>
+          <stop offset="60%" stop-color="#3878E0" stop-opacity="0.05"/>
+          <stop offset="100%" stop-color="#3878E0" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="800" cy="400" rx="700" ry="280" fill="none" stroke="#3878E0" stroke-width="0.5" opacity="0.1"><animate attributeName="opacity" values="0.1;0.18;0.1" dur="14s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="800" cy="400" rx="500" ry="200" fill="none" stroke="#3878E0" stroke-width="0.5" opacity="0.13"><animate attributeName="opacity" values="0.13;0.22;0.13" dur="14s" begin="2s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="800" cy="400" rx="320" ry="128" fill="none" stroke="#3878E0" stroke-width="0.5" opacity="0.18"><animate attributeName="opacity" values="0.18;0.28;0.18" dur="14s" begin="4s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="800" cy="400" rx="160" ry="64" fill="none" stroke="#3878E0" stroke-width="0.5" opacity="0.24"><animate attributeName="opacity" values="0.24;0.34;0.24" dur="14s" begin="6s" repeatCount="indefinite"/></ellipse>
+      <circle cx="800" cy="400" r="50" fill="url(#rg-field)" opacity="0.6"/>
+    </svg>
+  </div>
+
+  <div class="bh-content">
+
+    <header class="bh-chrome" id="chrome">
+      <div class="bh-mark-group">
+        <a class="bh-mark" href="/" aria-label="bleu.live home">
+          <span>bleu</span><span class="heartbeat">.</span><span>live</span><span style="color:var(--ink)">.</span>
+        </a>
+        <button class="bh-context" id="ctx-btn" aria-label="change city">
+          <span class="bh-context-dot"></span>
+          <span id="ctx-text">locating you</span>
+        </button>
+      </div>
+
+      <nav class="bh-numerals" aria-label="seven seas">
+        <button class="bh-numeral" data-route="/">i.<span class="bh-numeral-tip">home</span></button>
+        <button class="bh-numeral active" aria-current="page">ii.<span class="bh-numeral-tip">local</span></button>
+        <button class="bh-numeral" data-route="/support">iii.<span class="bh-numeral-tip">support</span></button>
+        <button class="bh-numeral" data-route="/learn">iv.<span class="bh-numeral-tip">learn</span></button>
+        <button class="bh-numeral" data-route="/supply">v.<span class="bh-numeral-tip">supply</span></button>
+        <button class="bh-numeral" data-route="/ecsiq">vi.<span class="bh-numeral-tip">ecsiq</span></button>
+        <button class="bh-numeral" data-route="/why">vii.<span class="bh-numeral-tip">why</span></button>
+      </nav>
+
+      <div class="bh-chrome-right">
+        <button class="bh-signin" id="signin">sign in</button>
+        <button class="bh-create" id="create-top">create account</button>
+        <button class="bh-held" data-route="/held">
+          <span class="bh-held-dot" id="held-dot"></span>
+          <span id="held-label">held</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="bh-surface">
+      <div class="bh-sea-id">Sea ii</div>
+      <div class="bh-bigmark">bleu<span class="dot">.</span>live<span class="end">.</span></div>
+      <p class="bh-opening"><em>Care that meets you</em> where you are. Your block. Your parish. Your state.</p>
+
+      <div class="bh-city-card">
+        <div class="bh-city-pin"></div>
+        <div class="bh-city-text">
+          <div class="bh-city-label">your city</div>
+          <div class="bh-city-name" id="city-name"><em>Locating you...</em></div>
+          <div class="bh-city-sub" id="city-sub">Used only to find clinics, support groups, pharmacies, and crisis lines near you. Nothing else.</div>
+        </div>
+        <div class="bh-city-actions">
+          <button class="bh-city-change" id="city-change">Change</button>
+          <a class="bh-city-hub" id="city-hub" href="https://neworleans.bleu.live" target="_blank" rel="noopener">city hub →</a>
+        </div>
+      </div>
+
+      <div class="bh-input-shell">
+        <div class="bh-input-wrap">
+          <label class="sr-only" for="alvai-input">Tell Alvai what you need near you</label>
+          <input type="text" class="bh-input" id="alvai-input" placeholder="What do you need near you? Clinic, food, support, ride, anything." autocomplete="off" />
+          <button class="bh-input-go" id="alvai-go" aria-label="Send to Alvai">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="bh-chips" role="list" aria-label="local quick starts" id="chips">
+          <!-- chips populated by JS based on city + time of day -->
+        </div>
+
+        <div class="bh-trust-row">
+          <span><span class="bh-trust-strong">Free</span> · always</span>
+          <span class="tdot"></span>
+          <span>Encrypted</span>
+          <span class="tdot"></span>
+          <span>Never sold</span>
+          <span class="tdot"></span>
+          <span><span class="bh-trust-strong">855K</span> verified clinicians nationwide</span>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="bh-whispers-band">
+      <div class="bh-whisper" id="whisper" aria-live="polite">
+        <span class="bh-whisper-tag" id="wtag">observation</span>
+        <span id="wtext"></span>
+      </div>
+    </div>
+
+    <!-- LIVE COUNTS — what is near you, right now -->
+    <div class="bh-livebar" id="livebar">
+      <div class="bh-live-stat">
+        <div class="bh-live-num"><em id="lb-clinicians">—</em></div>
+        <div class="bh-live-label">clinicians near you</div>
+      </div>
+      <div class="bh-live-stat">
+        <div class="bh-live-num"><em id="lb-clinics">—</em></div>
+        <div class="bh-live-label">free &amp; sliding-scale clinics</div>
+      </div>
+      <div class="bh-live-stat">
+        <div class="bh-live-num"><em id="lb-recovery">—</em></div>
+        <div class="bh-live-label">recovery groups this week</div>
+      </div>
+      <div class="bh-live-stat">
+        <div class="bh-live-num"><em id="lb-events">—</em></div>
+        <div class="bh-live-label">free wellness events</div>
+      </div>
+    </div>
+
+    <div class="bh-flow">
+
+      <!-- FOUR TIERS as a flowing river -->
+      <section class="bh-section" aria-label="four tiers of care">
+        <div class="bh-section-frame">
+          <div class="bh-zone-label">how care works here</div>
+          <p class="bh-zone-prompt">Four tiers. <em>Each one is a doorway.</em></p>
+          <p class="bh-zone-sub">The platform routes you to the lightest tier that fits. You move up only when the lighter tier is not enough.</p>
+        </div>
+        <div class="bh-tiers-river">
+          <div class="bh-tiers">
+            <button class="bh-tier" data-prompt="Show me what I can do for myself today — lifestyle medicine, sleep, food, movement, stress, connection">
+              <div class="bh-tier-num"><span class="bh-tier-dot"></span>tier i &middot; self</div>
+              <div class="bh-tier-name">What you can do today</div>
+              <div class="bh-tier-line">Sleep, food, movement, stress, connection.</div>
+              <div class="bh-tier-examples"><strong>The six pillars of lifestyle medicine.</strong> Plain steps. No appointment. Free. Felicia signs every plan.</div>
+              <div class="bh-tier-time">always available</div>
+            </button>
+            <button class="bh-tier support" data-prompt="Find peer support and recovery groups near me">
+              <div class="bh-tier-num"><span class="bh-tier-dot"></span>tier ii &middot; support</div>
+              <div class="bh-tier-name">People who get it</div>
+              <div class="bh-tier-line">Peer recovery, faith groups, neighbors.</div>
+              <div class="bh-tier-examples"><strong>AA &middot; NA &middot; SMART &middot; NAMI &middot; grief groups.</strong> Free. Often tonight. No appointment.</div>
+              <div class="bh-tier-time" id="tier-support-time">checking your area</div>
+            </button>
+            <button class="bh-tier clinical" data-prompt="Find clinical care near me — FQHC, urgent care, telehealth">
+              <div class="bh-tier-num"><span class="bh-tier-dot"></span>tier iii &middot; clinical</div>
+              <div class="bh-tier-name">Real clinics, real prices</div>
+              <div class="bh-tier-line">FQHCs, urgent care, telehealth, parish health.</div>
+              <div class="bh-tier-examples"><strong>Sliding scale.</strong> Medicaid-friendly. Cost shown up front. Wait time visible.</div>
+              <div class="bh-tier-time" id="tier-clinical-time">checking your area</div>
+            </button>
+            <button class="bh-tier crisis" data-prompt="I need crisis help right now">
+              <div class="bh-tier-num"><span class="bh-tier-dot"></span>tier iv &middot; crisis</div>
+              <div class="bh-tier-name">When it cannot wait</div>
+              <div class="bh-tier-line">988 for mental health. 911 for emergencies.</div>
+              <div class="bh-tier-examples"><strong>Non-overrideable.</strong> The platform steps aside. Trained people take over.</div>
+              <div class="bh-tier-time">24 / 7 / 365</div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- DIRECTORY — eight categories with city-aware live counts -->
+      <section class="bh-directory" aria-label="local directory">
+        <div class="bh-section-frame">
+          <div class="bh-zone-label">what is near you</div>
+          <p class="bh-zone-prompt">Real places. Real people. <em>In your city.</em></p>
+          <p class="bh-zone-sub">Every cell hands you off to a real provider, a real meeting, a real pharmacy. No paywall. No appointment to find one.</p>
+        </div>
+        <div class="bh-dir-grid" id="dir-grid">
+          <button class="bh-dir" data-cat="clinics" data-prompt="Show me FQHCs and community health centers near me">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">clinics</div>
+              <div class="bh-dir-name">FQHCs &middot; community health</div>
+              <div class="bh-dir-desc">Federally Qualified Health Centers. Sliding scale. Everyone welcome regardless of pay.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-clinics">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-dir" data-cat="urgent" data-prompt="Show me urgent care that takes Medicaid near me">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">urgent care</div>
+              <div class="bh-dir-name">Walk-in care, today</div>
+              <div class="bh-dir-desc">When you need to be seen now but it is not 911. Wait times shown.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-urgent">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-dir" data-cat="recovery" data-prompt="Show me peer recovery and support groups near me tonight">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">recovery</div>
+              <div class="bh-dir-name">Peer support &middot; meetings tonight</div>
+              <div class="bh-dir-desc">AA, NA, SMART Recovery, NAMI, grief, caregivers. Many meet daily.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-recovery">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-dir" data-cat="mh" data-prompt="Show me mental health services and therapists near me">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">mental health</div>
+              <div class="bh-dir-name">Therapists &middot; counselors</div>
+              <div class="bh-dir-desc">Sliding scale, telehealth, in-person. Medicaid-friendly. Wait time honest.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-mh">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-dir" data-cat="ob" data-prompt="Show me maternal and OB services near me">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">maternal care</div>
+              <div class="bh-dir-name">OB, midwives, postpartum</div>
+              <div class="bh-dir-desc">Pregnancy, birth, postpartum. We name the OB desert when we see it.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-ob">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-dir" data-cat="food" data-prompt="Show me food assistance and SNAP help near me">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">food</div>
+              <div class="bh-dir-name">Food banks &middot; SNAP help</div>
+              <div class="bh-dir-desc">Pantries, hot meals, application help, school programs, WIC.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-food">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-dir" data-cat="rx" data-prompt="Show me pharmacies and prescription assistance near me">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">pharmacy</div>
+              <div class="bh-dir-name">Pharmacies &middot; prescription help</div>
+              <div class="bh-dir-desc">24-hour pharmacies, GoodRx, manufacturer programs, drug-aid.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-rx">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-dir" data-cat="trans" data-prompt="Show me transportation help to medical appointments">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">transportation</div>
+              <div class="bh-dir-name">Rides to your appointment</div>
+              <div class="bh-dir-desc">Medicaid transport, parish vans, volunteer drivers, telehealth alternatives.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-trans">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- PARISH RIPPLE -->
+      <section class="bh-parish-ripple" aria-label="how local widens out">
+        <div class="bh-section-frame" style="margin-bottom:8px">
+          <div class="bh-zone-label">how local widens out</div>
+        </div>
+        <svg class="bh-ripple-svg" viewBox="0 0 380 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="rg-pr" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#3878E0" stop-opacity="0.55"/>
+              <stop offset="60%" stop-color="#3878E0" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#3878E0" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="190" cy="120" rx="170" ry="90" fill="none" stroke="#3878E0" stroke-width="0.5" opacity="0.16"><animate attributeName="opacity" values="0.16;0.3;0.16" dur="6s" repeatCount="indefinite"/></ellipse>
+          <ellipse cx="190" cy="120" rx="130" ry="68" fill="none" stroke="#3878E0" stroke-width="0.5" opacity="0.22"><animate attributeName="opacity" values="0.22;0.36;0.22" dur="6s" begin="0.5s" repeatCount="indefinite"/></ellipse>
+          <ellipse cx="190" cy="120" rx="90" ry="46" fill="none" stroke="#3878E0" stroke-width="0.5" opacity="0.28"><animate attributeName="opacity" values="0.28;0.46;0.28" dur="6s" begin="1s" repeatCount="indefinite"/></ellipse>
+          <ellipse cx="190" cy="120" rx="50" ry="26" fill="none" stroke="#3878E0" stroke-width="0.5" opacity="0.36"><animate attributeName="opacity" values="0.36;0.6;0.36" dur="6s" begin="1.5s" repeatCount="indefinite"/></ellipse>
+          <circle cx="190" cy="120" r="16" fill="url(#rg-pr)" opacity="0.7"/>
+          <circle cx="190" cy="120" r="4" fill="#3878E0" opacity="0.95"><animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite"/></circle>
+          <text x="190" y="123" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="9" fill="#181714" font-weight="400">you</text>
+          <text x="190" y="156" text-anchor="middle" font-family="Inter" font-size="8" fill="#4b4942" letter-spacing="1.6" font-weight="500">BLOCK</text>
+          <text x="190" y="180" text-anchor="middle" font-family="Inter" font-size="8" fill="#807a6f" letter-spacing="1.6" font-weight="500">CITY</text>
+          <text x="190" y="206" text-anchor="middle" font-family="Inter" font-size="8" fill="#807a6f" letter-spacing="1.6" font-weight="500">PARISH</text>
+          <text x="190" y="230" text-anchor="middle" font-family="Inter" font-size="8" fill="#a8a299" letter-spacing="1.6" font-weight="500">STATE</text>
+        </svg>
+        <p class="bh-ripple-prompt">Local <em>starts with you</em>. It widens to your block, your city, your parish, your state. The deeper rings stay quiet until you need them.</p>
+      </section>
+
+      <!-- LOUISIANA CURRENT -->
+      <section class="bh-louisiana" aria-label="louisiana current">
+        <div class="bh-louisiana-inner">
+          <div class="bh-louisiana-eyebrow">our first state</div>
+          <h2 class="bh-louisiana-title">Louisiana ranks last in healthcare outcomes. <em>That is where we start.</em></h2>
+          <p class="bh-louisiana-body">The platform is built for every state. <em>Deployment in Louisiana comes first because the need is the largest.</em> 73% of Louisianans live in a primary-care shortage area. 93% in a mental-health shortage area. 44 of 64 parishes are designated rural. Louisiana ranks <em>second nationally</em> in rural hospitals at risk of closure.</p>
+          <div class="bh-louisiana-stats">
+            <div class="bh-la-stat"><div class="bh-la-num"><em>60+</em></div><div class="bh-la-label">rural parishes</div></div>
+            <div class="bh-la-stat"><div class="bh-la-num"><em>73%</em></div><div class="bh-la-label">in primary-care shortage</div></div>
+            <div class="bh-la-stat"><div class="bh-la-num"><em>93%</em></div><div class="bh-la-label">in mental-health shortage</div></div>
+            <div class="bh-la-stat"><div class="bh-la-num"><em>27&ndash;33</em></div><div class="bh-la-label">rural hospitals at risk</div></div>
+          </div>
+          <div class="bh-louisiana-foot">
+            <span>Submitted to the Louisiana Rural Health Transformation Catalyst Fund &middot; May 2026</span>
+            <a href="https://neworleans.bleu.live" target="_blank" rel="noopener">neworleans.bleu.live →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHO SHOWS UP HERE — RHTCF populations served verbatim -->
+      <section class="bh-populations" aria-label="who shows up here">
+        <div class="bh-populations-head">
+          <div class="bh-zone-label">who shows up here</div>
+          <p class="bh-zone-prompt">Built for the people <em>most often lost to escalation.</em></p>
+          <p class="bh-zone-sub">The platform is free at the point of use, statewide by design, and built specifically for the populations the state already pays for.</p>
+        </div>
+        <div class="bh-pop-grid">
+          <div class="bh-pop">
+            <span class="bh-pop-num">i.</span>
+            <p class="bh-pop-text"><strong>Rural residents</strong> across Louisiana's 60+ rural parishes &mdash; especially in primary-care shortage areas and parishes whose hospital has closed, scaled back, or sits on the at-risk list.</p>
+          </div>
+          <div class="bh-pop">
+            <span class="bh-pop-num">ii.</span>
+            <p class="bh-pop-text"><strong>Medicaid members and dual-eligibles</strong> whose access is shaped by transportation, distance, and provider availability.</p>
+          </div>
+          <div class="bh-pop">
+            <span class="bh-pop-num">iii.</span>
+            <p class="bh-pop-text"><strong>The uninsured and underinsured</strong> &mdash; including the working poor disqualified from Medicaid but unable to absorb commercial costs.</p>
+          </div>
+          <div class="bh-pop">
+            <span class="bh-pop-num">iv.</span>
+            <p class="bh-pop-text"><strong>FQHC, RHC, and parish health unit patients</strong> whose between-visit guidance is currently unavailable.</p>
+          </div>
+          <div class="bh-pop">
+            <span class="bh-pop-num">v.</span>
+            <p class="bh-pop-text"><strong>Pregnant and postpartum patients</strong> facing the OB desert, with hypertensive disorders as a primary contributor to Louisiana's elevated maternal mortality.</p>
+          </div>
+          <div class="bh-pop">
+            <span class="bh-pop-num">vi.</span>
+            <p class="bh-pop-text"><strong>Adults in addiction recovery</strong> who need non-judgmental, off-hours support and routing to peer recovery, SAMHSA, and 988.</p>
+          </div>
+          <div class="bh-pop">
+            <span class="bh-pop-num">vii.</span>
+            <p class="bh-pop-text"><strong>Older adults</strong> managing multiple chronic conditions, polypharmacy, and supplement-medication interaction risk.</p>
+          </div>
+          <div class="bh-pop">
+            <span class="bh-pop-num">viii.</span>
+            <p class="bh-pop-text"><strong>Veterans and rural caregivers</strong> carrying chronic disease, behavioral health burden, and isolation.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- DOCK -->
+      <section class="bh-dock" aria-label="seven seas">
+        <p class="bh-dock-prompt">Seven rooms. <em>One conversation.</em> Every door connects to every other.</p>
+        <div class="bh-dock-row">
+          <button class="bh-sea" data-route="/">
+            <div class="bh-sea-num">i.</div>
+            <div class="bh-sea-name">Home</div>
+            <div class="bh-sea-line">begin here</div>
+          </button>
+          <button class="bh-sea current" aria-current="page">
+            <div class="bh-sea-num">ii.</div>
+            <div class="bh-sea-name">Local</div>
+            <div class="bh-sea-line">care &middot; city</div>
+          </button>
+          <button class="bh-sea" data-route="/support">
+            <div class="bh-sea-num">iii.</div>
+            <div class="bh-sea-name">Support</div>
+            <div class="bh-sea-line">therapy &middot; sleep</div>
+          </button>
+          <button class="bh-sea" data-route="/learn">
+            <div class="bh-sea-num">iv.</div>
+            <div class="bh-sea-name">Learn</div>
+            <div class="bh-sea-line">science you use</div>
+          </button>
+          <button class="bh-sea" data-route="/supply">
+            <div class="bh-sea-num">v.</div>
+            <div class="bh-sea-name">Supply</div>
+            <div class="bh-sea-line">protocols</div>
+          </button>
+          <button class="bh-sea" data-route="/ecsiq">
+            <div class="bh-sea-num">vi.</div>
+            <div class="bh-sea-name">ECSIQ</div>
+            <div class="bh-sea-line">ECS</div>
+          </button>
+          <button class="bh-sea" data-route="/why">
+            <div class="bh-sea-num">vii.</div>
+            <div class="bh-sea-name">Why BLEU</div>
+            <div class="bh-sea-line">the difference</div>
+          </button>
+        </div>
+      </section>
+
+      <section class="bh-preservation" aria-label="if you are in crisis">
+        <p class="bh-preservation-text">If you are in crisis, <em>we step aside</em>. The numbers below connect you to people trained to help. Free. Confidential.</p>
+        <div class="bh-crisis">
+          <a href="tel:988">988</a>
+          <a href="sms:741741?body=HOME">Text HOME &middot; 741741</a>
+          <a href="tel:18006624357">SAMHSA</a>
+          <a href="tel:18664887386">Trevor</a>
+          <a href="tel:18004843731">Never Use Alone</a>
+          <a href="tel:911">911</a>
+        </div>
+      </section>
+
+      <footer class="bh-floor">
+        <div class="bh-floor-mark">bleu<span class="dot">.</span>live<span style="color:var(--ink)">.</span></div>
+        <div class="bh-floor-meta">
+          A clinically governed digital care delivery platform &middot; Patent Pending &middot; &copy; 2026 FLEUR DE BLEUDREAM LLC<br />
+          Created by Bleu Garner &middot; Co-Founder, Chief Clinical Officer &amp; President: Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl. ACLM<br />
+          <a href="/affiliate-disclosure" style="color:inherit">Affiliate Disclosure</a> &middot; Not medical advice
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <button class="bh-presence" data-prompt="Alvai — I want to keep talking" aria-label="Alvai presence">
+    <div class="bh-orb"></div>
+    <span class="bh-presence-label">the room is listening</span>
+  </button>
+
+  <!-- CITY PICKER MODAL -->
+  <div class="bh-modal" id="city-modal" role="dialog" aria-modal="true" aria-labelledby="city-modal-title">
+    <div class="bh-modal-card">
+      <button class="bh-modal-close" id="city-modal-close" aria-label="Close">&times;</button>
+      <div class="bh-modal-eyebrow">your city</div>
+      <h2 class="bh-modal-title" id="city-modal-title">Pick your <em>city.</em></h2>
+      <p class="bh-modal-sub">We use it to find clinics, support, and crisis lines near you. Nothing else.</p>
+
+      <input type="text" class="bh-city-search" id="city-search" placeholder="Search city, parish, or zip..." autocomplete="off" />
+
+      <div class="bh-city-section">Louisiana &middot; first state</div>
+      <div class="bh-city-list" id="city-list-la">
+        <button class="bh-city-row sacred" data-city="New Orleans" data-state="LA" data-parish="Orleans" data-hub="https://neworleans.bleu.live"><span class="bh-city-row-name">New Orleans <span class="bh-city-row-tag">first &middot; sacred</span></span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Baton Rouge" data-state="LA" data-parish="East Baton Rouge"><span class="bh-city-row-name">Baton Rouge</span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Lafayette" data-state="LA" data-parish="Lafayette"><span class="bh-city-row-name">Lafayette</span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Shreveport" data-state="LA" data-parish="Caddo"><span class="bh-city-row-name">Shreveport</span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Lake Charles" data-state="LA" data-parish="Calcasieu"><span class="bh-city-row-name">Lake Charles</span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Monroe" data-state="LA" data-parish="Ouachita"><span class="bh-city-row-name">Monroe</span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Alexandria" data-state="LA" data-parish="Rapides"><span class="bh-city-row-name">Alexandria</span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Houma" data-state="LA" data-parish="Terrebonne"><span class="bh-city-row-name">Houma</span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Hammond" data-state="LA" data-parish="Tangipahoa"><span class="bh-city-row-name">Hammond</span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Slidell" data-state="LA" data-parish="St. Tammany"><span class="bh-city-row-name">Slidell</span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Covington" data-state="LA" data-parish="St. Tammany"><span class="bh-city-row-name">Covington</span><span class="bh-city-row-state">LA</span></button>
+        <button class="bh-city-row" data-city="Metairie" data-state="LA" data-parish="Jefferson"><span class="bh-city-row-name">Metairie</span><span class="bh-city-row-state">LA</span></button>
+      </div>
+
+      <div class="bh-city-section">Other major cities</div>
+      <div class="bh-city-list" id="city-list-other">
+        <button class="bh-city-row" data-city="New York" data-state="NY"><span class="bh-city-row-name">New York</span><span class="bh-city-row-state">NY</span></button>
+        <button class="bh-city-row" data-city="Los Angeles" data-state="CA"><span class="bh-city-row-name">Los Angeles</span><span class="bh-city-row-state">CA</span></button>
+        <button class="bh-city-row" data-city="Chicago" data-state="IL"><span class="bh-city-row-name">Chicago</span><span class="bh-city-row-state">IL</span></button>
+        <button class="bh-city-row" data-city="Houston" data-state="TX"><span class="bh-city-row-name">Houston</span><span class="bh-city-row-state">TX</span></button>
+        <button class="bh-city-row" data-city="Atlanta" data-state="GA"><span class="bh-city-row-name">Atlanta</span><span class="bh-city-row-state">GA</span></button>
+        <button class="bh-city-row" data-city="Miami" data-state="FL"><span class="bh-city-row-name">Miami</span><span class="bh-city-row-state">FL</span></button>
+        <button class="bh-city-row" data-city="Denver" data-state="CO"><span class="bh-city-row-name">Denver</span><span class="bh-city-row-state">CO</span></button>
+        <button class="bh-city-row" data-city="Boston" data-state="MA"><span class="bh-city-row-name">Boston</span><span class="bh-city-row-state">MA</span></button>
+        <button class="bh-city-row" data-city="Nashville" data-state="TN"><span class="bh-city-row-name">Nashville</span><span class="bh-city-row-state">TN</span></button>
+        <button class="bh-city-row" data-city="Portland" data-state="OR"><span class="bh-city-row-name">Portland</span><span class="bh-city-row-state">OR</span></button>
+        <button class="bh-city-row" data-city="Seattle" data-state="WA"><span class="bh-city-row-name">Seattle</span><span class="bh-city-row-state">WA</span></button>
+        <button class="bh-city-row" data-city="Phoenix" data-state="AZ"><span class="bh-city-row-name">Phoenix</span><span class="bh-city-row-state">AZ</span></button>
+        <button class="bh-city-row" data-city="Philadelphia" data-state="PA"><span class="bh-city-row-name">Philadelphia</span><span class="bh-city-row-state">PA</span></button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+/* =========================================================================
+   bleu.live — Local (Sea ii) · DEEP BUILD v2
+   Production hooks (wire on deploy):
+     window.sendPrompt(text)
+     window.routeTo(path)
+     window.setUserCity(city, state, parish)
+     window.getUserCity() → {city, state, parish}
+     window.lookupNearby(category, city) → Promise<{count, items, soonest}>
+       Backend: query Supabase wellness_businesses, wellness_events,
+       practitioners_npi by city (and parish for LA).
+   ========================================================================= */
+(function(){
+  'use strict';
+
+  function sendPrompt(text){
+    if (typeof window.sendPrompt === 'function') return window.sendPrompt(text);
+    var input = document.getElementById('alvai-input');
+    if (input) { input.value = text; input.focus(); }
+    console.log('[bleu/local] prompt:', text);
+  }
+  function routeTo(path){
+    if (typeof window.routeTo === 'function') return window.routeTo(path);
+    console.log('[bleu/local] route:', path);
+  }
+  function setUserCity(city, state, parish){
+    if (typeof window.setUserCity === 'function') return window.setUserCity(city, state, parish);
+  }
+
+  // City state
+  var currentCity = 'New Orleans';
+  var currentState = 'LA';
+  var currentParish = 'Orleans';
+  var sacredCities = ['New Orleans'];
+  var cityHubs = { 'New Orleans': 'https://neworleans.bleu.live' };
+
+  // Honest city-aware count placeholders. Real lookupNearby() backend replaces these.
+  // Format: city → category → display string
+  var FALLBACK_COUNTS = {
+    'New Orleans': {
+      clinicians: '32,400',
+      clinics: '14',
+      recovery: '180+ this week',
+      events: '40+ this week',
+      'count-clinics': '14 in your parish',
+      'count-urgent': '12 nearby',
+      'count-recovery': '180+ this week',
+      'count-mh': '600+ providers',
+      'count-ob': 'in your parish',
+      'count-food': '40+ pantries',
+      'count-rx': '85+ pharmacies',
+      'count-trans': 'Medicaid + parish vans'
+    },
+    'Baton Rouge': {
+      clinicians: '18,200',
+      clinics: '9',
+      recovery: '120+ this week',
+      events: '25+ this week',
+      'count-clinics': '9 in your parish',
+      'count-urgent': '8 nearby',
+      'count-recovery': '120+ this week',
+      'count-mh': '400+ providers',
+      'count-ob': 'in your parish',
+      'count-food': '24+ pantries',
+      'count-rx': '60+ pharmacies',
+      'count-trans': 'Medicaid + CATS'
+    },
+    'Lafayette': {
+      clinicians: '11,400',
+      clinics: '6',
+      recovery: '90+ this week',
+      events: '18+ this week',
+      'count-clinics': '6 in your parish',
+      'count-urgent': '7 nearby',
+      'count-recovery': '90+ this week',
+      'count-mh': '260+ providers',
+      'count-ob': 'in your parish',
+      'count-food': '18+ pantries',
+      'count-rx': '40+ pharmacies',
+      'count-trans': 'Medicaid + LTC'
+    },
+    'default': {
+      clinicians: 'available',
+      clinics: 'available',
+      recovery: 'available',
+      events: 'available',
+      'count-clinics': 'available',
+      'count-urgent': 'available',
+      'count-recovery': 'meetings near you',
+      'count-mh': 'available',
+      'count-ob': 'in your area',
+      'count-food': 'available',
+      'count-rx': 'available',
+      'count-trans': 'available'
+    }
+  };
+
+  function applyCounts(city){
+    var c = FALLBACK_COUNTS[city] || FALLBACK_COUNTS['default'];
+    var ids = ['count-clinics','count-urgent','count-recovery','count-mh','count-ob','count-food','count-rx','count-trans'];
+    ids.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.textContent = c[id] || 'available';
+    });
+    var lb = {
+      'lb-clinicians': c.clinicians,
+      'lb-clinics': c.clinics,
+      'lb-recovery': c.recovery,
+      'lb-events': c.events
+    };
+    Object.keys(lb).forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.textContent = lb[id];
+    });
+  }
+
+  function applyCity(city, state, parish){
+    currentCity = city;
+    currentState = state;
+    currentParish = parish || '';
+    var name = document.getElementById('city-name');
+    var sub = document.getElementById('city-sub');
+    var ctx = document.getElementById('ctx-text');
+    var hubLink = document.getElementById('city-hub');
+    if (name) name.innerHTML = city + ', <em>' + state + '</em>';
+    if (sub) {
+      if (sacredCities.indexOf(city) >= 0) {
+        sub.textContent = 'Your dedicated city hub. Showing parish-level clinics, support groups, and crisis lines.';
+      } else if (state === 'LA' && parish) {
+        sub.textContent = 'Showing ' + parish + ' Parish clinics, support groups, and crisis lines.';
+      } else {
+        sub.textContent = 'Showing clinics, support groups, and crisis lines for ' + city + ', ' + state + '.';
+      }
+    }
+    if (ctx) ctx.textContent = city.toLowerCase() + ' · live';
+    if (hubLink) {
+      if (cityHubs[city]) {
+        hubLink.href = cityHubs[city];
+        hubLink.style.display = '';
+      } else {
+        hubLink.style.display = 'none';
+      }
+    }
+    applyCounts(city);
+    rebuildChips(city, state);
+    setUserCity(city, state, parish);
+
+    // Production: replace placeholders with real Supabase counts via lookupNearby()
+    if (typeof window.lookupNearby === 'function') {
+      ['clinics','urgent','recovery','mh','ob','food','rx','trans'].forEach(function(cat){
+        try {
+          window.lookupNearby(cat, city).then(function(result){
+            if (result && typeof result.count === 'number') {
+              var el = document.getElementById('count-' + cat);
+              if (el) el.textContent = result.count + (cat === 'recovery' ? ' meetings this week' : ' near you');
+            }
+          });
+        } catch (e) {}
+      });
+    }
+  }
+
+  // Time-of-day-aware chip generation per city
+  function rebuildChips(city, state){
+    var chipBox = document.getElementById('chips');
+    if (!chipBox) return;
+    var hr = new Date().getHours();
+    var night = (hr >= 21 || hr < 6);
+    var chips;
+    if (night) {
+      chips = [
+        ['Find a 24-hour pharmacy near me', '24-hour pharmacy'],
+        ['Find a recovery group meeting tonight near me', 'Meeting tonight'],
+        ['Find an urgent care that takes Medicaid open now', 'Urgent care open now'],
+        ['I am awake and worried &mdash; what is open right now in ' + city, 'What is open right now'],
+        ['Find a 24-hour mental health line near me', '24-hour mental health'],
+        ['Find a crisis stabilization unit in ' + state, 'Crisis stabilization'],
+        ['I just need someone to talk to right now', 'I just need someone to talk to', true]
+      ];
+    } else {
+      chips = [
+        ['Find a free clinic near me in ' + city, 'Free clinic near me'],
+        ['Find an FQHC in ' + (currentParish ? currentParish + ' Parish' : city), 'FQHC near me'],
+        ['Find food assistance and SNAP help in ' + city, 'Food assistance'],
+        ['Find an urgent care that takes Medicaid in ' + city, 'Urgent care · Medicaid'],
+        ['Find a peer recovery group in ' + city, 'Recovery group near me'],
+        ['Find a sliding-scale therapist in ' + city, 'Sliding-scale therapist'],
+        ['I do not know where to start', 'I do not know where to start', true]
+      ];
+    }
+    chipBox.innerHTML = '';
+    chips.forEach(function(c){
+      var btn = document.createElement('button');
+      btn.className = 'bh-chip' + (c[2] ? ' bh-chip-quiet' : '');
+      btn.setAttribute('role', 'listitem');
+      btn.setAttribute('data-prompt', c[0]);
+      btn.innerHTML = c[1];
+      btn.addEventListener('click', function(){
+        sendPrompt(c[0]);
+        flashHeld();
+      });
+      chipBox.appendChild(btn);
+    });
+  }
+
+  // Initialize from Passport profile if available, else default
+  if (typeof window.getUserCity === 'function') {
+    var p = window.getUserCity();
+    if (p && p.city) applyCity(p.city, p.state, p.parish);
+    else applyCity(currentCity, currentState, currentParish);
+  } else {
+    applyCity(currentCity, currentState, currentParish);
+  }
+
+  // Whispers — local-aware
+  var pool = {
+    night: [
+      {tag:'observation', cls:'monk',      text:'After midnight, the people you can call are fewer. The list below is the one we keep.'},
+      {tag:'clinical',    cls:'physician', text:'A 24-hour pharmacy is not just a building. It is a clinician with a license, on call.'},
+      {tag:'recognition', cls:'monk',      text:'You can be in a city of a million and still feel alone. The peer groups know that.'},
+      {tag:'wisdom',      cls:'wisdom',    text:'The closest help is often the help you forget exists.'},
+      {tag:'observation', cls:'monk',      text:'Crisis lines do not need you to explain. They just need you to dial.'}
+    ],
+    day: [
+      {tag:'clinical',    cls:'physician', text:'FQHCs see you whether you can pay or not. The sliding scale is real, not a slogan.'},
+      {tag:'observation', cls:'monk',      text:'Care that is far away is care most people will not use.'},
+      {tag:'science',     cls:'science',   text:'Distance to the nearest clinic is one of the strongest predictors of whether people get care at all.'},
+      {tag:'wisdom',      cls:'wisdom',    text:'Local does not mean small. Local means real.'},
+      {tag:'clinical',    cls:'physician', text:'The pharmacist is the most accessible clinician you have. Most people forget to ask them.'}
+    ]
+  };
+  var hr = new Date().getHours();
+  var deck = (hr >= 22 || hr < 6) ? pool.night : pool.day;
+  var w = document.getElementById('whisper');
+  var wt = document.getElementById('wtag');
+  var wx = document.getElementById('wtext');
+  var wi = -1;
+  function nextW(){
+    if (!w || !wt || !wx) return;
+    w.classList.remove('show');
+    setTimeout(function(){
+      wi = (wi + 1) % deck.length;
+      var d = deck[wi];
+      wt.textContent = d.tag;
+      wt.className = 'bh-whisper-tag ' + d.cls;
+      wx.textContent = d.text;
+      w.classList.add('show');
+    }, 1500);
+  }
+  setTimeout(nextW, 1800);
+  setInterval(nextW, 9500);
+
+  // Held set
+  var heldDot = document.getElementById('held-dot');
+  var heldLabel = document.getElementById('held-label');
+  var heldCount = 0;
+  function flashHeld(){
+    if (!heldDot || !heldLabel) return;
+    heldCount++;
+    heldDot.classList.remove('pulse');
+    void heldDot.offsetWidth;
+    heldDot.classList.add('pulse');
+    heldLabel.textContent = 'held · ' + heldCount;
+  }
+
+  // City modal
+  var cityModal = document.getElementById('city-modal');
+  function openCityModal(){
+    if (!cityModal) return;
+    cityModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){
+      var s = document.getElementById('city-search');
+      if (s) s.focus();
+    }, 400);
+  }
+  function closeCityModal(){
+    if (!cityModal) return;
+    cityModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  var byId = function(id){ return document.getElementById(id); };
+  if (byId('city-change')) byId('city-change').addEventListener('click', openCityModal);
+  if (byId('ctx-btn')) byId('ctx-btn').addEventListener('click', openCityModal);
+  if (byId('city-modal-close')) byId('city-modal-close').addEventListener('click', closeCityModal);
+  if (cityModal) cityModal.addEventListener('click', function(e){ if (e.target === cityModal) closeCityModal(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && cityModal && cityModal.classList.contains('open')) closeCityModal();
+  });
+
+  // City row selection
+  document.querySelectorAll('.bh-city-row').forEach(function(row){
+    row.addEventListener('click', function(){
+      var city = row.getAttribute('data-city');
+      var state = row.getAttribute('data-state');
+      var parish = row.getAttribute('data-parish') || '';
+      applyCity(city, state, parish);
+      closeCityModal();
+    });
+  });
+
+  // City search
+  var search = document.getElementById('city-search');
+  if (search) {
+    search.addEventListener('input', function(){
+      var q = (search.value || '').toLowerCase().trim();
+      document.querySelectorAll('.bh-city-row').forEach(function(row){
+        var city = (row.getAttribute('data-city') || '').toLowerCase();
+        var state = (row.getAttribute('data-state') || '').toLowerCase();
+        var parish = (row.getAttribute('data-parish') || '').toLowerCase();
+        var match = q === '' || city.indexOf(q) >= 0 || state.indexOf(q) >= 0 || parish.indexOf(q) >= 0;
+        row.style.display = match ? 'flex' : 'none';
+      });
+    });
+  }
+
+  // Cursor aura
+  var root = document.querySelector('.bh');
+  if (root && window.matchMedia && !window.matchMedia('(hover: none)').matches) {
+    document.addEventListener('mousemove', function(e){
+      var x = (e.clientX / window.innerWidth) * 100;
+      var y = (e.clientY / window.innerHeight) * 100;
+      root.style.setProperty('--mx', x + '%');
+      root.style.setProperty('--my', y + '%');
+    });
+  }
+
+  // Chrome scroll
+  var chrome = document.getElementById('chrome');
+  if (chrome) {
+    var ck = function(){
+      if (window.scrollY > 40) chrome.classList.add('scrolled');
+      else chrome.classList.remove('scrolled');
+    };
+    window.addEventListener('scroll', ck, { passive: true });
+  }
+
+  // Wire prompts and routes
+  document.querySelectorAll('[data-prompt]').forEach(function(node){
+    node.addEventListener('click', function(){
+      var p = node.getAttribute('data-prompt');
+      if (p) sendPrompt(p);
+      if (node.classList.contains('bh-tier') || node.classList.contains('bh-dir')) flashHeld();
+    });
+  });
+  document.querySelectorAll('[data-route]').forEach(function(node){
+    node.addEventListener('click', function(){
+      var r = node.getAttribute('data-route');
+      if (r) routeTo(r);
+    });
+  });
+  if (byId('signin')) byId('signin').addEventListener('click', function(){ routeTo('/signin'); });
+  if (byId('create-top')) byId('create-top').addEventListener('click', function(){ routeTo('/create-account'); });
+
+  // Alvai input — submits with city context appended
+  var input = document.getElementById('alvai-input');
+  var go = document.getElementById('alvai-go');
+  function submit(){
+    if (!input) return;
+    var v = (input.value || '').trim();
+    if (!v) return;
+    sendPrompt(v + ' (city: ' + currentCity + ', ' + currentState + ')');
+    flashHeld();
+    input.value = '';
+  }
+  if (go) go.addEventListener('click', submit);
+  if (input) input.addEventListener('keydown', function(e){ if (e.key === 'Enter') submit(); });
+})();
+</script>
+
+  <script src="/js/bleu-prod-hooks.js" defer></script>
+</body>
+</html>

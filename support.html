@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#fcf8ef" />
+
+<title>bleu.live — Support · help that listens</title>
+
+<meta name="description" content="Help that listens — therapy, sleep, recovery, grief. Twenty-two evidence-based modes. Free. Always. Co-founded by Bleu Garner and Dr. Felicia Stoler, DCN." />
+<meta name="author" content="Bleu Garner · Dr. Felicia Stoler, DCN" />
+<meta property="og:title" content="bleu.live — Support · help that listens" />
+<meta property="og:description" content="Therapy. Sleep. Recovery. Grief. Free. Always." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://bleu.live/support" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* =========================================================================
+   bleu.live — Support (Sea iii) · DEEP BUILD
+   v1 · 2026-05-09
+   The opening line: "Help that listens — therapy, sleep, recovery, grief."
+   The 22 modes are how the platform listens differently for different pain.
+   Crisis preservation lifted to the top — Support is highest-stakes sea.
+   Wall held. ECS rule held. Fifth-grade bar throughout.
+   ========================================================================= */
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#fcf8ef;color:#181714;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;overflow-x:hidden;
+}
+
+.bh{
+  --ink:#181714;--ink-soft:#4b4942;--ink-faint:#807a6f;--ink-whisper:#a8a299;
+  --cream:#faf6ee;--cream-warm:#f4ecd9;--cream-deep:#e8dcc0;--paper:#fffaf1;
+  --blue:#3878E0;--blue-soft:#5B9BFF;--blue-deep:#2156A8;
+  --gold:#c9a227;--gold-soft:#e6cb74;
+  --purple:#4B1E82;--purple-soft:#7c4ab8;
+  --teal:#2f8a83;--coral:#c95f4a;--moss:#5b8c7b;
+  --rose:#c87a8e;
+  --display:'Fraunces',Georgia,serif;
+  --body:'Inter',-apple-system,sans-serif;
+  position:relative;min-height:100vh;
+  /* Support gradient: warm cream into a softer purple-cream — the listening sea */
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(75,30,130,.06),transparent 55%),
+    radial-gradient(ellipse at 80% 70%,rgba(91,140,123,.04),transparent 60%),
+    linear-gradient(180deg,#fcf8ef 0%,#f5edd8 30%,#f0e4cd 60%,#f5edd8 85%,#fcf8ef 100%);
+  color:var(--ink);font-family:var(--body);line-height:1.6;
+}
+
+/* RIPPLE FIELD — softer than Local, wider amplitude */
+.bh-ripple-field{
+  position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+}
+.bh-ripple-field svg{
+  position:absolute;left:50%;top:30%;transform:translate(-50%,-50%);
+  width:140vw;max-width:1700px;height:auto;opacity:.45;
+}
+
+.bh::before{
+  content:"";position:fixed;inset:0;
+  background:radial-gradient(ellipse 800px 400px at var(--mx,50%) var(--my,30%),rgba(75,30,130,.06),transparent 70%);
+  pointer-events:none;transition:background 1.4s ease;z-index:1;
+}
+.bh-aura{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(75,30,130,.05) 0%,transparent 35%),
+    radial-gradient(circle at 70% 60%,rgba(91,140,123,.04) 0%,transparent 40%);
+  animation:drift 32s ease-in-out infinite alternate;
+}
+@keyframes drift{
+  0%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-2%,1%) scale(1.02)}
+  100%{transform:translate(1%,-1%) scale(.99)}
+}
+.bh-content{position:relative;z-index:2}
+
+/* CHROME */
+.bh-chrome{
+  position:sticky;top:0;z-index:40;
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(252,248,239,0);backdrop-filter:blur(0px);
+  transition:all .8s ease;border-bottom:0.5px solid transparent;gap:14px;
+}
+.bh-chrome.scrolled{
+  background:rgba(252,248,239,.85);
+  backdrop-filter:saturate(140%) blur(20px);
+  -webkit-backdrop-filter:saturate(140%) blur(20px);
+  border-bottom:0.5px solid rgba(232,220,192,.6);
+}
+.bh-mark-group{display:flex;align-items:center;gap:14px;min-width:0;flex-shrink:0}
+.bh-mark{
+  font-family:var(--display);font-size:18px;font-weight:300;letter-spacing:-.02em;
+  color:var(--ink);position:relative;cursor:pointer;
+  text-decoration:none;transition:.4s ease;
+}
+.bh-mark .heartbeat{
+  display:inline-block;color:var(--blue);font-weight:400;
+  animation:heartbeat 4s ease-in-out infinite;
+}
+@keyframes heartbeat{
+  0%,40%,100%{transform:scale(1);text-shadow:0 0 0 rgba(56,120,224,0)}
+  50%{transform:scale(1.18);text-shadow:0 0 18px rgba(56,120,224,.55)}
+  60%{transform:scale(1.05);text-shadow:0 0 8px rgba(56,120,224,.3)}
+}
+.bh-context{
+  font-size:10px;color:var(--ink-whisper);font-weight:400;letter-spacing:.16em;
+  text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  opacity:0;animation:rise .9s ease-out .2s forwards;cursor:default;
+}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.bh-context-dot{
+  width:4px;height:4px;border-radius:50%;background:var(--purple);opacity:.7;
+  animation:contextPulse 4s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes contextPulse{0%,100%{opacity:.4}50%{opacity:.9}}
+
+.bh-numerals{
+  display:flex;gap:2px;align-items:center;
+  font-family:var(--display);font-style:italic;font-size:11px;
+  color:var(--ink-faint);font-weight:400;letter-spacing:.04em;
+}
+.bh-numeral{
+  background:none;border:0;color:var(--ink-faint);
+  font-family:inherit;font-size:inherit;font-style:inherit;
+  font-weight:inherit;letter-spacing:inherit;
+  padding:5px 8px;cursor:pointer;border-radius:50%;
+  transition:.4s ease;width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.bh-numeral:hover{color:var(--ink);background:rgba(232,220,192,.5)}
+.bh-numeral.active{color:var(--purple);font-weight:500}
+.bh-numeral.active::after{
+  content:"";position:absolute;bottom:1px;left:50%;
+  transform:translateX(-50%);width:3px;height:3px;
+  border-radius:50%;background:var(--purple);opacity:.7;
+}
+.bh-numeral-tip{
+  position:absolute;top:32px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--cream);padding:5px 10px;border-radius:6px;
+  font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  font-style:normal;white-space:nowrap;opacity:0;pointer-events:none;
+  transition:.3s ease;z-index:50;
+}
+.bh-numeral:hover .bh-numeral-tip{opacity:1;transform:translateX(-50%) translateY(2px)}
+.bh-numeral-tip::before{
+  content:"";position:absolute;top:-4px;left:50%;transform:translateX(-50%);
+  border-left:4px solid transparent;border-right:4px solid transparent;
+  border-bottom:4px solid var(--ink);
+}
+
+.bh-chrome-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.bh-signin{
+  font-family:var(--body);font-size:11px;color:var(--ink-soft);
+  font-weight:500;letter-spacing:.06em;background:none;border:0;
+  cursor:pointer;padding:6px 10px;border-radius:999px;transition:.4s ease;
+}
+.bh-signin:hover{color:var(--ink);background:rgba(232,220,192,.45)}
+.bh-create{
+  font-family:var(--body);font-size:11px;font-weight:500;letter-spacing:.06em;
+  cursor:pointer;padding:7px 14px;border-radius:999px;
+  background:var(--ink);color:var(--cream);border:0;transition:.4s ease;
+  white-space:nowrap;
+}
+.bh-create:hover{background:var(--purple);transform:translateY(-1px)}
+.bh-held{
+  display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-soft);
+  letter-spacing:.06em;cursor:pointer;padding:6px 12px;border-radius:999px;
+  background:rgba(255,250,241,.45);border:0.5px solid rgba(232,220,192,.5);
+  transition:.4s ease;font-family:var(--body);
+}
+.bh-held:hover{background:rgba(255,250,241,.85);border-color:var(--cream-deep)}
+.bh-held-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.7}
+.bh-held-dot.pulse{animation:heldPulse 1.6s ease-out}
+@keyframes heldPulse{
+  0%{transform:scale(1);opacity:.7}
+  30%{transform:scale(2.4);opacity:1;box-shadow:0 0 0 3px rgba(201,162,39,.2)}
+  100%{transform:scale(1);opacity:.7}
+}
+
+/* HERO */
+.bh-surface{padding:36px 22px 22px;text-align:center;position:relative}
+.bh-sea-id{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--display);font-style:italic;
+  font-size:12px;color:var(--purple);font-weight:400;
+  letter-spacing:.04em;margin-bottom:12px;
+  opacity:0;animation:rise 1s ease-out .3s forwards;
+  position:relative;z-index:3;
+}
+.bh-sea-id::before,.bh-sea-id::after{
+  content:"";width:18px;height:0.5px;background:var(--purple);opacity:.5;
+}
+.bh-bigmark{
+  font-family:var(--display);font-weight:200;
+  font-size:clamp(26px,4vw,40px);letter-spacing:-.04em;line-height:1;
+  color:var(--ink-soft);position:relative;z-index:3;margin-bottom:14px;
+  opacity:0;animation:rise 1s ease-out .35s forwards;
+}
+.bh-bigmark .dot{
+  color:var(--blue);font-weight:300;display:inline-block;
+  animation:dotbreath 5s ease-in-out infinite;
+}
+.bh-bigmark .end{color:var(--ink-soft)}
+@keyframes dotbreath{
+  0%,100%{opacity:.85;transform:scale(1);text-shadow:0 0 18px rgba(56,120,224,.3)}
+  50%{opacity:1;transform:scale(1.1);text-shadow:0 0 38px rgba(56,120,224,.55)}
+}
+
+.bh-opening{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(17px,2.4vw,22px);line-height:1.45;
+  color:var(--ink);max-width:620px;margin:0 auto 20px;
+  letter-spacing:-.005em;position:relative;z-index:3;
+  opacity:0;animation:rise 1s ease-out .45s forwards;
+}
+.bh-opening em{font-style:italic;color:var(--purple);font-weight:400}
+
+/* CRISIS BAR — LIFTED TO TOP. Support is the sea where this matters most. */
+.bh-crisis-top{
+  max-width:780px;margin:0 auto 22px;padding:14px 20px;
+  background:linear-gradient(135deg,rgba(201,95,74,.08),rgba(201,95,74,.04));
+  border:0.5px solid rgba(201,95,74,.3);border-radius:14px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;
+  position:relative;z-index:3;
+  opacity:0;animation:rise 1s ease-out .5s forwards;
+}
+.bh-crisis-top-label{
+  font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--coral);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.bh-crisis-top-label::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:var(--coral);
+  animation:crisisPulse 2.4s ease-in-out infinite;
+}
+@keyframes crisisPulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.3);box-shadow:0 0 0 4px rgba(201,95,74,.2)}}
+.bh-crisis-top-line{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:13.5px;color:var(--ink-soft);line-height:1.5;
+  flex:1;min-width:200px;text-align:left;
+}
+.bh-crisis-top-line em{font-style:italic;color:var(--ink);font-weight:400}
+.bh-crisis-top-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.bh-crisis-btn{
+  text-decoration:none;font-size:11px;font-weight:500;letter-spacing:.06em;
+  color:var(--ink);padding:7px 14px;border-radius:999px;
+  background:rgba(255,250,241,.85);
+  border:0.5px solid rgba(201,95,74,.4);
+  transition:.3s ease;white-space:nowrap;
+}
+.bh-crisis-btn:hover{background:var(--coral);color:#fff;border-color:var(--coral)}
+
+/* MOOD CHECK-IN */
+.bh-mood-card{
+  max-width:680px;margin:0 auto 22px;padding:18px 22px;
+  background:rgba(255,250,241,.7);
+  border:0.5px solid rgba(232,220,192,.6);border-radius:18px;
+  position:relative;z-index:3;
+  opacity:0;animation:rise 1s ease-out .55s forwards;
+}
+.bh-mood-label{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:10px;text-align:center;
+}
+.bh-mood-prompt{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:15px;color:var(--ink-soft);text-align:center;margin-bottom:14px;
+  line-height:1.4;
+}
+.bh-mood-prompt em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-mood-row{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
+}
+.bh-mood{
+  font-family:var(--body);font-size:12.5px;font-weight:400;color:var(--ink-soft);
+  background:rgba(255,250,241,.6);
+  border:0.5px solid rgba(232,220,192,.6);border-radius:999px;
+  padding:8px 14px;cursor:pointer;
+  transition:.35s cubic-bezier(.2,.8,.3,1);
+  white-space:nowrap;
+}
+.bh-mood:hover{background:var(--purple);color:#fff;border-color:var(--purple);transform:translateY(-1px)}
+
+/* ALVAI INPUT */
+.bh-input-shell{
+  position:relative;z-index:3;width:100%;max-width:620px;margin:0 auto;
+  opacity:0;animation:rise 1s ease-out .8s forwards;
+}
+.bh-input-wrap{position:relative}
+.bh-input{
+  width:100%;padding:18px 56px 18px 24px;
+  border:0.5px solid rgba(232,220,192,.7);border-radius:999px;
+  background:rgba(255,250,241,.94);backdrop-filter:blur(8px);
+  font-size:16px;line-height:1.6;color:var(--ink);
+  font-family:var(--body);font-weight:400;outline:none;
+  transition:.5s cubic-bezier(.2,.8,.3,1);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 16px 40px -28px rgba(15,28,46,.18);
+}
+.bh-input::placeholder{color:var(--ink-faint);font-style:italic;font-weight:300}
+.bh-input:focus{
+  border-color:rgba(75,30,130,.35);background:rgba(255,250,241,1);
+  box-shadow:
+    0 0 0 5px rgba(75,30,130,.07),
+    0 1px 0 rgba(255,255,255,.7) inset,
+    0 24px 56px -28px rgba(75,30,130,.22);
+}
+.bh-input-go{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:38px;height:38px;border-radius:50%;
+  background:var(--ink);color:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:0;transition:.4s ease;
+}
+.bh-input-go:hover{background:var(--purple);transform:translateY(-50%) scale(1.06)}
+
+.bh-trust-row{
+  display:flex;justify-content:center;align-items:center;gap:14px;
+  margin-top:18px;flex-wrap:wrap;
+  font-size:10.5px;color:var(--ink-faint);font-weight:500;letter-spacing:.06em;
+  opacity:0;animation:rise 1s ease-out 1.05s forwards;
+}
+.bh-trust-row .tdot{width:3px;height:3px;border-radius:50%;background:var(--ink-faint);opacity:.5}
+.bh-trust-strong{color:var(--ink-soft);font-weight:500}
+
+/* WHISPERS */
+.bh-whispers-band{
+  max-width:780px;margin:24px auto 0;min-height:46px;
+  display:flex;align-items:center;justify-content:center;padding:0 22px;
+  opacity:0;animation:rise 1s ease-out 1.3s forwards;
+}
+.bh-whisper{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:13.5px;line-height:1.5;letter-spacing:-.005em;
+  color:var(--ink-faint);text-align:center;max-width:560px;
+  opacity:0;transition:opacity 1.4s ease;
+}
+.bh-whisper.show{opacity:1}
+.bh-whisper-tag{
+  font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-right:9px;opacity:.7;
+}
+.bh-whisper-tag.physician{color:var(--gold)}
+.bh-whisper-tag.monk{color:var(--purple)}
+.bh-whisper-tag.science{color:var(--teal)}
+.bh-whisper-tag.lineage{color:var(--coral)}
+.bh-whisper-tag.wisdom{color:var(--moss)}
+
+.bh-flow{padding:0 22px}
+.bh-section{max-width:1080px;margin:0 auto;padding:48px 0 24px}
+.bh-section-frame{text-align:center;margin-bottom:28px}
+.bh-zone-label{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:12px;
+  display:inline-flex;align-items:center;gap:14px;
+}
+.bh-zone-label::before,.bh-zone-label::after{
+  content:"";width:24px;height:0.5px;background:var(--purple);opacity:.5;
+}
+.bh-zone-prompt{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(18px,2.6vw,26px);line-height:1.3;letter-spacing:-.015em;
+  color:var(--ink);max-width:620px;margin:0 auto;
+}
+.bh-zone-prompt em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-zone-sub{
+  font-family:var(--body);font-size:13px;color:var(--ink-faint);
+  max-width:580px;margin:10px auto 0;line-height:1.55;
+}
+
+/* THERAPY MODE GRID — 22 modes in three families */
+.bh-modes{
+  margin-top:24px;
+}
+.bh-mode-family{
+  margin-bottom:24px;
+}
+.bh-mode-family-label{
+  font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;text-align:center;
+  display:flex;align-items:center;gap:14px;justify-content:center;
+}
+.bh-mode-family-label::before,.bh-mode-family-label::after{
+  content:"";flex:1;max-width:60px;height:0.5px;background:var(--gold);opacity:.4;
+}
+.bh-mode-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;
+}
+.bh-mode{
+  background:rgba(255,250,241,.65);
+  border:0.5px solid rgba(232,220,192,.55);border-radius:14px;
+  padding:14px 16px;text-align:left;cursor:pointer;
+  font-family:var(--body);transition:.35s cubic-bezier(.2,.8,.3,1);
+  position:relative;overflow:hidden;
+}
+.bh-mode:hover{
+  background:var(--paper);transform:translateY(-2px);
+  border-color:rgba(75,30,130,.3);
+  box-shadow:0 14px 30px -22px rgba(75,30,130,.3);
+}
+.bh-mode-name{
+  font-family:var(--display);font-weight:400;font-size:14.5px;
+  color:var(--ink);letter-spacing:-.01em;margin-bottom:4px;
+}
+.bh-mode-line{
+  font-size:11.5px;color:var(--ink-faint);font-weight:400;
+  line-height:1.45;
+}
+.bh-mode-line em{font-style:italic;color:var(--ink-soft)}
+
+/* SLEEP — own card, own architectural prominence */
+.bh-sleep-card{
+  max-width:1080px;margin:36px auto 0;padding:32px 28px;
+  background:linear-gradient(135deg,rgba(75,30,130,.06),rgba(91,140,123,.04));
+  border:0.5px solid rgba(75,30,130,.25);border-radius:24px;
+  position:relative;overflow:hidden;
+  box-shadow:0 24px 50px -34px rgba(75,30,130,.25);
+}
+.bh-sleep-card::before{
+  content:"";position:absolute;top:-30%;right:-5%;width:340px;height:340px;
+  border-radius:50%;background:radial-gradient(circle,rgba(75,30,130,.07),transparent 60%);
+  pointer-events:none;
+}
+.bh-sleep-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
+.bh-sleep-text{}
+.bh-sleep-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:14px;
+  display:inline-flex;align-items:center;gap:14px;
+}
+.bh-sleep-eyebrow::before{
+  content:"";width:24px;height:0.5px;background:var(--purple);opacity:.6;
+}
+.bh-sleep-title{
+  font-family:var(--display);font-weight:300;font-size:clamp(22px,3vw,30px);
+  letter-spacing:-.025em;line-height:1.15;color:var(--ink);margin-bottom:12px;
+}
+.bh-sleep-title em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-sleep-body{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:14.5px;line-height:1.6;color:var(--ink-soft);margin-bottom:18px;
+}
+.bh-sleep-body em{font-style:italic;color:var(--ink);font-weight:400}
+.bh-sleep-actions{display:flex;flex-wrap:wrap;gap:8px}
+.bh-sleep-btn{
+  font-family:var(--body);font-size:12px;font-weight:500;letter-spacing:.04em;
+  background:var(--ink);color:var(--cream);
+  border:0;padding:11px 18px;border-radius:999px;cursor:pointer;
+  transition:.3s ease;white-space:nowrap;
+}
+.bh-sleep-btn:hover{background:var(--purple);transform:translateY(-1px)}
+.bh-sleep-btn.outline{
+  background:transparent;color:var(--ink-soft);
+  border:0.5px solid rgba(232,220,192,.7);
+}
+.bh-sleep-btn.outline:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.bh-sleep-side{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;min-height:200px;
+}
+.bh-sleep-moon{
+  width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#e8d4ff,#7c4ab8 60%,#4B1E82 100%);
+  position:relative;
+  box-shadow:0 14px 40px -10px rgba(75,30,130,.5),inset 0 1px 1px rgba(255,255,255,.4);
+}
+.bh-sleep-moon::after{
+  content:"";position:absolute;inset:-12px;border-radius:50%;
+  border:0.5px solid rgba(124,74,184,.4);
+  animation:moonHalo 5s ease-in-out infinite;
+}
+.bh-sleep-moon::before{
+  content:"";position:absolute;inset:-26px;border-radius:50%;
+  border:0.5px solid rgba(124,74,184,.2);
+  animation:moonHalo2 5s ease-in-out infinite;
+}
+@keyframes moonHalo{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.18);opacity:.1}}
+@keyframes moonHalo2{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.4);opacity:0}}
+.bh-sleep-stat{
+  position:absolute;font-family:var(--display);font-style:italic;font-size:11px;
+  color:var(--ink-faint);font-weight:400;letter-spacing:.04em;text-align:center;
+}
+.bh-sleep-stat-1{top:8px;left:0;text-align:left}
+.bh-sleep-stat-2{bottom:8px;right:0;text-align:right}
+
+/* RECOVERY STRIP — 7 modes parallel structure */
+.bh-recovery{
+  max-width:1080px;margin:36px auto 0;padding:32px 28px;
+  background:rgba(255,250,241,.6);
+  border:0.5px solid rgba(232,220,192,.55);border-radius:24px;
+}
+.bh-recovery-head{margin-bottom:22px;text-align:center}
+.bh-recovery-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--moss);margin-bottom:12px;
+  display:inline-flex;align-items:center;gap:14px;
+}
+.bh-recovery-eyebrow::before,.bh-recovery-eyebrow::after{
+  content:"";width:24px;height:0.5px;background:var(--moss);opacity:.5;
+}
+.bh-recovery-title{
+  font-family:var(--display);font-weight:300;font-size:clamp(20px,2.8vw,26px);
+  letter-spacing:-.025em;line-height:1.2;color:var(--ink);margin-bottom:8px;
+}
+.bh-recovery-title em{font-style:italic;color:var(--moss);font-weight:400}
+.bh-recovery-body{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:14px;line-height:1.55;color:var(--ink-soft);
+  max-width:580px;margin:0 auto;
+}
+.bh-recovery-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;
+  margin-top:20px;
+}
+.bh-rec-mode{
+  background:rgba(255,250,241,.7);
+  border:0.5px solid rgba(91,140,123,.25);border-radius:12px;
+  padding:14px 14px;text-align:left;cursor:pointer;
+  font-family:var(--body);transition:.35s ease;
+}
+.bh-rec-mode:hover{
+  background:var(--paper);border-color:var(--moss);transform:translateY(-2px);
+  box-shadow:0 12px 26px -20px rgba(91,140,123,.4);
+}
+.bh-rec-name{
+  font-family:var(--display);font-weight:400;font-size:14px;
+  color:var(--ink);letter-spacing:-.01em;margin-bottom:3px;
+}
+.bh-rec-line{
+  font-size:11px;color:var(--ink-faint);font-weight:400;line-height:1.4;
+}
+.bh-recovery-foot{
+  display:flex;justify-content:center;align-items:center;gap:14px;
+  margin-top:18px;font-size:11px;color:var(--ink-faint);letter-spacing:.04em;
+  flex-wrap:wrap;
+}
+.bh-recovery-foot strong{color:var(--ink-soft);font-weight:500}
+.bh-recovery-foot a{color:var(--moss);text-decoration:none;font-weight:500}
+.bh-recovery-foot a:hover{color:var(--purple)}
+
+/* THERAPIST HANDOFF — when you are ready for a real person */
+.bh-handoff{
+  max-width:1080px;margin:36px auto 0;padding:32px 28px;
+}
+.bh-handoff-head{text-align:center;margin-bottom:22px}
+.bh-handoff-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;
+  background:rgba(232,220,192,.5);
+  border:0.5px solid rgba(232,220,192,.5);
+  border-radius:18px;overflow:hidden;
+}
+.bh-handoff-card{
+  background:rgba(255,250,241,.75);padding:22px 20px;
+  font-family:var(--body);transition:.4s ease;cursor:pointer;border:0;
+  display:flex;flex-direction:column;justify-content:space-between;
+  min-height:160px;text-align:left;
+}
+.bh-handoff-card:hover{background:var(--paper)}
+.bh-handoff-label{
+  font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.bh-handoff-name{
+  font-family:var(--display);font-weight:380;font-size:17px;
+  letter-spacing:-.02em;color:var(--ink);margin-bottom:5px;
+}
+.bh-handoff-desc{
+  font-size:11.5px;line-height:1.5;color:var(--ink-faint);
+  font-weight:400;margin-bottom:12px;
+}
+.bh-handoff-foot{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:10px;border-top:0.5px solid rgba(232,220,192,.5);gap:10px;
+}
+.bh-handoff-price{
+  font-size:10.5px;font-weight:500;letter-spacing:.06em;
+  color:var(--ink-soft);
+}
+.bh-handoff-price strong{color:var(--ink);font-weight:500}
+.bh-handoff-arrow{
+  font-family:var(--display);font-size:14px;color:var(--ink-faint);
+  transition:.4s ease;
+}
+.bh-handoff-card:hover .bh-handoff-arrow{transform:translateX(4px);color:var(--purple)}
+
+/* FELICIA SIGNATURE — Support is her primary clinical voice domain */
+.bh-felicia{max-width:760px;margin:36px auto 0;padding:32px 22px;text-align:center}
+.bh-felicia-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:18px;
+  display:inline-flex;align-items:center;gap:14px;
+}
+.bh-felicia-eyebrow::before,.bh-felicia-eyebrow::after{
+  content:"";width:32px;height:0.5px;background:var(--gold);opacity:.6;
+}
+.bh-felicia-quote{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(18px,2.5vw,24px);line-height:1.45;letter-spacing:-.015em;
+  color:var(--ink);max-width:620px;margin:0 auto 22px;
+}
+.bh-felicia-quote em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-felicia-byline{
+  font-size:10.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-faint);line-height:1.9;
+}
+.bh-felicia-byline .name{color:var(--ink-soft)}
+.bh-felicia-byline .title{
+  display:block;font-size:11px;letter-spacing:.16em;
+  color:var(--gold);font-weight:600;margin-top:4px;
+}
+.bh-felicia-byline .creds{
+  display:block;font-size:9.5px;letter-spacing:.14em;
+  color:var(--ink-whisper);margin-top:4px;
+}
+
+/* DOCK */
+.bh-dock{max-width:1080px;margin:48px auto 0;padding:32px 0 24px;text-align:center}
+.bh-dock-prompt{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(19px,2.6vw,26px);line-height:1.3;letter-spacing:-.015em;
+  color:var(--ink);max-width:600px;margin:0 auto 22px;
+}
+.bh-dock-prompt em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-dock-row{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:0;
+  border-top:0.5px solid rgba(232,220,192,.5);
+  border-bottom:0.5px solid rgba(232,220,192,.5);
+}
+.bh-sea{
+  flex:1;min-width:118px;padding:20px 12px;cursor:pointer;
+  background:transparent;border:0;
+  border-right:0.5px solid rgba(232,220,192,.4);
+  font-family:var(--body);transition:.4s ease;
+  text-align:center;position:relative;overflow:hidden;
+}
+.bh-sea:last-child{border-right:0}
+.bh-sea::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent,rgba(75,30,130,.05));
+  opacity:0;transition:.5s ease;
+}
+.bh-sea:hover::before{opacity:1}
+.bh-sea:hover{background:rgba(255,250,241,.5)}
+.bh-sea.current{background:rgba(232,220,192,.3)}
+.bh-sea-num{
+  font-family:var(--display);font-style:italic;font-size:10px;
+  color:var(--gold);opacity:.6;margin-bottom:5px;position:relative;z-index:1;
+}
+.bh-sea-name{
+  font-family:var(--display);font-weight:380;font-size:17px;
+  letter-spacing:-.018em;color:var(--ink);margin-bottom:3px;
+  position:relative;z-index:1;
+}
+.bh-sea-line{
+  font-size:9.5px;color:var(--ink-faint);font-weight:400;
+  letter-spacing:.04em;line-height:1.4;position:relative;z-index:1;
+}
+
+/* CRISIS PRESERVATION — second appearance, larger numbers list */
+.bh-preservation{max-width:760px;margin:0 auto;padding:28px 22px 24px;text-align:center}
+.bh-preservation-text{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:14.5px;line-height:1.6;color:var(--ink-soft);margin-bottom:14px;
+}
+.bh-preservation-text em{font-style:italic;color:var(--ink);font-weight:400}
+.bh-crisis-full{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:14px}
+.bh-crisis-line{
+  background:rgba(255,250,241,.5);border:0.5px solid rgba(232,220,192,.5);
+  border-radius:12px;padding:12px 14px;text-align:left;
+  display:flex;flex-direction:column;gap:2px;
+  text-decoration:none;transition:.3s ease;
+}
+.bh-crisis-line:hover{background:var(--paper);border-color:var(--coral)}
+.bh-crisis-num{
+  font-family:var(--display);font-weight:400;font-size:15px;color:var(--ink);
+  letter-spacing:-.01em;
+}
+.bh-crisis-who{
+  font-size:10px;color:var(--ink-faint);font-weight:500;letter-spacing:.06em;
+}
+
+/* FOOTER */
+.bh-floor{
+  padding:26px 22px 22px;
+  border-top:0.5px solid rgba(232,220,192,.4);
+  display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+  flex-wrap:wrap;font-size:10px;color:var(--ink-faint);letter-spacing:.04em;
+}
+.bh-floor-mark{
+  font-family:var(--display);font-size:13px;font-weight:300;
+  color:var(--ink-soft);letter-spacing:-.02em;
+}
+.bh-floor-mark .dot{color:var(--blue)}
+.bh-floor-meta{text-align:right;line-height:1.7;font-size:9.5px;letter-spacing:.05em}
+
+/* PRESENCE */
+.bh-presence{
+  position:fixed;bottom:18px;right:18px;z-index:50;
+  display:flex;align-items:center;gap:0;cursor:pointer;
+  background:transparent;border:0;font-family:var(--body);padding:0;
+  transition:.5s ease;
+}
+.bh-orb{
+  width:42px;height:42px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#c4a8e8,#7c4ab8 60%,#4B1E82 100%);
+  position:relative;flex-shrink:0;
+  box-shadow:0 12px 36px -12px rgba(75,30,130,.5),inset 0 1px 1px rgba(255,255,255,.4);
+  transition:.4s ease;
+}
+.bh-orb::before{
+  content:"";position:absolute;inset:-7px;border-radius:50%;
+  border:0.5px solid rgba(124,74,184,.3);
+  animation:halo1 5s ease-in-out infinite;
+}
+.bh-orb::after{
+  content:"";position:absolute;inset:-14px;border-radius:50%;
+  border:0.5px solid rgba(124,74,184,.18);
+  animation:halo2 5s ease-in-out infinite;
+}
+@keyframes halo1{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.25);opacity:.1}}
+@keyframes halo2{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.4);opacity:0}}
+.bh-presence-label{
+  margin-left:0;padding:0;font-size:0;overflow:hidden;
+  color:var(--ink-soft);font-weight:400;letter-spacing:.04em;
+  white-space:nowrap;transition:.5s cubic-bezier(.2,.8,.3,1);opacity:0;
+}
+.bh-presence:hover .bh-presence-label{font-size:12px;padding:0 14px 0 11px;opacity:1}
+.bh-presence:hover .bh-orb{transform:scale(1.05)}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* RESPONSIVE */
+@media(max-width:880px){
+  .bh-sleep-inner{grid-template-columns:1fr;gap:24px;text-align:center}
+  .bh-sleep-actions{justify-content:center}
+  .bh-sleep-eyebrow{justify-content:center}
+  .bh-mode-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .bh-handoff-grid{grid-template-columns:repeat(2,1fr)}
+  .bh-sea{min-width:33%;border-bottom:0.5px solid rgba(232,220,192,.4)}
+  .bh-context,.bh-signin{display:none}
+  .bh-bigmark{font-size:24px}
+  .bh-crisis-top{flex-direction:column;text-align:center}
+  .bh-crisis-top-line{text-align:center}
+}
+@media(max-width:560px){
+  .bh-mode-grid{grid-template-columns:1fr}
+  .bh-handoff-grid{grid-template-columns:1fr}
+  .bh-recovery-grid{grid-template-columns:repeat(2,1fr)}
+  .bh-sea{min-width:50%}
+  .bh-input{padding:15px 50px 15px 19px;font-size:15px}
+  .bh-presence-label{display:none}
+  .bh-numerals{display:none}
+  .bh-bigmark{font-size:22px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="bh">
+  <div class="bh-aura"></div>
+  <div class="bh-ripple-field" aria-hidden="true">
+    <svg viewBox="0 0 1700 800" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="rg-field" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#7c4ab8" stop-opacity="0.16"/>
+          <stop offset="60%" stop-color="#4B1E82" stop-opacity="0.05"/>
+          <stop offset="100%" stop-color="#4B1E82" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="850" cy="400" rx="780" ry="320" fill="none" stroke="#7c4ab8" stroke-width="0.5" opacity="0.1"><animate attributeName="opacity" values="0.1;0.18;0.1" dur="16s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="850" cy="400" rx="560" ry="220" fill="none" stroke="#7c4ab8" stroke-width="0.5" opacity="0.13"><animate attributeName="opacity" values="0.13;0.22;0.13" dur="16s" begin="2s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="850" cy="400" rx="360" ry="140" fill="none" stroke="#7c4ab8" stroke-width="0.5" opacity="0.18"><animate attributeName="opacity" values="0.18;0.28;0.18" dur="16s" begin="4s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="850" cy="400" rx="180" ry="70" fill="none" stroke="#7c4ab8" stroke-width="0.5" opacity="0.24"><animate attributeName="opacity" values="0.24;0.34;0.24" dur="16s" begin="6s" repeatCount="indefinite"/></ellipse>
+      <circle cx="850" cy="400" r="55" fill="url(#rg-field)" opacity="0.6"/>
+    </svg>
+  </div>
+
+  <div class="bh-content">
+
+    <header class="bh-chrome" id="chrome">
+      <div class="bh-mark-group">
+        <a class="bh-mark" href="/" aria-label="bleu.live home">
+          <span>bleu</span><span class="heartbeat">.</span><span>live</span><span style="color:var(--ink)">.</span>
+        </a>
+        <div class="bh-context">
+          <span class="bh-context-dot"></span>
+          <span id="ctx-text">listening</span>
+        </div>
+      </div>
+
+      <nav class="bh-numerals" aria-label="seven seas">
+        <button class="bh-numeral" data-route="/">i.<span class="bh-numeral-tip">home</span></button>
+        <button class="bh-numeral" data-route="/local">ii.<span class="bh-numeral-tip">local</span></button>
+        <button class="bh-numeral active" aria-current="page">iii.<span class="bh-numeral-tip">support</span></button>
+        <button class="bh-numeral" data-route="/learn">iv.<span class="bh-numeral-tip">learn</span></button>
+        <button class="bh-numeral" data-route="/supply">v.<span class="bh-numeral-tip">supply</span></button>
+        <button class="bh-numeral" data-route="/ecsiq">vi.<span class="bh-numeral-tip">ecsiq</span></button>
+        <button class="bh-numeral" data-route="/why">vii.<span class="bh-numeral-tip">why</span></button>
+      </nav>
+
+      <div class="bh-chrome-right">
+        <button class="bh-signin" id="signin">sign in</button>
+        <button class="bh-create" id="create-top">create account</button>
+        <button class="bh-held" data-route="/held">
+          <span class="bh-held-dot" id="held-dot"></span>
+          <span id="held-label">held</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="bh-surface">
+      <div class="bh-sea-id">Sea iii</div>
+      <div class="bh-bigmark">bleu<span class="dot">.</span>live<span class="end">.</span></div>
+      <p class="bh-opening"><em>Help that listens</em> &mdash; therapy, sleep, recovery, grief.</p>
+
+      <!-- CRISIS BAR — top placement -->
+      <div class="bh-crisis-top">
+        <span class="bh-crisis-top-label">in crisis</span>
+        <span class="bh-crisis-top-line">If you are not safe right now, <em>please use one of these instead.</em> Free. Confidential. Trained people answer.</span>
+        <span class="bh-crisis-top-actions">
+          <a class="bh-crisis-btn" href="tel:988">Call 988</a>
+          <a class="bh-crisis-btn" href="sms:741741?body=HOME">Text HOME &middot; 741741</a>
+          <a class="bh-crisis-btn" href="tel:911">911</a>
+        </span>
+      </div>
+
+      <!-- MOOD CHECK-IN -->
+      <div class="bh-mood-card">
+        <div class="bh-mood-label">how you feel right now</div>
+        <p class="bh-mood-prompt">Pick what fits. <em>The platform listens differently for each one.</em></p>
+        <div class="bh-mood-row">
+          <button class="bh-mood" data-prompt="I am anxious right now and I cannot shake it. Help me regulate.">Anxious</button>
+          <button class="bh-mood" data-prompt="I feel low. Heavy. Flat. Help me through this.">Low</button>
+          <button class="bh-mood" data-prompt="I am angry. I do not know what to do with this feeling.">Angry</button>
+          <button class="bh-mood" data-prompt="I am grieving. I lost someone or something. Hold space with me.">Grieving</button>
+          <button class="bh-mood" data-prompt="I feel numb. Disconnected. Like I am watching from outside.">Numb</button>
+          <button class="bh-mood" data-prompt="I am overwhelmed. Everything is too much right now.">Overwhelmed</button>
+          <button class="bh-mood" data-prompt="I cannot sleep. Help me wind down.">Cannot sleep</button>
+          <button class="bh-mood" data-prompt="I am okay actually &mdash; I just want to talk.">Okay actually</button>
+        </div>
+      </div>
+
+      <!-- ALVAI INPUT -->
+      <div class="bh-input-shell">
+        <div class="bh-input-wrap">
+          <label class="sr-only" for="alvai-input">Tell Alvai what you are carrying</label>
+          <input type="text" class="bh-input" id="alvai-input" placeholder="Tell me what you are carrying. Anything. We start there." autocomplete="off" />
+          <button class="bh-input-go" id="alvai-go" aria-label="Send to Alvai">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="bh-trust-row">
+          <span><span class="bh-trust-strong">Free</span> &middot; always</span>
+          <span class="tdot"></span>
+          <span><span class="bh-trust-strong">22</span> evidence-based modes</span>
+          <span class="tdot"></span>
+          <span>Encrypted</span>
+          <span class="tdot"></span>
+          <span>Never sold</span>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="bh-whispers-band">
+      <div class="bh-whisper" id="whisper" aria-live="polite">
+        <span class="bh-whisper-tag" id="wtag">observation</span>
+        <span id="wtext"></span>
+      </div>
+    </div>
+
+    <div class="bh-flow">
+
+      <!-- THERAPY MODES — three families -->
+      <section class="bh-section" aria-label="therapy modes">
+        <div class="bh-section-frame">
+          <div class="bh-zone-label">how we can listen</div>
+          <p class="bh-zone-prompt">Twenty-two modes. <em>Each one listens differently.</em></p>
+          <p class="bh-zone-sub">Pick a mode and Alvai changes how it responds. Or just type what is going on, and we pick the right mode for you.</p>
+        </div>
+
+        <div class="bh-modes">
+
+          <div class="bh-mode-family">
+            <div class="bh-mode-family-label">foundational &middot; how we listen</div>
+            <div class="bh-mode-grid">
+              <button class="bh-mode" data-prompt="Open Talk Therapy mode. I just need someone to listen.">
+                <div class="bh-mode-name">Talk Therapy</div>
+                <div class="bh-mode-line">For when you just need to be heard. <em>The mode that listens longest before responding.</em></div>
+              </button>
+              <button class="bh-mode" data-prompt="Open CBT mode. I want to work on the thoughts that keep looping.">
+                <div class="bh-mode-name">CBT</div>
+                <div class="bh-mode-line">Cognitive Behavioral. For thoughts that loop and will not loosen.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open DBT skills mode. I need help managing big feelings.">
+                <div class="bh-mode-name">DBT Skills</div>
+                <div class="bh-mode-line">Distress tolerance. For feelings too big to sit with alone.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open ACT mode. I want to make room for hard feelings and keep moving.">
+                <div class="bh-mode-name">ACT</div>
+                <div class="bh-mode-line">Acceptance and commitment. Make room for the hard. Move toward what matters.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Motivational Interviewing mode. I am stuck and I cannot make myself move.">
+                <div class="bh-mode-name">Motivational</div>
+                <div class="bh-mode-line">When you know what to do but cannot start.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Solution-Focused mode. I want to make a small move forward.">
+                <div class="bh-mode-name">Solution-Focused</div>
+                <div class="bh-mode-line">Small moves. Real results. The next right thing.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Mindfulness mode. I want to come back to right now.">
+                <div class="bh-mode-name">Mindfulness</div>
+                <div class="bh-mode-line">Come back to right now. Breath, body, presence.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Psychodynamic mode. I want to understand patterns from my past.">
+                <div class="bh-mode-name">Psychodynamic</div>
+                <div class="bh-mode-line">For old patterns that keep showing up new.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Behavioral mode. I want to change a habit one step at a time.">
+                <div class="bh-mode-name">Behavioral</div>
+                <div class="bh-mode-line">Change one behavior. Then the next.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Integrative mode. I want a blend of approaches.">
+                <div class="bh-mode-name">Integrative</div>
+                <div class="bh-mode-line">A blend, when no one approach fits.</div>
+              </button>
+            </div>
+          </div>
+
+          <div class="bh-mode-family">
+            <div class="bh-mode-family-label">specialized &middot; for specific pain</div>
+            <div class="bh-mode-grid">
+              <button class="bh-mode" data-prompt="Open Grief mode. I lost someone or something and I am not okay.">
+                <div class="bh-mode-name">Grief</div>
+                <div class="bh-mode-line">No timeline. No stages. <em>Tell me about them.</em></div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Trauma-Informed mode. Go gently. I will say when.">
+                <div class="bh-mode-name">Trauma-Informed</div>
+                <div class="bh-mode-line">Safety first. We move at your pace. You set the floor.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Somatic mode. I want to notice what my body is holding.">
+                <div class="bh-mode-name">Somatic</div>
+                <div class="bh-mode-line">Body-based. For what words alone cannot reach.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Existential mode. I am asking the big questions.">
+                <div class="bh-mode-name">Existential</div>
+                <div class="bh-mode-line">Meaning, mortality, purpose. The questions that keep you up.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Eating &amp; Body mode. My relationship with food or my body needs care.">
+                <div class="bh-mode-name">Eating &amp; Body</div>
+                <div class="bh-mode-line">Anti-diet. Felicia signs every word. <em>Your body is not a problem to solve.</em></div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Sleep Therapy mode. I cannot sleep and I want help winding down.">
+                <div class="bh-mode-name">Sleep Therapy</div>
+                <div class="bh-mode-line">For the 2am awake hour. Wind down without the brain race.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Family Systems mode. My family pattern is hurting me.">
+                <div class="bh-mode-name">Family Systems</div>
+                <div class="bh-mode-line">For the patterns that started before you did.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Codependency mode. I keep over-giving and losing myself.">
+                <div class="bh-mode-name">Codependency</div>
+                <div class="bh-mode-line">When caring for others has cost you yourself.</div>
+              </button>
+            </div>
+          </div>
+
+          <div class="bh-mode-family">
+            <div class="bh-mode-family-label">recovery-adjacent &middot; for substance and behavior</div>
+            <div class="bh-mode-grid">
+              <button class="bh-mode" data-prompt="Open Substance Support mode. I am working on my use.">
+                <div class="bh-mode-name">Substance</div>
+                <div class="bh-mode-line">Alcohol, opioids, stimulants. No judgment.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Harm Reduction mode. I am not ready to stop and I want to stay safe.">
+                <div class="bh-mode-name">Harm Reduction</div>
+                <div class="bh-mode-line">Stay safe. Stay alive. <em>You decide the pace.</em></div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Gambling Recovery mode. I am working on my gambling.">
+                <div class="bh-mode-name">Gambling Recovery</div>
+                <div class="bh-mode-line">For the urge that does not need a substance.</div>
+              </button>
+              <button class="bh-mode" data-prompt="Open Dual Diagnosis mode. I am working on mental health and substance use together.">
+                <div class="bh-mode-name">Dual Diagnosis</div>
+                <div class="bh-mode-line">When mental health and use are tangled. Both get cared for.</div>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SLEEP CARD -->
+      <section class="bh-section" aria-label="sleep" style="padding-top:0">
+        <div class="bh-sleep-card">
+          <div class="bh-sleep-inner">
+            <div class="bh-sleep-text">
+              <div class="bh-sleep-eyebrow">if it is the middle of the night</div>
+              <h3 class="bh-sleep-title">You are not <em>broken</em>. You are awake at 2am.</h3>
+              <p class="bh-sleep-body">Sleep loss makes everything feel worse than it is. <em>The platform knows this.</em> We can wind you down, walk you through a breath, or just sit with you until your nervous system finds the floor again.</p>
+              <div class="bh-sleep-actions">
+                <button class="bh-sleep-btn" data-prompt="Walk me through a wind-down for sleep right now. I am awake and worried.">Wind me down</button>
+                <button class="bh-sleep-btn outline" data-prompt="Open Sleep Therapy mode. I cannot sleep and I want guided help.">Sleep Therapy mode</button>
+                <button class="bh-sleep-btn outline" data-prompt="Help me build a sleep protocol I can follow nightly.">Build a sleep protocol</button>
+              </div>
+            </div>
+            <div class="bh-sleep-side">
+              <div class="bh-sleep-stat bh-sleep-stat-1">most common 2am search</div>
+              <div class="bh-sleep-moon"></div>
+              <div class="bh-sleep-stat bh-sleep-stat-2">sleep is the<br/>foundation of everything</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECOVERY -->
+      <section class="bh-section" aria-label="recovery" style="padding-top:0">
+        <div class="bh-recovery">
+          <div class="bh-recovery-head">
+            <div class="bh-recovery-eyebrow">recovery</div>
+            <h3 class="bh-recovery-title">Whether it is hour one or year ten. <em>You are in the right place.</em></h3>
+            <p class="bh-recovery-body">Recovery is not willpower. <em>It never was.</em> The platform meets you where you are &mdash; with dignity, privacy, and tools that work. No judgment. Ever.</p>
+          </div>
+          <div class="bh-recovery-grid">
+            <button class="bh-rec-mode" data-prompt="Open Early Sobriety mode. I am in my first days or weeks.">
+              <div class="bh-rec-name">Early Sobriety</div>
+              <div class="bh-rec-line">Day 1. Hour 1. We hold steady.</div>
+            </button>
+            <button class="bh-rec-mode" data-prompt="Open Relapse Prevention mode. I want to stay on the path.">
+              <div class="bh-rec-name">Relapse Prevention</div>
+              <div class="bh-rec-line">Spot the slope before the slip.</div>
+            </button>
+            <button class="bh-rec-mode" data-prompt="Open Harm Reduction mode. I am still using and I want to stay safe.">
+              <div class="bh-rec-name">Harm Reduction</div>
+              <div class="bh-rec-line">Stay alive. Stay informed.</div>
+            </button>
+            <button class="bh-rec-mode" data-prompt="Open 12-Step support mode. I want help working a program.">
+              <div class="bh-rec-name">12-Step</div>
+              <div class="bh-rec-line">AA, NA, and the rooms that work.</div>
+            </button>
+            <button class="bh-rec-mode" data-prompt="Open Family Recovery mode. Someone I love is using.">
+              <div class="bh-rec-name">Family</div>
+              <div class="bh-rec-line">For the people who love someone in it.</div>
+            </button>
+            <button class="bh-rec-mode" data-prompt="Open MAT mode. I want help with medication-assisted treatment.">
+              <div class="bh-rec-name">MAT</div>
+              <div class="bh-rec-line">Medication-assisted. Suboxone, naltrexone, methadone.</div>
+            </button>
+            <button class="bh-rec-mode" data-prompt="Open Milestones mode. I want to mark my time.">
+              <div class="bh-rec-name">Milestones</div>
+              <div class="bh-rec-line">Day 1. Day 30. Year 1. Each one matters.</div>
+            </button>
+          </div>
+          <div class="bh-recovery-foot">
+            <span><strong>Free meeting finders:</strong></span>
+            <a href="https://www.aa.org" target="_blank" rel="noopener">AA</a>
+            <a href="https://www.na.org" target="_blank" rel="noopener">NA</a>
+            <a href="https://www.smartrecovery.org" target="_blank" rel="noopener">SMART Recovery</a>
+            <a href="https://www.nami.org" target="_blank" rel="noopener">NAMI</a>
+            <a href="tel:18006624357">SAMHSA &middot; 1-800-662-4357</a>
+            <a href="tel:18004843731">Never Use Alone &middot; 1-800-484-3731</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- THERAPIST HANDOFF -->
+      <section class="bh-handoff" aria-label="when you are ready for a real person">
+        <div class="bh-handoff-head">
+          <div class="bh-zone-label">when you are ready for a real person</div>
+          <p class="bh-zone-prompt">A licensed clinician. <em>Not a chatbot. Not a friend.</em></p>
+          <p class="bh-zone-sub">Alvai is a bridge. These are the actual humans on the other side of the bridge.</p>
+        </div>
+        <div class="bh-handoff-grid">
+          <button class="bh-handoff-card" data-prompt="Find me a licensed therapist near me using the NPI directory">
+            <div>
+              <div class="bh-handoff-label">in your city</div>
+              <div class="bh-handoff-name">Find a therapist near you</div>
+              <div class="bh-handoff-desc">Searches the federal NPI Registry. 855,432 verified clinicians. Filter by specialty, insurance, distance.</div>
+            </div>
+            <div class="bh-handoff-foot">
+              <span class="bh-handoff-price"><strong>Free to search</strong></span>
+              <span class="bh-handoff-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-handoff-card" data-prompt="Show me BetterHelp online therapy options">
+            <div>
+              <div class="bh-handoff-label">online &middot; ongoing</div>
+              <div class="bh-handoff-name">BetterHelp</div>
+              <div class="bh-handoff-desc">Licensed therapists by video, phone, or text. Match within 48 hours. Insurance and FSA accepted at many plans.</div>
+            </div>
+            <div class="bh-handoff-foot">
+              <span class="bh-handoff-price">From <strong>$60/wk</strong></span>
+              <span class="bh-handoff-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-handoff-card" data-prompt="Show me Talkspace online therapy options">
+            <div>
+              <div class="bh-handoff-label">online &middot; flexible</div>
+              <div class="bh-handoff-name">Talkspace</div>
+              <div class="bh-handoff-desc">Therapy by message, audio, or video. Insurance accepted by many plans. Psychiatry available.</div>
+            </div>
+            <div class="bh-handoff-foot">
+              <span class="bh-handoff-price">From <strong>$70/wk</strong></span>
+              <span class="bh-handoff-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-handoff-card" data-prompt="Show me Open Path low-cost therapy">
+            <div>
+              <div class="bh-handoff-label">low-cost &middot; sliding</div>
+              <div class="bh-handoff-name">Open Path Collective</div>
+              <div class="bh-handoff-desc">Sliding-scale therapy from $40 to $80 per session. One-time membership. Real therapists, real plans.</div>
+            </div>
+            <div class="bh-handoff-foot">
+              <span class="bh-handoff-price">From <strong>$40/session</strong></span>
+              <span class="bh-handoff-arrow">→</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- FELICIA -->
+      <section class="bh-felicia" aria-label="felicia signature">
+        <div class="bh-felicia-eyebrow">a note from your clinical lead</div>
+        <p class="bh-felicia-quote">"You do not have to fix yourself before you ask for help. <em>Asking for help is part of the work.</em>"</p>
+        <div class="bh-felicia-byline">
+          <span class="name">Dr. Felicia Stoler</span>
+          <span class="title">Co-Founder &middot; Chief Clinical Officer &middot; President</span>
+          <span class="creds">DCN &middot; MS &middot; RDN &middot; FACSM &middot; FAND &middot; Dipl. ACLM</span>
+        </div>
+      </section>
+
+      <!-- DOCK -->
+      <section class="bh-dock" aria-label="seven seas">
+        <p class="bh-dock-prompt">Seven rooms. <em>One conversation.</em> Every door connects to every other.</p>
+        <div class="bh-dock-row">
+          <button class="bh-sea" data-route="/">
+            <div class="bh-sea-num">i.</div>
+            <div class="bh-sea-name">Home</div>
+            <div class="bh-sea-line">begin here</div>
+          </button>
+          <button class="bh-sea" data-route="/local">
+            <div class="bh-sea-num">ii.</div>
+            <div class="bh-sea-name">Local</div>
+            <div class="bh-sea-line">care &middot; city</div>
+          </button>
+          <button class="bh-sea current" aria-current="page">
+            <div class="bh-sea-num">iii.</div>
+            <div class="bh-sea-name">Support</div>
+            <div class="bh-sea-line">therapy &middot; sleep</div>
+          </button>
+          <button class="bh-sea" data-route="/learn">
+            <div class="bh-sea-num">iv.</div>
+            <div class="bh-sea-name">Learn</div>
+            <div class="bh-sea-line">science you use</div>
+          </button>
+          <button class="bh-sea" data-route="/supply">
+            <div class="bh-sea-num">v.</div>
+            <div class="bh-sea-name">Supply</div>
+            <div class="bh-sea-line">protocols</div>
+          </button>
+          <button class="bh-sea" data-route="/ecsiq">
+            <div class="bh-sea-num">vi.</div>
+            <div class="bh-sea-name">ECSIQ</div>
+            <div class="bh-sea-line">ECS</div>
+          </button>
+          <button class="bh-sea" data-route="/why">
+            <div class="bh-sea-num">vii.</div>
+            <div class="bh-sea-name">Why BLEU</div>
+            <div class="bh-sea-line">the difference</div>
+          </button>
+        </div>
+      </section>
+
+      <!-- CRISIS PRESERVATION — second appearance, full numbers list -->
+      <section class="bh-preservation" aria-label="if you are in crisis">
+        <p class="bh-preservation-text">If you are in crisis, <em>we step aside</em>. The numbers below connect you to people trained to help. Free. Confidential.</p>
+        <div class="bh-crisis-full">
+          <a class="bh-crisis-line" href="tel:988">
+            <div class="bh-crisis-num">988</div>
+            <div class="bh-crisis-who">Suicide &amp; Crisis Lifeline &middot; 24/7</div>
+          </a>
+          <a class="bh-crisis-line" href="sms:741741?body=HOME">
+            <div class="bh-crisis-num">Text HOME &middot; 741741</div>
+            <div class="bh-crisis-who">Crisis Text Line &middot; 24/7</div>
+          </a>
+          <a class="bh-crisis-line" href="tel:18006624357">
+            <div class="bh-crisis-num">1-800-662-4357</div>
+            <div class="bh-crisis-who">SAMHSA &middot; substance &amp; mental health &middot; 24/7</div>
+          </a>
+          <a class="bh-crisis-line" href="tel:18664887386">
+            <div class="bh-crisis-num">1-866-488-7386</div>
+            <div class="bh-crisis-who">Trevor Project &middot; LGBTQ youth &middot; 24/7</div>
+          </a>
+          <a class="bh-crisis-line" href="tel:18004843731">
+            <div class="bh-crisis-num">1-800-484-3731</div>
+            <div class="bh-crisis-who">Never Use Alone &middot; overdose prevention</div>
+          </a>
+          <a class="bh-crisis-line" href="tel:911">
+            <div class="bh-crisis-num">911</div>
+            <div class="bh-crisis-who">If you or someone is in immediate danger</div>
+          </a>
+        </div>
+      </section>
+
+      <footer class="bh-floor">
+        <div class="bh-floor-mark">bleu<span class="dot">.</span>live<span style="color:var(--ink)">.</span></div>
+        <div class="bh-floor-meta">
+          A clinically governed digital care delivery platform &middot; Patent Pending &middot; &copy; 2026 FLEUR DE BLEUDREAM LLC<br />
+          Created by Bleu Garner &middot; Co-Founder, Chief Clinical Officer &amp; President: Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl. ACLM<br />
+          Alvai uses evidence-based frameworks &middot; Not a substitute for licensed care &middot; <a href="/affiliate-disclosure" style="color:inherit">Affiliate Disclosure</a>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <button class="bh-presence" data-prompt="Alvai &mdash; I want to keep talking" aria-label="Alvai presence">
+    <div class="bh-orb"></div>
+    <span class="bh-presence-label">the room is listening</span>
+  </button>
+</main>
+
+<script>
+/* =========================================================================
+   bleu.live — Support (Sea iii) · DEEP BUILD v1
+   Production hooks (wire on deploy):
+     window.sendPrompt(text)  → routes to Alvai with mode + emotional state
+     window.routeTo(path)
+     window.openMode(modeKey) → switches Alvai engine to specific mode
+   ========================================================================= */
+(function(){
+  'use strict';
+
+  function sendPrompt(text){
+    if (typeof window.sendPrompt === 'function') return window.sendPrompt(text);
+    var input = document.getElementById('alvai-input');
+    if (input) { input.value = text; input.focus(); }
+    console.log('[bleu/support] prompt:', text);
+  }
+  function routeTo(path){
+    if (typeof window.routeTo === 'function') return window.routeTo(path);
+    console.log('[bleu/support] route:', path);
+  }
+
+  // Time-aware contextual phrase — Support is most-used 2am
+  var ctx = document.getElementById('ctx-text');
+  if (ctx) {
+    var hr = new Date().getHours();
+    if (hr >= 0 && hr < 5) ctx.textContent = '2am · we are awake with you';
+    else if (hr < 9) ctx.textContent = 'morning · soft start';
+    else if (hr < 12) ctx.textContent = 'late morning · steady';
+    else if (hr < 14) ctx.textContent = 'midday · check in';
+    else if (hr < 18) ctx.textContent = 'afternoon · slow rise';
+    else if (hr < 21) ctx.textContent = 'evening · day is closing';
+    else ctx.textContent = 'late · softer light';
+  }
+
+  // Whispers — clinical / emotional / scientific drift
+  var pool = {
+    night: [
+      {tag:'clinical',    cls:'physician', text:'Sleep loss changes how the brain interprets emotion. What feels catastrophic at 2am often softens by morning.'},
+      {tag:'observation', cls:'monk',      text:'Awake at this hour does not mean broken. It means your nervous system has not found the floor yet.'},
+      {tag:'wisdom',      cls:'wisdom',    text:'You do not have to solve anything tonight. You only have to make it through to morning.'},
+      {tag:'recognition', cls:'monk',      text:'The body interprets isolation differently after midnight. The list of people you can call is shorter. We are still here.'},
+      {tag:'clinical',    cls:'physician', text:'Anxiety at night is often the day catching up with the body. Not a flaw. A delay.'}
+    ],
+    day: [
+      {tag:'clinical',    cls:'physician', text:'Asking for help is part of the work. It is not a step before the work.'},
+      {tag:'observation', cls:'monk',      text:'The nervous system asks for safety before it can ask for change.'},
+      {tag:'science',     cls:'science',   text:'Eight to twelve weeks of CBT produces measurable changes in the inflammatory pathways linked to chronic disease.'},
+      {tag:'wisdom',      cls:'wisdom',    text:'Grief is love with nowhere to go. There is no wrong way. There is no timeline.'},
+      {tag:'clinical',    cls:'physician', text:'The most accessible clinician you have is often the one you forget exists. The pharmacist. The peer-support volunteer. The 988 counselor.'}
+    ]
+  };
+  var hr2 = new Date().getHours();
+  var deck = (hr2 >= 22 || hr2 < 6) ? pool.night : pool.day;
+  var w = document.getElementById('whisper');
+  var wt = document.getElementById('wtag');
+  var wx = document.getElementById('wtext');
+  var wi = -1;
+  function nextW(){
+    if (!w || !wt || !wx) return;
+    w.classList.remove('show');
+    setTimeout(function(){
+      wi = (wi + 1) % deck.length;
+      var d = deck[wi];
+      wt.textContent = d.tag;
+      wt.className = 'bh-whisper-tag ' + d.cls;
+      wx.textContent = d.text;
+      w.classList.add('show');
+    }, 1500);
+  }
+  setTimeout(nextW, 2000);
+  setInterval(nextW, 9500);
+
+  // Held set
+  var heldDot = document.getElementById('held-dot');
+  var heldLabel = document.getElementById('held-label');
+  var heldCount = 0;
+  function flashHeld(){
+    if (!heldDot || !heldLabel) return;
+    heldCount++;
+    heldDot.classList.remove('pulse');
+    void heldDot.offsetWidth;
+    heldDot.classList.add('pulse');
+    heldLabel.textContent = 'held · ' + heldCount;
+  }
+
+  // Cursor aura
+  var root = document.querySelector('.bh');
+  if (root && window.matchMedia && !window.matchMedia('(hover: none)').matches) {
+    document.addEventListener('mousemove', function(e){
+      var x = (e.clientX / window.innerWidth) * 100;
+      var y = (e.clientY / window.innerHeight) * 100;
+      root.style.setProperty('--mx', x + '%');
+      root.style.setProperty('--my', y + '%');
+    });
+  }
+
+  // Chrome scroll
+  var chrome = document.getElementById('chrome');
+  if (chrome) {
+    var ck = function(){
+      if (window.scrollY > 40) chrome.classList.add('scrolled');
+      else chrome.classList.remove('scrolled');
+    };
+    window.addEventListener('scroll', ck, { passive: true });
+  }
+
+  // Wire prompts and routes
+  document.querySelectorAll('[data-prompt]').forEach(function(node){
+    node.addEventListener('click', function(){
+      var p = node.getAttribute('data-prompt');
+      if (p) sendPrompt(p);
+      if (node.classList.contains('bh-mood') || node.classList.contains('bh-mode') || node.classList.contains('bh-rec-mode') || node.classList.contains('bh-handoff-card') || node.classList.contains('bh-sleep-btn')) flashHeld();
+    });
+  });
+  document.querySelectorAll('[data-route]').forEach(function(node){
+    node.addEventListener('click', function(){
+      var r = node.getAttribute('data-route');
+      if (r) routeTo(r);
+    });
+  });
+  var byId = function(id){ return document.getElementById(id); };
+  if (byId('signin')) byId('signin').addEventListener('click', function(){ routeTo('/signin'); });
+  if (byId('create-top')) byId('create-top').addEventListener('click', function(){ routeTo('/create-account'); });
+
+  // Alvai input
+  var input = document.getElementById('alvai-input');
+  var go = document.getElementById('alvai-go');
+  function submit(){
+    if (!input) return;
+    var v = (input.value || '').trim();
+    if (!v) return;
+    sendPrompt(v);
+    flashHeld();
+    input.value = '';
+  }
+  if (go) go.addEventListener('click', submit);
+  if (input) input.addEventListener('keydown', function(e){ if (e.key === 'Enter') submit(); });
+})();
+</script>
+
+  <script src="/js/bleu-prod-hooks.js" defer></script>
+</body>
+</html>

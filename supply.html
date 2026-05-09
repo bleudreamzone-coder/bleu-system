@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#fcf8ef" />
+
+<title>bleu.live — Supply · tools you can buy, safety you cannot</title>
+
+<meta name="description" content="Tools you can buy. Safety you cannot. Protocol bundles, practitioner dispensary, sourcing — every product checked against your medications first. Free safety engine. 302K interaction pairs." />
+<meta name="author" content="Bleu Garner · Dr. Felicia Stoler, DCN" />
+<meta property="og:title" content="bleu.live — Supply · tools you can buy" />
+<meta property="og:description" content="Safety you cannot." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://bleu.live/supply" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* =========================================================================
+   bleu.live — Supply (Sea v) · DEEP BUILD
+   v1 · 2026-05-09
+   The opening line: "Tools you can buy. Safety you cannot."
+   The CYP450 safety engine bookends the page — first and last surface.
+   Stripe price IDs are locked. Fullscript fstoler. Amazon bleulive20-20.
+   Wall held: ECS not cannabis. Cannabis lives in Sea vi (ECSIQ).
+   Every button is wired. Alvai is the unifier.
+   ========================================================================= */
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#fcf8ef;color:#181714;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;overflow-x:hidden;
+}
+
+.bh{
+  --ink:#181714;--ink-soft:#4b4942;--ink-faint:#807a6f;--ink-whisper:#a8a299;
+  --cream:#faf6ee;--cream-warm:#f4ecd9;--cream-deep:#e8dcc0;--paper:#fffaf1;
+  --blue:#3878E0;--blue-soft:#5B9BFF;--blue-deep:#2156A8;
+  --gold:#c9a227;--gold-soft:#e6cb74;
+  --purple:#4B1E82;--purple-soft:#7c4ab8;
+  --teal:#2f8a83;--coral:#c95f4a;--moss:#5b8c7b;
+  --display:'Fraunces',Georgia,serif;
+  --body:'Inter',-apple-system,sans-serif;
+  position:relative;min-height:100vh;
+  /* Supply gradient: cream into a soft teal — the trust sea */
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(47,138,131,.06),transparent 55%),
+    radial-gradient(ellipse at 80% 70%,rgba(201,162,39,.04),transparent 60%),
+    linear-gradient(180deg,#fcf8ef 0%,#f4eedb 30%,#eee5cc 60%,#f4eedb 85%,#fcf8ef 100%);
+  color:var(--ink);font-family:var(--body);line-height:1.6;
+}
+
+.bh-ripple-field{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bh-ripple-field svg{
+  position:absolute;left:50%;top:30%;transform:translate(-50%,-50%);
+  width:140vw;max-width:1700px;height:auto;opacity:.45;
+}
+.bh::before{
+  content:"";position:fixed;inset:0;
+  background:radial-gradient(ellipse 800px 400px at var(--mx,50%) var(--my,30%),rgba(47,138,131,.07),transparent 70%);
+  pointer-events:none;transition:background 1.4s ease;z-index:1;
+}
+.bh-aura{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(47,138,131,.05) 0%,transparent 35%),
+    radial-gradient(circle at 70% 60%,rgba(201,162,39,.04) 0%,transparent 40%);
+  animation:drift 30s ease-in-out infinite alternate;
+}
+@keyframes drift{
+  0%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-2%,1%) scale(1.02)}
+  100%{transform:translate(1%,-1%) scale(.99)}
+}
+.bh-content{position:relative;z-index:2}
+
+/* CHROME */
+.bh-chrome{
+  position:sticky;top:0;z-index:40;
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(252,248,239,0);backdrop-filter:blur(0px);
+  transition:all .8s ease;border-bottom:0.5px solid transparent;gap:14px;
+}
+.bh-chrome.scrolled{
+  background:rgba(252,248,239,.85);
+  backdrop-filter:saturate(140%) blur(20px);
+  -webkit-backdrop-filter:saturate(140%) blur(20px);
+  border-bottom:0.5px solid rgba(232,220,192,.6);
+}
+.bh-mark-group{display:flex;align-items:center;gap:14px;min-width:0;flex-shrink:0}
+.bh-mark{
+  font-family:var(--display);font-size:18px;font-weight:300;letter-spacing:-.02em;
+  color:var(--ink);position:relative;cursor:pointer;
+  text-decoration:none;transition:.4s ease;
+}
+.bh-mark .heartbeat{
+  display:inline-block;color:var(--blue);font-weight:400;
+  animation:heartbeat 4s ease-in-out infinite;
+}
+@keyframes heartbeat{
+  0%,40%,100%{transform:scale(1);text-shadow:0 0 0 rgba(56,120,224,0)}
+  50%{transform:scale(1.18);text-shadow:0 0 18px rgba(56,120,224,.55)}
+  60%{transform:scale(1.05);text-shadow:0 0 8px rgba(56,120,224,.3)}
+}
+.bh-context{
+  font-size:10px;color:var(--ink-whisper);font-weight:400;letter-spacing:.16em;
+  text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  opacity:0;animation:rise .9s ease-out .2s forwards;cursor:default;
+}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.bh-context-dot{
+  width:4px;height:4px;border-radius:50%;background:var(--teal);opacity:.8;
+  animation:contextPulse 4s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes contextPulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+.bh-numerals{
+  display:flex;gap:2px;align-items:center;
+  font-family:var(--display);font-style:italic;font-size:11px;
+  color:var(--ink-faint);font-weight:400;letter-spacing:.04em;
+}
+.bh-numeral{
+  background:none;border:0;color:var(--ink-faint);
+  font-family:inherit;font-size:inherit;font-style:inherit;
+  font-weight:inherit;letter-spacing:inherit;
+  padding:5px 8px;cursor:pointer;border-radius:50%;
+  transition:.4s ease;width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.bh-numeral:hover{color:var(--ink);background:rgba(232,220,192,.5)}
+.bh-numeral.active{color:var(--teal);font-weight:500}
+.bh-numeral.active::after{
+  content:"";position:absolute;bottom:1px;left:50%;
+  transform:translateX(-50%);width:3px;height:3px;
+  border-radius:50%;background:var(--teal);opacity:.8;
+}
+.bh-numeral-tip{
+  position:absolute;top:32px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--cream);padding:5px 10px;border-radius:6px;
+  font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  font-style:normal;white-space:nowrap;opacity:0;pointer-events:none;
+  transition:.3s ease;z-index:50;
+}
+.bh-numeral:hover .bh-numeral-tip{opacity:1;transform:translateX(-50%) translateY(2px)}
+.bh-numeral-tip::before{
+  content:"";position:absolute;top:-4px;left:50%;transform:translateX(-50%);
+  border-left:4px solid transparent;border-right:4px solid transparent;
+  border-bottom:4px solid var(--ink);
+}
+
+.bh-chrome-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.bh-signin{
+  font-family:var(--body);font-size:11px;color:var(--ink-soft);
+  font-weight:500;letter-spacing:.06em;background:none;border:0;
+  cursor:pointer;padding:6px 10px;border-radius:999px;transition:.4s ease;
+}
+.bh-signin:hover{color:var(--ink);background:rgba(232,220,192,.45)}
+.bh-create{
+  font-family:var(--body);font-size:11px;font-weight:500;letter-spacing:.06em;
+  cursor:pointer;padding:7px 14px;border-radius:999px;
+  background:var(--ink);color:var(--cream);border:0;transition:.4s ease;
+  white-space:nowrap;
+}
+.bh-create:hover{background:var(--purple);transform:translateY(-1px)}
+.bh-held{
+  display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-soft);
+  letter-spacing:.06em;cursor:pointer;padding:6px 12px;border-radius:999px;
+  background:rgba(255,250,241,.45);border:0.5px solid rgba(232,220,192,.5);
+  transition:.4s ease;font-family:var(--body);
+}
+.bh-held:hover{background:rgba(255,250,241,.85);border-color:var(--cream-deep)}
+.bh-held-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.7}
+.bh-held-dot.pulse{animation:heldPulse 1.6s ease-out}
+@keyframes heldPulse{
+  0%{transform:scale(1);opacity:.7}
+  30%{transform:scale(2.4);opacity:1;box-shadow:0 0 0 3px rgba(201,162,39,.2)}
+  100%{transform:scale(1);opacity:.7}
+}
+
+/* HERO */
+.bh-surface{padding:36px 22px 22px;text-align:center;position:relative}
+.bh-sea-id{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--display);font-style:italic;
+  font-size:12px;color:var(--teal);font-weight:400;
+  letter-spacing:.04em;margin-bottom:12px;
+  opacity:0;animation:rise 1s ease-out .3s forwards;
+  position:relative;z-index:3;
+}
+.bh-sea-id::before,.bh-sea-id::after{
+  content:"";width:18px;height:0.5px;background:var(--teal);opacity:.5;
+}
+.bh-bigmark{
+  font-family:var(--display);font-weight:200;
+  font-size:clamp(26px,4vw,40px);letter-spacing:-.04em;line-height:1;
+  color:var(--ink-soft);position:relative;z-index:3;margin-bottom:14px;
+  opacity:0;animation:rise 1s ease-out .35s forwards;
+}
+.bh-bigmark .dot{
+  color:var(--blue);font-weight:300;display:inline-block;
+  animation:dotbreath 5s ease-in-out infinite;
+}
+.bh-bigmark .end{color:var(--ink-soft)}
+@keyframes dotbreath{
+  0%,100%{opacity:.85;transform:scale(1);text-shadow:0 0 18px rgba(56,120,224,.3)}
+  50%{opacity:1;transform:scale(1.1);text-shadow:0 0 38px rgba(56,120,224,.55)}
+}
+.bh-opening{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(17px,2.4vw,22px);line-height:1.45;
+  color:var(--ink);max-width:620px;margin:0 auto 20px;
+  letter-spacing:-.005em;position:relative;z-index:3;
+  opacity:0;animation:rise 1s ease-out .45s forwards;
+}
+.bh-opening em{font-style:italic;color:var(--teal);font-weight:400}
+
+/* SAFETY ENGINE LEAD CARD — the architectural lead */
+.bh-safety-lead{
+  max-width:780px;margin:0 auto 22px;padding:22px 24px;
+  background:linear-gradient(135deg,rgba(47,138,131,.1),rgba(47,138,131,.04));
+  border:0.5px solid rgba(47,138,131,.35);border-radius:18px;
+  display:flex;align-items:center;gap:18px;position:relative;z-index:3;
+  box-shadow:0 18px 36px -22px rgba(47,138,131,.3);
+  opacity:0;animation:rise 1s ease-out .55s forwards;
+}
+.bh-safety-shield{
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,#3da89f,#2f8a83 60%,#1f6660);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px -4px rgba(47,138,131,.5),inset 0 1px 1px rgba(255,255,255,.3);
+  position:relative;
+}
+.bh-safety-shield::after{
+  content:"";position:absolute;inset:-5px;border-radius:18px;
+  border:0.5px solid rgba(47,138,131,.4);
+  animation:safetyHalo 4s ease-in-out infinite;
+}
+@keyframes safetyHalo{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.1);opacity:.1}}
+.bh-safety-shield svg{position:relative;z-index:1}
+.bh-safety-text{flex:1;text-align:left;min-width:0}
+.bh-safety-label{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:5px;
+}
+.bh-safety-title{
+  font-family:var(--display);font-weight:380;font-size:18px;
+  letter-spacing:-.018em;color:var(--ink);line-height:1.25;margin-bottom:5px;
+}
+.bh-safety-title em{font-style:italic;color:var(--teal);font-weight:400}
+.bh-safety-sub{
+  font-size:12px;color:var(--ink-faint);font-weight:400;
+  letter-spacing:.01em;line-height:1.5;
+}
+.bh-safety-sub strong{color:var(--ink-soft);font-weight:500}
+.bh-safety-cta{
+  font-family:var(--body);font-size:11.5px;font-weight:500;letter-spacing:.04em;
+  background:var(--teal);color:#fff;border:0;
+  padding:10px 18px;border-radius:999px;cursor:pointer;
+  transition:.3s ease;white-space:nowrap;flex-shrink:0;
+}
+.bh-safety-cta:hover{background:#1f6660;transform:translateY(-1px)}
+
+/* ALVAI INPUT */
+.bh-input-shell{
+  position:relative;z-index:3;width:100%;max-width:620px;margin:0 auto;
+  opacity:0;animation:rise 1s ease-out .8s forwards;
+}
+.bh-input-wrap{position:relative}
+.bh-input{
+  width:100%;padding:18px 56px 18px 24px;
+  border:0.5px solid rgba(232,220,192,.7);border-radius:999px;
+  background:rgba(255,250,241,.94);backdrop-filter:blur(8px);
+  font-size:16px;line-height:1.6;color:var(--ink);
+  font-family:var(--body);font-weight:400;outline:none;
+  transition:.5s cubic-bezier(.2,.8,.3,1);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 16px 40px -28px rgba(15,28,46,.18);
+}
+.bh-input::placeholder{color:var(--ink-faint);font-style:italic;font-weight:300}
+.bh-input:focus{
+  border-color:rgba(47,138,131,.4);background:rgba(255,250,241,1);
+  box-shadow:
+    0 0 0 5px rgba(47,138,131,.07),
+    0 1px 0 rgba(255,255,255,.7) inset,
+    0 24px 56px -28px rgba(47,138,131,.22);
+}
+.bh-input-go{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:38px;height:38px;border-radius:50%;
+  background:var(--ink);color:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:0;transition:.4s ease;
+}
+.bh-input-go:hover{background:var(--teal);transform:translateY(-50%) scale(1.06)}
+
+.bh-chips{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:14px;
+  opacity:0;animation:rise 1s ease-out 1.05s forwards;
+}
+.bh-chip{
+  font-family:var(--body);font-size:12.5px;font-weight:400;color:var(--ink-soft);
+  background:rgba(255,250,241,.55);
+  border:0.5px solid rgba(232,220,192,.6);border-radius:999px;
+  padding:8px 14px;cursor:pointer;
+  transition:.35s cubic-bezier(.2,.8,.3,1);
+  white-space:nowrap;letter-spacing:.005em;
+}
+.bh-chip:hover{
+  background:var(--ink);color:var(--cream);border-color:var(--ink);
+  transform:translateY(-2px);box-shadow:0 12px 24px -14px rgba(15,28,46,.4);
+}
+.bh-chip-quiet{color:var(--ink-faint);font-style:italic}
+.bh-chip-quiet:hover{font-style:normal}
+
+.bh-trust-row{
+  display:flex;justify-content:center;align-items:center;gap:14px;
+  margin-top:18px;flex-wrap:wrap;
+  font-size:10.5px;color:var(--ink-faint);font-weight:500;letter-spacing:.06em;
+  opacity:0;animation:rise 1s ease-out 1.3s forwards;
+}
+.bh-trust-row .tdot{width:3px;height:3px;border-radius:50%;background:var(--ink-faint);opacity:.5}
+.bh-trust-strong{color:var(--ink-soft);font-weight:500}
+
+/* WHISPERS */
+.bh-whispers-band{
+  max-width:780px;margin:24px auto 0;min-height:46px;
+  display:flex;align-items:center;justify-content:center;padding:0 22px;
+  opacity:0;animation:rise 1s ease-out 1.55s forwards;
+}
+.bh-whisper{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:13.5px;line-height:1.5;letter-spacing:-.005em;
+  color:var(--ink-faint);text-align:center;max-width:560px;
+  opacity:0;transition:opacity 1.4s ease;
+}
+.bh-whisper.show{opacity:1}
+.bh-whisper-tag{
+  font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-right:9px;opacity:.7;
+}
+.bh-whisper-tag.physician{color:var(--gold)}
+.bh-whisper-tag.monk{color:var(--purple)}
+.bh-whisper-tag.science{color:var(--teal)}
+.bh-whisper-tag.lineage{color:var(--coral)}
+.bh-whisper-tag.wisdom{color:var(--moss)}
+
+.bh-flow{padding:0 22px}
+.bh-section{max-width:1080px;margin:0 auto;padding:48px 0 24px}
+.bh-section-frame{text-align:center;margin-bottom:28px}
+.bh-zone-label{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:12px;
+  display:inline-flex;align-items:center;gap:14px;
+}
+.bh-zone-label::before,.bh-zone-label::after{
+  content:"";width:24px;height:0.5px;background:var(--teal);opacity:.5;
+}
+.bh-zone-prompt{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(18px,2.6vw,26px);line-height:1.3;letter-spacing:-.015em;
+  color:var(--ink);max-width:600px;margin:0 auto;
+}
+.bh-zone-prompt em{font-style:italic;color:var(--teal);font-weight:400}
+.bh-zone-sub{
+  font-family:var(--body);font-size:13px;color:var(--ink-faint);
+  max-width:580px;margin:10px auto 0;line-height:1.55;
+}
+
+/* PROTOCOL BUNDLES — owned products, real Stripe price IDs */
+.bh-protocols{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px;
+}
+.bh-protocol{
+  background:rgba(255,250,241,.85);
+  border:0.5px solid rgba(232,220,192,.6);border-radius:18px;
+  padding:24px 20px 20px;
+  font-family:var(--body);transition:.4s ease;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  box-shadow:0 14px 32px -24px rgba(15,28,46,.18);
+}
+.bh-protocol:hover{
+  border-color:rgba(47,138,131,.4);transform:translateY(-3px);
+  box-shadow:0 22px 44px -22px rgba(47,138,131,.3);
+}
+.bh-protocol-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.bh-protocol-eyebrow::before{
+  content:"";width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.7;
+}
+.bh-protocol-name{
+  font-family:var(--display);font-weight:400;font-size:22px;
+  letter-spacing:-.025em;color:var(--ink);margin-bottom:6px;line-height:1;
+}
+.bh-protocol-tagline{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:13px;line-height:1.45;color:var(--ink-soft);margin-bottom:14px;
+}
+.bh-protocol-includes{
+  font-size:11px;color:var(--ink-faint);font-weight:400;
+  line-height:1.55;margin-bottom:14px;flex:1;
+  padding-top:12px;border-top:0.5px solid rgba(232,220,192,.5);
+}
+.bh-protocol-includes strong{color:var(--ink-soft);font-weight:500}
+.bh-protocol-price{
+  display:flex;align-items:baseline;gap:6px;margin-bottom:12px;
+}
+.bh-protocol-price-num{
+  font-family:var(--display);font-weight:400;font-size:30px;
+  color:var(--ink);letter-spacing:-.025em;line-height:1;
+}
+.bh-protocol-price-unit{
+  font-size:11.5px;color:var(--ink-faint);font-weight:400;letter-spacing:.04em;
+}
+.bh-protocol-cta{
+  font-family:var(--body);font-size:12px;font-weight:500;letter-spacing:.04em;
+  background:var(--ink);color:var(--cream);
+  border:0;padding:12px 0;border-radius:12px;cursor:pointer;
+  transition:.3s ease;width:100%;
+}
+.bh-protocol-cta:hover{background:var(--teal);transform:translateY(-1px)}
+.bh-protocol-foot{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:8px;font-size:10px;color:var(--ink-faint);letter-spacing:.04em;
+}
+.bh-protocol-cancel{font-style:italic}
+.bh-protocol-safety{color:var(--teal);font-weight:500}
+
+/* FULLSCRIPT — practitioner dispensary */
+.bh-fullscript{
+  max-width:1080px;margin:36px auto 0;padding:32px 28px;
+  background:linear-gradient(135deg,rgba(75,30,130,.05),rgba(124,74,184,.03));
+  border:0.5px solid rgba(75,30,130,.2);border-radius:24px;
+  position:relative;overflow:hidden;
+}
+.bh-fullscript::before{
+  content:"";position:absolute;top:-30%;right:-5%;width:340px;height:340px;
+  border-radius:50%;background:radial-gradient(circle,rgba(75,30,130,.06),transparent 60%);
+  pointer-events:none;
+}
+.bh-fs-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1.4fr;gap:32px}
+.bh-fs-text{}
+.bh-fs-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:14px;
+  display:inline-flex;align-items:center;gap:14px;
+}
+.bh-fs-eyebrow::before{
+  content:"";width:24px;height:0.5px;background:var(--purple);opacity:.6;
+}
+.bh-fs-title{
+  font-family:var(--display);font-weight:300;font-size:clamp(22px,2.8vw,28px);
+  letter-spacing:-.025em;line-height:1.2;color:var(--ink);margin-bottom:12px;
+}
+.bh-fs-title em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-fs-body{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:14.5px;line-height:1.6;color:var(--ink-soft);margin-bottom:16px;
+}
+.bh-fs-body em{font-style:italic;color:var(--ink);font-weight:400}
+.bh-fs-byline{
+  font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-faint);line-height:1.7;margin-bottom:18px;
+}
+.bh-fs-byline strong{color:var(--ink-soft);font-weight:500}
+.bh-fs-byline em{color:var(--purple);font-weight:600;font-style:normal;letter-spacing:.16em}
+.bh-fs-cta{
+  font-family:var(--body);font-size:12px;font-weight:500;letter-spacing:.04em;
+  background:var(--purple);color:#fff;border:0;
+  padding:12px 22px;border-radius:999px;cursor:pointer;
+  transition:.3s ease;
+}
+.bh-fs-cta:hover{background:var(--ink);transform:translateY(-1px)}
+.bh-fs-plans{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.bh-fs-plan{
+  background:rgba(255,250,241,.7);
+  border:0.5px solid rgba(75,30,130,.15);border-radius:12px;
+  padding:14px 16px;cursor:pointer;
+  font-family:var(--body);transition:.3s ease;text-align:left;
+}
+.bh-fs-plan:hover{background:var(--paper);border-color:var(--purple);transform:translateY(-2px)}
+.bh-fs-plan-name{
+  font-family:var(--display);font-weight:400;font-size:14px;
+  color:var(--ink);letter-spacing:-.01em;margin-bottom:3px;
+}
+.bh-fs-plan-line{font-size:11px;color:var(--ink-faint);line-height:1.4;font-weight:400}
+
+/* AMAZON SOURCING — disclosed mass-market path */
+.bh-sourcing{
+  max-width:1080px;margin:36px auto 0;padding:32px 28px;
+  background:rgba(255,250,241,.6);
+  border:0.5px solid rgba(232,220,192,.55);border-radius:24px;
+}
+.bh-sourcing-head{margin-bottom:22px;text-align:center}
+.bh-sourcing-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;
+  display:inline-flex;align-items:center;gap:14px;
+}
+.bh-sourcing-eyebrow::before,.bh-sourcing-eyebrow::after{
+  content:"";width:24px;height:0.5px;background:var(--gold);opacity:.5;
+}
+.bh-sourcing-title{
+  font-family:var(--display);font-weight:300;font-size:clamp(20px,2.6vw,26px);
+  letter-spacing:-.025em;line-height:1.2;color:var(--ink);margin-bottom:8px;
+}
+.bh-sourcing-title em{font-style:italic;color:var(--gold);font-weight:400}
+.bh-sourcing-body{
+  font-family:var(--body);font-size:13.5px;line-height:1.55;color:var(--ink-faint);
+  max-width:560px;margin:0 auto;
+}
+.bh-sourcing-body strong{color:var(--ink-soft);font-weight:500}
+.bh-sourcing-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;
+  margin-top:20px;
+}
+.bh-source-cat{
+  background:rgba(255,250,241,.7);
+  border:0.5px solid rgba(232,220,192,.55);border-radius:12px;
+  padding:14px 16px;cursor:pointer;
+  font-family:var(--body);transition:.3s ease;text-align:left;
+}
+.bh-source-cat:hover{background:var(--paper);transform:translateY(-2px);border-color:var(--gold)}
+.bh-source-cat-name{
+  font-family:var(--display);font-weight:400;font-size:14px;
+  color:var(--ink);letter-spacing:-.01em;margin-bottom:3px;
+}
+.bh-source-cat-line{font-size:11px;color:var(--ink-faint);line-height:1.4;font-weight:400}
+.bh-sourcing-foot{
+  display:flex;justify-content:center;align-items:center;gap:14px;
+  margin-top:18px;font-size:11px;color:var(--ink-faint);letter-spacing:.04em;
+  flex-wrap:wrap;text-align:center;font-style:italic;
+}
+
+/* AFFILIATE PRIORITY DOCTRINE — five tiers visible */
+.bh-priority{
+  max-width:1080px;margin:36px auto 0;padding:32px 28px;
+}
+.bh-priority-head{text-align:center;margin-bottom:24px}
+.bh-priority-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
+  background:rgba(232,220,192,.5);
+  border:0.5px solid rgba(232,220,192,.5);
+  border-radius:18px;overflow:hidden;
+}
+.bh-pri{
+  background:rgba(255,250,241,.7);padding:18px 14px;
+  font-family:var(--body);text-align:center;
+}
+.bh-pri-num{
+  font-family:var(--display);font-style:italic;font-weight:400;
+  font-size:13px;color:var(--gold);margin-bottom:6px;
+}
+.bh-pri-name{
+  font-family:var(--display);font-weight:400;font-size:14px;
+  color:var(--ink);letter-spacing:-.01em;margin-bottom:5px;
+}
+.bh-pri-line{
+  font-size:10.5px;color:var(--ink-faint);font-weight:400;
+  line-height:1.5;
+}
+
+/* TRUST BAND — Working Rules made visible */
+.bh-trust-band{
+  max-width:780px;margin:36px auto 0;padding:24px 28px;
+  background:linear-gradient(135deg,rgba(255,250,241,.85),rgba(244,236,217,.55));
+  border:0.5px solid rgba(201,162,39,.3);border-radius:18px;
+  text-align:center;
+}
+.bh-trust-band-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;
+}
+.bh-trust-band-quote{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(15px,2vw,18px);line-height:1.55;color:var(--ink);
+  max-width:580px;margin:0 auto 14px;
+}
+.bh-trust-band-quote em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-trust-band-sub{
+  font-size:10.5px;color:var(--ink-faint);font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.bh-trust-band-sub a{color:inherit;text-decoration:none;border-bottom:0.5px solid currentColor;padding-bottom:1px}
+.bh-trust-band-sub a:hover{color:var(--ink)}
+
+/* FELICIA SIGNATURE */
+.bh-felicia{max-width:760px;margin:36px auto 0;padding:32px 22px;text-align:center}
+.bh-felicia-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:18px;
+  display:inline-flex;align-items:center;gap:14px;
+}
+.bh-felicia-eyebrow::before,.bh-felicia-eyebrow::after{
+  content:"";width:32px;height:0.5px;background:var(--gold);opacity:.6;
+}
+.bh-felicia-quote{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(18px,2.5vw,24px);line-height:1.45;letter-spacing:-.015em;
+  color:var(--ink);max-width:620px;margin:0 auto 22px;
+}
+.bh-felicia-quote em{font-style:italic;color:var(--purple);font-weight:400}
+.bh-felicia-byline{
+  font-size:10.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-faint);line-height:1.9;
+}
+.bh-felicia-byline .name{color:var(--ink-soft)}
+.bh-felicia-byline .title{
+  display:block;font-size:11px;letter-spacing:.16em;
+  color:var(--gold);font-weight:600;margin-top:4px;
+}
+.bh-felicia-byline .creds{
+  display:block;font-size:9.5px;letter-spacing:.14em;
+  color:var(--ink-whisper);margin-top:4px;
+}
+
+/* SAFETY ENGINE FOOTER STRIP — second appearance, page bookend */
+.bh-safety-foot{
+  max-width:1080px;margin:36px auto 0;padding:24px 28px;
+  background:linear-gradient(135deg,rgba(47,138,131,.06),rgba(47,138,131,.02));
+  border:0.5px solid rgba(47,138,131,.25);border-radius:18px;
+  display:flex;align-items:center;gap:18px;
+}
+.bh-safety-foot-icon{
+  width:42px;height:42px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,#3da89f,#2f8a83);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px -2px rgba(47,138,131,.4);
+}
+.bh-safety-foot-text{flex:1;min-width:0}
+.bh-safety-foot-title{
+  font-family:var(--display);font-weight:380;font-size:15px;
+  color:var(--ink);letter-spacing:-.01em;line-height:1.3;margin-bottom:3px;
+}
+.bh-safety-foot-title em{font-style:italic;color:var(--teal);font-weight:400}
+.bh-safety-foot-sub{
+  font-size:11.5px;color:var(--ink-faint);font-weight:400;line-height:1.45;
+}
+.bh-safety-foot-cta{
+  font-family:var(--body);font-size:11.5px;font-weight:500;letter-spacing:.04em;
+  background:transparent;color:var(--teal);
+  border:0.5px solid var(--teal);padding:9px 16px;border-radius:999px;
+  cursor:pointer;transition:.3s ease;white-space:nowrap;flex-shrink:0;
+}
+.bh-safety-foot-cta:hover{background:var(--teal);color:#fff}
+
+/* DOCK */
+.bh-dock{max-width:1080px;margin:48px auto 0;padding:32px 0 24px;text-align:center}
+.bh-dock-prompt{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:clamp(19px,2.6vw,26px);line-height:1.3;letter-spacing:-.015em;
+  color:var(--ink);max-width:600px;margin:0 auto 22px;
+}
+.bh-dock-prompt em{font-style:italic;color:var(--teal);font-weight:400}
+.bh-dock-row{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:0;
+  border-top:0.5px solid rgba(232,220,192,.5);
+  border-bottom:0.5px solid rgba(232,220,192,.5);
+}
+.bh-sea{
+  flex:1;min-width:118px;padding:20px 12px;cursor:pointer;
+  background:transparent;border:0;
+  border-right:0.5px solid rgba(232,220,192,.4);
+  font-family:var(--body);transition:.4s ease;
+  text-align:center;position:relative;overflow:hidden;
+}
+.bh-sea:last-child{border-right:0}
+.bh-sea::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent,rgba(47,138,131,.05));
+  opacity:0;transition:.5s ease;
+}
+.bh-sea:hover::before{opacity:1}
+.bh-sea:hover{background:rgba(255,250,241,.5)}
+.bh-sea.current{background:rgba(232,220,192,.3)}
+.bh-sea-num{
+  font-family:var(--display);font-style:italic;font-size:10px;
+  color:var(--gold);opacity:.6;margin-bottom:5px;position:relative;z-index:1;
+}
+.bh-sea-name{
+  font-family:var(--display);font-weight:380;font-size:17px;
+  letter-spacing:-.018em;color:var(--ink);margin-bottom:3px;
+  position:relative;z-index:1;
+}
+.bh-sea-line{
+  font-size:9.5px;color:var(--ink-faint);font-weight:400;
+  letter-spacing:.04em;line-height:1.4;position:relative;z-index:1;
+}
+
+/* CRISIS PRESERVATION */
+.bh-preservation{max-width:640px;margin:0 auto;padding:28px 22px 24px;text-align:center}
+.bh-preservation-text{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:14.5px;line-height:1.6;color:var(--ink-soft);margin-bottom:14px;
+}
+.bh-preservation-text em{font-style:italic;color:var(--ink);font-weight:400}
+.bh-crisis{display:flex;flex-wrap:wrap;justify-content:center;gap:5px}
+.bh-crisis a{
+  text-decoration:none;font-size:10px;font-weight:500;letter-spacing:.06em;
+  color:var(--ink-soft);padding:5px 11px;border-radius:999px;
+  background:rgba(255,250,241,.5);
+  border:0.5px solid rgba(232,220,192,.5);
+  transition:.4s ease;
+}
+.bh-crisis a:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+
+/* FOOTER */
+.bh-floor{
+  padding:26px 22px 22px;
+  border-top:0.5px solid rgba(232,220,192,.4);
+  display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+  flex-wrap:wrap;font-size:10px;color:var(--ink-faint);letter-spacing:.04em;
+}
+.bh-floor-mark{
+  font-family:var(--display);font-size:13px;font-weight:300;
+  color:var(--ink-soft);letter-spacing:-.02em;
+}
+.bh-floor-mark .dot{color:var(--blue)}
+.bh-floor-meta{text-align:right;line-height:1.7;font-size:9.5px;letter-spacing:.05em}
+
+/* PRESENCE */
+.bh-presence{
+  position:fixed;bottom:18px;right:18px;z-index:50;
+  display:flex;align-items:center;gap:0;cursor:pointer;
+  background:transparent;border:0;font-family:var(--body);padding:0;
+  transition:.5s ease;
+}
+.bh-orb{
+  width:42px;height:42px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#5fcec4,#2f8a83 60%,#1a5650 100%);
+  position:relative;flex-shrink:0;
+  box-shadow:0 12px 36px -12px rgba(47,138,131,.5),inset 0 1px 1px rgba(255,255,255,.4);
+  transition:.4s ease;
+}
+.bh-orb::before{
+  content:"";position:absolute;inset:-7px;border-radius:50%;
+  border:0.5px solid rgba(47,138,131,.3);
+  animation:halo1 5s ease-in-out infinite;
+}
+.bh-orb::after{
+  content:"";position:absolute;inset:-14px;border-radius:50%;
+  border:0.5px solid rgba(47,138,131,.18);
+  animation:halo2 5s ease-in-out infinite;
+}
+@keyframes halo1{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.25);opacity:.1}}
+@keyframes halo2{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.4);opacity:0}}
+.bh-presence-label{
+  margin-left:0;padding:0;font-size:0;overflow:hidden;
+  color:var(--ink-soft);font-weight:400;letter-spacing:.04em;
+  white-space:nowrap;transition:.5s cubic-bezier(.2,.8,.3,1);opacity:0;
+}
+.bh-presence:hover .bh-presence-label{font-size:12px;padding:0 14px 0 11px;opacity:1}
+.bh-presence:hover .bh-orb{transform:scale(1.05)}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* RESPONSIVE */
+@media(max-width:880px){
+  .bh-protocols{grid-template-columns:repeat(2,1fr)}
+  .bh-fs-inner{grid-template-columns:1fr;gap:24px}
+  .bh-priority-grid{grid-template-columns:repeat(3,1fr)}
+  .bh-pri:nth-child(4),.bh-pri:nth-child(5){border-top:0.5px solid rgba(232,220,192,.4)}
+  .bh-sea{min-width:33%;border-bottom:0.5px solid rgba(232,220,192,.4)}
+  .bh-context,.bh-signin{display:none}
+  .bh-bigmark{font-size:24px}
+  .bh-safety-lead{flex-wrap:wrap;text-align:center}
+  .bh-safety-text{text-align:center;width:100%}
+  .bh-safety-foot{flex-wrap:wrap;text-align:center}
+}
+@media(max-width:560px){
+  .bh-protocols{grid-template-columns:1fr}
+  .bh-priority-grid{grid-template-columns:1fr}
+  .bh-fs-plans{grid-template-columns:1fr}
+  .bh-sea{min-width:50%}
+  .bh-input{padding:15px 50px 15px 19px;font-size:15px}
+  .bh-presence-label{display:none}
+  .bh-numerals{display:none}
+  .bh-bigmark{font-size:22px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="bh">
+  <div class="bh-aura"></div>
+  <div class="bh-ripple-field" aria-hidden="true">
+    <svg viewBox="0 0 1700 800" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="rg-field" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#3da89f" stop-opacity="0.16"/>
+          <stop offset="60%" stop-color="#2f8a83" stop-opacity="0.05"/>
+          <stop offset="100%" stop-color="#2f8a83" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="850" cy="400" rx="780" ry="320" fill="none" stroke="#3da89f" stroke-width="0.5" opacity="0.1"><animate attributeName="opacity" values="0.1;0.18;0.1" dur="16s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="850" cy="400" rx="560" ry="220" fill="none" stroke="#3da89f" stroke-width="0.5" opacity="0.13"><animate attributeName="opacity" values="0.13;0.22;0.13" dur="16s" begin="2s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="850" cy="400" rx="360" ry="140" fill="none" stroke="#3da89f" stroke-width="0.5" opacity="0.18"><animate attributeName="opacity" values="0.18;0.28;0.18" dur="16s" begin="4s" repeatCount="indefinite"/></ellipse>
+      <ellipse cx="850" cy="400" rx="180" ry="70" fill="none" stroke="#3da89f" stroke-width="0.5" opacity="0.24"><animate attributeName="opacity" values="0.24;0.34;0.24" dur="16s" begin="6s" repeatCount="indefinite"/></ellipse>
+      <circle cx="850" cy="400" r="55" fill="url(#rg-field)" opacity="0.6"/>
+    </svg>
+  </div>
+
+  <div class="bh-content">
+
+    <header class="bh-chrome" id="chrome">
+      <div class="bh-mark-group">
+        <a class="bh-mark" href="/" aria-label="bleu.live home">
+          <span>bleu</span><span class="heartbeat">.</span><span>live</span><span style="color:var(--ink)">.</span>
+        </a>
+        <div class="bh-context"><span class="bh-context-dot"></span><span id="ctx-text">supply · live</span></div>
+      </div>
+
+      <nav class="bh-numerals" aria-label="seven seas">
+        <button class="bh-numeral" data-route="/">i.<span class="bh-numeral-tip">home</span></button>
+        <button class="bh-numeral" data-route="/local">ii.<span class="bh-numeral-tip">local</span></button>
+        <button class="bh-numeral" data-route="/support">iii.<span class="bh-numeral-tip">support</span></button>
+        <button class="bh-numeral" data-route="/learn">iv.<span class="bh-numeral-tip">learn</span></button>
+        <button class="bh-numeral active" aria-current="page">v.<span class="bh-numeral-tip">supply</span></button>
+        <button class="bh-numeral" data-route="/ecsiq">vi.<span class="bh-numeral-tip">ecsiq</span></button>
+        <button class="bh-numeral" data-route="/why">vii.<span class="bh-numeral-tip">why</span></button>
+      </nav>
+
+      <div class="bh-chrome-right">
+        <button class="bh-signin" id="signin">sign in</button>
+        <button class="bh-create" id="create-top">create account</button>
+        <button class="bh-held" data-route="/held">
+          <span class="bh-held-dot" id="held-dot"></span>
+          <span id="held-label">held</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="bh-surface">
+      <div class="bh-sea-id">Sea v</div>
+      <div class="bh-bigmark">bleu<span class="dot">.</span>live<span class="end">.</span></div>
+      <p class="bh-opening"><em>Tools you can buy.</em> Safety you cannot.</p>
+
+      <!-- SAFETY ENGINE LEAD -->
+      <div class="bh-safety-lead">
+        <div class="bh-safety-shield">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2L4 6V12C4 17 7.5 21 12 22C16.5 21 20 17 20 12V6L12 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M9 12L11 14L15 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="bh-safety-text">
+          <div class="bh-safety-label">before you buy anything</div>
+          <div class="bh-safety-title">Check what safely <em>mixes with your meds.</em></div>
+          <div class="bh-safety-sub"><strong>302,000</strong> drug-supplement interaction pairs &middot; <strong>54</strong> CYP450 substances &middot; always free, never paywalled.</div>
+        </div>
+        <button class="bh-safety-cta" data-prompt="Open the safety engine. I want to check what safely mixes with my medications.">Run a safety check</button>
+      </div>
+
+      <!-- ALVAI INPUT -->
+      <div class="bh-input-shell">
+        <div class="bh-input-wrap">
+          <label class="sr-only" for="alvai-input">Tell Alvai what you are looking for</label>
+          <input type="text" class="bh-input" id="alvai-input" placeholder="What are you looking for? Sleep, stress, longevity, gut, or something specific." autocomplete="off" />
+          <button class="bh-input-go" id="alvai-go" aria-label="Send to Alvai">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="bh-chips" role="list" aria-label="supply quick starts">
+          <button class="bh-chip" role="listitem" data-prompt="Show me the Sleep protocol bundle">Sleep protocol</button>
+          <button class="bh-chip" role="listitem" data-prompt="Show me the Stress protocol bundle">Stress protocol</button>
+          <button class="bh-chip" role="listitem" data-prompt="Show me the Longevity protocol bundle">Longevity protocol</button>
+          <button class="bh-chip" role="listitem" data-prompt="Show me the Gut protocol bundle">Gut protocol</button>
+          <button class="bh-chip" role="listitem" data-prompt="Show me Dr. Stoler's practitioner dispensary on Fullscript">Fullscript dispensary</button>
+          <button class="bh-chip" role="listitem" data-prompt="Find me the cheapest safe option for magnesium glycinate">Cheapest safe option</button>
+          <button class="bh-chip bh-chip-quiet" role="listitem" data-prompt="I do not know what I need yet">I do not know what I need</button>
+        </div>
+
+        <div class="bh-trust-row">
+          <span><span class="bh-trust-strong">Safety</span> &middot; always free</span>
+          <span class="tdot"></span>
+          <span>Affiliate disclosed</span>
+          <span class="tdot"></span>
+          <span>Cancel anytime</span>
+          <span class="tdot"></span>
+          <span><span class="bh-trust-strong">Felicia signs</span> every protocol</span>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="bh-whispers-band">
+      <div class="bh-whisper" id="whisper" aria-live="polite">
+        <span class="bh-whisper-tag" id="wtag">observation</span>
+        <span id="wtext"></span>
+      </div>
+    </div>
+
+    <div class="bh-flow">
+
+      <!-- PROTOCOL BUNDLES -->
+      <section class="bh-section" aria-label="protocol bundles">
+        <div class="bh-section-frame">
+          <div class="bh-zone-label">our protocols</div>
+          <p class="bh-zone-prompt">Four bundles. <em>Each one Felicia-signed.</em></p>
+          <p class="bh-zone-sub">Monthly subscription. Cancel anytime. Every bundle includes the products, the daily plan, and the safety check &mdash; the safety check is also free on its own.</p>
+        </div>
+        <div class="bh-protocols">
+
+          <div class="bh-protocol" data-stripe-price="price_1TEKQmK4cATmIFbokmkYg47S">
+            <div class="bh-protocol-eyebrow">most-used</div>
+            <div class="bh-protocol-name">Sleep</div>
+            <div class="bh-protocol-tagline">Wind down without the brain race.</div>
+            <div class="bh-protocol-includes"><strong>Includes:</strong> magnesium glycinate, L-theanine, glycine, evening protocol guide, wind-down playlist, weekly Alvai check-in.</div>
+            <div class="bh-protocol-price">
+              <span class="bh-protocol-price-num">$49</span>
+              <span class="bh-protocol-price-unit">/ month</span>
+            </div>
+            <button class="bh-protocol-cta" data-prompt="Start the Sleep protocol bundle subscription at $49 per month" data-stripe="sleep">Start Sleep protocol</button>
+            <div class="bh-protocol-foot">
+              <span class="bh-protocol-cancel">Cancel anytime</span>
+              <span class="bh-protocol-safety">Safety-checked</span>
+            </div>
+          </div>
+
+          <div class="bh-protocol" data-stripe-price="price_1TEKS6K4cATmIFbo1OW7BeCW">
+            <div class="bh-protocol-eyebrow">daily regulation</div>
+            <div class="bh-protocol-name">Stress</div>
+            <div class="bh-protocol-tagline">Steady the nervous system. Daily.</div>
+            <div class="bh-protocol-includes"><strong>Includes:</strong> ashwagandha, B-complex (methylated), rhodiola, daily breath protocol, weekly Alvai check-in.</div>
+            <div class="bh-protocol-price">
+              <span class="bh-protocol-price-num">$45</span>
+              <span class="bh-protocol-price-unit">/ month</span>
+            </div>
+            <button class="bh-protocol-cta" data-prompt="Start the Stress protocol bundle subscription at $45 per month" data-stripe="stress">Start Stress protocol</button>
+            <div class="bh-protocol-foot">
+              <span class="bh-protocol-cancel">Cancel anytime</span>
+              <span class="bh-protocol-safety">Safety-checked</span>
+            </div>
+          </div>
+
+          <div class="bh-protocol" data-stripe-price="price_1TEKSWK4cATmIFbojDTEJng9">
+            <div class="bh-protocol-eyebrow">long view</div>
+            <div class="bh-protocol-name">Longevity</div>
+            <div class="bh-protocol-tagline">The foundations. Done daily.</div>
+            <div class="bh-protocol-includes"><strong>Includes:</strong> creatine monohydrate, omega-3, vitamin D3+K2, daily foundation guide, weekly Alvai check-in.</div>
+            <div class="bh-protocol-price">
+              <span class="bh-protocol-price-num">$69</span>
+              <span class="bh-protocol-price-unit">/ month</span>
+            </div>
+            <button class="bh-protocol-cta" data-prompt="Start the Longevity protocol bundle subscription at $69 per month" data-stripe="longevity">Start Longevity protocol</button>
+            <div class="bh-protocol-foot">
+              <span class="bh-protocol-cancel">Cancel anytime</span>
+              <span class="bh-protocol-safety">Safety-checked</span>
+            </div>
+          </div>
+
+          <div class="bh-protocol" data-stripe-price="price_1TEKSsK4cATmIFbouxOBHtwQ">
+            <div class="bh-protocol-eyebrow">repair</div>
+            <div class="bh-protocol-name">Gut</div>
+            <div class="bh-protocol-tagline">The microbiome learns slowly. We help.</div>
+            <div class="bh-protocol-includes"><strong>Includes:</strong> targeted probiotic, L-glutamine, digestive bitters, food protocol, weekly Alvai check-in.</div>
+            <div class="bh-protocol-price">
+              <span class="bh-protocol-price-num">$55</span>
+              <span class="bh-protocol-price-unit">/ month</span>
+            </div>
+            <button class="bh-protocol-cta" data-prompt="Start the Gut protocol bundle subscription at $55 per month" data-stripe="gut">Start Gut protocol</button>
+            <div class="bh-protocol-foot">
+              <span class="bh-protocol-cancel">Cancel anytime</span>
+              <span class="bh-protocol-safety">Safety-checked</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- FULLSCRIPT DISPENSARY -->
+      <section class="bh-section" aria-label="fullscript practitioner dispensary" style="padding-top:0">
+        <div class="bh-fullscript">
+          <div class="bh-fs-inner">
+            <div class="bh-fs-text">
+              <div class="bh-fs-eyebrow">practitioner dispensary</div>
+              <h3 class="bh-fs-title">What a clinician <em>actually prescribes.</em></h3>
+              <p class="bh-fs-body">Practitioner-grade products. <em>Methylated forms. Once-daily dosing.</em> Curated by Dr. Felicia Stoler from her clinical practice. Same dispensary she uses with private patients.</p>
+              <div class="bh-fs-byline">
+                <strong>Dr. Felicia Stoler</strong> &middot; <em>practitioner ID fstoler</em><br/>
+                Ten published plans &middot; Powered by Fullscript
+              </div>
+              <button class="bh-fs-cta" data-prompt="Open Dr. Stoler's full Fullscript practitioner dispensary">See the full dispensary</button>
+            </div>
+            <div class="bh-fs-plans">
+              <button class="bh-fs-plan" data-prompt="Show me the Daily Foundation plan in Dr. Stoler's Fullscript dispensary">
+                <div class="bh-fs-plan-name">Daily Foundation</div>
+                <div class="bh-fs-plan-line">The everyday baseline.</div>
+              </button>
+              <button class="bh-fs-plan" data-prompt="Show me the Sleep &amp; Recovery plan in Dr. Stoler's Fullscript dispensary">
+                <div class="bh-fs-plan-name">Sleep &amp; Recovery</div>
+                <div class="bh-fs-plan-line">For nights that fight back.</div>
+              </button>
+              <button class="bh-fs-plan" data-prompt="Show me the Stress &amp; HPA Support plan in Dr. Stoler's Fullscript dispensary">
+                <div class="bh-fs-plan-name">Stress &amp; HPA Support</div>
+                <div class="bh-fs-plan-line">When the nervous system needs a hand.</div>
+              </button>
+              <button class="bh-fs-plan" data-prompt="Show me the Gut Restore plan in Dr. Stoler's Fullscript dispensary">
+                <div class="bh-fs-plan-name">Gut Restore</div>
+                <div class="bh-fs-plan-line">Microbiome repair, slow and steady.</div>
+              </button>
+              <button class="bh-fs-plan" data-prompt="Show me the Cardiovascular plan in Dr. Stoler's Fullscript dispensary">
+                <div class="bh-fs-plan-name">Cardiovascular</div>
+                <div class="bh-fs-plan-line">Heart, lipids, vessels.</div>
+              </button>
+              <button class="bh-fs-plan" data-prompt="Show me the Cognitive Support plan in Dr. Stoler's Fullscript dispensary">
+                <div class="bh-fs-plan-name">Cognitive Support</div>
+                <div class="bh-fs-plan-line">Focus, clarity, steady mind.</div>
+              </button>
+              <button class="bh-fs-plan" data-prompt="Show me the Metabolic Health plan in Dr. Stoler's Fullscript dispensary">
+                <div class="bh-fs-plan-name">Metabolic Health</div>
+                <div class="bh-fs-plan-line">Insulin, weight, energy.</div>
+              </button>
+              <button class="bh-fs-plan" data-prompt="Show me the Women's Health plan in Dr. Stoler's Fullscript dispensary">
+                <div class="bh-fs-plan-name">Women's Health</div>
+                <div class="bh-fs-plan-line">Cycle, fertility, perimenopause.</div>
+              </button>
+              <button class="bh-fs-plan" data-prompt="Show me the Athletic Performance plan in Dr. Stoler's Fullscript dispensary">
+                <div class="bh-fs-plan-name">Athletic Performance</div>
+                <div class="bh-fs-plan-line">Train. Recover. Repeat.</div>
+              </button>
+              <button class="bh-fs-plan" data-prompt="Show me the Immune Support plan in Dr. Stoler's Fullscript dispensary">
+                <div class="bh-fs-plan-name">Immune Support</div>
+                <div class="bh-fs-plan-line">Resilience without overdoing it.</div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AMAZON SOURCING -->
+      <section class="bh-section" aria-label="amazon sourcing" style="padding-top:0">
+        <div class="bh-sourcing">
+          <div class="bh-sourcing-head">
+            <div class="bh-sourcing-eyebrow">when you want the cheapest safe option</div>
+            <h3 class="bh-sourcing-title">Mass-market sourcing. <em>Fully disclosed.</em></h3>
+            <p class="bh-sourcing-body">For when the practitioner-grade option is not in budget, or when you just want one bottle from the place you already shop. <strong>Affiliate links disclosed.</strong> Price-checked. Same safety check runs first.</p>
+          </div>
+          <div class="bh-sourcing-grid">
+            <button class="bh-source-cat" data-prompt="Find me the cheapest safe magnesium glycinate on Amazon">
+              <div class="bh-source-cat-name">Magnesium</div>
+              <div class="bh-source-cat-line">Glycinate, threonate, citrate.</div>
+            </button>
+            <button class="bh-source-cat" data-prompt="Find me the cheapest safe omega-3 fish oil on Amazon">
+              <div class="bh-source-cat-name">Omega-3</div>
+              <div class="bh-source-cat-line">Fish oil, krill, algae.</div>
+            </button>
+            <button class="bh-source-cat" data-prompt="Find me the cheapest safe vitamin D3 K2 on Amazon">
+              <div class="bh-source-cat-name">Vitamin D3 + K2</div>
+              <div class="bh-source-cat-line">The pair that works together.</div>
+            </button>
+            <button class="bh-source-cat" data-prompt="Find me the cheapest safe creatine monohydrate on Amazon">
+              <div class="bh-source-cat-name">Creatine</div>
+              <div class="bh-source-cat-line">Monohydrate. Plain. Pure.</div>
+            </button>
+            <button class="bh-source-cat" data-prompt="Find me the cheapest safe L-theanine on Amazon">
+              <div class="bh-source-cat-name">L-theanine</div>
+              <div class="bh-source-cat-line">Calm without sedation.</div>
+            </button>
+            <button class="bh-source-cat" data-prompt="Find me the cheapest safe ashwagandha on Amazon">
+              <div class="bh-source-cat-name">Ashwagandha</div>
+              <div class="bh-source-cat-line">Adaptogen for stress load.</div>
+            </button>
+            <button class="bh-source-cat" data-prompt="Find me the cheapest safe probiotic on Amazon">
+              <div class="bh-source-cat-name">Probiotic</div>
+              <div class="bh-source-cat-line">Strain-specific. Targeted.</div>
+            </button>
+            <button class="bh-source-cat" data-prompt="Find me the cheapest safe B-complex methylated on Amazon">
+              <div class="bh-source-cat-name">B-complex</div>
+              <div class="bh-source-cat-line">Methylated forms.</div>
+            </button>
+          </div>
+          <div class="bh-sourcing-foot">
+            <span>Amazon Associates &middot; tag bleulive20-20 &middot; <a href="/affiliate-disclosure" style="color:inherit">disclosure</a></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- AFFILIATE PRIORITY -->
+      <section class="bh-priority" aria-label="how we choose">
+        <div class="bh-priority-head">
+          <div class="bh-zone-label">how we choose</div>
+          <p class="bh-zone-prompt">Five tiers. <em>In this order, every time.</em></p>
+          <p class="bh-zone-sub">When the platform recommends a product, this is the order we look in. The cheapest safe answer wins, every time.</p>
+        </div>
+        <div class="bh-priority-grid">
+          <div class="bh-pri">
+            <div class="bh-pri-num">i.</div>
+            <div class="bh-pri-name">Owned</div>
+            <div class="bh-pri-line">Our four protocols. Stripe-secured. Felicia-signed.</div>
+          </div>
+          <div class="bh-pri">
+            <div class="bh-pri-num">ii.</div>
+            <div class="bh-pri-name">Practitioner</div>
+            <div class="bh-pri-line">Fullscript dispensary. Clinical-grade.</div>
+          </div>
+          <div class="bh-pri">
+            <div class="bh-pri-num">iii.</div>
+            <div class="bh-pri-name">Affiliate</div>
+            <div class="bh-pri-line">Amazon. Disclosed. Mass-market.</div>
+          </div>
+          <div class="bh-pri">
+            <div class="bh-pri-num">iv.</div>
+            <div class="bh-pri-name">Service</div>
+            <div class="bh-pri-line">BetterHelp. Eventbrite. Real services.</div>
+          </div>
+          <div class="bh-pri">
+            <div class="bh-pri-num">v.</div>
+            <div class="bh-pri-name">Free</div>
+            <div class="bh-pri-line">Spotify. YouTube. PubMed. Always available.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRUST BAND — Working Rule No. 5 visible -->
+      <section class="bh-section" aria-label="our promise" style="padding-top:0">
+        <div class="bh-trust-band">
+          <div class="bh-trust-band-eyebrow">our promise</div>
+          <p class="bh-trust-band-quote">"We collect the minimum. <em>We do not sell data. Ever.</em> The safety check is always free, always before the buy button."</p>
+          <div class="bh-trust-band-sub">Working Rule No. 5 &middot; <a href="/affiliate-disclosure">Affiliate Disclosure</a> &middot; <a href="/privacy">Privacy</a></div>
+        </div>
+      </section>
+
+      <!-- FELICIA -->
+      <section class="bh-felicia" aria-label="felicia signature">
+        <div class="bh-felicia-eyebrow">a note from your clinical lead</div>
+        <p class="bh-felicia-quote">"<em>Diet and exercise are the least expensive, least invasive, most effective ways</em> to prevent and treat most diseases. Supplements are the smallest part of the answer. We sell what helps. We do not sell what does not."</p>
+        <div class="bh-felicia-byline">
+          <span class="name">Dr. Felicia Stoler</span>
+          <span class="title">Co-Founder &middot; Chief Clinical Officer &middot; President</span>
+          <span class="creds">DCN &middot; MS &middot; RDN &middot; FACSM &middot; FAND &middot; Dipl. ACLM</span>
+        </div>
+      </section>
+
+      <!-- SAFETY ENGINE FOOTER STRIP — page bookend -->
+      <section class="bh-section" aria-label="before you check out" style="padding-top:0">
+        <div class="bh-safety-foot">
+          <div class="bh-safety-foot-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2L4 6V12C4 17 7.5 21 12 22C16.5 21 20 17 20 12V6L12 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M9 12L11 14L15 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="bh-safety-foot-text">
+            <div class="bh-safety-foot-title">Before you check out: <em>run the safety check.</em></div>
+            <div class="bh-safety-foot-sub">It runs automatically inside every protocol bundle. You can also run it any time, on any product or supplement, free.</div>
+          </div>
+          <button class="bh-safety-foot-cta" data-prompt="Run the safety engine on what is in my cart and what I take">Run a check now</button>
+        </div>
+      </section>
+
+      <!-- DOCK -->
+      <section class="bh-dock" aria-label="seven seas">
+        <p class="bh-dock-prompt">Seven rooms. <em>One conversation.</em> Every door connects to every other.</p>
+        <div class="bh-dock-row">
+          <button class="bh-sea" data-route="/">
+            <div class="bh-sea-num">i.</div>
+            <div class="bh-sea-name">Home</div>
+            <div class="bh-sea-line">begin here</div>
+          </button>
+          <button class="bh-sea" data-route="/local">
+            <div class="bh-sea-num">ii.</div>
+            <div class="bh-sea-name">Local</div>
+            <div class="bh-sea-line">care &middot; city</div>
+          </button>
+          <button class="bh-sea" data-route="/support">
+            <div class="bh-sea-num">iii.</div>
+            <div class="bh-sea-name">Support</div>
+            <div class="bh-sea-line">therapy &middot; sleep</div>
+          </button>
+          <button class="bh-sea" data-route="/learn">
+            <div class="bh-sea-num">iv.</div>
+            <div class="bh-sea-name">Learn</div>
+            <div class="bh-sea-line">science you use</div>
+          </button>
+          <button class="bh-sea current" aria-current="page">
+            <div class="bh-sea-num">v.</div>
+            <div class="bh-sea-name">Supply</div>
+            <div class="bh-sea-line">protocols</div>
+          </button>
+          <button class="bh-sea" data-route="/ecsiq">
+            <div class="bh-sea-num">vi.</div>
+            <div class="bh-sea-name">ECSIQ</div>
+            <div class="bh-sea-line">ECS</div>
+          </button>
+          <button class="bh-sea" data-route="/why">
+            <div class="bh-sea-num">vii.</div>
+            <div class="bh-sea-name">Why BLEU</div>
+            <div class="bh-sea-line">the difference</div>
+          </button>
+        </div>
+      </section>
+
+      <section class="bh-preservation" aria-label="if you are in crisis">
+        <p class="bh-preservation-text">If you are in crisis, <em>we step aside</em>. The numbers below connect you to people trained to help. Free. Confidential.</p>
+        <div class="bh-crisis">
+          <a href="tel:988">988</a>
+          <a href="sms:741741?body=HOME">Text HOME &middot; 741741</a>
+          <a href="tel:18006624357">SAMHSA</a>
+          <a href="tel:18664887386">Trevor</a>
+          <a href="tel:18004843731">Never Use Alone</a>
+          <a href="tel:911">911</a>
+        </div>
+      </section>
+
+      <footer class="bh-floor">
+        <div class="bh-floor-mark">bleu<span class="dot">.</span>live<span style="color:var(--ink)">.</span></div>
+        <div class="bh-floor-meta">
+          A clinically governed digital care delivery platform &middot; Patent Pending &middot; &copy; 2026 FLEUR DE BLEUDREAM LLC<br />
+          Created by Bleu Garner &middot; Co-Founder, Chief Clinical Officer &amp; President: Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl. ACLM<br />
+          <a href="/affiliate-disclosure" style="color:inherit">Affiliate Disclosure</a> &middot; Stripe-secured &middot; Not medical advice
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <button class="bh-presence" data-prompt="Alvai &mdash; help me figure out what I actually need" aria-label="Alvai presence">
+    <div class="bh-orb"></div>
+    <span class="bh-presence-label">the room is listening</span>
+  </button>
+</main>
+
+<script>
+/* =========================================================================
+   bleu.live — Supply (Sea v) · DEEP BUILD v1
+   Production hooks (wire on deploy):
+     window.sendPrompt(text)          → routes to Alvai
+     window.routeTo(path)             → seven seas navigation
+     window.startStripeCheckout(key)  → starts Stripe Checkout for the
+       protocol bundle. Keys: 'sleep' | 'stress' | 'longevity' | 'gut'.
+       Backend: Stripe price IDs locked —
+         sleep:     price_1TEKQmK4cATmIFbokmkYg47S ($49/mo)
+         stress:    price_1TEKS6K4cATmIFbo1OW7BeCW ($45/mo)
+         longevity: price_1TEKSWK4cATmIFbojDTEJng9 ($69/mo)
+         gut:       price_1TEKSsK4cATmIFbouxOBHtwQ ($55/mo)
+       Stripe account: acct_1ShZN7K4cATmIFbo
+   The page is built so that even if no production hooks are wired, every
+   button still routes to Alvai with a prompt — Alvai is the unifier.
+   ========================================================================= */
+(function(){
+  'use strict';
+
+  function sendPrompt(text){
+    if (typeof window.sendPrompt === 'function') return window.sendPrompt(text);
+    var input = document.getElementById('alvai-input');
+    if (input) { input.value = text; input.focus(); }
+    console.log('[bleu/supply] prompt:', text);
+  }
+  function routeTo(path){
+    if (typeof window.routeTo === 'function') return window.routeTo(path);
+    console.log('[bleu/supply] route:', path);
+  }
+  function startStripeCheckout(key, fallbackPrompt){
+    // Production: starts Stripe Checkout with the right price ID.
+    // If not wired, falls back to Alvai with the right protocol prompt.
+    if (typeof window.startStripeCheckout === 'function') return window.startStripeCheckout(key);
+    sendPrompt(fallbackPrompt);
+  }
+
+  // Whispers — supply-aware
+  var pool = [
+    {tag:'clinical',    cls:'physician', text:'Diet and exercise are the least expensive, least invasive, most effective ways to prevent and treat most diseases.'},
+    {tag:'observation', cls:'monk',      text:'Most supplement harm comes from interactions, not from the supplement itself. The check matters more than the bottle.'},
+    {tag:'science',     cls:'science',   text:'Methylated B-vitamins exist because about a third of people cannot fully convert the standard form. The label matters.'},
+    {tag:'wisdom',      cls:'wisdom',    text:'The cheapest safe option is almost always the right answer.'},
+    {tag:'clinical',    cls:'physician', text:'A practitioner-grade label is not marketing. It is a manufacturing standard the FDA does not require.'},
+    {tag:'observation', cls:'monk',      text:'Affiliate disclosure is not a footnote. It is the platform telling you exactly how it gets paid.'}
+  ];
+  var w = document.getElementById('whisper');
+  var wt = document.getElementById('wtag');
+  var wx = document.getElementById('wtext');
+  var wi = -1;
+  function nextW(){
+    if (!w || !wt || !wx) return;
+    w.classList.remove('show');
+    setTimeout(function(){
+      wi = (wi + 1) % pool.length;
+      var d = pool[wi];
+      wt.textContent = d.tag;
+      wt.className = 'bh-whisper-tag ' + d.cls;
+      wx.textContent = d.text;
+      w.classList.add('show');
+    }, 1500);
+  }
+  setTimeout(nextW, 2000);
+  setInterval(nextW, 9500);
+
+  // Held set
+  var heldDot = document.getElementById('held-dot');
+  var heldLabel = document.getElementById('held-label');
+  var heldCount = 0;
+  function flashHeld(){
+    if (!heldDot || !heldLabel) return;
+    heldCount++;
+    heldDot.classList.remove('pulse');
+    void heldDot.offsetWidth;
+    heldDot.classList.add('pulse');
+    heldLabel.textContent = 'held · ' + heldCount;
+  }
+
+  // Cursor aura
+  var root = document.querySelector('.bh');
+  if (root && window.matchMedia && !window.matchMedia('(hover: none)').matches) {
+    document.addEventListener('mousemove', function(e){
+      var x = (e.clientX / window.innerWidth) * 100;
+      var y = (e.clientY / window.innerHeight) * 100;
+      root.style.setProperty('--mx', x + '%');
+      root.style.setProperty('--my', y + '%');
+    });
+  }
+
+  // Chrome scroll
+  var chrome = document.getElementById('chrome');
+  if (chrome) {
+    var ck = function(){
+      if (window.scrollY > 40) chrome.classList.add('scrolled');
+      else chrome.classList.remove('scrolled');
+    };
+    window.addEventListener('scroll', ck, { passive: true });
+  }
+
+  // Stripe protocol checkouts — every CTA wired to a real price ID
+  document.querySelectorAll('[data-stripe]').forEach(function(node){
+    node.addEventListener('click', function(e){
+      e.stopPropagation(); // prevent the data-prompt listener from also firing
+      var key = node.getAttribute('data-stripe');
+      var prompt = node.getAttribute('data-prompt') || ('Start the ' + key + ' protocol');
+      startStripeCheckout(key, prompt);
+      flashHeld();
+    });
+  });
+
+  // Wire all data-prompt elements except those already handled by Stripe
+  document.querySelectorAll('[data-prompt]').forEach(function(node){
+    if (node.hasAttribute('data-stripe')) return;
+    node.addEventListener('click', function(){
+      var p = node.getAttribute('data-prompt');
+      if (p) sendPrompt(p);
+      if (node.classList.contains('bh-chip')
+          || node.classList.contains('bh-fs-plan')
+          || node.classList.contains('bh-source-cat')
+          || node.classList.contains('bh-safety-cta')
+          || node.classList.contains('bh-safety-foot-cta')
+          || node.classList.contains('bh-fs-cta')) flashHeld();
+    });
+  });
+
+  document.querySelectorAll('[data-route]').forEach(function(node){
+    node.addEventListener('click', function(){
+      var r = node.getAttribute('data-route');
+      if (r) routeTo(r);
+    });
+  });
+  var byId = function(id){ return document.getElementById(id); };
+  if (byId('signin')) byId('signin').addEventListener('click', function(){ routeTo('/signin'); });
+  if (byId('create-top')) byId('create-top').addEventListener('click', function(){ routeTo('/create-account'); });
+
+  // Alvai input
+  var input = document.getElementById('alvai-input');
+  var go = document.getElementById('alvai-go');
+  function submit(){
+    if (!input) return;
+    var v = (input.value || '').trim();
+    if (!v) return;
+    sendPrompt(v);
+    flashHeld();
+    input.value = '';
+  }
+  if (go) go.addEventListener('click', submit);
+  if (input) input.addEventListener('keydown', function(e){ if (e.key === 'Enter') submit(); });
+
+  // UNIFICATION SAFETY NET — warns dev console if any interactive element ships dead.
+  // Working Rule applied: every button must work; Alvai is the unifier.
+  setTimeout(function(){
+    var dead = [];
+    document.querySelectorAll('button, [role="button"]').forEach(function(node){
+      if (node.hasAttribute('data-prompt')) return;
+      if (node.hasAttribute('data-route')) return;
+      if (node.hasAttribute('data-stripe')) return;
+      if (node.hasAttribute('data-city')) return;
+      if (node.id && ['signin','create-top','alvai-go','city-change','city-modal-close'].indexOf(node.id) >= 0) return;
+      if (node.classList.contains('bh-numeral') && node.classList.contains('active')) return;
+      if (node.classList.contains('bh-sea') && node.classList.contains('current')) return;
+      if (node.getAttribute('aria-current') === 'page') return;
+      dead.push(node);
+    });
+    if (dead.length) {
+      console.warn('[bleu/supply] dead surfaces detected:', dead);
+    }
+  }, 800);
+})();
+</script>
+
+  <script src="/js/bleu-prod-hooks.js" defer></script>
+</body>
+</html>
