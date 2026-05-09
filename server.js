@@ -1915,13 +1915,13 @@ const server = http.createServer((req, res) => {
 
         const proto = (req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim();
         const origin = `${proto}://${req.headers.host}`;
-        const protocol = PROTOCOL_MAP[priceId];
+        const entry = PROTOCOL_MAP[priceId];
 
         const form = new URLSearchParams();
-        form.append('mode', p.mode === 'subscription' ? 'subscription' : 'payment');
+        form.append('mode', entry.mode);
         form.append('line_items[0][price]', priceId);
         form.append('line_items[0][quantity]', '1');
-        form.append('success_url', `${origin}/?checkout=success&protocol=${protocol}`);
+        form.append('success_url', `${origin}/?checkout=success&protocol=${entry.name}`);
         form.append('cancel_url', `${origin}/?checkout=cancel`);
         form.append('metadata[price_id]', priceId);
         if (p.user_id) form.append('client_reference_id', String(p.user_id));
@@ -1977,11 +1977,11 @@ const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
 const PROTOCOL_MAP = {
-  'price_1TEKQmK4cATmIFbokmkYg47S': 'sleep_reset',
-  'price_1TEKS6K4cATmIFbo1OW7BeCW': 'stress_reset',
-  'price_1TEKSWKcATmIFbojDTEJng9':  'longevity_core',
-  'price_1TEKSsK4cATmIFbouxOBHtwQ': 'gut_reset',
-  'price_1TBPtAK4cATmIFboFVb9m0QN': 'pro'
+  'price_1TEKQmK4cATmIFbokmkYg47S': { name: 'sleep_reset',    mode: 'subscription' },
+  'price_1TEKS6K4cATmIFbo1OW7BeCW': { name: 'stress_reset',   mode: 'subscription' },
+  'price_1TEKSWKcATmIFbojDTEJng9':  { name: 'longevity_core', mode: 'subscription' },
+  'price_1TEKSsK4cATmIFbouxOBHtwQ': { name: 'gut_reset',      mode: 'subscription' },
+  'price_1TBPtAK4cATmIFboFVb9m0QN': { name: 'pro',            mode: 'subscription' }
 };
 
 // Stripe webhook endpoint - must receive raw body
@@ -2022,7 +2022,7 @@ function handleStripeWebhook(req, res) {
       const userId = session.client_reference_id;
       const priceId = session.metadata?.price_id || 
                       (session.line_items?.data?.[0]?.price?.id);
-      const protocol = PROTOCOL_MAP[priceId] || 'pro';
+      const protocol = PROTOCOL_MAP[priceId]?.name || 'pro';
       const email = session.customer_details?.email;
 
       console.log(`Payment complete: ${protocol} | user: ${userId} | email: ${email}`);
