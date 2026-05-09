@@ -1904,6 +1904,42 @@ const server = http.createServer((req, res) => {
 
   if (pn === '/stripe-webhook' && req.method === 'POST') { handleStripeWebhook(req, res); return; }
 
+  if (pn === '/api/stripe/create-session' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { (async () => {
+      try {
+        if (!STRIPE_SECRET) return json(res, 503, { error: 'Stripe not configured' });
+        const p = JSON.parse(b || '{}');
+        const priceId = p.price_id;
+        if (!priceId || !PROTOCOL_MAP[priceId]) return json(res, 400, { error: 'Unknown price_id' });
+
+        const proto = (req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim();
+        const origin = `${proto}://${req.headers.host}`;
+        const protocol = PROTOCOL_MAP[priceId];
+
+        const form = new URLSearchParams();
+        form.append('mode', p.mode === 'subscription' ? 'subscription' : 'payment');
+        form.append('line_items[0][price]', priceId);
+        form.append('line_items[0][quantity]', '1');
+        form.append('success_url', `${origin}/?checkout=success&protocol=${protocol}`);
+        form.append('cancel_url', `${origin}/?checkout=cancel`);
+        form.append('metadata[price_id]', priceId);
+        if (p.user_id) form.append('client_reference_id', String(p.user_id));
+        if (p.email) form.append('customer_email', String(p.email));
+
+        const sr = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + STRIPE_SECRET, 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: form.toString()
+        });
+        const data = await sr.json();
+        if (!sr.ok) { console.error('Stripe create-session:', sr.status, data?.error?.message); return json(res, 502, { error: data?.error?.message || 'Stripe error' }); }
+        return json(res, 200, { url: data.url });
+      } catch(e) { console.error('create-session failed:', e.message); return json(res, 500, { error: e.message }); }
+    })(); });
+    return;
+  }
+
   if (pn === '/api/stats') return json(res, 200, { version:'4.0', modes: Object.keys(MODE_PROMPTS).length, therapy: Object.keys(THERAPY_MODES).length, recovery: Object.keys(RECOVERY_MODES).length });
 
   // ═══════ SEO ENGINE — city pages, sitemap, robots.txt ═══════
