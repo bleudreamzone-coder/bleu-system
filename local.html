@@ -574,11 +574,7 @@ body{
   padding:18px 20px;
   display:flex;gap:14px;align-items:flex-start;
 }
-.bh-pop-num{
-  font-family:var(--display);font-style:italic;font-weight:400;
-  font-size:13px;color:var(--gold);flex-shrink:0;
-  min-width:18px;line-height:1.5;
-}
+.bh-pop-num{display:none}
 .bh-pop-text{
   font-family:var(--body);font-size:13px;line-height:1.55;
   color:var(--ink-soft);
@@ -1000,34 +996,34 @@ body{
       <section class="bh-section" aria-label="four tiers of care">
         <div class="bh-section-frame">
           <div class="bh-zone-label">how care works here</div>
-          <p class="bh-zone-prompt">Four tiers. <em>Each one is a doorway.</em></p>
-          <p class="bh-zone-sub">The platform routes you to the lightest tier that fits. You move up only when the lighter tier is not enough.</p>
+          <p class="bh-zone-prompt">Four options. <em>Each one is a doorway.</em></p>
+          <p class="bh-zone-sub">Self-care first. Peer support next. Clinical care when you need it. Emergency help when it cannot wait. You see all four, every time. You choose what you need in the moment.</p>
         </div>
         <div class="bh-tiers-river">
           <div class="bh-tiers">
             <button class="bh-tier" data-prompt="Show me what I can do for myself today — lifestyle medicine, sleep, food, movement, stress, connection">
-              <div class="bh-tier-num"><span class="bh-tier-dot"></span>tier i &middot; self</div>
+              <div class="bh-tier-num"><span class="bh-tier-dot"></span>self-care</div>
               <div class="bh-tier-name">What you can do today</div>
               <div class="bh-tier-line">Sleep, food, movement, stress, connection, avoiding what harms you.</div>
               <div class="bh-tier-examples"><strong>The six pillars of lifestyle medicine.</strong> Plain steps. No appointment. Free. Clinically governed. Evidence-based.</div>
               <div class="bh-tier-time">always available</div>
             </button>
-            <button class="bh-tier support" data-prompt="Find peer support and recovery groups near me">
-              <div class="bh-tier-num"><span class="bh-tier-dot"></span>tier ii &middot; support</div>
+            <button class="bh-tier support" data-prompt="Find peer support, recovery groups, caregiver groups, and pharmacist consultation near me">
+              <div class="bh-tier-num"><span class="bh-tier-dot"></span>peer support</div>
               <div class="bh-tier-name">People who get it</div>
-              <div class="bh-tier-line">Peer recovery, faith groups, neighbors.</div>
-              <div class="bh-tier-examples"><strong>AA &middot; NA &middot; SMART &middot; NAMI &middot; grief groups.</strong> Free. Often tonight. No appointment.</div>
+              <div class="bh-tier-line">Peer recovery, faith groups, caregivers, neighbors, your pharmacist.</div>
+              <div class="bh-tier-examples"><strong>AA &middot; NA &middot; SMART &middot; NAMI &middot; grief groups &middot; caregiver groups &middot; pharmacist consultation.</strong> Free. Often tonight. No appointment.</div>
               <div class="bh-tier-time" id="tier-support-time">checking your area</div>
             </button>
             <button class="bh-tier clinical" data-prompt="Find clinical care near me — FQHC, urgent care, telehealth">
-              <div class="bh-tier-num"><span class="bh-tier-dot"></span>tier iii &middot; clinical</div>
+              <div class="bh-tier-num"><span class="bh-tier-dot"></span>clinical care</div>
               <div class="bh-tier-name">Real clinics, real prices</div>
               <div class="bh-tier-line">FQHCs, urgent care, telehealth, parish health.</div>
-              <div class="bh-tier-examples"><strong>Sliding scale.</strong> Medicaid-friendly. Cost shown up front. Wait time visible.</div>
+              <div class="bh-tier-examples"><strong>Sliding scale.</strong> Medicaid-friendly. Cost shown when available.</div>
               <div class="bh-tier-time" id="tier-clinical-time">checking your area</div>
             </button>
-            <button class="bh-tier crisis" data-prompt="I need crisis help right now">
-              <div class="bh-tier-num"><span class="bh-tier-dot"></span>tier iv &middot; crisis</div>
+            <button class="bh-tier crisis" data-prompt="I'm in crisis and need help now">
+              <div class="bh-tier-num"><span class="bh-tier-dot"></span>emergency help</div>
               <div class="bh-tier-name">When it cannot wait</div>
               <div class="bh-tier-line">988 for mental health. 911 for emergencies.</div>
               <div class="bh-tier-examples"><strong>Non-overrideable.</strong> The platform steps aside. Trained people take over.</div>
@@ -1042,7 +1038,7 @@ body{
         <div class="bh-section-frame">
           <div class="bh-zone-label">what is near you</div>
           <p class="bh-zone-prompt">Real places. Real people. <em>In your city.</em></p>
-          <p class="bh-zone-sub">Every cell hands you off to a real provider, a real meeting, a real pharmacy. No paywall. No appointment to find one.</p>
+          <p class="bh-zone-sub">Every option leads you to a real provider, a real meeting, a real pharmacy. No paywall. No appointment to find one.</p>
         </div>
         <div class="bh-dir-grid" id="dir-grid">
           <button class="bh-dir" data-cat="clinics" data-prompt="Show me FQHCs and community health centers near me">
@@ -1133,7 +1129,41 @@ body{
               <span class="bh-dir-arrow">→</span>
             </div>
           </button>
+          <button class="bh-dir" data-cat="dental" data-prompt="Show me dental care, FQHC dental, and sliding-scale dentistry near me">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">dental</div>
+              <div class="bh-dir-name">Dental care &middot; sliding scale</div>
+              <div class="bh-dir-desc">FQHC dental, sliding-scale dentistry, parish dental health units. The Medicaid dental gap is real &mdash; we route around it.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-dental">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-dir" data-cat="hearing" data-prompt="Show me audiology, hearing screening, and OTC hearing aids near me">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">hearing</div>
+              <div class="bh-dir-name">Audiology &middot; hearing aids</div>
+              <div class="bh-dir-desc">Medicaid-covered audiology, OTC hearing aids, Lions Club, parish hearing screening.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-hearing">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
+          <button class="bh-dir" data-cat="community" data-prompt="Show me community and belonging — congregate meals, library programs, dance and music groups, faith communities, volunteer opportunities">
+            <div class="bh-dir-top">
+              <div class="bh-dir-label">community &amp; belonging</div>
+              <div class="bh-dir-name">Where connection happens</div>
+              <div class="bh-dir-desc">Congregate meals, library programs, dance &amp; music groups, faith communities, volunteer opportunities.</div>
+            </div>
+            <div class="bh-dir-foot">
+              <span class="bh-dir-count" id="count-community">finding</span>
+              <span class="bh-dir-arrow">→</span>
+            </div>
+          </button>
         </div>
+        <p class="bh-zone-sub" style="text-align:center;margin:18px auto 0;max-width:760px;font-style:italic;">BLEU is deepest in New Orleans right now. We're adding parishes as the platform grows. Outside Louisiana, you see national resources only &mdash; for now.</p>
       </section>
 
       <!-- PARISH RIPPLE -->
@@ -1504,7 +1534,7 @@ body{
         ['Find an urgent care that takes Medicaid open now', 'Urgent care open now'],
         ['I am awake and worried &mdash; what is open right now in ' + city, 'What is open right now'],
         ['Find a 24-hour mental health line near me', '24-hour mental health'],
-        ['Find a crisis stabilization unit in ' + state, 'Crisis stabilization'],
+        ['Find a crisis stabilization unit in ' + state, "I'm in crisis and need help now"],
         ['I just need someone to talk to right now', 'I just need someone to talk to', true]
       ];
     } else {
