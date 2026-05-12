@@ -259,10 +259,7 @@ body{
   transition:.3s ease;
 }
 .bh-ladder-tier:hover{background:var(--paper)}
-.bh-ladder-tier-num{
-  font-family:var(--display);font-style:italic;font-size:10.5px;
-  color:var(--moss);margin-bottom:4px;letter-spacing:.04em;
-}
+.bh-ladder-tier-num{display:none}
 .bh-ladder-tier-name{
   font-family:var(--display);font-weight:400;font-size:14px;
   color:var(--ink);letter-spacing:-.01em;margin-bottom:3px;line-height:1.2;
@@ -909,7 +906,7 @@ body{
         </div>
         <div class="bh-pillars">
           <button class="bh-pillar" data-prompt="Open the Nutrition pillar. Show me the evidence on diet, food, and what to eat.">
-            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>pillar i</div>
+            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>nutrition</div>
             <div class="bh-pillar-name">Nutrition</div>
             <div class="bh-pillar-line">What you eat shapes everything downstream.</div>
             <div class="bh-pillar-includes"><strong>Includes:</strong> whole foods, plant-forward eating, fiber, protein needs by age, ultra-processed food, time-restricted eating, the Mediterranean pattern.</div>
@@ -919,7 +916,7 @@ body{
             </div>
           </button>
           <button class="bh-pillar" data-prompt="Open the Physical Activity pillar. Show me the evidence on movement, strength, and cardio.">
-            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>pillar ii</div>
+            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>physical activity</div>
             <div class="bh-pillar-name">Physical activity</div>
             <div class="bh-pillar-line">The body is built to move. Daily.</div>
             <div class="bh-pillar-includes"><strong>Includes:</strong> strength training, walking, zone 2 cardio, mobility, flexibility, exercise minimums by age, exercise as medicine.</div>
@@ -929,7 +926,7 @@ body{
             </div>
           </button>
           <button class="bh-pillar" data-prompt="Open the Restorative Sleep pillar. Show me the evidence on sleep, circadian rhythm, and recovery.">
-            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>pillar iii</div>
+            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>restorative sleep</div>
             <div class="bh-pillar-name">Restorative sleep</div>
             <div class="bh-pillar-line">Where the body does the repair.</div>
             <div class="bh-pillar-includes"><strong>Includes:</strong> sleep hygiene, circadian rhythm, light exposure, sleep cycles, what wrecks sleep, what restores it.</div>
@@ -939,7 +936,7 @@ body{
             </div>
           </button>
           <button class="bh-pillar" data-prompt="Open the Stress Management pillar. Show me the evidence on the nervous system, regulation, and resilience.">
-            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>pillar iv</div>
+            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>stress management</div>
             <div class="bh-pillar-name">Stress management</div>
             <div class="bh-pillar-line">Regulating the nervous system. Daily.</div>
             <div class="bh-pillar-includes"><strong>Includes:</strong> breath, meditation, vagal tone, cold exposure, cortisol, the HPA axis, what works under stress and what does not.</div>
@@ -949,7 +946,7 @@ body{
             </div>
           </button>
           <button class="bh-pillar" data-prompt="Open the Avoidance of Risky Substances pillar. Show me the evidence on alcohol, tobacco, and other risk factors.">
-            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>pillar v</div>
+            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>avoiding what harms you</div>
             <div class="bh-pillar-name">Risky substances</div>
             <div class="bh-pillar-line">What costs more than it gives.</div>
             <div class="bh-pillar-includes"><strong>Includes:</strong> alcohol, tobacco, nicotine, sleep meds, the data on moderation, harm reduction, what the latest research actually says.</div>
@@ -959,10 +956,10 @@ body{
             </div>
           </button>
           <button class="bh-pillar" data-prompt="Open the Positive Social Connection pillar. Show me the evidence on relationships, loneliness, and community.">
-            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>pillar vi</div>
+            <div class="bh-pillar-num"><span class="bh-pillar-dot"></span>positive social connection</div>
             <div class="bh-pillar-name">Social connection</div>
-            <div class="bh-pillar-line">Relationships shape biology. Loneliness is a risk factor.</div>
-            <div class="bh-pillar-includes"><strong>Includes:</strong> the Holt-Lunstad meta-analysis, loneliness mortality, Blue Zones belonging research, friendship, family, community.</div>
+            <div class="bh-pillar-line">Relationships shape biology. Loneliness is a risk factor. Belonging is medicine.</div>
+            <div class="bh-pillar-includes"><strong>Lived practices:</strong> congregate meals, faith communities, music, dance, learning groups, time in nature, intergenerational time, volunteer work, hobby groups. <strong>Evidence:</strong> the Holt-Lunstad meta-analysis, loneliness mortality, Blue Zones belonging research.</div>
             <div class="bh-pillar-foot">
               <span class="bh-pillar-tier">established</span>
               <span class="bh-pillar-arrow">→</span>
@@ -1028,7 +1025,50 @@ body{
               <div class="bh-cond-name">Cognitive decline</div>
               <div class="bh-cond-line">Alzheimer's risk. Prevention. Brain.</div>
             </button>
+            <button class="bh-cond" data-prompt="Open the deep page on Oral and Dental Health — cardiovascular link, diabetes link, ER avoidance, Medicaid dental gap.">
+              <div class="bh-cond-name">Oral &amp; dental</div>
+              <div class="bh-cond-line">Heart link. Diabetes link. The Medicaid dental gap.</div>
+            </button>
+            <button class="bh-cond" data-prompt="Open the deep page on Hearing — dementia prevention, depression risk, social isolation, fall risk.">
+              <div class="bh-cond-name">Hearing</div>
+              <div class="bh-cond-line">Dementia risk. Isolation. Falls. What screening shows.</div>
+            </button>
           </div>
+        </div>
+      </section>
+
+      <!-- COMMUNITY &amp; BELONGING -->
+      <section class="bh-section" aria-label="community and belonging" style="padding-top:0">
+        <div class="bh-section-frame">
+          <div class="bh-zone-label">community &amp; belonging</div>
+          <p class="bh-zone-prompt">Connection is medicine. <em>Belonging is a practice.</em></p>
+          <p class="bh-zone-sub">Pillar VI lives here. The lived practices that fulfill it &mdash; and where to find them near you.</p>
+        </div>
+        <div class="bh-conditions-grid">
+          <button class="bh-cond" data-prompt="Find congregate meal sites near me and how to join.">
+            <div class="bh-cond-name">Congregate meals</div>
+            <div class="bh-cond-line">Eating with people. Senior centers, community kitchens.</div>
+          </button>
+          <button class="bh-cond" data-prompt="Find library programs and learning groups near me.">
+            <div class="bh-cond-name">Library programs</div>
+            <div class="bh-cond-line">Free. Open to all. Where curiosity lives.</div>
+          </button>
+          <button class="bh-cond" data-prompt="Find dance and music groups near me.">
+            <div class="bh-cond-name">Dance &amp; music</div>
+            <div class="bh-cond-line">Move with people. Sing with people.</div>
+          </button>
+          <button class="bh-cond" data-prompt="Find faith communities near me — open and welcoming.">
+            <div class="bh-cond-name">Faith communities</div>
+            <div class="bh-cond-line">Shared rituals. Shared meaning.</div>
+          </button>
+          <button class="bh-cond" data-prompt="Find volunteer opportunities near me that match what I care about.">
+            <div class="bh-cond-name">Volunteer work</div>
+            <div class="bh-cond-line">Being useful to someone you may never meet.</div>
+          </button>
+          <button class="bh-cond" data-prompt="Find hobby groups, clubs, and learning circles near me.">
+            <div class="bh-cond-name">Hobby &amp; learning groups</div>
+            <div class="bh-cond-line">Build something. Learn something. With people.</div>
+          </button>
         </div>
       </section>
 
