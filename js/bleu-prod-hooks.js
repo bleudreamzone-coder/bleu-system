@@ -15,7 +15,6 @@
   // -------------------------------------------------------------------
   var CONFIG = {
     alvaiEndpoint:   '/api/chat',           // ALVAI backend (Supabase edge fn)
-    budMode:         'ecsiq',               // mode flag for /ecsiq sea
     // Stripe public key is injected at build/runtime. Server exposes it at
     // /api/config (or window.__BLEU_STRIPE_PK__ from a server-rendered tag).
     // Never hardcode the live key in the repo.
@@ -27,9 +26,7 @@
       '/support':   '/support',
       '/learn':     '/learn',
       '/supply':    '/supply',
-      '/ecsiq':     '/ecsiq',
-      '/why':       '/why',
-      '/held':      '/held',
+      '/account':   '/account',
       '/signin':    '/auth/signin',
       '/create-account': '/auth/create',
       '/affiliate-disclosure': '/legal/affiliate-disclosure',
@@ -53,12 +50,10 @@
   // Detect which sea we're on — the URL path tells us mode.
   function detectMode(){
     var p = window.location.pathname || '/';
-    if (p.indexOf('/ecsiq') !== -1) return 'ecsiq';   // Bud
     if (p.indexOf('/support') !== -1) return 'therapy';
     if (p.indexOf('/supply') !== -1) return 'supply';
     if (p.indexOf('/learn') !== -1) return 'learn';
     if (p.indexOf('/local') !== -1) return 'local';
-    if (p.indexOf('/why') !== -1) return 'why';
     return 'general';
   }
 
@@ -70,8 +65,6 @@
     if (p.indexOf('/support') !== -1) return 'support';
     if (p.indexOf('/supply') !== -1) return 'supply';
     if (p.indexOf('/learn') !== -1) return 'learn';
-    if (p.indexOf('/ecsiq') !== -1) return 'ecsiq';
-    if (p.indexOf('/why') !== -1) return 'why';
     return 'home';
   }
 
