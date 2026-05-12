@@ -569,7 +569,7 @@ body{
   line-height:1.5;
 }
 
-/* TRUST BAND — Working Rules made visible */
+/* TRUST BAND */
 .bh-trust-band{
   max-width:780px;margin:36px auto 0;padding:24px 28px;
   background:linear-gradient(135deg,rgba(255,250,241,.85),rgba(244,236,217,.55));
@@ -839,9 +839,9 @@ body{
       <div class="bh-chrome-right">
         <button class="bh-signin" id="signin">sign in</button>
         <button class="bh-create" id="create-top">create account</button>
-        <button class="bh-held" data-route="/held">
+        <button class="bh-held" data-route="/account">
           <span class="bh-held-dot" id="held-dot"></span>
-          <span id="held-label">held</span>
+          <span id="held-label">My Account</span>
         </button>
       </div>
     </header>
@@ -1131,12 +1131,12 @@ body{
         </div>
       </section>
 
-      <!-- TRUST BAND — Working Rule No. 5 visible -->
+      <!-- TRUST BAND -->
       <section class="bh-section" aria-label="our promise" style="padding-top:0">
         <div class="bh-trust-band">
           <div class="bh-trust-band-eyebrow">our promise</div>
           <p class="bh-trust-band-quote">"We collect the minimum. <em>We do not sell data. Ever.</em> The safety check is always free, always before the buy button."</p>
-          <div class="bh-trust-band-sub">Working Rule No. 5 &middot; <a href="/affiliate-disclosure">Affiliate Disclosure</a> &middot; <a href="/privacy">Privacy</a></div>
+          <div class="bh-trust-band-sub"><a href="/affiliate-disclosure">Affiliate Disclosure</a> &middot; <a href="/privacy">Privacy</a></div>
         </div>
       </section>
 
@@ -1230,7 +1230,7 @@ body{
    bleu.live — Supply (Sea v) · DEEP BUILD v1
    Production hooks (wire on deploy):
      window.sendPrompt(text)          → routes to Alvai
-     window.routeTo(path)             → seven seas navigation
+     window.routeTo(path)             → five-tab navigation
      window.startStripeCheckout(key)  → starts Stripe Checkout for the
        protocol bundle. Keys: 'sleep' | 'stress' | 'longevity' | 'gut'.
        Backend: Stripe price IDs locked —
@@ -1300,7 +1300,7 @@ body{
     heldDot.classList.remove('pulse');
     void heldDot.offsetWidth;
     heldDot.classList.add('pulse');
-    heldLabel.textContent = 'held · ' + heldCount;
+    heldLabel.textContent = 'My Account';
   }
 
   // Cursor aura
@@ -1375,7 +1375,7 @@ body{
   if (input) input.addEventListener('keydown', function(e){ if (e.key === 'Enter') submit(); });
 
   // UNIFICATION SAFETY NET — warns dev console if any interactive element ships dead.
-  // Working Rule applied: every button must work; Alvai is the unifier.
+  // Every interactive surface must have a wired handler; Alvai is the unifier.
   setTimeout(function(){
     var dead = [];
     document.querySelectorAll('button, [role="button"]').forEach(function(node){

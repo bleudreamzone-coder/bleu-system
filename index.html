@@ -769,9 +769,9 @@ body{
       <div class="bh-chrome-right">
         <button class="bh-signin" id="signin">sign in</button>
         <button class="bh-create" id="create-top">create account</button>
-        <button class="bh-held" data-route="/held">
+        <button class="bh-held" data-route="/account">
           <span class="bh-held-dot" id="held-dot"></span>
-          <span id="held-label">held</span>
+          <span id="held-label">My Account</span>
         </button>
       </div>
     </header>
@@ -830,8 +830,8 @@ body{
       <div class="bh-passport-strip">
         <div class="bh-passport-glyph"></div>
         <div class="bh-passport-text">
-          <div class="bh-passport-line1">Your <em>BLEU account</em> · <strong>10 seconds with Google or Apple</strong></div>
-          <div class="bh-passport-line2">Saves your conversation, your held resources, and your safety profile across all seven rooms</div>
+          <div class="bh-passport-line1">Your <em>BLEU account</em> · <strong>10 seconds with your email</strong></div>
+          <div class="bh-passport-line2">Saves your conversation, your saved resources, and your safety profile across the platform</div>
         </div>
         <button class="bh-passport-yes" id="passport-yes">Create account</button>
       </div>
@@ -1030,7 +1030,7 @@ body{
       <button class="bh-modal-close" id="modal-close" aria-label="Close">&times;</button>
       <div class="bh-modal-eyebrow">create your account</div>
       <h2 class="bh-modal-title" id="modal-title">Your <em>BLEU account.</em></h2>
-      <p class="bh-modal-sub">10 seconds. Use Google, Apple, or email. The platform remembers you across all seven rooms.</p>
+      <p class="bh-modal-sub">10 seconds. Create with your email. The platform remembers you across every tab.</p>
 
       <div class="bh-modal-social">
         <button class="bh-social-btn" id="auth-google" type="button">
@@ -1062,7 +1062,7 @@ body{
 
       <p class="bh-modal-existing">Already have one? <a id="modal-signin">Sign in</a></p>
 
-      <p class="bh-modal-promise">"We collect the minimum. We don't sell data. Ever." &mdash; Working Rule No. 5</p>
+      <p class="bh-modal-promise">"We collect the minimum. We don't sell data. Ever."</p>
     </div>
   </div>
 </main>
@@ -1093,18 +1093,7 @@ body{
     console.log('[bleu] auth:', provider, payload || '');
   }
 
-  // Time-aware contextual phrase
-  var ctx = document.getElementById('ctx-text');
-  if (ctx) {
-    var hr = new Date().getHours();
-    if (hr >= 0 && hr < 5) ctx.textContent = 'awake at this hour · we are here';
-    else if (hr < 9) ctx.textContent = 'early morning · take it slow';
-    else if (hr < 12) ctx.textContent = 'late morning · steady arrival';
-    else if (hr < 14) ctx.textContent = 'midday · check in with the body';
-    else if (hr < 18) ctx.textContent = 'afternoon · the slow rise';
-    else if (hr < 21) ctx.textContent = 'evening · the day is closing';
-    else ctx.textContent = 'late · softer light tonight';
-  }
+  // Static contextual phrase — the room is always listening.
 
   // Hospitality typewriter — Felicia's receiving voice
   var phrases = [
@@ -1183,7 +1172,7 @@ body{
     heldDot.classList.remove('pulse');
     void heldDot.offsetWidth;
     heldDot.classList.add('pulse');
-    heldLabel.textContent = 'held · ' + heldCount;
+    heldLabel.textContent = 'My Account';
   }
 
   // Modal

@@ -11,7 +11,7 @@
   'use strict';
 
   // -------------------------------------------------------------------
-  // CONFIG — edit once, applies to all seven seas
+  // CONFIG — edit once, applies to all five tabs
   // -------------------------------------------------------------------
   var CONFIG = {
     alvaiEndpoint:   '/api/chat',           // ALVAI backend (Supabase edge fn)
@@ -45,9 +45,9 @@
   };
 
   // -------------------------------------------------------------------
-  // ALVAI + BUD — primary unifier
+  // ALVAI — primary unifier
   // -------------------------------------------------------------------
-  // Detect which sea we're on — the URL path tells us mode.
+  // Detect which tab we're on — the URL path tells us mode.
   function detectMode(){
     var p = window.location.pathname || '/';
     if (p.indexOf('/support') !== -1) return 'therapy';
@@ -59,7 +59,7 @@
 
   // Display label for the panel header — uses the URL slug (HOME, LOCAL, SUPPORT, ...)
   // rather than the AI mode name (general, therapy, ...) so the reader sees what they expect.
-  function detectSeaLabel(){
+  function detectTabLabel(){
     var p = window.location.pathname || '/';
     if (p.indexOf('/local') !== -1) return 'local';
     if (p.indexOf('/support') !== -1) return 'support';
@@ -146,7 +146,7 @@
     subRow.style.cssText = 'display:inline-flex;align-items:center;margin-top:5px;';
     var sub = document.createElement('span');
     sub.style.cssText = 'font-size:10px;font-weight:400;text-transform:uppercase;letter-spacing:.16em;color:#a8a299;';
-    sub.textContent = 'sea · ' + detectSeaLabel();
+    sub.textContent = detectTabLabel();
     _modeLabel = sub;
     subRow.appendChild(sub);
     hdrLeft.appendChild(title); hdrLeft.appendChild(subRow);
@@ -234,7 +234,7 @@
 
   function openPanel(){
     var p = ensurePanel();
-    if (_modeLabel) _modeLabel.textContent = 'sea · ' + detectSeaLabel();
+    if (_modeLabel) _modeLabel.textContent = detectTabLabel();
     ensureWelcome();
     requestAnimationFrame(function(){
       p.style.transform = 'translateY(0)';
@@ -304,7 +304,7 @@
   window.sendPrompt = function(text){
     if (!text) return;
     var mode = detectMode();
-    var payload = { message: text, mode: mode, timestamp: new Date().toISOString(), sea: mode };
+    var payload = { message: text, mode: mode, timestamp: new Date().toISOString() };
 
     // Backwards compatibility: if a sea or shell defines window.alvaiPanel, hand off.
     if (typeof window.alvaiPanel === 'object' && typeof window.alvaiPanel.send === 'function') {
@@ -489,5 +489,5 @@
   // MARK PRODUCTION READY
   // -------------------------------------------------------------------
   window.bleuProdHooks = { version: '1.0.0', date: '2026-05-09', mode: detectMode() };
-  console.log('[bleu/prod] hooks loaded · sea =', detectMode());
+  console.log('[bleu/prod] hooks loaded · tab =', detectMode());
 })();

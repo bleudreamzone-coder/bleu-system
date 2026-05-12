@@ -818,9 +818,9 @@ body{
       <div class="bh-chrome-right">
         <button class="bh-signin" id="signin">sign in</button>
         <button class="bh-create" id="create-top">create account</button>
-        <button class="bh-held" data-route="/held">
+        <button class="bh-held" data-route="/account">
           <span class="bh-held-dot" id="held-dot"></span>
-          <span id="held-label">held</span>
+          <span id="held-label">My Account</span>
         </button>
       </div>
     </header>
@@ -1308,7 +1308,7 @@ body{
     heldDot.classList.remove('pulse');
     void heldDot.offsetWidth;
     heldDot.classList.add('pulse');
-    heldLabel.textContent = 'held · ' + heldCount;
+    heldLabel.textContent = 'My Account';
   }
 
   // Cursor aura

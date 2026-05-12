@@ -536,7 +536,7 @@ body{
   background:var(--ink-faint);opacity:.5;margin-top:7px;
 }
 
-/* BEAST LIBRARY — vetted teaching */
+/* LIBRARY — vetted teaching */
 .bh-library{
   max-width:1080px;margin:36px auto 0;padding:32px 28px;
   background:linear-gradient(135deg,rgba(91,140,123,.06),rgba(91,140,123,.02));
@@ -815,9 +815,9 @@ body{
       <div class="bh-chrome-right">
         <button class="bh-signin" id="signin">sign in</button>
         <button class="bh-create" id="create-top">create account</button>
-        <button class="bh-held" data-route="/held">
+        <button class="bh-held" data-route="/account">
           <span class="bh-held-dot" id="held-dot"></span>
-          <span id="held-label">held</span>
+          <span id="held-label">My Account</span>
         </button>
       </div>
     </header>
@@ -1089,7 +1089,7 @@ body{
         </div>
       </section>
 
-      <!-- BEAST LIBRARY -->
+      <!-- LIBRARY -->
       <section class="bh-section" aria-label="vetted teaching" style="padding-top:0">
         <div class="bh-library">
           <div class="bh-library-head">
@@ -1103,7 +1103,7 @@ body{
               <div class="bh-lib-name">Vetted videos by condition</div>
               <div class="bh-lib-line">YouTube indexed and screened. Sleep, anxiety, gut, pain, focus, recovery, and more &mdash; the teachers we trust, surfaced.</div>
               <div class="bh-lib-foot">
-                <span class="bh-lib-count"><strong>BEAST</strong> indexed daily</span>
+                <span class="bh-lib-count"><strong>Updated daily</strong></span>
                 <span class="bh-lib-arrow">→</span>
               </div>
             </button>
@@ -1112,7 +1112,7 @@ body{
               <div class="bh-lib-name">Audio for sleep and regulation</div>
               <div class="bh-lib-line">Spotify playlists matched to mood and condition. Sleep, focus, anxiety, recovery, pain, meditation. Surfaced by what you tell us.</div>
               <div class="bh-lib-foot">
-                <span class="bh-lib-count"><strong>BEAST</strong> indexed daily</span>
+                <span class="bh-lib-count"><strong>Updated daily</strong></span>
                 <span class="bh-lib-arrow">→</span>
               </div>
             </button>
@@ -1121,7 +1121,7 @@ body{
               <div class="bh-lib-name">Free wellness events near you</div>
               <div class="bh-lib-line">Eventbrite category 107 indexed by city. Health fairs, classes, support gatherings. Mostly free.</div>
               <div class="bh-lib-foot">
-                <span class="bh-lib-count"><strong>BEAST</strong> indexed daily</span>
+                <span class="bh-lib-count"><strong>Updated daily</strong></span>
                 <span class="bh-lib-arrow">→</span>
               </div>
             </button>
@@ -1202,10 +1202,10 @@ body{
    bleu.live — Learn (Sea iv) · DEEP BUILD v1
    Production hooks (wire on deploy):
      window.sendPrompt(text)  → Alvai
-     window.routeTo(path)     → seven seas + 333 HERO pages
+     window.routeTo(path)     → five-tab navigation + 333 HERO pages
    The 333 deep condition pages are real production routes:
      /sleep, /anxiety, /gut already deployed.
-     Other condition routes ship as the BEAST library expands them.
+     Other condition routes ship as the library expands.
    Every button works. Alvai is the unifier — every interaction routes
    to her if no production hook is wired yet.
    ========================================================================= */
@@ -1261,7 +1261,7 @@ body{
     heldDot.classList.remove('pulse');
     void heldDot.offsetWidth;
     heldDot.classList.add('pulse');
-    heldLabel.textContent = 'held · ' + heldCount;
+    heldLabel.textContent = 'My Account';
   }
 
   // Cursor aura
@@ -1343,7 +1343,7 @@ body{
   if (go) go.addEventListener('click', submit);
   if (input) input.addEventListener('keydown', function(e){ if (e.key === 'Enter') submit(); });
 
-  // UNIFICATION SAFETY NET — Working Rule applied: every button must work.
+  // UNIFICATION SAFETY NET — every interactive surface must have a wired handler.
   // Alvai is the unifier. Console-warn the dev team if any element ships dead.
   setTimeout(function(){
     var dead = [];
