@@ -592,6 +592,11 @@ body{
   transition:.4s ease;
 }
 .bh-handoff-card:hover .bh-handoff-arrow{transform:translateX(4px);color:var(--purple)}
+.bh-handoff-aff{
+  margin-top:8px;font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-whisper);text-align:right;
+}
+.bh-handoff-aff a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 
 /* FELICIA SIGNATURE — Support is her primary clinical voice domain */
 .bh-felicia{max-width:760px;margin:36px auto 0;padding:32px 22px;text-align:center}
@@ -848,9 +853,14 @@ body{
         <div class="bh-mood-row">
           <button class="bh-mood" data-prompt="I am anxious right now and I cannot shake it. Help me regulate.">Anxious</button>
           <button class="bh-mood" data-prompt="I feel low. Heavy. Flat. Help me through this.">Low</button>
+          <button class="bh-mood" data-prompt="I feel sad. Something hurts. Help me sit with it.">Sad</button>
+          <button class="bh-mood" data-prompt="I am depressed. Days feel heavy. I am struggling.">Depressed</button>
           <button class="bh-mood" data-prompt="I am angry. I do not know what to do with this feeling.">Angry</button>
           <button class="bh-mood" data-prompt="I am grieving. I lost someone or something. Hold space with me.">Grieving</button>
           <button class="bh-mood" data-prompt="I feel numb. Disconnected. Like I am watching from outside.">Numb</button>
+          <button class="bh-mood" data-prompt="I feel drained. Empty. Like I have nothing left.">Drained</button>
+          <button class="bh-mood" data-prompt="I feel weak. Worn down. My body or mind cannot carry more.">Weak</button>
+          <button class="bh-mood" data-prompt="I am stressed. Too much pressure, too many things at once.">Stressed</button>
           <button class="bh-mood" data-prompt="I am overwhelmed. Everything is too much right now.">Overwhelmed</button>
           <button class="bh-mood" data-prompt="I cannot sleep. Help me wind down.">Cannot sleep</button>
           <button class="bh-mood" data-prompt="I am okay actually &mdash; I just want to talk.">Okay actually</button>
@@ -1064,7 +1074,7 @@ body{
             </button>
             <button class="bh-rec-mode" data-prompt="Open MAT mode. I want help with medication-assisted treatment.">
               <div class="bh-rec-name">MAT</div>
-              <div class="bh-rec-line">Medication-assisted. Suboxone, naltrexone, methadone.</div>
+              <div class="bh-rec-line">Medication-assisted treatment. Talk to a clinician about options that may include Suboxone, naltrexone, or methadone.</div>
             </button>
             <button class="bh-rec-mode" data-prompt="Open Milestones mode. I want to mark my time.">
               <div class="bh-rec-name">Milestones</div>
@@ -1112,6 +1122,7 @@ body{
               <span class="bh-handoff-price">From <strong>$60/wk</strong></span>
               <span class="bh-handoff-arrow">→</span>
             </div>
+            <div class="bh-handoff-aff"><a href="/affiliate-disclosure" style="color:inherit">Affiliate disclosed</a></div>
           </button>
           <button class="bh-handoff-card" data-prompt="Show me Talkspace online therapy options">
             <div>
@@ -1123,6 +1134,7 @@ body{
               <span class="bh-handoff-price">From <strong>$70/wk</strong></span>
               <span class="bh-handoff-arrow">→</span>
             </div>
+            <div class="bh-handoff-aff"><a href="/affiliate-disclosure" style="color:inherit">Affiliate disclosed</a></div>
           </button>
           <button class="bh-handoff-card" data-prompt="Show me Open Path low-cost therapy">
             <div>
@@ -1134,6 +1146,7 @@ body{
               <span class="bh-handoff-price">From <strong>$40/session</strong></span>
               <span class="bh-handoff-arrow">→</span>
             </div>
+            <div class="bh-handoff-aff"><a href="/affiliate-disclosure" style="color:inherit">Membership-based</a></div>
           </button>
         </div>
       </section>
