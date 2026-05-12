@@ -126,16 +126,16 @@ body{
 @keyframes contextPulse{0%,100%{opacity:.4}50%{opacity:.9}}
 
 .bh-numerals{
-  display:flex;gap:2px;align-items:center;
-  font-family:var(--display);font-style:italic;font-size:11px;
-  color:var(--ink-faint);font-weight:400;letter-spacing:.04em;
+  display:flex;gap:4px;align-items:center;
+  font-family:var(--body);font-size:12px;
+  color:var(--ink-faint);font-weight:400;letter-spacing:.02em;
 }
 .bh-numeral{
   background:none;border:0;color:var(--ink-faint);
-  font-family:inherit;font-size:inherit;font-style:inherit;
+  font-family:inherit;font-size:inherit;
   font-weight:inherit;letter-spacing:inherit;
-  padding:5px 8px;cursor:pointer;border-radius:50%;
-  transition:.4s ease;width:26px;height:26px;
+  padding:6px 12px;cursor:pointer;border-radius:14px;
+  transition:.4s ease;min-height:26px;
   display:flex;align-items:center;justify-content:center;position:relative;
 }
 .bh-numeral:hover{color:var(--ink);background:rgba(232,220,192,.5)}
@@ -807,14 +807,12 @@ body{
         </div>
       </div>
 
-      <nav class="bh-numerals" aria-label="seven seas">
-        <button class="bh-numeral" data-route="/">i.<span class="bh-numeral-tip">home</span></button>
-        <button class="bh-numeral" data-route="/local">ii.<span class="bh-numeral-tip">local</span></button>
-        <button class="bh-numeral active" aria-current="page">iii.<span class="bh-numeral-tip">support</span></button>
-        <button class="bh-numeral" data-route="/learn">iv.<span class="bh-numeral-tip">learn</span></button>
-        <button class="bh-numeral" data-route="/supply">v.<span class="bh-numeral-tip">supply</span></button>
-        <button class="bh-numeral" data-route="/ecsiq">vi.<span class="bh-numeral-tip">ecsiq</span></button>
-        <button class="bh-numeral" data-route="/why">vii.<span class="bh-numeral-tip">why</span></button>
+      <nav class="bh-numerals" aria-label="primary">
+        <button class="bh-numeral" data-route="/">Home</button>
+        <button class="bh-numeral" data-route="/local">Local</button>
+        <button class="bh-numeral active" aria-current="page">Support</button>
+        <button class="bh-numeral" data-route="/learn">Learn</button>
+        <button class="bh-numeral" data-route="/supply">Supply</button>
       </nav>
 
       <div class="bh-chrome-right">
@@ -1152,43 +1150,27 @@ body{
       </section>
 
       <!-- DOCK -->
-      <section class="bh-dock" aria-label="seven seas">
-        <p class="bh-dock-prompt">Seven rooms. <em>One conversation.</em> Every door connects to every other.</p>
+      <section class="bh-dock" aria-label="tabs">
         <div class="bh-dock-row">
           <button class="bh-sea" data-route="/">
-            <div class="bh-sea-num">i.</div>
             <div class="bh-sea-name">Home</div>
             <div class="bh-sea-line">begin here</div>
           </button>
           <button class="bh-sea" data-route="/local">
-            <div class="bh-sea-num">ii.</div>
             <div class="bh-sea-name">Local</div>
             <div class="bh-sea-line">care &middot; city</div>
           </button>
           <button class="bh-sea current" aria-current="page">
-            <div class="bh-sea-num">iii.</div>
             <div class="bh-sea-name">Support</div>
             <div class="bh-sea-line">therapy &middot; sleep</div>
           </button>
           <button class="bh-sea" data-route="/learn">
-            <div class="bh-sea-num">iv.</div>
             <div class="bh-sea-name">Learn</div>
             <div class="bh-sea-line">science you use</div>
           </button>
           <button class="bh-sea" data-route="/supply">
-            <div class="bh-sea-num">v.</div>
             <div class="bh-sea-name">Supply</div>
-            <div class="bh-sea-line">protocols</div>
-          </button>
-          <button class="bh-sea" data-route="/ecsiq">
-            <div class="bh-sea-num">vi.</div>
-            <div class="bh-sea-name">ECSIQ</div>
-            <div class="bh-sea-line">ECS</div>
-          </button>
-          <button class="bh-sea" data-route="/why">
-            <div class="bh-sea-num">vii.</div>
-            <div class="bh-sea-name">Why BLEU</div>
-            <div class="bh-sea-line">the difference</div>
+            <div class="bh-sea-line">protocols &middot; safety check</div>
           </button>
         </div>
       </section>

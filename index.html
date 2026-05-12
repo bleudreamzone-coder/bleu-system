@@ -118,16 +118,16 @@ body{
 @keyframes contextPulse{0%,100%{opacity:.4}50%{opacity:.9}}
 
 .bh-numerals{
-  display:flex;gap:2px;align-items:center;
-  font-family:var(--display);font-style:italic;font-size:11px;
-  color:var(--ink-faint);font-weight:400;letter-spacing:.04em;
+  display:flex;gap:4px;align-items:center;
+  font-family:var(--body);font-size:12px;
+  color:var(--ink-faint);font-weight:400;letter-spacing:.02em;
 }
 .bh-numeral{
   background:none;border:0;color:var(--ink-faint);
-  font-family:inherit;font-size:inherit;font-style:inherit;
+  font-family:inherit;font-size:inherit;
   font-weight:inherit;letter-spacing:inherit;
-  padding:5px 8px;cursor:pointer;border-radius:50%;
-  transition:.4s ease;width:26px;height:26px;
+  padding:6px 12px;cursor:pointer;border-radius:14px;
+  transition:.4s ease;min-height:26px;
   display:flex;align-items:center;justify-content:center;position:relative;
 }
 .bh-numeral:hover{color:var(--ink);background:rgba(232,220,192,.5)}
@@ -137,19 +137,7 @@ body{
   transform:translateX(-50%);width:3px;height:3px;
   border-radius:50%;background:var(--blue);opacity:.6;
 }
-.bh-numeral-tip{
-  position:absolute;top:32px;left:50%;transform:translateX(-50%);
-  background:var(--ink);color:var(--cream);padding:5px 10px;border-radius:6px;
-  font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
-  font-style:normal;white-space:nowrap;opacity:0;pointer-events:none;
-  transition:.3s ease;z-index:50;
-}
-.bh-numeral:hover .bh-numeral-tip{opacity:1;transform:translateX(-50%) translateY(2px)}
-.bh-numeral-tip::before{
-  content:"";position:absolute;top:-4px;left:50%;transform:translateX(-50%);
-  border-left:4px solid transparent;border-right:4px solid transparent;
-  border-bottom:4px solid var(--ink);
-}
+.bh-numeral-tip{display:none}
 
 .bh-chrome-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .bh-signin{
@@ -770,14 +758,12 @@ body{
         <div class="bh-context"><span class="bh-context-dot"></span><span id="ctx-text">listening</span></div>
       </div>
 
-      <nav class="bh-numerals" aria-label="seven seas">
-        <button class="bh-numeral active" aria-current="page">i.<span class="bh-numeral-tip">home</span></button>
-        <button class="bh-numeral" data-route="/local">ii.<span class="bh-numeral-tip">local</span></button>
-        <button class="bh-numeral" data-route="/support">iii.<span class="bh-numeral-tip">support</span></button>
-        <button class="bh-numeral" data-route="/learn">iv.<span class="bh-numeral-tip">learn</span></button>
-        <button class="bh-numeral" data-route="/supply">v.<span class="bh-numeral-tip">supply</span></button>
-        <button class="bh-numeral" data-route="/ecsiq">vi.<span class="bh-numeral-tip">ecsiq</span></button>
-        <button class="bh-numeral" data-route="/why">vii.<span class="bh-numeral-tip">why</span></button>
+      <nav class="bh-numerals" aria-label="primary">
+        <button class="bh-numeral active" aria-current="page">Home</button>
+        <button class="bh-numeral" data-route="/local">Local</button>
+        <button class="bh-numeral" data-route="/support">Support</button>
+        <button class="bh-numeral" data-route="/learn">Learn</button>
+        <button class="bh-numeral" data-route="/supply">Supply</button>
       </nav>
 
       <div class="bh-chrome-right">
@@ -984,43 +970,27 @@ body{
         </div>
       </section>
 
-      <section class="bh-dock" aria-label="seven seas">
-        <p class="bh-dock-prompt">Seven rooms. <em>One conversation.</em> Every door connects to every other.</p>
+      <section class="bh-dock" aria-label="tabs">
         <div class="bh-dock-row">
-          <button class="bh-sea current" aria-current="page">
-            <div class="bh-sea-num">i.</div>
+          <button class="bh-sea current" aria-current="page" data-route="/">
             <div class="bh-sea-name">Home</div>
             <div class="bh-sea-line">begin here</div>
           </button>
           <button class="bh-sea" data-route="/local">
-            <div class="bh-sea-num">ii.</div>
             <div class="bh-sea-name">Local</div>
             <div class="bh-sea-line">care &middot; city</div>
           </button>
           <button class="bh-sea" data-route="/support">
-            <div class="bh-sea-num">iii.</div>
             <div class="bh-sea-name">Support</div>
             <div class="bh-sea-line">therapy &middot; sleep</div>
           </button>
           <button class="bh-sea" data-route="/learn">
-            <div class="bh-sea-num">iv.</div>
             <div class="bh-sea-name">Learn</div>
             <div class="bh-sea-line">science you use</div>
           </button>
           <button class="bh-sea" data-route="/supply">
-            <div class="bh-sea-num">v.</div>
             <div class="bh-sea-name">Supply</div>
-            <div class="bh-sea-line">protocols</div>
-          </button>
-          <button class="bh-sea" data-route="/ecsiq">
-            <div class="bh-sea-num">vi.</div>
-            <div class="bh-sea-name">ECSIQ</div>
-            <div class="bh-sea-line">ECS</div>
-          </button>
-          <button class="bh-sea" data-route="/why">
-            <div class="bh-sea-num">vii.</div>
-            <div class="bh-sea-name">Why BLEU</div>
-            <div class="bh-sea-line">the difference</div>
+            <div class="bh-sea-line">protocols &middot; safety check</div>
           </button>
         </div>
       </section>
