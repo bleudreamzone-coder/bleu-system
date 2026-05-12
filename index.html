@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#fcf8ef" />
 
-<title>bleu.live — A clinically governed digital care delivery platform</title>
+<title>bleu.live — A clinically governed care platform built for your life</title>
 
-<meta name="description" content="A clinically governed digital care delivery platform. Free. Private. Built for real life. Co-founded by Bleu Garner and Dr. Felicia Stoler, DCN." />
+<meta name="description" content="A clinically governed care platform built for your life. Free. Private. Built for real life." />
 <meta name="author" content="Bleu Garner · Dr. Felicia Stoler, DCN" />
-<meta property="og:title" content="bleu.live — A clinically governed digital care delivery platform" />
+<meta property="og:title" content="bleu.live — A clinically governed care platform built for your life" />
 <meta property="og:description" content="Free. Private. Built for real life." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://bleu.live/" />
@@ -464,12 +464,52 @@ body{
   display:block;font-size:9.5px;letter-spacing:.14em;
   color:var(--ink-whisper);margin-top:4px;
 }
+.bh-felicia-aux{
+  max-width:560px;margin:22px auto 0;padding:14px 12px 0;
+  border-top:0.5px solid rgba(201,162,39,.18);text-align:center;
+}
+.bh-felicia-aux-quote{
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:17px;line-height:1.45;color:var(--ink-soft);
+  margin:0 0 6px;
+}
+.bh-felicia-aux-byline{
+  font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-whisper);
+}
+
+/* TRUST CALLOUT — small, plain, placed before any commerce surface */
+.bh-trust-callout{
+  max-width:720px;margin:18px auto 0;padding:14px 22px;
+  text-align:center;
+  font-family:var(--display);font-style:italic;font-weight:300;
+  font-size:15px;color:var(--ink-soft);line-height:1.5;
+}
+.bh-trust-callout strong{font-style:normal;font-weight:500;color:var(--ink)}
+
+/* CRISIS — explainer pattern */
+.bh-crisis-full{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:14px;max-width:780px;margin-left:auto;margin-right:auto}
+.bh-crisis-line{
+  background:rgba(255,250,241,.5);border:0.5px solid rgba(232,220,192,.5);
+  border-radius:12px;padding:12px 14px;text-align:left;
+  display:flex;flex-direction:column;gap:2px;
+  text-decoration:none;transition:.3s ease;
+  color:var(--ink);
+}
+.bh-crisis-line:hover{background:var(--paper);border-color:var(--coral)}
+.bh-crisis-num{
+  font-family:var(--display);font-weight:400;font-size:15px;color:var(--ink);
+  letter-spacing:-.01em;
+}
+.bh-crisis-who{
+  font-size:10px;color:var(--ink-faint);font-weight:500;letter-spacing:.06em;
+}
 
 /* ECOSYSTEM */
 .bh-ecosystem{max-width:1080px;margin:0 auto;padding:36px 0 24px}
 .bh-ecosystem-head{text-align:center;margin-bottom:24px}
 .bh-ecosystem-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;
   background:rgba(232,220,192,.5);
   border:0.5px solid rgba(232,220,192,.5);
   border-radius:18px;overflow:hidden;
@@ -787,7 +827,7 @@ body{
 
       <div class="bh-bigmark">bleu<span class="dot">.</span>live<span class="end">.</span></div>
 
-      <p class="bh-opening">A <em>clinically governed</em> digital care delivery platform. Free. Private. Built for real life.</p>
+      <p class="bh-opening">A <em>clinically governed</em> care platform built for your life.</p>
 
       <div class="bh-typewriter-shell" aria-live="polite">
         <h1 class="bh-typewriter">
@@ -819,11 +859,11 @@ body{
         <div class="bh-trust-row">
           <span><span class="bh-trust-strong">Free</span> · always</span>
           <span class="tdot"></span>
-          <span>Encrypted</span>
+          <span><a href="/privacy" style="color:inherit;text-decoration:underline;text-decoration-color:rgba(128,122,111,.3);text-underline-offset:2px">Encrypted</a></span>
           <span class="tdot"></span>
           <span>Never sold</span>
           <span class="tdot"></span>
-          <span><span class="bh-trust-strong">855K</span> verified clinicians</span>
+          <span>Clinically governed</span>
         </div>
       </div>
 
@@ -838,6 +878,31 @@ body{
 
     </section>
 
+    <section class="bh-dock" aria-label="tabs">
+      <div class="bh-dock-row">
+        <button class="bh-sea current" aria-current="page" data-route="/">
+          <div class="bh-sea-name">Home</div>
+          <div class="bh-sea-line">begin here</div>
+        </button>
+        <button class="bh-sea" data-route="/local">
+          <div class="bh-sea-name">Local</div>
+          <div class="bh-sea-line">care &middot; city</div>
+        </button>
+        <button class="bh-sea" data-route="/support">
+          <div class="bh-sea-name">Support</div>
+          <div class="bh-sea-line">therapy &middot; sleep</div>
+        </button>
+        <button class="bh-sea" data-route="/learn">
+          <div class="bh-sea-name">Learn</div>
+          <div class="bh-sea-line">science you use</div>
+        </button>
+        <button class="bh-sea" data-route="/supply">
+          <div class="bh-sea-name">Supply</div>
+          <div class="bh-sea-line">protocols &middot; safety check</div>
+        </button>
+      </div>
+    </section>
+
     <div class="bh-whispers-band">
       <div class="bh-whisper" id="whisper" aria-live="polite">
         <span class="bh-whisper-tag" id="wtag">observation</span>
@@ -847,13 +912,11 @@ body{
 
     <div class="bh-cities">
       <div class="bh-cities-line">
-        <span>Live in <strong>32 cities</strong></span>
+        <span>Deepest in <strong>New Orleans</strong></span>
         <span class="cdot"></span>
-        <a href="https://neworleans.bleu.live" style="color:inherit;text-decoration:none">neworleans.bleu.live</a>
+        <span>National resources elsewhere</span>
         <span class="cdot"></span>
-        <span><strong>333 city pages</strong></span>
-        <span class="cdot"></span>
-        <span>expanding</span>
+        <span>Expanding parish by parish</span>
       </div>
     </div>
 
@@ -866,25 +929,21 @@ body{
         </div>
         <div class="bh-paths">
           <button class="bh-path" data-prompt="My body needs attention — sleep, pain, energy, recovery">
-            <div class="bh-path-num">i.</div>
             <div class="bh-path-name">Body</div>
             <div class="bh-path-line">Sleep that won't come. Pain that won't quit.</div>
             <span class="bh-path-arrow">→</span>
           </button>
           <button class="bh-path" data-prompt="My mind needs attention — anxiety, mood, focus, identity">
-            <div class="bh-path-num">ii.</div>
             <div class="bh-path-name">Mind</div>
-            <div class="bh-path-line">A mind that won't quiet. Awake at 2am again.</div>
+            <div class="bh-path-line">Anxiety that won't ease. Days that feel heavy.</div>
             <span class="bh-path-arrow">→</span>
           </button>
           <button class="bh-path" data-prompt="Money pressure is affecting my health">
-            <div class="bh-path-num">iii.</div>
             <div class="bh-path-name">Money</div>
             <div class="bh-path-line">When meds cost too much. When care gets put off.</div>
             <span class="bh-path-arrow">→</span>
           </button>
           <button class="bh-path" data-prompt="Something deeper — meaning, grief, connection, purpose">
-            <div class="bh-path-num">iv.</div>
             <div class="bh-path-name">Spirit</div>
             <div class="bh-path-line">Loss. Loneliness. Wanting more from your days.</div>
             <span class="bh-path-arrow">→</span>
@@ -892,8 +951,8 @@ body{
         </div>
       </section>
 
-      <section class="bh-felicia" aria-label="the doctrine">
-        <div class="bh-felicia-eyebrow">the doctrine</div>
+      <section class="bh-felicia" aria-label="what we stand for">
+        <div class="bh-felicia-eyebrow">what we stand for</div>
         <p class="bh-felicia-quote">"Put good tools in good hands and let people <em>take care of themselves &mdash; and each other</em>."</p>
         <div class="bh-felicia-doctrine">
           <div class="bh-doctrine-half">
@@ -911,7 +970,17 @@ body{
           <span class="title">Chief Clinical Officer</span>
           <span class="creds">DCN &middot; MS &middot; RDN &middot; FACSM &middot; FAND &middot; Dipl. ACLM</span>
         </div>
+        <div class="bh-felicia-aux">
+          <p class="bh-felicia-aux-quote">"People want to be heard. They want to be seen."</p>
+          <div class="bh-felicia-aux-byline">&mdash; Dr. Felicia Stoler, Chief Clinical Officer</div>
+        </div>
+        <div class="bh-felicia-aux">
+          <p class="bh-felicia-aux-quote">"Science is real. No bias."</p>
+          <div class="bh-felicia-aux-byline">&mdash; Dr. Felicia Stoler, Chief Clinical Officer</div>
+        </div>
       </section>
+
+      <div class="bh-trust-callout"><strong>BLEU does not run ads.</strong> The only incentive is your outcome.</div>
 
       <section class="bh-ecosystem" aria-label="the full ecosystem">
         <div class="bh-ecosystem-head">
@@ -919,91 +988,66 @@ body{
           <p class="bh-zone-prompt">Every service. Every safeguard. <em>Verifiable.</em></p>
         </div>
         <div class="bh-ecosystem-grid">
-          <button class="bh-eco" data-prompt="Show me the protocol bundles">
-            <div class="bh-eco-label">protocols</div>
-            <div class="bh-eco-name">Find a protocol that fits you</div>
-            <div class="bh-eco-desc">Sleep &middot; Stress &middot; Longevity &middot; Gut. From $45/mo. Stripe-secured.</div>
-            <span class="bh-eco-status">live</span>
-          </button>
-          <button class="bh-eco" data-prompt="Show me the Fullscript practitioner dispensary">
-            <div class="bh-eco-label">supplements</div>
-            <div class="bh-eco-name">Practitioner-grade, clinically chosen</div>
-            <div class="bh-eco-desc">Dr. Stoler's dispensary. 10 protocols. Methylated forms.</div>
-            <span class="bh-eco-status">live</span>
-          </button>
-          <button class="bh-eco" data-prompt="Show me sourcing and pricing">
-            <div class="bh-eco-label">sourcing</div>
-            <div class="bh-eco-name">The cheapest safe option, every time</div>
-            <div class="bh-eco-desc">Amazon Associates &middot; disclosed always &middot; price-checked.</div>
-            <span class="bh-eco-status">live</span>
+          <button class="bh-eco" data-prompt="Check what safely mixes with my medications">
+            <div class="bh-eco-label">drug interaction check</div>
+            <div class="bh-eco-name">See what safely mixes with your meds</div>
+            <div class="bh-eco-desc">Always free. Never paywalled. Run before any new supplement or product.</div>
+            <span class="bh-eco-status">free</span>
           </button>
           <button class="bh-eco" data-prompt="Find a clinician near me">
             <div class="bh-eco-label">clinicians</div>
-            <div class="bh-eco-name">Someone who understands your condition</div>
-            <div class="bh-eco-desc">855,432 verified by the federal NPI Registry.</div>
-            <span class="bh-eco-status">live</span>
-          </button>
-          <button class="bh-eco" data-prompt="Check what safely mixes with my medications">
-            <div class="bh-eco-label">safety</div>
-            <div class="bh-eco-name">Check what safely mixes with your meds</div>
-            <div class="bh-eco-desc">CYP450 engine &middot; 302K interaction pairs &middot; always free.</div>
-            <span class="bh-eco-status">live</span>
+            <div class="bh-eco-name">Find someone who takes your condition seriously</div>
+            <div class="bh-eco-desc">Verified by the federal NPI Registry.</div>
+            <span class="bh-eco-status">free</span>
           </button>
           <button class="bh-eco" data-prompt="Show me the audio care library">
             <div class="bh-eco-label">audio</div>
             <div class="bh-eco-name">Audio for sleep, regulation, recovery</div>
-            <div class="bh-eco-desc">Spotify integration &middot; surfaced by mood and need.</div>
-            <span class="bh-eco-status">live</span>
+            <div class="bh-eco-desc">Curated and surfaced by mood and need.</div>
+            <span class="bh-eco-status">free</span>
           </button>
           <button class="bh-eco" data-prompt="Show me the visual care library">
             <div class="bh-eco-label">video</div>
             <div class="bh-eco-name">Vetted teaching, by condition</div>
-            <div class="bh-eco-desc">YouTube curated &middot; educational and movement.</div>
+            <div class="bh-eco-desc">Educational and movement. Curated, not recommended by algorithm.</div>
+            <span class="bh-eco-status">free</span>
+          </button>
+          <button class="bh-eco" data-prompt="Show me supplement options — bundles, dispensary, and lower-cost">
+            <div class="bh-eco-label">supplements</div>
+            <div class="bh-eco-name">Three honest ways to source what helps</div>
+            <div class="bh-eco-desc">BLEU protocol bundles, Fullscript dispensary, or lower-cost retail. Every option checked against your meds.</div>
             <span class="bh-eco-status">live</span>
-          </button>
-          <button class="bh-eco" data-prompt="Show me the ECS intelligence platform">
-            <div class="bh-eco-label">ECS</div>
-            <div class="bh-eco-name">Endocannabinoid system intelligence</div>
-            <div class="bh-eco-desc">CannaIQ.net &middot; nervous-system regulation &middot; same safety engine.</div>
-            <span class="bh-eco-status">live</span>
-          </button>
-        </div>
-      </section>
-
-      <section class="bh-dock" aria-label="tabs">
-        <div class="bh-dock-row">
-          <button class="bh-sea current" aria-current="page" data-route="/">
-            <div class="bh-sea-name">Home</div>
-            <div class="bh-sea-line">begin here</div>
-          </button>
-          <button class="bh-sea" data-route="/local">
-            <div class="bh-sea-name">Local</div>
-            <div class="bh-sea-line">care &middot; city</div>
-          </button>
-          <button class="bh-sea" data-route="/support">
-            <div class="bh-sea-name">Support</div>
-            <div class="bh-sea-line">therapy &middot; sleep</div>
-          </button>
-          <button class="bh-sea" data-route="/learn">
-            <div class="bh-sea-name">Learn</div>
-            <div class="bh-sea-line">science you use</div>
-          </button>
-          <button class="bh-sea" data-route="/supply">
-            <div class="bh-sea-name">Supply</div>
-            <div class="bh-sea-line">protocols &middot; safety check</div>
           </button>
         </div>
       </section>
 
       <section class="bh-preservation" aria-label="if you are in crisis">
         <p class="bh-preservation-text">If you are in crisis, <em>we step aside</em>. The numbers below connect you to people trained to help. Free. Confidential.</p>
-        <div class="bh-crisis">
-          <a href="tel:988">988</a>
-          <a href="sms:741741?body=HOME">Text HOME &middot; 741741</a>
-          <a href="tel:18006624357">SAMHSA</a>
-          <a href="tel:18664887386">Trevor</a>
-          <a href="tel:18004843731">Never Use Alone</a>
-          <a href="tel:911">911</a>
+        <div class="bh-crisis-full">
+          <a class="bh-crisis-line" href="tel:988">
+            <div class="bh-crisis-num">988</div>
+            <div class="bh-crisis-who">Suicide &amp; Crisis Lifeline &middot; 24/7</div>
+          </a>
+          <a class="bh-crisis-line" href="sms:741741?body=HOME">
+            <div class="bh-crisis-num">Text HOME &middot; 741741</div>
+            <div class="bh-crisis-who">Crisis Text Line &middot; 24/7</div>
+          </a>
+          <a class="bh-crisis-line" href="tel:18006624357">
+            <div class="bh-crisis-num">1-800-662-4357</div>
+            <div class="bh-crisis-who">SAMHSA &middot; substance &amp; mental health &middot; 24/7</div>
+          </a>
+          <a class="bh-crisis-line" href="tel:18664887386">
+            <div class="bh-crisis-num">1-866-488-7386</div>
+            <div class="bh-crisis-who">Trevor Project &middot; LGBTQ youth &middot; 24/7</div>
+          </a>
+          <a class="bh-crisis-line" href="tel:18004843731">
+            <div class="bh-crisis-num">1-800-484-3731</div>
+            <div class="bh-crisis-who">Never Use Alone &middot; overdose prevention</div>
+          </a>
+          <a class="bh-crisis-line" href="tel:911">
+            <div class="bh-crisis-num">911</div>
+            <div class="bh-crisis-who">If you or someone is in immediate danger</div>
+          </a>
         </div>
       </section>
 
