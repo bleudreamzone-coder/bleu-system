@@ -356,9 +356,12 @@
               }
               if (typeof j.text === 'string' && j.text) {
                 if (firstToken) { if (asst.contains(dots)) asst.removeChild(dots); firstToken = false; }
+                // Only auto-scroll if the user is already pinned to the bottom.
+                // If they scrolled up to re-read the start of the response, leave them there.
+                var atBottom = (_body.scrollHeight - _body.scrollTop - _body.clientHeight) <= 40;
                 full += j.text;
                 asst.appendChild(document.createTextNode(j.text));
-                _body.scrollTop = _body.scrollHeight;
+                if (atBottom) _body.scrollTop = _body.scrollHeight;
                 window.dispatchEvent(new CustomEvent('bleu:alvai-token', { detail: { token: j.text, full: full, mode: mode } }));
               }
             } catch (e) { /* skip malformed line */ }
