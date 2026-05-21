@@ -1,3 +1,9 @@
 
 .github/workflows/deploy-alvai.yml
 docs/cleanup-may-2026/
+
+# Supabase CLI local state — created by `supabase link`. Contains
+# project-ref metadata and may contain access tokens / cache. Must not
+# be committed. (Full .gitignore rewrite is TD-006 / Week 1 W1.4 of
+# _meta/audit/2026-05-21/11_NEXT_30_DAYS.md.)
+.supabase/

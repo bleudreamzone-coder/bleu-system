@@ -1,0 +1,71 @@
+BLEU.LIVE — RLS AUDIT
+=====================
+Date scaffolded: 2026-05-21
+Project: sqyzboesdpdussiwqpzk (Bleu-Live, Supabase)
+Status: NOT YET POPULATED — requires credentialed pull per
+        supabase/policies/PROCEDURE.md (Step 4)
+
+This file is the per-table RLS-enabled / policy-count audit. It will
+be populated by running the SQL in PROCEDURE.md Step 4 in the Supabase
+SQL editor and pasting the CSV result here.
+
+Until populated:
+  • bleu.live has no in-repo record of which tables have RLS enabled.
+  • Any policy edit made through the dashboard is undetectable from
+    this repo.
+  • If the Supabase project is migrated, recreated, or had its policies
+    edited, the access-control rules disappear with no trace here.
+
+This is TD-003 (CRITICAL) in the audit tech-debt register.
+
+PROCEDURE — Step 4 SQL (paste this into the Supabase SQL editor):
+
+  SELECT
+    schemaname,
+    tablename,
+    rowsecurity AS rls_enabled,
+    (SELECT count(*) FROM pg_policies p
+      WHERE p.schemaname = t.schemaname AND p.tablename = t.tablename
+    ) AS policy_count
+  FROM pg_tables t
+  WHERE schemaname = 'public'
+  ORDER BY rls_enabled ASC, tablename ASC;
+
+Paste the CSV result BELOW this line. If any user-data table has
+rls_enabled = false, STOP and flag — see PROCEDURE.md Step 6.
+
+=====================================================================
+RESULT (paste here):
+=====================================================================
+
+[NOT YET POPULATED]
+
+
+=====================================================================
+USER-DATA TABLES THAT MUST HAVE rls_enabled = true
+=====================================================================
+
+profiles, conversation_history, conversation_memory, user_coherence,
+conversations, commitments, emotional_signals, predictive_signals,
+care_twin_state, care_twin_embeddings, session_embeddings, user_arcs,
+agent11_syntheses, product_feedback, session_feedback, user_signals,
+outcome_events
+
+
+=====================================================================
+SERVICE-ROLE-ONLY TABLES (anon/authenticated should be REVOKEd)
+=====================================================================
+
+practitioners, locations, products, protocols, youtube_videos,
+pubmed_studies, reddit_mentions, marketplace_practitioners, clicks,
+pageviews, sessions, scrape_log, daily_reports, environmental_data
+
+
+=====================================================================
+NEXT REVIEW DUE
+=====================================================================
+
+2026-08-21 (90 days from scaffolding)
+
+Refer to supabase/policies/README.md and PROCEDURE.md for cadence and
+update steps.
