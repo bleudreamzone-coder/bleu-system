@@ -1650,12 +1650,49 @@ async function warmCache() {
 }
 
 // ═══ SERVER ═══
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://bleu.live,https://www.bleu.live,https://cannaiq.net,https://www.cannaiq.net,http://localhost:8080,http://localhost:3000').split(',').map(s=>s.trim()).filter(Boolean);
+function corsOrigin(reqOrigin) {
+  if (reqOrigin && ALLOWED_ORIGINS.includes(reqOrigin)) return reqOrigin;
+  return ALLOWED_ORIGINS[0];
+}
 function json(res, code, data) { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); }
-function cors(res) { res.setHeader('Access-Control-Allow-Origin','*'); res.setHeader('Access-Control-Allow-Methods','GET,POST,OPTIONS'); res.setHeader('Access-Control-Allow-Headers','Content-Type,Authorization'); }
+function cors(res, req) {
+  const origin = corsOrigin(req && req.headers && req.headers.origin);
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+}
+function securityHeaders(res, opts) {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'geolocation=(self),microphone=(),camera=()');
+  if (opts && opts.html) {
+    // CSP ships in Report-Only mode first. Browsers report violations to
+    // devtools without blocking. After a week of clean logs flip the header
+    // name to `Content-Security-Policy` (drop the `-Report-Only`) to enforce.
+    res.setHeader('Content-Security-Policy-Report-Only',
+      "default-src 'self'; " +
+      "script-src 'self' 'unsafe-inline' https://*.supabase.co https://js.stripe.com https://plausible.io; " +
+      "style-src 'self' 'unsafe-inline'; " +
+      "img-src 'self' data: https: blob:; " +
+      "font-src 'self' data: https:; " +
+      "connect-src 'self' https://*.supabase.co https://api.stripe.com https://api.openai.com https://plausible.io; " +
+      "frame-src 'self' https://js.stripe.com; " +
+      "object-src 'none'; " +
+      "base-uri 'self'; " +
+      "form-action 'self'; " +
+      "frame-ancestors 'none'"
+    );
+  }
+}
 function maskEmail(e) { if (!e || typeof e !== 'string' || e.indexOf('@') < 1) return '(none)'; const i = e.indexOf('@'); return e[0] + '***' + e.slice(i); }
 
 const server = http.createServer((req, res) => {
-  cors(res);
+  cors(res, req);
+  securityHeaders(res);
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pn = url.pathname;
   if (req.method === 'OPTIONS') return json(res, 200, {});
@@ -2590,7 +2627,7 @@ const server = http.createServer((req, res) => {
   }
 
   if ((pn === '/' || pn === '/index.html') && !url.searchParams.has('v')) { res.writeHead(302, {'Location':'/?v=20260403','Cache-Control':'no-store'}); res.end(); return; }
-  if (pn === '/' || pn === '/index.html') { const noCacheHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'}; fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,noCacheHeaders);res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,noCacheHeaders);res.end(d);} }); return; }
+  if (pn === '/' || pn === '/index.html') { securityHeaders(res, {html:true}); const noCacheHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'}; fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,noCacheHeaders);res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,noCacheHeaders);res.end(d);} }); return; }
 
   const ext = path.extname(pn);
   const mime = {'.css':'text/css','.js':'application/javascript','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon','.json':'application/json'};
