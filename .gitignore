@@ -1,9 +1,130 @@
+# ============================================================================
+# bleu.live — .gitignore
+# Comprehensive Node + Python coverage. Closes TD-006 / FU-005 / Week 1 W1.4.
+# Audit ref: _meta/audit/2026-05-21/09_SECURITY_AND_PRIVACY_AUDIT.md
+# ============================================================================
 
+# ---- preserved from prior .gitignore -----------------------------------------
 .github/workflows/deploy-alvai.yml
 docs/cleanup-may-2026/
 
 # Supabase CLI local state — created by `supabase link`. Contains
 # project-ref metadata and may contain access tokens / cache. Must not
-# be committed. (Full .gitignore rewrite is TD-006 / Week 1 W1.4 of
-# _meta/audit/2026-05-21/11_NEXT_30_DAYS.md.)
+# be committed.
 .supabase/
+supabase/.temp/
+# Note: a handful of files inside supabase/.temp/ are already tracked
+# from before this rule was added (cli-latest, gotrue-version, etc.).
+# They will continue to show as modified after every supabase CLI
+# invocation. Untracking is a separate cleanup (`git rm --cached`).
+
+# ---- environment / secrets ---------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+secrets/
+credentials.json
+service-account*.json
+
+# ---- Node ecosystem ----------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+.yarn/
+.pnp.*
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+.turbo/
+
+# ---- Python ecosystem --------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.hypothesis/
+
+# Python venvs
+venv/
+.venv/
+env/
+ENV/
+
+# ---- OS junk -----------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ---- Editor / IDE state ------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+.vs/
+
+# ---- Test / coverage artifacts -----------------------------------------------
+coverage/
+*.lcov
+.nyc_output/
+junit.xml
+
+# ---- Logs --------------------------------------------------------------------
+logs/
+*.log
+!CHANGELOG.log
+!HISTORY.log
+
+# ---- Misc temp ---------------------------------------------------------------
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+*.rej
+
+# ============================================================================
+# NOT IGNORED (intentional):
+#   - dist/                     deployed SEO assets, served as static pages
+#   - supabase/migrations/      RLS policy migrations, source of truth
+#   - supabase/schema-snapshot* policy audit artifacts
+#   - _meta/                    audit deliverables, follow-ups
+#   - .gitignore                this file
+# ============================================================================
