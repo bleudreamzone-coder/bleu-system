@@ -1,0 +1,159 @@
+BLEU.LIVE — ENTITY WALL AUDIT
+=============================
+Date: 2026-05-21
+Scope: every "Jazz Bird" / "jazzbird*" reference in the working tree
+
+bleu.live is operated by Fleur De BleuDream LLC. Jazz Bird® NOLA is
+Dr. Felicia Stoler's separate 501(c)(3) nonprofit. The audit prompt
+flags any code, data, branding, or claim that collapses the wall as
+WALL VIOLATION (HIGH).
+
+Notes on reconciliation against post-reorg state (2026-05-21):
+The audit was performed at git tip f70426a. By the time this branch
+was rebased onto current main (commit 8f9a6d0), the team had already
+completed major phase-1 through phase-10 reorg commits. In particular,
+"phase 4: site-wide find-and-replace cleanup" (commit e8c96a2) and the
+phase commits that touched index.html had already removed all Jazz Bird
+publisher claims from the served SPA. This branch therefore focuses on
+the surfaces NOT covered by the upstream reorg — primarily the dist/
+pre-generated SEO pages.
+
+Categories below:
+  FIXED                — wall violation resolved (by this branch or upstream)
+  FIXED UPSTREAM       — already addressed in origin/main before rebase
+  KEEP — partnership   — accurate community-partner reference; safe
+  KEEP — affiliation   — Dr. Stoler's separate Jazz Bird affiliation
+  KEEP — contact       — email at jazzbirdnola.com (personal address)
+  KEEP — link-out      — outbound link to a Jazz Bird-owned site
+  FOLLOW-UP            — out-of-scope for the 5-fix session; logged
+  DEAD                 — file is dead per audit; not served; ignored
+
+
+================================================================
+LIVE SURFACE — INDEX.HTML (the served SPA)
+================================================================
+
+FIXED UPSTREAM (phase 4 reorg, commit e8c96a2):
+  Every Jazz-Bird-as-publisher attribution previously in index.html
+  has been removed by the team in the phase reorg before this branch
+  was applied. Current grep `grep -c "Jazz Bird" index.html` = 0.
+  The audit's findings at the original line numbers (1079, 7220,
+  12480, 12519, 13599) are all resolved.
+
+
+================================================================
+LIVE SURFACE — supply.html, support.html, seo-engine.js, server.js
+================================================================
+
+NONE   supply.html, support.html  zero mentions of Jazz Bird. New files
+                                  introduced in the phase-9 supply-tab
+                                  restructure; clean from the start.
+
+NONE   seo-engine.js              zero publisher-attribution mentions.
+                                  Only "jazz" appears as a metaphor in
+                                  CITY_META soul copy.
+
+NONE   server.js                  zero entity-claim mentions. Only "jazz"
+                                  as a voice metaphor in ALVAI_CORE and
+                                  recovery mode.
+
+
+================================================================
+ON-DISK CONTENT — dist/anxiety, dist/sleep, dist/gut (1,810 files)
+================================================================
+These pages are NOT served by the live server (verified per
+_meta/audit/2026-05-21/06_CONTENT_ENGINE_AUDIT.md). They sit on disk
+and are reachable only if migrated into the dynamic engine or pushed
+to a CDN.
+
+FIXED  dist/anxiety/*.html   1,810 condition pages: targeted sed on the
+       dist/sleep/*.html     schema.org JSON keys (this branch):
+       dist/gut/*.html
+                               "name":"Jazz Bird 501(c)(3)" →
+                                 "name":"BLEU.live","legalName":"Fleur De BleuDream LLC"
+                               "@id":"https://bleu.live#jazz-bird" →
+                                 "@id":"https://bleu.live#org"
+                               "jobTitle":"Principal Investigator, Jazz Bird 501(c)(3)" →
+                                 "jobTitle":"Chief Clinical Officer, bleu.live"
+
+FOLLOW-UP  dist/anxiety/*.html   1,810 pages STILL contain prose-level
+           dist/sleep/*.html     claims:
+           dist/gut/*.html         "Jazz Bird's NPI database"
+                                   "Jazz Bird's causal research pipeline"
+                                   "Jazz Bird's city-level intelligence"
+                                   "Jazz Bird 501(c)(3) Research Foundation"
+                                   "Jazz Bird is a 501(c)(3). The research
+                                    belongs to the community ..."
+                           These attribute bleu.live platform capabilities
+                           to Jazz Bird. They need content regeneration
+                           (the generator source produces this prose),
+                           not sed. Logged for the next content-engine
+                           pass. While the pages remain unserved by the
+                           live server, the indexing harm is bounded;
+                           however, before any migration to the dynamic
+                           engine these must be rewritten. → FU-001
+
+
+================================================================
+ON-DISK CONTENT — dist/cities (4,214 global city pages)
+================================================================
+
+FOLLOW-UP  dist/cities/*.html (4,214 files)
+           Extensive prose-level Jazz Bird mentions:
+             "Jazz Bird 501(c)(3) maintains zero ad revenue ..."
+             "Jazz Bird Data Point"
+             "Jazz Bird research donations"
+             "Jazz Bird science"
+             "Jazz Bird 501(c)(3) · BLEU Deep South"
+             "Jazz Bird 501(c)(3) · Dr. Felicia Stoler ..."
+           These are page-wide prose, not isolated schema fields.
+           Same disposition as the condition pages: out of scope for
+           this surgical fix; needs content regeneration. → FU-002
+
+           These pages are also NOT served by the live server today.
+
+
+================================================================
+DEAD FILES — partly cleaned upstream
+================================================================
+Per the audit's tech-debt register (Week 3, W3.3 — "Delete the DEAD
+pile"), the team's upstream cleanup commits (73299e1, c5764ae, and
+others) have already removed many of the files flagged in the original
+audit: `server-old-claude.js`, `server-v4.js`, `server.js.backup`,
+`nola-enhanced.html`, `nola-index*.txt` (all 7 variants), and others.
+
+Files that remain DEAD on origin/main with Jazz Bird references but are
+not served:
+  alvai-v3.ts (v3 edge fn; no caller)
+  BLEU_NOLA_2am_v3_Nuclear.html
+  BLEU_LIVE_Score_v2_Nuclear.html
+  bleu-master.html
+  Various one-shot .py scripts (bleu-*.py, home*.py, master.py, mp2.py,
+    ocean-*.py, tank-filler.py, patch*.py, fix-*.py, batch1.py,
+    nola-soul.py, rebuild.py, stream-upgrade.py, upgrade.py)
+
+No code change to any of these files in this branch. Scheduled for
+removal in the audit's Week 3 task.
+
+
+================================================================
+SUMMARY
+================================================================
+LIVE SURFACE: clean. The team's upstream phase reorg removed every
+              Jazz-Bird-as-publisher attribution from index.html.
+              supply.html, support.html, seo-engine.js, and server.js
+              emit no Jazz Bird publisher claims.
+
+DIST CONDITION PAGES (1,810): schema fields cleaned via targeted sed
+              on this branch. Prose-level claims remain and are logged
+              as follow-up; while these pages remain unserved by the
+              live server, the indexing harm is bounded. Before any
+              migration of dist/ to the dynamic engine, the prose must
+              be rewritten.
+
+DIST CITY PAGES (4,214): out of scope for this surgical fix. Logged
+              as follow-up requiring content regeneration.
+
+DEAD FILES: untouched in this branch; partly cleaned by upstream
+              cleanup commits already. Remaining removals scheduled
+              for Week 3 of the 30-day plan.
