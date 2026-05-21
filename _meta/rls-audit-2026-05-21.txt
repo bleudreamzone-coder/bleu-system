@@ -1,45 +1,194 @@
 BLEU.LIVE — RLS AUDIT
 =====================
 Date scaffolded: 2026-05-21
-Project: sqyzboesdpdussiwqpzk (Bleu-Live, Supabase)
-Status: NOT YET POPULATED — requires credentialed pull per
-        supabase/policies/PROCEDURE.md (Step 4)
+Date populated:  2026-05-21 (afternoon ship session)
+Project:         sqyzboesdpdussiwqpzk (Bleu-Live, Supabase)
+Source:          supabase db dump --linked --schema public (CLI 2.101.0)
+Status:          POPULATED — see RESULT block below
 
-This file is the per-table RLS-enabled / policy-count audit. It will
-be populated by running the SQL in PROCEDURE.md Step 4 in the Supabase
-SQL editor and pasting the CSV result here.
-
-Until populated:
-  • bleu.live has no in-repo record of which tables have RLS enabled.
-  • Any policy edit made through the dashboard is undetectable from
-    this repo.
-  • If the Supabase project is migrated, recreated, or had its policies
-    edited, the access-control rules disappear with no trace here.
-
-This is TD-003 (CRITICAL) in the audit tech-debt register.
-
-PROCEDURE — Step 4 SQL (paste this into the Supabase SQL editor):
-
-  SELECT
-    schemaname,
-    tablename,
-    rowsecurity AS rls_enabled,
-    (SELECT count(*) FROM pg_policies p
-      WHERE p.schemaname = t.schemaname AND p.tablename = t.tablename
-    ) AS policy_count
-  FROM pg_tables t
-  WHERE schemaname = 'public'
-  ORDER BY rls_enabled ASC, tablename ASC;
-
-Paste the CSV result BELOW this line. If any user-data table has
-rls_enabled = false, STOP and flag — see PROCEDURE.md Step 6.
+This file is the per-table RLS-enabled / policy-count audit. It was
+derived from the schema dump at supabase/schema-snapshot-2026-05-21.sql,
+which faithfully captures every ALTER TABLE ... ENABLE ROW LEVEL
+SECURITY statement and every CREATE POLICY from the live database.
 
 =====================================================================
-RESULT (paste here):
+RESULT
 =====================================================================
 
-[NOT YET POPULATED]
+48 tables in public schema. 20 have RLS enabled. 28 do NOT.
+30 CREATE POLICY statements total across 20 tables.
 
+Per the README's "covered tables" list, of the 17 named user-data
+tables that MUST have rls_enabled = true:
+
+  - 5 are not present in this schema dump (legacy/never-created):
+      conversation_memory, care_twin_state, product_feedback,
+      session_feedback, user_signals
+  - 5 are present and have RLS enabled:
+      profiles (5 policies), conversation_history (0 policies),
+      conversations (4 policies), care_twin_embeddings (2 policies),
+      outcome_events (1 policy)
+  - 7 are present but have RLS DISABLED — P0 FINDING:
+      user_coherence, commitments, emotional_signals,
+      predictive_signals, session_embeddings, user_arcs,
+      agent11_syntheses
+
+All 7 P0 tables also carry GRANT ALL TO anon and GRANT ALL TO
+authenticated, meaning anyone with the public anon JWT (which is
+embedded in index.html and is public by design) can SELECT, INSERT,
+UPDATE, or DELETE every row.
+
+This is the STOP condition described in PROCEDURE.md Step 6 and in
+the SHIP_IT_PROMPT TASK 1 Step 7. The FU-004 closure commit was NOT
+written. A separate P0 fix is required before BLOCKER 4 can be
+closed.
+
+=====================================================================
+FULL TABLE INVENTORY (48 tables)
+=====================================================================
+
+RLS ENABLED (20):
+  affiliate_clicks            (1 policy)
+  analytics_events            (1 policy)
+  care_twin_embeddings        (2 policies)
+  clinical_trials             (1 policy)
+  conversation_history        (0 policies)   *** RLS on but NO policy — see note below ***
+  conversations               (4 policies)
+  events                      (1 policy)
+  fda_adverse_events          (1 policy)
+  fda_data                    (1 policy)
+  legal_disclaimers           (1 policy)
+  life_stabilization_scores   (2 policies)
+  locations                   (1 policy)
+  nola_providers              (1 policy)
+  outcome_events              (1 policy)
+  practitioners               (1 policy)
+  products                    (1 policy)
+  profiles                    (5 policies)
+  real_events                 (1 policy)
+  scrape_log                  (1 policy)
+  user_reviews                (2 policies)
+
+RLS DISABLED (28):
+  *** USER-DATA TABLES (P0 EXPOSURE) ***
+  user_coherence              — phone numbers, CI/ISI per user
+  commitments                 — per-user commitments
+  emotional_signals           — per-user emotional state
+  predictive_signals          — per-user predictions
+  session_embeddings          — per-session 1536-dim vectors
+  user_arcs                   — per-user narrative arcs
+  agent11_syntheses           — per-user agent synthesis output
+
+  *** SERVICE-ROLE-ONLY (per README — should still REVOKE anon) ***
+  pipeline_log
+  daily_reports
+  scrape_log                  — actually RLS-on (above), good
+  pubmed_studies
+  reddit_mentions
+  youtube_videos
+  marketplace_practitioners   — README lists this as service-role-only
+                                BUT also notes the dr_felicia_reviewed
+                                flag and says it "should be read-only
+                                for non-service-role"
+  practitioner_bookings
+  product_practitioner_links
+  symptom_specialist_map
+  validation_log
+  workforce_signals
+  food_sources
+  conditions
+  cities
+  classes
+  protocols                   — referenced from Stripe price IDs;
+                                read-only for anon is acceptable
+  safety_checks
+  seo_pages
+  reviews
+  care_twin_patterns
+  dr_felicia_reviews          — clinical signoff data; should be
+                                service-role only with REVOKE anon
+
+NOTE on conversation_history (RLS on, 0 policies): the table has RLS
+enabled but no CREATE POLICY in the dump. With RLS on and zero
+policies, the default deny applies to all non-service-role roles. The
+server.js path uses the service-role key (which bypasses RLS), so
+backend reads/writes still work. But the frontend anon key has zero
+read access. This may be intentional (anon should not read history
+directly) or a missing policy that breaks a UX path. Worth confirming.
+
+=====================================================================
+GRANT/REVOKE STATE FOR THE 7 P0 TABLES
+=====================================================================
+
+Every P0 table has:
+  GRANT ALL ON TABLE ... TO "anon";
+  GRANT ALL ON TABLE ... TO "authenticated";
+  GRANT ALL ON TABLE ... TO "service_role";
+
+There is no REVOKE for any of them. Combined with RLS off, the access
+posture is fully open to anyone holding the anon JWT — which is
+public by design (embedded in index.html line 795).
+
+Attack surface check:
+  curl 'https://sqyzboesdpdussiwqpzk.supabase.co/rest/v1/user_coherence?select=*' \
+       -H "apikey: <anon-jwt-from-index.html>" \
+       -H "Authorization: Bearer <anon-jwt-from-index.html>"
+  → would dump every row of user_coherence (every user's phone, CI, ISI)
+
+The default privileges line:
+  ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public"
+    GRANT ALL ON TABLES TO "anon";
+
+means any NEW table created in this schema also inherits anon-GRANT
+ALL automatically. This is the root cause for the broader "28 tables
+without RLS" picture and needs to be addressed at the schema-default
+level, not table-by-table.
+
+=====================================================================
+RECOMMENDED P0 FIX SEQUENCE (for Bleu to choose path)
+=====================================================================
+
+OPTION A — Minimum patch, ship today
+  In Supabase SQL editor, for each of the 7 user-data tables:
+    ALTER TABLE public.<t> ENABLE ROW LEVEL SECURITY;
+    CREATE POLICY "<t>_own_row" ON public.<t>
+      FOR ALL TO authenticated
+      USING (user_id = auth.uid())
+      WITH CHECK (user_id = auth.uid());
+    REVOKE ALL ON public.<t> FROM anon;
+  Then re-run this audit. Single migration file. ~30 min.
+
+OPTION B — Full hardening
+  Option A + revoke default privileges to anon at the schema level:
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON TABLES FROM anon;
+    REVOKE ALL ON ALL TABLES IN SCHEMA public FROM anon;
+    Then explicitly GRANT SELECT on the read-only tables (cities,
+    locations, products, protocols, etc.) that the frontend actually
+    needs to read with the anon key.
+  Higher friction (catalog of what the frontend actually reads with
+  anon must be built first). Right thing long-term.
+
+OPTION C — Service-role-only enforcement
+  If the 7 P0 tables are written ONLY by server.js (service role),
+  not by the frontend with the anon key:
+    REVOKE ALL ON public.<t> FROM anon, authenticated;
+  No RLS needed because no non-service role can touch the table.
+  Confirm by grep — see "Verification before fix" below.
+
+Verification before fix (which of the 7 tables does the frontend
+write to via the anon key vs. server.js write via service role?):
+
+  Frontend anon-key writes (per audit 09):
+    profiles, conversations, product_feedback, session_feedback,
+    user_signals (last three don't exist in this dump)
+
+  So none of the 7 P0 tables are in the documented frontend-anon
+  write list. They are likely all server-write only (server.js or
+  edge functions using service role). That means OPTION C is
+  probably the right answer for most of them. user_coherence is
+  the one to confirm — the SMS reorder path writes phone numbers
+  somewhere, and if that's a frontend anon write, the policy needs
+  to allow that specific path.
 
 =====================================================================
 USER-DATA TABLES THAT MUST HAVE rls_enabled = true
