@@ -9,6 +9,11 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+// Deterministic crisis detection + non-overrideable banner.
+// See _meta/audit/2026-05-21/07_CLINICAL_GOVERNANCE_AUDIT.md and
+// _meta/clinical/signoffs/crisis_validator-2026-05-21-stoler.md.
+const { detectCrisis, CRISIS_BANNER } = require('./core/safety/crisis_validator');
+
 const OPENAI_KEY = process.env.OPENAI_API_KEY || '';
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
@@ -1666,6 +1671,26 @@ const server = http.createServer((req, res) => {
         // ── SESSION INTENT — mark emotional sessions so frontend suppresses commerce cards ──
         const suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message);
 
+        // ── CRISIS DETECTION — deterministic, non-overrideable. Audit ref:
+        //    _meta/audit/2026-05-21/07_CLINICAL_GOVERNANCE_AUDIT.md
+        //    Fires the same banner regardless of what the model says next.
+        const crisis = detectCrisis(p.message);
+        if (crisis.detected) {
+          console.log('[CRISIS]', JSON.stringify({
+            ts: new Date().toISOString(),
+            category: crisis.category,
+            matched: crisis.matched,
+            session: p.session || null,
+            user: p.user_id || null,
+            endpoint: '/api/chat',
+          }));
+        }
+        const writeCrisisBannerSSE = () => {
+          if (crisis.detected) {
+            res.write('data: ' + JSON.stringify({ text: CRISIS_BANNER, crisis: true }) + '\n\n');
+          }
+        };
+
         // ── GREETING CACHE — instant response, zero API calls ──
         const GREET_CACHE = {
           'hello':["You found us. What's going on right now?","I'm here. What brought you in tonight?","Hey. Talk to me."],
@@ -1689,6 +1714,7 @@ const server = http.createServer((req, res) => {
           const reply = variants[Math.floor(Date.now()/60000) % variants.length];
           res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-cache','Connection':'keep-alive','Access-Control-Allow-Origin':'*'});
           if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
+          writeCrisisBannerSSE();
           res.write('data: '+JSON.stringify({text:reply})+'\n\n');
           res.write('data: [DONE]\n\n');
           res.end();
@@ -1778,6 +1804,7 @@ const server = http.createServer((req, res) => {
         if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI error:', ar.status, errBody.substring(0,500)); return json(res, 500, {error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model}); }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
+        writeCrisisBannerSSE();
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '', full = '', chunkCount = 0;
         while (true) {
           const { done, value } = await rd.read(); if (done) break;
@@ -1850,6 +1877,18 @@ const server = http.createServer((req, res) => {
       try {
         const p = JSON.parse(b);
         const suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message||'');
+        // Crisis detection — see /api/chat above and core/safety/crisis_validator.js
+        const crisis = detectCrisis(p.message || '');
+        if (crisis.detected) {
+          console.log('[CRISIS]', JSON.stringify({
+            ts: new Date().toISOString(),
+            category: crisis.category,
+            matched: crisis.matched,
+            session: p.session || null,
+            user: p.user_id || null,
+            endpoint: '/api/chat/stream',
+          }));
+        }
         const model = pickModel(p.message||'', p.mode||'general');
         let sys = await buildPrompt(p.message||'', p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety', p.assistant);
 
@@ -1887,6 +1926,7 @@ const server = http.createServer((req, res) => {
         if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI stream error:', ar.status, errBody.substring(0,500)); res.writeHead(500,{'Content-Type':'application/json'}); return res.end(JSON.stringify({error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model})); }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
+        if (crisis.detected) res.write('data: ' + JSON.stringify({ text: CRISIS_BANNER, crisis: true }) + '\n\n');
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = ''; let full = '';
         while (true) { const { done, value } = await rd.read(); if (done) break; buf += dc.decode(value, { stream: true }); const ls = buf.split('\n'); buf = ls.pop()||'';
           for (const ln of ls) { if (!ln.startsWith('data: ')) continue; const d = ln.slice(6).trim(); if (d==='[DONE]') { res.write('data: '+JSON.stringify({done:true,model})+'\n\n'); continue; } try { const j=JSON.parse(d); const t=j.choices?.[0]?.delta?.content; if(t){ full+=t; res.write('data: '+JSON.stringify({t,text:t})+'\n\n'); } } catch{} } }
