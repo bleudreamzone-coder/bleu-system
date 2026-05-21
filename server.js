@@ -1652,6 +1652,7 @@ async function warmCache() {
 // ═══ SERVER ═══
 function json(res, code, data) { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); }
 function cors(res) { res.setHeader('Access-Control-Allow-Origin','*'); res.setHeader('Access-Control-Allow-Methods','GET,POST,OPTIONS'); res.setHeader('Access-Control-Allow-Headers','Content-Type,Authorization'); }
+function maskEmail(e) { if (!e || typeof e !== 'string' || e.indexOf('@') < 1) return '(none)'; const i = e.indexOf('@'); return e[0] + '***' + e.slice(i); }
 
 const server = http.createServer((req, res) => {
   cors(res);
@@ -2681,7 +2682,7 @@ function handleStripeWebhook(req, res) {
       const protocol = PROTOCOL_MAP[priceId]?.name || 'pro';
       const email = session.customer_details?.email;
 
-      console.log(`Payment complete: ${protocol} | user: ${userId} | email: ${email}`);
+      console.log(`Payment complete: ${protocol} | user: ${userId} | email: ${maskEmail(email)}`);
 
       if (SUPABASE_URL && SUPABASE_KEY) {
         try {
