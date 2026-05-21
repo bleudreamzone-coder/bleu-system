@@ -2573,30 +2573,58 @@ const PROTOCOL_MAP = {
 };
 
 // Stripe webhook endpoint - must receive raw body
+//
+// Fail-closed signature verification (2026-05-21):
+//   Missing STRIPE_WEBHOOK_SECRET env var → 500 + CRITICAL log
+//   Missing stripe-signature header       → 400
+//   Malformed stripe-signature header     → 400
+//   Bad or forged signature               → 400
+//   Verification exception                → 400
+// Audit reference: _meta/audit/2026-05-21/09_SECURITY_AND_PRIVACY_AUDIT.md
 function handleStripeWebhook(req, res) {
   let body = '';
   req.on('data', chunk => { body += chunk; });
   req.on('end', async () => {
+    // Fail closed when the secret is not configured. Refuse to process
+    // any payload — previously, a missing secret silently bypassed
+    // verification and accepted every POST as valid.
+    if (!STRIPE_WEBHOOK_SECRET) {
+      console.error('[stripe-webhook] CRITICAL: STRIPE_WEBHOOK_SECRET is not set — refusing to process webhook');
+      json(res, 500, { error: 'Webhook secret not configured' });
+      return;
+    }
+
     const sig = req.headers['stripe-signature'];
-    
-    // Verify webhook signature
-    if (STRIPE_WEBHOOK_SECRET && STRIPE_SECRET) {
-      try {
-        const crypto = require('crypto');
-        const timestamp = sig.split(',').find(s => s.startsWith('t=')).split('=')[1];
-        const expectedSig = crypto
-          .createHmac('sha256', STRIPE_WEBHOOK_SECRET)
-          .update(timestamp + '.' + body)
-          .digest('hex');
-        const receivedSig = sig.split(',').find(s => s.startsWith('v1=')).split('=')[1];
-        if (expectedSig !== receivedSig) {
-          json(res, 400, { error: 'Invalid signature' });
-          return;
-        }
-      } catch(e) {
-        json(res, 400, { error: 'Signature check failed' });
+    if (!sig) {
+      json(res, 400, { error: 'Missing stripe-signature header' });
+      return;
+    }
+
+    try {
+      const crypto = require('crypto');
+      const tsPart  = sig.split(',').find(s => s.startsWith('t='));
+      const v1Part  = sig.split(',').find(s => s.startsWith('v1='));
+      if (!tsPart || !v1Part) {
+        json(res, 400, { error: 'Malformed stripe-signature header' });
         return;
       }
+      const timestamp  = tsPart.split('=')[1];
+      const receivedSig = v1Part.split('=')[1];
+      const expectedSig = crypto
+        .createHmac('sha256', STRIPE_WEBHOOK_SECRET)
+        .update(timestamp + '.' + body)
+        .digest('hex');
+      // Constant-time comparison to avoid timing side-channels.
+      const a = Buffer.from(expectedSig, 'hex');
+      const b = Buffer.from(receivedSig, 'hex');
+      if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+        json(res, 400, { error: 'Invalid signature' });
+        return;
+      }
+    } catch(e) {
+      console.error('[stripe-webhook] signature verification threw:', e.message);
+      json(res, 400, { error: 'Signature check failed' });
+      return;
     }
 
     let event;
@@ -2683,5 +2711,8 @@ server.listen(PORT, () => {
   console.log(`  Supabase: ${!!(SUPABASE_URL&&SUPABASE_KEY)?'CONNECTED':'NOT CONFIGURED'}`);
   console.log(`  Key: ${!!OPENAI_KEY?'LOADED':'MISSING'}`);
   console.log(`  Stripe: ${(STRIPE_SECRET&&STRIPE_WEBHOOK_SECRET)?'configured':'missing keys — payments will not unlock protocols'}`);
+  if (!STRIPE_WEBHOOK_SECRET) {
+    console.error('  ⚠ CRITICAL: STRIPE_WEBHOOK_SECRET is not set. /stripe-webhook will refuse every request with HTTP 500 until configured.');
+  }
   warmCache();
 });
