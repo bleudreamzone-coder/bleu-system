@@ -120,3 +120,117 @@ Adaptations from the prompt as written, made to match the actual codebase:
 ## Closing note
 
 The diagnosis was the audit. The treatment is on this branch. The branch is pushed, the PR is open, manual blockers are explicit. Once Felicia signs off the crisis validator, Bleu runs the RLS pull, and the Longevity back-fill SQL is applied, the platform meaningfully closes the deck's "clinically governed digital care delivery" gap.
+
+---
+
+## Afternoon Ship Session (2026-05-21)
+
+After morning execution session and a brief recovery break, Bleu (CTO)
+ran a follow-up session against `_meta/audit/2026-05-21/SHIP_IT_PROMPT.md`
+to close every Week-1 item that did not require Felicia's signoff.
+
+### The unplanned finding
+
+The session opened with TASK 1 — execute the RLS credentialed pull
+(BLOCKER 4). Bleu authed (`supabase login`) and the linked project's
+`public` schema was dumped via `supabase db dump --linked`. The dump
+itself succeeded.
+
+**Then the audit paid for itself.** Cross-referencing the dump against
+the README's "user-data tables that MUST have rls_enabled = true" list
+surfaced 7 tables with **RLS off AND `GRANT ALL TO anon`**:
+
+`user_coherence` (per-user phone numbers + CI/ISI), `commitments`,
+`emotional_signals`, `predictive_signals`, `session_embeddings`,
+`user_arcs`, `agent11_syntheses`.
+
+The public anon JWT is embedded in `index.html:795` (correct usage,
+anon keys are public by design). With `GRANT ALL TO anon` and no RLS,
+anyone with that key — meaning anyone — can SELECT/INSERT/UPDATE/DELETE
+every row of these tables via a one-line curl against the Supabase REST
+API. Most damaging: `user_coherence.phone`, the SMS-reorder phone
+column.
+
+Root cause is one level deeper: `ALTER DEFAULT PRIVILEGES ... GRANT ALL
+ON TABLES TO "anon"` is set at the public-schema level, so every new
+table created by the postgres role inherits anon-GRANT-ALL by default.
+28 of 48 public tables sit in that default-anon-grant posture.
+
+### What shipped
+
+Three commits resolve the finding (without applying the fix to live db),
+and four ship the Week-1 S-effort items.
+
+| Commit | Title | Files |
+|---|---|---|
+| `8fc5149` | chore(governance): RLS pull — P0 EXPOSURE FOUND | schema-snapshot, policies extract, audit text (populated), this prompt |
+| `41dc9b9` | fix(rls): TD-003-P0 fix candidate — REVOKE anon on 7 tables | `supabase/migrations/2026-05-21-p0-revoke-anon.sql` |
+| `6f1d9ab` | chore: comprehensive .gitignore rewrite | `.gitignore` |
+| `7d414be` | fix(privacy): stop logging email plaintext | `server.js` (maskEmail helper) |
+| `20cb7e6` | feat(security): OWASP headers + CORS allowlist | `server.js` |
+| `e34643d` | feat(ops): SMS reorder cron + endpoint auth | `server.js`, `.github/workflows/sms-reorder-cron.yml` |
+
+(One more commit to add the pre-merge checklist and this execution-report
+update lands alongside this commit.)
+
+### Decision audit trail (Bleu's, taken with Claude paused on STOP rule)
+
+1. **Commit posture for the audit artifacts:** option (b) — commit
+   with an honest "P0 EXPOSURE FOUND" title. "Don't bury this. The
+   audit's value IS the honesty. The artifact is evidence that you
+   found the problem yourself."
+2. **Fix path for the 7 tables:** option (C) — REVOKE ALL FROM anon,
+   authenticated. Justified by the verification grep showing all
+   legitimate access goes through server.js's `SUPABASE_SERVICE_KEY`
+   or the edge function's `SUPABASE_SERVICE_ROLE_KEY`. No frontend
+   anon-key code touches any of the 7 tables.
+3. **Defense-in-depth ENABLE RLS:** noted in the migration's comments
+   as an optional append, Bleu's call to make before applying.
+4. **Continue parallel work:** yes — the 4 Week-1 S-effort items don't
+   touch RLS, so they shipped while the P0 finding stays gated on a
+   manual SQL-editor step.
+
+### Tests at end of afternoon session
+
+```
+$ node tests/stripe-webhook.test.js       → PASS (33 assertions)
+$ node tests/crisis_validator.test.js     → PASS (35 assertions)
+$ node --check server.js                  → ok
+$ PORT=18080 node server.js               → boots clean
+$ curl headers smoke test                 → OWASP + CORS verified
+$ /api/send-reorder-reminders auth        → fail-closed unset, 401 wrong, pass correct
+```
+
+### Status of PR #1 blockers after this session
+
+| Blocker | Morning status | Afternoon status |
+|---|---|---|
+| 1 — Longevity back-fill | ⬜ PENDING (Felicia) | ⬜ PENDING (no change — Felicia not in this session) |
+| 2 — Crisis signoff | ⬜ PENDING (Felicia) | ⬜ PENDING (no change — Felicia not in this session) |
+| 3 — Stripe webhook secret | ✅ CONFIRMED | ✅ CONFIRMED (re-verify step queued in checklist) |
+| 4 — RLS pull | ⬜ PENDING | 🔴 **PULL DONE, P0 FOUND** — fix candidate written, application manual |
+
+### Adaptations from the afternoon prompt
+
+- **PROCEDURE.md Step 4 (per-table RLS audit query in SQL Editor):**
+  derived the same answer directly from the schema dump instead, which
+  faithfully captures every `ALTER TABLE ... ENABLE ROW LEVEL SECURITY`
+  and `GRANT/REVOKE`. Saves a dashboard round-trip without losing
+  fidelity.
+- **CORS narrowing:** the prompt suggested "narrow wildcard where SSE
+  doesn't need it." Implementation went further — explicit ALLOWED_ORIGINS
+  allowlist (env-overridable) with reflected-Origin behavior, falling
+  back to the canonical first entry for disallowed origins. SSE
+  endpoints still emit wildcard directly in their writeHead calls (so
+  no behavior change there).
+- **CSP starter:** shipped as `Content-Security-Policy-Report-Only`
+  rather than enforcing immediately, so a missed directive doesn't
+  break the live site. After a week of clean violation reports in
+  devtools, Bleu drops `-Report-Only` from the header name to enforce.
+- **SMS reorder endpoint:** the prompt's W1.10 said "confirm it has
+  auth; add it if it doesn't." It didn't. Auth added via
+  `REORDER_CRON_SECRET` with `crypto.timingSafeEqual` comparison.
+- **Defense-in-depth on the RLS fix:** the migration ships REVOKE-only
+  per Bleu's Option C, with the `ENABLE ROW LEVEL SECURITY` block as
+  commented-out append. Bleu's call before applying.
+
