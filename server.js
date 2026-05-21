@@ -27,6 +27,13 @@ const TWILIO_SID  = process.env.TWILIO_ACCOUNT_SID  || '';
 const TWILIO_AUTH = process.env.TWILIO_AUTH_TOKEN    || '';
 const TWILIO_FROM = process.env.TWILIO_PHONE_NUMBER  || '';
 
+// Shared secret authorizing scheduled callers (GitHub Actions cron, manual
+// curl trigger) to invoke /api/send-reorder-reminders. Must match a value
+// configured in BOTH Render env and GitHub Actions Secrets. If unset, the
+// endpoint refuses every request — same fail-closed posture as the Stripe
+// webhook secret.
+const REORDER_CRON_SECRET = process.env.REORDER_CRON_SECRET || '';
+
 // Hard cap on the recall block injected into the system prompt.
 // Roughly ~1500 tokens at ~4 chars/token.
 const RECALL_CHAR_BUDGET = 6000;
@@ -2467,6 +2474,26 @@ const server = http.createServer((req, res) => {
   if (pn === '/api/send-reorder-reminders' && req.method === 'POST') {
     (async () => {
       try {
+        // Auth: require shared secret. Fail-closed if unconfigured.
+        if (!REORDER_CRON_SECRET) {
+          console.error('[reorder-cron] CRITICAL: REORDER_CRON_SECRET not set — refusing to process');
+          return json(res, 500, {error:'REORDER_CRON_SECRET not configured'});
+        }
+        const authHeader = String(req.headers.authorization || '');
+        const presented = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+        const expected = REORDER_CRON_SECRET;
+        let authOk = false;
+        try {
+          const crypto = require('crypto');
+          const a = Buffer.from(presented);
+          const b = Buffer.from(expected);
+          authOk = a.length === b.length && crypto.timingSafeEqual(a, b);
+        } catch { authOk = false; }
+        if (!authOk) {
+          const ip = req.headers['x-forwarded-for'] || (req.socket && req.socket.remoteAddress) || '?';
+          console.warn(`[reorder-cron] unauthorized attempt from ${ip}`);
+          return json(res, 401, {error:'Unauthorized'});
+        }
         if (!SUPABASE_URL || !SUPABASE_KEY) return json(res, 500, {error:'Supabase not configured'});
         if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) return json(res, 500, {error:'Twilio not configured'});
         const today = new Date().toISOString().slice(0, 10);
