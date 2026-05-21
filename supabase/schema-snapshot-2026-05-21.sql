@@ -2435,8 +2435,6 @@ GRANT ALL ON TABLE "public"."affiliate_clicks" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."agent11_syntheses" TO "anon";
-GRANT ALL ON TABLE "public"."agent11_syntheses" TO "authenticated";
 GRANT ALL ON TABLE "public"."agent11_syntheses" TO "service_role";
 
 
@@ -2477,8 +2475,6 @@ GRANT ALL ON TABLE "public"."clinical_trials" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."commitments" TO "anon";
-GRANT ALL ON TABLE "public"."commitments" TO "authenticated";
 GRANT ALL ON TABLE "public"."commitments" TO "service_role";
 
 
@@ -2511,8 +2507,6 @@ GRANT ALL ON TABLE "public"."dr_felicia_reviews" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."emotional_signals" TO "anon";
-GRANT ALL ON TABLE "public"."emotional_signals" TO "authenticated";
 GRANT ALL ON TABLE "public"."emotional_signals" TO "service_role";
 
 
@@ -2619,8 +2613,6 @@ GRANT ALL ON TABLE "public"."practitioners" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."predictive_signals" TO "anon";
-GRANT ALL ON TABLE "public"."predictive_signals" TO "authenticated";
 GRANT ALL ON TABLE "public"."predictive_signals" TO "service_role";
 
 
@@ -2697,8 +2689,6 @@ GRANT ALL ON TABLE "public"."seo_pages" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."session_embeddings" TO "anon";
-GRANT ALL ON TABLE "public"."session_embeddings" TO "authenticated";
 GRANT ALL ON TABLE "public"."session_embeddings" TO "service_role";
 
 
@@ -2715,14 +2705,10 @@ GRANT ALL ON SEQUENCE "public"."symptom_specialist_map_id_seq" TO "service_role"
 
 
 
-GRANT ALL ON TABLE "public"."user_arcs" TO "anon";
-GRANT ALL ON TABLE "public"."user_arcs" TO "authenticated";
 GRANT ALL ON TABLE "public"."user_arcs" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."user_coherence" TO "anon";
-GRANT ALL ON TABLE "public"."user_coherence" TO "authenticated";
 GRANT ALL ON TABLE "public"."user_coherence" TO "service_role";
 
 

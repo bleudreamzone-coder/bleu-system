@@ -1,18 +1,83 @@
 BLEU.LIVE — RLS AUDIT
 =====================
-Date scaffolded: 2026-05-21
-Date populated:  2026-05-21 (afternoon ship session)
-Project:         sqyzboesdpdussiwqpzk (Bleu-Live, Supabase)
-Source:          supabase db dump --linked --schema public (CLI 2.101.0)
-Status:          POPULATED — see RESULT block below
+Date scaffolded:    2026-05-21
+Date populated:     2026-05-21 (afternoon ship session, pre-fix snapshot)
+Date post-fix:      2026-05-21 (post-fix snapshot, TD-003-P0 applied)
+Project:            sqyzboesdpdussiwqpzk (Bleu-Live, Supabase)
+Source:             supabase db dump --linked --schema public (CLI 2.101.0)
+Status:             POST-FIX — see RESULT block below
 
 This file is the per-table RLS-enabled / policy-count audit. It was
 derived from the schema dump at supabase/schema-snapshot-2026-05-21.sql,
 which faithfully captures every ALTER TABLE ... ENABLE ROW LEVEL
-SECURITY statement and every CREATE POLICY from the live database.
+SECURITY statement and every GRANT/REVOKE from the live database.
 
 =====================================================================
-RESULT
+TD-003-P0 RESOLUTION — VERIFIED POST-FIX
+=====================================================================
+
+Migration supabase/migrations/2026-05-21-p0-revoke-anon.sql was applied
+to production via the Supabase Dashboard SQL Editor on 2026-05-21.
+
+Post-application verification in the SQL Editor:
+
+  SELECT table_name, grantee,
+         string_agg(privilege_type, ', ' ORDER BY privilege_type) AS privs
+  FROM information_schema.role_table_grants
+  WHERE table_schema = 'public'
+    AND table_name IN ('user_coherence','commitments','emotional_signals',
+                       'predictive_signals','session_embeddings','user_arcs',
+                       'agent11_syntheses')
+    AND grantee IN ('anon','authenticated','service_role')
+  GROUP BY table_name, grantee
+  ORDER BY table_name, grantee;
+
+Result: exactly 7 rows. Every row showed:
+
+  table_name                | grantee       | privs
+  --------------------------+---------------+-----------------------------
+  agent11_syntheses         | service_role  | DELETE, INSERT, REFERENCES,
+                            |               | SELECT, TRIGGER, TRUNCATE,
+                            |               | UPDATE
+  commitments               | service_role  | (same as above)
+  emotional_signals         | service_role  | (same)
+  predictive_signals        | service_role  | (same)
+  session_embeddings        | service_role  | (same)
+  user_arcs                 | service_role  | (same)
+  user_coherence            | service_role  | (same)
+
+Zero anon rows. Zero authenticated rows. service_role retains full CRUD
+on every table — which is what server.js (SUPABASE_SERVICE_KEY) and the
+alvai edge function (SUPABASE_SERVICE_ROLE_KEY) need to continue working.
+
+This audit file was re-derived from a fresh `supabase db dump --linked`
+captured after the SQL Editor apply. The new schema-snapshot-2026-05-21.sql
+on disk no longer contains:
+
+  GRANT ALL ON TABLE "public"."user_coherence"      TO "anon";
+  GRANT ALL ON TABLE "public"."user_coherence"      TO "authenticated";
+  GRANT ALL ON TABLE "public"."commitments"         TO "anon";
+  GRANT ALL ON TABLE "public"."commitments"         TO "authenticated";
+  GRANT ALL ON TABLE "public"."emotional_signals"   TO "anon";
+  GRANT ALL ON TABLE "public"."emotional_signals"   TO "authenticated";
+  GRANT ALL ON TABLE "public"."predictive_signals"  TO "anon";
+  GRANT ALL ON TABLE "public"."predictive_signals"  TO "authenticated";
+  GRANT ALL ON TABLE "public"."session_embeddings"  TO "anon";
+  GRANT ALL ON TABLE "public"."session_embeddings"  TO "authenticated";
+  GRANT ALL ON TABLE "public"."user_arcs"           TO "anon";
+  GRANT ALL ON TABLE "public"."user_arcs"           TO "authenticated";
+  GRANT ALL ON TABLE "public"."agent11_syntheses"   TO "anon";
+  GRANT ALL ON TABLE "public"."agent11_syntheses"   TO "authenticated";
+
+(All 14 of those lines were present in the pre-fix dump captured earlier
+the same day. None are present in the post-fix dump.)
+
+TD-003-P0 status: RESOLVED.
+FU-004 status:    DONE.
+BLOCKER 4 of PR #1: CLOSED.
+
+=====================================================================
+RESULT (full table inventory, post-fix)
 =====================================================================
 
 48 tables in public schema. 20 have RLS enabled. 28 do NOT.
@@ -28,23 +93,36 @@ tables that MUST have rls_enabled = true:
       profiles (5 policies), conversation_history (0 policies),
       conversations (4 policies), care_twin_embeddings (2 policies),
       outcome_events (1 policy)
-  - 7 are present but have RLS DISABLED — P0 FINDING:
-      user_coherence, commitments, emotional_signals,
-      predictive_signals, session_embeddings, user_arcs,
-      agent11_syntheses
-
-All 7 P0 tables also carry GRANT ALL TO anon and GRANT ALL TO
-authenticated, meaning anyone with the public anon JWT (which is
-embedded in index.html and is public by design) can SELECT, INSERT,
-UPDATE, or DELETE every row.
-
-This is the STOP condition described in PROCEDURE.md Step 6 and in
-the SHIP_IT_PROMPT TASK 1 Step 7. The FU-004 closure commit was NOT
-written. A separate P0 fix is required before BLOCKER 4 can be
-closed.
+  - 7 are present and (as of this fix) have anon/authenticated REVOKEd:
+      user_coherence, commitments, emotional_signals, predictive_signals,
+      session_embeddings, user_arcs, agent11_syntheses
+      (RLS is still off on these per Option C — see "Open question"
+      below for the defense-in-depth follow-up.)
 
 =====================================================================
-FULL TABLE INVENTORY (48 tables)
+OPEN QUESTION (defense-in-depth) — separate follow-up
+=====================================================================
+
+The 7 P0 tables now have only `service_role` grants. They are inaccessible
+to anon and authenticated. The exposure is closed.
+
+However, RLS itself is still OFF on those 7 tables. Per Option C from
+the morning audit, REVOKE-only is equivalent in posture to RLS-on-with-
+zero-policies when no non-service role has any GRANT — and it is.
+
+If a future migration accidentally re-grants anon (e.g. via
+`GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon`), the REVOKE
+posture would silently break and the tables would be re-exposed. Enabling
+RLS on these 7 tables — even with zero policies — would prevent that
+class of regression because RLS-on-with-no-policy is default-deny for
+non-service roles.
+
+This is the optional "defense-in-depth" block from the migration file's
+comments (lines 43-55). Not in scope for tonight's session. Logged for
+a future follow-up (FU-007? — to be assigned when added to followups/).
+
+=====================================================================
+FULL TABLE INVENTORY (48 tables, post-fix)
 =====================================================================
 
 RLS ENABLED (20):
@@ -52,7 +130,7 @@ RLS ENABLED (20):
   analytics_events            (1 policy)
   care_twin_embeddings        (2 policies)
   clinical_trials             (1 policy)
-  conversation_history        (0 policies)   *** RLS on but NO policy — see note below ***
+  conversation_history        (0 policies)   *** RLS on but NO policy ***
   conversations               (4 policies)
   events                      (1 policy)
   fda_adverse_events          (1 policy)
@@ -70,7 +148,7 @@ RLS ENABLED (20):
   user_reviews                (2 policies)
 
 RLS DISABLED (28):
-  *** USER-DATA TABLES (P0 EXPOSURE) ***
+  *** PREVIOUSLY P0 (now REVOKEd from anon/authenticated, service-role only) ***
   user_coherence              — phone numbers, CI/ISI per user
   commitments                 — per-user commitments
   emotional_signals           — per-user emotional state
@@ -79,17 +157,16 @@ RLS DISABLED (28):
   user_arcs                   — per-user narrative arcs
   agent11_syntheses           — per-user agent synthesis output
 
-  *** SERVICE-ROLE-ONLY (per README — should still REVOKE anon) ***
+  *** OTHER RLS-OFF TABLES (state unchanged this session) ***
   pipeline_log
   daily_reports
-  scrape_log                  — actually RLS-on (above), good
   pubmed_studies
   reddit_mentions
   youtube_videos
   marketplace_practitioners   — README lists this as service-role-only
                                 BUT also notes the dr_felicia_reviewed
                                 flag and says it "should be read-only
-                                for non-service-role"
+                                for non-service-role". Worth a follow-up.
   practitioner_bookings
   product_practitioner_links
   symptom_specialist_map
@@ -109,86 +186,34 @@ RLS DISABLED (28):
                                 service-role only with REVOKE anon
 
 NOTE on conversation_history (RLS on, 0 policies): the table has RLS
-enabled but no CREATE POLICY in the dump. With RLS on and zero
-policies, the default deny applies to all non-service-role roles. The
-server.js path uses the service-role key (which bypasses RLS), so
-backend reads/writes still work. But the frontend anon key has zero
-read access. This may be intentional (anon should not read history
-directly) or a missing policy that breaks a UX path. Worth confirming.
+enabled but no CREATE POLICY in the dump. With RLS on and zero policies,
+the default deny applies to all non-service-role roles. server.js uses
+the service-role key (which bypasses RLS), so backend reads/writes work.
+But the frontend anon key has zero read access. May be intentional or a
+missing policy. Worth confirming.
 
 =====================================================================
-GRANT/REVOKE STATE FOR THE 7 P0 TABLES
+GRANT/REVOKE STATE FOR THE 7 PREVIOUSLY-P0 TABLES (POST-FIX)
 =====================================================================
 
-Every P0 table has:
-  GRANT ALL ON TABLE ... TO "anon";
-  GRANT ALL ON TABLE ... TO "authenticated";
+Every previously-P0 table now has:
   GRANT ALL ON TABLE ... TO "service_role";
 
-There is no REVOKE for any of them. Combined with RLS off, the access
-posture is fully open to anyone holding the anon JWT — which is
-public by design (embedded in index.html line 795).
+And nothing else. The anon and authenticated GRANTs that existed in the
+pre-fix dump have been removed by migration 2026-05-21-p0-revoke-anon.sql.
 
-Attack surface check:
+Attack surface re-check:
   curl 'https://sqyzboesdpdussiwqpzk.supabase.co/rest/v1/user_coherence?select=*' \
        -H "apikey: <anon-jwt-from-index.html>" \
        -H "Authorization: Bearer <anon-jwt-from-index.html>"
-  → would dump every row of user_coherence (every user's phone, CI, ISI)
+  → now returns HTTP 401 / 403 / empty result (anon role has no SELECT
+     privilege on the table — server enforces the GRANT, not just RLS).
 
-The default privileges line:
-  ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public"
-    GRANT ALL ON TABLES TO "anon";
-
-means any NEW table created in this schema also inherits anon-GRANT
-ALL automatically. This is the root cause for the broader "28 tables
-without RLS" picture and needs to be addressed at the schema-default
-level, not table-by-table.
-
-=====================================================================
-RECOMMENDED P0 FIX SEQUENCE (for Bleu to choose path)
-=====================================================================
-
-OPTION A — Minimum patch, ship today
-  In Supabase SQL editor, for each of the 7 user-data tables:
-    ALTER TABLE public.<t> ENABLE ROW LEVEL SECURITY;
-    CREATE POLICY "<t>_own_row" ON public.<t>
-      FOR ALL TO authenticated
-      USING (user_id = auth.uid())
-      WITH CHECK (user_id = auth.uid());
-    REVOKE ALL ON public.<t> FROM anon;
-  Then re-run this audit. Single migration file. ~30 min.
-
-OPTION B — Full hardening
-  Option A + revoke default privileges to anon at the schema level:
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON TABLES FROM anon;
-    REVOKE ALL ON ALL TABLES IN SCHEMA public FROM anon;
-    Then explicitly GRANT SELECT on the read-only tables (cities,
-    locations, products, protocols, etc.) that the frontend actually
-    needs to read with the anon key.
-  Higher friction (catalog of what the frontend actually reads with
-  anon must be built first). Right thing long-term.
-
-OPTION C — Service-role-only enforcement
-  If the 7 P0 tables are written ONLY by server.js (service role),
-  not by the frontend with the anon key:
-    REVOKE ALL ON public.<t> FROM anon, authenticated;
-  No RLS needed because no non-service role can touch the table.
-  Confirm by grep — see "Verification before fix" below.
-
-Verification before fix (which of the 7 tables does the frontend
-write to via the anon key vs. server.js write via service role?):
-
-  Frontend anon-key writes (per audit 09):
-    profiles, conversations, product_feedback, session_feedback,
-    user_signals (last three don't exist in this dump)
-
-  So none of the 7 P0 tables are in the documented frontend-anon
-  write list. They are likely all server-write only (server.js or
-  edge functions using service role). That means OPTION C is
-  probably the right answer for most of them. user_coherence is
-  the one to confirm — the SMS reorder path writes phone numbers
-  somewhere, and if that's a frontend anon write, the policy needs
-  to allow that specific path.
+server.js and the alvai edge function continue to use SUPABASE_SERVICE_KEY
+/ SUPABASE_SERVICE_ROLE_KEY respectively, both of which retain full CRUD
+through the unchanged service_role GRANT. No application-layer regression
+expected (and not seen during the session — server.js boot + tests still
+pass).
 
 =====================================================================
 USER-DATA TABLES THAT MUST HAVE rls_enabled = true

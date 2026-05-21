@@ -1,6 +1,7 @@
 -- RLS policies + RLS-enable statements extracted from schema-snapshot-2026-05-21.sql
--- Generated 2026-05-21T21:32:41Z by SHIP_IT_PROMPT.md TASK 1
+-- Generated 2026-05-21T22:24:35Z by SHIP_IT_PROMPT.md TASK 1 (POST-FIX)
 -- Source: supabase db dump --linked --schema public (Supabase CLI 2.101.0)
+-- This file reflects the post-fix state — see commit closing TD-003-P0.
 
 -- ============================================================
 -- ALTER TABLE ... ENABLE ROW LEVEL SECURITY statements
@@ -68,8 +69,6 @@ GRANT ALL ON FUNCTION "public"."update_timestamp"() TO "service_role";
 GRANT ALL ON TABLE "public"."affiliate_clicks" TO "anon";
 GRANT ALL ON TABLE "public"."affiliate_clicks" TO "authenticated";
 GRANT ALL ON TABLE "public"."affiliate_clicks" TO "service_role";
-GRANT ALL ON TABLE "public"."agent11_syntheses" TO "anon";
-GRANT ALL ON TABLE "public"."agent11_syntheses" TO "authenticated";
 GRANT ALL ON TABLE "public"."agent11_syntheses" TO "service_role";
 GRANT ALL ON TABLE "public"."analytics_events" TO "anon";
 GRANT ALL ON TABLE "public"."analytics_events" TO "authenticated";
@@ -89,8 +88,6 @@ GRANT ALL ON TABLE "public"."classes" TO "service_role";
 GRANT ALL ON TABLE "public"."clinical_trials" TO "anon";
 GRANT ALL ON TABLE "public"."clinical_trials" TO "authenticated";
 GRANT ALL ON TABLE "public"."clinical_trials" TO "service_role";
-GRANT ALL ON TABLE "public"."commitments" TO "anon";
-GRANT ALL ON TABLE "public"."commitments" TO "authenticated";
 GRANT ALL ON TABLE "public"."commitments" TO "service_role";
 GRANT ALL ON TABLE "public"."conditions" TO "anon";
 GRANT ALL ON TABLE "public"."conditions" TO "authenticated";
@@ -105,8 +102,6 @@ GRANT ALL ON TABLE "public"."daily_reports" TO "service_role";
 GRANT ALL ON TABLE "public"."dr_felicia_reviews" TO "anon";
 GRANT ALL ON TABLE "public"."dr_felicia_reviews" TO "authenticated";
 GRANT ALL ON TABLE "public"."dr_felicia_reviews" TO "service_role";
-GRANT ALL ON TABLE "public"."emotional_signals" TO "anon";
-GRANT ALL ON TABLE "public"."emotional_signals" TO "authenticated";
 GRANT ALL ON TABLE "public"."emotional_signals" TO "service_role";
 GRANT ALL ON TABLE "public"."events" TO "anon";
 GRANT ALL ON TABLE "public"."events" TO "authenticated";
@@ -159,8 +154,6 @@ GRANT ALL ON TABLE "public"."practitioner_bookings" TO "service_role";
 GRANT ALL ON TABLE "public"."practitioners" TO "anon";
 GRANT ALL ON TABLE "public"."practitioners" TO "authenticated";
 GRANT ALL ON TABLE "public"."practitioners" TO "service_role";
-GRANT ALL ON TABLE "public"."predictive_signals" TO "anon";
-GRANT ALL ON TABLE "public"."predictive_signals" TO "authenticated";
 GRANT ALL ON TABLE "public"."predictive_signals" TO "service_role";
 GRANT ALL ON TABLE "public"."product_practitioner_links" TO "anon";
 GRANT ALL ON TABLE "public"."product_practitioner_links" TO "authenticated";
@@ -198,8 +191,6 @@ GRANT ALL ON TABLE "public"."scrape_log" TO "service_role";
 GRANT ALL ON TABLE "public"."seo_pages" TO "anon";
 GRANT ALL ON TABLE "public"."seo_pages" TO "authenticated";
 GRANT ALL ON TABLE "public"."seo_pages" TO "service_role";
-GRANT ALL ON TABLE "public"."session_embeddings" TO "anon";
-GRANT ALL ON TABLE "public"."session_embeddings" TO "authenticated";
 GRANT ALL ON TABLE "public"."session_embeddings" TO "service_role";
 GRANT ALL ON TABLE "public"."symptom_specialist_map" TO "anon";
 GRANT ALL ON TABLE "public"."symptom_specialist_map" TO "authenticated";
@@ -207,11 +198,7 @@ GRANT ALL ON TABLE "public"."symptom_specialist_map" TO "service_role";
 GRANT ALL ON SEQUENCE "public"."symptom_specialist_map_id_seq" TO "anon";
 GRANT ALL ON SEQUENCE "public"."symptom_specialist_map_id_seq" TO "authenticated";
 GRANT ALL ON SEQUENCE "public"."symptom_specialist_map_id_seq" TO "service_role";
-GRANT ALL ON TABLE "public"."user_arcs" TO "anon";
-GRANT ALL ON TABLE "public"."user_arcs" TO "authenticated";
 GRANT ALL ON TABLE "public"."user_arcs" TO "service_role";
-GRANT ALL ON TABLE "public"."user_coherence" TO "anon";
-GRANT ALL ON TABLE "public"."user_coherence" TO "authenticated";
 GRANT ALL ON TABLE "public"."user_coherence" TO "service_role";
 GRANT ALL ON TABLE "public"."user_reviews" TO "anon";
 GRANT ALL ON TABLE "public"."user_reviews" TO "authenticated";
