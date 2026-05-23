@@ -1112,6 +1112,39 @@ async function querySupabase(table, query, limit, method, body) {
   }
 }
 
+// ═══ AUDIT HELPERS (Phase 1) ═══
+// Fire-and-forget event logging. Never throws — a logging failure must
+// never break the response path. Writes via service-role querySupabase.
+
+async function logEvent({ session_id, user_id, event_type, sea, mode, payload }) {
+  if (!event_type) return;
+  try {
+    await querySupabase('bleu_events', '', 0, 'POST', {
+      session_id: session_id || null,
+      user_id: user_id || null,
+      event_type,
+      sea: sea || null,
+      mode: mode || null,
+      payload: payload || {}
+    });
+  } catch (e) {
+    console.error('[LOG_EVENT_FAIL]', JSON.stringify({ event_type, err: e.message, ts: Date.now() }));
+  }
+}
+
+async function logPlanEvent(plan_id, event_type, payload) {
+  if (!plan_id || !event_type) return;
+  try {
+    await querySupabase('bleu_plan_events', '', 0, 'POST', {
+      plan_id,
+      event_type,
+      payload: payload || {}
+    });
+  } catch (e) {
+    console.error('[LOG_PLAN_EVENT_FAIL]', JSON.stringify({ plan_id, event_type, err: e.message, ts: Date.now() }));
+  }
+}
+
 // ═══ MEMORY HELPERS (conversation_history + pgvector recall) ═══
 
 // Call a Supabase stored function (RPC endpoint) with service-role auth.
