@@ -2175,13 +2175,19 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(b);
         if(!p.session_id) return json(res,400,{error:'session_id required'});
         const existing = await querySupabase('sessions', `?session_id=eq.${p.session_id}`, 1);
-        if(existing && existing.length > 0) {
+        const isResume = !!(existing && existing.length > 0);
+        if(isResume) {
           // Update last_active and increment count
           const headers = {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'};
           await fetch(SUPABASE_URL+'/rest/v1/sessions?session_id=eq.'+p.session_id, {method:'PATCH',headers,body:JSON.stringify({last_active:new Date().toISOString(),conversation_count:(existing[0].conversation_count||0)+1,city:p.city||existing[0].city})});
         } else {
           await querySupabase('sessions','',0,'POST',{session_id:p.session_id,city:p.city||'',conversation_count:1,created_at:new Date().toISOString(),last_active:new Date().toISOString()});
         }
+        logEvent({
+          session_id: p.session_id,
+          event_type: isResume ? 'session_resume' : 'session_start',
+          payload:    { city: p.city || null, prior_count: isResume ? (existing[0].conversation_count || 0) : 0 }
+        });
         json(res,200,{ok:true});
       } catch(e){ json(res,200,{ok:true}); }
     })(); });
@@ -2888,6 +2894,31 @@ function handleStripeWebhook(req, res) {
         } catch(e) {
           console.error('Supabase update failed:', e.message);
         }
+      }
+
+      // Audit: purchase_completed to bleu_events. Email is SHA-256'd
+      // (TD-010 privacy — never store plaintext email in the audit trail).
+      // Lowercased + trimmed so the same address always hashes the same.
+      try {
+        const _crypto = require('crypto');
+        const email_hash = email
+          ? _crypto.createHash('sha256').update(String(email).trim().toLowerCase()).digest('hex')
+          : null;
+        logEvent({
+          user_id:    userId || null,
+          event_type: 'purchase_completed',
+          payload: {
+            stripe_session_id: session.id || null,
+            stripe_customer:   session.customer || null,
+            price_id:          priceId || null,
+            protocol_name:     protocol,
+            amount_cents:      session.amount_total || null,
+            currency:          session.currency || null,
+            email_hash
+          }
+        });
+      } catch (e) {
+        console.error('[purchase_completed audit failed]', e.message);
       }
     }
 
