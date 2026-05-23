@@ -1962,13 +1962,21 @@ const server = http.createServer((req, res) => {
           msgs.push({ role: 'user', content: p.message });
         }
         const ctl2 = new AbortController();
-        const tmr2 = setTimeout(() => ctl2.abort(), 30000);
+        // Supply mode: Fullscript plan responses regularly need ~30-40s on gpt-4o.
+        const streamTimeoutMs = (p.mode === 'supply') ? 45000 : 30000;
+        const tmr2 = setTimeout(() => ctl2.abort(), streamTimeoutMs);
         const ar = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST', headers: { 'Authorization': `Bearer ${OPENAI_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ model, messages: msgs, max_completion_tokens: model==='gpt-4o'?4000:2000, temperature: 1, stream: true }),
           signal: ctl2.signal
         }).finally(() => clearTimeout(tmr2));
-        if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI stream error:', ar.status, errBody.substring(0,500)); res.writeHead(500,{'Content-Type':'application/json'}); return res.end(JSON.stringify({error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model})); }
+        if (!ar.ok) {
+          const errBody = await ar.text();
+          console.error('OpenAI stream error:', ar.status, errBody.substring(0,500));
+          console.error('[ALVAI_QUIET]', JSON.stringify({ mode: p.mode||'general', msgLen: (p.message||'').length, err: 'openai_http_'+ar.status, err_name: 'OpenAIHTTPError', model, ts: Date.now() }));
+          res.writeHead(500,{'Content-Type':'application/json'});
+          return res.end(JSON.stringify({error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model}));
+        }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
         if (crisis.detected) res.write('data: ' + JSON.stringify({ text: CRISIS_BANNER, crisis: true }) + '\n\n');
@@ -1995,7 +2003,13 @@ const server = http.createServer((req, res) => {
         } else if (p.message) {
           console.log(`[memory] stream aborted before usable assistant turn (len=${full ? full.length : 0}), skipping write`);
         }
-      } catch (e) { res.writeHead(500,{'Content-Type':'application/json'}); res.end(JSON.stringify({error:e.message})); }
+      } catch (e) {
+        let _mode = 'general', _msgLen = 0;
+        try { const _p = JSON.parse(b); _mode = _p.mode || 'general'; _msgLen = (_p.message || '').length; } catch {}
+        console.error('[ALVAI_QUIET]', JSON.stringify({ mode: _mode, msgLen: _msgLen, err: e.message, err_name: e.name, ts: Date.now() }));
+        if (!res.headersSent) { res.writeHead(500,{'Content-Type':'application/json'}); }
+        try { res.end(JSON.stringify({error:e.message})); } catch {}
+      }
     })(); });
     return;
   }
