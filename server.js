@@ -1158,6 +1158,24 @@ async function logPlanEvent(plan_id, event_type, payload) {
   }
 }
 
+// State/decision audit (Phase 4 state_estimate, Phase 2 commerce_steward).
+// Separate from logEvent so the replay/reasoning surface is queryable on
+// its own table without filtering bleu_events by event_type.
+async function logDecision({ session_id, user_id, decision_type, inputs, outputs }) {
+  if (!decision_type) return;
+  try {
+    await querySupabase('bleu_decisions', '', 0, 'POST', {
+      session_id: session_id || null,
+      user_id:    user_id || null,
+      decision_type,
+      inputs:  inputs  || {},
+      outputs: outputs || {}
+    });
+  } catch (e) {
+    console.error('[LOG_DECISION_FAIL]', JSON.stringify({ decision_type, err: e.message, ts: Date.now() }));
+  }
+}
+
 // ═══ MEMORY HELPERS (conversation_history + pgvector recall) ═══
 
 // Call a Supabase stored function (RPC endpoint) with service-role auth.
