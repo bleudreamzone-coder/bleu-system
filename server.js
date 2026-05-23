@@ -1116,6 +1116,19 @@ async function querySupabase(table, query, limit, method, body) {
 // Fire-and-forget event logging. Never throws — a logging failure must
 // never break the response path. Writes via service-role querySupabase.
 
+// TD-010 privacy: never store plaintext email in audit/telemetry payloads.
+// SHA-256 with trim+lowercase so the same address always hashes the same
+// (lets ops correlate a known address to events without the table ever
+// holding the address itself). Used by /stripe-webhook for both the
+// bleu_events purchase_completed row and the outcome_events insert.
+function hashEmail(email) {
+  if (!email) return null;
+  return require('crypto')
+    .createHash('sha256')
+    .update(String(email).trim().toLowerCase())
+    .digest('hex');
+}
+
 async function logEvent({ session_id, user_id, event_type, sea, mode, payload }) {
   if (!event_type) return;
   try {
@@ -2885,7 +2898,7 @@ function handleStripeWebhook(req, res) {
               payload: {
                 price_id: priceId || null,
                 customer: session.customer || null,
-                email: email || null,
+                email_hash: hashEmail(email),
                 amount_total: session.amount_total || null,
                 currency: session.currency || null
               }
@@ -2896,14 +2909,9 @@ function handleStripeWebhook(req, res) {
         }
       }
 
-      // Audit: purchase_completed to bleu_events. Email is SHA-256'd
-      // (TD-010 privacy — never store plaintext email in the audit trail).
-      // Lowercased + trimmed so the same address always hashes the same.
+      // Audit: purchase_completed to bleu_events. Email via hashEmail()
+      // helper (TD-010 privacy — never store plaintext in the audit trail).
       try {
-        const _crypto = require('crypto');
-        const email_hash = email
-          ? _crypto.createHash('sha256').update(String(email).trim().toLowerCase()).digest('hex')
-          : null;
         logEvent({
           user_id:    userId || null,
           event_type: 'purchase_completed',
@@ -2914,7 +2922,7 @@ function handleStripeWebhook(req, res) {
             protocol_name:     protocol,
             amount_cents:      session.amount_total || null,
             currency:          session.currency || null,
-            email_hash
+            email_hash:        hashEmail(email)
           }
         });
       } catch (e) {
