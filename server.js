@@ -1954,6 +1954,16 @@ const server = http.createServer((req, res) => {
     req.on('end', () => { (async () => {
       try {
         const p = JSON.parse(b);
+        const ts_start = Date.now();
+        // Audit: impression at request entry. Fire-and-forget; never blocks prose.
+        logEvent({
+          session_id: p.session_id || p.session || null,
+          user_id:    p.user_id || null,
+          event_type: 'chat_message_in',
+          sea:        p.sea || null,
+          mode:       p.mode || 'general',
+          payload:    { msg_len: (p.message||'').length, has_history: !!(p.history && p.history.length) }
+        });
         const suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message||'');
         // Crisis detection — see /api/chat above and core/safety/crisis_validator.js
         const crisis = detectCrisis(p.message || '');
@@ -2007,16 +2017,39 @@ const server = http.createServer((req, res) => {
           const errBody = await ar.text();
           console.error('OpenAI stream error:', ar.status, errBody.substring(0,500));
           console.error('[ALVAI_QUIET]', JSON.stringify({ mode: p.mode||'general', msgLen: (p.message||'').length, err: 'openai_http_'+ar.status, err_name: 'OpenAIHTTPError', model, ts: Date.now() }));
+          logEvent({
+            session_id: p.session_id || p.session || null,
+            user_id:    p.user_id || null,
+            event_type: 'alvai_quiet',
+            sea:        p.sea || null,
+            mode:       p.mode || 'general',
+            payload:    { msg_len: (p.message||'').length, err: 'openai_http_'+ar.status, err_name: 'OpenAIHTTPError', model }
+          });
           res.writeHead(500,{'Content-Type':'application/json'});
           return res.end(JSON.stringify({error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model}));
         }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
         if (crisis.detected) res.write('data: ' + JSON.stringify({ text: CRISIS_BANNER, crisis: true }) + '\n\n');
-        const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = ''; let full = '';
+        const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = ''; let full = ''; let ts_ttfb = 0;
         while (true) { const { done, value } = await rd.read(); if (done) break; buf += dc.decode(value, { stream: true }); const ls = buf.split('\n'); buf = ls.pop()||'';
-          for (const ln of ls) { if (!ln.startsWith('data: ')) continue; const d = ln.slice(6).trim(); if (d==='[DONE]') { res.write('data: '+JSON.stringify({done:true,model})+'\n\n'); continue; } try { const j=JSON.parse(d); const t=j.choices?.[0]?.delta?.content; if(t){ full+=t; res.write('data: '+JSON.stringify({t,text:t})+'\n\n'); } } catch{} } }
+          for (const ln of ls) { if (!ln.startsWith('data: ')) continue; const d = ln.slice(6).trim(); if (d==='[DONE]') { res.write('data: '+JSON.stringify({done:true,model})+'\n\n'); continue; } try { const j=JSON.parse(d); const t=j.choices?.[0]?.delta?.content; if(t){ if(!ts_ttfb) ts_ttfb = Date.now(); full+=t; res.write('data: '+JSON.stringify({t,text:t})+'\n\n'); } } catch{} } }
         res.end();
+        // Audit: successful completion. Fire-and-forget.
+        logEvent({
+          session_id: p.session_id || p.session || null,
+          user_id:    p.user_id || null,
+          event_type: 'chat_message_out',
+          sea:        p.sea || null,
+          mode:       p.mode || 'general',
+          payload:    {
+            model,
+            full_len:        full.length,
+            ttfb_ms:         ts_ttfb ? (ts_ttfb - ts_start) : null,
+            total_ms:        Date.now() - ts_start,
+            crisis_detected: crisis.detected
+          }
+        });
 
         // Memory: write turns to conversation_history (fire-and-forget).
         // Guard against partial writes on client disconnect — require a minimum
@@ -2037,9 +2070,17 @@ const server = http.createServer((req, res) => {
           console.log(`[memory] stream aborted before usable assistant turn (len=${full ? full.length : 0}), skipping write`);
         }
       } catch (e) {
-        let _mode = 'general', _msgLen = 0;
-        try { const _p = JSON.parse(b); _mode = _p.mode || 'general'; _msgLen = (_p.message || '').length; } catch {}
+        let _mode = 'general', _msgLen = 0, _session = null, _user = null, _sea = null;
+        try { const _p = JSON.parse(b); _mode = _p.mode || 'general'; _msgLen = (_p.message || '').length; _session = _p.session_id || _p.session || null; _user = _p.user_id || null; _sea = _p.sea || null; } catch {}
         console.error('[ALVAI_QUIET]', JSON.stringify({ mode: _mode, msgLen: _msgLen, err: e.message, err_name: e.name, ts: Date.now() }));
+        logEvent({
+          session_id: _session,
+          user_id:    _user,
+          event_type: 'alvai_quiet',
+          sea:        _sea,
+          mode:       _mode,
+          payload:    { msg_len: _msgLen, err: e.message, err_name: e.name }
+        });
         if (!res.headersSent) { res.writeHead(500,{'Content-Type':'application/json'}); }
         try { res.end(JSON.stringify({error:e.message})); } catch {}
       }
