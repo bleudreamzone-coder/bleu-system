@@ -2156,6 +2156,17 @@ const server = http.createServer((req, res) => {
         const p = JSON.parse(b);
         if (!p.message?.trim()) return json(res, 400, { error: 'Message required' });
 
+        // Audit: impression at request entry — parity with /api/chat/stream so
+        // the LIVE browser path (sendPrompt → /api/chat) is captured too.
+        logEvent({
+          session_id: p.session_id || p.session || null,
+          user_id:    p.user_id || null,
+          event_type: 'chat_message_in',
+          sea:        p.sea || null,
+          mode:       p.mode || 'general',
+          payload:    { msg_len: (p.message||'').length, has_history: !!(p.history && p.history.length) }
+        });
+
         // ── SESSION INTENT — mark emotional sessions so frontend suppresses commerce cards ──
         const suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message);
 
@@ -2317,6 +2328,15 @@ const server = http.createServer((req, res) => {
         await runCommerceSteward(res, p, crisis);
         res.write('data: [DONE]\n\n');
         res.end();
+        // Audit: successful completion — parity with /api/chat/stream.
+        logEvent({
+          session_id: p.session_id || p.session || null,
+          user_id:    p.user_id || null,
+          event_type: 'chat_message_out',
+          sea:        p.sea || null,
+          mode:       p.mode || 'general',
+          payload:    { model, resp_len: (full||'').length }
+        });
         // Write conversation memory + CI record (fire and forget)
         if (SUPABASE_URL && SUPABASE_KEY && full) {
           // CI scoring — Identity Stability Index research pipeline
