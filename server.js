@@ -13,6 +13,7 @@ const path = require('path');
 // See _meta/audit/2026-05-21/07_CLINICAL_GOVERNANCE_AUDIT.md and
 // _meta/clinical/signoffs/crisis_validator-2026-05-21-stoler.md.
 const { detectCrisis, CRISIS_BANNER } = require('./core/safety/crisis_validator');
+const { isCrisisPhrase } = require('./core/safety/canonical_crisis_patterns');
 
 const OPENAI_KEY = process.env.OPENAI_API_KEY || '';
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
@@ -1393,14 +1394,16 @@ function scoreStability(ctx) {
   const msg = (ctx && ctx.message ? String(ctx.message) : '');
   const m = msg.toLowerCase();
 
-  let dc = {};
-  try { dc = detectCrisis(msg) || {}; } catch (e) { dc = {}; }
-  const suicidality = /kill myself|kill me\b|want to die|end it all|end my life|not worth living|cannot keep living|can'?t keep living|cannot go on|can'?t go on|do(?:n'?t| not) want to (?:be here|live)|no reason to live|better off (?:dead|without me)|cannot do this anymore|can'?t do this anymore/;
+  // Canonical merge (Mission 6.1.5): the commerce gate and the 988 banner
+  // (detectCrisis) now call the SAME isCrisisPhrase. psychosis_mania stays
+  // gate-specific (a stability hard-stop, not a crisis phrase). detectCrisis
+  // is also consulted so any future divergence is impossible.
+  let crisisCanon = false;
+  try { crisisCanon = isCrisisPhrase(msg) || (detectCrisis(msg) || {}).detected; } catch (e) { crisisCanon = false; }
   const psychosis_mania = /hearing voices|they are watching|can'?t stop the thoughts|racing thoughts for days|haven'?t slept in a week and feel amazing/;
 
-  if (dc.detected || suicidality.test(m) || psychosis_mania.test(m)) {
-    const trigger = dc.detected ? ('detectCrisis:' + (dc.category || 'crisis'))
-      : suicidality.test(m) ? 'suicidality' : 'psychosis_mania';
+  if (crisisCanon || psychosis_mania.test(m)) {
+    const trigger = crisisCanon ? 'canonical_crisis' : 'psychosis_mania';
     logEvent({ session_id: ctx && ctx.session_id, sea: ctx && ctx.sea, mode: ctx && ctx.mode, event_type: 'safety_shield_handoff', payload: { trigger, severity: 'critical' } });
     return 0;
   }
@@ -3483,6 +3486,36 @@ function handleStripeWebhook(req, res) {
 
     json(res, 200, { received: true });
   });
+}
+
+// ─── Mission 6.1.5 inline canonical-crisis regression harness ──────────────
+// Run with: BLEU_TEST_CRISIS=1 node server.js   (exits before listen)
+// Verifies detectCrisis (988 banner) and the commerce gate (via isCrisisPhrase)
+// return IDENTICAL crisis results on all 11 phrases — any drift fails the test.
+if (process.env.BLEU_TEST_CRISIS === '1') {
+  const cases = [
+    ['a', 'I want to kill myself', true],
+    ['b', 'I cannot keep living like this', true],
+    ['c', 'I cannot do this anymore', true],
+    ['d', 'I want to die', true],
+    ['e', 'I am thinking about ending it', true],
+    ['f', 'I do not want to be here anymore', true],
+    ['g', 'what is the point of going on', true],
+    ['h', 'everyone would be better off without me', true],
+    ['i', 'I am tired of living', true],
+    ['j', 'I hate myself', false],
+    ['k', 'I cannot keep doing this job', false],
+  ];
+  let allPass = true;
+  for (const [id, phrase, want] of cases) {
+    const banner = detectCrisis(phrase).detected;   // 988 banner trigger
+    const gate = isCrisisPhrase(phrase);            // commerce gate source
+    const ok = banner === want && gate === want && banner === gate;
+    if (!ok) allPass = false;
+    console.log(`Test ${id} [${want ? 'crisis' : 'safe'}] banner=${banner} gate=${gate} ${ok ? '✓' : '✗ FAIL'}  ${phrase}`);
+  }
+  console.log(allPass ? '\n✅ CANONICAL CRISIS: banner+gate identical, 11/11 correct' : '\n❌ CRISIS TESTS FAILED');
+  process.exit(allPass ? 0 : 1);
 }
 
 // ─── Mission 4.2 inline Open Window gate test harness ──────────────────────

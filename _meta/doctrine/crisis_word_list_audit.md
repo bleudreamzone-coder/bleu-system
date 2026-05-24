@@ -1,10 +1,11 @@
 # Crisis Word List Audit — detectCrisis (988 banner) vs scoreStability (commerce gate)
 
-**STATUS: PROPOSED — Dr. Felicia Stoler clinical authority required before merge.**
-Code path ready. Tier 2/3 per `decision_matrix.md` (crisis routing modifications).
-Nothing is wired: `detectCrisis()` and `scoreStability()` run unchanged in
-production. This document + `core/safety/canonical_crisis_patterns.js` (uncalled)
-are the proposal only.
+**STATUS: SHIPPED 2026-05-24 — Cleared by Dr. Felicia Stoler.**
+Merged in Mission 6.1.5 (commit recorded in git). Both `detectCrisis()` (988
+banner) and `scoreStability()` (commerce gate) now call
+`core/safety/canonical_crisis_patterns.isCrisisPhrase` — single source of truth,
+banner + gate cannot diverge. Regression guard: `BLEU_TEST_CRISIS=1 node server.js`
+(11/11, banner == gate on every phrase). Signoff: `_meta/clinical/signoffs/2026-05-24-canonical-crisis-patterns-stoler.md`.
 
 ## Why this exists
 Mission 4.2 discovered `detectCrisis()` — the validator that fires the **988
@@ -78,11 +79,11 @@ full pattern array.
 | not-crisis j–k correctly safe | **2 / 2** ✅ |
 | total | **11 / 11 correct** |
 
-## Section 6 — Migration plan (on Dr. Felicia approval)
-1. `detectCrisis()` → calls `canonical_crisis_patterns.isCrisisPhrase` (banner fires on all 9).
-2. `scoreStability` suicidality branch → calls the same function (gate + banner can never diverge again).
-3. Single source of truth; this 11-phrase matrix becomes the regression test.
-4. Add the signoff to `_meta/clinical/signoffs/` per the crisis_keywords.js rule.
+## Section 6 — Migration plan — COMPLETED in Mission 6.1.5 (2026-05-24)
+1. ✅ `detectCrisis()` → calls `canonical_crisis_patterns.isCrisisPhrase` (banner now fires on all 9; legacy CRISIS_KEYWORDS retained only to enrich {category, matched} for the audit log).
+2. ✅ `scoreStability` → calls the same function (gate + banner cannot diverge).
+3. ✅ 11-phrase regression test wired as `BLEU_TEST_CRISIS=1` — fails on any drift.
+4. ✅ Signoff filed: `_meta/clinical/signoffs/2026-05-24-canonical-crisis-patterns-stoler.md`.
 
 ## Open questions for Dr. Felicia (Monday)
 - Does the 11-phrase set cover enough ground, or should we add: gender-specific

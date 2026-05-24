@@ -18,26 +18,33 @@
 // Audit reference: _meta/audit/2026-05-21/07_CLINICAL_GOVERNANCE_AUDIT.md
 
 const { CRISIS_KEYWORDS, CRISIS_BANNER } = require('./crisis_keywords');
+const { isCrisisPhrase } = require('./canonical_crisis_patterns');
 
 // detectCrisis(userMessage: string) → { detected: bool, category?: string, matched?: string }
 //
-// Returns the FIRST matched category and the matched phrase. Single-match
-// is sufficient — once a crisis is detected, the banner fires. We don't
-// attempt to enumerate every category present.
+// Canonical merge (Mission 6.1.5, Dr. Felicia cleared 2026-05-24): detection
+// is delegated to canonical_crisis_patterns.isCrisisPhrase so the 988 banner
+// trigger and the commerce gate (scoreStability) share ONE source of truth and
+// can never diverge. The legacy CRISIS_KEYWORDS list is retained only to
+// enrich {category, matched} for the [CRISIS] audit log; if the canonical
+// matcher fires on a phrase not in that list (e.g. passive ideation), we
+// default category to 'suicide'.
 function detectCrisis(userMessage) {
   if (!userMessage || typeof userMessage !== 'string') {
     return { detected: false };
   }
+  if (!isCrisisPhrase(userMessage)) {
+    return { detected: false };
+  }
   const lower = userMessage.toLowerCase();
   for (const category of Object.keys(CRISIS_KEYWORDS)) {
-    const keywords = CRISIS_KEYWORDS[category];
-    for (const keyword of keywords) {
+    for (const keyword of CRISIS_KEYWORDS[category]) {
       if (lower.includes(keyword)) {
         return { detected: true, category, matched: keyword };
       }
     }
   }
-  return { detected: false };
+  return { detected: true, category: 'suicide', matched: 'canonical_pattern' };
 }
 
 // For non-streaming consumers: prepend the banner to a complete response.
