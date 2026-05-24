@@ -397,8 +397,7 @@
           note.textContent = 'Added to cart';
           if (btn.parentNode) btn.parentNode.appendChild(note);
         }
-        var cnt = document.getElementById('bleu-your-plan-count');
-        if (cnt) cnt.textContent = String(d.items_count != null ? d.items_count : (parseInt(cnt.textContent || '0', 10) + 1));
+        if (typeof setCartCount === 'function' && d.items_count != null) setCartCount(d.items_count);
         window.dispatchEvent(new CustomEvent('bleu:plan-updated', { detail: { sku: sku, items_count: d.items_count, total_cents: d.total_cents } }));
       } else {
         console.error('[bleu/prod] addToPlan failed', d);
@@ -410,6 +409,167 @@
   window.sendFollowupToAlvai = function(text){
     if (text && typeof window.sendPrompt === 'function') window.sendPrompt(text);
   };
+
+  // -------------------------------------------------------------------
+  // YOUR CART drawer + Checkout routing (Mission 2.7)
+  // Built in JS (createElement) rather than static index.html markup —
+  // same IDs the badge already targets, works wherever the hooks load.
+  // -------------------------------------------------------------------
+  function ensureCartStyle(){
+    if (document.getElementById('bleu-cart-style')) return;
+    var s = document.createElement('style'); s.id = 'bleu-cart-style';
+    s.textContent =
+      '#bleu-your-plan-badge{position:fixed;top:20px;right:20px;z-index:999;display:flex;align-items:center;gap:7px;background:#1F4E79;color:#f4efe6;border:none;border-radius:22px;height:44px;padding:0 17px;cursor:pointer;font:600 14px Inter,-apple-system,sans-serif;box-shadow:0 2px 10px rgba(0,0,0,.15)}'
+    + '#bleu-your-plan-badge[hidden]{display:none}'
+    + '#bleu-your-plan-count{min-width:18px;text-align:center;background:rgba(255,255,255,.18);border-radius:10px;padding:0 6px}'
+    + '.bleu-cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:#fbfaf7;border-left:1px solid rgba(75,30,130,.12);transform:translateX(100%);transition:transform 240ms ease;z-index:1000;color:#181714;display:flex;flex-direction:column;font:14px/1.5 Inter,-apple-system,sans-serif}'
+    + '.bleu-cart-drawer[aria-hidden="false"]{transform:translateX(0)}'
+    + '.bleu-cart__header{padding:18px 22px;border-bottom:1px solid rgba(75,30,130,.10);display:flex;justify-content:space-between;align-items:center}'
+    + '.bleu-cart__header h2{margin:0;font:600 17px Inter,sans-serif}'
+    + '.bleu-cart__close{background:none;border:none;font-size:20px;cursor:pointer;color:#807a6f;line-height:1}'
+    + '.bleu-cart__items{flex:1;overflow-y:auto;padding:14px 22px;list-style:none;margin:0}'
+    + '.bleu-cart__items li{padding:12px 0;border-bottom:1px solid rgba(75,30,130,.06);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}'
+    + '.bleu-cart__rm{background:none;border:none;color:#b5651d;cursor:pointer;font-size:12px;flex:none}'
+    + '.bleu-cart__footer{padding:18px 22px;border-top:1px solid rgba(75,30,130,.10)}'
+    + '.bleu-cart__total{font-size:14px;opacity:.75;margin-bottom:12px}'
+    + '.bleu-cart__checkout{width:100%;padding:13px;background:#C9A84C;color:#0a0a0c;border:none;border-radius:8px;font:600 15px Inter,sans-serif;cursor:pointer}'
+    + '.bleu-cart__checkout:disabled{opacity:.5;cursor:default}'
+    + '.bleu-cart__disclosure{margin-top:10px;font-size:11px;opacity:.7;line-height:1.4}'
+    + '@media(max-width:480px){.bleu-cart-drawer{width:100vw}}';
+    document.head.appendChild(s);
+  }
+
+  function ensureCartDrawer(){
+    if (document.getElementById('bleu-your-plan-drawer')) return;
+    ensureCartStyle();
+
+    var badge = document.createElement('button');
+    badge.id = 'bleu-your-plan-badge';
+    badge.setAttribute('aria-label', 'Open Your Cart');
+    badge.hidden = true;
+    var bl = document.createElement('span'); bl.textContent = 'Cart'; badge.appendChild(bl);
+    var cnt = document.createElement('span'); cnt.id = 'bleu-your-plan-count'; cnt.textContent = '0'; badge.appendChild(cnt);
+    badge.addEventListener('click', openYourCartDrawer);
+    document.body.appendChild(badge);
+
+    var drawer = document.createElement('aside');
+    drawer.id = 'bleu-your-plan-drawer'; drawer.className = 'bleu-cart-drawer'; drawer.setAttribute('aria-hidden', 'true');
+    var hdr = document.createElement('div'); hdr.className = 'bleu-cart__header';
+    var h2 = document.createElement('h2'); h2.textContent = 'Your Cart'; hdr.appendChild(h2);
+    var close = document.createElement('button'); close.id = 'bleu-your-plan-close'; close.className = 'bleu-cart__close'; close.setAttribute('aria-label', 'Close'); close.textContent = '✕';
+    close.addEventListener('click', closeYourCartDrawer); hdr.appendChild(close);
+    drawer.appendChild(hdr);
+    var ul = document.createElement('ul'); ul.id = 'bleu-your-plan-items'; ul.className = 'bleu-cart__items'; drawer.appendChild(ul);
+    var ftr = document.createElement('div'); ftr.className = 'bleu-cart__footer';
+    var tot = document.createElement('div'); tot.id = 'bleu-your-plan-total'; tot.className = 'bleu-cart__total'; ftr.appendChild(tot);
+    var co = document.createElement('button'); co.id = 'bleu-your-plan-continue'; co.className = 'bleu-cart__checkout'; co.textContent = 'Checkout';
+    co.addEventListener('click', continueCheckout); ftr.appendChild(co);
+    var disc = document.createElement('p'); disc.id = 'bleu-your-plan-disclosure'; disc.className = 'bleu-cart__disclosure'; ftr.appendChild(disc);
+    drawer.appendChild(ftr);
+    document.body.appendChild(drawer);
+  }
+
+  function setCartCount(n){
+    ensureCartDrawer();
+    var cnt = document.getElementById('bleu-your-plan-count');
+    var badge = document.getElementById('bleu-your-plan-badge');
+    if (cnt) cnt.textContent = String(n);
+    if (badge) badge.hidden = !(n > 0);
+  }
+  window.setCartCount = setCartCount;
+
+  function openYourCartDrawer(){
+    ensureCartDrawer();
+    fetch('/api/plan/get?session_id=' + encodeURIComponent(getSessionId()))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var plan = d && d.plan;
+        var ul = document.getElementById('bleu-your-plan-items');
+        var tot = document.getElementById('bleu-your-plan-total');
+        var disc = document.getElementById('bleu-your-plan-disclosure');
+        var co = document.getElementById('bleu-your-plan-continue');
+        ul.textContent = '';
+        if (!plan || !plan.items || !plan.items.length) {
+          var empty = document.createElement('li'); empty.style.opacity = '.55'; empty.textContent = 'Your cart is empty.'; ul.appendChild(empty);
+          tot.textContent = ''; disc.textContent = ''; if (co) co.disabled = true;
+          setCartCount(0);
+        } else {
+          if (co) co.disabled = false;
+          plan.items.forEach(function(item){
+            var li = document.createElement('li');
+            var left = document.createElement('div');
+            var nm = document.createElement('div'); nm.textContent = item.name || item.sku; left.appendChild(nm);
+            if (item.monthly && item.price_cents) {
+              var pr = document.createElement('div'); pr.style.cssText = 'font-size:12px;opacity:.6'; pr.textContent = '$' + (item.price_cents / 100).toFixed(2) + '/mo'; left.appendChild(pr);
+            }
+            li.appendChild(left);
+            var rm = document.createElement('button'); rm.className = 'bleu-cart__rm'; rm.textContent = 'Remove';
+            (function(sku){ rm.addEventListener('click', function(){ removeFromCart(sku); }); })(item.sku);
+            li.appendChild(rm);
+            ul.appendChild(li);
+          });
+          tot.textContent = plan.total_cents > 0 ? ('Total: $' + (plan.total_cents / 100).toFixed(2) + '/mo') : '';
+          var hasC = plan.items.some(function(i){ return i.rail === 'C'; });
+          disc.textContent = hasC ? 'Items marked for Amazon will open on Amazon. BLEU earns a small commission on Amazon purchases (tag bleulive20-20).' : '';
+          setCartCount(plan.items.length);
+        }
+        document.getElementById('bleu-your-plan-drawer').setAttribute('aria-hidden', 'false');
+      })
+      .catch(function(e){ console.error('[bleu/prod] open cart error', e); });
+  }
+  window.openYourCartDrawer = openYourCartDrawer;
+
+  function closeYourCartDrawer(){
+    var d = document.getElementById('bleu-your-plan-drawer'); if (d) d.setAttribute('aria-hidden', 'true');
+  }
+
+  function removeFromCart(sku){
+    fetch('/api/plan/remove', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: getSessionId(), sku: sku }) })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (d && d.ok) { setCartCount(d.items_count); openYourCartDrawer(); } })
+      .catch(function(e){ console.error('[bleu/prod] remove error', e); });
+  }
+
+  function continueCheckout(){
+    fetch('/api/plan/continue', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: getSessionId() }) })
+      .then(function(r){ return r.json().then(function(d){ return { status: r.status, d: d }; }); })
+      .then(function(res){
+        if (res.status === 503) { alert('Checkout is paused right now. Please try again shortly.'); return; }
+        var d = res.d;
+        if (!d || !d.ok) { alert('Checkout failed: ' + ((d && d.error) || 'unknown')); return; }
+        var hasA = d.rail_a_items && d.rail_a_items.length > 0;
+        var hasC = d.rail_c_items && d.rail_c_items.length > 0;
+        if (hasA && hasC) {
+          var first = confirm('Your cart has BLEU plans AND Amazon items. Start with your BLEU plan first?');
+          if (first) continueRailA(d.rail_a_items); else continueRailC(d.rail_c_items);
+          return;
+        }
+        if (hasA) { continueRailA(d.rail_a_items); return; }
+        if (hasC) { continueRailC(d.rail_c_items); return; }
+        alert('Nothing to check out.');
+      })
+      .catch(function(e){ console.error('[bleu/prod] checkout error', e); alert('Checkout error. Try again.'); });
+  }
+
+  // Rail A — BLEU-owned plan → Stripe. (Multi-item Rail A uses the first item's
+  // price for now; Stripe multi-line cart is a future enhancement.)
+  function continueRailA(items){
+    var item = items[0];
+    fetch('/api/stripe/create-session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ price_id: item.stripe_price_id, key: item.sku }) })
+      .then(function(r){ return r.json().then(function(d){ return { status: r.status, d: d }; }); })
+      .then(function(res){
+        if (res.status === 503) { alert('Checkout is paused right now. Please try again shortly.'); return; }
+        if (res.d && res.d.url) { window.location.href = res.d.url; } else { alert('Checkout setup failed.'); }
+      })
+      .catch(function(e){ console.error('[bleu/prod] stripe error', e); });
+  }
+
+  // Rail C — Amazon affiliate. Disclosure required BEFORE opening.
+  function continueRailC(items){
+    var ok = confirm('These items will open on Amazon. BLEU earns a small commission on Amazon purchases (tag bleulive20-20). Continue?');
+    if (!ok) return;
+    items.forEach(function(item){ if (item.amazon_url) window.open(item.amazon_url, '_blank', 'noopener'); });
+  }
 
   // -------------------------------------------------------------------
   // sendPrompt — streams /api/chat via SSE into the panel, token by token
@@ -584,11 +744,22 @@
   // -------------------------------------------------------------------
   // UNIFICATION SAFETY NET — final dead-surface watchdog
   // -------------------------------------------------------------------
+  // Build the cart drawer and restore the badge count for returning sessions.
+  window.addEventListener('load', function(){
+    try {
+      ensureCartDrawer();
+      fetch('/api/plan/get?session_id=' + encodeURIComponent(getSessionId()))
+        .then(function(r){ return r.json(); })
+        .then(function(d){ if (d && d.plan && d.plan.items) setCartCount(d.plan.items.length); })
+        .catch(function(){});
+    } catch (e) { console.error('[bleu/prod] cart init', e); }
+  });
+
   window.addEventListener('load', function(){
     setTimeout(function(){
       var dead = [];
       var allowedAttrs = ['data-prompt','data-route','data-stripe','data-city','data-audience','data-mode','data-step','data-terp','data-system'];
-      var allowedIds = ['signin','create-top','alvai-go','alvai-bar-go','bud-bar-go','floater-close','check-go','r-deeper','r-cite','check-ask','terps-ask-bud','city-change','city-modal-close','passport-yes','auth-google','auth-apple','modal-submit','slider'];
+      var allowedIds = ['signin','create-top','alvai-go','alvai-bar-go','bud-bar-go','floater-close','check-go','r-deeper','r-cite','check-ask','terps-ask-bud','city-change','city-modal-close','passport-yes','auth-google','auth-apple','modal-submit','slider','bleu-your-plan-badge','bleu-your-plan-close','bleu-your-plan-continue'];
       document.querySelectorAll('button, [role="button"]').forEach(function(node){
         for (var i = 0; i < allowedAttrs.length; i++) if (node.hasAttribute(allowedAttrs[i])) return;
         if (node.id && allowedIds.indexOf(node.id) >= 0) return;

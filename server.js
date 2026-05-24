@@ -1404,10 +1404,18 @@ async function runCommerceSteward(res, p, crisis) {
 async function commerceEnabledGlobal() {
   try {
     const rows = await querySupabase('bleu_commerce_settings', '?select=commerce_enabled_global', 1);
+    // querySupabase swallows errors → null. Log read failures for visibility,
+    // but still fail-open (a DB blip must not halt all checkout).
+    if (rows == null) {
+      console.error('[KILL_SWITCH_READ_FAIL] could not read bleu_commerce_settings — failing open');
+      logEvent({ event_type: 'kill_switch_read_fail', payload: { failmode: 'open' } });
+      return true;
+    }
     if (Array.isArray(rows) && rows.length && rows[0].commerce_enabled_global === false) return false;
     return true;
   } catch (e) {
     console.error('[KILL_SWITCH_READ_FAIL]', e && e.message);
+    logEvent({ event_type: 'kill_switch_read_fail', payload: { failmode: 'open', err: e && e.message } });
     return true;
   }
 }
