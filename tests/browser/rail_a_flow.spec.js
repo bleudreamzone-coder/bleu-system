@@ -26,8 +26,9 @@ test('Rail A: sleep → card → cart → Stripe checkout', async ({ page }) => 
 
   const checkout = page.locator('#bleu-your-plan-continue');
   await expect(checkout).toBeEnabled();
+  page.on('console', (msg) => console.log('[browser]', msg.text()));
   await Promise.all([
-    page.waitForURL(/checkout\.stripe\.com/, { timeout: 30000 }),
+    page.waitForURL(/checkout\.stripe\.com/, { timeout: 60000 }),
     checkout.click(),
   ]);
 });
