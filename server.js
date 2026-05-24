@@ -1176,6 +1176,128 @@ async function logDecision({ session_id, user_id, decision_type, inputs, outputs
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// FIVE BRAINS — Commerce Steward (Phase 2, Mission 2.2)
+// Pure deterministic functions. Zero LLM calls. Zero new dependencies.
+// All take ctx = {message, sea, mode, session_id, state, passport, safety_status}.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// intentBrain — regex classifier. Priority: crisis → commerce → reflection →
+// navigation → support → local_care → education. Returns {intent, confidence}.
+function intentBrain(ctx) {
+  const msg = (ctx && ctx.message ? String(ctx.message) : '').toLowerCase();
+
+  // Crisis short-circuits everything. No other Brain decision matters.
+  const crisis = /(\bkill myself\b|suicide|\bend it\b|overdose|cannot go on|want to die|988|hurting myself|\bkill me\b|not worth living)/;
+  if (crisis.test(msg)) return { intent: 'crisis', confidence: 1.0 };
+
+  const commerce = /(\bbuy\b|\border\b|where can i get|recommend a supplement|what should i take|best .* for)/;
+  if (commerce.test(msg)) return { intent: 'commerce', confidence: 0.8 };
+
+  const reflection = /(i feel|why am i|i cannot|tonight|i am tired|i am scared)/;
+  if (reflection.test(msg)) return { intent: 'reflection', confidence: 0.7 };
+
+  const navigation = /\b(go to|open the|show me|take me to|navigate|which tab|directory|the map)\b/;
+  if (navigation.test(msg)) return { intent: 'navigation', confidence: 0.6 };
+
+  const support = /\b(i need help|need support|can you help|help me)\b/;
+  if (support.test(msg)) return { intent: 'support', confidence: 0.6 };
+
+  const local_care = /\b(near me|doctor near|find a|practitioner|clinic|therapist near)\b/;
+  if (local_care.test(msg)) return { intent: 'local_care', confidence: 0.6 };
+
+  return { intent: 'education', confidence: 0.5 };
+}
+
+// Rail C single-supplement matchers (sku resolved against live catalog).
+const _RAIL_C_MATCHERS = [
+  [/magnesium/,             'magnesium_glycinate'],
+  [/l-theanine|theanine/,   'l_theanine_200mg'],
+  [/ashwagandha/,           'ashwagandha_ksm66'],
+  [/omega/,                 'omega3_epadha_2g'],
+  [/vitamin d|d3/,          'vitamin_d3_5000iu_k2'],
+  [/fiber|psyllium/,        'psyllium_husk_capsules'],
+  [/zinc/,                  'zinc_picolinate_15mg'],
+  [/melatonin/,             'melatonin_3mg_timed_release'],
+];
+
+// Rail A category matchers.
+const _RAIL_A_MATCHERS = [
+  [/sleep|insomnia|cant sleep|cannot sleep/,         'sleep_reset'],
+  [/stress|anxious|overwhelmed|anxiety/,             'stress_protocol'],
+  [/longevity|daily|foundation|vitamin|multivitamin/,'longevity_core'],
+  [/gut|digest|bloat|constipation|ibs/,              'gut_reset'],
+];
+
+// productBrain — returns {matched: [{sku, rail, score, reason}], no_match: bool}.
+// catalog is the array of active bleu_catalog rows. A sku only matches if it is
+// actually present + active in catalog (no fake cards). Fullscript-style queries
+// (cardiovascular, athletic performance, women's health, cognitive beyond basics)
+// match nothing → no_match=true → Alvai's prose carries the answer.
+function productBrain(ctx, catalog) {
+  const msg = (ctx && ctx.message ? String(ctx.message) : '').toLowerCase();
+  const rows = Array.isArray(catalog) ? catalog : [];
+  const inCatalog = (sku) => rows.find(r => r && r.sku === sku && r.active !== false);
+  const matched = [];
+  const push = (sku, rail, score, reason) => { if (inCatalog(sku)) matched.push({ sku, rail, score, reason }); };
+
+  // 'amazon' anywhere → Rail C only.
+  if (/\bamazon\b/.test(msg)) {
+    for (const [re, sku] of _RAIL_C_MATCHERS) {
+      if (re.test(msg)) { push(sku, 'C', 0.8, 'amazon single-supplement match'); break; }
+    }
+    return { matched, no_match: matched.length === 0 };
+  }
+
+  // Rail A category match first.
+  for (const [re, sku] of _RAIL_A_MATCHERS) {
+    if (re.test(msg)) { push(sku, 'A', 0.9, 'rail A category match'); break; }
+  }
+  if (matched.length) return { matched, no_match: false };
+
+  // Single-supplement Rail C fallback.
+  for (const [re, sku] of _RAIL_C_MATCHERS) {
+    if (re.test(msg)) { push(sku, 'C', 0.7, 'rail C single-supplement match'); break; }
+  }
+  return { matched, no_match: matched.length === 0 };
+}
+
+// safetyBrain — reads ctx.safety_status. Phase 2 default 'render' when clear/null.
+// Phase 5 Safety Shield wires real logic here. This is the seam.
+function safetyBrain(ctx) {
+  const s = ctx && ctx.safety_status;
+  if (s === 'monitor') return { decision: 'render_with_caution', badge: 'Verify with your clinician' };
+  if (s === 'gate')    return { decision: 'gate', badge: 'Please verify with Dr. Stoler before starting' };
+  if (s === 'block')   return { decision: 'block', badge: null };
+  return { decision: 'render', badge: null }; // clear or null
+}
+
+// cartBrain — state-gated render count. Phase 2 default max_cards=3 when
+// state.classifier is null or 'stable'. Phase 3 Layer 29 (Mission 4.2) refines.
+function cartBrain(ctx) {
+  const c = ctx && ctx.state && ctx.state.classifier;
+  if (c === 'crisis' || c === 'overloaded' || c === 'vulnerable') return { max_cards: 0, reason: c };
+  if (c === 'withdrawn' || c === 'low_energy')                    return { max_cards: 1, reason: c };
+  return { max_cards: 3, reason: c || 'stable' };
+}
+
+// memoryBrain — fire-and-forget audit logging. NEVER throws.
+function memoryBrain(ctx, intent, products, safety, cart) {
+  try {
+    const base = { session_id: ctx && ctx.session_id, sea: ctx && ctx.sea, mode: ctx && ctx.mode };
+    if (intent && intent.intent === 'commerce') {
+      logEvent({ ...base, event_type: 'purchase_intent_detected', payload: { msg_len: ((ctx && ctx.message) || '').length } });
+    }
+    const m = (products && products.matched) || [];
+    logEvent({ ...base, event_type: 'card_render', payload: { sku_list: m.map(x => x.sku), rail_list: m.map(x => x.rail), count: m.length } });
+    if (cart && cart.max_cards === 0) {
+      logEvent({ ...base, event_type: 'commerce_suppressed', payload: { reason: cart.reason } });
+    }
+  } catch (e) {
+    console.error('[MEMORY_BRAIN_FAIL]', e && e.message);
+  }
+}
+
 // ═══ MEMORY HELPERS (conversation_history + pgvector recall) ═══
 
 // Call a Supabase stored function (RPC endpoint) with service-role auth.
@@ -2950,6 +3072,46 @@ function handleStripeWebhook(req, res) {
 
     json(res, 200, { received: true });
   });
+}
+
+// ─── Mission 2.2 inline Five Brains test harness ───────────────────────────
+// Run with: BLEU_TEST_BRAINS=1 node server.js   (exits before listen)
+if (process.env.BLEU_TEST_BRAINS === '1') {
+  const mockCatalog = [
+    { sku: 'sleep_reset', rail: 'A', active: true },
+    { sku: 'stress_protocol', rail: 'A', active: true },
+    { sku: 'longevity_core', rail: 'A', active: true },
+    { sku: 'gut_reset', rail: 'A', active: true },
+    { sku: 'magnesium_glycinate', rail: 'C', active: true },
+    { sku: 'l_theanine_200mg', rail: 'C', active: true },
+    { sku: 'ashwagandha_ksm66', rail: 'C', active: true },
+    { sku: 'omega3_epadha_2g', rail: 'C', active: true },
+    { sku: 'vitamin_d3_5000iu_k2', rail: 'C', active: true },
+    { sku: 'psyllium_husk_capsules', rail: 'C', active: true },
+    { sku: 'zinc_picolinate_15mg', rail: 'C', active: true },
+    { sku: 'melatonin_3mg_timed_release', rail: 'C', active: true },
+  ];
+  const t1  = intentBrain({ message: 'I want to kill myself' });
+  const t2i = intentBrain({ message: 'I cannot sleep' });
+  const t2p = productBrain({ message: 'I cannot sleep' }, mockCatalog);
+  const t3  = productBrain({ message: 'magnesium on amazon' }, mockCatalog);
+  const t4  = productBrain({ message: 'cardiovascular support protocol' }, mockCatalog);
+  const t5  = cartBrain({ state: {} });
+  console.log('Test 1  intentBrain("kill myself")        →', JSON.stringify(t1));
+  console.log('Test 2a intentBrain("I cannot sleep")     →', JSON.stringify(t2i));
+  console.log('Test 2b productBrain("I cannot sleep")    →', JSON.stringify(t2p));
+  console.log('Test 3  productBrain("magnesium on amazon")→', JSON.stringify(t3));
+  console.log('Test 4  productBrain("cardiovascular...")  →', JSON.stringify(t4));
+  console.log('Test 5  cartBrain({state:{}})             →', JSON.stringify(t5));
+  const pass =
+    t1.intent === 'crisis' && t1.confidence === 1.0 &&
+    t2i.intent === 'reflection' &&
+    t2p.matched[0] && t2p.matched[0].sku === 'sleep_reset' && t2p.matched[0].rail === 'A' &&
+    t3.matched[0] && t3.matched[0].sku === 'magnesium_glycinate' && t3.matched[0].rail === 'C' &&
+    t4.no_match === true && t4.matched.length === 0 &&
+    t5.max_cards === 3;
+  console.log(pass ? '\n✅ ALL FIVE BRAIN TESTS PASS' : '\n❌ BRAIN TESTS FAILED');
+  process.exit(pass ? 0 : 1);
 }
 
 const PORT = process.env.PORT || 8080;
