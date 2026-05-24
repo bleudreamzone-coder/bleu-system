@@ -11,4 +11,10 @@ services:
     runtime: node
     schedule: "0 14 * * *"
     buildCommand: ""
-    startCommand: "curl -X POST --max-time 60 -fsS https://bleu-system.onrender.com/api/send-reorder-reminders"
+    # Sends the shared secret the handler requires (Bearer REORDER_CRON_SECRET).
+    # Set REORDER_CRON_SECRET on BOTH the web service and this cron in the Render
+    # dashboard, or the handler returns 401 (missing) / 500 (unset).
+    startCommand: "curl -X POST --max-time 60 -fsS -H \"Authorization: Bearer $REORDER_CRON_SECRET\" https://bleu-system.onrender.com/api/send-reorder-reminders"
+    envVars:
+      - key: REORDER_CRON_SECRET
+        sync: false
