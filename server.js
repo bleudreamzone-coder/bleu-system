@@ -1071,7 +1071,21 @@ CBD ALTERNATIVES always: "Charlotte's Web sleep gummies — CBD with melatonin, 
 
 RULES: Legality varies by state. Never diagnose. Dose low, go slow. NO bullet points. End with: "28 years in cannabis medicine built this. Want the full protocol? Just say the word."
 
-Bridges: Vessel — "Cannabis works best in a complete stack." Therapy — "If using for anxiety, therapy tab addresses the root." Protocols — "Full evening protocol — strain, supplements, breathing." Directory — "Cannabis-friendly doctor in the directory."`,
+Bridges: Vessel — "Cannabis works best in a complete stack." Therapy — "If using for anxiety, therapy tab addresses the root." Protocols — "Full evening protocol — strain, supplements, breathing." Directory — "Cannabis-friendly doctor in the directory."
+
+REGULATORY FLOOR (locked):
+- FDA has approved only one cannabis-derived drug (Epidiolex) and three synthetic cannabis-related drugs. NO other THC/CBD products are FDA-approved for disease treatment.
+- THC and CBD products are EXCLUDED from the dietary-supplement definition under the FD&C Act.
+- All health claims must be truthful, non-misleading, and backed by competent and reliable scientific evidence (FTC standard).
+- CDC: cannabis acutely affects memory, learning, attention, decision-making, coordination, emotions, and reaction time.
+- Approximately 3 in 10 cannabis users have cannabis use disorder.
+When discussing cannabis, never claim treatment, cure, or guaranteed outcome. Use plain language. Acknowledge what the evidence supports and what it does not.
+
+HARD-STOP contraindications (recommend clinician review): pregnancy or breastfeeding; driving or hazardous work; significant medication interaction concerns; history of psychosis or severe paranoia; severe mood instability; concurrent alcohol or sedative use.
+
+USE MODE (legal, planned, harm-reduced session): Guide the pattern — goal, route (smoke/edible/vape/tincture), context, food and hydration, driving and work lockouts, next-morning reflection. Teaching happens BEFORE use and AFTER the peak, never during. Conservative dose rule: lowest labeled serving, avoid rapid re-dosing; edibles can take 30 minutes to 2 hours and last longer than expected. BLEU does NOT sell cannabis products. No product cards render here — guidance only.
+
+RESET MODE (reducing or quitting): BLOCK ALL UPSELL. No commerce cards, no supplements framed as cannabis-replacement. Switch to abstinence support: sleep protection, craving plans, trigger avoidance, support activation, escalation rules. Cannabis withdrawal commonly brings anxiety, irritability, disturbed sleep, depressed mood, appetite loss — peaks week 1, improves weeks 2-3. Rare withdrawal-precipitated acute psychosis exists; escalate (suggest a clinician) if signs emerge. BLEU does NOT sell cannabis products to a user trying to quit. Period.`,
 missions: ALVAI_CORE + `\n\nYou are in MISSIONS mode — gamification engine. Wellness as daily challenges.
 
 YOUR ROLE: Coach who breaks big goals into small wins. Not "get healthy" — "drink 8 glasses of water today. Mission one. Streak begins."
@@ -1333,6 +1347,14 @@ function memoryBrain(ctx, intent, products, safety, cart) {
   }
 }
 
+// ecsiqMode — classify a cannabis-sea message as 'reset' (reducing/quitting)
+// or 'use' (planned, legal, harm-reduced session). Reset blocks all upsell.
+function ecsiqMode(message) {
+  const reset_patterns = /\b(quit|quitting|stop|stopping|reduce|reducing|cut back|cutting back|break from|tolerance break|t.?break|reset|sober|sobering)\b/i;
+  if (reset_patterns.test(message || '')) return 'reset';
+  return 'use';
+}
+
 // runCommerceSteward — shared by /api/chat and /api/chat/stream. Runs the Five
 // Brains after the prose stream, writes a plain `data:{cards}` SSE line before
 // the stream ends, and logs memoryBrain events + the commerce_steward decision.
@@ -1352,6 +1374,15 @@ async function runCommerceSteward(res, p, crisis) {
     const intent = intentBrain(ctx);
     // Crisis never sees commerce — intentBrain OR the deterministic detectCrisis.
     if (intent.intent === 'crisis' || (crisis && crisis.detected)) return;
+
+    // ECSIQ / CannaIQ sea — BLEU sells no cannabis products. Guidance only, no
+    // cards. Classify Use vs Reset (reset = zero upsell) and log it. Dr. Felicia
+    // reviews any cannabis seed before it could ever render. (Mission 4.3)
+    if (ctx.sea === 'ecsiq' || ctx.mode === 'ecsiq' || ctx.mode === 'cannaiq') {
+      const m = ecsiqMode(ctx.message);
+      logEvent({ session_id: ctx.session_id, sea: ctx.sea, mode: ctx.mode, event_type: 'ecsiq_mode_classified', payload: { mode: m, reason: m === 'reset' ? 'reset pattern matched' : 'default use' } });
+      return;
+    }
 
     const catalog = await querySupabase('bleu_catalog', '?active=eq.true&select=*', 50) || [];
     const products = productBrain(ctx, catalog);
