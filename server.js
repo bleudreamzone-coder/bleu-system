@@ -1347,6 +1347,81 @@ function memoryBrain(ctx, intent, products, safety, cart) {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// OPEN WINDOWS DOCTRINE v1 — Phase 3 Layer 29 Receptivity-Stability gate
+// (Mission 4.2). Dr. Felicia cleared the doctrine; this is its executable form.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// scoreReceptivity — composite of six 0..1 sub-scores, averaged.
+function scoreReceptivity(ctx) {
+  const m = (ctx && ctx.message ? String(ctx.message) : '').toLowerCase();
+
+  // recency — based on ctx.cue_event_timestamp if present (Phase 8 sets it;
+  // chat flow leaves it null → neutral 0.5).
+  let recency = 0.5;
+  if (ctx && ctx.cue_event_timestamp) {
+    const ageH = (Date.now() - new Date(ctx.cue_event_timestamp).getTime()) / 3600000;
+    if (!isNaN(ageH)) {
+      recency = ageH < 24 ? 1.0 : ageH <= 72 ? 0.7 : ageH <= 168 ? 0.5 : ageH <= 336 ? 0.3 : 0.1;
+    }
+  }
+
+  const salience = /changed my life|cannot keep|scared me|woke me up|rock bottom|i cannot do this anymore/.test(m) ? 1.0
+    : /really matters|serious|need to|have to|must change/.test(m) ? 0.6 : 0.3;
+
+  const willingness = /i want to change|want to\b.*\bchange|help me|i'?m ready|i will do|committed to/.test(m) ? 1.0
+    : /thinking about|maybe|considering/.test(m) ? 0.6 : 0.3;
+
+  const attribution = /because of|after the|since the diagnosis|now that i know|diagnos|doctor said|told me i have/.test(m) ? 1.0 : 0.4;
+
+  const self_concept_shift = /i'?m not who i want to be|i want to live|this is not me|i want to be different/.test(m) ? 1.0 : 0.4;
+
+  const support_availability = /partner|wife|husband|spouse|family|friend|sponsor|therapist|doctor/.test(m) ? 1.0
+    : /community|group|neighbor/.test(m) ? 0.6 : 0.5;
+
+  return (recency + salience + willingness + attribution + self_concept_shift + support_availability) / 6;
+}
+
+// scoreStability — starts at 1.0, subtracts penalties; psychosis/mania/
+// suicidality is a HARD STOP to 0 (not a penalty). Bridges through the
+// canonical detectCrisis() validator AND a robust suicidality regex, because
+// detectCrisis does NOT catch passive ideation like "I cannot keep living
+// like this" (verified empirically — flagged for Dr. Felicia / Tier 3).
+function scoreStability(ctx) {
+  const msg = (ctx && ctx.message ? String(ctx.message) : '');
+  const m = msg.toLowerCase();
+
+  let dc = {};
+  try { dc = detectCrisis(msg) || {}; } catch (e) { dc = {}; }
+  const suicidality = /kill myself|kill me\b|want to die|end it all|end my life|not worth living|cannot keep living|can'?t keep living|cannot go on|can'?t go on|do(?:n'?t| not) want to (?:be here|live)|no reason to live|better off (?:dead|without me)|cannot do this anymore|can'?t do this anymore/;
+  const psychosis_mania = /hearing voices|they are watching|can'?t stop the thoughts|racing thoughts for days|haven'?t slept in a week and feel amazing/;
+
+  if (dc.detected || suicidality.test(m) || psychosis_mania.test(m)) {
+    const trigger = dc.detected ? ('detectCrisis:' + (dc.category || 'crisis'))
+      : suicidality.test(m) ? 'suicidality' : 'psychosis_mania';
+    logEvent({ session_id: ctx && ctx.session_id, sea: ctx && ctx.sea, mode: ctx && ctx.mode, event_type: 'safety_shield_handoff', payload: { trigger, severity: 'critical' } });
+    return 0;
+  }
+
+  let s = 1.0;
+  if (/cannot sleep|can'?t sleep|haven'?t slept|no sleep|awake all night|sleep deprivation/.test(m)) s -= 0.3; // sleep_loss
+  if (/panic|cannot feel|can'?t feel|floating|not here|dissociating|unreal|cannot breathe|can'?t breathe/.test(m)) s -= 0.3; // panic/dissociation
+  if (/drunk|high right now|just used|just took|took something|on something|wasted/.test(m)) s -= 0.4; // intoxication
+  if (/they hit me|homeless|not safe|kicked out|in danger|someone is hurting me/.test(m)) s -= 0.4; // unsafe environment
+  return Math.max(0, s);
+}
+
+// openWindowGate — 4-state composite. Replaces cartBrain's binary default.
+function openWindowGate(ctx) {
+  const r = scoreReceptivity(ctx);
+  const s = scoreStability(ctx);
+  const score = r * s;
+  if (s === 0)            return { state: 'crisis',        receptivity: r, stability: 0, score: 0,     max_cards: 0, commerce_allowed: false, routing: 'crisis_route' };
+  if (s < 0.4)            return { state: 'open_unstable', receptivity: r, stability: s, score,        max_cards: 0, commerce_allowed: false, routing: 'stabilization_first' };
+  if (r >= 0.6 && s >= 0.6) return { state: 'open_stable',  receptivity: r, stability: s, score,        max_cards: 3, commerce_allowed: true,  routing: 'open_window_protocol_eligible' };
+  return { state: 'not_open', receptivity: r, stability: s, score, max_cards: 3, commerce_allowed: true, routing: 'standard' };
+}
+
 // ecsiqMode — classify a cannabis-sea message as 'reset' (reducing/quitting)
 // or 'use' (planned, legal, harm-reduced session). Reset blocks all upsell.
 function ecsiqMode(message) {
@@ -1372,12 +1447,39 @@ async function runCommerceSteward(res, p, crisis) {
       safety_status: 'clear'             // Phase 5 fills this
     };
     const intent = intentBrain(ctx);
-    // Crisis never sees commerce — intentBrain OR the deterministic detectCrisis.
-    if (intent.intent === 'crisis' || (crisis && crisis.detected)) return;
 
-    // ECSIQ / CannaIQ sea — BLEU sells no cannabis products. Guidance only, no
-    // cards. Classify Use vs Reset (reset = zero upsell) and log it. Dr. Felicia
-    // reviews any cannabis seed before it could ever render. (Mission 4.3)
+    // ── Open Window screening (Phase 3 Layer 29, Mission 4.2) — runs on EVERY
+    // evaluation BEFORE any early return, so crisis/unstable states are audited
+    // too. scoreStability emits safety_shield_handoff on a hard-stop. ──
+    const owGate = openWindowGate(ctx);
+    logEvent({
+      session_id: ctx.session_id,
+      event_type: 'open_window_screened',
+      payload: { receptivity: owGate.receptivity, stability: owGate.stability, score: owGate.score, state: owGate.state, routing: owGate.routing }
+    });
+    if (owGate.state === 'open_stable' && ctx.session_id) {
+      const existing = await querySupabase('bleu_open_windows', `?session_id=eq.${encodeURIComponent(ctx.session_id)}&phase=neq.closed&select=id`, 1);
+      if (!existing || !existing.length) {
+        await querySupabase('bleu_open_windows', '', 0, 'POST', {
+          session_id: ctx.session_id,
+          cue_event_type: 'self_declared',
+          cue_event_timestamp: new Date().toISOString(),
+          receptivity_score: owGate.receptivity,
+          stability_score: owGate.stability,
+          open_window_score: owGate.score,
+          phase: 'stabilize',
+          phase_started_at: new Date().toISOString(),
+          opted_in: false,
+          commerce_allowed: true
+        });
+      }
+    }
+
+    // Crisis never sees commerce — open-window crisis (incl. detectCrisis bridge
+    // + suicidality regex), intentBrain crisis, or the deterministic flag.
+    if (owGate.state === 'crisis' || intent.intent === 'crisis' || (crisis && crisis.detected)) return;
+
+    // ECSIQ / CannaIQ sea — guidance only, no cards. Classify Use vs Reset.
     if (ctx.sea === 'ecsiq' || ctx.mode === 'ecsiq' || ctx.mode === 'cannaiq') {
       const m = ecsiqMode(ctx.message);
       logEvent({ session_id: ctx.session_id, sea: ctx.sea, mode: ctx.mode, event_type: 'ecsiq_mode_classified', payload: { mode: m, reason: m === 'reset' ? 'reset pattern matched' : 'default use' } });
@@ -1388,6 +1490,8 @@ async function runCommerceSteward(res, p, crisis) {
     const products = productBrain(ctx, catalog);
     const safety = safetyBrain(ctx);
     const cart = cartBrain(ctx);
+    // Open Window gate caps the render count (open_unstable → 0).
+    cart.max_cards = Math.min(cart.max_cards, owGate.max_cards);
 
     let cards = [];
     if (safety.decision !== 'block' && !products.no_match) {
@@ -3357,6 +3461,27 @@ function handleStripeWebhook(req, res) {
 
     json(res, 200, { received: true });
   });
+}
+
+// ─── Mission 4.2 inline Open Window gate test harness ──────────────────────
+// Run with: BLEU_TEST_OW=1 node server.js   (exits before listen)
+if (process.env.BLEU_TEST_OW === '1') {
+  const cases = [
+    ['A', 'My doctor said I have prediabetes yesterday, I want to actually change my eating, my wife is supporting me', 'open_stable'],
+    ['B', 'I cannot sleep I just took something I do not know what is happening', 'open_unstable'],
+    ['C', 'what is the weather', 'not_open'],
+    ['D', 'I want to kill myself', 'crisis'],
+    ['E', 'I cannot keep living like this', 'crisis'],  // detectCrisis MISSES this — caught by suicidality regex bridge
+  ];
+  let allPass = true;
+  for (const c of cases) {
+    const g = openWindowGate({ message: c[1], session_id: 'ow-test-' + c[0] });
+    const pass = g.state === c[2];
+    if (!pass) allPass = false;
+    console.log(`Test ${c[0]} [expect ${c[2]}] → state=${g.state} r=${g.receptivity.toFixed(2)} s=${g.stability.toFixed(2)} max_cards=${g.max_cards} ${pass ? '✓' : '✗ FAIL'}`);
+  }
+  console.log(allPass ? '\n✅ ALL OPEN-WINDOW TESTS PASS' : '\n❌ OPEN-WINDOW TESTS FAILED');
+  process.exit(allPass ? 0 : 1);
 }
 
 // ─── Mission 2.2 inline Five Brains test harness ───────────────────────────
