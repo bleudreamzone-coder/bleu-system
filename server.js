@@ -3387,6 +3387,13 @@ function handleStripeWebhook(req, res) {
         json(res, 400, { error: 'Invalid signature' });
         return;
       }
+      // Replay protection (Mission 7.6): reject signatures whose timestamp is
+      // more than 300s from now.
+      const ageSec = Math.abs(Math.floor(Date.now() / 1000) - parseInt(timestamp, 10));
+      if (!Number.isFinite(ageSec) || ageSec > 300) {
+        json(res, 400, { error: 'Timestamp outside tolerance window' });
+        return;
+      }
     } catch(e) {
       console.error('[stripe-webhook] signature verification threw:', e.message);
       json(res, 400, { error: 'Signature check failed' });
@@ -3398,6 +3405,14 @@ function handleStripeWebhook(req, res) {
       json(res, 400, { error: 'Invalid JSON' });
       return;
     }
+
+    // Idempotency (Mission 7.6): Stripe re-delivers events. Skip any event id
+    // already recorded so a duplicate delivery cannot double-activate.
+    try {
+      const seen = await querySupabase('stripe_processed_events', `?event_id=eq.${encodeURIComponent(event.id)}&select=event_id`, 1);
+      if (seen && seen.length) { json(res, 200, { received: true, duplicate: true }); return; }
+      await querySupabase('stripe_processed_events', '', 0, 'POST', { event_id: event.id, event_type: event.type });
+    } catch (e) { console.error('[stripe-webhook] idempotency check failed:', e.message); }
 
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
