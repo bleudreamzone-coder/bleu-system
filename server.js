@@ -1136,10 +1136,11 @@ async function querySupabase(table, query, limit, method, body) {
     const r = await fetch(url, {
       method,
       headers,
-      body: method === 'POST' ? JSON.stringify(body) : undefined
+      body: (method === 'POST' || method === 'PATCH' || method === 'PUT') ? JSON.stringify(body) : undefined
     });
     if (method === 'POST') return true;
-    return r.ok ? await r.json() : null;
+    // PATCH/DELETE may return 204 (no body); tolerate empty parse.
+    return r.ok ? await r.json().catch(() => true) : null;
   } catch (e) {
     console.error(`Supabase ${table} error:`, e.message);
     return null;
@@ -1393,6 +1394,21 @@ async function runCommerceSteward(res, p, crisis) {
     });
   } catch (e) {
     console.error('[COMMERCE_STEWARD_FAIL]', e && e.message);
+  }
+}
+
+// Global commerce kill switch (Mission 2.6). Reads bleu_commerce_settings.
+// Fail-OPEN: only an explicit commerce_enabled_global=false blocks checkout —
+// a read error or missing row does NOT block (so a DB blip can't break all
+// checkout). Cards still render regardless; suppression is at checkout only.
+async function commerceEnabledGlobal() {
+  try {
+    const rows = await querySupabase('bleu_commerce_settings', '?select=commerce_enabled_global', 1);
+    if (Array.isArray(rows) && rows.length && rows[0].commerce_enabled_global === false) return false;
+    return true;
+  } catch (e) {
+    console.error('[KILL_SWITCH_READ_FAIL]', e && e.message);
+    return true;
   }
 }
 
@@ -2345,6 +2361,130 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ─── YOUR CART / PLAN endpoints (Mission 2.6) ──────────────────────────────
+  // bleu_plan: one active plan per session (partial unique index). All writes
+  // server-mediated via querySupabase. POST returns true (return=minimal), so
+  // a freshly-created plan is re-fetched to obtain its id.
+  if (pn === '/api/plan/add' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', async () => {
+      try {
+        const { session_id, sku } = JSON.parse(b || '{}');
+        if (!session_id || !sku) return json(res, 400, { error: 'session_id and sku required' });
+
+        // active plan, or create one
+        let plans = await querySupabase('bleu_plan', `?session_id=eq.${encodeURIComponent(session_id)}&status=eq.active`, 1);
+        let plan = (plans && plans[0]) || null;
+        if (!plan) {
+          await querySupabase('bleu_plan', '', 0, 'POST', { session_id, items: [], total_cents: 0, status: 'active' });
+          plans = await querySupabase('bleu_plan', `?session_id=eq.${encodeURIComponent(session_id)}&status=eq.active`, 1);
+          plan = (plans && plans[0]) || null;
+        }
+        if (!plan) return json(res, 500, { error: 'could not create plan' });
+
+        // catalog item (must be active)
+        const items = await querySupabase('bleu_catalog', `?sku=eq.${encodeURIComponent(sku)}&active=eq.true`, 1);
+        if (!items || !items.length) return json(res, 404, { error: 'sku not found or inactive' });
+        const item = items[0];
+
+        // dedupe
+        const existing = (plan.items || []).find(i => i.sku === item.sku);
+        if (existing) {
+          return json(res, 200, { ok: true, plan_id: plan.id, items_count: (plan.items || []).length, total_cents: plan.total_cents, already_in_plan: true });
+        }
+
+        const newItems = [...(plan.items || []), {
+          sku: item.sku, rail: item.rail, name: item.name,
+          price_cents: item.price_cents, monthly: item.monthly,
+          stripe_price_id: item.stripe_price_id || null, amazon_url: item.amazon_url || null
+        }];
+        const newTotal = newItems.reduce((s, i) => s + (i.price_cents || 0), 0);
+
+        await querySupabase('bleu_plan', `?id=eq.${plan.id}`, 1, 'PATCH', { items: newItems, total_cents: newTotal, updated_at: new Date().toISOString() });
+
+        logPlanEvent(plan.id, 'item_added', { sku: item.sku, rail: item.rail });
+        logEvent({ session_id, event_type: 'plan_item_added', payload: { sku: item.sku, total_cents: newTotal } });
+
+        return json(res, 200, { ok: true, plan_id: plan.id, items_count: newItems.length, total_cents: newTotal });
+      } catch (e) {
+        console.error('[PLAN_ADD_FAIL]', e && e.message);
+        return json(res, 500, { error: 'plan add failed' });
+      }
+    });
+    return;
+  }
+
+  if (pn === '/api/plan/get' && req.method === 'GET') {
+    (async () => {
+      try {
+        const sid = url.searchParams.get('session_id');
+        if (!sid) return json(res, 400, { error: 'session_id required' });
+        const plans = await querySupabase('bleu_plan', `?session_id=eq.${encodeURIComponent(sid)}&status=eq.active`, 1);
+        return json(res, 200, { plan: (plans && plans[0]) || null });
+      } catch (e) {
+        console.error('[PLAN_GET_FAIL]', e && e.message);
+        return json(res, 500, { error: 'plan fetch failed' });
+      }
+    })();
+    return;
+  }
+
+  if (pn === '/api/plan/remove' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', async () => {
+      try {
+        const { session_id, sku } = JSON.parse(b || '{}');
+        if (!session_id || !sku) return json(res, 400, { error: 'session_id and sku required' });
+        const plans = await querySupabase('bleu_plan', `?session_id=eq.${encodeURIComponent(session_id)}&status=eq.active`, 1);
+        const plan = (plans && plans[0]) || null;
+        if (!plan) return json(res, 404, { error: 'no active plan' });
+
+        const newItems = (plan.items || []).filter(i => i.sku !== sku);
+        const newTotal = newItems.reduce((s, i) => s + (i.price_cents || 0), 0);
+        await querySupabase('bleu_plan', `?id=eq.${plan.id}`, 1, 'PATCH', { items: newItems, total_cents: newTotal, updated_at: new Date().toISOString() });
+
+        logPlanEvent(plan.id, 'item_removed', { sku });
+        logEvent({ session_id, event_type: 'plan_item_removed', payload: { sku, total_cents: newTotal } });
+
+        return json(res, 200, { ok: true, items_count: newItems.length, total_cents: newTotal });
+      } catch (e) {
+        console.error('[PLAN_REMOVE_FAIL]', e && e.message);
+        return json(res, 500, { error: 'plan remove failed' });
+      }
+    });
+    return;
+  }
+
+  if (pn === '/api/plan/continue' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', async () => {
+      try {
+        // Global kill switch — checkout suppression (cards still render).
+        if (!(await commerceEnabledGlobal())) return json(res, 503, { error: 'commerce temporarily unavailable' });
+
+        const { session_id } = JSON.parse(b || '{}');
+        if (!session_id) return json(res, 400, { error: 'session_id required' });
+        const plans = await querySupabase('bleu_plan', `?session_id=eq.${encodeURIComponent(session_id)}&status=eq.active`, 1);
+        const plan = (plans && plans[0]) || null;
+        if (!plan) return json(res, 404, { error: 'no active plan' });
+
+        await querySupabase('bleu_plan', `?id=eq.${plan.id}`, 1, 'PATCH', { status: 'started', updated_at: new Date().toISOString() });
+
+        const railOf = (r) => (plan.items || []).filter(i => i.rail === r);
+        const rail_a_items = railOf('A'), rail_b_items = railOf('B'), rail_c_items = railOf('C');
+
+        logPlanEvent(plan.id, 'plan_started', { rail_a_count: rail_a_items.length, rail_b_count: rail_b_items.length, rail_c_count: rail_c_items.length });
+        logEvent({ session_id, event_type: 'plan_started', payload: { total_cents: plan.total_cents } });
+
+        return json(res, 200, { ok: true, rail_a_items, rail_b_items, rail_c_items, total_cents: plan.total_cents });
+      } catch (e) {
+        console.error('[PLAN_CONTINUE_FAIL]', e && e.message);
+        return json(res, 500, { error: 'continue failed' });
+      }
+    });
+    return;
+  }
+
   if (pn === '/api/safety-check' && req.method === 'GET') {
     const sub = url.searchParams.get('substances')||'';
     if (!sub) return json(res, 400, { error: 'substances param required' });
@@ -2939,6 +3079,8 @@ const server = http.createServer((req, res) => {
     let b = ''; req.on('data', c => b += c);
     req.on('end', () => { (async () => {
       try {
+        // Global kill switch — checkout suppression (Mission 2.6).
+        if (!(await commerceEnabledGlobal())) return json(res, 503, { error: 'commerce temporarily unavailable' });
         if (!STRIPE_SECRET) return json(res, 503, { error: 'Stripe not configured' });
         const p = JSON.parse(b || '{}');
         const priceId = p.price_id;
