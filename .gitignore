@@ -128,3 +128,6 @@ temp/
 #   - _meta/                    audit deliverables, follow-ups
 #   - .gitignore                this file
 # ============================================================================
+
+# Playwright artifacts
+test-results/
