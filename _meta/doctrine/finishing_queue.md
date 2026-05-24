@@ -37,10 +37,23 @@ renderer, /api/plan/* endpoints, kill switch, Your Cart drawer + checkout.
   documenting what it catches that the other misses. HIGH priority — this is
   the 988 banner for passive suicidal ideation.
 
+## scoreStability calibration for emotional overwhelm (Tier 2/3)
+- status: open
+- owner: Dr. Felicia (clinical) + CC (implementation)
+- target: next session / 2.4.5
+- notes: Mission 5.0 Scenario 1 ("I just lost my job and I cannot sleep,
+  everything feels like too much") scored state=not_open (s=0.7, only the
+  sleep_loss -0.3 penalty fired) and rendered a Sleep Reset card. The
+  emotional-overwhelm / acute-loss signals ("everything feels like too much",
+  "lost my job") are not in any stability penalty list, so a distressed 2 AM
+  person can still see commerce. Dr. Felicia to decide whether overwhelm /
+  acute-loss phrasings should reduce stability below the 0.4 commerce
+  threshold. Do NOT auto-tune — clinical threshold decision.
+
 ## Mission 5.0 — full-system smoke + final evidence
-- status: in-progress
+- status: shipped 2026-05-24 — six scenarios run, audit-parity fix landed
 - owner: CC
-- target: today
+- target: done
 
 ## Kill switch — fail-closed config option
 - status: open (future)
