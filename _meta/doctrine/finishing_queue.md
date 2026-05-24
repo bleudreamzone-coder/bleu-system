@@ -20,28 +20,25 @@ renderer, /api/plan/* endpoints, kill switch, Your Cart drawer + checkout.
   beat first); recovery-mode grafted a magnesium rec onto a recovery query
   (Dr. Felicia to review recovery-mode supplement content).
 
-## Mission 4.1 — Phase 1.6 Open Window foundation tables
-- status: open
-- owner: CC
-- target: today (this session)
-- notes: bleu_open_windows + bleu_open_window_actions, RLS locked.
+## Missions 4.1, 4.2, 4.3 — SHIPPED 2026-05-24
+- 4.1 Open Window tables (f01e874), 4.2 Receptivity-Stability gate (866a560),
+  4.3 ECSIQ regulatory floor + Use/Reset (f01e874). All live + smoke-verified.
 
-## Mission 4.2 — Phase 3 Layer 29 Receptivity-Stability gate
+## detectCrisis() ↔ scoreStability suicidality-regex audit (Tier 3)
 - status: open
-- owner: CC (doctrine cleared by Dr. Felicia; Captain Soul Gates the code)
-- target: today
-- notes: replaces cartBrain's binary state default. Must bridge crisis
-  classification through the existing detectCrisis() validator (server.js:15),
-  since intentBrain's crisis word-list does not catch every phrase (flagged in
-  Mission 2.2 — e.g. "I cannot keep living like this").
-
-## Mission 4.3 — ECSIQ + CannaIQ regulatory floor + Use/Reset mode
-- status: open
-- owner: CC (Tier 2 clinical content — Dr. Felicia authority)
-- target: today
+- owner: Dr. Felicia (clinical decision) + CC (implementation)
+- target: next session
+- notes: VERIFIED that detectCrisis() (core/safety/crisis_validator.js, fires
+  the 988 banner) does NOT catch passive ideation like "I cannot keep living
+  like this" or "I cannot do this anymore". Mission 4.2's scoreStability
+  suicidality regex catches them for the commerce gate, but the 988 CRISIS
+  BANNER still won't fire for those phrasings. Audit the two word lists:
+  either merge into one canonical list, or formally separate with each
+  documenting what it catches that the other misses. HIGH priority — this is
+  the 988 banner for passive suicidal ideation.
 
 ## Mission 5.0 — full-system smoke + final evidence
-- status: open
+- status: in-progress
 - owner: CC
 - target: today
 
