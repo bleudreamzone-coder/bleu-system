@@ -1332,6 +1332,70 @@ function memoryBrain(ctx, intent, products, safety, cart) {
   }
 }
 
+// runCommerceSteward — shared by /api/chat and /api/chat/stream. Runs the Five
+// Brains after the prose stream, writes a plain `data:{cards}` SSE line before
+// the stream ends, and logs memoryBrain events + the commerce_steward decision.
+// NEVER throws: on any failure logs [COMMERCE_STEWARD_FAIL] and emits no cards,
+// so the chat stream always completes cleanly.
+async function runCommerceSteward(res, p, crisis) {
+  try {
+    const ctx = {
+      message: p.message,
+      sea: p.sea || 'home',
+      mode: p.mode || 'general',
+      session_id: p.session_id || p.session || null,
+      state: { classifier: 'stable' }, // Phase 3 (Mission 4.2) fills this
+      passport: {},                      // Phase 3 fills this
+      safety_status: 'clear'             // Phase 5 fills this
+    };
+    const intent = intentBrain(ctx);
+    // Crisis never sees commerce — intentBrain OR the deterministic detectCrisis.
+    if (intent.intent === 'crisis' || (crisis && crisis.detected)) return;
+
+    const catalog = await querySupabase('bleu_catalog', '?active=eq.true&select=*', 50) || [];
+    const products = productBrain(ctx, catalog);
+    const safety = safetyBrain(ctx);
+    const cart = cartBrain(ctx);
+
+    let cards = [];
+    if (safety.decision !== 'block' && !products.no_match) {
+      const byId = {};
+      for (const row of catalog) byId[row.sku] = row;
+      cards = products.matched.slice(0, cart.max_cards).map(m => {
+        const item = byId[m.sku] || {};
+        return {
+          sku: item.sku,
+          rail: item.rail,
+          name: item.name,
+          description: item.description,
+          price_cents: item.price_cents,
+          monthly: item.monthly,
+          button_label: item.rail === 'B' ? 'View Plan' : 'Add to Cart',
+          stripe_price_id: item.stripe_price_id || null,
+          amazon_url: item.amazon_url || null,
+          fullscript_template_id: item.fullscript_template_id || null,
+          felicia_signoff: item.felicia_signoff,
+          safety_badge: safety.badge
+        };
+      });
+    }
+
+    if (cards.length) res.write('data: ' + JSON.stringify({ cards }) + '\n\n');
+
+    memoryBrain(ctx, intent, products, safety, cart);
+
+    // logDecision drops unknown keys, so agent/layer are folded into inputs.
+    logDecision({
+      session_id: ctx.session_id,
+      decision_type: 'commerce_steward',
+      inputs:  { intent: intent.intent, sea: ctx.sea, mode: ctx.mode, agent: 'commerce_steward', layer: 'phase_2' },
+      outputs: { cards_count: cards.length, suppressed: cart.max_cards === 0, no_match: products.no_match }
+    });
+  } catch (e) {
+    console.error('[COMMERCE_STEWARD_FAIL]', e && e.message);
+  }
+}
+
 // ═══ MEMORY HELPERS (conversation_history + pgvector recall) ═══
 
 // Call a Supabase stored function (RPC endpoint) with service-role auth.
@@ -2088,6 +2152,10 @@ const server = http.createServer((req, res) => {
           res.write('data: '+JSON.stringify({text:fb})+'\n\n');
           full = fb;
         }
+        // Commerce Steward — Five Brains, shared helper (Mission 2.5). This is
+        // the endpoint the live browser uses via sendPrompt, so cards must emit
+        // here too — not only on /api/chat/stream.
+        await runCommerceSteward(res, p, crisis);
         res.write('data: [DONE]\n\n');
         res.end();
         // Write conversation memory + CI record (fire and forget)
@@ -2221,69 +2289,8 @@ const server = http.createServer((req, res) => {
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = ''; let full = ''; let ts_ttfb = 0;
         while (true) { const { done, value } = await rd.read(); if (done) break; buf += dc.decode(value, { stream: true }); const ls = buf.split('\n'); buf = ls.pop()||'';
           for (const ln of ls) { if (!ln.startsWith('data: ')) continue; const d = ln.slice(6).trim(); if (d==='[DONE]') { res.write('data: '+JSON.stringify({done:true,model})+'\n\n'); continue; } try { const j=JSON.parse(d); const t=j.choices?.[0]?.delta?.content; if(t){ if(!ts_ttfb) ts_ttfb = Date.now(); full+=t; res.write('data: '+JSON.stringify({t,text:t})+'\n\n'); } } catch{} } }
-        // ── COMMERCE STEWARD — Five Brains (Mission 2.3) ──────────────────
-        // Runs after the prose stream completes, before res.end(). Emits a
-        // cards SSE line (plain `data:` discriminated by j.cards — the reader
-        // gets its j.cards branch in Mission 2.5). Any failure logs
-        // [COMMERCE_STEWARD_FAIL] and emits NO cards; prose already completed.
-        try {
-          const ctx = {
-            message: p.message,
-            sea: p.sea || 'home',
-            mode: p.mode || 'general',
-            session_id: p.session_id,
-            state: { classifier: 'stable' }, // Phase 3 (Mission 4.2) fills this
-            passport: {},                      // Phase 3 fills this
-            safety_status: 'clear'             // Phase 5 fills this
-          };
-          const intent = intentBrain(ctx);
-          // Crisis never sees commerce. detectCrisis() broadens intentBrain's
-          // word-list here; full bridge lands in Mission 4.2.
-          if (intent.intent !== 'crisis' && !crisis.detected) {
-            const catalog = await querySupabase('bleu_catalog', '?active=eq.true&select=*', 50) || [];
-            const products = productBrain(ctx, catalog);
-            const safety = safetyBrain(ctx);
-            const cart = cartBrain(ctx);
-
-            let cards = [];
-            if (safety.decision !== 'block' && !products.no_match) {
-              const byId = {};
-              for (const row of catalog) byId[row.sku] = row;
-              cards = products.matched.slice(0, cart.max_cards).map(m => {
-                const item = byId[m.sku] || {};
-                return {
-                  sku: item.sku,
-                  rail: item.rail,
-                  name: item.name,
-                  description: item.description,
-                  price_cents: item.price_cents,
-                  monthly: item.monthly,
-                  button_label: item.rail === 'B' ? 'View Plan' : 'Add to Cart',
-                  stripe_price_id: item.stripe_price_id || null,
-                  amazon_url: item.amazon_url || null,
-                  fullscript_template_id: item.fullscript_template_id || null,
-                  felicia_signoff: item.felicia_signoff,
-                  safety_badge: safety.badge
-                };
-              });
-            }
-
-            if (cards.length) res.write('data: ' + JSON.stringify({ cards }) + '\n\n');
-
-            memoryBrain(ctx, intent, products, safety, cart);
-
-            // logDecision drops unknown keys, so agent/layer are folded into
-            // inputs (Captain-approved drift resolution, Mission 2.2 → 2.3).
-            logDecision({
-              session_id: p.session_id,
-              decision_type: 'commerce_steward',
-              inputs:  { intent: intent.intent, sea: ctx.sea, mode: ctx.mode, agent: 'commerce_steward', layer: 'phase_2' },
-              outputs: { cards_count: cards.length, suppressed: cart.max_cards === 0, no_match: products.no_match }
-            });
-          }
-        } catch (e) {
-          console.error('[COMMERCE_STEWARD_FAIL]', e && e.message);
-        }
+        // Commerce Steward — Five Brains, shared helper (Mission 2.3 / 2.5).
+        await runCommerceSteward(res, p, crisis);
         res.end();
         // Audit: successful completion. Fire-and-forget.
         logEvent({

@@ -299,12 +299,125 @@
   }
 
   // -------------------------------------------------------------------
+  // COMMERCE — inline product cards (Mission 2.5)
+  // -------------------------------------------------------------------
+  // Stable per-browser session id. No client session source existed before;
+  // this is the canonical one, reused for chat + plan so audit/plan correlate.
+  function getSessionId(){
+    try {
+      var k = 'bleu:session_id', v = localStorage.getItem(k);
+      if (!v) {
+        v = (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : ('s-' + Date.now() + '-' + Math.random().toString(36).slice(2));
+        localStorage.setItem(k, v);
+      }
+      return v;
+    } catch (e) { return 's-' + Date.now(); }
+  }
+  window.getSessionId = getSessionId;
+
+  function ensureCardStyle(){
+    if (document.getElementById('bleu-card-style')) return;
+    var s = document.createElement('style');
+    s.id = 'bleu-card-style';
+    s.textContent =
+      '.bleu-card{max-width:340px;margin:10px 0 10px 14px;padding:14px;border-radius:12px;background:#fbfaf7;border:1px solid rgba(75,30,130,.12);border-left:3px solid #C9A84C;font:14px/1.5 \'Inter\',-apple-system,sans-serif;color:#181714}'
+    + '.bleu-card--rail-A{border-left-color:#C9A84C}'
+    + '.bleu-card--rail-B{border-left-color:#7CCBA2}'
+    + '.bleu-card--rail-C{border-left-color:#2E75B6}'
+    + '.bleu-card__name{font-weight:600;font-size:15px}'
+    + '.bleu-card__desc{font-size:13px;opacity:.8;margin:5px 0}'
+    + '.bleu-card__signoff{font-size:11px;color:#9a7b1e;margin:5px 0;letter-spacing:.04em}'
+    + '.bleu-card__safety{font-size:11px;color:#b5651d;margin:5px 0}'
+    + '.bleu-card__btn{margin-top:9px;padding:7px 16px;border:1px solid #4b1e82;background:#4b1e82;color:#fff;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}'
+    + '.bleu-card__btn:disabled{opacity:.55;cursor:default}'
+    + '.bleu-card__added{font-size:12px;color:#2e7d32;margin-top:6px}'
+    + '@media (max-width:480px){.bleu-card{max-width:calc(100% - 28px)}}';
+    document.head.appendChild(s);
+  }
+
+  // Build cards with createElement only — never innerHTML with server data.
+  function renderCardsBelowMessage(cards){
+    ensureCardStyle();
+    for (var i = 0; i < cards.length; i++){
+      var c = cards[i] || {};
+      var card = document.createElement('div');
+      card.className = 'bleu-card bleu-card--rail-' + (c.rail || 'A');
+
+      var name = document.createElement('div');
+      name.className = 'bleu-card__name';
+      name.textContent = c.name || '';
+      card.appendChild(name);
+
+      if (c.description){
+        var desc = document.createElement('div');
+        desc.className = 'bleu-card__desc';
+        desc.textContent = c.description;
+        card.appendChild(desc);
+      }
+      if (c.felicia_signoff){
+        var so = document.createElement('div');
+        so.className = 'bleu-card__signoff';
+        so.textContent = '✓ Reviewed by Dr. Stoler';
+        card.appendChild(so);
+      }
+      if (c.safety_badge){
+        var sb = document.createElement('div');
+        sb.className = 'bleu-card__safety';
+        sb.textContent = c.safety_badge;
+        card.appendChild(sb);
+      }
+      var btn = document.createElement('button');
+      btn.className = 'bleu-card__btn';
+      btn.setAttribute('data-sku', c.sku || '');
+      btn.textContent = c.button_label || 'Add to Cart';
+      (function(sku, b){ b.addEventListener('click', function(){ window.addToPlan(sku, b); }); })(c.sku, btn);
+      card.appendChild(btn);
+
+      _body.appendChild(card);
+    }
+    _body.scrollTop = _body.scrollHeight;
+  }
+
+  // POST sku to the active plan. On success: confirm inline, disable button,
+  // bump the Your Cart badge (badge arrives in Mission 2.7 — guarded).
+  window.addToPlan = function(sku, btn){
+    if (!sku) return;
+    fetch('/api/plan/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: getSessionId(), sku: sku })
+    }).then(function(r){ return r.json(); }).then(function(d){
+      if (d && d.ok){
+        if (btn){
+          btn.disabled = true;
+          var note = document.createElement('div');
+          note.className = 'bleu-card__added';
+          note.textContent = 'Added to cart';
+          if (btn.parentNode) btn.parentNode.appendChild(note);
+        }
+        var cnt = document.getElementById('bleu-your-plan-count');
+        if (cnt) cnt.textContent = String(d.items_count != null ? d.items_count : (parseInt(cnt.textContent || '0', 10) + 1));
+        window.dispatchEvent(new CustomEvent('bleu:plan-updated', { detail: { sku: sku, items_count: d.items_count, total_cents: d.total_cents } }));
+      } else {
+        console.error('[bleu/prod] addToPlan failed', d);
+      }
+    }).catch(function(e){ console.error('[bleu/prod] addToPlan error', e); });
+  };
+
+  // Engagement chips ("Tell me more", "Compare options") post as a new turn.
+  window.sendFollowupToAlvai = function(text){
+    if (text && typeof window.sendPrompt === 'function') window.sendPrompt(text);
+  };
+
+  // -------------------------------------------------------------------
   // sendPrompt — streams /api/chat via SSE into the panel, token by token
   // -------------------------------------------------------------------
   window.sendPrompt = function(text){
     if (!text) return;
     var mode = detectMode();
-    var payload = { message: text, mode: mode, timestamp: new Date().toISOString() };
+    var payload = { message: text, mode: mode, session_id: getSessionId(), timestamp: new Date().toISOString() };
 
     // Backwards compatibility: if a sea or shell defines window.alvaiPanel, hand off.
     if (typeof window.alvaiPanel === 'object' && typeof window.alvaiPanel.send === 'function') {
@@ -352,6 +465,11 @@
               var j = JSON.parse(data);
               if (j.suppressCommerce) {
                 window.dispatchEvent(new CustomEvent('bleu:alvai-suppress-commerce', { detail: { mode: mode } }));
+                continue;
+              }
+              if (j.cards && Array.isArray(j.cards) && j.cards.length > 0) {
+                if (firstToken && asst.contains(dots)) { asst.removeChild(dots); firstToken = false; }
+                try { renderCardsBelowMessage(j.cards); } catch (e) { console.error('[CARDS_RENDER_FAIL]', e); }
                 continue;
               }
               if (typeof j.text === 'string' && j.text) {
