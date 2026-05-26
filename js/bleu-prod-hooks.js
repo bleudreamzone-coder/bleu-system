@@ -664,6 +664,12 @@
   // -------------------------------------------------------------------
   window.routeTo = function(path){
     if (!path) return;
+    // Magic-link sign-in has no server page — '/signin' maps to /auth/signin
+    // which does not exist (returns {"error":"Not found"}). Open the magic-link
+    // modal instead. Guarded by AUTH_LIVE so behavior is unchanged when off.
+    if (path === '/signin' && AUTH_LIVE && typeof window.requestMagicLink === 'function') {
+      window.requestMagicLink(); return;
+    }
     var resolved = CONFIG.routes[path] || path;
     // If app shell has a router, use it. Otherwise hard nav.
     if (typeof window.appRouter === 'object' && typeof window.appRouter.push === 'function') {
