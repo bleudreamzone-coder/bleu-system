@@ -717,7 +717,7 @@
   // behavior. This is the canonical magic-link UI + verify handler — the old
   // index.html inline copy was removed so only ONE verify-on-load runs (a second
   // POST would 401 after the token is consumed).
-  var AUTH_LIVE = false;   // ← flip true after manual magic-link smoke
+  var AUTH_LIVE = true;    // magic-link live (flipped Day-80 after smoke 25/25)
 
   window.authProvider = function(provider){
     if (provider === 'google')   { window.location.href = '/auth/google'; return; }
