@@ -10,7 +10,7 @@ Six read-only audits (no code/schema/deploy touched):
 
 ## Top 10 findings by severity
 1. 🔴 **Resend domain `bleu.live` unverified** → all email fails → Citizen #1 blocked. (Captain fixing.)
-2. 🔴 **`terms.html` + `privacy.html` are empty stubs** — legal exposure for a paid health app.
+2. 🟡 **~~`terms.html` + `privacy.html` empty stubs~~ — CORRECTED: both are full minified legal pages, NOT empty.** They need an accuracy review (age "13+ with parental consent" vs 18+, stale dates, refund window) + ideally an attorney pass — but no legal *void*.
 3. 🔴 **Exposed `service_role` key not rotated** — bypasses all the RLS work; top security item (carried).
 4. 🟠 **No SMS** — Twilio creds missing + two competing inbound webhooks (`/twilio-reply` vs `/api/sms/inbound`).
 5. 🟠 **No committed integration tests** for the new auth/comms/cron paths; the Day-80 smoke harnesses were one-shot in `/tmp`. The querySupabase bug had no regression guard.
@@ -23,7 +23,7 @@ Six read-only audits (no code/schema/deploy touched):
 ## Top 10 Day 81–83 work items by impact
 1. Verify Resend domain (DNS) → unblock Citizen #1. *(in progress)*
 2. Rotate `service_role` key + confirm `SESSION_SECRET`/`REORDER_CRON_SECRET` in Render.
-3. Write real Terms + Privacy pages.
+3. Review existing Terms + Privacy for accuracy (age 18+, dates, refund window) + attorney pass — they already exist with real content.
 4. Commit the Day-80 smoke harnesses as `tests/integration/` (magic-link, webhook→email, sms/inbound) — regression guard.
 5. Wire `getSessionCitizen` into routes + `logTrustPacket` onto guidance routes — *with* the new tests.
 6. Twilio: add creds + consolidate to one signed webhook; fix `/twilio-reply` plaintext phone.
@@ -39,5 +39,5 @@ Six read-only audits (no code/schema/deploy touched):
 
 ## Before walking into French Quarter visits
 - The **magic-link email will not arrive** until Resend's `bleu.live` is verified — do not demo sign-up until that's green (test with `delivered@resend.dev` or your own inbox first).
-- **Don't hand out Card B / `/welcome` yet** — that route isn't built, mobile is thin, and Terms/Privacy are empty. Partner conversations: fine. Live guest sign-ups at scale: not yet.
+- **Don't hand out Card B / `/welcome` yet** — that route isn't built and mobile is thin. (Terms/Privacy DO exist — earlier "empty" claim was wrong; they just want an accuracy review.) Partner conversations: fine. Live guest sign-ups at scale: not yet.
 - What IS demo-safe today: the seas (Local/Support/Learn/Supply), ALVAI chat, Stripe checkout. The auth + email loop is one DNS verification away from real.
