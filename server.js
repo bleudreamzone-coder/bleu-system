@@ -1306,6 +1306,84 @@ async function sendEmail({ to, subject, html, text, template_version, citizen_id
   }
 }
 
+// ═══ AUTH HELPERS (Mission 7.4 — magic-link passwordless) ═══
+// Raw-http server: there is no Express middleware layer. The "session
+// middleware" is getSessionCitizen(req), a never-throws helper each route
+// calls to resolve req's signed cookie → bleu_citizens row (or null).
+//
+// Deferred-when-no-secret fail-safe (same spirit as sendEmail): if
+// SESSION_SECRET is unset we mint an ephemeral process-lifetime secret so the
+// flow still works in dev — but sessions reset on every restart and this is
+// logged loudly. Set SESSION_SECRET in Render before relying on persistence.
+let _ephemeralSessionSecret = null;
+function sessionSecret() {
+  if (process.env.SESSION_SECRET) return process.env.SESSION_SECRET;
+  if (!_ephemeralSessionSecret) {
+    _ephemeralSessionSecret = require('crypto').randomBytes(32).toString('hex');
+    console.warn('[auth] SESSION_SECRET unset — using ephemeral secret. Sessions will reset on restart (deferred mode).');
+  }
+  return _ephemeralSessionSecret;
+}
+
+// Cookie value = base64url(payload) + "." + base64url(HMAC-SHA256). Stateless
+// and tamper-evident: any edit to the payload invalidates the signature.
+function signSession(payload) {
+  const crypto = require('crypto');
+  const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const sig = crypto.createHmac('sha256', sessionSecret()).update(body).digest('base64url');
+  return `${body}.${sig}`;
+}
+function verifySession(value) {
+  if (!value || value.indexOf('.') < 1) return null;
+  const crypto = require('crypto');
+  const [body, sig] = value.split('.');
+  const expected = crypto.createHmac('sha256', sessionSecret()).update(body).digest('base64url');
+  const a = Buffer.from(sig), b = Buffer.from(expected);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
+  try {
+    const obj = JSON.parse(Buffer.from(body, 'base64url').toString());
+    if (obj.exp && Date.now() > obj.exp) return null;   // expired
+    return obj;
+  } catch { return null; }
+}
+
+function parseCookies(req) {
+  const out = {};
+  const h = req.headers && req.headers.cookie;
+  if (!h) return out;
+  h.split(';').forEach(part => {
+    const i = part.indexOf('=');
+    if (i > 0) out[part.slice(0, i).trim()] = decodeURIComponent(part.slice(i + 1).trim());
+  });
+  return out;
+}
+
+// Session "middleware" for the raw-http dispatcher. Never throws → caller gets
+// null on any failure and continues as anonymous.
+async function getSessionCitizen(req) {
+  try {
+    const sess = verifySession(parseCookies(req).bleu_session);
+    if (!sess || !sess.cid) return null;
+    const rows = await querySupabase('bleu_citizens', `?id=eq.${encodeURIComponent(sess.cid)}&select=*`, 1);
+    return (rows && rows.length) ? rows[0] : null;
+  } catch (e) { return null; }
+}
+
+// In-memory rate limit: 3 magic-link requests per email_hash per 10 min.
+// Chosen over a DB-backed counter to keep the request path zero-query on the
+// hot path; tradeoff is it resets on restart and is per-instance (acceptable
+// for abuse-throttling at current single-instance scale). Documented for 7.4
+// Soul-Gate — revisit if we go multi-instance.
+const _magicLinkRate = new Map();
+function magicLinkRateOk(emailHash) {
+  const now = Date.now(), windowMs = 10 * 60 * 1000, max = 3;
+  const hits = (_magicLinkRate.get(emailHash) || []).filter(t => now - t < windowMs);
+  if (hits.length >= max) { _magicLinkRate.set(emailHash, hits); return false; }
+  hits.push(now);
+  _magicLinkRate.set(emailHash, hits);
+  return true;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // FIVE BRAINS — Commerce Steward (Phase 2, Mission 2.2)
 // Pure deterministic functions. Zero LLM calls. Zero new dependencies.
@@ -3355,6 +3433,105 @@ const server = http.createServer((req, res) => {
         if (!sr.ok) { console.error('Stripe create-session:', sr.status, data?.error?.message); return json(res, 502, { error: data?.error?.message || 'Stripe error' }); }
         return json(res, 200, { url: data.url });
       } catch(e) { console.error('create-session failed:', e.message); return json(res, 500, { error: e.message }); }
+    })(); });
+    return;
+  }
+
+  // ─── Mission 7.4 — Magic-link request. Always 200 (no account enumeration).
+  if (pn === '/api/auth/magic-link' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { (async () => {
+      try {
+        const p = JSON.parse(b || '{}');
+        const email = String(p.email || '').trim();
+        if (!email || email.indexOf('@') < 1) return json(res, 200, { ok: true });
+        const emailHash = hashEmail(email);
+
+        if (!magicLinkRateOk(emailHash)) {
+          logEvent({ event_type: 'magic_link_rate_limited', payload: { email_hash: emailHash } });
+          return json(res, 200, { ok: true });   // same response — don't reveal throttling
+        }
+
+        const token = require('crypto').randomBytes(32).toString('hex');
+        const now = new Date().toISOString();
+        await querySupabase('magic_links', '', 0, 'POST', {
+          email_hash: emailHash,
+          token,
+          expires_at: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+          ip_address: String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || null,
+          user_agent: req.headers['user-agent'] || null,
+          created_at: now
+        });
+
+        const proto = (req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim();
+        const link = `${proto}://${req.headers.host}/?verify=${token}`;
+        // Fire-and-forget. With no RESEND_API_KEY this defers (no live send) per Wave 1 contract.
+        sendEmail({
+          to: email,
+          template_version: 'magic_link_v1',
+          subject: 'Your BLEU sign-in link',
+          html: `<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a;line-height:1.6;">`
+              + `<p>Here's your sign-in link for BLEU.</p>`
+              + `<p style="margin:28px 0;"><a href="${link}" style="background:#C9A84C;color:#1a1a1a;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;display:inline-block;">Sign in to BLEU</a></p>`
+              + `<p style="font-size:13px;color:#666;">If the button doesn't work, paste this into your browser:<br><span style="word-break:break-all;">${link}</span></p>`
+              + `<p>This link expires in 15 minutes. If you didn't request this, you can ignore this email.</p>`
+              + `<p style="margin-top:32px;">— BLEU</p>`
+              + `<hr style="border:none;border-top:1px solid #e5e5e5;margin:28px 0;">`
+              + `<p style="font-size:12px;color:#888;">BLEU protocols are reviewed by Dr. Felicia Stoler, DCN, credentialed protocol reviewer. This message supports your wellness journey and is not medical advice; it does not diagnose, treat, or replace care from your own clinician.</p></div>`,
+          text: `Here's your sign-in link for BLEU.\n\nSign in: ${link}\n\nThis link expires in 15 minutes. If you didn't request this, you can ignore this email.\n\n— BLEU`
+        }).catch(e => console.error('[magic-link email]', e.message));
+
+        logEvent({ event_type: 'magic_link_requested', payload: { email_hash: emailHash } });
+        return json(res, 200, { ok: true });
+      } catch (e) { console.error('magic-link failed:', e.message); return json(res, 200, { ok: true }); }
+    })(); });
+    return;
+  }
+
+  // ─── Mission 7.4 — Verify token, mint session cookie, find/create Citizen.
+  if (pn === '/api/auth/verify' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { (async () => {
+      try {
+        const p = JSON.parse(b || '{}');
+        const token = String(p.token || '').trim();
+        if (!token) return json(res, 400, { ok: false, error: 'missing token' });
+
+        const now = new Date().toISOString();
+        // Atomic single-use consume: the filter (unconsumed AND unexpired) means
+        // a concurrent or replayed verify matches zero rows. PostgREST returns
+        // the updated representation, so a non-empty array == we won the consume.
+        const consumed = await querySupabase(
+          'magic_links',
+          `?token=eq.${encodeURIComponent(token)}&consumed_at=is.null&expires_at=gt.${now}`,
+          0, 'PATCH', { consumed_at: now }
+        );
+        if (!Array.isArray(consumed) || !consumed.length) {
+          logEvent({ event_type: 'magic_link_verify_failed' });
+          return json(res, 401, { ok: false, error: 'invalid or expired link' });
+        }
+
+        const emailHash = consumed[0].email_hash;
+        let cid = consumed[0].citizen_id || null;
+        if (!cid) {
+          let cz = await querySupabase('bleu_citizens', `?email_hash=eq.${encodeURIComponent(emailHash)}&select=id`, 1);
+          if (cz && cz.length) { cid = cz[0].id; }
+          else {
+            await querySupabase('bleu_citizens', '', 0, 'POST', { email_hash: emailHash, first_seen_at: now });
+            cz = await querySupabase('bleu_citizens', `?email_hash=eq.${encodeURIComponent(emailHash)}&select=id`, 1);
+            cid = (cz && cz.length) ? cz[0].id : null;
+          }
+        }
+
+        const maxAgeSec = 30 * 24 * 60 * 60;
+        const cookie = signSession({ cid, eh: emailHash, exp: Date.now() + maxAgeSec * 1000 });
+        const secure = (req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim() === 'https';
+        res.setHeader('Set-Cookie',
+          `bleu_session=${cookie}; HttpOnly; ${secure ? 'Secure; ' : ''}SameSite=Lax; Path=/; Max-Age=${maxAgeSec}`);
+
+        logEvent({ user_id: cid, event_type: 'magic_link_verified', payload: { email_hash: emailHash } });
+        return json(res, 200, { ok: true, citizen: { id: cid } });
+      } catch (e) { console.error('verify failed:', e.message); return json(res, 500, { ok: false, error: e.message }); }
     })(); });
     return;
   }
