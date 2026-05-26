@@ -1228,6 +1228,84 @@ async function logDecision({ session_id, user_id, decision_type, inputs, outputs
   }
 }
 
+// ═══ COMMS HELPER (Mission 7.3) ═══
+// Sends one transactional email via Resend and logs it to bleu_comms. Like the
+// audit helpers, it NEVER throws — a send/log failure must not break the caller
+// (the Stripe webhook must still return 200). All writes go through the
+// service-role querySupabase.
+//
+// Fail-safe contract: if RESEND_API_KEY is unset (key not yet pasted into the
+// Render env), it does NOT attempt a send — it records a status='deferred' row
+// and returns { ok:false, deferred:true }. That makes the whole feature inert
+// and observable until the Captain provisions the key, with no code change.
+//
+// TD-010: `to` is hashed into recipient_hash before storage; the plaintext
+// address is only handed to Resend in-memory, never persisted.
+//
+// Returns: { ok, deferred?, skipped?, message_id?, error? }
+async function sendEmail({ to, subject, html, text, template_version, citizen_id }) {
+  if (!to) return { ok: false, skipped: true, error: 'no recipient' };
+
+  const recipient_hash = hashEmail(to);
+  const base = {
+    citizen_id: citizen_id || null,
+    recipient_hash,
+    comm_type: 'email',
+    template_version: template_version || null,
+    subject: subject || null,
+    body: html || text || null
+  };
+
+  // No key → deferred. Record intent, do not send.
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('[sendEmail] RESEND_API_KEY unset — deferring email (template:', template_version, ')');
+    try {
+      await querySupabase('bleu_comms', '', 0, 'POST', {
+        ...base,
+        status: 'deferred',
+        error_message: 'RESEND_API_KEY not configured',
+        created_at: new Date().toISOString()
+      });
+    } catch (e) { console.error('[sendEmail] deferred log failed:', e.message); }
+    return { ok: false, deferred: true };
+  }
+
+  try {
+    const { Resend } = require('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const { data, error } = await resend.emails.send({
+      from: 'BLEU <hello@bleu.live>',
+      to,
+      subject,
+      html,
+      ...(text ? { text } : {})
+    });
+
+    if (error) {
+      await querySupabase('bleu_comms', '', 0, 'POST', {
+        ...base, status: 'failed', error_message: String(error.message || error), created_at: new Date().toISOString()
+      });
+      logEvent({ user_id: citizen_id || null, event_type: 'email_failed', payload: { template_version, recipient_hash, error: String(error.message || error) } });
+      return { ok: false, error: String(error.message || error) };
+    }
+
+    const message_id = data && data.id ? data.id : null;
+    await querySupabase('bleu_comms', '', 0, 'POST', {
+      ...base, resend_message_id: message_id, status: 'sent', sent_at: new Date().toISOString(), created_at: new Date().toISOString()
+    });
+    logEvent({ user_id: citizen_id || null, event_type: 'email_sent', payload: { template_version, recipient_hash, resend_message_id: message_id } });
+    return { ok: true, message_id };
+  } catch (e) {
+    console.error('[sendEmail] send threw:', e.message);
+    try {
+      await querySupabase('bleu_comms', '', 0, 'POST', {
+        ...base, status: 'failed', error_message: e.message, created_at: new Date().toISOString()
+      });
+    } catch (_) {}
+    return { ok: false, error: e.message };
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // FIVE BRAINS — Commerce Steward (Phase 2, Mission 2.2)
 // Pure deterministic functions. Zero LLM calls. Zero new dependencies.
@@ -3497,6 +3575,22 @@ function handleStripeWebhook(req, res) {
       } catch (e) {
         console.error('[purchase_completed audit failed]', e.message);
       }
+
+      // TODO (Mission 7.3 — Soul-Gate before enabling): send order confirmation.
+      // Wiring point is HERE — inside checkout.session.completed, AFTER the
+      // idempotency check (so a re-delivered event cannot re-send) and AFTER
+      // protocol activation + purchase_completed audit. NOTE: this handler keys
+      // on checkout.session.completed, NOT payment_intent.succeeded.
+      // Before un-commenting, resolve citizen_id (this handler updates profiles,
+      // not bleu_citizens — see report) and confirm `email` is present.
+      //
+      // sendEmail({
+      //   to: email,
+      //   citizen_id: <resolved bleu_citizens.id>,
+      //   template_version: 'order_confirmation_v1',
+      //   subject: 'Your BLEU protocol is on the way',
+      //   html: renderTemplate('order_confirmation_v1', { protocol_name: protocol }),
+      // }).catch(e => console.error('[order confirmation email]', e.message));
     }
 
     json(res, 200, { received: true });
