@@ -18,3 +18,16 @@ services:
     envVars:
       - key: REORDER_CRON_SECRET
         sync: false
+
+  - type: cron
+    name: bleu-day7-outcomes
+    runtime: node
+    schedule: "0 15 * * *"
+    buildCommand: ""
+    # Day-7 outcome SMS (Mission 6.X). 15:00 UTC = 10:00 America/Chicago during
+    # CDT (UTC-5); 09:00 during CST (UTC-6) — Render cron is UTC, no DST. Reuses
+    # the same REORDER_CRON_SECRET Bearer the handler checks (timing-safe).
+    startCommand: "curl -X POST --max-time 60 -fsS -H \"Authorization: Bearer $REORDER_CRON_SECRET\" https://bleu-system.onrender.com/api/send-day7-outcomes"
+    envVars:
+      - key: REORDER_CRON_SECRET
+        sync: false

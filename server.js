@@ -3997,21 +3997,58 @@ function handleStripeWebhook(req, res) {
         console.error('[purchase_completed audit failed]', e.message);
       }
 
-      // TODO (Mission 7.3 — Soul-Gate before enabling): send order confirmation.
-      // Wiring point is HERE — inside checkout.session.completed, AFTER the
-      // idempotency check (so a re-delivered event cannot re-send) and AFTER
-      // protocol activation + purchase_completed audit. NOTE: this handler keys
-      // on checkout.session.completed, NOT payment_intent.succeeded.
-      // Before un-commenting, resolve citizen_id (this handler updates profiles,
-      // not bleu_citizens — see report) and confirm `email` is present.
-      //
-      // sendEmail({
-      //   to: email,
-      //   citizen_id: <resolved bleu_citizens.id>,
-      //   template_version: 'order_confirmation_v1',
-      //   subject: 'Your BLEU protocol is on the way',
-      //   html: renderTemplate('order_confirmation_v1', { protocol_name: protocol }),
-      // }).catch(e => console.error('[order confirmation email]', e.message));
+      // Order confirmation email (Mission 7.3, activated 7.x). Runs after the
+      // idempotency check (a re-delivered event short-circuits above, so this
+      // fires at most once) and after the purchase_completed audit. Keyed on
+      // checkout.session.completed (NOT payment_intent.succeeded).
+      if (email) {
+        try {
+          // Resolve (or create) the bleu_citizens row for this payer. Mirrors the
+          // find-or-create used by /api/auth/verify; email_hash is UNIQUE so a
+          // concurrent insert loses harmlessly and the re-select still finds it.
+          // NOTE: bleu_citizens has no `source` column — map to real columns.
+          const eh = hashEmail(email);
+          let citizenId = null;
+          if (SUPABASE_URL && SUPABASE_KEY) {
+            let cz = await querySupabase('bleu_citizens', `?email_hash=eq.${encodeURIComponent(eh)}&select=id`, 1);
+            if (cz && cz.length) citizenId = cz[0].id;
+            else {
+              await querySupabase('bleu_citizens', '', 0, 'POST', {
+                email_hash: eh,
+                profile_id: userId || null,
+                first_stripe_session_id: session.id || null,
+                plan_started_at: new Date().toISOString()
+              });
+              cz = await querySupabase('bleu_citizens', `?email_hash=eq.${encodeURIComponent(eh)}&select=id`, 1);
+              citizenId = (cz && cz.length) ? cz[0].id : null;
+            }
+          }
+
+          const firstName = String(session.customer_details?.name || '').trim().split(/\s+/)[0] || '';
+          const amount = session.amount_total != null
+            ? `$${(session.amount_total / 100).toFixed(2)} ${String(session.currency || 'usd').toUpperCase()}`
+            : '';
+          const orderSummary = `You chose the ${protocol} protocol${amount ? `, ${amount}` : ''}, and it's a considered place to begin.`;
+          const greeting = firstName ? `${firstName},` : 'Welcome,';
+          const footer = 'BLEU protocols are reviewed by Dr. Felicia Stoler, DCN, credentialed protocol reviewer. This message supports your wellness journey and is not medical advice; it does not diagnose, treat, or replace care from your own clinician.';
+          const html =
+            `<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a;line-height:1.6;">`
+            + `<p>${greeting}</p>`
+            + `<p>Your protocol is confirmed and on its way. ${orderSummary}</p>`
+            + `<p>You don't need to do anything right now. Settle in. On Day 3 you'll hear from us with a short check-in, because the early days are where a protocol either takes root or quietly slips. We'll be there for that.</p>`
+            + `<p>If anything feels off before then, reply to this message and a person will read it.</p>`
+            + `<p style="margin-top:32px;">— BLEU</p>`
+            + `<hr style="border:none;border-top:1px solid #e5e5e5;margin:28px 0;">`
+            + `<p style="font-size:12px;color:#888;">${footer}</p></div>`;
+          const text = `${greeting}\n\nYour protocol is confirmed and on its way. ${orderSummary}\n\nYou don't need to do anything right now. On Day 3 you'll hear from us with a short check-in.\n\nIf anything feels off before then, reply to this message and a person will read it.\n\n— BLEU\n\n${footer}`;
+
+          // Fire-and-forget: a send/log failure must never fail the webhook (200 below).
+          sendEmail({ to: email, citizen_id: citizenId, template_version: 'order_confirmation_v1', subject: 'Your BLEU protocol is on the way', html, text })
+            .catch(e => console.error('[order confirmation email]', e.message));
+        } catch (e) {
+          console.error('[order confirmation wire-up failed]', e.message);
+        }
+      }
     }
 
     json(res, 200, { received: true });
