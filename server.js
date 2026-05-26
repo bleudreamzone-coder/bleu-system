@@ -1144,7 +1144,13 @@ async function querySupabase(table, query, limit, method, body) {
   } else {
     const sep = query && query.startsWith('?') ? '' : '?';
     url = `${SUPABASE_URL}/rest/v1/${table}${sep}${query}`;
-    if (limit) {
+    if (method === 'PATCH' || method === 'PUT' || method === 'DELETE') {
+      // Return the affected rows so callers can tell a filtered write that
+      // MATCHED from one that missed (e.g. magic-link atomic consume). Without
+      // this, PostgREST replies 204 empty and we'd return `true` for both —
+      // making every verify 401 even after consuming the token.
+      headers['Prefer'] = 'return=representation';
+    } else if (limit) {
       headers['Range'] = `0-${limit - 1}`;
       headers['Prefer'] = 'count=exact';
     }
