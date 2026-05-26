@@ -1181,6 +1181,17 @@ function hashEmail(email) {
     .digest('hex');
 }
 
+// TD-010 privacy for phone numbers (Mission 6.X SMS outcomes). Normalize to
+// digits-only before hashing so "+1 (504) 555-1212" and "15045551212" collide
+// to the same hash — lets us correlate an inbound reply to its outbound send
+// without ever storing the plaintext number in bleu_comms/bleu_events.
+function hashPhone(phone) {
+  if (!phone) return null;
+  const digits = String(phone).replace(/\D/g, '');
+  if (!digits) return null;
+  return require('crypto').createHash('sha256').update(digits).digest('hex');
+}
+
 async function logEvent({ session_id, user_id, event_type, sea, mode, payload }) {
   if (!event_type) return;
   try {
@@ -1382,6 +1393,84 @@ function magicLinkRateOk(emailHash) {
   hits.push(now);
   _magicLinkRate.set(emailHash, hits);
   return true;
+}
+
+// ═══ DAY-7 OUTCOME CAPTURE (Mission 6.X) ═══
+// Phone source note: bleu_citizens has NO phone column — phone lives plaintext
+// in user_coherence, keyed by session_id (same key bleu_citizens carries). So
+// we resolve a Citizen's phone by joining on session_id. Citizens with no
+// session_id or no user_coherence phone are skipped (never texted) — the safe
+// deferred default. Long-term fix: capture phone_hash on bleu_citizens at
+// signup. Documented for 6.X Soul-Gate.
+async function resolveCitizenPhone(citizen) {
+  if (!citizen || !citizen.session_id) return null;
+  const rows = await querySupabase(
+    'user_coherence',
+    `?session_id=eq.${encodeURIComponent(citizen.session_id)}&phone=not.is.null&select=phone&order=created_at.desc`,
+    1
+  );
+  return (rows && rows.length) ? rows[0].phone : null;
+}
+
+// Selects the day-7 cohort (first_seen_at in the [now-7d-12h, now-7d] window),
+// dedupes against prior sends, honors opt-out, sends the outcome SMS, and logs
+// to bleu_comms + bleu_events. Per-citizen try/catch — one failure never aborts
+// the run. Returns a counts summary. Sends live SMS only when invoked with a
+// configured Twilio account (cron-triggered); never auto-runs.
+const DAY7_OUTCOME_BODY = "Hi from BLEU. It's been 7 days since you started your protocol. Reply BETTER, SAME, or WORSE so Dr. Felicia can review your trajectory. Reply STOP to opt out.";
+async function scheduleDay7OutcomeChecks() {
+  const out = { sent: 0, already_sent: 0, no_phone: 0, opted_out: 0, errors: [] };
+  if (!SUPABASE_URL || !SUPABASE_KEY) { out.error = 'Supabase not configured'; return out; }
+  if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) { out.error = 'Twilio not configured'; return out; }
+
+  const upper = new Date(Date.now() - 7 * 864e5).toISOString();
+  const lower = new Date(Date.now() - 7 * 864e5 - 12 * 36e5).toISOString();
+  const citizens = await querySupabase(
+    'bleu_citizens',
+    `?first_seen_at=gte.${lower}&first_seen_at=lte.${upper}&select=id,session_id,first_seen_at`,
+    500
+  );
+  if (!Array.isArray(citizens) || !citizens.length) return out;
+
+  for (const c of citizens) {
+    try {
+      const dup = await querySupabase('bleu_events', `?event_type=eq.day7_outcome_sent&user_id=eq.${encodeURIComponent(c.id)}&select=id`, 1);
+      if (dup && dup.length) { out.already_sent++; continue; }
+
+      const phone = await resolveCitizenPhone(c);
+      if (!phone) { out.no_phone++; continue; }
+      const phoneHash = hashPhone(phone);
+
+      const opt = await querySupabase('bleu_events', `?event_type=eq.sms_opted_out&payload->>phone_hash=eq.${phoneHash}&select=id`, 1);
+      if (opt && opt.length) { out.opted_out++; continue; }
+
+      const tw = await sendSMS(phone, DAY7_OUTCOME_BODY);
+      const sid = tw && tw.sid ? tw.sid : null;
+      await querySupabase('bleu_comms', '', 0, 'POST', {
+        citizen_id: c.id, recipient_hash: phoneHash, comm_type: 'sms',
+        template_version: 'day7_outcome_v1', body: DAY7_OUTCOME_BODY,
+        twilio_sid: sid, status: 'sent', sent_at: new Date().toISOString(), created_at: new Date().toISOString()
+      });
+      logEvent({ user_id: c.id, event_type: 'day7_outcome_sent', payload: { template_version: 'day7_outcome_v1', recipient_hash: phoneHash } });
+      out.sent++;
+    } catch (e) { out.errors.push({ citizen_id: c.id, error: String(e.message || e) }); }
+  }
+  return out;
+}
+
+// Twilio request authenticity: HMAC-SHA1 over (full URL + POST params sorted by
+// key, concatenated), base64, compared constant-time to X-Twilio-Signature.
+// Returns { ok, deferred }. deferred=true when TWILIO_AUTH unset (cannot verify
+// → caller decides to accept-and-mark per the 6.X deferred contract).
+function twilioSignatureValid(req, params, fullUrl) {
+  if (!TWILIO_AUTH) return { ok: false, deferred: true };
+  const crypto = require('crypto');
+  const data = Object.keys(params).sort().reduce((s, k) => s + k + params[k], fullUrl);
+  const expected = crypto.createHmac('sha1', TWILIO_AUTH).update(Buffer.from(data, 'utf-8')).digest('base64');
+  const provided = String(req.headers['x-twilio-signature'] || '');
+  const a = Buffer.from(provided), b = Buffer.from(expected);
+  const ok = a.length === b.length && crypto.timingSafeEqual(a, b);
+  return { ok, deferred: false };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -3326,6 +3415,100 @@ const server = http.createServer((req, res) => {
         json(res, 200, {sent, errors: errors.length ? errors : undefined});
       } catch(e) { json(res, 500, {error:'send-reorder-reminders failed', detail:String(e.message||e)}); }
     })();
+    return;
+  }
+
+  // ─── Mission 6.X — Day-7 outcome cron. Separate endpoint from reorder
+  // reminders (distinct cadence/cohort) but reuses REORDER_CRON_SECRET + the
+  // same Bearer + timingSafeEqual auth. Suggested schedule: daily 10:00 America/Chicago.
+  if (pn === '/api/send-day7-outcomes' && req.method === 'POST') {
+    (async () => {
+      try {
+        if (!REORDER_CRON_SECRET) {
+          console.error('[day7-cron] CRITICAL: REORDER_CRON_SECRET not set — refusing to process');
+          return json(res, 500, { error: 'REORDER_CRON_SECRET not configured' });
+        }
+        const authHeader = String(req.headers.authorization || '');
+        const presented = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+        let authOk = false;
+        try {
+          const crypto = require('crypto');
+          const a = Buffer.from(presented), b = Buffer.from(REORDER_CRON_SECRET);
+          authOk = a.length === b.length && crypto.timingSafeEqual(a, b);
+        } catch { authOk = false; }
+        if (!authOk) {
+          const ip = req.headers['x-forwarded-for'] || (req.socket && req.socket.remoteAddress) || '?';
+          console.warn(`[day7-cron] unauthorized attempt from ${ip}`);
+          return json(res, 401, { error: 'Unauthorized' });
+        }
+        const result = await scheduleDay7OutcomeChecks();
+        return json(res, 200, result);
+      } catch (e) { return json(res, 500, { error: 'send-day7-outcomes failed', detail: String(e.message || e) }); }
+    })();
+    return;
+  }
+
+  // ─── Mission 6.X — Inbound SMS (day-7 outcome replies + opt-out). Signature-
+  // validated. NOTE: distinct from the existing /twilio-reply (reorder YES/no,
+  // unauthenticated). Only ONE can be the Twilio messaging webhook URL — see
+  // report; consolidation is a Soul-Gate decision.
+  if (pn === '/api/sms/inbound' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { (async () => {
+      const okXml = (msg) => { res.writeHead(200, { 'Content-Type': 'text/xml' });
+        res.end(`<?xml version="1.0" encoding="UTF-8"?><Response>${msg ? `<Message>${msg}</Message>` : ''}</Response>`); };
+      try {
+        const usp = new URLSearchParams(b);
+        const params = {}; for (const [k, v] of usp) params[k] = v;
+
+        const proto = (req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim();
+        const fullUrl = `${proto}://${req.headers.host}${req.url}`;
+        const sig = twilioSignatureValid(req, params, fullUrl);
+        if (!sig.deferred && !sig.ok) {
+          console.warn('[sms/inbound] invalid Twilio signature — rejecting');
+          res.writeHead(403); res.end('forbidden'); return;   // 403 (not 5xx): Twilio won't retry a forged request
+        }
+
+        const from = params.From || '';
+        const bodyText = (params.Body || '').trim();
+        const messageSid = params.MessageSid || null;
+        const phoneHash = hashPhone(from);
+
+        // Link reply → most recent day-7 send (within 14d) via bleu_comms.recipient_hash.
+        let parentEventId = null, citizenId = null;
+        if (phoneHash) {
+          const fourteen = new Date(Date.now() - 14 * 864e5).toISOString();
+          const cm = await querySupabase('bleu_comms',
+            `?comm_type=eq.sms&template_version=eq.day7_outcome_v1&recipient_hash=eq.${phoneHash}&sent_at=gt.${fourteen}&select=id,citizen_id&order=sent_at.desc`, 1);
+          if (cm && cm.length) { parentEventId = cm[0].id; citizenId = cm[0].citizen_id; }
+        }
+
+        let result;
+        if (/^(stop|unsubscribe|cancel|end|quit)/i.test(bodyText)) result = 'opt_out';
+        else if (/^better/i.test(bodyText)) result = 'better';
+        else if (/^same/i.test(bodyText)) result = 'same';
+        else if (/^worse/i.test(bodyText)) result = 'worse';
+        else result = 'unparseable';
+
+        if (result === 'opt_out') logEvent({ event_type: 'sms_opted_out', payload: { phone_hash: phoneHash } });
+        logEvent({
+          user_id: citizenId, event_type: 'day7_outcome_response',
+          payload: { result, raw_text: bodyText, message_sid: messageSid, parent_event_id: parentEventId, sig_validated: sig.deferred ? false : sig.ok, sig_deferred: !!sig.deferred }
+        });
+
+        const replies = {
+          better: 'Thank you. Your check-in is recorded. Dr. Felicia will review. Reply STOP anytime.',
+          same:   'Thank you. Your check-in is recorded. Dr. Felicia will review. Reply STOP anytime.',
+          worse:  'Thank you. Your check-in is recorded. Dr. Felicia will review. Reply STOP anytime.',
+          opt_out: "You're opted out. We won't text again. You can still use bleu.live.",
+          unparseable: "Thanks. We couldn't read that as BETTER/SAME/WORSE — but it's logged."
+        };
+        okXml(replies[result]);
+      } catch (e) {
+        console.error('sms/inbound failed:', e.message);
+        okXml(null);   // always 200 to Twilio — a 5xx triggers retries
+      }
+    })(); });
     return;
   }
 
