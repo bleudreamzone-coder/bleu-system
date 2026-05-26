@@ -1239,6 +1239,61 @@ async function logDecision({ session_id, user_id, decision_type, inputs, outputs
   }
 }
 
+// ═══ TRUST PACKET (Mission 6 — canonical guidance-route record) ═══
+// Schema: _meta/schemas/trust_packet_v1.md. buildTrustPacket is a pure
+// validator/constructor — it THROWS on malformed input (callers that want a
+// guaranteed-valid packet handle the error). logTrustPacket is the never-throws
+// wrapper that builds + writes to bleu_events (event_type='trust_packet').
+// NOT retrofitted onto any route yet — available for future callers (6.4).
+const TRUST_PACKET_ENUMS = {
+  signal_detected:        ['sleep', 'stress', 'gut', 'energy', 'mood', 'pain', 'crisis', 'general'],
+  risk_level:             ['low', 'medium', 'high', 'crisis'],
+  evidence_tier:          ['established', 'emerging', 'experimental', 'narrative'],
+  claim_boundary:         ['education_only', 'wellness_support', 'refer_to_clinician'],
+  action_route:           ['calm', 'learn', 'protocol', 'product', 'practitioner', 'track', 'escalate'],
+  commerce_gate_state:    ['green', 'yellow', 'red', 'black'],
+  outcome_check_scheduled:['none', 'day_3', 'day_7', 'day_30']
+};
+function buildTrustPacket(args) {
+  args = args || {};
+  const packet = {};
+  for (const field of Object.keys(TRUST_PACKET_ENUMS)) {
+    const v = args[field];
+    if (v === undefined || v === null) throw new Error(`buildTrustPacket: missing required field '${field}'`);
+    if (!TRUST_PACKET_ENUMS[field].includes(v)) {
+      throw new Error(`buildTrustPacket: '${field}' must be one of [${TRUST_PACKET_ENUMS[field].join(', ')}], got '${v}'`);
+    }
+    packet[field] = v;
+  }
+  const flags = args.safety_flags === undefined ? [] : args.safety_flags;
+  if (!Array.isArray(flags) || !flags.every(f => typeof f === 'string')) {
+    throw new Error("buildTrustPacket: 'safety_flags' must be an array of strings");
+  }
+  packet.safety_flags = flags;
+  if (typeof args.reviewer_version !== 'string' || !args.reviewer_version) {
+    throw new Error("buildTrustPacket: 'reviewer_version' must be a non-empty string");
+  }
+  packet.reviewer_version = args.reviewer_version;
+  packet.timestamp = args.timestamp || new Date().toISOString();   // ISO 8601
+  return packet;
+}
+async function logTrustPacket(args) {
+  try {
+    const packet = buildTrustPacket(args);
+    await querySupabase('bleu_events', '', 0, 'POST', {
+      session_id: (args && args.session_id) || null,
+      user_id:    (args && args.user_id) || null,
+      event_type: 'trust_packet',
+      mode:       (args && args.mode) || null,
+      payload:    packet
+    });
+    return packet;
+  } catch (e) {
+    console.error('[TRUST_PACKET_FAIL]', JSON.stringify({ err: e.message, ts: Date.now() }));
+    return null;
+  }
+}
+
 // ═══ COMMS HELPER (Mission 7.3) ═══
 // Sends one transactional email via Resend and logs it to bleu_comms. Like the
 // audit helpers, it NEVER throws — a send/log failure must not break the caller
