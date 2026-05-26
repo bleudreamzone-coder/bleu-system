@@ -710,14 +710,64 @@
   };
 
   // -------------------------------------------------------------------
-  // AUTH — Google, Apple, email
+  // AUTH — Google, Apple, email (magic-link)
   // -------------------------------------------------------------------
+  // Mission 7.5: passwordless magic-link is wired but INERT until AUTH_LIVE is
+  // flipped (after manual end-to-end smoke). Until then 'email' keeps its prior
+  // behavior. This is the canonical magic-link UI + verify handler — the old
+  // index.html inline copy was removed so only ONE verify-on-load runs (a second
+  // POST would 401 after the token is consumed).
+  var AUTH_LIVE = false;   // ← flip true after manual magic-link smoke
+
   window.authProvider = function(provider){
     if (provider === 'google')   { window.location.href = '/auth/google'; return; }
     if (provider === 'apple')    { window.location.href = '/auth/apple'; return; }
-    if (provider === 'email')    { window.location.href = '/auth/email'; return; }
+    if (provider === 'email')    {
+      if (AUTH_LIVE) { window.requestMagicLink(); return; }
+      window.location.href = '/auth/email'; return;
+    }
     console.warn('[bleu/prod] unknown auth provider:', provider);
   };
+
+  // Opens a minimal sign-in modal → POST /api/auth/magic-link. No enumeration:
+  // identical confirmation regardless of whether the email is registered.
+  window.requestMagicLink = function(){
+    if (document.getElementById('bleu-signin-overlay')) return;
+    var ov = document.createElement('div');
+    ov.id = 'bleu-signin-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;';
+    ov.innerHTML =
+      '<div style="background:#fff;color:#1a1a1a;max-width:360px;width:90%;padding:24px;border-radius:14px;font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;">'
+      + '<h3 style="margin:0 0 8px;font-size:18px;">Sign in to BLEU</h3>'
+      + '<p style="margin:0 0 16px;color:#555;font-size:14px;">We’ll email you a secure sign-in link.</p>'
+      + '<input id="bleu-signin-email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #ccc;border-radius:8px;font-size:15px;margin-bottom:12px;">'
+      + '<button id="bleu-signin-send" style="width:100%;padding:11px;border:0;border-radius:8px;background:#C9A84C;color:#1a1a1a;font-weight:600;font-size:15px;cursor:pointer;">Email me a sign-in link</button>'
+      + '<button id="bleu-signin-close" style="width:100%;padding:8px;margin-top:8px;border:0;background:none;color:#888;font-size:13px;cursor:pointer;">Cancel</button>'
+      + '<p id="bleu-signin-msg" style="margin:12px 0 0;font-size:13px;color:#2D8A7A;display:none;"></p></div>';
+    document.body.appendChild(ov);
+    var close = function(){ ov.remove(); };
+    ov.addEventListener('click', function(e){ if (e.target === ov) close(); });
+    document.getElementById('bleu-signin-close').addEventListener('click', close);
+    document.getElementById('bleu-signin-send').addEventListener('click', function(){
+      var email = (document.getElementById('bleu-signin-email').value || '').trim();
+      var msg = document.getElementById('bleu-signin-msg');
+      fetch('/api/auth/magic-link', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email }) })
+        .finally(function(){ msg.style.display = 'block'; msg.textContent = 'If that email exists in our system, a sign-in link is on the way.'; });
+    });
+  };
+
+  // Verify-on-load: ?verify=<token> → POST /api/auth/verify. Token never logged.
+  window.addEventListener('load', function(){
+    if (!AUTH_LIVE) return;
+    var token = new URLSearchParams(window.location.search).get('verify');
+    if (!token) return;
+    fetch('/api/auth/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: token }) })
+      .then(function(r){
+        history.replaceState({}, document.title, location.pathname);
+        if (r.status === 200) { location.assign('/?signed_in=1'); }
+        else { console.warn('[bleu/prod] sign-in link expired or already used'); }
+      }).catch(function(){});
+  });
 
   // -------------------------------------------------------------------
   // CITY — Local sea passport context
