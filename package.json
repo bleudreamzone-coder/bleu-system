@@ -4,7 +4,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test:browser": "playwright test tests/browser/"
+    "test:browser": "playwright test tests/browser/",
+    "test:logic": "node tests/integration/server-logic.smoke.js",
+    "test:webhook-smoke": "node tests/integration/stripe-webhook.smoke.js"
   },
   "engines": {
     "node": ">=18"
