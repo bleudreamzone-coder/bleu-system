@@ -1144,7 +1144,13 @@ async function querySupabase(table, query, limit, method, body) {
   } else {
     const sep = query && query.startsWith('?') ? '' : '?';
     url = `${SUPABASE_URL}/rest/v1/${table}${sep}${query}`;
-    if (limit) {
+    if (method === 'PATCH' || method === 'PUT' || method === 'DELETE') {
+      // Return the affected rows so callers can tell a filtered write that
+      // MATCHED from one that missed (e.g. magic-link atomic consume). Without
+      // this, PostgREST replies 204 empty and we'd return `true` for both —
+      // making every verify 401 even after consuming the token.
+      headers['Prefer'] = 'return=representation';
+    } else if (limit) {
       headers['Range'] = `0-${limit - 1}`;
       headers['Prefer'] = 'count=exact';
     }
@@ -1179,6 +1185,17 @@ function hashEmail(email) {
     .createHash('sha256')
     .update(String(email).trim().toLowerCase())
     .digest('hex');
+}
+
+// TD-010 privacy for phone numbers (Mission 6.X SMS outcomes). Normalize to
+// digits-only before hashing so "+1 (504) 555-1212" and "15045551212" collide
+// to the same hash — lets us correlate an inbound reply to its outbound send
+// without ever storing the plaintext number in bleu_comms/bleu_events.
+function hashPhone(phone) {
+  if (!phone) return null;
+  const digits = String(phone).replace(/\D/g, '');
+  if (!digits) return null;
+  return require('crypto').createHash('sha256').update(digits).digest('hex');
 }
 
 async function logEvent({ session_id, user_id, event_type, sea, mode, payload }) {
@@ -1226,6 +1243,295 @@ async function logDecision({ session_id, user_id, decision_type, inputs, outputs
   } catch (e) {
     console.error('[LOG_DECISION_FAIL]', JSON.stringify({ decision_type, err: e.message, ts: Date.now() }));
   }
+}
+
+// ═══ TRUST PACKET (Mission 6 — canonical guidance-route record) ═══
+// Schema: _meta/schemas/trust_packet_v1.md. buildTrustPacket is a pure
+// validator/constructor — it THROWS on malformed input (callers that want a
+// guaranteed-valid packet handle the error). logTrustPacket is the never-throws
+// wrapper that builds + writes to bleu_events (event_type='trust_packet').
+// NOT retrofitted onto any route yet — available for future callers (6.4).
+const TRUST_PACKET_ENUMS = {
+  signal_detected:        ['sleep', 'stress', 'gut', 'energy', 'mood', 'pain', 'crisis', 'general'],
+  risk_level:             ['low', 'medium', 'high', 'crisis'],
+  evidence_tier:          ['established', 'emerging', 'experimental', 'narrative'],
+  claim_boundary:         ['education_only', 'wellness_support', 'refer_to_clinician'],
+  action_route:           ['calm', 'learn', 'protocol', 'product', 'practitioner', 'track', 'escalate'],
+  commerce_gate_state:    ['green', 'yellow', 'red', 'black'],
+  outcome_check_scheduled:['none', 'day_3', 'day_7', 'day_30']
+};
+function buildTrustPacket(args) {
+  args = args || {};
+  const packet = {};
+  for (const field of Object.keys(TRUST_PACKET_ENUMS)) {
+    const v = args[field];
+    if (v === undefined || v === null) throw new Error(`buildTrustPacket: missing required field '${field}'`);
+    if (!TRUST_PACKET_ENUMS[field].includes(v)) {
+      throw new Error(`buildTrustPacket: '${field}' must be one of [${TRUST_PACKET_ENUMS[field].join(', ')}], got '${v}'`);
+    }
+    packet[field] = v;
+  }
+  const flags = args.safety_flags === undefined ? [] : args.safety_flags;
+  if (!Array.isArray(flags) || !flags.every(f => typeof f === 'string')) {
+    throw new Error("buildTrustPacket: 'safety_flags' must be an array of strings");
+  }
+  packet.safety_flags = flags;
+  if (typeof args.reviewer_version !== 'string' || !args.reviewer_version) {
+    throw new Error("buildTrustPacket: 'reviewer_version' must be a non-empty string");
+  }
+  packet.reviewer_version = args.reviewer_version;
+  packet.timestamp = args.timestamp || new Date().toISOString();   // ISO 8601
+  return packet;
+}
+async function logTrustPacket(args) {
+  try {
+    const packet = buildTrustPacket(args);
+    await querySupabase('bleu_events', '', 0, 'POST', {
+      session_id: (args && args.session_id) || null,
+      user_id:    (args && args.user_id) || null,
+      event_type: 'trust_packet',
+      mode:       (args && args.mode) || null,
+      payload:    packet
+    });
+    return packet;
+  } catch (e) {
+    console.error('[TRUST_PACKET_FAIL]', JSON.stringify({ err: e.message, ts: Date.now() }));
+    return null;
+  }
+}
+
+// ═══ COMMS HELPER (Mission 7.3) ═══
+// Sends one transactional email via Resend and logs it to bleu_comms. Like the
+// audit helpers, it NEVER throws — a send/log failure must not break the caller
+// (the Stripe webhook must still return 200). All writes go through the
+// service-role querySupabase.
+//
+// Fail-safe contract: if RESEND_API_KEY is unset (key not yet pasted into the
+// Render env), it does NOT attempt a send — it records a status='deferred' row
+// and returns { ok:false, deferred:true }. That makes the whole feature inert
+// and observable until the Captain provisions the key, with no code change.
+//
+// TD-010: `to` is hashed into recipient_hash before storage; the plaintext
+// address is only handed to Resend in-memory, never persisted.
+//
+// Returns: { ok, deferred?, skipped?, message_id?, error? }
+async function sendEmail({ to, subject, html, text, template_version, citizen_id }) {
+  if (!to) return { ok: false, skipped: true, error: 'no recipient' };
+
+  const recipient_hash = hashEmail(to);
+  const base = {
+    citizen_id: citizen_id || null,
+    recipient_hash,
+    comm_type: 'email',
+    template_version: template_version || null,
+    subject: subject || null,
+    body: html || text || null
+  };
+
+  // No key → deferred. Record intent, do not send.
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('[sendEmail] RESEND_API_KEY unset — deferring email (template:', template_version, ')');
+    try {
+      await querySupabase('bleu_comms', '', 0, 'POST', {
+        ...base,
+        status: 'deferred',
+        error_message: 'RESEND_API_KEY not configured',
+        created_at: new Date().toISOString()
+      });
+    } catch (e) { console.error('[sendEmail] deferred log failed:', e.message); }
+    return { ok: false, deferred: true };
+  }
+
+  try {
+    const { Resend } = require('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const { data, error } = await resend.emails.send({
+      from: 'BLEU <hello@bleu.live>',
+      to,
+      subject,
+      html,
+      ...(text ? { text } : {})
+    });
+
+    if (error) {
+      await querySupabase('bleu_comms', '', 0, 'POST', {
+        ...base, status: 'failed', error_message: String(error.message || error), created_at: new Date().toISOString()
+      });
+      logEvent({ user_id: citizen_id || null, event_type: 'email_failed', payload: { template_version, recipient_hash, error: String(error.message || error) } });
+      return { ok: false, error: String(error.message || error) };
+    }
+
+    const message_id = data && data.id ? data.id : null;
+    await querySupabase('bleu_comms', '', 0, 'POST', {
+      ...base, resend_message_id: message_id, status: 'sent', sent_at: new Date().toISOString(), created_at: new Date().toISOString()
+    });
+    logEvent({ user_id: citizen_id || null, event_type: 'email_sent', payload: { template_version, recipient_hash, resend_message_id: message_id } });
+    return { ok: true, message_id };
+  } catch (e) {
+    console.error('[sendEmail] send threw:', e.message);
+    try {
+      await querySupabase('bleu_comms', '', 0, 'POST', {
+        ...base, status: 'failed', error_message: e.message, created_at: new Date().toISOString()
+      });
+    } catch (_) {}
+    return { ok: false, error: e.message };
+  }
+}
+
+// ═══ AUTH HELPERS (Mission 7.4 — magic-link passwordless) ═══
+// Raw-http server: there is no Express middleware layer. The "session
+// middleware" is getSessionCitizen(req), a never-throws helper each route
+// calls to resolve req's signed cookie → bleu_citizens row (or null).
+//
+// Deferred-when-no-secret fail-safe (same spirit as sendEmail): if
+// SESSION_SECRET is unset we mint an ephemeral process-lifetime secret so the
+// flow still works in dev — but sessions reset on every restart and this is
+// logged loudly. Set SESSION_SECRET in Render before relying on persistence.
+let _ephemeralSessionSecret = null;
+function sessionSecret() {
+  if (process.env.SESSION_SECRET) return process.env.SESSION_SECRET;
+  if (!_ephemeralSessionSecret) {
+    _ephemeralSessionSecret = require('crypto').randomBytes(32).toString('hex');
+    console.warn('[auth] SESSION_SECRET unset — using ephemeral secret. Sessions will reset on restart (deferred mode).');
+  }
+  return _ephemeralSessionSecret;
+}
+
+// Cookie value = base64url(payload) + "." + base64url(HMAC-SHA256). Stateless
+// and tamper-evident: any edit to the payload invalidates the signature.
+function signSession(payload) {
+  const crypto = require('crypto');
+  const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const sig = crypto.createHmac('sha256', sessionSecret()).update(body).digest('base64url');
+  return `${body}.${sig}`;
+}
+function verifySession(value) {
+  if (!value || value.indexOf('.') < 1) return null;
+  const crypto = require('crypto');
+  const [body, sig] = value.split('.');
+  const expected = crypto.createHmac('sha256', sessionSecret()).update(body).digest('base64url');
+  const a = Buffer.from(sig), b = Buffer.from(expected);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
+  try {
+    const obj = JSON.parse(Buffer.from(body, 'base64url').toString());
+    if (obj.exp && Date.now() > obj.exp) return null;   // expired
+    return obj;
+  } catch { return null; }
+}
+
+function parseCookies(req) {
+  const out = {};
+  const h = req.headers && req.headers.cookie;
+  if (!h) return out;
+  h.split(';').forEach(part => {
+    const i = part.indexOf('=');
+    if (i > 0) out[part.slice(0, i).trim()] = decodeURIComponent(part.slice(i + 1).trim());
+  });
+  return out;
+}
+
+// Session "middleware" for the raw-http dispatcher. Never throws → caller gets
+// null on any failure and continues as anonymous.
+async function getSessionCitizen(req) {
+  try {
+    const sess = verifySession(parseCookies(req).bleu_session);
+    if (!sess || !sess.cid) return null;
+    const rows = await querySupabase('bleu_citizens', `?id=eq.${encodeURIComponent(sess.cid)}&select=*`, 1);
+    return (rows && rows.length) ? rows[0] : null;
+  } catch (e) { return null; }
+}
+
+// In-memory rate limit: 3 magic-link requests per email_hash per 10 min.
+// Chosen over a DB-backed counter to keep the request path zero-query on the
+// hot path; tradeoff is it resets on restart and is per-instance (acceptable
+// for abuse-throttling at current single-instance scale). Documented for 7.4
+// Soul-Gate — revisit if we go multi-instance.
+const _magicLinkRate = new Map();
+function magicLinkRateOk(emailHash) {
+  const now = Date.now(), windowMs = 10 * 60 * 1000, max = 3;
+  const hits = (_magicLinkRate.get(emailHash) || []).filter(t => now - t < windowMs);
+  if (hits.length >= max) { _magicLinkRate.set(emailHash, hits); return false; }
+  hits.push(now);
+  _magicLinkRate.set(emailHash, hits);
+  return true;
+}
+
+// ═══ DAY-7 OUTCOME CAPTURE (Mission 6.X) ═══
+// Phone source note: bleu_citizens has NO phone column — phone lives plaintext
+// in user_coherence, keyed by session_id (same key bleu_citizens carries). So
+// we resolve a Citizen's phone by joining on session_id. Citizens with no
+// session_id or no user_coherence phone are skipped (never texted) — the safe
+// deferred default. Long-term fix: capture phone_hash on bleu_citizens at
+// signup. Documented for 6.X Soul-Gate.
+async function resolveCitizenPhone(citizen) {
+  if (!citizen || !citizen.session_id) return null;
+  const rows = await querySupabase(
+    'user_coherence',
+    `?session_id=eq.${encodeURIComponent(citizen.session_id)}&phone=not.is.null&select=phone&order=created_at.desc`,
+    1
+  );
+  return (rows && rows.length) ? rows[0].phone : null;
+}
+
+// Selects the day-7 cohort (first_seen_at in the [now-7d-12h, now-7d] window),
+// dedupes against prior sends, honors opt-out, sends the outcome SMS, and logs
+// to bleu_comms + bleu_events. Per-citizen try/catch — one failure never aborts
+// the run. Returns a counts summary. Sends live SMS only when invoked with a
+// configured Twilio account (cron-triggered); never auto-runs.
+const DAY7_OUTCOME_BODY = "Hi from BLEU. It's been 7 days since you started your protocol. Reply BETTER, SAME, or WORSE so Dr. Felicia can review your trajectory. Reply STOP to opt out.";
+async function scheduleDay7OutcomeChecks() {
+  const out = { sent: 0, already_sent: 0, no_phone: 0, opted_out: 0, errors: [] };
+  if (!SUPABASE_URL || !SUPABASE_KEY) { out.error = 'Supabase not configured'; return out; }
+  if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) { out.error = 'Twilio not configured'; return out; }
+
+  const upper = new Date(Date.now() - 7 * 864e5).toISOString();
+  const lower = new Date(Date.now() - 7 * 864e5 - 12 * 36e5).toISOString();
+  const citizens = await querySupabase(
+    'bleu_citizens',
+    `?first_seen_at=gte.${lower}&first_seen_at=lte.${upper}&select=id,session_id,first_seen_at`,
+    500
+  );
+  if (!Array.isArray(citizens) || !citizens.length) return out;
+
+  for (const c of citizens) {
+    try {
+      const dup = await querySupabase('bleu_events', `?event_type=eq.day7_outcome_sent&user_id=eq.${encodeURIComponent(c.id)}&select=id`, 1);
+      if (dup && dup.length) { out.already_sent++; continue; }
+
+      const phone = await resolveCitizenPhone(c);
+      if (!phone) { out.no_phone++; continue; }
+      const phoneHash = hashPhone(phone);
+
+      const opt = await querySupabase('bleu_events', `?event_type=eq.sms_opted_out&payload->>phone_hash=eq.${phoneHash}&select=id`, 1);
+      if (opt && opt.length) { out.opted_out++; continue; }
+
+      const tw = await sendSMS(phone, DAY7_OUTCOME_BODY);
+      const sid = tw && tw.sid ? tw.sid : null;
+      await querySupabase('bleu_comms', '', 0, 'POST', {
+        citizen_id: c.id, recipient_hash: phoneHash, comm_type: 'sms',
+        template_version: 'day7_outcome_v1', body: DAY7_OUTCOME_BODY,
+        twilio_sid: sid, status: 'sent', sent_at: new Date().toISOString(), created_at: new Date().toISOString()
+      });
+      logEvent({ user_id: c.id, event_type: 'day7_outcome_sent', payload: { template_version: 'day7_outcome_v1', recipient_hash: phoneHash } });
+      out.sent++;
+    } catch (e) { out.errors.push({ citizen_id: c.id, error: String(e.message || e) }); }
+  }
+  return out;
+}
+
+// Twilio request authenticity: HMAC-SHA1 over (full URL + POST params sorted by
+// key, concatenated), base64, compared constant-time to X-Twilio-Signature.
+// Returns { ok, deferred }. deferred=true when TWILIO_AUTH unset (cannot verify
+// → caller decides to accept-and-mark per the 6.X deferred contract).
+function twilioSignatureValid(req, params, fullUrl) {
+  if (!TWILIO_AUTH) return { ok: false, deferred: true };
+  const crypto = require('crypto');
+  const data = Object.keys(params).sort().reduce((s, k) => s + k + params[k], fullUrl);
+  const expected = crypto.createHmac('sha1', TWILIO_AUTH).update(Buffer.from(data, 'utf-8')).digest('base64');
+  const provided = String(req.headers['x-twilio-signature'] || '');
+  const a = Buffer.from(provided), b = Buffer.from(expected);
+  const ok = a.length === b.length && crypto.timingSafeEqual(a, b);
+  return { ok, deferred: false };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -3173,6 +3479,100 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ─── Mission 6.X — Day-7 outcome cron. Separate endpoint from reorder
+  // reminders (distinct cadence/cohort) but reuses REORDER_CRON_SECRET + the
+  // same Bearer + timingSafeEqual auth. Suggested schedule: daily 10:00 America/Chicago.
+  if (pn === '/api/send-day7-outcomes' && req.method === 'POST') {
+    (async () => {
+      try {
+        if (!REORDER_CRON_SECRET) {
+          console.error('[day7-cron] CRITICAL: REORDER_CRON_SECRET not set — refusing to process');
+          return json(res, 500, { error: 'REORDER_CRON_SECRET not configured' });
+        }
+        const authHeader = String(req.headers.authorization || '');
+        const presented = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+        let authOk = false;
+        try {
+          const crypto = require('crypto');
+          const a = Buffer.from(presented), b = Buffer.from(REORDER_CRON_SECRET);
+          authOk = a.length === b.length && crypto.timingSafeEqual(a, b);
+        } catch { authOk = false; }
+        if (!authOk) {
+          const ip = req.headers['x-forwarded-for'] || (req.socket && req.socket.remoteAddress) || '?';
+          console.warn(`[day7-cron] unauthorized attempt from ${ip}`);
+          return json(res, 401, { error: 'Unauthorized' });
+        }
+        const result = await scheduleDay7OutcomeChecks();
+        return json(res, 200, result);
+      } catch (e) { return json(res, 500, { error: 'send-day7-outcomes failed', detail: String(e.message || e) }); }
+    })();
+    return;
+  }
+
+  // ─── Mission 6.X — Inbound SMS (day-7 outcome replies + opt-out). Signature-
+  // validated. NOTE: distinct from the existing /twilio-reply (reorder YES/no,
+  // unauthenticated). Only ONE can be the Twilio messaging webhook URL — see
+  // report; consolidation is a Soul-Gate decision.
+  if (pn === '/api/sms/inbound' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { (async () => {
+      const okXml = (msg) => { res.writeHead(200, { 'Content-Type': 'text/xml' });
+        res.end(`<?xml version="1.0" encoding="UTF-8"?><Response>${msg ? `<Message>${msg}</Message>` : ''}</Response>`); };
+      try {
+        const usp = new URLSearchParams(b);
+        const params = {}; for (const [k, v] of usp) params[k] = v;
+
+        const proto = (req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim();
+        const fullUrl = `${proto}://${req.headers.host}${req.url}`;
+        const sig = twilioSignatureValid(req, params, fullUrl);
+        if (!sig.deferred && !sig.ok) {
+          console.warn('[sms/inbound] invalid Twilio signature — rejecting');
+          res.writeHead(403); res.end('forbidden'); return;   // 403 (not 5xx): Twilio won't retry a forged request
+        }
+
+        const from = params.From || '';
+        const bodyText = (params.Body || '').trim();
+        const messageSid = params.MessageSid || null;
+        const phoneHash = hashPhone(from);
+
+        // Link reply → most recent day-7 send (within 14d) via bleu_comms.recipient_hash.
+        let parentEventId = null, citizenId = null;
+        if (phoneHash) {
+          const fourteen = new Date(Date.now() - 14 * 864e5).toISOString();
+          const cm = await querySupabase('bleu_comms',
+            `?comm_type=eq.sms&template_version=eq.day7_outcome_v1&recipient_hash=eq.${phoneHash}&sent_at=gt.${fourteen}&select=id,citizen_id&order=sent_at.desc`, 1);
+          if (cm && cm.length) { parentEventId = cm[0].id; citizenId = cm[0].citizen_id; }
+        }
+
+        let result;
+        if (/^(stop|unsubscribe|cancel|end|quit)/i.test(bodyText)) result = 'opt_out';
+        else if (/^better/i.test(bodyText)) result = 'better';
+        else if (/^same/i.test(bodyText)) result = 'same';
+        else if (/^worse/i.test(bodyText)) result = 'worse';
+        else result = 'unparseable';
+
+        if (result === 'opt_out') logEvent({ event_type: 'sms_opted_out', payload: { phone_hash: phoneHash } });
+        logEvent({
+          user_id: citizenId, event_type: 'day7_outcome_response',
+          payload: { result, raw_text: bodyText, message_sid: messageSid, parent_event_id: parentEventId, sig_validated: sig.deferred ? false : sig.ok, sig_deferred: !!sig.deferred }
+        });
+
+        const replies = {
+          better: 'Thank you. Your check-in is recorded. Dr. Felicia will review. Reply STOP anytime.',
+          same:   'Thank you. Your check-in is recorded. Dr. Felicia will review. Reply STOP anytime.',
+          worse:  'Thank you. Your check-in is recorded. Dr. Felicia will review. Reply STOP anytime.',
+          opt_out: "You're opted out. We won't text again. You can still use bleu.live.",
+          unparseable: "Thanks. We couldn't read that as BETTER/SAME/WORSE — but it's logged."
+        };
+        okXml(replies[result]);
+      } catch (e) {
+        console.error('sms/inbound failed:', e.message);
+        okXml(null);   // always 200 to Twilio — a 5xx triggers retries
+      }
+    })(); });
+    return;
+  }
+
   // ═══════ TWILIO INBOUND REPLY WEBHOOK ═══════
   if (pn === '/twilio-reply' && req.method === 'POST') {
     let b=''; req.on('data',c=>b+=c);
@@ -3277,6 +3677,105 @@ const server = http.createServer((req, res) => {
         if (!sr.ok) { console.error('Stripe create-session:', sr.status, data?.error?.message); return json(res, 502, { error: data?.error?.message || 'Stripe error' }); }
         return json(res, 200, { url: data.url });
       } catch(e) { console.error('create-session failed:', e.message); return json(res, 500, { error: e.message }); }
+    })(); });
+    return;
+  }
+
+  // ─── Mission 7.4 — Magic-link request. Always 200 (no account enumeration).
+  if (pn === '/api/auth/magic-link' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { (async () => {
+      try {
+        const p = JSON.parse(b || '{}');
+        const email = String(p.email || '').trim();
+        if (!email || email.indexOf('@') < 1) return json(res, 200, { ok: true });
+        const emailHash = hashEmail(email);
+
+        if (!magicLinkRateOk(emailHash)) {
+          logEvent({ event_type: 'magic_link_rate_limited', payload: { email_hash: emailHash } });
+          return json(res, 200, { ok: true });   // same response — don't reveal throttling
+        }
+
+        const token = require('crypto').randomBytes(32).toString('hex');
+        const now = new Date().toISOString();
+        await querySupabase('magic_links', '', 0, 'POST', {
+          email_hash: emailHash,
+          token,
+          expires_at: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+          ip_address: String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || null,
+          user_agent: req.headers['user-agent'] || null,
+          created_at: now
+        });
+
+        const proto = (req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim();
+        const link = `${proto}://${req.headers.host}/?verify=${token}`;
+        // Fire-and-forget. With no RESEND_API_KEY this defers (no live send) per Wave 1 contract.
+        sendEmail({
+          to: email,
+          template_version: 'magic_link_v1',
+          subject: 'Your BLEU sign-in link',
+          html: `<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a;line-height:1.6;">`
+              + `<p>Here's your sign-in link for BLEU.</p>`
+              + `<p style="margin:28px 0;"><a href="${link}" style="background:#C9A84C;color:#1a1a1a;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;display:inline-block;">Sign in to BLEU</a></p>`
+              + `<p style="font-size:13px;color:#666;">If the button doesn't work, paste this into your browser:<br><span style="word-break:break-all;">${link}</span></p>`
+              + `<p>This link expires in 15 minutes. If you didn't request this, you can ignore this email.</p>`
+              + `<p style="margin-top:32px;">— BLEU</p>`
+              + `<hr style="border:none;border-top:1px solid #e5e5e5;margin:28px 0;">`
+              + `<p style="font-size:12px;color:#888;">BLEU protocols are reviewed by Dr. Felicia Stoler, DCN, credentialed protocol reviewer. This message supports your wellness journey and is not medical advice; it does not diagnose, treat, or replace care from your own clinician.</p></div>`,
+          text: `Here's your sign-in link for BLEU.\n\nSign in: ${link}\n\nThis link expires in 15 minutes. If you didn't request this, you can ignore this email.\n\n— BLEU`
+        }).catch(e => console.error('[magic-link email]', e.message));
+
+        logEvent({ event_type: 'magic_link_requested', payload: { email_hash: emailHash } });
+        return json(res, 200, { ok: true });
+      } catch (e) { console.error('magic-link failed:', e.message); return json(res, 200, { ok: true }); }
+    })(); });
+    return;
+  }
+
+  // ─── Mission 7.4 — Verify token, mint session cookie, find/create Citizen.
+  if (pn === '/api/auth/verify' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { (async () => {
+      try {
+        const p = JSON.parse(b || '{}');
+        const token = String(p.token || '').trim();
+        if (!token) return json(res, 400, { ok: false, error: 'missing token' });
+
+        const now = new Date().toISOString();
+        // Atomic single-use consume: the filter (unconsumed AND unexpired) means
+        // a concurrent or replayed verify matches zero rows. PostgREST returns
+        // the updated representation, so a non-empty array == we won the consume.
+        const consumed = await querySupabase(
+          'magic_links',
+          `?token=eq.${encodeURIComponent(token)}&consumed_at=is.null&expires_at=gt.${now}`,
+          0, 'PATCH', { consumed_at: now }
+        );
+        if (!Array.isArray(consumed) || !consumed.length) {
+          logEvent({ event_type: 'magic_link_verify_failed' });
+          return json(res, 401, { ok: false, error: 'invalid or expired link' });
+        }
+
+        const emailHash = consumed[0].email_hash;
+        let cid = consumed[0].citizen_id || null;
+        if (!cid) {
+          let cz = await querySupabase('bleu_citizens', `?email_hash=eq.${encodeURIComponent(emailHash)}&select=id`, 1);
+          if (cz && cz.length) { cid = cz[0].id; }
+          else {
+            await querySupabase('bleu_citizens', '', 0, 'POST', { email_hash: emailHash, first_seen_at: now });
+            cz = await querySupabase('bleu_citizens', `?email_hash=eq.${encodeURIComponent(emailHash)}&select=id`, 1);
+            cid = (cz && cz.length) ? cz[0].id : null;
+          }
+        }
+
+        const maxAgeSec = 30 * 24 * 60 * 60;
+        const cookie = signSession({ cid, eh: emailHash, exp: Date.now() + maxAgeSec * 1000 });
+        const secure = (req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim() === 'https';
+        res.setHeader('Set-Cookie',
+          `bleu_session=${cookie}; HttpOnly; ${secure ? 'Secure; ' : ''}SameSite=Lax; Path=/; Max-Age=${maxAgeSec}`);
+
+        logEvent({ user_id: cid, event_type: 'magic_link_verified', payload: { email_hash: emailHash } });
+        return json(res, 200, { ok: true, citizen: { id: cid } });
+      } catch (e) { console.error('verify failed:', e.message); return json(res, 500, { ok: false, error: e.message }); }
     })(); });
     return;
   }
@@ -3497,6 +3996,22 @@ function handleStripeWebhook(req, res) {
       } catch (e) {
         console.error('[purchase_completed audit failed]', e.message);
       }
+
+      // TODO (Mission 7.3 — Soul-Gate before enabling): send order confirmation.
+      // Wiring point is HERE — inside checkout.session.completed, AFTER the
+      // idempotency check (so a re-delivered event cannot re-send) and AFTER
+      // protocol activation + purchase_completed audit. NOTE: this handler keys
+      // on checkout.session.completed, NOT payment_intent.succeeded.
+      // Before un-commenting, resolve citizen_id (this handler updates profiles,
+      // not bleu_citizens — see report) and confirm `email` is present.
+      //
+      // sendEmail({
+      //   to: email,
+      //   citizen_id: <resolved bleu_citizens.id>,
+      //   template_version: 'order_confirmation_v1',
+      //   subject: 'Your BLEU protocol is on the way',
+      //   html: renderTemplate('order_confirmation_v1', { protocol_name: protocol }),
+      // }).catch(e => console.error('[order confirmation email]', e.message));
     }
 
     json(res, 200, { received: true });
