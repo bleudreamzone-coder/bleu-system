@@ -1741,6 +1741,49 @@ function ecsiqMode(message) {
   return 'use';
 }
 
+// Central commerce-restraint gate. Commerce follows care: never on the
+// first assistant response, never during crisis/support states, and never
+// without a stated health concern in the current or recent user history.
+const COMMERCE_CONCERN_RE = /\b(sleep|insomnia|can'?t sleep|cannot sleep|anxiety|anxious|panic|stress|overwhelm|pain|inflammation|ache|fatigue|tired|energy|focus|adhd|gut|digest|bloat|constipation|ibs|prediabetes|diabetes|blood sugar|cholesterol|blood pressure|weight|menopause|hormone|cortisol|magnesium|theanine|ashwagandha|omega|vitamin|supplement|protocol|nutrition|diet|exercise|movement|therapy|therapist|doctor|practitioner|medication|prescription|pharmacy|cannabis|cbd|thc)\b/i;
+
+function normalizeChatTurns(turns) {
+  return Array.isArray(turns) ? turns.filter(t => t && typeof t === 'object') : [];
+}
+
+function hasPriorAssistantTurn(p, priorMessages) {
+  return normalizeChatTurns(priorMessages).concat(normalizeChatTurns(p && p.history)).some(m => m.role === 'assistant');
+}
+
+function hasRecentCommerceConcern(currentText, priorMessages, p) {
+  const userTexts = [];
+  if (currentText) userTexts.push(String(currentText));
+  for (const m of normalizeChatTurns(priorMessages).concat(normalizeChatTurns(p && p.history)).slice(-12)) {
+    if (m.role === 'user' && m.content) userTexts.push(String(m.content));
+  }
+  return userTexts.some(t => COMMERCE_CONCERN_RE.test(t));
+}
+
+function getCommerceGate(p, crisis, opts = {}) {
+  const firstResponse = !hasPriorAssistantTurn(p || {}, opts.priorMessages);
+  const supportTier = !!opts.supportTier;
+  const crisisTier = !!(crisis && crisis.detected);
+  const hasConcern = hasRecentCommerceConcern((p && p.message) || '', opts.priorMessages, p);
+  let reason = 'allowed';
+  if (crisisTier) reason = 'crisis';
+  else if (supportTier) reason = 'support_tier';
+  else if (firstResponse) reason = 'first_response';
+  else if (!hasConcern) reason = 'no_stated_concern';
+  return { allowed: reason === 'allowed', reason, firstResponse, supportTier, hasConcern };
+}
+
+function appendCommerceGatePrompt(sys, commerceGate) {
+  if (!commerceGate) return sys;
+  if (!commerceGate.allowed) {
+    return sys + `\n\nCOMMERCE RESTRAINT GATE — ${commerceGate.reason}: Do not mention products, affiliate links, subscriptions, marketplace offers, carts, buy lines, or pricing in this response. Give care, stabilization, behavioral/lifestyle guidance, and one clinically appropriate next step. Commerce can only follow after the relationship and concern are established.`;
+  }
+  return sys + `\n\nCOMMERCE RESTRAINT GATE — allowed: If a product, provider, affiliate, subscription, or cart is clinically relevant, frame it as optional support after behavioral/lifestyle guidance. Do not pressure. Disclose commercial relationships plainly.`;
+}
+
 // runCommerceSteward — shared by /api/chat and /api/chat/stream. Runs the Five
 // Brains after the prose stream, writes a plain `data:{cards}` SSE line before
 // the stream ends, and logs memoryBrain events + the commerce_steward decision.
@@ -1758,6 +1801,9 @@ async function runCommerceSteward(res, p, crisis) {
       safety_status: 'clear'             // Phase 5 fills this
     };
     const intent = intentBrain(ctx);
+    const commerceGate = p._commerceGate || getCommerceGate(p, crisis, {
+      supportTier: checkEmotionalIntent(p.session || p.user_id || null, p.message || '')
+    });
 
     // ── Open Window screening (Phase 3 Layer 29, Mission 4.2) — runs on EVERY
     // evaluation BEFORE any early return, so crisis/unstable states are audited
@@ -1786,9 +1832,17 @@ async function runCommerceSteward(res, p, crisis) {
       }
     }
 
-    // Crisis never sees commerce — open-window crisis (incl. detectCrisis bridge
-    // + suicidality regex), intentBrain crisis, or the deterministic flag.
-    if (owGate.state === 'crisis' || intent.intent === 'crisis' || (crisis && crisis.detected)) return;
+    // Crisis and commerce-restraint blocks never see commerce cards. Log suppressed
+    // decisions so we can audit first-turn and follow-up behavior without rendering.
+    if (owGate.state === 'crisis' || intent.intent === 'crisis' || (crisis && crisis.detected) || !commerceGate.allowed) {
+      logDecision({
+        session_id: ctx.session_id,
+        decision_type: 'commerce_steward',
+        inputs:  { intent: intent.intent, sea: ctx.sea, mode: ctx.mode, agent: 'commerce_steward', layer: 'phase_2', commerce_gate: commerceGate.reason },
+        outputs: { cards_count: 0, suppressed: true, no_match: false }
+      });
+      return;
+    }
 
     // ECSIQ / CannaIQ sea — guidance only, no cards. Classify Use vs Reset.
     if (ctx.sea === 'ecsiq' || ctx.mode === 'ecsiq' || ctx.mode === 'cannaiq') {
@@ -1835,7 +1889,7 @@ async function runCommerceSteward(res, p, crisis) {
     logDecision({
       session_id: ctx.session_id,
       decision_type: 'commerce_steward',
-      inputs:  { intent: intent.intent, sea: ctx.sea, mode: ctx.mode, agent: 'commerce_steward', layer: 'phase_2' },
+      inputs:  { intent: intent.intent, sea: ctx.sea, mode: ctx.mode, agent: 'commerce_steward', layer: 'phase_2', commerce_gate: commerceGate.reason },
       outputs: { cards_count: cards.length, suppressed: cart.max_cards === 0, no_match: products.no_match }
     });
   } catch (e) {
@@ -2591,6 +2645,9 @@ const server = http.createServer((req, res) => {
         if (recallBlock) {
           sys += `\n\nRELEVANT CONTEXT FROM THIS USER'S PRIOR CONVERSATIONS — real things this user said to you or you said to them before. Use only if clearly relevant to the current question. Do NOT paraphrase as if they just said it now:\n${recallBlock}`;
         }
+        const commerceGate = getCommerceGate(p, crisis, { priorMessages: shortTerm, supportTier: suppressCommerce });
+        p._commerceGate = commerceGate;
+        sys = appendCommerceGatePrompt(sys, commerceGate);
 
         const messages = [{ role: 'system', content: sys }];
         if (shortTerm.length) {
@@ -2738,6 +2795,9 @@ const server = http.createServer((req, res) => {
         if (recallBlock) {
           sys += `\n\nRELEVANT CONTEXT FROM THIS USER'S PRIOR CONVERSATIONS — real things this user said to you or you said to them before. Use only if clearly relevant to the current question. Do NOT paraphrase as if they just said it now:\n${recallBlock}`;
         }
+        const commerceGate = getCommerceGate(p, crisis, { priorMessages: shortTerm, supportTier: suppressCommerce });
+        p._commerceGate = commerceGate;
+        sys = appendCommerceGatePrompt(sys, commerceGate);
 
         const msgs = [{ role: 'system', content: sys }];
         if (shortTerm.length) {
@@ -4103,6 +4163,27 @@ if (process.env.BLEU_TEST_OW === '1') {
     console.log(`Test ${c[0]} [expect ${c[2]}] → state=${g.state} r=${g.receptivity.toFixed(2)} s=${g.stability.toFixed(2)} max_cards=${g.max_cards} ${pass ? '✓' : '✗ FAIL'}`);
   }
   console.log(allPass ? '\n✅ ALL OPEN-WINDOW TESTS PASS' : '\n❌ OPEN-WINDOW TESTS FAILED');
+  process.exit(allPass ? 0 : 1);
+}
+
+// ─── Commerce-restraint gate test harness ─────────────────────────────────
+// Run with: BLEU_TEST_COMMERCE_GATE=1 node server.js   (exits before listen)
+if (process.env.BLEU_TEST_COMMERCE_GATE === '1') {
+  const cases = [
+    ['first concern blocks', { message: 'I cannot sleep' }, null, {}, 'first_response'],
+    ['follow-up carries concern', { message: 'about three weeks' }, null, { priorMessages: [{ role: 'user', content: 'I cannot sleep' }, { role: 'assistant', content: 'How long has this been happening?' }] }, 'allowed'],
+    ['no concern blocks', { message: 'tell me what to do' }, null, { priorMessages: [{ role: 'assistant', content: 'I am here.' }] }, 'no_stated_concern'],
+    ['crisis blocks', { message: 'I want to die' }, { detected: true }, { priorMessages: [{ role: 'assistant', content: 'I am here.' }] }, 'crisis'],
+    ['support tier blocks', { message: 'magnesium for sleep' }, null, { priorMessages: [{ role: 'assistant', content: 'I am here.' }], supportTier: true }, 'support_tier'],
+  ];
+  let allPass = true;
+  for (const [name, req, crisis, opts, want] of cases) {
+    const gate = getCommerceGate(req, crisis, opts);
+    const pass = gate.reason === want;
+    if (!pass) allPass = false;
+    console.log(`${name}: reason=${gate.reason} allowed=${gate.allowed} ${pass ? '✓' : '✗ FAIL expected '+want}`);
+  }
+  console.log(allPass ? '\n✅ ALL COMMERCE-GATE TESTS PASS' : '\n❌ COMMERCE-GATE TESTS FAILED');
   process.exit(allPass ? 0 : 1);
 }
 

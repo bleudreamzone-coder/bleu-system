@@ -1237,6 +1237,42 @@ function generateBundleCart(paths: string[]): string {
     `Weave the Amazon or Fullscript link inline with the mechanism — inside the sentence where the product is named, not as a separate closing line.\n`;
 }
 
+const COMMERCE_CONCERN_RE = /\b(sleep|insomnia|can'?t sleep|cannot sleep|anxiety|anxious|panic|stress|overwhelm|pain|inflammation|ache|fatigue|tired|energy|focus|adhd|gut|digest|bloat|constipation|ibs|prediabetes|diabetes|blood sugar|cholesterol|blood pressure|weight|menopause|hormone|cortisol|magnesium|theanine|ashwagandha|omega|vitamin|supplement|protocol|nutrition|diet|exercise|movement|therapy|therapist|doctor|practitioner|medication|prescription|pharmacy|cannabis|cbd|thc)\b/i;
+
+function hasPriorAssistantTurn(messages: any[]): boolean {
+  return Array.isArray(messages) && messages.some((m: any) => m?.role === "assistant");
+}
+
+function hasRecentCommerceConcern(messages: any[], userText: string): boolean {
+  const texts: string[] = [];
+  if (userText) texts.push(userText);
+  if (Array.isArray(messages)) {
+    messages.slice(-12).forEach((m: any) => {
+      if (m?.role === "user" && m?.content) texts.push(String(m.content));
+    });
+  }
+  return texts.some((t) => COMMERCE_CONCERN_RE.test(t));
+}
+
+function getCommerceGate(messages: any[], userText: string, isCrisis: boolean, safetyTier: number): { allowed: boolean; reason: string; firstResponse: boolean; supportTier: boolean; hasConcern: boolean } {
+  const firstResponse = !hasPriorAssistantTurn(messages);
+  const supportTier = !isCrisis && safetyTier > 0;
+  const hasConcern = hasRecentCommerceConcern(messages, userText || "");
+  let reason = "allowed";
+  if (isCrisis) reason = "crisis";
+  else if (supportTier) reason = "support_tier";
+  else if (firstResponse) reason = "first_response";
+  else if (!hasConcern) reason = "no_stated_concern";
+  return { allowed: reason === "allowed", reason, firstResponse, supportTier, hasConcern };
+}
+
+function appendCommerceGatePrompt(prompt: string, commerceGate: { allowed: boolean; reason: string }): string {
+  if (!commerceGate.allowed) {
+    return prompt + `\n\nCOMMERCE RESTRAINT GATE — ${commerceGate.reason}: Do not mention products, affiliate links, subscriptions, marketplace offers, carts, buy lines, or pricing in this response. Give care, stabilization, behavioral/lifestyle guidance, and one clinically appropriate next step. Commerce can only follow after the relationship and concern are established.`;
+  }
+  return prompt + `\n\nCOMMERCE RESTRAINT GATE — allowed: If a product, provider, affiliate, subscription, or cart is clinically relevant, frame it as optional support after behavioral/lifestyle guidance. Do not pressure. Disclose commercial relationships plainly.`;
+}
+
 function classifyPathway(msg: string, biomarkers: any): string[] {
   const t = msg.toLowerCase();
   const paths: string[] = [];
@@ -2127,6 +2163,7 @@ serve(async (req) => {
     const hopeKeywords = ["nothing ever gets better","completely empty","no point anymore","nothing matters","empty inside","can't keep going","don't want to be here","nothing left","so done","give up on life","no reason","pointless","never get better","can't do this anymore"];
     const keywordCrisis = hopeKeywords.some(w => userText.toLowerCase().includes(w));
     const isCrisis = safetyResult.risk_tier >= 3 || keywordCrisis;
+    const commerceGate = getCommerceGate(messages, userText, isCrisis, safetyResult.risk_tier || 0);
 
     // ═══ ASSEMBLE CONTEXT ═══
     let contextData = "";
@@ -2159,7 +2196,7 @@ serve(async (req) => {
     }
 
     // ═══ MARKETPLACE PRACTITIONERS — Dr. Felicia vetted, bookable ═══
-    if (marketplacePractitioners && marketplacePractitioners.length > 0) {
+    if (commerceGate.allowed && marketplacePractitioners && marketplacePractitioners.length > 0) {
       contextData += "\n\n[BLEU MARKETPLACE — DR. FELICIA REVIEWED & APPROVED (these are bookable)]:\n";
       marketplacePractitioners.forEach((p:any, i:number) => {
         contextData += `${i+1}. ${p.practitioner_name} — ${p.primary_specialty}`;
@@ -2172,7 +2209,7 @@ serve(async (req) => {
       contextData += "MARKETPLACE INSTRUCTION: Surface these vetted providers first when relevant. They are bookable directly through BLEU. Do NOT invent pricing or details not shown above.\n";
     }
 
-    if (products?.length > 0) {
+    if (commerceGate.allowed && products?.length > 0) {
       contextData += "\n\n[VERIFIED PRODUCTS]:\n";
       products.forEach((p:any, i:number) => {
         contextData += `${i+1}. ${p.name}`;
@@ -2183,10 +2220,10 @@ serve(async (req) => {
       });
     }
 
-    const affiliateLayer = isCrisis ? "" : detectAffiliates(userText);
-    const prescriptionLayer = generatePrescription(userText, currentBiomarkers, isCrisis);
+    const affiliateLayer = commerceGate.allowed ? detectAffiliates(userText) : "";
+    const prescriptionLayer = commerceGate.allowed ? generatePrescription(userText, currentBiomarkers, isCrisis) : "";
     const pathways = classifyPathway(userText, currentBiomarkers);
-    const bundleLayer = isCrisis ? "" : generateBundleCart(pathways);
+    const bundleLayer = commerceGate.allowed ? generateBundleCart(pathways) : "";
     const modeLayer = isCrisis ? CRISIS_OVERRIDE_PROMPT : (MODE_LAYERS[mode as string] || MODE_LAYERS["alvai"]);
     const therapyLayer = (!isCrisis && therapy_mode) ? `\nTherapy modality: ${therapy_mode.toUpperCase()}.` : "";
     const recoveryLayer = (!isCrisis && recovery_mode) ? `\nRecovery mode: ${recovery_mode.toUpperCase()}.` : "";
@@ -2224,8 +2261,11 @@ serve(async (req) => {
 
     const VOICE_SEAL = `You are Alvai. Not a rules engine. Not a system running instructions. A voice.\nEvery rule above exists so you can forget it and speak directly.\nThe person in front of you is real. Speak to them. One thought. One question. Done.`;
 
-    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, bundleLayer, affiliateLayer, passportLayer, trustLayer, simulationLayer, VOICE_SEAL]
-      .filter(Boolean).join("\n\n");
+    const systemPrompt = appendCommerceGatePrompt(
+      [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, bundleLayer, affiliateLayer, passportLayer, trustLayer, simulationLayer, VOICE_SEAL]
+        .filter(Boolean).join("\n\n"),
+      commerceGate
+    );
 
     // ═══ AGENT 19 FINAL ROUTING — Crisis override, then 70/25/5 tier ═══
     const finalRouting = isCrisis
