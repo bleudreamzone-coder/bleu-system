@@ -6,13 +6,17 @@
     "start": "node server.js",
     "test:browser": "playwright test tests/browser/",
     "test:logic": "node tests/integration/server-logic.smoke.js",
-    "test:webhook-smoke": "node tests/integration/stripe-webhook.smoke.js"
+    "test:webhook-smoke": "node tests/integration/stripe-webhook.smoke.js",
+    "test": "npm run test:schemas",
+    "test:schemas": "node tests/schemas/signal-object-v1.1.test.js"
   },
   "engines": {
     "node": ">=18"
   },
   "devDependencies": {
-    "@playwright/test": "^1.60.0"
+    "@playwright/test": "^1.60.0",
+    "ajv": "^8.12.0",
+    "ajv-formats": "^3.0.1"
   },
   "dependencies": {
     "resend": "^6.12.4"
