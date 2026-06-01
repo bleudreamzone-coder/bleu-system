@@ -1293,6 +1293,32 @@ function classifyPathway(msg: string, biomarkers: any): string[] {
   return paths;
 }
 
+// Conservative timing/framing gate for every commerce surface in this function.
+const COMMERCE_CONCERN_RE = /\b(sleep|insomnia|can'?t sleep|cannot sleep|wake|anxiety|anxious|stress|overwhelm|panic|pain|inflamm|joint|arthritis|fatigue|tired|exhausted|energy|brain fog|focus|gut|digest|bloat|constipat|ibs|diarrhea|mood|depress|sad|blood sugar|insulin|weight|glp-?1|semaglutide|ozempic|metabolic|cholesterol|heart|blood pressure|immune|sick|hormone|thyroid|menopause|supplement|vitamin|magnesium|melatonin|omega|probiotic|berberine|protocol|product|cart|amazon|fullscript|stripe|subscribe|subscription|therapy|therapist|counselor)\b/i;
+
+function hasPriorAssistantTurn(messages: any[]): boolean {
+  return (messages || []).some((m:any) => m?.role === "assistant" && String(m.content || "").trim().length > 0);
+}
+
+function getCommerceGate(messages: any[], userText: string, isCrisis: boolean, safetyTier: number): { allowed: boolean; reason: string; firstResponse: boolean; supportTier: boolean; hasConcern: boolean } {
+  const firstResponse = !hasPriorAssistantTurn(messages);
+  const supportTier = !isCrisis && safetyTier > 0;
+  const hasConcern = COMMERCE_CONCERN_RE.test(userText || "");
+  let reason = "";
+  if (isCrisis) reason = "crisis_tier";
+  else if (supportTier) reason = "support_tier";
+  else if (firstResponse) reason = "first_response";
+  else if (!hasConcern) reason = "no_stated_concern";
+  return { allowed: !reason, reason, firstResponse, supportTier, hasConcern };
+}
+
+function getCommerceGateLayer(gate: { allowed: boolean; reason: string }): string {
+  if (gate.allowed) {
+    return `COMMERCE RESTRAINT: Commerce may surface only as an optional, secondary support directly tied to the user's stated concern. Never make a product, affiliate link, subscription, marketplace booking, or checkout the primary content.`;
+  }
+  return `COMMERCE RESTRAINT ACTIVE (${gate.reason}): Do not include products, supplements, affiliate links, stores, prices, buy lines, subscriptions, marketplace booking offers, Amazon, Fullscript, Stripe, LabCorp, BetterHelp offers, or checkout language in this response. Listen first, answer clinically, and ask one useful follow-up question.`;
+}
+
 const PRESCRIPTION_MAP: Record<string, {
   rx: string; dose: string; timing: string; mechanism: string;
   duration: string; link: string; label: string; price: string;
@@ -2127,6 +2153,7 @@ serve(async (req) => {
     const hopeKeywords = ["nothing ever gets better","completely empty","no point anymore","nothing matters","empty inside","can't keep going","don't want to be here","nothing left","so done","give up on life","no reason","pointless","never get better","can't do this anymore"];
     const keywordCrisis = hopeKeywords.some(w => userText.toLowerCase().includes(w));
     const isCrisis = safetyResult.risk_tier >= 3 || keywordCrisis;
+    const commerceGate = getCommerceGate(messages, userText, isCrisis, safetyResult.risk_tier || 0);
 
     // ═══ ASSEMBLE CONTEXT ═══
     let contextData = "";
@@ -2159,7 +2186,7 @@ serve(async (req) => {
     }
 
     // ═══ MARKETPLACE PRACTITIONERS — Dr. Felicia vetted, bookable ═══
-    if (marketplacePractitioners && marketplacePractitioners.length > 0) {
+    if (commerceGate.allowed && marketplacePractitioners && marketplacePractitioners.length > 0) {
       contextData += "\n\n[BLEU MARKETPLACE — DR. FELICIA REVIEWED & APPROVED (these are bookable)]:\n";
       marketplacePractitioners.forEach((p:any, i:number) => {
         contextData += `${i+1}. ${p.practitioner_name} — ${p.primary_specialty}`;
@@ -2172,7 +2199,7 @@ serve(async (req) => {
       contextData += "MARKETPLACE INSTRUCTION: Surface these vetted providers first when relevant. They are bookable directly through BLEU. Do NOT invent pricing or details not shown above.\n";
     }
 
-    if (products?.length > 0) {
+    if (commerceGate.allowed && products?.length > 0) {
       contextData += "\n\n[VERIFIED PRODUCTS]:\n";
       products.forEach((p:any, i:number) => {
         contextData += `${i+1}. ${p.name}`;
@@ -2183,10 +2210,11 @@ serve(async (req) => {
       });
     }
 
-    const affiliateLayer = isCrisis ? "" : detectAffiliates(userText);
-    const prescriptionLayer = generatePrescription(userText, currentBiomarkers, isCrisis);
-    const pathways = classifyPathway(userText, currentBiomarkers);
-    const bundleLayer = isCrisis ? "" : generateBundleCart(pathways);
+    const affiliateLayer = commerceGate.allowed ? detectAffiliates(userText) : "";
+    const prescriptionLayer = commerceGate.allowed ? generatePrescription(userText, currentBiomarkers, isCrisis) : "";
+    const pathways = commerceGate.allowed ? classifyPathway(userText, currentBiomarkers) : [];
+    const bundleLayer = commerceGate.allowed ? generateBundleCart(pathways) : "";
+    const commerceGateLayer = getCommerceGateLayer(commerceGate);
     const modeLayer = isCrisis ? CRISIS_OVERRIDE_PROMPT : (MODE_LAYERS[mode as string] || MODE_LAYERS["alvai"]);
     const therapyLayer = (!isCrisis && therapy_mode) ? `\nTherapy modality: ${therapy_mode.toUpperCase()}.` : "";
     const recoveryLayer = (!isCrisis && recovery_mode) ? `\nRecovery mode: ${recovery_mode.toUpperCase()}.` : "";
@@ -2224,7 +2252,7 @@ serve(async (req) => {
 
     const VOICE_SEAL = `You are Alvai. Not a rules engine. Not a system running instructions. A voice.\nEvery rule above exists so you can forget it and speak directly.\nThe person in front of you is real. Speak to them. One thought. One question. Done.`;
 
-    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, contextData, prescriptionLayer, bundleLayer, affiliateLayer, passportLayer, trustLayer, simulationLayer, VOICE_SEAL]
+    const systemPrompt = [ALVAI_SYSTEM_PROMPT, modeLayer, therapyLayer, recoveryLayer, commerceGateLayer, contextData, prescriptionLayer, bundleLayer, affiliateLayer, passportLayer, trustLayer, simulationLayer, VOICE_SEAL]
       .filter(Boolean).join("\n\n");
 
     // ═══ AGENT 19 FINAL ROUTING — Crisis override, then 70/25/5 tier ═══
