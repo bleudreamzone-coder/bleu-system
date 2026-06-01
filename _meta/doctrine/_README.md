@@ -2,7 +2,7 @@
 
 The locked thesis and its inheritance. Read [[source_document_v1]] first — everything else descends from it. Files marked **CONFIDENTIAL** are Fleur de BleuDream LLC trade secrets; do not distribute.
 
-**Last reviewed:** 2026-05-29
+**Last reviewed:** 2026-05-31
 
 | File | One-line |
 |---|---|
@@ -21,3 +21,4 @@ The locked thesis and its inheritance. Read [[source_document_v1]] first — eve
 
 ## Related operational docs (pre-existing, not part of this thesis set)
 - `refusal_list.md`, `decision_matrix.md`, `crisis_word_list_audit.md`, `cyp450_wiring_audit.md`, `voice_integrity_test.md`, `finishing_queue.md`, `weekly_scorecard.sql`
+- | [bleu_care_commerce_policy_v1.md](bleu_care_commerce_policy_v1.md) | Care-routing & commerce policy — free guidance first, optional commerce last, treatment referrals gated behind legal review. |
