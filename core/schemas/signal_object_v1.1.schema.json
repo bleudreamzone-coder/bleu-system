@@ -1,0 +1,466 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/signal-object-v1.1.json",
+  "title": "Signal Object v1.1",
+  "description": "Shadow-mode Signal Object schema for BLEU Prism/decompose output. Not wired to production paths.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "signal_id",
+    "created_at",
+    "source",
+    "primary_intent",
+    "sub_intents",
+    "six_bands",
+    "variant_blend",
+    "risk_level",
+    "risk_flags",
+    "needed_info",
+    "commerce_intent",
+    "evidence_need",
+    "three_voices",
+    "six_pressures",
+    "confidence"
+  ],
+  "properties": {
+    "signal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "primary_intent": {
+      "type": "string",
+      "enum": [
+        "sleep",
+        "stress",
+        "anxiety",
+        "gut",
+        "longevity",
+        "body_composition",
+        "supplement",
+        "medication_safety",
+        "crisis",
+        "caregiver",
+        "commerce",
+        "general_wellness",
+        "unknown"
+      ]
+    },
+    "sub_intents": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "six_bands": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "life_stage",
+        "clinical_complexity",
+        "financial_capacity",
+        "readiness",
+        "trust",
+        "dose_tolerance"
+      ],
+      "properties": {
+        "life_stage": {
+          "$ref": "#/$defs/life_stage_band"
+        },
+        "clinical_complexity": {
+          "$ref": "#/$defs/clinical_complexity_band"
+        },
+        "financial_capacity": {
+          "$ref": "#/$defs/financial_capacity_band"
+        },
+        "readiness": {
+          "$ref": "#/$defs/readiness_band"
+        },
+        "trust": {
+          "$ref": "#/$defs/trust_band"
+        },
+        "dose_tolerance": {
+          "$ref": "#/$defs/dose_tolerance_band"
+        }
+      }
+    },
+    "variant_blend": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/variant_weight"
+      }
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "green",
+        "yellow",
+        "orange",
+        "red",
+        "crisis"
+      ]
+    },
+    "risk_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "needed_info": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "commerce_intent": {
+      "type": "string",
+      "enum": [
+        "none",
+        "soft",
+        "explicit",
+        "blocked"
+      ]
+    },
+    "evidence_need": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "clinical_review_required"
+      ]
+    },
+    "three_voices": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "user_voice",
+        "clinical_voice",
+        "infrastructure_voice"
+      ],
+      "properties": {
+        "user_voice": {
+          "$ref": "#/$defs/voice_assessment"
+        },
+        "clinical_voice": {
+          "$ref": "#/$defs/voice_assessment"
+        },
+        "infrastructure_voice": {
+          "$ref": "#/$defs/voice_assessment"
+        }
+      }
+    },
+    "six_pressures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "information",
+        "nervous_system",
+        "time",
+        "competitive",
+        "legal",
+        "philosophical"
+      ],
+      "properties": {
+        "information": {
+          "$ref": "#/$defs/pressure_assessment"
+        },
+        "nervous_system": {
+          "$ref": "#/$defs/pressure_assessment"
+        },
+        "time": {
+          "$ref": "#/$defs/pressure_assessment"
+        },
+        "competitive": {
+          "$ref": "#/$defs/pressure_assessment"
+        },
+        "legal": {
+          "$ref": "#/$defs/pressure_assessment"
+        },
+        "philosophical": {
+          "$ref": "#/$defs/pressure_assessment"
+        }
+      }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "$defs": {
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "band_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "confidence"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "life_stage_band": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/band_base"
+        },
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "L1_emerging_adult",
+                "L2_establishing_adult",
+                "L3_midlife_pivot",
+                "L4_active_aging",
+                "L5_late_aging"
+              ]
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "clinical_complexity_band": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/band_base"
+        },
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "C0_asymptomatic_wellness_curious",
+                "C1_functional_concerns",
+                "C2_single_stable_condition",
+                "C3_multiple_complex_conditions",
+                "C4_acute_unstable"
+              ]
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "financial_capacity_band": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/band_base"
+        },
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "F1_constrained",
+                "F2_practical",
+                "F3_comfortable",
+                "F4_premium",
+                "unknown"
+              ]
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "readiness_band": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/band_base"
+        },
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "R0_pre_contemplation",
+                "R1_exploring",
+                "R2_considering",
+                "R3_preparing",
+                "R4_acting",
+                "R5_maintaining"
+              ]
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "trust_band": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/band_base"
+        },
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "T0_hostile",
+                "T1_cautious",
+                "T2_default",
+                "T3_engaged",
+                "T4_advocate"
+              ]
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "dose_tolerance_band": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/band_base"
+        },
+        {
+          "properties": {
+            "value": {
+              "enum": [
+                "D1_micro",
+                "D2_low",
+                "D3_medium",
+                "D4_high",
+                "D5_expert"
+              ]
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "variant_weight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "variant_id",
+        "label",
+        "probability"
+      ],
+      "properties": {
+        "variant_id": {
+          "type": "string",
+          "enum": [
+            "V1.1_sleep_compromised_professional",
+            "V1.2_perimenopause_navigator",
+            "V1.3_type_2_diabetes_pre_early",
+            "V1.4_anxiety_forward_young_adult",
+            "V1.5_longevity_curious_tech_worker",
+            "V1.6_gut_issue_sufferer",
+            "V1.7_post_cancer_wellness_rebuilder",
+            "V1.8_body_composition_focused",
+            "V1.9_chronic_pain_manager",
+            "V1.10_caregiver_burnout_adult",
+            "V1.11_supplement_confused",
+            "V2.1_business_traveler",
+            "V2.2_wedding_event_guest",
+            "V2.3_anxious_traveler",
+            "V2.4_older_guest",
+            "V2.5_tired_parent",
+            "V2.6_wellness_tourist",
+            "V3.1_night_shift_worker",
+            "V3.2_housekeeping_veteran",
+            "V3.3_service_worker_parent",
+            "V3.4_tipped_worker_on_edge",
+            "V3.5_hospitality_manager",
+            "V4.1_multi_med_older_adult",
+            "V4.2_pregnant_trying_to_conceive",
+            "V4.3_autoimmune_navigator",
+            "V4.4_mental_health_lifestyle",
+            "V4.5_clinician_referred",
+            "V5.1_institutional_buyer",
+            "V5.2_benefits_leader",
+            "V5.3_clinical_partner",
+            "V5.4_grant_funder",
+            "unknown_or_needs_info",
+            "crisis_active"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "voice_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "rationale"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "present",
+            "needs_attention",
+            "blocked"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "pressure_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "discipline"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "clear",
+            "watch",
+            "active",
+            "blocked"
+          ]
+        },
+        "discipline": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
