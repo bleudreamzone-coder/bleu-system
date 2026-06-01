@@ -3,9 +3,10 @@
 // with only a local STRIPE_WEBHOOK_SECRET; no Supabase/Resend, so DB no-ops.
 const crypto = require('crypto');
 const { spawn } = require('child_process');
+const path = require('path');
 const SECRET = 'whsec_smoke_local_test';
-const child = spawn('node', ['server.js'], {
-  cwd: '/workspaces/bleu-system',
+const child = spawn(process.execPath, ['server.js'], {
+  cwd: path.resolve(__dirname, '../..'),
   env: Object.assign({}, process.env, { STRIPE_WEBHOOK_SECRET: SECRET, PORT: '8080',
     SUPABASE_URL: '', SUPABASE_SERVICE_KEY: '', RESEND_API_KEY: '' }),
   stdio: ['ignore', 'pipe', 'pipe']

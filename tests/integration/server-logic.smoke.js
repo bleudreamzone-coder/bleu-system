@@ -1,5 +1,6 @@
 const fs = require('fs');
-const src = fs.readFileSync('/workspaces/bleu-system/server.js', 'utf8');
+const path = require('path');
+const src = fs.readFileSync(path.resolve(__dirname, '../../server.js'), 'utf8');
 process.env.SESSION_SECRET = 'smoke-secret-deterministic';
 
 function grab(re, label) { const m = src.match(re); if (!m) throw new Error('could not extract ' + label); return m[0]; }
