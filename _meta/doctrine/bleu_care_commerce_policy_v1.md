@@ -65,3 +65,15 @@ Every recommendation carries its evidence weight on the BLEU evidence ladder (**
 
 ## 8. The litmus test
 Before any monetizable item appears, ask: **"Would we still recommend this if it earned us nothing?"** If the paid item is leading the response, stop and re-order. If a recommendation is a *treatment or service* with a fee attached, it goes to legal review first.
+
+## 9. Disclosures & claims language
+BLEU does more than a single product, so it carries a **layered** disclosure set. The required layers and the principle each enforces are below. **Exact wording is set by counsel before launch** (see the legal-questions doc) — these are placeholders, not final legal text.
+
+| Layer | Applies to | Principle / placeholder |
+|---|---|---|
+| **General wellness** | All guidance and content | Educational / self-help; not medical advice; not a substitute for professional care; not intended to diagnose, treat, cure, or prevent. *(The Sleepio-style disclaimer; our direct analog.)* |
+| **Supplement claims (FDA/DSHEA)** | Any supplement suggestion | Standard FDA/DSHEA disclaimer ("these statements have not been evaluated by the FDA; not intended to diagnose, treat, cure, or prevent any disease"); no disease claims; "may help / some people find" framing only. |
+| **Affiliate disclosure (FTC)** | Any paid / affiliate link | Clear, conspicuous "we may earn a commission" at the point of the link. |
+| **Crisis / emergency** | Anywhere distress may surface | "BLEU is not an emergency or crisis service. If you are in danger or thinking about harming yourself, call or text 988, or call 911." |
+
+**Principle:** claims stay non-promissory and evidence-honest (see §5); the free, evidence-based option always leads; each disclosure appears where its surface does — the supplement disclaimer with the supplement, the affiliate line with the link, the crisis line wherever a distress path is possible. Final legal wording is confirmed by counsel before launch.
