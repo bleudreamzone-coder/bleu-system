@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/decision-object-v1.1.json",
+  "title": "Decision Object v1.1",
+  "description": "Shadow-mode Decision Object schema for BLEU decide() output. Encodes Seven Gates, 20 Refusals, LRAS, and authority routing without production wiring.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "created_at",
+    "surface",
+    "input_summary",
+    "gates",
+    "refusal_checks",
+    "lras",
+    "allowed_response",
+    "commerce_permission",
+    "outcome_schedule",
+    "authority",
+    "arbiter_priority_stack",
+    "final_action"
+  ],
+  "properties": {
+    "decision_id": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "surface": { "type": "string", "minLength": 1 },
+    "input_summary": { "type": "string", "minLength": 1 },
+    "gates": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        { "$ref": "#/$defs/crisis_gate" },
+        { "$ref": "#/$defs/medication_safety_gate" },
+        { "$ref": "#/$defs/evidence_gate" },
+        { "$ref": "#/$defs/claim_boundary_gate" },
+        { "$ref": "#/$defs/clinical_review_gate" },
+        { "$ref": "#/$defs/commerce_gate" },
+        { "$ref": "#/$defs/outcome_gate" }
+      ],
+      "items": false
+    },
+    "refusal_checks": {
+      "type": "array",
+      "minItems": 20,
+      "maxItems": 20,
+      "prefixItems": [
+        { "$ref": "#/$defs/refusal_1" },
+        { "$ref": "#/$defs/refusal_2" },
+        { "$ref": "#/$defs/refusal_3" },
+        { "$ref": "#/$defs/refusal_4" },
+        { "$ref": "#/$defs/refusal_5" },
+        { "$ref": "#/$defs/refusal_6" },
+        { "$ref": "#/$defs/refusal_7" },
+        { "$ref": "#/$defs/refusal_8" },
+        { "$ref": "#/$defs/refusal_9" },
+        { "$ref": "#/$defs/refusal_10" },
+        { "$ref": "#/$defs/refusal_11" },
+        { "$ref": "#/$defs/refusal_12" },
+        { "$ref": "#/$defs/refusal_13" },
+        { "$ref": "#/$defs/refusal_14" },
+        { "$ref": "#/$defs/refusal_15" },
+        { "$ref": "#/$defs/refusal_16" },
+        { "$ref": "#/$defs/refusal_17" },
+        { "$ref": "#/$defs/refusal_18" },
+        { "$ref": "#/$defs/refusal_19" },
+        { "$ref": "#/$defs/refusal_20" }
+      ],
+      "items": false
+    },
+    "lras": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formula", "benefit", "evidence", "safety_cost", "trust_cost", "reversibility", "followup_value", "score", "rationale"],
+      "properties": {
+        "formula": {
+          "type": "string",
+          "const": "benefit*evidence - (safety_cost + trust_cost)*(1 - reversibility) + followup_value"
+        },
+        "benefit": { "type": "number", "minimum": 0, "maximum": 1 },
+        "evidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "safety_cost": { "type": "number", "minimum": 0, "maximum": 1 },
+        "trust_cost": { "type": "number", "minimum": 0, "maximum": 1 },
+        "reversibility": { "type": "number", "minimum": 0, "maximum": 1 },
+        "followup_value": { "type": "number", "minimum": 0, "maximum": 1 },
+        "score": { "type": "number" },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "allowed_response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["response_class", "allowed_actions", "prohibited_actions", "rationale"],
+      "properties": {
+        "response_class": { "type": "string", "enum": ["crisis_routing", "education_only", "wellness_support", "commerce_allowed", "human_review", "defer"] },
+        "allowed_actions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "prohibited_actions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "commerce_permission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "rationale"],
+      "properties": {
+        "status": { "type": "string", "enum": ["allowed", "blocked", "needs_review"] },
+        "rationale": { "type": "string", "minLength": 1 },
+        "allowed_categories": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "outcome_schedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "cadence", "rationale"],
+      "properties": {
+        "status": { "type": "string", "enum": ["scheduled", "deferred", "not_applicable"] },
+        "cadence": { "type": "array", "items": { "type": "string", "enum": ["day_3", "day_7", "day_30", "none"] } },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tier", "decision_owner", "felicia_required", "rationale"],
+      "properties": {
+        "tier": { "type": "string", "enum": ["tier_1_bleu_decides", "tier_2_felicia_decides_bleu_recommends", "tier_3_felicia_decides_system_performs"] },
+        "decision_owner": { "type": "string", "enum": ["bleu", "dr_felicia", "captain_soul_gate", "system"] },
+        "felicia_required": { "type": "boolean" },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "arbiter_priority_stack": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "enum": ["crisis", "medication_safety", "evidence", "claim_boundary", "clinical_review", "commerce", "outcome", "captain_soul_gate", "dr_felicia"] }
+    },
+    "final_action": {
+      "type": "string",
+      "enum": ["allow", "block", "escalate", "revise", "defer"]
+    }
+  },
+  "$defs": {
+    "gate_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "status", "rationale"],
+      "properties": {
+        "gate": { "type": "string" },
+        "status": { "type": "string", "enum": ["pass", "passed", "blocked", "needs_review", "hard_stop", "reroute"] },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "crisis_gate": { "allOf": [{ "$ref": "#/$defs/gate_base" }, { "properties": { "gate": { "const": "crisis" } } }] },
+    "medication_safety_gate": { "allOf": [{ "$ref": "#/$defs/gate_base" }, { "properties": { "gate": { "const": "medication_safety" } } }] },
+    "evidence_gate": { "allOf": [{ "$ref": "#/$defs/gate_base" }, { "properties": { "gate": { "const": "evidence" } } }] },
+    "claim_boundary_gate": { "allOf": [{ "$ref": "#/$defs/gate_base" }, { "properties": { "gate": { "const": "claim_boundary" } } }] },
+    "clinical_review_gate": { "allOf": [{ "$ref": "#/$defs/gate_base" }, { "properties": { "gate": { "const": "clinical_review" } } }] },
+    "commerce_gate": { "allOf": [{ "$ref": "#/$defs/gate_base" }, { "properties": { "gate": { "const": "commerce" } } }] },
+    "outcome_gate": { "allOf": [{ "$ref": "#/$defs/gate_base" }, { "properties": { "gate": { "const": "outcome" } } }] },
+    "refusal_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["refusal_number", "status", "action"],
+      "properties": {
+        "refusal_number": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "status": { "type": "string", "enum": ["passed", "triggered", "not_applicable"] },
+        "action": { "type": "string", "minLength": 1 }
+      }
+    },
+    "refusal_1": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 1 } } }] },
+    "refusal_2": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 2 } } }] },
+    "refusal_3": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 3 } } }] },
+    "refusal_4": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 4 } } }] },
+    "refusal_5": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 5 } } }] },
+    "refusal_6": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 6 } } }] },
+    "refusal_7": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 7 } } }] },
+    "refusal_8": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 8 } } }] },
+    "refusal_9": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 9 } } }] },
+    "refusal_10": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 10 } } }] },
+    "refusal_11": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 11 } } }] },
+    "refusal_12": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 12 } } }] },
+    "refusal_13": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 13 } } }] },
+    "refusal_14": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 14 } } }] },
+    "refusal_15": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 15 } } }] },
+    "refusal_16": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 16 } } }] },
+    "refusal_17": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 17 } } }] },
+    "refusal_18": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 18 } } }] },
+    "refusal_19": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 19 } } }] },
+    "refusal_20": { "allOf": [{ "$ref": "#/$defs/refusal_base" }, { "properties": { "refusal_number": { "const": 20 } } }] }
+  }
+}
