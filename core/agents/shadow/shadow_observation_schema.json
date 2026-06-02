@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/shadow-observation-v1.json",
+  "title": "ShadowObservation",
+  "description": "Dormant-by-default parallel observation record for future shadow-first agent migration.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "observation_id",
+    "session_id",
+    "timestamp",
+    "candidate_agent_id",
+    "candidate_decision",
+    "candidate_trust_packet",
+    "live_response_hash",
+    "shadow_response_hash",
+    "parity_match",
+    "latency_ms",
+    "errors",
+    "td_010_compliance"
+  ],
+  "properties": {
+    "observation_id": { "type": "string", "format": "uuid" },
+    "session_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Hashed session identifier per TD-010 privacy rules."
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "candidate_agent_id": { "type": "string", "minLength": 1 },
+    "candidate_decision": {
+      "description": "Decision Object reference; optional/null until a candidate agent ships.",
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "minLength": 1 },
+        { "$ref": "https://bleu.live/schemas/decision-object-v1.1.json" }
+      ]
+    },
+    "candidate_trust_packet": {
+      "description": "Trust Packet reference; optional/null until a candidate agent ships.",
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "minLength": 1 },
+        { "$ref": "https://bleu.live/schemas/trust-packet-v1.1.json" }
+      ]
+    },
+    "live_response_hash": { "type": ["string", "null"] },
+    "shadow_response_hash": { "type": ["string", "null"] },
+    "parity_match": { "type": ["boolean", "null"] },
+    "latency_ms": { "type": "integer", "minimum": 0 },
+    "errors": { "type": "array", "items": { "type": "string" } },
+    "td_010_compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pii_hashed", "plaintext_email_stored", "plaintext_phone_stored"],
+      "properties": {
+        "pii_hashed": { "const": true },
+        "plaintext_email_stored": { "const": false },
+        "plaintext_phone_stored": { "const": false }
+      }
+    }
+  }
+}
