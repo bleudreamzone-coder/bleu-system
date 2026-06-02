@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/shadow-comparison-v1.0.json",
+  "title": "ShadowComparisonResult v1.0",
+  "description": "Hash-only comparison record for a production response and a dormant shadow agent response observed against the same Signal. Raw response text is never persisted.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "comparison_id",
+    "schema_version",
+    "signal_id",
+    "production_response_hash",
+    "production_word_count",
+    "shadow_response_hash",
+    "shadow_word_count",
+    "hashes_match",
+    "word_count_delta",
+    "agent_id",
+    "agent_tier",
+    "observation_window_id",
+    "observed_at",
+    "td_010_compliance"
+  ],
+  "properties": {
+    "comparison_id": { "type": "string", "format": "uuid" },
+    "schema_version": { "const": "1.0" },
+    "signal_id": { "type": "string", "format": "uuid" },
+    "production_response_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "production_word_count": { "type": "integer", "minimum": 0 },
+    "shadow_response_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "shadow_word_count": { "type": "integer", "minimum": 0 },
+    "hashes_match": { "type": "boolean" },
+    "word_count_delta": { "type": "integer" },
+    "agent_id": { "type": "string", "minLength": 3, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "agent_tier": {
+      "type": "string",
+      "enum": ["tier_1_captain", "tier_2_felicia", "tier_3_felicia_autonomous", "tier_infrastructure"]
+    },
+    "observation_window_id": { "type": "string", "minLength": 1 },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "td_010_compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pii_hashed", "plaintext_email_stored", "plaintext_phone_stored", "contains_raw_response_text"],
+      "properties": {
+        "pii_hashed": { "const": true },
+        "plaintext_email_stored": { "const": false },
+        "plaintext_phone_stored": { "const": false },
+        "contains_raw_response_text": { "const": false }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "hashes_match": { "const": true } },
+        "required": ["hashes_match"]
+      },
+      "then": {
+        "properties": { "word_count_delta": { "const": 0 } }
+      }
+    }
+  ]
+}

@@ -1,68 +1,87 @@
-# Shadow Runner Infrastructure
+# Shadow Agent Wiring
 
-PR Hotel adds the dormant shadow-observation layer for BLEU's future agent migration. It creates the safe place where a candidate agent can run beside the existing `server.js` path, record what it would have done, and compare that candidate path against the live production response without changing the citizen-facing response.
+This directory contains BLEU's dormant shadow infrastructure: the Shadow Runner observation source and the Shadow Agent Wiring subscription layer. The wiring scaffold lets future registered agents be observed beside production without changing a citizen-facing response.
+
+## Source anchors
+
+- `_meta/THE_BLEU_BIBLE.md` defines BLEU's mechanical primitives and the evidence discipline: classify the Signal, decide safely, record proof, then respond. Shadow comparison exists to support that proof layer before any candidate agent owns traffic.
+- `core/agents/shadow/shadow_runner.js` is the PR #15 observation source. It creates `ShadowObservation` records while staying dormant-by-default and swallowing internal errors with the `[SHADOW]` prefix.
+- `core/agents/_adapter/agent_interface.js` is the PR #14 adapter boundary for future agent implementations. Shadow wiring does not invoke real agents in this PR.
+- `core/schemas/shadow_comparison_v1.0.schema.json` defines the hash-only `ShadowComparisonResult` record stored by `createShadowWiring()`.
 
 ## Architecture
 
-Blueprint Section 11 calls for a **shadow-first migration**: agent paths must prove parity and safety before they are allowed to own production traffic. This directory implements only that observation scaffold:
+Shadow Agent Wiring is the subscription layer between a future agent registry and Shadow Runner observations:
 
-1. `createShadowRunner(config)` receives a future adapter registry.
-2. `observe(requestContext)` accepts a snapshot of a chat request/response boundary.
-3. When explicitly enabled and sampled, registered candidate agents can produce `ShadowObservation` records.
-4. `flush()` writes buffered records to stdout in development or to the future Supabase sink.
+1. A future agent registers through `createShadowWiring(config).registerShadowAgent()` with an `agentId`, `agentTier`, and optional `observationFilter`.
+2. Shadow Runner emits an observation window for the same Signal already handled by production.
+3. A future integration supplies the production response and shadow response to `observeAndCompare()`.
+4. Wiring hashes both responses, counts words, records whether the hashes match, and stores a schema-validated `ShadowComparisonResult`.
+5. Production behavior remains unchanged. The record is only later parity evidence.
 
-No live route imports this runner in PR Hotel. No real agent is registered here. The production response still flows exclusively through the existing `server.js` implementation until a later PR deliberately wires an observation hook.
+This PR does **not** register any actual agent, does **not** invoke a model, does **not** route through the dormant Model Router, and does **not** emit a real Trust Packet.
 
-## Dormant-by-default controls
+## Subscription model
 
-The shadow runner will **never auto-enable**. The safe defaults are:
+`registerShadowAgent({ agentId, agentTier, observationFilter })` validates each subscription and returns a generated `subscription_id` on success. The subscription list ships empty by default. `getActiveSubscriptions()` and `getSubscriptionCount()` expose the in-memory subscription state for future audit wiring and tests.
 
-- `SHADOW_RUNNER_ENABLED=false`
-- `SHADOW_RUNNER_SINK=stdout`
-- `SHADOW_RUNNER_SAMPLE_RATE=0.0`
+The optional `observationFilter` is reserved for future Shadow Runner windows, such as `variant_tags`, `gates_required`, or other observation predicates. The current scaffold records the filter but does not use it to alter production behavior.
 
-Production deployment requires Captain to manually set these in the Render dashboard after Dr. Felicia signs off on the first agent boundary. `SHADOW_RUNNER_SAMPLE_RATE` must be incremented manually from `0.0` upward.
+## Clinical agent gating
 
-## Activation sequence
+Clinical shadow agents are authority-gated at registration:
 
-Activation requires all of the following, in order:
+- `tier_2_felicia` requires `felicia_signoff_doc` in `createShadowWiring(config)`.
+- `tier_3_felicia_autonomous` requires `felicia_signoff_doc` in `createShadowWiring(config)`.
+- `tier_1_captain` and `tier_infrastructure` do not require clinical signoff for registration.
 
-1. **Dr. Felicia signoff** on the agent being shadowed (Tier 2).
-2. **Captain manual Render env var setting** for `SHADOW_RUNNER_ENABLED`, `SHADOW_RUNNER_SINK`, and `SHADOW_RUNNER_SAMPLE_RATE` (Tier 1).
-3. **Captain manual Supabase SQL migration application** using `supabase/migrations/2026-06-01-shadow-observations-table.sql`.
-4. **Captain manual sample-rate increment** from `0.0` upward after reviewing first observations.
-
-Dormant-by-default is the safety feature. The runner is not a launch switch.
-
-## Future registration example
-
-Pseudocode only; this PR does not export or register a real agent:
+Registration without required Felicia signoff resolves with:
 
 ```js
-const { freezeRegistry } = require('../_adapter');
-const { createShadowRunner } = require('./shadow_runner');
-
-const registry = freezeRegistry(); // Future PR replaces with signed candidate registry.
-const shadowRunner = createShadowRunner({ registry });
-
-await shadowRunner.observe({
-  sessionId: 'sha256:hashed-session-id',
-  userText: '[redacted or minimized request text]',
-  signal: null,
-  crisisTier: 'none',
-  commerceGate: { allowed: false },
-  liveResponseText: 'Existing server.js response text',
-});
+{ registered: false, subscription_id: null, reason: 'clinical_agent_requires_felicia_signoff' }
 ```
 
-Future agent PRs must emit Decision Object and Trust Packet references before shadow records are used for parity review.
+The method resolves instead of throwing so shadow infrastructure cannot break production. This enforces Decision Matrix Tier 2/3 authority before any clinical agent can be attached to a shadow observation stream.
 
-## Privacy and refusal boundary
+## Dormant-by-default activation sequence
 
-Shadow observations are implementation-detail records, not citizen-readable data. Session identifiers must be hashed per TD-010, and the schema requires:
+Activation is intentionally manual and ordered:
 
-- `pii_hashed: true`
-- `plaintext_email_stored: false`
-- `plaintext_phone_stored: false`
+1. Dr. Felicia signs clinical agent boundaries for the Tier 2/3 master list.
+2. Captain enables Shadow Runner in Render with `SHADOW_RUNNER_ENABLED=true`.
+3. Captain enables Shadow Wiring in Render with `SHADOW_WIRING_ENABLED=true`.
+4. Captain registers agents through later per-agent audit PRs.
+5. A future PR wires Trust Packet Logger consumption so shadow comparisons can become Counterfactual evidence.
 
-Refusal 18 applies: shadow infrastructure cannot break production. `observe()`, `flush()`, and `isEnabled()` swallow internal errors and log them with `[SHADOW]`.
+Safe default: `createShadowWiring({}).isEnabled()` returns `false` unless `process.env.SHADOW_WIRING_ENABLED === 'true'`.
+
+## Sinks
+
+`SHADOW_WIRING_SINKS` is a frozen array:
+
+```js
+['buffer', 'stdout', 'supabase']
+```
+
+The default sink is `buffer`. `stdout` logs a hash-only comparison envelope. `supabase` is scaffolded but requires an injected client; no table write is attempted without it.
+
+## TD-010 hash-only discipline
+
+Shadow comparison records contain only:
+
+- response hashes,
+- response word counts,
+- derived hash match status,
+- derived word count delta,
+- agent and observation identifiers,
+- TD-010 compliance constants.
+
+Raw production response text and raw shadow response text are never persisted in `shadow_comparison` records. `td_010_compliance.contains_raw_response_text` is schema-locked to `false`.
+
+## Test discovery note
+
+`tests/agents/shadow/wiring.test.js` ships with this PR but is **not** inserted into `package.json` `scripts.test:schemas` tonight. The future glob refactor PR will auto-discover it. Until that lands, verify this scaffold directly:
+
+```bash
+node tests/agents/shadow/wiring.test.js
+```
