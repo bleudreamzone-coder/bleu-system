@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/memory-query-v1.1.json",
+  "title": "MemoryQuery v1.1",
+  "description": "Shadow-mode retrieval query contract. Agents read memory through this object, never direct SQL.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["query_id", "session_id", "kinds", "tier", "max_records", "include_expired"],
+  "properties": {
+    "query_id": { "type": "string", "format": "uuid" },
+    "session_id": { "type": "string", "minLength": 1, "description": "Hashed session identifier per TD-010." },
+    "kinds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/memory_kind" }
+    },
+    "tier": { "$ref": "#/$defs/decision_matrix_tier" },
+    "max_records": { "type": "integer", "minimum": 1, "maximum": 50 },
+    "include_expired": { "type": "boolean", "default": false }
+  },
+  "$defs": {
+    "memory_kind": {
+      "type": "string",
+      "enum": ["episodic", "semantic", "preference", "decision_history", "counterfactual_link"]
+    },
+    "decision_matrix_tier": {
+      "type": "string",
+      "enum": ["tier_1_captain", "tier_2_felicia", "tier_3_felicia_autonomous", "tier_4_citizen_request"]
+    }
+  }
+}

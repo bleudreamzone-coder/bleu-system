@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/memory-record-v1.1.json",
+  "title": "MemoryRecord v1.1",
+  "description": "Shadow-mode durable session memory record for future BLEU agents. TD-010 prohibits plaintext email and phone storage.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_id",
+    "session_id",
+    "citizen_id",
+    "kind",
+    "schema_version",
+    "created_at",
+    "updated_at",
+    "ttl_days",
+    "retention_authority",
+    "payload",
+    "td_010"
+  ],
+  "properties": {
+    "record_id": { "type": "string", "format": "uuid" },
+    "session_id": { "type": "string", "minLength": 1, "description": "Hashed session identifier per TD-010." },
+    "citizen_id": { "anyOf": [{ "type": "string", "format": "uuid" }, { "type": "null" }] },
+    "kind": { "$ref": "#/$defs/memory_kind" },
+    "schema_version": { "const": "1.1" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "ttl_days": {
+      "anyOf": [
+        { "type": "integer", "minimum": 1, "default": 90 },
+        { "type": "null" }
+      ],
+      "description": "Retention TTL: default 90 episodic, null semantic, 365 preference, 730 decision_history. Enforced by application policy before live activation."
+    },
+    "retention_authority": { "$ref": "#/$defs/retention_authority" },
+    "payload": {
+      "type": "object",
+      "description": "Per-kind memory payload validated by the matching oneOf branch."
+    },
+    "td_010": { "$ref": "#/$defs/td_010" }
+  },
+  "oneOf": [
+    {
+      "title": "episodic",
+      "properties": {
+        "kind": { "const": "episodic" },
+        "payload": { "$ref": "#/$defs/episodic_payload" }
+      }
+    },
+    {
+      "title": "semantic",
+      "properties": {
+        "kind": { "const": "semantic" },
+        "payload": { "$ref": "#/$defs/semantic_payload" }
+      }
+    },
+    {
+      "title": "preference",
+      "properties": {
+        "kind": { "const": "preference" },
+        "payload": { "$ref": "#/$defs/preference_payload" }
+      }
+    },
+    {
+      "title": "decision_history",
+      "properties": {
+        "kind": { "const": "decision_history" },
+        "payload": { "$ref": "#/$defs/decision_history_payload" }
+      }
+    },
+    {
+      "title": "counterfactual_link",
+      "properties": {
+        "kind": { "const": "counterfactual_link" },
+        "payload": { "$ref": "#/$defs/counterfactual_link_payload" }
+      }
+    }
+  ],
+  "$defs": {
+    "memory_kind": {
+      "type": "string",
+      "enum": ["episodic", "semantic", "preference", "decision_history", "counterfactual_link"]
+    },
+    "retention_authority": {
+      "type": "string",
+      "enum": ["tier_1_captain", "tier_2_felicia", "tier_3_felicia_autonomous", "tier_4_citizen_request"]
+    },
+    "td_010": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pii_hashed", "plaintext_email_stored", "plaintext_phone_stored"],
+      "properties": {
+        "pii_hashed": { "const": true },
+        "plaintext_email_stored": { "const": false },
+        "plaintext_phone_stored": { "const": false }
+      }
+    },
+    "episodic_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["interaction_summary", "variant_tags", "gates_triggered", "refusals_triggered", "commerce_surfaced"],
+      "properties": {
+        "interaction_summary": { "type": "string", "minLength": 1 },
+        "variant_tags": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "gates_triggered": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "refusals_triggered": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 20 } },
+        "commerce_surfaced": { "type": "boolean" }
+      }
+    },
+    "semantic_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topic", "citizen_facts", "confidence"],
+      "properties": {
+        "topic": { "type": "string", "minLength": 1 },
+        "citizen_facts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "not": { "pattern": "plaintext_(email|phone)" }
+          }
+        },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "preference_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "preference_key", "preference_value", "citizen_explicit"],
+      "properties": {
+        "domain": { "type": "string", "minLength": 1 },
+        "preference_key": { "type": "string", "minLength": 1 },
+        "preference_value": true,
+        "citizen_explicit": { "type": "boolean" }
+      }
+    },
+    "decision_history_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_id", "outcome_observed", "days_since"],
+      "properties": {
+        "decision_id": { "type": "string", "format": "uuid" },
+        "outcome_observed": { "type": "string", "minLength": 1 },
+        "days_since": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "counterfactual_link_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trust_packet_id", "counterfactual_class", "citizen_acknowledged"],
+      "properties": {
+        "trust_packet_id": { "type": "string", "format": "uuid" },
+        "counterfactual_class": { "type": "string", "minLength": 1 },
+        "citizen_acknowledged": { "type": "boolean" }
+      }
+    }
+  }
+}
