@@ -1,6 +1,6 @@
 # Model Router Scaffold
 
-Status: scaffold only, dormant by default, no provider SDKs, no API calls, no model registrations.
+Status: DORMANT — model router scaffold only; not imported by server.js.
 
 ## Architecture
 

@@ -6,6 +6,7 @@ The locked thesis and its inheritance. Read [[source_document_v1]] first — eve
 
 | File | One-line |
 |---|---|
+| [felicia_standards_v1.md](felicia_standards_v1.md) | PENDING_SIGNOFF — structured Dr. Felicia standards template; not live-binding until signoff. |
 | [source_document_v1.md](source_document_v1.md) | The locked thesis: BLEU is the clinically governed lens; three-voice stack; the sacred line. |
 | [refusal_doctrine_v1.md](refusal_doctrine_v1.md) | "What BLEU Refuses To Do" — 20 hard, testable boundaries. |
 | [pressure_architecture_v1.md](pressure_architecture_v1.md) | The six pressures (information, nervous-system, time, competitive, legal, philosophical) + disciplines. |

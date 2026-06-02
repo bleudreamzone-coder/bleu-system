@@ -1,3 +1,4 @@
+// STATUS: DORMANT — counterfactual review scaffold only; not imported by server.js.
 'use strict';
 
 const crypto = require('node:crypto');

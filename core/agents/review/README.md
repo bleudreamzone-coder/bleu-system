@@ -1,5 +1,7 @@
 # CounterfactualReview v1.1 — Shadow Reviewer Adapter
 
+Status: DORMANT — counterfactual review scaffold only; not imported by server.js.
+
 CounterfactualReview is the dormant human-review loop for the mandatory Trust Packet `counterfactual` field. `_meta/THE_BLEU_BIBLE.md` Part VIII states that the Counterfactual is BLEU's proof unit and that every ledger entry must include one. `core/schemas/trust_packet_v1.1.schema.json` makes that mandate executable by requiring `counterfactual.class`, `prevented_wrong_answer`, `bleu_difference`, and `confidence`.
 
 This directory adds the review layer above that proof claim. A Trust Packet can claim that BLEU prevented a generic-AI wrong answer; a CounterfactualReview records whether a qualified human reviewer confirms, disputes, revises, or finds insufficient evidence for that claim. Without populated review records, Trust Packet Counterfactuals are narrative. With this schema and a future review history, they become audit-grade evidence for grants, VCs, institutional buyers, and acquirers.

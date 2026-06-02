@@ -1,3 +1,4 @@
+// STATUS: DORMANT — outcome checkpoint scaffold only; not imported by server.js.
 'use strict';
 
 const { NotImplementedError } = require('../_adapter');

@@ -1,5 +1,7 @@
 # Dr. Felicia Stoler Professional Standards — bleu.live Operations (v1.0)
 
+Status: PENDING_SIGNOFF — structured Felicia standards template; not live-binding until Dr. Felicia signs off.
+
 ## Document Metadata
 
 - **Document type:** Institutional Doctrine

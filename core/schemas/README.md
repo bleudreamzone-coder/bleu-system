@@ -1,5 +1,7 @@
 # Core Schemas
 
+Status: TESTED_ONLY / DORMANT — v1.1 schemas are test-validated scaffolds and dormant contracts; live Signal/Decision/Trust Packet v0 bridge is in server.js.
+
 This directory stores production-ready JSON Schemas for BLEU's future four-function runtime (`decompose`, `decide`, `record`, `respond`). The files are shadow-mode artifacts: they are not wired into `server.js`, `/api/chat`, route handlers, Supabase migrations, or any production path yet.
 
 Schemas in this directory are reserved for the future Agents SDK migration and related mechanical implementation work described by the Total System Blueprint.

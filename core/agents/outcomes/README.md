@@ -1,5 +1,7 @@
 # Outcome Checkpoints (Shadow Mode — Schema + Stub Capture)
 
+Status: DORMANT — outcome checkpoint scaffold only; not imported by server.js.
+
 OutcomeCheckpoint v1.1 records are the dormant follow-up artifacts that fulfill Trust Packet `outcome_plan.day_3`, `outcome_plan.day_7`, and `outcome_plan.day_30` commitments. They answer the audit question: after BLEU recommended a next step, did BLEU return to ask whether the Citizen followed it, benefited, experienced harm, or had updated measurements?
 
 ## Doctrine source

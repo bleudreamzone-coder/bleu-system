@@ -1,5 +1,7 @@
 # Trust Packet Logging Plumbing
 
+Status: DORMANT — this directory is Trust Packet v1.1 logging plumbing only; the live Trust Packet v0 bridge is in server.js.
+
 This directory contains dormant Trust Packet v1.1 logging plumbing for the future BLEU `record()` path. It is intentionally not wired into `server.js`, `/api/chat`, or any Supabase Edge Function in this PR.
 
 ## Doctrine anchors
