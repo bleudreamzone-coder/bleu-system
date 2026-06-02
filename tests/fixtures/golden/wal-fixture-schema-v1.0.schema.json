@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/wal-fixture-v1.0.json",
+  "title": "Wrong Answer Library Fixture v1.0",
+  "description": "Golden fixture format for Wrong Answer Library seed scenarios. Fixtures document generic AI failure patterns without authoring clinical response language before required signoff.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scenario_id",
+    "schema_version",
+    "label",
+    "source_doctrine_refs",
+    "variant_tags",
+    "felicia_mandatory",
+    "citizen_input_example",
+    "generic_wrong_answer_pattern",
+    "why_wrong_doctrine_refs",
+    "refusals_tested",
+    "gates_exercised",
+    "bleu_correct_behavior_template",
+    "signoff_status",
+    "signoff_doc",
+    "notes",
+    "td_010_compliance"
+  ],
+  "properties": {
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^WAL-[A-Z0-9-]+$"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "label": {
+      "type": "string",
+      "minLength": 5
+    },
+    "source_doctrine_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "variant_tags": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^V[1-5]\\.\\d+$"
+      }
+    },
+    "felicia_mandatory": {
+      "type": "boolean"
+    },
+    "citizen_input_example": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 1000
+    },
+    "generic_wrong_answer_pattern": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 2000
+    },
+    "why_wrong_doctrine_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "refusals_tested": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      }
+    },
+    "gates_exercised": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "gate",
+          "expected_status",
+          "reason"
+        ],
+        "properties": {
+          "gate": {
+            "type": "string",
+            "enum": [
+              "crisis",
+              "medication_safety",
+              "evidence",
+              "claim_boundary",
+              "clinical_review",
+              "commerce",
+              "outcome"
+            ]
+          },
+          "expected_status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "passed",
+              "blocked",
+              "needs_review",
+              "hard_stop",
+              "reroute"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    },
+    "bleu_correct_behavior_template": {
+      "type": "string"
+    },
+    "signoff_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "signed_by_felicia",
+        "signed_by_delegate",
+        "deprecated"
+      ]
+    },
+    "signoff_doc": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 5000
+    },
+    "td_010_compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pii_hashed",
+        "plaintext_email_stored",
+        "plaintext_phone_stored",
+        "contains_real_citizen_data"
+      ],
+      "properties": {
+        "pii_hashed": {
+          "type": "boolean"
+        },
+        "plaintext_email_stored": {
+          "type": "boolean",
+          "const": false
+        },
+        "plaintext_phone_stored": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_real_citizen_data": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "properties": {
+        "gates_exercised": {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate": {
+                "const": "crisis"
+              }
+            },
+            "required": [
+              "gate"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      }
+    },
+    {
+      "properties": {
+        "gates_exercised": {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate": {
+                "const": "medication_safety"
+              }
+            },
+            "required": [
+              "gate"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      }
+    },
+    {
+      "properties": {
+        "gates_exercised": {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate": {
+                "const": "evidence"
+              }
+            },
+            "required": [
+              "gate"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      }
+    },
+    {
+      "properties": {
+        "gates_exercised": {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate": {
+                "const": "claim_boundary"
+              }
+            },
+            "required": [
+              "gate"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      }
+    },
+    {
+      "properties": {
+        "gates_exercised": {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate": {
+                "const": "clinical_review"
+              }
+            },
+            "required": [
+              "gate"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      }
+    },
+    {
+      "properties": {
+        "gates_exercised": {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate": {
+                "const": "commerce"
+              }
+            },
+            "required": [
+              "gate"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      }
+    },
+    {
+      "properties": {
+        "gates_exercised": {
+          "contains": {
+            "type": "object",
+            "properties": {
+              "gate": {
+                "const": "outcome"
+              }
+            },
+            "required": [
+              "gate"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "signoff_status": {
+            "const": "pending"
+          }
+        },
+        "required": [
+          "signoff_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "bleu_correct_behavior_template": {
+            "const": "PENDING_FELICIA_SIGNOFF"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "signoff_status": {
+            "enum": [
+              "signed_by_felicia",
+              "signed_by_delegate"
+            ]
+          }
+        },
+        "required": [
+          "signoff_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "bleu_correct_behavior_template": {
+            "type": "string",
+            "minLength": 50,
+            "not": {
+              "const": "PENDING_FELICIA_SIGNOFF"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
