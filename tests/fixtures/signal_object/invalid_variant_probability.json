@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.1",
+  "intent": "sleep_help",
+  "sub_intents": ["supplement_question"],
+  "life_stage": "L3_midlife_pivot",
+  "clinical_complexity": "C1_functional_concerns",
+  "readiness": "R3_preparing",
+  "trust": "T2_default",
+  "dose_tolerance": "D2_low",
+  "financial_signal": "unknown",
+  "variant_blend": {
+    "V1.1_sleep_compromised_professional": 1.25
+  },
+  "risk_flags": [],
+  "needed_info": ["medications"],
+  "commerce_intent": "soft",
+  "evidence_need": "medium",
+  "confidence": 0.68
+}

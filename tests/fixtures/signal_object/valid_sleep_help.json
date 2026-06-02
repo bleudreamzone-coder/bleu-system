@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.1",
+  "intent": "sleep_help",
+  "sub_intents": ["supplement_question", "stress_context"],
+  "life_stage": "L3_midlife_pivot",
+  "clinical_complexity": "C1_functional_concerns",
+  "readiness": "R3_preparing",
+  "trust": "T2_default",
+  "dose_tolerance": "D2_low",
+  "financial_signal": "unknown",
+  "variant_blend": {
+    "V1.2_perimenopause_navigator": 0.52,
+    "V1.1_sleep_compromised_professional": 0.27,
+    "V1.11_supplement_confused": 0.14,
+    "unknown_or_needs_info": 0.07
+  },
+  "risk_flags": ["possible_sleep_apnea_screen_needed"],
+  "needed_info": ["medications", "duration_of_sleep_issue"],
+  "commerce_intent": "soft",
+  "evidence_need": "medium",
+  "confidence": 0.68
+}

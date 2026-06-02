@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.1",
+  "intent": "crisis_support",
+  "sub_intents": ["self_harm_signal"],
+  "life_stage": "unknown_or_needs_info",
+  "clinical_complexity": "C4_acute_unstable",
+  "readiness": "unknown_or_needs_info",
+  "trust": "T1_cautious",
+  "dose_tolerance": "D1_micro",
+  "financial_signal": "unknown_or_needs_info",
+  "variant_blend": {
+    "unknown_or_needs_info": 1
+  },
+  "risk_flags": ["self_harm_signal", "crisis_routing_needed", "commerce_blocked"],
+  "needed_info": ["immediate_safety_status", "location_for_emergency_support"],
+  "commerce_intent": "blocked",
+  "evidence_need": "urgent",
+  "confidence": 0.91
+}

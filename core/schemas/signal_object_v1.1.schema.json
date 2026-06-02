@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/signal_object_v1.1.schema.json",
+  "title": "BLEU Signal Object v1.1",
+  "description": "Canonical shadow-mode output of Prism/decompose(): classification data only, never Citizen-facing guidance.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "intent",
+    "sub_intents",
+    "life_stage",
+    "clinical_complexity",
+    "readiness",
+    "trust",
+    "dose_tolerance",
+    "financial_signal",
+    "variant_blend",
+    "risk_flags",
+    "needed_info",
+    "commerce_intent",
+    "evidence_need",
+    "confidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.1"
+    },
+    "intent": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "sub_intents": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "uniqueItems": true
+    },
+    "life_stage": {
+      "type": "string",
+      "enum": [
+        "L1_emerging_adult",
+        "L2_establishing_adult",
+        "L3_midlife_pivot",
+        "L4_active_aging",
+        "L5_late_aging",
+        "unknown_or_needs_info"
+      ]
+    },
+    "clinical_complexity": {
+      "type": "string",
+      "enum": [
+        "C0_asymptomatic_wellness_curious",
+        "C1_functional_concerns",
+        "C2_single_stable_condition",
+        "C3_multiple_complex_conditions",
+        "C4_acute_unstable",
+        "unknown_or_needs_info"
+      ]
+    },
+    "readiness": {
+      "type": "string",
+      "enum": [
+        "R0_pre_contemplation",
+        "R1_exploring",
+        "R2_considering",
+        "R3_preparing",
+        "R4_acting",
+        "R5_maintaining",
+        "unknown_or_needs_info"
+      ]
+    },
+    "trust": {
+      "type": "string",
+      "enum": [
+        "T0_hostile",
+        "T1_cautious",
+        "T2_default",
+        "T3_engaged",
+        "T4_advocate",
+        "unknown_or_needs_info"
+      ]
+    },
+    "dose_tolerance": {
+      "type": "string",
+      "enum": [
+        "D1_micro",
+        "D2_low",
+        "D3_medium",
+        "D4_high",
+        "D5_expert",
+        "unknown_or_needs_info"
+      ]
+    },
+    "financial_signal": {
+      "type": "string",
+      "enum": [
+        "F1_constrained",
+        "F2_practical",
+        "F3_comfortable",
+        "F4_premium",
+        "unknown_or_needs_info",
+        "unknown"
+      ]
+    },
+    "variant_blend": {
+      "type": "object",
+      "description": "Probabilistic variant signals. Values should sum to 1.0; the schema enforces shape/range while fixture tests enforce sum tolerance.",
+      "minProperties": 1,
+      "maxProperties": 35,
+      "propertyNames": {
+        "anyOf": [
+          { "const": "unknown_or_needs_info" },
+          { "pattern": "^V[0-9]+\\.[0-9]+_[a-z0-9_]+$" }
+        ]
+      },
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "risk_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "uniqueItems": true
+    },
+    "needed_info": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "uniqueItems": true
+    },
+    "commerce_intent": {
+      "type": "string",
+      "enum": ["none", "soft", "direct", "blocked"]
+    },
+    "evidence_need": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "urgent"]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "clinical_complexity": { "const": "C4_acute_unstable" }
+        },
+        "required": ["clinical_complexity"]
+      },
+      "then": {
+        "properties": {
+          "commerce_intent": { "const": "blocked" },
+          "evidence_need": { "enum": ["high", "urgent"] },
+          "dose_tolerance": { "enum": ["D1_micro", "D2_low", "unknown_or_needs_info"] }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": {
+          "life_stage": { "const": "L5_late_aging" }
+        },
+        "required": ["life_stage"]
+      },
+      "then": {
+        "properties": {
+          "dose_tolerance": { "enum": ["D1_micro", "D2_low", "unknown_or_needs_info"] }
+        }
+      }
+    }
+  ]
+}
