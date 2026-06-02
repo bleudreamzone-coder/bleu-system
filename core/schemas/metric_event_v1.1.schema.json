@@ -1,0 +1,593 @@
+{
+  "$defs": {
+    "agent_invoked_data": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "type": "string"
+        },
+        "agent_tier": {
+          "$ref": "#/$defs/decision_matrix_tier"
+        },
+        "handoff_from_agent_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "latency_ms": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "agent_id",
+        "agent_tier",
+        "handoff_from_agent_id",
+        "latency_ms"
+      ],
+      "type": "object"
+    },
+    "chat_turn_data": {
+      "additionalProperties": false,
+      "properties": {
+        "latency_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "role": {
+          "enum": [
+            "user",
+            "assistant"
+          ],
+          "type": "string"
+        },
+        "turn_index": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "word_count": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "turn_index",
+        "role",
+        "word_count",
+        "latency_ms"
+      ],
+      "type": "object"
+    },
+    "commerce_gate_state_data": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed": {
+          "type": "boolean"
+        },
+        "crisis_tier": {
+          "type": "boolean"
+        },
+        "first_response": {
+          "type": "boolean"
+        },
+        "has_concern": {
+          "type": "boolean"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "support_tier": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "allowed",
+        "reason",
+        "first_response",
+        "has_concern",
+        "support_tier",
+        "crisis_tier"
+      ],
+      "type": "object"
+    },
+    "counterfactual_class": {
+      "enum": [
+        "crisis_missed",
+        "unsafe_supplement",
+        "overclaim",
+        "premature_commerce",
+        "wrong_dose",
+        "missed_referral",
+        "privacy_leak",
+        "voice_drift",
+        "none"
+      ],
+      "type": "string"
+    },
+    "decision_emitted_data": {
+      "additionalProperties": false,
+      "properties": {
+        "authority": {
+          "$ref": "#/$defs/decision_matrix_tier"
+        },
+        "decision_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "final_action": {
+          "type": "string"
+        },
+        "gates_summary": {
+          "additionalProperties": false,
+          "properties": {
+            "hard_stop": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "needs_human_signoff": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "pass": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "reroute": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "soft_warn": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "pass",
+            "soft_warn",
+            "reroute",
+            "hard_stop",
+            "needs_human_signoff"
+          ],
+          "type": "object"
+        },
+        "refusals_triggered_count": {
+          "maximum": 20,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "signal_id": {
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision_id",
+        "signal_id",
+        "gates_summary",
+        "refusals_triggered_count",
+        "authority",
+        "final_action"
+      ],
+      "type": "object"
+    },
+    "decision_matrix_tier": {
+      "enum": [
+        "tier_1_captain",
+        "tier_2_felicia",
+        "tier_3_felicia_autonomous"
+      ],
+      "type": "string"
+    },
+    "error_caught_data": {
+      "additionalProperties": false,
+      "properties": {
+        "error_class": {
+          "type": "string"
+        },
+        "error_message": {
+          "type": "string"
+        },
+        "recoverable": {
+          "type": "boolean"
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "warn",
+            "error",
+            "critical"
+          ],
+          "type": "string"
+        },
+        "stack_excerpt": {
+          "maxLength": 500,
+          "type": "string"
+        }
+      },
+      "required": [
+        "error_class",
+        "error_message",
+        "stack_excerpt",
+        "severity",
+        "recoverable"
+      ],
+      "type": "object"
+    },
+    "gate_fired_data": {
+      "additionalProperties": false,
+      "properties": {
+        "gate_name": {
+          "enum": [
+            "crisis",
+            "medication_safety",
+            "evidence",
+            "claim_boundary",
+            "clinical_review",
+            "commerce",
+            "outcome"
+          ],
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "soft_warn",
+            "reroute",
+            "hard_stop",
+            "needs_human_signoff"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "gate_name",
+        "status",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "refusal_triggered_data": {
+      "additionalProperties": false,
+      "properties": {
+        "action_taken": {
+          "type": "string"
+        },
+        "refusal_name": {
+          "type": "string"
+        },
+        "refusal_number": {
+          "maximum": 20,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "refusal_number",
+        "refusal_name",
+        "action_taken"
+      ],
+      "type": "object"
+    },
+    "tool_invoked_data": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_usd": {
+          "default": 0,
+          "minimum": 0,
+          "type": "number"
+        },
+        "invocation_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "latency_ms": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "result_status": {
+          "enum": [
+            "success",
+            "failure",
+            "timeout",
+            "rate_limited",
+            "circuit_breaker_open"
+          ],
+          "type": "string"
+        },
+        "retries_attempted": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "tool_id": {
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tool_id",
+        "invocation_id",
+        "result_status",
+        "latency_ms",
+        "retries_attempted",
+        "cost_usd"
+      ],
+      "type": "object"
+    },
+    "trust_packet_emitted_data": {
+      "additionalProperties": false,
+      "properties": {
+        "counterfactual_class": {
+          "$ref": "#/$defs/counterfactual_class"
+        },
+        "decision_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "evaluator_passed": {
+          "type": "boolean"
+        },
+        "packet_id": {
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "packet_id",
+        "decision_id",
+        "counterfactual_class",
+        "evaluator_passed"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://bleu.live/schemas/metric-event-v1.1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "properties": {
+        "event_data": {
+          "$ref": "#/$defs/chat_turn_data"
+        },
+        "event_type": {
+          "const": "chat_turn"
+        }
+      },
+      "required": [
+        "event_type",
+        "event_data"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "event_data": {
+          "$ref": "#/$defs/gate_fired_data"
+        },
+        "event_type": {
+          "const": "gate_fired"
+        }
+      },
+      "required": [
+        "event_type",
+        "event_data"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "event_data": {
+          "$ref": "#/$defs/refusal_triggered_data"
+        },
+        "event_type": {
+          "const": "refusal_triggered"
+        }
+      },
+      "required": [
+        "event_type",
+        "event_data"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "event_data": {
+          "$ref": "#/$defs/commerce_gate_state_data"
+        },
+        "event_type": {
+          "const": "commerce_gate_state"
+        }
+      },
+      "required": [
+        "event_type",
+        "event_data"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "event_data": {
+          "$ref": "#/$defs/agent_invoked_data"
+        },
+        "event_type": {
+          "const": "agent_invoked"
+        }
+      },
+      "required": [
+        "event_type",
+        "event_data"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "event_data": {
+          "$ref": "#/$defs/tool_invoked_data"
+        },
+        "event_type": {
+          "const": "tool_invoked"
+        }
+      },
+      "required": [
+        "event_type",
+        "event_data"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "event_data": {
+          "$ref": "#/$defs/decision_emitted_data"
+        },
+        "event_type": {
+          "const": "decision_emitted"
+        }
+      },
+      "required": [
+        "event_type",
+        "event_data"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "event_data": {
+          "$ref": "#/$defs/trust_packet_emitted_data"
+        },
+        "event_type": {
+          "const": "trust_packet_emitted"
+        }
+      },
+      "required": [
+        "event_type",
+        "event_data"
+      ],
+      "type": "object"
+    },
+    {
+      "properties": {
+        "event_data": {
+          "$ref": "#/$defs/error_caught_data"
+        },
+        "event_type": {
+          "const": "error_caught"
+        }
+      },
+      "required": [
+        "event_type",
+        "event_data"
+      ],
+      "type": "object"
+    }
+  ],
+  "properties": {
+    "citizen_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "event_data": {
+      "type": "object"
+    },
+    "event_id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "event_subtype": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "event_type": {
+      "enum": [
+        "chat_turn",
+        "gate_fired",
+        "refusal_triggered",
+        "commerce_gate_state",
+        "agent_invoked",
+        "tool_invoked",
+        "decision_emitted",
+        "trust_packet_emitted",
+        "error_caught"
+      ],
+      "type": "string"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.1"
+    },
+    "session_id": {
+      "pattern": "^h_[0-9a-f]{16}$",
+      "type": "string"
+    },
+    "td_010_compliance": {
+      "additionalProperties": false,
+      "properties": {
+        "pii_hashed": {
+          "type": "boolean"
+        },
+        "plaintext_email_stored": {
+          "const": false
+        },
+        "plaintext_phone_in_payload": {
+          "const": false
+        },
+        "plaintext_phone_stored": {
+          "const": false
+        }
+      },
+      "required": [
+        "pii_hashed",
+        "plaintext_email_stored",
+        "plaintext_phone_stored",
+        "plaintext_phone_in_payload"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "event_id",
+    "event_type",
+    "event_subtype",
+    "session_id",
+    "citizen_id",
+    "schema_version",
+    "occurred_at",
+    "event_data",
+    "td_010_compliance"
+  ],
+  "title": "MetricEvent v1.1",
+  "type": "object"
+}
