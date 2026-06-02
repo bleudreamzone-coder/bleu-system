@@ -1,0 +1,1163 @@
+{
+  "$id": "https://bleu.live/config/variant-taxonomy-v1.json",
+  "version": "1.0.0",
+  "doctrine_source": "_meta/doctrine/icp_prism_doctrine_v1.md",
+  "icps": [
+    {
+      "id": "ICP_1_SELF_PAY",
+      "label": "Self-Pay",
+      "variants": [
+        {
+          "variant_id": "V1.1",
+          "label": "Sleep-Compromised Professional",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C1_functional_concerns",
+            "financial_capacity": "F2_practical",
+            "readiness": "R2_considering",
+            "trust": "T2_default",
+            "dose_tolerance": "D2_low"
+          },
+          "clinical_watchouts": [
+            "Reassess for depression or sleep apnea if sleep issues persist after multiple interventions."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:170-182"
+          ]
+        },
+        {
+          "variant_id": "V1.2",
+          "label": "Perimenopause Navigator",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": true,
+          "six_band_defaults": {
+            "life_stage": "L3_midlife_pivot",
+            "clinical_complexity": "C1_functional_concerns",
+            "financial_capacity": "F2_practical",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D3_medium"
+          },
+          "clinical_watchouts": [
+            "Clinician dismissal history means validation builds trust before protocol delivery.",
+            "Felicia clinical credibility matters most for this variant."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.65,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:184-198",
+            "_meta/doctrine/icp_prism_doctrine_v1.md:668-674"
+          ]
+        },
+        {
+          "variant_id": "V1.3",
+          "label": "Type 2 Diabetes Pre/Early-Diagnosis",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": true,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C2_single_stable_condition",
+            "financial_capacity": "F2_practical",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D2_low"
+          },
+          "clinical_watchouts": [
+            "HIGH drug-interaction risk; screen common medication and supplement combinations before guidance.",
+            "Felicia signoff mandatory on protocols."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.68,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:200-212",
+            "_meta/doctrine/icp_prism_doctrine_v1.md:668-674"
+          ]
+        },
+        {
+          "variant_id": "V1.4",
+          "label": "Anxiety-Forward Young Adult",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": true,
+          "six_band_defaults": {
+            "life_stage": "L1_emerging_adult",
+            "clinical_complexity": "C2_single_stable_condition",
+            "financial_capacity": "F1_constrained",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D2_low"
+          },
+          "clinical_watchouts": [
+            "SSRI + supplement interactions matter.",
+            "NEVER recommend serotonergic supplements to SSRI-using Citizens.",
+            "Felicia signoff on this rule mandatory."
+          ],
+          "external_language_allowed": [
+            "what actually works safely",
+            "supports lifestyle factors",
+            "coordinate with your care team"
+          ],
+          "external_language_forbidden": [
+            "you can stop medication",
+            "serotonergic supplement recommendation",
+            "we treat anxiety",
+            "you are this variant"
+          ],
+          "classifier_confidence_threshold": 0.68,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:214-226",
+            "_meta/doctrine/icp_prism_doctrine_v1.md:668-674"
+          ]
+        },
+        {
+          "variant_id": "V1.5",
+          "label": "Longevity-Curious Tech Worker",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "F3_comfortable",
+            "readiness": "R3_preparing",
+            "trust": "T2_default",
+            "dose_tolerance": "D4_high"
+          },
+          "clinical_watchouts": [
+            "Admit where evidence is experimental or narrative; overclaiming loses trust.",
+            "Felicia signoff on tone matters."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:228-240"
+          ]
+        },
+        {
+          "variant_id": "V1.6",
+          "label": "Gut-Issue Sufferer",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L1_emerging_adult",
+            "clinical_complexity": "C1_functional_concerns",
+            "financial_capacity": "F2_practical",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D3_medium"
+          },
+          "clinical_watchouts": [
+            "Gut symptoms can mask serious conditions; never discourage clinician consultation.",
+            "Weight loss, blood, severe pain, or persistent issues require escalation."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:242-254"
+          ]
+        },
+        {
+          "variant_id": "V1.7",
+          "label": "Post-Cancer Wellness Rebuilder",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": true,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C3_multiple_complex_conditions",
+            "financial_capacity": "F2_practical",
+            "readiness": "R3_preparing",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D3_medium"
+          },
+          "clinical_watchouts": [
+            "Supplement caution is extreme for cancer histories.",
+            "Felicia signoff mandatory and Citizen-specific clinical coordination essential."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.72,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:256-268",
+            "_meta/doctrine/icp_prism_doctrine_v1.md:668-674"
+          ]
+        },
+        {
+          "variant_id": "V1.8",
+          "label": "Body-Composition Focused",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L1_emerging_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "F2_practical",
+            "readiness": "R3_preparing",
+            "trust": "T2_default",
+            "dose_tolerance": "D3_medium"
+          },
+          "clinical_watchouts": [
+            "Screen for disordered eating signals.",
+            "If signals appear, route to eating disorder resources rather than continuing diet/composition protocols."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:270-282"
+          ]
+        },
+        {
+          "variant_id": "V1.9",
+          "label": "Chronic Pain Manager",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": true,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C2_single_stable_condition",
+            "financial_capacity": "F1_constrained",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D2_low"
+          },
+          "clinical_watchouts": [
+            "Polypharmacy interaction risk is high.",
+            "Opioid-using Citizens require special care.",
+            "Never recommend kratom, kava, or other substances with addiction potential."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.7,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:284-296",
+            "_meta/doctrine/icp_prism_doctrine_v1.md:668-674"
+          ]
+        },
+        {
+          "variant_id": "V1.10",
+          "label": "Caregiver-Burnout Adult",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L3_midlife_pivot",
+            "clinical_complexity": "C1_functional_concerns",
+            "financial_capacity": "F2_practical",
+            "readiness": "R1_exploring",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "High suicide-risk and high burnout-risk; screen for depression and suicidal ideation.",
+            "Minimize commerce; this Citizen needs presence, not products."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:298-310"
+          ]
+        },
+        {
+          "variant_id": "V1.11",
+          "label": "Supplement Confused",
+          "icp_id": "ICP_1_SELF_PAY",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "F2_practical",
+            "readiness": "R1_exploring",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D2_low"
+          },
+          "clinical_watchouts": [
+            "Commerce restraint earns commerce permission later.",
+            "Lead with evidence-tier review and what not to buy."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:312-324"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ICP_2_HOSPITALITY_GUEST",
+      "label": "Hospitality Guest",
+      "variants": [
+        {
+          "variant_id": "V2.1",
+          "label": "Business Traveler",
+          "icp_id": "ICP_2_HOSPITALITY_GUEST",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "F2_practical",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "Time-constrained; dose tolerance stays D1-D2 maximum.",
+            "Lead with one tonight-action."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:332-344"
+          ]
+        },
+        {
+          "variant_id": "V2.2",
+          "label": "Wedding/Event Guest",
+          "icp_id": "ICP_2_HOSPITALITY_GUEST",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L1_emerging_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "F2_practical",
+            "readiness": "R1_exploring",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "Acute alcohol use may mask underlying issues.",
+            "Use gentle escalation if pattern or extreme intoxication signals emerge."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:346-358"
+          ]
+        },
+        {
+          "variant_id": "V2.3",
+          "label": "Anxious Traveler",
+          "icp_id": "ICP_2_HOSPITALITY_GUEST",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L1_emerging_adult",
+            "clinical_complexity": "C1_functional_concerns",
+            "financial_capacity": "F2_practical",
+            "readiness": "R1_exploring",
+            "trust": "T0_hostile",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "Benzodiazepine + supplement interactions matter; avoid sedating supplement combinations.",
+            "Crisis screening if anxiety is severe."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.6,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:360-372"
+          ]
+        },
+        {
+          "variant_id": "V2.4",
+          "label": "Older Guest",
+          "icp_id": "ICP_2_HOSPITALITY_GUEST",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L4_active_aging",
+            "clinical_complexity": "C3_multiple_complex_conditions",
+            "financial_capacity": "F2_practical",
+            "readiness": "R1_exploring",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "HIGH polypharmacy risk; any supplement guidance requires triple-screening.",
+            "Cognitive impairment signals require gentle escalation to family or hotel staff."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.65,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:374-386"
+          ]
+        },
+        {
+          "variant_id": "V2.5",
+          "label": "Tired Parent",
+          "icp_id": "ICP_2_HOSPITALITY_GUEST",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "F1_constrained",
+            "readiness": "R1_exploring",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "Don't add to the parent's load.",
+            "D1-D2 only; lead with empathy."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:388-400"
+          ]
+        },
+        {
+          "variant_id": "V2.6",
+          "label": "Wellness Tourist",
+          "icp_id": "ICP_2_HOSPITALITY_GUEST",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "F3_comfortable",
+            "readiness": "R3_preparing",
+            "trust": "T2_default",
+            "dose_tolerance": "D3_medium"
+          },
+          "clinical_watchouts": [
+            "Highest-conversion Hospitality Guest type; property-branded experience must shine."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:402-414"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ICP_3_HOSPITALITY_WORKER",
+      "label": "Hospitality Worker",
+      "variants": [
+        {
+          "variant_id": "V3.1",
+          "label": "Night-Shift Worker",
+          "icp_id": "ICP_3_HOSPITALITY_WORKER",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L1_emerging_adult",
+            "clinical_complexity": "C1_functional_concerns",
+            "financial_capacity": "F1_constrained",
+            "readiness": "R1_exploring",
+            "trust": "T0_hostile",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "Elevated risk for metabolic disease, cancer, and depression.",
+            "Support within constraints; do not lecture about quitting night work."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.6,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:422-434"
+          ]
+        },
+        {
+          "variant_id": "V3.2",
+          "label": "Housekeeping Veteran",
+          "icp_id": "ICP_3_HOSPITALITY_WORKER",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L3_midlife_pivot",
+            "clinical_complexity": "C2_single_stable_condition",
+            "financial_capacity": "F1_constrained",
+            "readiness": "R1_exploring",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "Cultural humility critical; avoid white-wellness assumptions.",
+            "Spanish-language pathway is a future requirement."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.6,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:436-450"
+          ]
+        },
+        {
+          "variant_id": "V3.3",
+          "label": "Service Worker Parent",
+          "icp_id": "ICP_3_HOSPITALITY_WORKER",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "F1_constrained",
+            "readiness": "R1_exploring",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "Severe time poverty.",
+            "D1 dosing maximum; lead with the smallest thing that helps."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:452-464"
+          ]
+        },
+        {
+          "variant_id": "V3.4",
+          "label": "Tipped Worker on Edge",
+          "icp_id": "ICP_3_HOSPITALITY_WORKER",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L1_emerging_adult",
+            "clinical_complexity": "C1_functional_concerns",
+            "financial_capacity": "F1_constrained",
+            "readiness": "R1_exploring",
+            "trust": "T0_hostile",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "Substance use comorbidity is real.",
+            "Support without lecturing; crisis screening visible."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.62,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:466-478"
+          ]
+        },
+        {
+          "variant_id": "V3.5",
+          "label": "Hospitality Manager",
+          "icp_id": "ICP_3_HOSPITALITY_WORKER",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "F2_practical",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D2_low"
+          },
+          "clinical_watchouts": [
+            "Managers may become Citizen-Advocates; engage with care."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:480-492"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ICP_4_CLINICAL",
+      "label": "Clinical / Nutrition-Safe",
+      "variants": [
+        {
+          "variant_id": "V4.1",
+          "label": "Multi-Med Older Adult",
+          "icp_id": "ICP_4_CLINICAL",
+          "felicia_mandatory": true,
+          "six_band_defaults": {
+            "life_stage": "L4_active_aging",
+            "clinical_complexity": "C3_multiple_complex_conditions",
+            "financial_capacity": "F2_practical",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "Felicia signoff on every supplement recommendation.",
+            "Polypharmacy reviews are valuable but BLEU does not replace pharmacist."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.75,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:500-510",
+            "_meta/doctrine/icp_prism_doctrine_v1.md:668-674"
+          ]
+        },
+        {
+          "variant_id": "V4.2",
+          "label": "Pregnant/Trying-to-Conceive",
+          "icp_id": "ICP_4_CLINICAL",
+          "felicia_mandatory": true,
+          "six_band_defaults": {
+            "life_stage": "L1_emerging_adult",
+            "clinical_complexity": "C2_single_stable_condition",
+            "financial_capacity": "F2_practical",
+            "readiness": "R3_preparing",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D3_medium"
+          },
+          "clinical_watchouts": [
+            "HIGH liability surface.",
+            "Many supplements unsafe in pregnancy; default to OB consult first.",
+            "Felicia signoff mandatory on every recommendation."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.78,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:512-522",
+            "_meta/doctrine/icp_prism_doctrine_v1.md:668-674"
+          ]
+        },
+        {
+          "variant_id": "V4.3",
+          "label": "Autoimmune Navigator",
+          "icp_id": "ICP_4_CLINICAL",
+          "felicia_mandatory": true,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C3_multiple_complex_conditions",
+            "financial_capacity": "F2_practical",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D3_medium"
+          },
+          "clinical_watchouts": [
+            "Felicia signoff and specialty coordination essential.",
+            "Do not recommend immunomodulating supplements without specific clinical signoff."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.75,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:524-534",
+            "_meta/doctrine/icp_prism_doctrine_v1.md:668-674"
+          ]
+        },
+        {
+          "variant_id": "V4.4",
+          "label": "Mental Health + Lifestyle",
+          "icp_id": "ICP_4_CLINICAL",
+          "felicia_mandatory": true,
+          "six_band_defaults": {
+            "life_stage": "L1_emerging_adult",
+            "clinical_complexity": "C2_single_stable_condition",
+            "financial_capacity": "F2_practical",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D2_low"
+          },
+          "clinical_watchouts": [
+            "Felicia signoff.",
+            "Suicide and self-harm screening MUST be visible.",
+            "Crisis resources accessible."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.75,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:536-546",
+            "_meta/doctrine/icp_prism_doctrine_v1.md:668-674"
+          ]
+        },
+        {
+          "variant_id": "V4.5",
+          "label": "Cardiovascular Concerned",
+          "icp_id": "ICP_4_CLINICAL",
+          "felicia_mandatory": true,
+          "six_band_defaults": {
+            "life_stage": "L3_midlife_pivot",
+            "clinical_complexity": "C3_multiple_complex_conditions",
+            "financial_capacity": "F2_practical",
+            "readiness": "R2_considering",
+            "trust": "T1_cautious",
+            "dose_tolerance": "D2_low"
+          },
+          "clinical_watchouts": [
+            "Anticoagulant + supplement interactions require screening.",
+            "Felicia signoff mandatory."
+          ],
+          "external_language_allowed": [
+            "safe next step",
+            "what you shared",
+            "keep this simple"
+          ],
+          "external_language_forbidden": [
+            "you are this variant",
+            "guaranteed cure",
+            "medical diagnosis",
+            "replace your clinician"
+          ],
+          "classifier_confidence_threshold": 0.75,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:548-558",
+            "_meta/doctrine/icp_prism_doctrine_v1.md:668-674"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ICP_5_INSTITUTIONAL",
+      "label": "Institutional",
+      "variants": [
+        {
+          "variant_id": "V5.1",
+          "label": "Independent Boutique Hotel",
+          "icp_id": "ICP_5_INSTITUTIONAL",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "unknown",
+            "readiness": "R0_pre_contemplation",
+            "trust": "T0_hostile",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "default unknown: doctrine does not specify this band default; using conservative Signal Object enum placeholder.",
+            "Institutional buyer variant is organizational, not an individual Citizen."
+          ],
+          "external_language_allowed": [
+            "pilot proof",
+            "outcomes data",
+            "workflow fit"
+          ],
+          "external_language_forbidden": [
+            "individual diagnosis",
+            "guaranteed savings",
+            "replace clinical workflow"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:566-572"
+          ]
+        },
+        {
+          "variant_id": "V5.2",
+          "label": "Mid-Size Hotel Chain",
+          "icp_id": "ICP_5_INSTITUTIONAL",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "unknown",
+            "readiness": "R0_pre_contemplation",
+            "trust": "T0_hostile",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "default unknown: doctrine does not specify this band default; using conservative Signal Object enum placeholder.",
+            "Institutional buyer variant is organizational, not an individual Citizen."
+          ],
+          "external_language_allowed": [
+            "pilot proof",
+            "outcomes data",
+            "workflow fit"
+          ],
+          "external_language_forbidden": [
+            "individual diagnosis",
+            "guaranteed savings",
+            "replace clinical workflow"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:574-580"
+          ]
+        },
+        {
+          "variant_id": "V5.3",
+          "label": "Enterprise Hotel Brand",
+          "icp_id": "ICP_5_INSTITUTIONAL",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "unknown",
+            "readiness": "R0_pre_contemplation",
+            "trust": "T0_hostile",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "default unknown: doctrine does not specify this band default; using conservative Signal Object enum placeholder.",
+            "Institutional buyer variant is organizational, not an individual Citizen."
+          ],
+          "external_language_allowed": [
+            "pilot proof",
+            "outcomes data",
+            "workflow fit"
+          ],
+          "external_language_forbidden": [
+            "individual diagnosis",
+            "guaranteed savings",
+            "replace clinical workflow"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:582-588"
+          ]
+        },
+        {
+          "variant_id": "V5.4",
+          "label": "Mid-Size Employer (Worksite Wellness)",
+          "icp_id": "ICP_5_INSTITUTIONAL",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "unknown",
+            "readiness": "R0_pre_contemplation",
+            "trust": "T0_hostile",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "default unknown: doctrine does not specify this band default; using conservative Signal Object enum placeholder.",
+            "Institutional buyer variant is organizational, not an individual Citizen."
+          ],
+          "external_language_allowed": [
+            "pilot proof",
+            "outcomes data",
+            "workflow fit"
+          ],
+          "external_language_forbidden": [
+            "individual diagnosis",
+            "guaranteed savings",
+            "replace clinical workflow"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:590-596"
+          ]
+        },
+        {
+          "variant_id": "V5.5",
+          "label": "FQHC / Community Health Center",
+          "icp_id": "ICP_5_INSTITUTIONAL",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "unknown",
+            "readiness": "R0_pre_contemplation",
+            "trust": "T0_hostile",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "default unknown: doctrine does not specify this band default; using conservative Signal Object enum placeholder.",
+            "Institutional buyer variant is organizational, not an individual Citizen."
+          ],
+          "external_language_allowed": [
+            "pilot proof",
+            "outcomes data",
+            "workflow fit"
+          ],
+          "external_language_forbidden": [
+            "individual diagnosis",
+            "guaranteed savings",
+            "replace clinical workflow"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:598-604"
+          ]
+        },
+        {
+          "variant_id": "V5.6",
+          "label": "State Medicaid Innovation",
+          "icp_id": "ICP_5_INSTITUTIONAL",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "unknown",
+            "readiness": "R0_pre_contemplation",
+            "trust": "T0_hostile",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "default unknown: doctrine does not specify this band default; using conservative Signal Object enum placeholder.",
+            "Institutional buyer variant is organizational, not an individual Citizen."
+          ],
+          "external_language_allowed": [
+            "pilot proof",
+            "outcomes data",
+            "workflow fit"
+          ],
+          "external_language_forbidden": [
+            "individual diagnosis",
+            "guaranteed savings",
+            "replace clinical workflow"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:606-612"
+          ]
+        },
+        {
+          "variant_id": "V5.7",
+          "label": "University System",
+          "icp_id": "ICP_5_INSTITUTIONAL",
+          "felicia_mandatory": false,
+          "six_band_defaults": {
+            "life_stage": "L2_establishing_adult",
+            "clinical_complexity": "C0_asymptomatic_wellness_curious",
+            "financial_capacity": "unknown",
+            "readiness": "R0_pre_contemplation",
+            "trust": "T0_hostile",
+            "dose_tolerance": "D1_micro"
+          },
+          "clinical_watchouts": [
+            "default unknown: doctrine does not specify this band default; using conservative Signal Object enum placeholder.",
+            "Institutional buyer variant is organizational, not an individual Citizen."
+          ],
+          "external_language_allowed": [
+            "pilot proof",
+            "outcomes data",
+            "workflow fit"
+          ],
+          "external_language_forbidden": [
+            "individual diagnosis",
+            "guaranteed savings",
+            "replace clinical workflow"
+          ],
+          "classifier_confidence_threshold": 0.55,
+          "doctrine_refs": [
+            "_meta/doctrine/icp_prism_doctrine_v1.md:614-620"
+          ]
+        }
+      ]
+    }
+  ]
+}
