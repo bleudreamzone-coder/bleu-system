@@ -1,335 +1,97 @@
-# Dr. Felicia Stoler Professional Standards — bleu.live Operations (v1.0)
+# Felicia Standards v1
 
-Status: PENDING_SIGNOFF — structured Felicia standards template; not live-binding until Dr. Felicia signs off.
+**Repo path:** `_meta/doctrine/felicia_standards_v1.md`
+**Status:** `SIGNED` — 2026-06-02
+**Standards author:** Dr. Felicia Stoler
+**Version:** v1
+**Date signed:** 2026-06-02
 
-## Document Metadata
-
-- **Document type:** Institutional Doctrine
-- **Version:** 1.0
-- **Status:** STRUCTURED TEMPLATE — Sections marked PENDING_FELICIA_SIGNOFF await Dr. Felicia's authorship.
-- **Authored by:** Captain Bleu Garner (structural scaffolding) + Dr. Felicia Stoler (clinical content, by section)
-- **Scope:** bleu.live platform operations (Fleur de BleuDream LLC)
-- **NOT covered by this document:** Jazz Bird® NOLA founder role (separate doctrine)
-
-## Authority Boundary
-
-This document is a structured scaffold for professional standards that apply to Dr. Felicia Stoler's bleu.live role. Codex may record factual doctrine and operational filing conventions, but Codex does not author clinical or professional standards language for Dr. Felicia. Every section marked PENDING_FELICIA_SIGNOFF remains Dr. Felicia's authority until she edits, dates, and signs it through the documented signoff path.
+> Signed and binding as of 2026-06-02. Future changes require a new version and Dr. Stoler's signoff.
 
 ---
 
-## 1. Identity and Verified Credentials
+## 1. Authority & Scope
 
-### 1.1 Identity
+This document version-controls the professional and clinical standards of **Dr. Felicia Stoler** in her role as **President & Chief Clinical/Medical/Wellness Officer of bleu.live**.
 
-- **Full name:** Dr. Felicia Stoler
-- **Credentials, in order:** DCN, MS, RDN, FACSM, FAND, Dipl. ACLM
-- **Credential note:** Diplomate of the American College of Lifestyle Medicine, first cohort
-- **Role at bleu.live:** President & Chief Clinical / Medical / Wellness Officer
-- **Brand colors for document and visual consistency:** purple `#4B1E82`, gold `#C9A227`
-
-### 1.2 Verification Status
-
-Verified by Dr. Felicia Stoler: PENDING
+- It is the source of truth that Codex and all contributors must cite on any pull request touching clinical claims, credential framing, evidence grading, or public-facing health copy.
+- **Codex does not author or amend clinical/professional standards.** Only Dr. Stoler authors and signs changes to this document.
+- A clinical claim, credential statement, or evidence-grading change **does not ship** unless it conforms to this document.
+- **Role separation (non-negotiable):** Dr. Stoler's role in this document is strictly bleu.live (President & Chief Clinical/Medical/Wellness Officer). Her separate role as **Founder of Jazz Bird® NOLA** is a distinct entity and must **never** be conflated with bleu.live in any materials.
 
 ---
 
-## 2. Roles and Authority Boundaries
+## 2. Verified Credentials
 
-### 2.1 bleu.live Authority Covers
+Only verified credentials are used, stated exactly as held. No honorary, aspirational, or implied titles.
 
-Dr. Felicia's bleu.live authority covers the clinical and safety-facing surfaces where professional clinical judgment must govern institutional behavior:
+- **DCN** — Doctor of Clinical Nutrition
+- **MS** — Master of Science
+- **RDN** — Registered Dietitian Nutritionist
+- **FACSM** — Fellow, American College of Sports Medicine
+- **FAND** — Fellow of the Academy of Nutrition and Dietetics
+- **Dipl. ACLM** — Diplomate, American College of Lifestyle Medicine; member of the inaugural cohort of board-certified Lifestyle Medicine professionals
 
-- Clinical content governance
-- Scope-of-practice gating
-- Refusal doctrine interpretation at clinical surfaces
-- Agent boundary signoffs
-- Retention policy signoffs where clinical risk or citizen safety is implicated
-- Citizen safety enforcement at clinical or clinical-adjacent surfaces
-
-### 2.2 bleu.live Authority Does Not Cover
-
-Dr. Felicia's bleu.live role authority does not cover:
-
-- Engineering architecture decisions assigned to Captain Tier 1
-- Business or operational decisions outside clinical scope assigned to Captain Tier 1
-- Matters outside the bleu.live platform role identified in this document
-
-### 2.3 Engineering / Clinical Edge Cases
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 2.4 Escalation Paths Outside Stated Authority
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
+**Standard role title:** President & Chief Clinical/Medical/Wellness Officer, bleu.live.
 
 ---
 
-## 3. Decision Matrix Tier 2 Authority Surfaces
+## 3. Evidence Tiers
 
-### 3.1 Tier 2 Doctrine Source
+Every health claim that reaches a user, a grant reviewer, or public copy is graded (internally) by evidence strength before it appears. A lower-tier claim may never be presented as a higher-tier one.
 
-Decision Matrix Tier 2 is defined as "Dr. Felicia Decides, Bleu Recommends." The current institutional doctrine lists these Tier 2 categories:
-
-- Clinical claims in any user-facing copy
-- Supplement protocols and dosing
-- Cannabis interaction rules
-- Public credential framing
-- Open Windows protocol clinical content
-- ECSIQ + CannaIQ regulatory positioning
-- Fullscript plan templates and clinical guidance
-- Press / media health claims
-
-### 3.2 Mapped Operational Categories
-
-For this standards document, the Tier 2 authority surface is mapped into the following operational categories without expanding Dr. Felicia's authored standards:
-
-- Clinical content authorship
-- Scope-of-practice claim boundaries
-- Medication safety language
-- Crisis safety patterns
-- Clinical agent boundaries
-- Counterfactual review for clinical classes
-
-### 3.3 Standards Within Each Tier 2 Category
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 3.4 Escalation Versus Decision Thresholds
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 3.5 Routine Tier 2 Signoff Timelines
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
+- **Tier 1 — High.** Systematic reviews, RCTs, and major guideline bodies (e.g., USPSTF, ACLM, Academy of Nutrition and Dietetics position papers). Stated with confidence.
+- **Tier 2 — Moderate.** Observational/cohort studies, professional consensus, mechanistic plausibility with supporting data. Stated with appropriate hedging.
+- **Tier 3 — Low / Emerging.** Preliminary, single-study, anecdotal, or expert opinion without strong evidence. Stated explicitly as preliminary — never as established fact.
 
 ---
 
-## 4. Decision Matrix Tier 3 Autonomous Authority Surfaces
+## 4. The Four Locks (non-negotiable)
 
-### 4.1 Tier 3 Doctrine Source
+### Lock 1 — No unverified figures
+The **"10 million+ patients served since 1998"** figure, and any variant, is **UNVERIFIED** and must **never** appear in: grant submissions, LDH-facing materials, public-facing copy, clinical credential framing, measurement/outcome claims, or investor materials. **General rule:** no patient-count, reach, or outcome figure is used anywhere unless it is verified and sourced.
 
-Decision Matrix Tier 3 is defined as "Dr. Felicia Decides, System Performs autonomously." The current institutional doctrine lists these Tier 3 categories:
+### Lock 2 — Lineage is narrative, not credential
+Any multi-generational family lineage (e.g., the Jessie → Timothy → Bleu → Dakota narrative) is **personal storytelling only.** It must **never** be surfaced as professional credibility, clinical authority, or institutional credential — not in bleu.live copy, the system prompt, LDH-facing materials, grant submissions, or public content.
+`[ACTION FLAG: the live system prompt currently contains a "127 years of healing lineage" claim (server.js:68). This violates Lock 2 and must be corrected.]`
 
-- Siren level 3/4 escalation thresholds
-- Crisis routing modifications
-- Open Window red-flag screen updates
-- Cannabis hard-stop contraindication updates
+### Lock 3 — Honest credential framing
+Credentials are stated exactly as verified (Section 2). No inflation, no implied licensure not held. Framing must not imply a medical degree or scope Dr. Stoler does not hold — she is a doctorally-prepared clinical nutrition and lifestyle-medicine expert (DCN/RDN), not a physician, and copy must read accordingly. bleu.live and ALVAI do not present clinical oversight as a substitute for the user's own medical care.
 
-### 4.2 Routine Autonomous Standards
+### Lock 4 — Forbidden vocabulary & claim boundaries
+- No diagnostic language ("you have X").
+- No treatment, cure, or disease-prevention claims stated as certainty.
+- No medical-device or drug claims.
+- No absolute health promises ("will cure," "guaranteed").
+- Lifestyle-medicine discipline: behavioral intervention first; commerce only after care and only when clinically appropriate.
 
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 4.3 Tier 3 Exception Handling
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
----
-
-## 5. Clinical Content Authorship Standards
-
-### 5.1 Voice and Tone Standards
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 5.2 Clinical Citation Standards
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 5.3 Off-Limit Topics
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 5.4 Disclaimer Standards
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 5.5 Patient/Citizen-facing Language Standards
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
+*This is the v1 baseline forbidden-vocabulary set. It can be expanded in a later version anytime; expansions only add restrictions, so signing now is safe.*
 
 ---
 
-## 6. Documentation and Signoff Protocols
+## 5. Claim Boundaries for bleu.live / ALVAI
 
-### 6.1 Filing Location
+**May:** provide evidence-tiered lifestyle and wellness guidance; surface one safe next step; route to professional care; present educational content with sources.
 
-Clinical signoff documents are filed in:
+**May not:** diagnose; prescribe; claim to treat or cure; present a Tier 3 claim as Tier 1; surface unverified figures; use lineage as credibility; surface commerce during crisis or vulnerable states.
 
-```text
-_meta/clinical/signoffs/
-```
-
-### 6.2 Naming Convention
-
-Routine signoff documents use this naming convention:
-
-```text
-[YYYY-MM-DD]-stoler-signoff-[topic-kebab-case].md
-```
-
-### 6.3 Required Fields
-
-Each signoff document must include these fields:
-
-- `signed_by`
-- `signed_at`
-- `topic`
-- `decision_summary`
-- `rationale`
-- `scope`
-- `expires_at`
-- `revocation_path`
-
-### 6.4 Preferred Signoff Cadence
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 6.5 Review Windows for New Agent Boundaries
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 6.6 Escalation Paths During Signoff Sprint
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
+**Crisis:** clinical guidance halts and defers to the platform's deterministic crisis-escalation path (988 / emergency routing). No wellness coaching over a crisis signal.
 
 ---
 
-## 7. Off-Platform Clinical Referral Standards
+## 6. Maintenance
 
-### 7.1 Non-Substitution Principle
-
-bleu.live's AI surfaces never substitute for licensed clinical care. Off-platform referral is mandatory when clinical urgency exceeds AI scope.
-
-### 7.2 Standard Referral Categories
-
-Standard categories of off-platform referral include:
-
-- Crisis services
-- Primary care provider
-- Specialist referral
-- Pharmacy review for medication interactions
-- Mental health professional
-
-### 7.3 Specific Referral Criteria by Category
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 7.4 Preferred Referral Wording to Citizens
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 7.5 Mandatory Refusal and Referral Standards
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
+- Changes to this document require Dr. Stoler's signoff and a version bump.
 
 ---
 
-## 8. Continuing Education and Credential Maintenance
+## 7. Signoff
 
-### 8.1 Current Cycle Facts
+**Acknowledged and signed** by Dr. Felicia Stoler. These standards are accepted as authored and are binding on bleu.live clinical work.
 
-- The CDR cycle ending 2026-05-31 was completed with approximately 118.5 CPEUs reconstructed.
-- The next CDR cycle began 2026-06-01 with real-time logging as the standard going forward.
+**Signed:** Dr. Felicia Stoler, DCN, MS, RDN, FACSM, FAND, Dipl. ACLM
+President & Chief Clinical/Medical/Wellness Officer, bleu.live
 
-### 8.2 Credential Bodies
+**Date:** 2026-06-02
 
-Credential bodies relevant to this document include:
-
-- Commission on Dietetic Registration (CDR)
-- American College of Sports Medicine (ACSM)
-- American College of Lifestyle Medicine (ACLM)
-- Academy of Nutrition and Dietetics (AND)
-
-### 8.3 Continuing-Education Goals for Current Cycle
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 8.4 Credential-Relevant Project Priorities
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 8.5 Institutional Development Plan Related to bleu.live
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
----
-
-## 9. Conflict of Interest Disclosures
-
-### 9.1 Disclosure Categories
-
-Disclosure categories for this document include:
-
-- Product affiliations
-- Speaking honoraria
-- Research funding
-- Advisory roles outside bleu.live
-
-### 9.2 Specific Disclosures
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 9.3 Refresh Standard
-
-Specific disclosures are refreshed annually or upon material change.
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
----
-
-## 10. Brand and Communication Standards
-
-### 10.1 Brand Colors
-
-- **Purple:** `#4B1E82`
-- **Gold:** `#C9A227`
-
-### 10.2 Professional Communication Channels
-
-The professional communication channel relevant to bleu.live is institutional email at bleu.live, to be configured.
-
-### 10.3 Photo and Bio Standards for Citizen-facing Surfaces
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 10.4 Speaking and Publication Standards Intersecting with bleu.live Brand
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
-### 10.5 Social-Media Policy for bleu.live Content
-
-PENDING_FELICIA_SIGNOFF — to be authored by Dr. Felicia Stoler in clinical signoff session
-
----
-
-## 11. Document Maintenance
-
-### 11.1 Review Cadence
-
-This document is reviewed every 12 months at minimum.
-
-### 11.2 Versioning
-
-Material changes require a new version number, such as v1.1 or v1.2, via pull request with a Dr. Felicia signoff document.
-
-### 11.3 Revocation Path
-
-Revocations of prior signoff are filed at:
-
-```text
-_meta/clinical/signoffs/[date]-stoler-revocation-[topic].md
-```
-
-### 11.4 Next Review Due
-
-Next review due: 2027-06-02
-
----
-
-## Footer
-
-Document status: STRUCTURED TEMPLATE pending Dr. Felicia Stoler authorship on PENDING_FELICIA_SIGNOFF sections
-
-Captain Soul-Gate on structural scaffolding: 2026-06-02
-
-Felicia signoff path: edits to this document by Dr. Felicia Stoler followed by a PR with conventional commit prefix `docs(felicia-standards):`. Each section signed in turn flips PENDING_FELICIA_SIGNOFF to a dated `Signed by Dr. Felicia Stoler: YYYY-MM-DD` line.
+> Status: `SIGNED`. Codex may cite this document as binding on clinical pull requests.
