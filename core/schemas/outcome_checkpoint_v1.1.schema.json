@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/outcome-checkpoint-v1.1.json",
+  "title": "OutcomeCheckpoint v1.1",
+  "description": "Shadow-mode follow-up records that fulfill Trust Packet outcome_plan.day_3, day_7, and day_30 commitments.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "checkpoint_id",
+    "trust_packet_id",
+    "session_id",
+    "citizen_id",
+    "schema_version",
+    "checkpoint_day",
+    "scheduled_at",
+    "captured_at",
+    "status",
+    "delivery_channel",
+    "delivery_attempts",
+    "self_report",
+    "measurement_update",
+    "decline_reason",
+    "td_010_compliance"
+  ],
+  "properties": {
+    "checkpoint_id": { "type": "string", "format": "uuid" },
+    "trust_packet_id": { "type": "string", "format": "uuid" },
+    "session_id": { "type": "string", "pattern": "^h_[0-9a-f]{16}$" },
+    "citizen_id": { "type": "string", "format": "uuid" },
+    "schema_version": { "const": "1.1" },
+    "checkpoint_day": { "type": "integer", "enum": [3, 7, 30] },
+    "scheduled_at": { "type": "string", "format": "date-time" },
+    "captured_at": { "type": ["string", "null"], "format": "date-time" },
+    "status": { "type": "string", "enum": ["scheduled", "captured", "missed", "declined", "expired"] },
+    "delivery_channel": { "type": ["string", "null"], "enum": ["sms", "email", "in_app", null] },
+    "delivery_attempts": { "type": "integer", "minimum": 0, "default": 0 },
+    "self_report": { "anyOf": [{ "$ref": "#/$defs/self_report" }, { "type": "null" }] },
+    "measurement_update": { "anyOf": [{ "$ref": "#/$defs/measurement_update" }, { "type": "null" }] },
+    "decline_reason": { "type": ["string", "null"] },
+    "td_010_compliance": { "$ref": "#/$defs/td_010_compliance" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "captured" } }, "required": ["status"] },
+      "then": {
+        "properties": {
+          "captured_at": { "type": "string", "format": "date-time" },
+          "self_report": { "$ref": "#/$defs/self_report" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "status": { "enum": ["scheduled", "missed", "expired"] } }, "required": ["status"] },
+      "then": {
+        "properties": {
+          "captured_at": { "type": "null" },
+          "self_report": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "declined" } }, "required": ["status"] },
+      "then": {
+        "properties": {
+          "decline_reason": { "type": "string", "minLength": 1 },
+          "self_report": { "type": "null" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "td_010_compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pii_hashed", "plaintext_email_stored", "plaintext_phone_stored", "plaintext_in_free_text"],
+      "properties": {
+        "pii_hashed": { "type": "boolean" },
+        "plaintext_email_stored": { "const": false },
+        "plaintext_phone_stored": { "const": false },
+        "plaintext_in_free_text": { "const": false }
+      }
+    },
+    "self_report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adherence_score", "perceived_benefit", "perceived_harm", "free_text", "would_recommend_to_friend", "response_method"],
+      "properties": {
+        "adherence_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "perceived_benefit": { "type": "number", "minimum": 0, "maximum": 1 },
+        "perceived_harm": { "type": "number", "minimum": 0, "maximum": 1 },
+        "free_text": { "type": "string", "minLength": 0, "maxLength": 2000 },
+        "would_recommend_to_friend": { "type": ["boolean", "null"] },
+        "response_method": { "type": "string", "enum": ["text_message", "email_reply", "in_app_form", "voice_transcription", "clinician_proxy"] }
+      }
+    },
+    "measurement_update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["captured_via"],
+      "properties": {
+        "biomarkers": {
+          "type": "object",
+          "additionalProperties": { "type": ["number", "null"] }
+        },
+        "mood_score": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "sleep_score": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "energy_score": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "pain_score": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "stress_score": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "focus_score": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "gut_score": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "captured_via": { "type": "string", "enum": ["citizen_self_report", "wearable_integration", "lab_result", "clinician_entered", "passive_inference"] }
+      }
+    }
+  }
+}
