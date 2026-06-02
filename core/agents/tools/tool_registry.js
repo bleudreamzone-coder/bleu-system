@@ -1,3 +1,4 @@
+// STATUS: DORMANT — tool registry scaffold only; not imported by server.js.
 'use strict';
 
 const fs = require('node:fs');

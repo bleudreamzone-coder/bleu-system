@@ -1,5 +1,7 @@
 # Memory Architecture (Shadow Mode — Schema Only)
 
+Status: DORMANT — memory interface scaffold only; live memory remains in server.js.
+
 PR India adds the dormant durable memory shape for future agents and the Orchestrator. It does **not** connect `/api/chat`, `server.js`, Supabase, or any live agent path to memory.
 
 ## Doctrine source

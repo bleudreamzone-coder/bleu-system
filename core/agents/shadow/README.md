@@ -1,5 +1,7 @@
 # Shadow Agent Wiring
 
+Status: DORMANT — shadow runner/wiring scaffold only; not imported by server.js.
+
 This directory contains BLEU's dormant shadow infrastructure: the Shadow Runner observation source and the Shadow Agent Wiring subscription layer. The wiring scaffold lets future registered agents be observed beside production without changing a citizen-facing response.
 
 ## Source anchors

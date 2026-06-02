@@ -1,3 +1,4 @@
+// STATUS: DORMANT — memory interface scaffold only; live memory remains in server.js.
 'use strict';
 
 const crypto = require('node:crypto');

@@ -1,3 +1,4 @@
+// STATUS: DORMANT — shadow runner/wiring scaffold only; not imported by server.js.
 'use strict';
 
 const VALID_SINKS = new Set(['stdout', 'supabase']);

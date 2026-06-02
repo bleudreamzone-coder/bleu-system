@@ -1,3 +1,4 @@
+// STATUS: DORMANT — counterfactual capture scaffold only; not imported by server.js.
 'use strict';
 
 /**

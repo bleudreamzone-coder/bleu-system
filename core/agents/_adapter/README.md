@@ -1,5 +1,7 @@
 # Agents SDK Adapter Scaffold
 
+Status: DORMANT — SDK adapter scaffold only; not imported by server.js.
+
 This directory is the scaffold-only adapter layer for the future BLEU agent migration. It defines the **shape** of agents, tools, handoffs, and runners without creating any live agents, invoking any model, or wiring production traffic.
 
 ## Architecture mapping

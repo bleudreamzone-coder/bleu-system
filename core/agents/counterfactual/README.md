@@ -1,5 +1,7 @@
 # Counterfactual Capture Infrastructure (Dormant)
 
+Status: DORMANT — counterfactual capture scaffold only; not imported by server.js.
+
 This directory provides the dormant bridge between Trust Packet emission and human CounterfactualReview. The Bible establishes the Counterfactual as BLEU's proof unit and requires every production ledger record to include one; this infrastructure turns that field into a prioritized review queue instead of an unworked log backlog (`_meta/THE_BLEU_BIBLE.md`).
 
 ## Source-of-truth inputs

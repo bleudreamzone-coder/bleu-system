@@ -1,3 +1,4 @@
+// STATUS: DORMANT — SDK adapter scaffold only; not imported by server.js.
 'use strict';
 
 class NotImplementedError extends Error {

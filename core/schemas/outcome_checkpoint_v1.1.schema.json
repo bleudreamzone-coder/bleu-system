@@ -1,4 +1,5 @@
 {
+  "$comment": "STATUS: DORMANT — outcome checkpoint contract only; not imported by server.js.",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bleu.live/schemas/outcome-checkpoint-v1.1.json",
   "title": "OutcomeCheckpoint v1.1",

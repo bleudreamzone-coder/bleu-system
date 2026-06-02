@@ -1,4 +1,5 @@
 {
+  "$comment": "STATUS: DORMANT — metric event schema only; live server.js uses its own logEvent path.",
   "$defs": {
     "agent_invoked_data": {
       "additionalProperties": false,

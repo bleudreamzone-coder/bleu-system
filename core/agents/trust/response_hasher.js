@@ -1,3 +1,4 @@
+// STATUS: DORMANT — Trust Packet v1.1 logging helper only; live Trust Packet v0 bridge is in server.js.
 'use strict';
 
 const crypto = require('node:crypto');

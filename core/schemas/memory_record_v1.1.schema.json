@@ -1,4 +1,5 @@
 {
+  "$comment": "STATUS: DORMANT — memory interface contract only; not imported by server.js.",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bleu.live/schemas/memory-record-v1.1.json",
   "title": "MemoryRecord v1.1",

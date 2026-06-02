@@ -1,3 +1,4 @@
+// STATUS: DORMANT — Trust Packet v1.1 logger only; live Trust Packet v0 bridge is in server.js.
 'use strict';
 
 const fs = require('node:fs');

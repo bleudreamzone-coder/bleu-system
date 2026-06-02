@@ -1,3 +1,4 @@
+// STATUS: DORMANT — shadow wiring scaffold only; not imported by server.js.
 'use strict';
 
 const crypto = require('node:crypto');

@@ -1,4 +1,5 @@
 {
+  "$comment": "STATUS: TESTED_ONLY — Signal Object v1.1 schema is validated by tests but not imported by server.js; live Signal v0 is built in server.js.",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bleu.live/schemas/signal-object-v1.1.json",
   "title": "Signal Object v1.1",

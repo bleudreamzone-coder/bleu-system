@@ -1,5 +1,7 @@
 # Tool Registry Architecture — Shadow Mode
 
+Status: DORMANT — tool registry scaffold only; not imported by server.js.
+
 The Tool Registry is the dormant registration surface for future BLEU agent tools. It defines the shape a tool must satisfy before any agent may call it, but it does **not** register tools, invoke live APIs, or wire adapters in PR Juliet.
 
 This PR translates the tool layer described in the institutional blueprint's Tool Layer Mapping / adjacent operational rails into an executable registration contract. The local blueprint currently labels Section 13 as the outcome loop, while Sections 12, 15, 16, and 17 identify Stripe, Twilio, Resend/email, Supabase governance, and observability rails that future tools must obey. The Bible still governs the discipline: BLEU engineering primitives stay bounded, auditable, and ordered before any citizen-facing action.
