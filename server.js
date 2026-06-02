@@ -2102,7 +2102,7 @@ const server = http.createServer((req, res) => {
           res.write('data: '+JSON.stringify({text:reply})+'\n\n');
           res.write('data: [DONE]\n\n');
           res.end();
-          const { trust_packet_v0 } = buildTrustPacketV0({
+          const { signal_v0, decision_v0, trust_packet_v0 } = buildTrustPacketV0({
             ...trustPacketContextV0,
             memoryWriteStatus: 'skipped_greeting_cache_v0',
             responseSummary: { status: 'completed', path: 'greeting_cache', streamed: true, response_length: reply.length, model: 'greeting_cache_v0' },
@@ -2227,7 +2227,7 @@ const server = http.createServer((req, res) => {
         const memoryWriteStatus = (SUPABASE_URL && SUPABASE_KEY && full)
           ? 'queued_conversation_history_and_coherence_v0'
           : 'skipped_no_supabase_or_empty_response_v0';
-        const { trust_packet_v0 } = buildTrustPacketV0({
+        const { signal_v0, decision_v0, trust_packet_v0 } = buildTrustPacketV0({
           ...trustPacketContextV0,
           memoryWriteStatus,
           responseSummary: { status: 'completed', streamed: true, response_length: (full || '').length, chunks_seen: chunkCount, fallback_used: full === getFallback(p.message), model },
@@ -2393,7 +2393,7 @@ const server = http.createServer((req, res) => {
         const memoryWriteStatus = (SUPABASE_URL && SUPABASE_KEY && p.message && full && full.length >= 20)
           ? 'queued_conversation_history_v0'
           : 'skipped_no_supabase_or_short_response_v0';
-        const { trust_packet_v0 } = buildTrustPacketV0({
+        const { signal_v0, decision_v0, trust_packet_v0 } = buildTrustPacketV0({
           ...trustPacketContextV0,
           memoryWriteStatus,
           responseSummary: { status: 'completed', streamed: true, response_length: (full || '').length, ttfb_ms: ts_ttfb ? (ts_ttfb - ts_start) : null, total_ms: Date.now() - ts_start, model },
@@ -3683,43 +3683,50 @@ if (process.env.BLEU_TEST_TRUST_PACKET_V0 === '1') {
     session: 'trust-packet-v0-smoke',
     history: [],
   };
-  const crisis = detectCrisis(payload.message);
-  const openWindow = openWindowGate({ message: payload.message, session_id: payload.session });
-  const commerceGate = getCommerceGate(payload, crisis, { priorMessages: [] });
+  const endpoints = ['/api/chat', '/api/chat/stream'];
   const streamedChunks = ['You found us. ', 'Let us slow the night down.'];
-  const { signal_v0, decision_v0, trust_packet_v0 } = buildTrustPacketV0({
-    endpoint: '/api/chat',
-    payload,
-    crisis,
-    openWindow,
-    commerceGate,
-    memoryWriteStatus: 'diagnostic_skipped_no_write_v0',
-    responseSummary: {
-      status: 'completed',
-      streamed: true,
-      response_length: streamedChunks.join('').length,
-      chunks_seen: streamedChunks.length,
-      model: 'diagnostic_mock_stream_v0',
-    },
-    outcomeCheckpointRequired: crisis.detected,
-  });
-
-  const serialized = JSON.stringify(trust_packet_v0);
-  const checks = [
-    ['signal_v0 created', signal_v0 && signal_v0.schema === 'SignalObject.v0'],
-    ['decision_v0 created', decision_v0 && decision_v0.schema === 'DecisionObject.v0'],
-    ['trust_packet_v0 created', trust_packet_v0 && trust_packet_v0.schema === 'TrustPacket.v0'],
-    ['crisis false path works', signal_v0.crisis_detected === false && decision_v0.safety_gate === 'standard'],
-    ['commerce gate does not force commerce', decision_v0.commerce_allowed === false && signal_v0.commerce_intent.reason === 'first_response'],
-    ['response still streams normally', trust_packet_v0.response_summary.streamed === true && trust_packet_v0.response_summary.chunks_seen === 2],
-    ['no raw user message in packet', !serialized.includes(payload.message)],
-  ];
   let allPass = true;
-  for (const [name, ok] of checks) {
-    if (!ok) allPass = false;
-    console.log(`${name} ${ok ? '✓' : '✗ FAIL'}`);
+
+  for (const endpoint of endpoints) {
+    const crisis = detectCrisis(payload.message);
+    const openWindow = openWindowGate({ message: payload.message, session_id: payload.session });
+    const commerceGate = getCommerceGate(payload, crisis, { priorMessages: [] });
+    const { signal_v0, decision_v0, trust_packet_v0 } = buildTrustPacketV0({
+      endpoint,
+      payload,
+      crisis,
+      openWindow,
+      commerceGate,
+      memoryWriteStatus: 'diagnostic_skipped_no_write_v0',
+      responseSummary: {
+        status: 'completed',
+        streamed: true,
+        response_length: streamedChunks.join('').length,
+        chunks_seen: streamedChunks.length,
+        model: 'diagnostic_mock_stream_v0',
+      },
+      outcomeCheckpointRequired: crisis.detected,
+    });
+
+    const serialized = JSON.stringify(trust_packet_v0);
+    const checks = [
+      [`${endpoint} signal_v0 created`, signal_v0 && signal_v0.schema === 'SignalObject.v0'],
+      [`${endpoint} decision_v0 created`, decision_v0 && decision_v0.schema === 'DecisionObject.v0'],
+      [`${endpoint} trust_packet_v0 created`, trust_packet_v0 && trust_packet_v0.schema === 'TrustPacket.v0'],
+      [`${endpoint} crisis false path works`, signal_v0.crisis_detected === false && decision_v0.safety_gate === 'standard'],
+      [`${endpoint} commerce gate does not force commerce`, decision_v0.commerce_allowed === false && signal_v0.commerce_intent.reason === 'first_response'],
+      [`${endpoint} response still streams normally`, trust_packet_v0.response_summary.streamed === true && trust_packet_v0.response_summary.chunks_seen === 2],
+      [`${endpoint} no raw user message in packet`, !serialized.includes(payload.message)],
+      [`${endpoint} no session/user PII in packet`, !serialized.includes(payload.session) && !serialized.includes('user_id') && !serialized.includes('session_id')],
+      [`${endpoint} diagnostic performs no DB write`, trust_packet_v0.memory_write_status === 'diagnostic_skipped_no_write_v0'],
+    ];
+    for (const [name, ok] of checks) {
+      if (!ok) allPass = false;
+      console.log(`${name} ${ok ? '✓' : '✗ FAIL'}`);
+    }
+    logTrustPacketV0(trust_packet_v0);
   }
-  logTrustPacketV0(trust_packet_v0);
+
   console.log(allPass ? '\n✅ TRUST PACKET v0 DIAGNOSTIC PASS' : '\n❌ TRUST PACKET v0 DIAGNOSTIC FAILED');
   process.exit(allPass ? 0 : 1);
 }
@@ -3750,7 +3757,7 @@ if (process.env.BLEU_TEST_CRISIS === '1') {
     if (!ok) allPass = false;
     console.log(`Test ${id} [${want ? 'crisis' : 'safe'}] banner=${banner} gate=${gate} ${ok ? '✓' : '✗ FAIL'}  ${phrase}`);
   }
-  console.log(allPass ? '\n✅ CANONICAL CRISIS: banner+gate identical, 11/11 correct' : '\n❌ CRISIS TESTS FAILED');
+  console.log(allPass ? '\n✅ TRUST PACKET v0 DIAGNOSTIC PASS' : '\n❌ TRUST PACKET v0 DIAGNOSTIC FAILED');
   process.exit(allPass ? 0 : 1);
 }
 
