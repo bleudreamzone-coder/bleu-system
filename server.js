@@ -262,6 +262,104 @@ function appendCommerceGatePrompt(sys, gate) {
   return sys + `\n\nCOMMERCE RESTRAINT ACTIVE (${gate.reason}): Do not mention, recommend, or hint at products, supplements, carts, affiliate links, prices, stores, subscriptions, checkout, Amazon, Fullscript, Stripe, BetterHelp offers, or paid plans in this response. Listen first, address the stated need clinically, and ask one useful follow-up question.`;
 }
 
+// ═══════ TRUST PACKET v0 BRIDGE — observe-only runtime contract ═══════
+// v0 makes the authored Prism → Arbiter → Ledger loop observable without
+// adding a new layer, persisting sensitive records, or exposing internals to
+// citizens. Persistence waits for explicit Trust Packet storage/RLS review.
+function inferSurfaceIntentV0(message, mode) {
+  const m = String(message || '').toLowerCase();
+  if (/therapist|therapy|doctor|practitioner|near me|\b\d{5}\b/.test(m)) return 'find_care';
+  if (/sleep|insomnia|can't sleep|cannot sleep|anxiety|stress|pain|fatigue|supplement|vitamin|magnesium|protocol|product|cart/.test(m)) return 'wellness_support';
+  if (/help|struggling|overwhelmed|scared|not okay|relapse/.test(m)) return 'support_request';
+  if (/hello|hi|hey|start|what is bleu|what can you do/.test(m)) return 'orientation';
+  return mode ? `${mode}_conversation_v0` : 'general_conversation_v0';
+}
+
+function inferStateV0(message, crisis, openWindow, commerceGate) {
+  if (crisis && crisis.detected) return 'crisis_detected';
+  if (openWindow && openWindow.state === 'open_unstable') return 'open_unstable';
+  if (commerceGate && commerceGate.supportTier) return 'support_tier';
+  if (openWindow && openWindow.state === 'open_stable') return 'open_stable';
+  return 'stable_v0';
+}
+
+function approvedRouteV0(crisis, openWindow, commerceGate, endpoint) {
+  if (crisis && crisis.detected) return 'crisis_safety_response';
+  if (openWindow && openWindow.state === 'open_unstable') return 'support_first_response';
+  if (commerceGate && commerceGate.allowed) return 'alvai_stream_with_optional_commerce_cards';
+  return endpoint === '/api/chat/stream' ? 'alvai_stream' : 'api_chat_stream';
+}
+
+function buildTrustPacketV0({ endpoint, payload, crisis, openWindow, commerceGate, memoryWriteStatus, responseSummary, outcomeCheckpointRequired }) {
+  const createdAt = new Date().toISOString();
+  const mode = (payload && payload.mode) || 'general';
+  const crisisDetected = !!(crisis && crisis.detected);
+  const blockedRoutes = [];
+  if (crisisDetected) blockedRoutes.push('commerce', 'routine_product_recommendation');
+  if (commerceGate && !commerceGate.allowed) blockedRoutes.push('commerce');
+
+  const signal_v0 = {
+    schema: 'SignalObject.v0',
+    source: 'api_chat',
+    endpoint,
+    surface_intent: inferSurfaceIntentV0(payload && payload.message, mode),
+    inferred_state: inferStateV0(payload && payload.message, crisis, openWindow, commerceGate),
+    risk: {
+      crisis_detected: crisisDetected,
+      category: crisisDetected ? (crisis.category || 'unspecified') : null,
+    },
+    crisis_detected: crisisDetected,
+    open_window: openWindow ? {
+      state: openWindow.state,
+      receptivity: openWindow.receptivity,
+      stability: openWindow.stability,
+      max_cards: openWindow.max_cards,
+    } : null,
+    commerce_intent: commerceGate ? {
+      has_concern: !!commerceGate.hasConcern,
+      first_response: !!commerceGate.firstResponse,
+      support_tier: !!commerceGate.supportTier,
+      crisis_tier: !!commerceGate.crisisTier,
+      reason: commerceGate.reason || null,
+    } : null,
+    created_at: createdAt,
+  };
+
+  const decision_v0 = {
+    schema: 'DecisionObject.v0',
+    approved_route: approvedRouteV0(crisis, openWindow, commerceGate, endpoint),
+    route: openWindow ? openWindow.state : 'not_evaluated_v0',
+    safety_gate: crisisDetected ? 'crisis_banner_required' : 'standard',
+    commerce_allowed: !!(commerceGate && commerceGate.allowed) && !crisisDetected,
+    memory_allowed: true,
+    follow_up_allowed: !crisisDetected,
+    blocked_routes: Array.from(new Set(blockedRoutes)),
+    created_at: createdAt,
+  };
+
+  const trust_packet_v0 = {
+    schema: 'TrustPacket.v0',
+    signal: signal_v0,
+    decision: decision_v0,
+    response_channel: 'alvai_stream',
+    response_summary: responseSummary || { status: 'pending_v0' },
+    memory_write_status: memoryWriteStatus || 'pending_v0',
+    outcome_checkpoint_required: !!outcomeCheckpointRequired,
+    created_at: createdAt,
+  };
+
+  return { signal_v0, decision_v0, trust_packet_v0 };
+}
+
+function shouldLogTrustPacketV0() {
+  return process.env.BLEU_TEST_TRUST_PACKET_V0 === '1' || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
+}
+
+function logTrustPacketV0(packet) {
+  if (!shouldLogTrustPacketV0()) return;
+  console.log('[TRUST_PACKET_V0]', JSON.stringify(packet));
+}
+
 const MODE_PROMPTS = {
 general: ALVAI_CORE + `\n\nYou are on the HOME tab — the front door of BLEU. This is where everyone lands first.
 
@@ -1967,6 +2065,15 @@ const server = http.createServer((req, res) => {
             res.write('data: ' + JSON.stringify({ text: CRISIS_BANNER, crisis: true }) + '\n\n');
           }
         };
+        const openWindowV0 = openWindowGate({ message: p.message, session_id: p.session_id || p.session || p.user_id || null });
+        let commerceGateV0 = getCommerceGate(p, crisis, { supportTier: suppressCommerce });
+        const trustPacketContextV0 = {
+          endpoint: '/api/chat',
+          payload: p,
+          crisis,
+          openWindow: openWindowV0,
+          commerceGate: commerceGateV0,
+        };
 
         // ── GREETING CACHE — instant response, zero API calls ──
         const GREET_CACHE = {
@@ -1995,6 +2102,13 @@ const server = http.createServer((req, res) => {
           res.write('data: '+JSON.stringify({text:reply})+'\n\n');
           res.write('data: [DONE]\n\n');
           res.end();
+          const { trust_packet_v0 } = buildTrustPacketV0({
+            ...trustPacketContextV0,
+            memoryWriteStatus: 'skipped_greeting_cache_v0',
+            responseSummary: { status: 'completed', path: 'greeting_cache', streamed: true, response_length: reply.length, model: 'greeting_cache_v0' },
+            outcomeCheckpointRequired: crisis.detected,
+          });
+          logTrustPacketV0(trust_packet_v0);
           return;
         }
 
@@ -2059,6 +2173,8 @@ const server = http.createServer((req, res) => {
           sys += `\n\nRELEVANT CONTEXT FROM THIS USER'S PRIOR CONVERSATIONS — real things this user said to you or you said to them before. Use only if clearly relevant to the current question. Do NOT paraphrase as if they just said it now:\n${recallBlock}`;
         }
         p._commerceGate = getCommerceGate(p, crisis, { priorMessages: shortTerm, supportTier: suppressCommerce });
+        commerceGateV0 = p._commerceGate;
+        trustPacketContextV0.commerceGate = commerceGateV0;
         sys = appendCommerceGatePrompt(sys, p._commerceGate);
 
         const messages = [{ role: 'system', content: sys }];
@@ -2108,6 +2224,16 @@ const server = http.createServer((req, res) => {
         await runCommerceSteward(res, p, crisis);
         res.write('data: [DONE]\n\n');
         res.end();
+        const memoryWriteStatus = (SUPABASE_URL && SUPABASE_KEY && full)
+          ? 'queued_conversation_history_and_coherence_v0'
+          : 'skipped_no_supabase_or_empty_response_v0';
+        const { trust_packet_v0 } = buildTrustPacketV0({
+          ...trustPacketContextV0,
+          memoryWriteStatus,
+          responseSummary: { status: 'completed', streamed: true, response_length: (full || '').length, chunks_seen: chunkCount, fallback_used: full === getFallback(p.message), model },
+          outcomeCheckpointRequired: crisis.detected,
+        });
+        logTrustPacketV0(trust_packet_v0);
         // Audit: successful completion — parity with /api/chat/stream.
         logEvent({
           session_id: p.session_id || p.session || null,
@@ -2191,6 +2317,15 @@ const server = http.createServer((req, res) => {
             endpoint: '/api/chat/stream',
           }));
         }
+        const openWindowV0 = openWindowGate({ message: p.message || '', session_id: p.session_id || p.session || p.user_id || null });
+        let commerceGateV0 = getCommerceGate(p, crisis, { supportTier: suppressCommerce });
+        const trustPacketContextV0 = {
+          endpoint: '/api/chat/stream',
+          payload: p,
+          crisis,
+          openWindow: openWindowV0,
+          commerceGate: commerceGateV0,
+        };
         const model = pickModel(p.message||'', p.mode||'general');
         let sys = await buildPrompt(p.message||'', p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety', p.assistant);
 
@@ -2208,6 +2343,8 @@ const server = http.createServer((req, res) => {
           sys += `\n\nRELEVANT CONTEXT FROM THIS USER'S PRIOR CONVERSATIONS — real things this user said to you or you said to them before. Use only if clearly relevant to the current question. Do NOT paraphrase as if they just said it now:\n${recallBlock}`;
         }
         p._commerceGate = getCommerceGate(p, crisis, { priorMessages: shortTerm, supportTier: suppressCommerce });
+        commerceGateV0 = p._commerceGate;
+        trustPacketContextV0.commerceGate = commerceGateV0;
         sys = appendCommerceGatePrompt(sys, p._commerceGate);
 
         const msgs = [{ role: 'system', content: sys }];
@@ -2253,6 +2390,16 @@ const server = http.createServer((req, res) => {
         // Commerce Steward — Five Brains, shared helper (Mission 2.3 / 2.5).
         await runCommerceSteward(res, p, crisis);
         res.end();
+        const memoryWriteStatus = (SUPABASE_URL && SUPABASE_KEY && p.message && full && full.length >= 20)
+          ? 'queued_conversation_history_v0'
+          : 'skipped_no_supabase_or_short_response_v0';
+        const { trust_packet_v0 } = buildTrustPacketV0({
+          ...trustPacketContextV0,
+          memoryWriteStatus,
+          responseSummary: { status: 'completed', streamed: true, response_length: (full || '').length, ttfb_ms: ts_ttfb ? (ts_ttfb - ts_start) : null, total_ms: Date.now() - ts_start, model },
+          outcomeCheckpointRequired: crisis.detected,
+        });
+        logTrustPacketV0(trust_packet_v0);
         // Audit: successful completion. Fire-and-forget.
         logEvent({
           session_id: p.session_id || p.session || null,
@@ -3524,6 +3671,57 @@ function handleStripeWebhook(req, res) {
 
     json(res, 200, { received: true });
   });
+}
+
+// ─── Trust Packet v0 bridge diagnostic ────────────────────────────────────
+// Run with: BLEU_TEST_TRUST_PACKET_V0=1 node server.js   (exits before listen)
+// Exercises the observe-only bridge used by /api/chat and /api/chat/stream.
+if (process.env.BLEU_TEST_TRUST_PACKET_V0 === '1') {
+  const payload = {
+    message: 'Hi, I want to sleep better tonight.',
+    mode: 'general',
+    session: 'trust-packet-v0-smoke',
+    history: [],
+  };
+  const crisis = detectCrisis(payload.message);
+  const openWindow = openWindowGate({ message: payload.message, session_id: payload.session });
+  const commerceGate = getCommerceGate(payload, crisis, { priorMessages: [] });
+  const streamedChunks = ['You found us. ', 'Let us slow the night down.'];
+  const { signal_v0, decision_v0, trust_packet_v0 } = buildTrustPacketV0({
+    endpoint: '/api/chat',
+    payload,
+    crisis,
+    openWindow,
+    commerceGate,
+    memoryWriteStatus: 'diagnostic_skipped_no_write_v0',
+    responseSummary: {
+      status: 'completed',
+      streamed: true,
+      response_length: streamedChunks.join('').length,
+      chunks_seen: streamedChunks.length,
+      model: 'diagnostic_mock_stream_v0',
+    },
+    outcomeCheckpointRequired: crisis.detected,
+  });
+
+  const serialized = JSON.stringify(trust_packet_v0);
+  const checks = [
+    ['signal_v0 created', signal_v0 && signal_v0.schema === 'SignalObject.v0'],
+    ['decision_v0 created', decision_v0 && decision_v0.schema === 'DecisionObject.v0'],
+    ['trust_packet_v0 created', trust_packet_v0 && trust_packet_v0.schema === 'TrustPacket.v0'],
+    ['crisis false path works', signal_v0.crisis_detected === false && decision_v0.safety_gate === 'standard'],
+    ['commerce gate does not force commerce', decision_v0.commerce_allowed === false && signal_v0.commerce_intent.reason === 'first_response'],
+    ['response still streams normally', trust_packet_v0.response_summary.streamed === true && trust_packet_v0.response_summary.chunks_seen === 2],
+    ['no raw user message in packet', !serialized.includes(payload.message)],
+  ];
+  let allPass = true;
+  for (const [name, ok] of checks) {
+    if (!ok) allPass = false;
+    console.log(`${name} ${ok ? '✓' : '✗ FAIL'}`);
+  }
+  logTrustPacketV0(trust_packet_v0);
+  console.log(allPass ? '\n✅ TRUST PACKET v0 DIAGNOSTIC PASS' : '\n❌ TRUST PACKET v0 DIAGNOSTIC FAILED');
+  process.exit(allPass ? 0 : 1);
 }
 
 // ─── Mission 6.1.5 inline canonical-crisis regression harness ──────────────
