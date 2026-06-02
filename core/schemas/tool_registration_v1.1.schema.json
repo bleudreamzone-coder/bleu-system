@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/tool-registration-v1.1.json",
+  "title": "ToolRegistration v1.1",
+  "description": "Shadow-mode registry record for future BLEU clinical, communications, commerce, external API, and data-layer tools. No tools are registered by default.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "tool_id",
+    "tool_class",
+    "tool_version",
+    "schema_version",
+    "description",
+    "implementation_status",
+    "parameters_schema",
+    "returns_schema",
+    "rate_limit",
+    "felicia_signoff_required",
+    "felicia_signoff_doc",
+    "captain_signoff_required",
+    "captain_signoff_doc",
+    "data_classification",
+    "td_010_compliance",
+    "retry_policy",
+    "circuit_breaker",
+    "rollback_plan",
+    "cost_class",
+    "audit_doc"
+  ],
+  "properties": {
+    "tool_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "examples": [
+        "rxnorm-adapter",
+        "openfda-adapter",
+        "cyp450-engine",
+        "dailymed-adapter",
+        "pubmed-adapter",
+        "twilio-sms",
+        "resend-email",
+        "stripe-commerce",
+        "supabase-data"
+      ]
+    },
+    "tool_class": {
+      "type": "string",
+      "enum": ["clinical", "infrastructure", "external_api", "commerce", "communications", "data_layer"]
+    },
+    "tool_version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "schema_version": { "const": "1.1" },
+    "description": { "type": "string", "minLength": 1 },
+    "implementation_status": {
+      "type": "string",
+      "enum": ["stub", "adapter_present", "fully_wired", "retired"]
+    },
+    "parameters_schema": { "$ref": "#/$defs/json_schema_document" },
+    "returns_schema": { "$ref": "#/$defs/json_schema_document" },
+    "rate_limit": { "$ref": "#/$defs/rate_limit" },
+    "felicia_signoff_required": { "type": "boolean" },
+    "felicia_signoff_doc": { "$ref": "#/$defs/signoff_doc" },
+    "captain_signoff_required": { "type": "boolean" },
+    "captain_signoff_doc": { "$ref": "#/$defs/signoff_doc" },
+    "data_classification": {
+      "type": "string",
+      "enum": ["public_only", "citizen_session", "citizen_pii_hashed", "clinical_phi_avoid"]
+    },
+    "td_010_compliance": { "$ref": "#/$defs/td_010_compliance" },
+    "retry_policy": { "$ref": "#/$defs/retry_policy" },
+    "circuit_breaker": { "$ref": "#/$defs/circuit_breaker" },
+    "rollback_plan": { "type": "string", "minLength": 1 },
+    "cost_class": {
+      "type": "string",
+      "enum": ["free", "low", "medium", "high"]
+    },
+    "audit_doc": { "type": "string", "minLength": 1 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "tool_class": { "const": "clinical" } }, "required": ["tool_class"] },
+      "then": { "properties": { "felicia_signoff_required": { "const": true } } }
+    },
+    {
+      "if": { "properties": { "tool_class": { "const": "commerce" } }, "required": ["tool_class"] },
+      "then": {
+        "properties": {
+          "felicia_signoff_required": { "const": true },
+          "felicia_signoff_doc": { "type": "string", "minLength": 1 },
+          "captain_signoff_required": { "const": true },
+          "captain_signoff_doc": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "json_schema_document": {
+      "type": "object",
+      "description": "JSON Schema document describing tool input or output shape.",
+      "minProperties": 1
+    },
+    "signoff_doc": {
+      "anyOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "null" }
+      ]
+    },
+    "rate_limit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requests_per_minute", "burst", "throttle_strategy"],
+      "properties": {
+        "requests_per_minute": { "type": "integer", "minimum": 0 },
+        "burst": { "type": "integer", "minimum": 0 },
+        "throttle_strategy": { "type": "string", "enum": ["drop", "queue", "reject"] }
+      }
+    },
+    "td_010_compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pii_hashed", "plaintext_email_stored", "plaintext_phone_stored"],
+      "properties": {
+        "pii_hashed": { "type": "boolean" },
+        "plaintext_email_stored": { "const": false },
+        "plaintext_phone_stored": { "const": false }
+      }
+    },
+    "retry_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_retries", "backoff_strategy"],
+      "properties": {
+        "max_retries": { "type": "integer", "minimum": 0 },
+        "backoff_strategy": { "type": "string", "enum": ["linear", "exponential", "none"] }
+      }
+    },
+    "circuit_breaker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["failure_threshold", "reset_timeout_ms", "half_open_max_calls"],
+      "properties": {
+        "failure_threshold": { "type": "integer", "minimum": 1 },
+        "reset_timeout_ms": { "type": "integer", "minimum": 1 },
+        "half_open_max_calls": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

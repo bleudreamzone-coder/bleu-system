@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/tool-invocation-log-v1.1.json",
+  "title": "ToolInvocationLog v1.1",
+  "description": "Audit trail record for every future BLEU tool invocation. Parameters must not contain plaintext PII under TD-010.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "invocation_id",
+    "tool_id",
+    "agent_id",
+    "session_id",
+    "decision_id",
+    "parameters",
+    "result_status",
+    "latency_ms",
+    "retries_attempted",
+    "cost_usd",
+    "created_at"
+  ],
+  "properties": {
+    "invocation_id": { "type": "string", "format": "uuid" },
+    "tool_id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "agent_id": { "type": "string", "minLength": 1 },
+    "session_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Hashed session identifier; plaintext session PII is prohibited."
+    },
+    "decision_id": { "type": "string", "format": "uuid" },
+    "parameters": {
+      "type": "object",
+      "description": "jsonb payload for the tool call. Must not contain plaintext PII per TD-010.",
+      "not": {
+        "anyOf": [
+          { "required": ["plaintext_email"] },
+          { "required": ["plaintext_phone"] }
+        ]
+      }
+    },
+    "result_status": {
+      "type": "string",
+      "enum": ["success", "failure", "timeout", "rate_limited", "circuit_breaker_open"]
+    },
+    "latency_ms": { "type": "integer", "minimum": 0 },
+    "retries_attempted": { "type": "integer", "minimum": 0 },
+    "cost_usd": { "type": "number", "minimum": 0, "default": 0 },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}
