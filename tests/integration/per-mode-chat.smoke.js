@@ -41,7 +41,7 @@ const NON_CANNAIQ_MODES = [
   'learn', 'community', 'passport', 'therapy', 'recovery', 'missions', 'finance'
 ];
 
-// Bud voice tokens — these are pulled from BUD_V5_SYSTEM_PROMPT (server.js:218-783)
+// Retired Bud voice tokens — these came from the pre-excision BUD V5 prompt
 // and are specific enough that a leak into any other mode's output is a true
 // regression. Keep tight; loose substrings produce false positives.
 const BUD_LEAK_TOKENS = [
