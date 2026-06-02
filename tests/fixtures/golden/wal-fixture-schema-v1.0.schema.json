@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/wal-fixture-v1.0.json",
+  "title": "Wrong Answer Library Fixture v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scenario_id",
+    "schema_version",
+    "label",
+    "source_doctrine_refs",
+    "variant_tags",
+    "felicia_mandatory",
+    "citizen_input_example",
+    "generic_wrong_answer_pattern",
+    "why_wrong_doctrine_refs",
+    "refusals_tested",
+    "gates_exercised",
+    "bleu_correct_behavior_template",
+    "signoff_status",
+    "signoff_doc",
+    "notes",
+    "td_010_compliance"
+  ],
+  "properties": {
+    "scenario_id": { "type": "string", "pattern": "^WAL-[A-Z0-9-]+$" },
+    "schema_version": { "const": "1.0" },
+    "label": { "type": "string", "minLength": 1 },
+    "source_doctrine_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "variant_tags": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^V[1-5]\\.\\d+$" }
+    },
+    "felicia_mandatory": { "type": "boolean" },
+    "citizen_input_example": { "type": "string", "minLength": 1 },
+    "generic_wrong_answer_pattern": { "type": "string", "minLength": 30, "maxLength": 2000 },
+    "why_wrong_doctrine_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "refusals_tested": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": { "type": "integer", "minimum": 1, "maximum": 20 }
+    },
+    "gates_exercised": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate", "expected_status", "reason"],
+        "properties": {
+          "gate": {
+            "type": "string",
+            "enum": [
+              "crisis",
+              "medication_safety",
+              "evidence",
+              "claim_boundary",
+              "clinical_review",
+              "commerce",
+              "outcome"
+            ]
+          },
+          "expected_status": {
+            "type": "string",
+            "enum": ["pass", "passed", "blocked", "needs_review", "hard_stop", "reroute"]
+          },
+          "reason": { "type": "string", "minLength": 5 }
+        }
+      }
+    },
+    "bleu_correct_behavior_template": { "type": "string", "minLength": 1 },
+    "signoff_status": { "type": "string", "enum": ["pending", "signed_off", "rejected"] },
+    "signoff_doc": { "type": ["string", "null"] },
+    "notes": { "type": "string", "minLength": 1 },
+    "td_010_compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pii_hashed",
+        "plaintext_email_stored",
+        "plaintext_phone_stored",
+        "plaintext_address_stored",
+        "contains_real_citizen_data"
+      ],
+      "properties": {
+        "pii_hashed": { "const": true },
+        "plaintext_email_stored": { "const": false },
+        "plaintext_phone_stored": { "const": false },
+        "plaintext_address_stored": { "const": false },
+        "contains_real_citizen_data": { "const": false }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "signoff_status": { "const": "pending" } },
+        "required": ["signoff_status"]
+      },
+      "then": {
+        "properties": { "bleu_correct_behavior_template": { "const": "PENDING_FELICIA_SIGNOFF" } }
+      }
+    }
+  ]
+}
