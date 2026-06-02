@@ -29,32 +29,122 @@ function compileWithAjv(schemaDocument) {
   return { validate: ajv.compile(schemaDocument), errorsText: (errors) => ajv.errorsText(errors) };
 }
 
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function rejectAdditionalProperties(value, allowedProperties, label, errors) {
+  if (!isPlainObject(value)) return;
+  for (const key of Object.keys(value)) {
+    if (!allowedProperties.includes(key)) errors.push(`${label} additional property ${key} not allowed`);
+  }
+}
+
+function requireString(value, label, errors) {
+  if (typeof value !== 'string' || value.length < 1) errors.push(`${label} required`);
+}
+
+function requireBoolean(value, label, errors) {
+  if (typeof value !== 'boolean') errors.push(`${label} invalid`);
+}
+
+function requireNumberInRange(value, label, errors) {
+  if (typeof value !== 'number' || value < 0 || value > 1) errors.push(`${label} invalid`);
+}
+
+function validateOutcomeCheckpoint(checkpoint, label, errors) {
+  const statuses = trustPacketSchema.$defs.outcome_checkpoint.properties.status.enum;
+  const allowedProperties = Object.keys(trustPacketSchema.$defs.outcome_checkpoint.properties);
+  if (!isPlainObject(checkpoint)) {
+    errors.push(`${label} object required`);
+    return;
+  }
+  rejectAdditionalProperties(checkpoint, allowedProperties, label, errors);
+  for (const field of trustPacketSchema.$defs.outcome_checkpoint.required) {
+    if (checkpoint[field] === undefined) errors.push(`${label} missing ${field}`);
+  }
+  if (!statuses.includes(checkpoint.status)) errors.push(`${label} status invalid`);
+  requireString(checkpoint.rationale, `${label} rationale`, errors);
+  for (const optionalStringField of ['metric', 'owner']) {
+    if (checkpoint[optionalStringField] !== undefined) requireString(checkpoint[optionalStringField], `${label} ${optionalStringField}`, errors);
+  }
+}
+
+function validateStringArray(value, label, { minItems = 0 } = {}, errors) {
+  if (!Array.isArray(value)) {
+    errors.push(`${label} array required`);
+    return;
+  }
+  if (value.length < minItems) errors.push(`${label} must contain at least ${minItems} item(s)`);
+  for (const item of value) requireString(item, `${label} item`, errors);
+}
+
 function fallbackTrustPacketValidator(packet) {
   const errors = [];
   const classes = trustPacketSchema.properties.counterfactual.properties.class.enum;
-  if (!packet || typeof packet !== 'object') errors.push('packet object required');
+  if (!isPlainObject(packet)) errors.push('packet object required');
   for (const field of trustPacketSchema.required) {
     if (!packet || packet[field] === undefined) errors.push(`missing required property ${field}`);
   }
+  rejectAdditionalProperties(packet, Object.keys(trustPacketSchema.properties), 'packet', errors);
+
+  if (packet && packet.response) {
+    const responseProperties = Object.keys(trustPacketSchema.properties.response.properties);
+    rejectAdditionalProperties(packet.response, responseProperties, 'response', errors);
+    for (const field of trustPacketSchema.properties.response.required) {
+      if (packet.response[field] === undefined) errors.push(`response missing ${field}`);
+    }
+    requireString(packet.response.hash, 'response hash', errors);
+    requireString(packet.response.model, 'response model', errors);
+    if (!Number.isInteger(packet.response.word_count) || packet.response.word_count < 0) errors.push('response word_count invalid');
+    requireBoolean(packet.response.evaluator_passed, 'response evaluator_passed', errors);
+    if (Object.prototype.hasOwnProperty.call(packet.response, 'text')) errors.push('raw response text must not be persisted');
+    if (packet.response.voice_scores !== undefined) {
+      rejectAdditionalProperties(packet.response.voice_scores, Object.keys(trustPacketSchema.properties.response.properties.voice_scores.properties), 'response voice_scores', errors);
+      for (const score of Object.values(packet.response.voice_scores || {})) requireNumberInRange(score, 'voice score', errors);
+    }
+  }
+
   if (packet && packet.counterfactual) {
+    rejectAdditionalProperties(packet.counterfactual, Object.keys(trustPacketSchema.properties.counterfactual.properties), 'counterfactual', errors);
     for (const field of trustPacketSchema.properties.counterfactual.required) {
       if (packet.counterfactual[field] === undefined) errors.push(`counterfactual missing ${field}`);
     }
     if (!classes.includes(packet.counterfactual.class)) errors.push('invalid counterfactual class');
-    if (typeof packet.counterfactual.prevented_wrong_answer !== 'string' || packet.counterfactual.prevented_wrong_answer.length < 1) {
-      errors.push('prevented_wrong_answer required');
-    }
-    if (typeof packet.counterfactual.bleu_difference !== 'string' || packet.counterfactual.bleu_difference.length < 1) {
-      errors.push('bleu_difference required');
-    }
-    if (typeof packet.counterfactual.confidence !== 'number' || packet.counterfactual.confidence < 0 || packet.counterfactual.confidence > 1) {
-      errors.push('confidence invalid');
+    requireString(packet.counterfactual.prevented_wrong_answer, 'prevented_wrong_answer', errors);
+    requireString(packet.counterfactual.bleu_difference, 'bleu_difference', errors);
+    requireNumberInRange(packet.counterfactual.confidence, 'confidence', errors);
+  }
+
+  if (packet && packet.outcome_plan) {
+    rejectAdditionalProperties(packet.outcome_plan, Object.keys(trustPacketSchema.properties.outcome_plan.properties), 'outcome_plan', errors);
+    for (const key of trustPacketSchema.properties.outcome_plan.required) {
+      if (!packet.outcome_plan[key]) errors.push(`${key} required`);
+      validateOutcomeCheckpoint(packet.outcome_plan[key], key, errors);
     }
   }
-  if (packet && packet.audit && packet.audit.td_010) {
-    if (packet.audit.td_010.plaintext_email_stored !== false) errors.push('plaintext_email_stored blocked');
-    if (packet.audit.td_010.plaintext_phone_stored !== false) errors.push('plaintext_phone_stored blocked');
+
+  if (packet && packet.audit) {
+    rejectAdditionalProperties(packet.audit, Object.keys(trustPacketSchema.properties.audit.properties), 'audit', errors);
+    for (const field of trustPacketSchema.properties.audit.required) {
+      if (packet.audit[field] === undefined) errors.push(`audit missing ${field}`);
+    }
+    requireString(packet.audit.code_version, 'code_version', errors);
+    validateStringArray(packet.audit.doctrine_refs, 'doctrine_refs', { minItems: 1 }, errors);
+    if (!Array.isArray(packet.audit.refusals_checked)) {
+      errors.push('refusals_checked array required');
+    } else if (packet.audit.refusals_checked.some((item) => !Number.isInteger(item) || item < 1 || item > 20)) {
+      errors.push('refusals_checked item invalid');
+    }
+    validateStringArray(packet.audit.pressures_countered, 'pressures_countered', {}, errors);
+    if (packet.audit.td_010) {
+      rejectAdditionalProperties(packet.audit.td_010, Object.keys(trustPacketSchema.properties.audit.properties.td_010.properties), 'td_010', errors);
+      requireBoolean(packet.audit.td_010.pii_hashed, 'pii_hashed', errors);
+      if (packet.audit.td_010.plaintext_email_stored !== false) errors.push('plaintext_email_stored blocked');
+      if (packet.audit.td_010.plaintext_phone_stored !== false) errors.push('plaintext_phone_stored blocked');
+    }
   }
+
   fallbackTrustPacketValidator.errors = errors;
   return errors.length === 0;
 }

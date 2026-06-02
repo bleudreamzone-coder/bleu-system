@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { execFileSync } = require('node:child_process');
 
 const ajv2020Path = path.join(__dirname, '../../node_modules/ajv/dist/2020');
 const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
@@ -95,6 +96,54 @@ function validPacket(overrides = {}) {
   return { ...packet, ...overrides };
 }
 
+
+function runLoggerFallbackSmoke() {
+  const script = `
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const originalExistsSync = fs.existsSync;
+fs.existsSync = (target) => {
+  if (String(target).includes('node_modules/ajv')) return false;
+  return originalExistsSync(target);
+};
+const { createTrustPacket } = require('./core/agents/trust/trust_packet_factory');
+const { createTrustPacketLogger } = require('./core/agents/trust/trust_packet_logger');
+const outcome = (rationale) => ({ status: 'scheduled', rationale });
+const packet = createTrustPacket({
+  decisionId: '33333333-3333-4333-8333-333333333333',
+  signalId: '22222222-2222-4222-8222-222222222222',
+  response: { text: 'BLEU preserved restraint in the response.', model: 'schema-fixture-model', evaluator_passed: true },
+  counterfactual: {
+    class: 'premature_commerce',
+    prevented_wrong_answer: 'Prevented generic checkout routing before the commerce gate verified safety and timing.',
+    bleu_difference: 'BLEU preserved restraint by offering education and outcome follow-up before product movement.',
+    confidence: 0.85,
+  },
+  outcomePlan: {
+    day_3: outcome('Check whether the citizen felt supported and whether any safety signal emerged.'),
+    day_7: outcome('Capture reported sleep or stress outcome without implying treatment efficacy.'),
+    day_30: { status: 'deferred', rationale: 'Longer-term follow-up depends on the day-7 result and consent state.' },
+  },
+  auditContext: {
+    code_version: 'schema-shadow-v1.1',
+    doctrine_refs: ['_meta/THE_BLEU_BIBLE.md#counterfactual'],
+    refusals_checked: Array.from({ length: 20 }, (_, index) => index + 1),
+    pressures_countered: ['commerce', 'privacy'],
+  },
+});
+(async () => {
+  const rawResponsePacket = { ...packet, response: { ...packet.response, text: 'raw response text must stay out of sinks' } };
+  assert.deepEqual(await createTrustPacketLogger({}).emit(rawResponsePacket), { accepted: false, reason: 'schema_validation_failed' });
+  const extraPropertyPacket = { ...packet, unexpected: 'must be rejected without AJV' };
+  assert.deepEqual(await createTrustPacketLogger({}).emit(extraPropertyPacket), { accepted: false, reason: 'schema_validation_failed' });
+})().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
+`;
+  execFileSync(process.execPath, ['-e', script], { cwd: path.join(__dirname, '..', '..'), stdio: 'pipe' });
+}
+
 async function assertDoesNotThrowAsync(fn, message) {
   try {
     return await fn();
@@ -150,12 +199,14 @@ async function run() {
   assert.equal(createTrustPacketLogger({}).isEnabled(), false);
   assert.equal(createTrustPacketLogger({}).getSink(), 'buffer');
 
+  runLoggerFallbackSmoke();
+
   const observableLogger = createTrustPacketLogger({});
   assert.equal(observableLogger.getBufferedCount(), 0);
   await observableLogger.emit(packet);
   assert.equal(observableLogger.getBufferedCount(), 1);
 
-  console.log('trust-packet-logger fixtures passed (15/15)');
+  console.log('trust-packet-logger fixtures passed (16/16)');
 }
 
 run();
