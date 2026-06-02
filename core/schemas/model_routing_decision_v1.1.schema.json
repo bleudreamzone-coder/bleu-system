@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bleu.live/schemas/model-routing-decision-v1.1.json",
+  "title": "ModelRoutingDecision v1.1",
+  "description": "Audit record for a dormant Model Router routing decision. The router also enforces cost_cap_usd >= estimated_cost_usd at runtime because draft 2020-12 JSON Schema has no native cross-field numeric comparison.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "schema_version",
+    "request_id",
+    "agent_id",
+    "agent_tier",
+    "complexity_hint",
+    "latency_budget_ms",
+    "cost_cap_usd",
+    "selected_model",
+    "fallback_models",
+    "routing_reason",
+    "expected_latency_ms",
+    "estimated_cost_usd",
+    "decided_at",
+    "td_010_compliance"
+  ],
+  "properties": {
+    "decision_id": { "type": "string", "format": "uuid" },
+    "schema_version": { "const": "1.1" },
+    "request_id": { "type": "string", "format": "uuid" },
+    "agent_id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "agent_tier": {
+      "type": "string",
+      "enum": ["tier_1_captain", "tier_2_felicia", "tier_3_felicia_autonomous", "tier_infrastructure"]
+    },
+    "complexity_hint": {
+      "type": "string",
+      "enum": ["trivial", "simple", "moderate", "complex", "deep_reasoning"]
+    },
+    "latency_budget_ms": { "type": "integer", "exclusiveMinimum": 0 },
+    "cost_cap_usd": { "type": "number", "minimum": 0 },
+    "selected_model": { "$ref": "#/$defs/routed_model" },
+    "fallback_models": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/routed_model" }
+    },
+    "routing_reason": { "type": "string", "minLength": 10 },
+    "expected_latency_ms": { "type": "integer", "exclusiveMinimum": 0 },
+    "estimated_cost_usd": { "type": "number", "minimum": 0 },
+    "decided_at": { "type": "string", "format": "date-time" },
+    "td_010_compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pii_hashed", "plaintext_email_stored", "plaintext_phone_stored", "request_contains_pii"],
+      "properties": {
+        "pii_hashed": { "type": "boolean" },
+        "plaintext_email_stored": { "const": false },
+        "plaintext_phone_stored": { "const": false },
+        "request_contains_pii": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "routed_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_id", "provider", "tier_label"],
+      "properties": {
+        "model_id": { "type": "string" },
+        "provider": { "type": "string", "enum": ["openai", "anthropic", "local", "stub"] },
+        "tier_label": { "type": "string", "enum": ["fast", "balanced", "deep", "specialized"] }
+      }
+    }
+  }
+}
