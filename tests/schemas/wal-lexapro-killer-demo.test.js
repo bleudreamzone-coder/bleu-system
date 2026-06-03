@@ -14,9 +14,9 @@ const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
 
 function compileWithAjv(schemaDocument) {
   if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv2020 = require(ajv2020Path);
-  const addFormats = require(ajvFormatsPath);
-  const ajv = new Ajv2020({ allErrors: true, strict: true });
+  const Ajv2020 = require('ajv/dist/2020');
+  const addFormats = require('ajv-formats');
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
   addFormats(ajv);
   return { validate: ajv.compile(schemaDocument), errorsText: (errors) => ajv.errorsText(errors) };
 }

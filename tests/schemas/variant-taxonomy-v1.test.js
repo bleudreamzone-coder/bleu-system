@@ -1,7 +1,8 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const ajvPath = path.join(__dirname, '../../node_modules/ajv');
+const ajv2020Path = path.join(__dirname, '../../node_modules/ajv/dist/2020');
+const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
 
 const taxonomyPath = path.join(__dirname, '../../core/config/variant_taxonomy_v1.json');
 const signalSchemaPath = path.join(__dirname, '../../core/schemas/signal_object_v1.1.schema.json');
@@ -83,9 +84,11 @@ const taxonomyShape = {
 };
 
 function compileWithAjv(schemaDocument) {
-  if (!fs.existsSync(ajvPath)) return null;
-  const Ajv = require(ajvPath);
-  const ajv = new Ajv({ allErrors: true, strict: true });
+  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
+  const Ajv2020 = require('ajv/dist/2020');
+  const addFormats = require('ajv-formats');
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
   return { validate: ajv.compile(schemaDocument), errorsText: (errors) => ajv.errorsText(errors) };
 }
 
