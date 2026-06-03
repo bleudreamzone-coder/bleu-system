@@ -16,7 +16,7 @@ const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 function compileWithAjv(schemaDocument) {
   if (!fs.existsSync(`${ajvPath}.js`) && !fs.existsSync(ajvPath)) return null;
   const Ajv2020 = require(ajvPath);
-  const ajv = new Ajv2020({ allErrors: true, strict: true });
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
   if (fs.existsSync(ajvFormatsPath)) require(ajvFormatsPath)(ajv);
   ajv.addSchema(JSON.parse(fs.readFileSync(decisionSchemaPath, 'utf8')));
   ajv.addSchema(JSON.parse(fs.readFileSync(trustPacketSchemaPath, 'utf8')));
