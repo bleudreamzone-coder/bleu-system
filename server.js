@@ -1001,6 +1001,74 @@ async function getSessionCitizen(req) {
   } catch (e) { return null; }
 }
 
+function bearerTokenFrom(req) {
+  const h = req.headers && req.headers.authorization;
+  const m = typeof h === 'string' ? h.match(/^Bearer\s+(.+)$/i) : null;
+  return m ? m[1].trim() : '';
+}
+
+function cleanFirstName(value) {
+  const first = String(value || '').trim().split(/\s+/)[0] || '';
+  if (!first || first.length > 40) return '';
+  return /^[A-Za-z][A-Za-z'’-]*$/.test(first) ? first : '';
+}
+
+function firstNameFromRecord(record) {
+  if (!record || typeof record !== 'object') return '';
+  return cleanFirstName(
+    record.first_name ||
+    record.given_name ||
+    record.name ||
+    record.full_name ||
+    record.display_name
+  );
+}
+
+// Auth identity for ALVAI: verify the Supabase Bearer token server-side and derive
+// names only from trusted Supabase data. Never trusts a client-supplied name.
+async function resolveAlvaiAuthContext(req) {
+  const anonymous = { authenticated: false, user_id: null, first_name: '' };
+  try {
+    const token = bearerTokenFrom(req);
+    if (!token || !SUPABASE_URL || !SUPABASE_ANON_KEY) return anonymous;
+
+    const authRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + token }
+    });
+    if (!authRes.ok) return anonymous;
+    const authUser = await authRes.json();
+    if (!authUser?.id) return anonymous;
+
+    let firstName = firstNameFromRecord(authUser.user_metadata) || firstNameFromRecord(authUser.raw_user_meta_data);
+
+    if (!firstName && SUPABASE_KEY) {
+      const profiles = await querySupabase('profiles', `?id=eq.${encodeURIComponent(authUser.id)}&select=*`, 1);
+      firstName = firstNameFromRecord(profiles && profiles[0]);
+    }
+
+    if (!firstName && SUPABASE_KEY) {
+      const citizens = await querySupabase('bleu_citizens', `?profile_id=eq.${encodeURIComponent(authUser.id)}&select=*`, 1);
+      firstName = firstNameFromRecord(citizens && citizens[0]);
+    }
+
+    return { authenticated: true, user_id: authUser.id, first_name: firstName };
+  } catch (_) {
+    return anonymous;
+  }
+}
+
+function buildIdentityPrompt(authContext) {
+  const firstName = cleanFirstName(authContext && authContext.first_name);
+  if (firstName) {
+    return `
+
+SESSION IDENTITY — Supabase token verified. The user's first name is ${firstName}. When greeting this authenticated user, greet them by first name. Never claim you lack access to their name. Do not invent, alter, or overuse the name.`;
+  }
+  return `
+
+SESSION IDENTITY — No verified first name is available for this request. If asked about the user's name, use the existing privacy language: "I don't have your name." Do not invent a name.`;
+}
+
 // In-memory rate limit: 3 magic-link requests per email_hash per 10 min.
 // Chosen over a DB-backed counter to keep the request path zero-query on the
 // hot path; tradeoff is it resets on restart and is per-instance (acceptable
@@ -1888,7 +1956,7 @@ async function getClinicalPractitioners(msg) {
   }
 }
 
-async function buildPrompt(msg, mode, tm, rm, assistant) {
+async function buildPrompt(msg, mode, tm, rm, assistant, authContext) {
   let p = MODE_PROMPTS[mode] || MODE_PROMPTS.general;
   if (mode === 'therapy' && THERAPY_MODES[tm]) p += `\n\nACTIVE: ${tm.toUpperCase()}\n${THERAPY_MODES[tm]}`;
   if (mode === 'recovery' && RECOVERY_MODES[rm]) p += `\n\nACTIVE: ${rm.toUpperCase()}\n${RECOVERY_MODES[rm]}`;
@@ -1900,6 +1968,7 @@ async function buildPrompt(msg, mode, tm, rm, assistant) {
     (['community','map'].includes(mode)) ? getLocations(msg) : Promise.resolve('')
   ]);
   if (clinicalBlock) p = clinicalBlock + p;
+  p += buildIdentityPrompt(authContext);
   p += practitioners + locations + enrichment;
   // Cap system prompt to prevent model context overflow — enrichment gets truncated first
   if (p.length > 12000) p = p.substring(0, 12000) + '\n[Enrichment truncated for context window]';
@@ -1908,7 +1977,7 @@ async function buildPrompt(msg, mode, tm, rm, assistant) {
 
 async function callAI(msg, hist, mode, tm, rm) {
   const model = pickModel(msg, mode);
-  const sys = await buildPrompt(msg, mode, tm, rm);
+  const sys = await buildPrompt(msg, mode, tm, rm, null, null);
   const messages = [{ role: 'system', content: sys }];
   if (hist?.length) messages.push(...hist.slice(-12));
   messages.push({ role: 'user', content: msg });
@@ -2025,6 +2094,29 @@ const server = http.createServer((req, res) => {
 
   if (pn === '/health') return json(res, 200, { status: 'ok', hasKey: !!OPENAI_KEY, hasSupabase: !!(SUPABASE_URL&&SUPABASE_KEY), engine: 'openai', version: '4.0', modes: Object.keys(MODE_PROMPTS).length });
 
+  // Apple Sign in can use response_mode=form_post. If a provider ever POSTs to
+  // the SPA landing surface, convert that POST to a GET landing instead of
+  // falling through to the API JSON 404. API routes remain unchanged.
+  if (req.method === 'POST' && ['/', '/index.html', '/auth/callback', '/auth/signin'].includes(pn)) {
+    let b = '';
+    req.on('data', c => { if (b.length < 8192) b += c; });
+    req.on('end', () => {
+      const target = new URL('/', `http://${req.headers.host}`);
+      url.searchParams.forEach((value, key) => target.searchParams.set(key, value));
+      const contentType = req.headers['content-type'] || '';
+      if (/application\/x-www-form-urlencoded/i.test(contentType) && b) {
+        const form = new URLSearchParams(b);
+        ['code', 'state', 'error', 'error_description'].forEach(key => {
+          const value = form.get(key);
+          if (value) target.searchParams.set(key, value);
+        });
+      }
+      res.writeHead(302, { 'Location': target.pathname + target.search, 'Cache-Control': 'no-store' });
+      res.end();
+    });
+    return;
+  }
+
   if (pn === '/api/chat' && req.method === 'POST') {
     let b = ''; req.on('data', c => b += c);
     req.on('end', () => { (async () => {
@@ -2132,7 +2224,8 @@ const server = http.createServer((req, res) => {
         const maxTokens = TOKEN_CAPS[mode] || 800;
 
         const model = pickModel(p.message, mode);
-        let sys = await buildPrompt(p.message, mode, p.therapy_mode||'talk', p.recovery_mode||'sobriety', p.assistant);
+        const authContext = await resolveAlvaiAuthContext(req);
+        let sys = await buildPrompt(p.message, mode, p.therapy_mode||'talk', p.recovery_mode||'sobriety', p.assistant, authContext);
         if (p.passport_context) sys = 'PASSPORT CONTEXT: ' + p.passport_context + '. Personalize every response to this specific user\'s city, conditions, and medication profile.\n\n' + sys;
         const opening = detectOpening(p.message);
         if (opening) sys += '\n\nFIRST LINE LOCKED — begin your response with exactly this sentence, then continue naturally without repeating it:\n"' + opening + '"\n\nDo not rephrase it. Do not add a preamble. Start with it and move forward.';
@@ -2327,7 +2420,8 @@ const server = http.createServer((req, res) => {
           commerceGate: commerceGateV0,
         };
         const model = pickModel(p.message||'', p.mode||'general');
-        let sys = await buildPrompt(p.message||'', p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety', p.assistant);
+        const authContext = await resolveAlvaiAuthContext(req);
+        let sys = await buildPrompt(p.message||'', p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety', p.assistant, authContext);
 
         // ── MEMORY: server-authoritative short-term history + semantic recall ──
         const identity = resolveIdentity(p);
@@ -3431,7 +3525,7 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  if ((pn === '/' || pn === '/index.html') && !url.searchParams.has('v')) { res.writeHead(302, {'Location':'/?v=20260403','Cache-Control':'no-store'}); res.end(); return; }
+  if ((pn === '/' || pn === '/index.html') && !url.searchParams.has('v') && !url.searchParams.toString()) { res.writeHead(302, {'Location':'/?v=20260403','Cache-Control':'no-store'}); res.end(); return; }
   if (pn === '/' || pn === '/index.html') { securityHeaders(res, {html:true}); const noCacheHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'}; fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,noCacheHeaders);res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,noCacheHeaders);res.end(d);} }); return; }
 
   const ext = path.extname(pn);

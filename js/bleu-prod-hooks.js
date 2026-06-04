@@ -591,12 +591,27 @@
     var asstSlot = createAssistantSlot();
     var asst = asstSlot.slot, dots = asstSlot.dots;
 
+    function getAlvaiHeaders(){
+      var headers = { 'Content-Type': 'application/json' };
+      var sb = window.supabaseClient || window.supabase;
+      if (sb && sb.auth && typeof sb.auth.getSession === 'function') {
+        return sb.auth.getSession().then(function(result){
+          var token = result && result.data && result.data.session && result.data.session.access_token;
+          if (token) headers.Authorization = 'Bearer ' + token;
+          return headers;
+        }).catch(function(){ return headers; });
+      }
+      return Promise.resolve(headers);
+    }
+
     var full = '';
-    fetch(CONFIG.alvaiEndpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      credentials: 'include'
+    getAlvaiHeaders().then(function(headers){
+      return fetch(CONFIG.alvaiEndpoint, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(payload),
+        credentials: 'include'
+      });
     }).then(function(r){
       if (!r.ok || !r.body) {
         return r.text().then(function(t){ throw new Error('HTTP ' + r.status + ': ' + (t || 'no body')); });
