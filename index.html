@@ -1127,6 +1127,7 @@ body{
   var supabase = null;
   if (window.supabase && typeof window.supabase.createClient === 'function') {
     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    window.supabaseClient = supabase;
   }
 
   async function upsertSignedInProfile(session){
@@ -1272,22 +1273,24 @@ body{
   if (byId('signin')) byId('signin').addEventListener('click', function(){ routeTo('/signin'); });
   if (byId('modal-signin')) byId('modal-signin').addEventListener('click', function(){ closeModal(); routeTo('/signin'); });
   if (byId('modal-close')) byId('modal-close').addEventListener('click', closeModal);
-  if (byId('auth-google')) byId('auth-google').addEventListener('click', async function(){
+  var OAUTH_REDIRECT_TO = 'https://bleu.live';
+  async function signInWithOAuth(provider){
     if (!supabase) {
       console.error('[bleu] Supabase Auth client unavailable');
       return;
     }
     var result = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: 'https://bleu.live' }
+      provider: provider,
+      options: { redirectTo: OAUTH_REDIRECT_TO }
     });
     if (result.error) {
-      console.error('[bleu] Google sign-in failed:', result.error);
+      console.error('[bleu] ' + provider + ' sign-in failed:', result.error);
       return;
     }
     closeModal();
-  });
-  if (byId('auth-apple')) byId('auth-apple').addEventListener('click', function(){ authProvider('apple'); closeModal(); });
+  }
+  if (byId('auth-google')) byId('auth-google').addEventListener('click', function(){ signInWithOAuth('google'); });
+  if (byId('auth-apple')) byId('auth-apple').addEventListener('click', function(){ signInWithOAuth('apple'); });
   if (byId('modal-submit')) byId('modal-submit').addEventListener('click', function(){
     var em = (byId('m-email').value || '').trim();
     var pw = (byId('m-pw').value || '').trim();
