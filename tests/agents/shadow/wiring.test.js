@@ -6,17 +6,14 @@ const path = require('node:path');
 const schema = require('../../../core/schemas/shadow_comparison_v1.0.schema.json');
 const { createShadowWiring, SHADOW_WIRING_SINKS } = require('../../../core/agents/shadow/wiring');
 
-const ajv2020Path = path.join(__dirname, '../../../node_modules/ajv/dist/2020');
-const ajvFormatsPath = path.join(__dirname, '../../../node_modules/ajv-formats');
+const Ajv2020 = require('ajv/dist/2020');
+const addFormats = require('ajv-formats');
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const HEX_64 = /^[a-f0-9]{64}$/;
 const AGENT_TIERS = ['tier_1_captain', 'tier_2_felicia', 'tier_3_felicia_autonomous', 'tier_infrastructure'];
 const KEBAB_CASE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function compileWithAjv() {
-  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv2020 = require(ajv2020Path);
-  const addFormats = require(ajvFormatsPath);
   const ajv = new Ajv2020({ allErrors: true, strict: true });
   addFormats(ajv);
   return { ajv, validate: ajv.compile(schema), errorsText: (errors) => ajv.errorsText(errors) };
