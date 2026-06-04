@@ -25,6 +25,7 @@ function compileWithAjv(schemaDocument) {
 
 function fallbackMetricValidator(event) {
   const errors = [];
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(event.event_id || '')) errors.push('event_id must be uuid');
   if (!/^h_[0-9a-f]{16}$/.test(event.session_id || '')) errors.push('session_id must start with h_ hash');
   if (!event.td_010_compliance || event.td_010_compliance.plaintext_email_stored !== false) errors.push('plaintext_email_stored must be false');
   if (!event.event_data || (event.event_type === 'chat_turn' && event.event_data.turn_index === undefined)) errors.push('chat_turn requires turn_index');
@@ -88,6 +89,7 @@ async function run() {
   assertValidMetric('valid commerce_gate_state crisis tier event', validCommerceState);
 
   assertInvalidMetric('invalid session_id without h_ prefix', { ...validChatTurn, session_id: 'raw-session' });
+  assertInvalidMetric('invalid event_id format', { ...validChatTurn, event_id: 'invalid-event' });
 
   assertInvalidMetric('invalid plaintext_email_stored=true', {
     ...validChatTurn,
@@ -122,7 +124,7 @@ async function run() {
     'redactErrorMessage should strip email addresses'
   );
 
-  console.log('metric event schema fixtures passed (11/11)');
+  console.log('metric event schema fixtures passed (12/12)');
 }
 
 run();
