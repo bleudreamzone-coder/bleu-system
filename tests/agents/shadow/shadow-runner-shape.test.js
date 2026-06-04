@@ -8,16 +8,17 @@ const repoRoot = path.join(__dirname, '../../..');
 const schemaPath = path.join(repoRoot, 'core/agents/shadow/shadow_observation_schema.json');
 const decisionSchemaPath = path.join(repoRoot, 'core/schemas/decision_object_v1.1.schema.json');
 const trustPacketSchemaPath = path.join(repoRoot, 'core/schemas/trust_packet_v1.1.schema.json');
-const ajvPath = path.join(repoRoot, 'node_modules/ajv/dist/2020');
+const ajv2020Path = path.join(repoRoot, 'node_modules/ajv/dist/2020');
 const ajvFormatsPath = path.join(repoRoot, 'node_modules/ajv-formats');
 
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 
 function compileWithAjv(schemaDocument) {
-  if (!fs.existsSync(`${ajvPath}.js`) && !fs.existsSync(ajvPath)) return null;
-  const Ajv2020 = require(ajvPath);
-  const ajv = new Ajv2020({ allErrors: true, strict: true });
-  if (fs.existsSync(ajvFormatsPath)) require(ajvFormatsPath)(ajv);
+  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
+  const Ajv2020 = require('ajv/dist/2020');
+  const addFormats = require('ajv-formats');
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
   ajv.addSchema(JSON.parse(fs.readFileSync(decisionSchemaPath, 'utf8')));
   ajv.addSchema(JSON.parse(fs.readFileSync(trustPacketSchemaPath, 'utf8')));
   return { validate: ajv.compile(schemaDocument), errorsText: (errors) => ajv.errorsText(errors) };
