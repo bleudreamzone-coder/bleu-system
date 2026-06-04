@@ -107,8 +107,11 @@ async function run() {
   if (originalEnabled === undefined) delete process.env.METRIC_EMITTER_ENABLED;
   else process.env.METRIC_EMITTER_ENABLED = originalEnabled;
 
+  const invalidEvent = { event_id: 'invalid-event' };
+  assertInvalidMetric('invalid emitted metric event missing required fields', invalidEvent);
+
   await assert.doesNotReject(
-    () => createMetricEmitter({}).emit({ event_id: 'invalid-event' }),
+    () => createMetricEmitter({}).emit(invalidEvent),
     'invalid MetricEvent emission should resolve without throwing'
   );
 
@@ -122,7 +125,7 @@ async function run() {
     'redactErrorMessage should strip email addresses'
   );
 
-  console.log('metric event schema fixtures passed (11/11)');
+  console.log('metric event schema fixtures passed (12/12)');
 }
 
 run();
