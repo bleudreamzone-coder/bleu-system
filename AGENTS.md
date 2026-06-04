@@ -90,6 +90,9 @@ If the task is not required for the current demo and risks architecture drift, *
 
 Default posture: preserve the live path; prove governed behavior; do not expand the system; do not invent state; do not author clinical standards; record what is verified.
 
+
+**Schema test harness rule:** Schema tests use Ajv2020 from `ajv/dist/2020` with `strict:true`. Never `loadSchema`/`fetch`, never `addMetaSchema` to a draft-07 instance, never disable `strict`/`strictTypes`, never downgrade schemas to draft-07. Negative tests assert validation fails, not exact error counts/strings.
+
 ---
 
 ## 8. Final command
