@@ -1111,6 +1111,7 @@ body{
   </div>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* =========================================================================
    bleu.live — Home (Sea i)
@@ -1120,6 +1121,40 @@ body{
    ========================================================================= */
 (function(){
   'use strict';
+
+  var SUPABASE_URL = 'https://sqyzboesdpdussiwqpzk.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg0NDg2OTMsImV4cCI6MjA1NDAyNDY5M30.LVAjBCm23lxGx1mY0dCDn0AfT7GDVxAlKoh-G9TplGk';
+  var supabase = null;
+  if (window.supabase && typeof window.supabase.createClient === 'function') {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+
+  async function upsertSignedInProfile(session){
+    if (!supabase || !session || !session.user) return;
+    var user = session.user;
+    var profile = {
+      id: user.id,
+      email: user.email || null,
+      tier: 'pioneer',
+      updated_at: new Date().toISOString()
+    };
+    var result = await supabase
+      .from('profiles')
+      .upsert(profile, { onConflict: 'id' });
+    if (result.error) {
+      console.error('[bleu] profile upsert failed:', result.error);
+      return;
+    }
+    flashHeld();
+  }
+
+  if (supabase && supabase.auth && typeof supabase.auth.onAuthStateChange === 'function') {
+    supabase.auth.onAuthStateChange(function(event, session){
+      if (event === 'SIGNED_IN') {
+        upsertSignedInProfile(session);
+      }
+    });
+  }
 
   // Hooks for the production system. Replace with real handlers on integration.
   function sendPrompt(text){
@@ -1237,7 +1272,21 @@ body{
   if (byId('signin')) byId('signin').addEventListener('click', function(){ routeTo('/signin'); });
   if (byId('modal-signin')) byId('modal-signin').addEventListener('click', function(){ closeModal(); routeTo('/signin'); });
   if (byId('modal-close')) byId('modal-close').addEventListener('click', closeModal);
-  if (byId('auth-google')) byId('auth-google').addEventListener('click', function(){ authProvider('google'); closeModal(); });
+  if (byId('auth-google')) byId('auth-google').addEventListener('click', async function(){
+    if (!supabase) {
+      console.error('[bleu] Supabase Auth client unavailable');
+      return;
+    }
+    var result = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: 'https://bleu.live' }
+    });
+    if (result.error) {
+      console.error('[bleu] Google sign-in failed:', result.error);
+      return;
+    }
+    closeModal();
+  });
   if (byId('auth-apple')) byId('auth-apple').addEventListener('click', function(){ authProvider('apple'); closeModal(); });
   if (byId('modal-submit')) byId('modal-submit').addEventListener('click', function(){
     var em = (byId('m-email').value || '').trim();
