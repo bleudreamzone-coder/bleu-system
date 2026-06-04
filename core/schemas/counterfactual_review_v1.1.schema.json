@@ -47,18 +47,18 @@
   },
   "allOf": [
     {
-      "if": { "properties": { "verdict": { "const": "requires_revision" } }, "required": ["verdict"] },
-      "then": { "properties": { "suggested_revision": { "type": "string", "minLength": 1 } } },
-      "else": { "properties": { "suggested_revision": { "const": null } } }
+      "if": { "type": "object", "properties": { "verdict": { "const": "requires_revision" } }, "required": ["verdict"] },
+      "then": { "type": "object", "properties": { "suggested_revision": { "type": "string", "minLength": 1 } } },
+      "else": { "type": "object", "properties": { "suggested_revision": { "const": null } } }
     },
     {
-      "if": { "properties": { "clinical_review_required": { "const": true } }, "required": ["clinical_review_required"] },
-      "then": { "properties": { "reviewer_tier": { "enum": ["tier_2_felicia", "tier_3_felicia_autonomous"] } } }
+      "if": { "type": "object", "properties": { "clinical_review_required": { "const": true } }, "required": ["clinical_review_required"] },
+      "then": { "type": "object", "properties": { "reviewer_tier": { "enum": ["tier_2_felicia", "tier_3_felicia_autonomous"] } } }
     },
     {
-      "if": { "properties": { "counterfactual_class_reviewed": { "enum": ["crisis_missed", "unsafe_supplement", "missed_referral", "wrong_dose"] } }, "required": ["counterfactual_class_reviewed"] },
-      "then": { "properties": { "clinical_review_required": { "const": true } } },
-      "else": { "properties": { "clinical_review_required": { "const": false } } }
+      "if": { "type": "object", "properties": { "counterfactual_class_reviewed": { "enum": ["crisis_missed", "unsafe_supplement", "missed_referral", "wrong_dose"] } }, "required": ["counterfactual_class_reviewed"] },
+      "then": { "type": "object", "properties": { "clinical_review_required": { "const": true } } },
+      "else": { "type": "object", "properties": { "clinical_review_required": { "const": false } } }
     }
   ],
   "$defs": {

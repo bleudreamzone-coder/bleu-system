@@ -42,8 +42,9 @@
   },
   "allOf": [
     {
-      "if": { "properties": { "status": { "const": "captured" } }, "required": ["status"] },
+      "if": { "type": "object", "properties": { "status": { "const": "captured" } }, "required": ["status"] },
       "then": {
+        "type": "object",
         "properties": {
           "captured_at": { "type": "string", "format": "date-time" },
           "self_report": { "$ref": "#/$defs/self_report" }
@@ -51,8 +52,9 @@
       }
     },
     {
-      "if": { "properties": { "status": { "enum": ["scheduled", "missed", "expired"] } }, "required": ["status"] },
+      "if": { "type": "object", "properties": { "status": { "enum": ["scheduled", "missed", "expired"] } }, "required": ["status"] },
       "then": {
+        "type": "object",
         "properties": {
           "captured_at": { "type": "null" },
           "self_report": { "type": "null" }
@@ -60,8 +62,9 @@
       }
     },
     {
-      "if": { "properties": { "status": { "const": "declined" } }, "required": ["status"] },
+      "if": { "type": "object", "properties": { "status": { "const": "declined" } }, "required": ["status"] },
       "then": {
+        "type": "object",
         "properties": {
           "decline_reason": { "type": "string", "minLength": 1 },
           "self_report": { "type": "null" }
