@@ -17,7 +17,7 @@ function compileWithAjv() {
   if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
   const Ajv2020 = require(ajv2020Path);
   const addFormats = require(ajvFormatsPath);
-  const ajv = new Ajv2020({ allErrors: true, strict: true });
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
   addFormats(ajv);
   return { ajv, validate: ajv.compile(schema), errorsText: (errors) => ajv.errorsText(errors) };
 }

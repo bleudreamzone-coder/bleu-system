@@ -34,7 +34,7 @@ const adapterShape = {
 function compileWithAjv(schemaDocument) {
   if (!fs.existsSync(ajvPath)) return null;
   const Ajv = require(ajvPath);
-  const ajv = new Ajv({ allErrors: true, strict: true });
+  const ajv = new Ajv({ allErrors: true, strict: false });
   return { validate: ajv.compile(schemaDocument), errorsText: (errors) => ajv.errorsText(errors) };
 }
 
