@@ -1,79 +1,27 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const ajvPath = path.join(__dirname, '../../node_modules/ajv');
+const ajv2020Path = path.join(__dirname, '../../node_modules/ajv/dist/2020');
 const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
 
 const schemaPath = path.join(__dirname, '../../core/schemas/decision_object_v1.1.schema.json');
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 
 function compileWithAjv(schemaDocument) {
-  if (!fs.existsSync(ajvPath) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv = require(ajvPath);
+  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) {
+    throw new Error('Ajv 2020 and ajv-formats must be installed for strict draft 2020-12 schema validation.');
+  }
+  const Ajv2020 = require(ajv2020Path);
   const addFormats = require(ajvFormatsPath);
-  const ajv = new Ajv({ allErrors: true, strict: true });
+  const ajv = new Ajv2020({ allErrors: true, strict: true });
   addFormats(ajv);
   return { validate: ajv.compile(schemaDocument), errorsText: (errors) => ajv.errorsText(errors) };
 }
 
-function simpleFixtureValidator(fixture) {
-  const errors = [];
-
-  for (const field of schema.required) {
-    if (fixture[field] === undefined) errors.push(`missing required property ${field}`);
-  }
-
-  const expectedGates = schema.properties.gates.prefixItems.map((item) => {
-    const defName = item.$ref.replace('#/$defs/', '');
-    return schema.$defs[defName].allOf[1].properties.gate.const;
-  });
-
-  if (!Array.isArray(fixture.gates) || fixture.gates.length !== expectedGates.length) {
-    errors.push('gates must contain exactly seven entries');
-  } else {
-    fixture.gates.forEach((gate, index) => {
-      if (!gate || gate.gate !== expectedGates[index]) errors.push(`gate ${index} must be ${expectedGates[index]}`);
-      for (const field of schema.$defs.gate_base.required) {
-        if (!gate || gate[field] === undefined) errors.push(`gate ${index} missing ${field}`);
-      }
-      const statuses = schema.$defs.gate_base.properties.status.enum;
-      if (gate && gate.status !== undefined && !statuses.includes(gate.status)) errors.push(`gate ${index} invalid status ${gate.status}`);
-    });
-  }
-
-  if (!Array.isArray(fixture.refusal_checks) || fixture.refusal_checks.length !== 20) {
-    errors.push('refusal_checks must contain exactly twenty entries');
-  } else {
-    fixture.refusal_checks.forEach((refusal, index) => {
-      const expectedNumber = index + 1;
-      if (!refusal || refusal.refusal_number !== expectedNumber) errors.push(`refusal ${index} must be number ${expectedNumber}`);
-      for (const field of schema.$defs.refusal_base.required) {
-        if (!refusal || refusal[field] === undefined) errors.push(`refusal ${index} missing ${field}`);
-      }
-      const statuses = schema.$defs.refusal_base.properties.status.enum;
-      if (refusal && refusal.status !== undefined && !statuses.includes(refusal.status)) {
-        errors.push(`refusal ${index} invalid status ${refusal.status}`);
-      }
-    });
-  }
-
-  const expectedFormula = schema.properties.lras.properties.formula.const;
-  if (!fixture.lras || fixture.lras.formula !== expectedFormula) errors.push('lras formula const mismatch');
-
-  const finalActions = schema.properties.final_action.enum;
-  if (fixture.final_action !== undefined && !finalActions.includes(fixture.final_action)) {
-    errors.push(`invalid final_action ${fixture.final_action}`);
-  }
-
-  simpleFixtureValidator.errors = errors;
-  return errors.length === 0;
-}
 
 const compiled = compileWithAjv(schema);
-const validate = compiled ? compiled.validate : simpleFixtureValidator;
-const errorsText = compiled
-  ? (errors) => compiled.errorsText(errors)
-  : (errors) => (errors || simpleFixtureValidator.errors || []).join(', ');
+const validate = compiled.validate;
+const errorsText = (errors) => compiled.errorsText(errors);
 
 function gate(gateName, status = 'passed', rationale = 'Fixture gate evaluated in locked order.') {
   return { gate: gateName, status, rationale };
@@ -248,6 +196,10 @@ function run() {
   missingCommerceGate.gates = gates().filter((item) => item.gate !== 'commerce');
   assertInvalid('missing commerce gate', missingCommerceGate);
 
+  const misorderedGate = baseDecision();
+  [misorderedGate.gates[0], misorderedGate.gates[1]] = [misorderedGate.gates[1], misorderedGate.gates[0]];
+  assertInvalid('misordered prefixItems gate', misorderedGate);
+
   const emptyRefusals = baseDecision({ refusal_checks: Array.from({ length: 20 }, () => ({})) });
   assertInvalid('empty refusal checks', emptyRefusals);
 
@@ -255,7 +207,7 @@ function run() {
   badRefusalStatus.refusal_checks[6].status = 'blocked';
   assertInvalid('refusal 7 wrong status enum', badRefusalStatus);
 
-  console.log('Decision Object v1.1 schema fixtures: 6/6 passed');
+  console.log('Decision Object v1.1 schema fixtures: 7/7 passed');
 }
 
 run();

@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const ajvPath = path.join(__dirname, '../../node_modules/ajv');
+const ajv2020Path = path.join(__dirname, '../../node_modules/ajv/dist/2020');
 const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
 
 const schemaPath = path.join(__dirname, '../../core/schemas/signal_object_v1.1.schema.json');
@@ -9,54 +9,20 @@ const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 
 
 function compileWithAjv(schemaDocument) {
-  if (!fs.existsSync(ajvPath) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv = require(ajvPath);
+  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) {
+    throw new Error('Ajv 2020 and ajv-formats must be installed for strict draft 2020-12 schema validation.');
+  }
+  const Ajv2020 = require(ajv2020Path);
   const addFormats = require(ajvFormatsPath);
-  const ajv = new Ajv({ allErrors: true, strict: true });
+  const ajv = new Ajv2020({ allErrors: true, strict: true });
   addFormats(ajv);
   return { validate: ajv.compile(schemaDocument), errorsText: (errors) => ajv.errorsText(errors) };
 }
 
-function simpleFixtureValidator(fixture) {
-  const errors = [];
-  const required = schema.required;
-  for (const field of required) {
-    if (fixture[field] === undefined) errors.push(`missing required property ${field}`);
-  }
-
-  const primaryIntentValues = schema.properties.primary_intent.enum;
-  if (fixture.primary_intent !== undefined && !primaryIntentValues.includes(fixture.primary_intent)) {
-    errors.push(`invalid primary_intent ${fixture.primary_intent}`);
-  }
-
-  const riskLevelValues = schema.properties.risk_level.enum;
-  if (fixture.risk_level !== undefined && !riskLevelValues.includes(fixture.risk_level)) {
-    errors.push(`invalid risk_level ${fixture.risk_level}`);
-  }
-
-  const lifeStageValues = schema.$defs.life_stage_band.allOf[1].properties.value.enum;
-  const lifeStage = fixture.six_bands && fixture.six_bands.life_stage && fixture.six_bands.life_stage.value;
-  if (lifeStage !== undefined && !lifeStageValues.includes(lifeStage)) {
-    errors.push(`invalid life_stage ${lifeStage}`);
-  }
-
-  if (Array.isArray(fixture.variant_blend)) {
-    for (const variant of fixture.variant_blend) {
-      if (typeof variant.probability !== 'number' || variant.probability < 0 || variant.probability > 1) {
-        errors.push(`invalid variant probability ${variant.probability}`);
-      }
-    }
-  }
-
-  simpleFixtureValidator.errors = errors;
-  return errors.length === 0;
-}
 
 const compiled = compileWithAjv(schema);
-const validate = compiled ? compiled.validate : simpleFixtureValidator;
-const errorsText = compiled
-  ? (errors) => compiled.errorsText(errors)
-  : (errors) => (errors || simpleFixtureValidator.errors || []).join(', ');
+const validate = compiled.validate;
+const errorsText = (errors) => compiled.errorsText(errors);
 
 
 function band(value, confidence = 0.8, rationale = 'Fixture classification signal.') {
