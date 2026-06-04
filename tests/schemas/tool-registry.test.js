@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const ajv2020Path = path.join(__dirname, '../../node_modules/ajv/dist/2020');
+const ajvPath = require.resolve('ajv/dist/2020');
 const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
 const registrationSchemaPath = path.join(__dirname, '../../core/schemas/tool_registration_v1.1.schema.json');
 const registrationSchema = JSON.parse(fs.readFileSync(registrationSchemaPath, 'utf8'));
@@ -10,8 +10,8 @@ const { createToolRegistry } = require('../../core/agents/tools/tool_registry');
 const { NotImplementedError } = require('../../core/agents/_adapter');
 
 function compileWithAjv(schemaDocument) {
-  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv2020 = require(ajv2020Path);
+  if (!fs.existsSync(ajvPath) || !fs.existsSync(ajvFormatsPath)) return null;
+  const Ajv2020 = require(ajvPath);
   const addFormats = require(ajvFormatsPath);
   const ajv = new Ajv2020({ allErrors: true, strict: true });
   addFormats(ajv);

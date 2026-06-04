@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const ajvPath = path.join(__dirname, '../../node_modules/ajv');
+const ajvPath = require.resolve('ajv/dist/2020');
 const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
 
 const schemaPath = path.join(__dirname, '../../core/schemas/decision_object_v1.1.schema.json');
@@ -9,9 +9,9 @@ const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 
 function compileWithAjv(schemaDocument) {
   if (!fs.existsSync(ajvPath) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv = require(ajvPath);
+  const Ajv2020 = require(ajvPath);
   const addFormats = require(ajvFormatsPath);
-  const ajv = new Ajv({ allErrors: true, strict: true });
+  const ajv = new Ajv2020({ allErrors: true, strict: true });
   addFormats(ajv);
   return { validate: ajv.compile(schemaDocument), errorsText: (errors) => ajv.errorsText(errors) };
 }

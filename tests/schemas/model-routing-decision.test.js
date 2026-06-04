@@ -13,12 +13,12 @@ const {
 const { createModelRegistry } = require('../../core/agents/router/model_registry');
 const { NotImplementedError } = require('../../core/agents/_adapter');
 
-const ajv2020Path = path.join(__dirname, '../../node_modules/ajv/dist/2020');
+const ajvPath = require.resolve('ajv/dist/2020');
 const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
 
 function compileWithAjv() {
-  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv2020 = require(ajv2020Path);
+  if (!fs.existsSync(ajvPath) || !fs.existsSync(ajvFormatsPath)) return null;
+  const Ajv2020 = require(ajvPath);
   const addFormats = require(ajvFormatsPath);
   const ajv = new Ajv2020({ allErrors: true, strict: true });
   addFormats(ajv);

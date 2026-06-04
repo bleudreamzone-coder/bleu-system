@@ -20,12 +20,12 @@ const {
 } = require('../../core/agents/counterfactual/capture');
 const { createReviewQueue } = require('../../core/agents/counterfactual/review_queue');
 
-const ajv2020Path = path.join(__dirname, '../../node_modules/ajv/dist/2020');
+const ajvPath = require.resolve('ajv/dist/2020');
 const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
 
 function compileWithAjv(schemaDocument) {
-  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv2020 = require(ajv2020Path);
+  if (!fs.existsSync(ajvPath) || !fs.existsSync(ajvFormatsPath)) return null;
+  const Ajv2020 = require(ajvPath);
   const addFormats = require(ajvFormatsPath);
   const ajv = new Ajv2020({ allErrors: true, strict: true });
   addFormats(ajv);
@@ -48,24 +48,48 @@ const trustPacketErrorsText = compiled
   ? (errors) => compiled.errorsText(errors)
   : () => (fallbackTrustPacketValidator.errors || []).join(', ');
 
+function outcome(status, rationale) {
+  return { status, rationale };
+}
+
 function validTrustPacket(overrides = {}) {
   return {
     packet_id: '11111111-1111-4111-8111-111111111111',
-    schema_version: '1.1',
+    signal_id: '22222222-2222-4222-8222-222222222222',
+    decision_id: '33333333-3333-4333-8333-333333333333',
     created_at: '2026-06-02T00:00:00.000Z',
-    request_id: '22222222-2222-4222-8222-222222222222',
-    agent_id: 'counterfactual-capture-test',
-    decision_ref: '33333333-3333-4333-8333-333333333333',
+    surface: 'counterfactual_capture_fixture',
+    response: {
+      hash: 'sha256:counterfactual-capture-fixture-response-hash',
+      model: 'schema-fixture-model',
+      word_count: 42,
+      evaluator_passed: true,
+    },
     counterfactual: {
       class: 'unsafe_supplement',
       prevented_wrong_answer: 'Generic AI would recommend an unsafe supplement combination.',
       bleu_difference: 'BLEU restrained the supplement recommendation and elevated safety context.',
       confidence: 0.87,
     },
-    td_010_compliance: {
-      pii_hashed: true,
-      plaintext_email_stored: false,
-      plaintext_phone_stored: false,
+    outcome_plan: {
+      day_3: outcome('scheduled', 'Fixture day-3 checkpoint rationale.'),
+      day_7: outcome('scheduled', 'Fixture day-7 checkpoint rationale.'),
+      day_30: outcome('deferred', 'Fixture day-30 checkpoint rationale.'),
+    },
+    audit: {
+      code_version: 'counterfactual-capture-schema-fixture-v1.1',
+      doctrine_refs: [
+        '_meta/audits/2026-05-29-codex-total-system-blueprint-v1.md#section-7',
+        '_meta/THE_BLEU_BIBLE.md#counterfactual',
+        '_meta/doctrine/lens_architecture_doctrine_v1.md#the-five-machines',
+      ],
+      refusals_checked: Array.from({ length: 20 }, (_, index) => index + 1),
+      pressures_countered: ['governance', 'restraint', 'audit'],
+      td_010: {
+        pii_hashed: true,
+        plaintext_email_stored: false,
+        plaintext_phone_stored: false,
+      },
     },
     ...overrides,
   };

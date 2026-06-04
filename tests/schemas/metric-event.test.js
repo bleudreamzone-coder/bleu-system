@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const ajv2020Path = path.join(__dirname, '../../node_modules/ajv/dist/2020');
+const ajvPath = require.resolve('ajv/dist/2020');
 const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
 const metricSchemaPath = path.join(__dirname, '../../core/schemas/metric_event_v1.1.schema.json');
 const metricSchema = JSON.parse(fs.readFileSync(metricSchemaPath, 'utf8'));
@@ -15,8 +15,8 @@ const {
 } = require('../../core/metrics/event_factories');
 
 function compileWithAjv(schemaDocument) {
-  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv2020 = require(ajv2020Path);
+  if (!fs.existsSync(ajvPath) || !fs.existsSync(ajvFormatsPath)) return null;
+  const Ajv2020 = require(ajvPath);
   const addFormats = require(ajvFormatsPath);
   const ajv = new Ajv2020({ allErrors: true, strict: true });
   addFormats(ajv);
@@ -44,6 +44,16 @@ function assertValidMetric(name, fixture) {
 
 function assertInvalidMetric(name, fixture) {
   assert.equal(validateMetric(fixture), false, `${name} should fail validation`);
+}
+
+function assertInvalidEventReportsMissingFields() {
+  const invalidEvent = { event_id: 'invalid-event' };
+  const result = { valid: validateMetric(invalidEvent), errors: validateMetric.errors || fallbackMetricValidator.errors || [] };
+  assert.strictEqual(result.valid, false, 'invalid-event must remain an invalid negative fixture');
+  const messages = [...new Set(result.errors.map((error) => (typeof error === 'string' ? error : error.message)))];
+  assert(messages.some((message) => message.includes('event_type')), 'must report missing event_type');
+  assert(messages.some((message) => message.includes('event_data')), 'must report missing event_data');
+  return invalidEvent;
 }
 
 async function run() {
@@ -107,8 +117,10 @@ async function run() {
   if (originalEnabled === undefined) delete process.env.METRIC_EMITTER_ENABLED;
   else process.env.METRIC_EMITTER_ENABLED = originalEnabled;
 
+  const invalidEvent = assertInvalidEventReportsMissingFields();
+
   await assert.doesNotReject(
-    () => createMetricEmitter({}).emit({ event_id: 'invalid-event' }),
+    () => createMetricEmitter({}).emit(invalidEvent),
     'invalid MetricEvent emission should resolve without throwing'
   );
 
@@ -122,7 +134,7 @@ async function run() {
     'redactErrorMessage should strip email addresses'
   );
 
-  console.log('metric event schema fixtures passed (11/11)');
+  console.log('metric event schema fixtures passed (12/12)');
 }
 
 run();
