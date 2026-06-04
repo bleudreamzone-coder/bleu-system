@@ -2,8 +2,8 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const ajv2020Path = path.join(__dirname, '../../node_modules/ajv/dist/2020');
-const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
+const Ajv2020 = require('ajv/dist/2020');
+const addFormats = require('ajv-formats');
 const schemaPath = path.join(__dirname, '../../core/schemas/counterfactual_review_v1.1.schema.json');
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 const {
@@ -13,9 +13,6 @@ const {
 } = require('../../core/agents/review/counterfactual_reviewer');
 
 function compileWithAjv(schemaDocument) {
-  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv2020 = require(ajv2020Path);
-  const addFormats = require(ajvFormatsPath);
   const ajv = new Ajv2020({ allErrors: true, strict: true });
   addFormats(ajv);
   return { validate: ajv.compile(schemaDocument), errorsText: (errors) => ajv.errorsText(errors) };

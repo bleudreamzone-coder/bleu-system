@@ -8,13 +8,10 @@ const { hashResponse, countWords, hashAndCount } = require('../../core/agents/tr
 const { createTrustPacket } = require('../../core/agents/trust/trust_packet_factory');
 const { TRUST_PACKET_SINKS, createTrustPacketLogger } = require('../../core/agents/trust/trust_packet_logger');
 
-const ajv2020Path = path.join(__dirname, '../../node_modules/ajv/dist/2020');
-const ajvFormatsPath = path.join(__dirname, '../../node_modules/ajv-formats');
+const Ajv2020 = require('ajv/dist/2020');
+const addFormats = require('ajv-formats');
 
 function compileWithAjv(schemaDocument) {
-  if (!fs.existsSync(`${ajv2020Path}.js`) || !fs.existsSync(ajvFormatsPath)) return null;
-  const Ajv2020 = require(ajv2020Path);
-  const addFormats = require(ajvFormatsPath);
   const ajv = new Ajv2020({ allErrors: true, strict: true });
   addFormats(ajv);
   return { validate: ajv.compile(schemaDocument), errorsText: (errors) => ajv.errorsText(errors) };

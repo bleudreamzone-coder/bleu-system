@@ -42,6 +42,8 @@ One architecture, two vocabularies — doctrine names (Prism → Arbiter → Led
 
 **Law 5 — Verify, do not assume.** Never invent repository state. Cite exact file paths and line numbers. Use labels honestly: VERIFIED / PARTIALLY VERIFIED / UNVERIFIED / BLOCKED / REQUIRES HUMAN SIGNOFF. A claim without file evidence is not a fact.
 
+**Schema-test rule.** Schema tests use `require('ajv/dist/2020')` with `strict: true`; never use `loadSchema`/`fetch`, and never disable strict validation.
+
 **Law 6 — The meter is runtime proof.** Progress is not commits, PR count, new agents/schemas/docs, or abstraction. Progress is a verified live behavior, a reproducible demo path, a visible Trust Packet, a controlled governed response, a real Citizen action, a logged proof artifact. A merged scaffold PR is not progress unless it produces verified runtime behavior.
 
 ---
