@@ -97,3 +97,9 @@ Default posture: preserve the live path; prove governed behavior; do not expand 
 This system does not need more layers right now. It needs one controlled proof: a user signal enters; the system governs it; the response stays inside safety boundaries; the Trust Packet proves why; the demo repeats reliably. Until that is stage-ready, everything else is secondary.
 
 You are not here to redesign BLEU. You are here to protect the live path, produce the Lexapro counterfactual demo, show Signal → Decision → Response → Trust Packet, and prove it without inventing new architecture.
+
+---
+
+## Schema test rule
+
+Schema tests use Ajv2020 from `ajv/dist/2020`, `strict:true`, `addFormats`. Never `loadSchema`/`fetch`, never `addMetaSchema` to draft-07, never disable `strict`/`strictTypes`, never downgrade to draft-07. Negative tests stay invalid and assert SEMANTIC failure (`valid===false` + the right fields reported) — never exact error counts/strings, never made valid.
