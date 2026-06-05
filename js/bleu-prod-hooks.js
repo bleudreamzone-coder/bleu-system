@@ -27,8 +27,8 @@
       '/learn':     '/learn',
       '/supply':    '/supply',
       '/account':   '/account',
-      '/signin':    '/auth/signin',
-      '/create-account': '/auth/create',
+      '/signin':    '/signin',
+      '/create-account': '/create-account',
       '/affiliate-disclosure': '/legal/affiliate-disclosure',
       '/privacy':   '/legal/privacy',
       // 333 HERO pages already deployed in dist/
@@ -726,8 +726,17 @@
   var AUTH_LIVE = true;    // magic-link live (flipped Day-80 after smoke 25/25)
 
   window.authProvider = function(provider){
-    if (provider === 'google')   { window.location.href = '/auth/google'; return; }
-    if (provider === 'apple')    { window.location.href = '/auth/apple'; return; }
+    if ((provider === 'google' || provider === 'apple') && typeof window.bleuStartOAuth === 'function') {
+      window.bleuStartOAuth(provider);
+      return;
+    }
+    if ((provider === 'google' || provider === 'apple') && window.bleuSupabase && window.bleuSupabase.auth) {
+      window.bleuSupabase.auth.signInWithOAuth({
+        provider: provider,
+        options: { redirectTo: window.location.origin + '/' }
+      });
+      return;
+    }
     if (provider === 'email')    {
       if (AUTH_LIVE) { window.requestMagicLink(); return; }
       window.location.href = '/auth/email'; return;
