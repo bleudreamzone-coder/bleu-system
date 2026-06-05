@@ -1127,7 +1127,23 @@ body{
   var supabase = null;
   if (window.supabase && typeof window.supabase.createClient === 'function') {
     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    window.bleuSupabase = supabase;
   }
+
+  async function startOAuthProvider(provider){
+    if (!supabase) {
+      console.error('[bleu] Supabase Auth client unavailable');
+      return;
+    }
+    var result = await supabase.auth.signInWithOAuth({
+      provider: provider,
+      options: { redirectTo: window.location.origin + '/' }
+    });
+    if (result.error) {
+      console.error('[bleu] ' + provider + ' sign-in failed:', result.error);
+    }
+  }
+  window.bleuStartOAuth = startOAuthProvider;
 
   async function upsertSignedInProfile(session){
     if (!supabase || !session || !session.user) return;
@@ -1267,27 +1283,22 @@ body{
     document.body.style.overflow = '';
   }
   var byId = function(id){ return document.getElementById(id); };
+  if (window.location.pathname === '/create-account' || window.location.pathname === '/auth/create') {
+    openModal();
+  }
   if (byId('create-top')) byId('create-top').addEventListener('click', openModal);
   if (byId('passport-yes')) byId('passport-yes').addEventListener('click', openModal);
   if (byId('signin')) byId('signin').addEventListener('click', function(){ routeTo('/signin'); });
   if (byId('modal-signin')) byId('modal-signin').addEventListener('click', function(){ closeModal(); routeTo('/signin'); });
   if (byId('modal-close')) byId('modal-close').addEventListener('click', closeModal);
   if (byId('auth-google')) byId('auth-google').addEventListener('click', async function(){
-    if (!supabase) {
-      console.error('[bleu] Supabase Auth client unavailable');
-      return;
-    }
-    var result = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: 'https://bleu.live' }
-    });
-    if (result.error) {
-      console.error('[bleu] Google sign-in failed:', result.error);
-      return;
-    }
+    await startOAuthProvider('google');
     closeModal();
   });
-  if (byId('auth-apple')) byId('auth-apple').addEventListener('click', function(){ authProvider('apple'); closeModal(); });
+  if (byId('auth-apple')) byId('auth-apple').addEventListener('click', async function(){
+    await startOAuthProvider('apple');
+    closeModal();
+  });
   if (byId('modal-submit')) byId('modal-submit').addEventListener('click', function(){
     var em = (byId('m-email').value || '').trim();
     var pw = (byId('m-pw').value || '').trim();

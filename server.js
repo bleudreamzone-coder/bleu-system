@@ -1982,6 +1982,14 @@ function corsOrigin(reqOrigin) {
   return ALLOWED_ORIGINS[0];
 }
 function json(res, code, data) { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); }
+function serveIndex(res) {
+  securityHeaders(res, {html:true});
+  const noCacheHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'};
+  fs.readFile(path.join(__dirname,'index.html'), (e,d) => {
+    if(e){res.writeHead(200,noCacheHeaders);res.end('<html><body><h1>BLEU.live</h1></body></html>');}
+    else{res.writeHead(200,noCacheHeaders);res.end(d);}
+  });
+}
 function cors(res, req) {
   const origin = corsOrigin(req && req.headers && req.headers.origin);
   res.setHeader('Access-Control-Allow-Origin', origin);
@@ -3400,6 +3408,25 @@ const server = http.createServer((req, res) => {
 
   if (pn === '/api/stats') return json(res, 200, { version:'4.0', modes: Object.keys(MODE_PROMPTS).length, therapy: Object.keys(THERAPY_MODES).length, recovery: Object.keys(RECOVERY_MODES).length });
 
+  // Apple OAuth may POST its callback payload. Convert known frontend OAuth
+  // landing POSTs into a GET so the SPA/Supabase client can finish the session.
+  if (req.method === 'POST' && (pn === '/' || pn === '/auth/callback' || pn === '/auth/apple')) {
+    let b = '';
+    req.on('data', c => b += c);
+    req.on('end', () => {
+      const params = new URLSearchParams(url.searchParams);
+      const form = new URLSearchParams(b || '');
+      ['code','state','error','error_description','provider','scope'].forEach(k => {
+        const v = form.get(k);
+        if (v && !params.has(k)) params.set(k, v);
+      });
+      const qs = params.toString();
+      res.writeHead(302, {'Location': `/${qs ? '?' + qs : ''}`, 'Cache-Control':'no-store'});
+      res.end();
+    });
+    return;
+  }
+
   // ═══════ SEO ENGINE — city pages, sitemap, robots.txt ═══════
   if (req.method === 'GET') {
     const seoRoute = pn.replace(/^\//, '').replace(/\/$/, '');
@@ -3431,12 +3458,14 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  if ((pn === '/' || pn === '/index.html') && !url.searchParams.has('v')) { res.writeHead(302, {'Location':'/?v=20260403','Cache-Control':'no-store'}); res.end(); return; }
-  if (pn === '/' || pn === '/index.html') { securityHeaders(res, {html:true}); const noCacheHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'}; fs.readFile(path.join(__dirname,'index.html'), (e,d) => { if(e){res.writeHead(200,noCacheHeaders);res.end('<html><body><h1>BLEU.live</h1></body></html>');}else{res.writeHead(200,noCacheHeaders);res.end(d);} }); return; }
+  if ((pn === '/' || pn === '/index.html') && !url.searchParams.has('v') && !url.searchParams.has('code') && !url.searchParams.has('error')) { res.writeHead(302, {'Location':'/?v=20260403','Cache-Control':'no-store'}); res.end(); return; }
+  if (pn === '/' || pn === '/index.html') { serveIndex(res); return; }
 
   const ext = path.extname(pn);
   const mime = {'.css':'text/css','.js':'application/javascript','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon','.json':'application/json'};
   if (mime[ext]) { fs.readFile(path.join(__dirname,pn), (e,d) => { if(e) return json(res,404,{error:'Not found'}); res.writeHead(200,{'Content-Type':mime[ext]}); res.end(d); }); return; }
+
+  if (req.method === 'GET' && !pn.startsWith('/api/')) { serveIndex(res); return; }
 
   json(res, 404, { error: 'Not found' });
 });
