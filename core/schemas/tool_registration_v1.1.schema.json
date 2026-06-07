@@ -81,12 +81,13 @@
   },
   "allOf": [
     {
-      "if": { "properties": { "tool_class": { "const": "clinical" } }, "required": ["tool_class"] },
-      "then": { "properties": { "felicia_signoff_required": { "const": true } } }
+      "if": { "type": "object", "properties": { "tool_class": { "const": "clinical" } }, "required": ["tool_class"] },
+      "then": { "type": "object", "properties": { "felicia_signoff_required": { "const": true } } }
     },
     {
-      "if": { "properties": { "tool_class": { "const": "commerce" } }, "required": ["tool_class"] },
+      "if": { "type": "object", "properties": { "tool_class": { "const": "commerce" } }, "required": ["tool_class"] },
       "then": {
+        "type": "object",
         "properties": {
           "felicia_signoff_required": { "const": true },
           "felicia_signoff_doc": { "type": "string", "minLength": 1 },

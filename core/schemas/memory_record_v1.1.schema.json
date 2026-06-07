@@ -44,6 +44,7 @@
   "oneOf": [
     {
       "title": "episodic",
+      "type": "object",
       "properties": {
         "kind": { "const": "episodic" },
         "payload": { "$ref": "#/$defs/episodic_payload" }
@@ -51,6 +52,7 @@
     },
     {
       "title": "semantic",
+      "type": "object",
       "properties": {
         "kind": { "const": "semantic" },
         "payload": { "$ref": "#/$defs/semantic_payload" }
@@ -58,6 +60,7 @@
     },
     {
       "title": "preference",
+      "type": "object",
       "properties": {
         "kind": { "const": "preference" },
         "payload": { "$ref": "#/$defs/preference_payload" }
@@ -65,6 +68,7 @@
     },
     {
       "title": "decision_history",
+      "type": "object",
       "properties": {
         "kind": { "const": "decision_history" },
         "payload": { "$ref": "#/$defs/decision_history_payload" }
@@ -72,6 +76,7 @@
     },
     {
       "title": "counterfactual_link",
+      "type": "object",
       "properties": {
         "kind": { "const": "counterfactual_link" },
         "payload": { "$ref": "#/$defs/counterfactual_link_payload" }
