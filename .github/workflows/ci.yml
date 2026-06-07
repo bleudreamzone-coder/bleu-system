@@ -30,6 +30,9 @@ jobs:
       - name: Run schema and offline shape tests
         run: npm run test:schemas
 
+      - name: Run prompt compliance test
+        run: npm run test:prompt
+
       - name: Run server logic smoke test
         run: npm run test:logic
 
