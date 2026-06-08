@@ -14,6 +14,7 @@ const blocks = [
   grab(/function signSession\(payload\) \{[\s\S]*?\n\}/, 'signSession'),
   grab(/function verifySession\(value\) \{[\s\S]*?\n\}/, 'verifySession'),
   grab(/function twilioSignatureValid\(req, params, fullUrl\) \{[\s\S]*?\n\}/, 'twilioSignatureValid'),
+  src.slice(src.indexOf('const DIRECTORY_CITY_ZIP_PREFIX = {'), src.indexOf('\nasync function buildPrompt', src.indexOf('const DIRECTORY_CITY_ZIP_PREFIX = {'))),
   grab(/const TRUST_PACKET_ENUMS = \{[\s\S]*?\n\};/, 'TRUST_PACKET_ENUMS'),
   grab(/function buildTrustPacket\(args\) \{[\s\S]*?\n\}/, 'buildTrustPacket'),
 ];
@@ -76,5 +77,35 @@ console.log('TEST: hashPhone normalization (TD-010)');
 const body = "Hi from BLEU. It's been 7 days since you started your protocol. Reply BETTER, SAME, or WORSE so Dr. Felicia can review your trajectory. Reply STOP to opt out.";
 (body.length <= 160) ? ok(`day7 SMS body ${body.length} chars ≤160 (single segment)`) : no('SMS too long', body.length);
 
-console.log(`\nRESULT: ${pass} passed, ${fail} failed`);
-process.exit(fail ? 1 : 0);
+console.log('TEST: practitioner directory guardrails');
+let directoryRows = [];
+let lastPractitionerQuery = null;
+querySupabase = async (table, query, limit) => {
+  if (table === 'practitioners') {
+    lastPractitionerQuery = { query, limit };
+    return directoryRows;
+  }
+  return [];
+};
+
+(async () => {
+  let out = await getClinicalPractitioners('find me a therapist near me');
+  (/5-digit ZIP code/i.test(out) && /Name NO practitioners/i.test(out) && !/27th Avenue|504-321-1751/i.test(out))
+    ? ok('near-me practitioner request without location asks for ZIP and names no providers')
+    : no('near-me guard', out);
+
+  directoryRows = [];
+  out = await getClinicalPractitioners('find me a therapist in Natchitoches');
+  (/no verified practitioners returned for natchitoches/i.test(out) && /Name NO practitioners/i.test(out) && lastPractitionerQuery.query.includes('zip=like.714*'))
+    ? ok('location with zero DB rows yields no-match directive and no default city')
+    : no('zero-row guard', JSON.stringify({ out, lastPractitionerQuery }));
+
+  directoryRows = [{ full_name:'Seeded Provider, LPC', specialty:'Counselor', address_line1:'123 Verified St', city:'Natchitoches', state:'LA', zip:'71457', phone:'318-555-0100', npi:'1234567890', practice_name:'Seeded Clinic' }];
+  out = await getClinicalPractitioners('find me a therapist in 71457');
+  (/Seeded Provider, LPC/.test(out) && /123 Verified St/.test(out) && /318-555-0100/.test(out) && /1234567890/.test(out) && !/Unnamed|on request|27th Avenue|504-321-1751/i.test(out) && lastPractitionerQuery.query.includes('zip=like.71457*'))
+    ? ok('ZIP lookup returns only seeded database row fields')
+    : no('seeded-row guard', JSON.stringify({ out, lastPractitionerQuery }));
+
+  console.log(`\nRESULT: ${pass} passed, ${fail} failed`);
+  process.exit(fail ? 1 : 0);
+})().catch((e) => { console.error(e); process.exit(1); });
