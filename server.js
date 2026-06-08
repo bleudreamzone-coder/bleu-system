@@ -141,6 +141,8 @@ RULES:
 - Never say "I am just an AI." You are Alvai. You are the soul of BLEU.
 - When showing practitioners from database, show only the verified rows supplied by the system; never invent extra rows to reach a count
 - Empathy first. Products second. Always.
+
+SUPPLEMENTS ARE LAST, NOT FIRST. For any concern, explore everything a person can change first — rest, environment, movement, food, routine, stress, connection — then community resources, and a clinician when it's needed. Do not raise supplements or products unless the person explicitly asks. If they do not ask, you may mention supplementation only near the end of the conversation, briefly, as one optional consideration alongside the lifestyle and clinical steps — never the lead, never the fix. BLEU is evidence-based lifestyle medicine, not biohacking; the longest-lived people are sustained by how they live, not by pills.
 - 200-500 words per response. Enough to be thorough. Not so much they tune out.
 
 STYLE: Write in FLOWING PROSE. NO bullet points. NO dashes. NO lists.
@@ -232,25 +234,42 @@ function checkEmotionalIntent(sessionId, message) {
 
 // ═══════ COMMERCE RESTRAINT — timing + framing gate for ALVAI commerce ═══════
 const COMMERCE_CONCERN_RE = /\b(sleep|insomnia|can'?t sleep|cannot sleep|wake|pain|inflamm|joint|arthritis|fatigue|tired|exhausted|energy|brain fog|focus|gut|digest|bloat|constipat|ibs|diarrhea|blood sugar|insulin|weight|glp-?1|semaglutide|ozempic|metabolic|cholesterol|heart|blood pressure|immune|sick|hormone|thyroid|menopause|supplement|vitamin|magnesium|melatonin|omega|probiotic|berberine|protocol|product|cart|amazon|fullscript|stripe|subscribe|subscription)\b/i;
-function hasPriorAssistantTurn(p, priorMessages) {
+// Explicit product/supplement request — the ONLY thing that lets a card surface
+// early. Approved by Dr. Stoler 2026-06-08: care first, supplements last.
+const EXPLICIT_PRODUCT_INTENT = /\b(what should i (take|buy|use|get)|what (can|do|should) i (take|buy|use)|recommend (me )?(a |an |some )?(supplement|product|vitamin|brand)|which (supplement|vitamin|product|brand)|is there (a |an )?(supplement|vitamin|pill|product)|(any )?supplements? (for|to|i should)|do you sell|where (can|do) i (buy|get)|add to cart|buy (it|this|that|one))\b/i;
+function countPriorAssistantTurns(p, priorMessages) {
   const history = []
     .concat(Array.isArray(priorMessages) ? priorMessages : [])
     .concat(Array.isArray(p && p.history) ? p.history : []);
-  return history.some(m => m && m.role === 'assistant' && String(m.content || '').trim());
+  return history.filter(m => m && m.role === 'assistant' && String(m.content || '').trim()).length;
 }
+function hasPriorAssistantTurn(p, priorMessages) {
+  return countPriorAssistantTurns(p, priorMessages) > 0;
+}
+// CARE-FIRST COMMERCE GATE (Dr. Stoler signoff 2026-06-08): a product card never
+// appears in the opening exchanges. It can surface only AFTER real self-care
+// guidance has been given (>= 2 prior assistant turns), or right away ONLY if the
+// person explicitly asks for a product. Crisis and distress suppress commerce
+// entirely, regardless of any product request.
+const CARE_FIRST_MIN_ASSISTANT_TURNS = 2;
 function getCommerceGate(p, crisis, opts = {}) {
   const message = String((p && p.message) || '');
   const sessionId = (p && (p.session_id || p.session || p.user_id)) || null;
-  const firstResponse = !hasPriorAssistantTurn(p || {}, opts.priorMessages);
+  const priorAssistantTurns = countPriorAssistantTurns(p || {}, opts.priorMessages);
+  const firstResponse = priorAssistantTurns === 0;
   const supportTier = !!opts.supportTier || checkEmotionalIntent(sessionId, message);
   const crisisTier = !!(crisis && crisis.detected);
   const hasConcern = COMMERCE_CONCERN_RE.test(message);
+  const explicitProduct = EXPLICIT_PRODUCT_INTENT.test(message);
+  const careGuidanceGiven = priorAssistantTurns >= CARE_FIRST_MIN_ASSISTANT_TURNS;
   let reason = '';
   if (crisisTier) reason = 'crisis_tier';
   else if (supportTier) reason = 'support_tier';
+  else if (explicitProduct) reason = '';               // user explicitly asked for a product → allowed
   else if (firstResponse) reason = 'first_response';
   else if (!hasConcern) reason = 'no_stated_concern';
-  return { allowed: !reason, reason, firstResponse, supportTier, crisisTier, hasConcern };
+  else if (!careGuidanceGiven) reason = 'care_first';  // concern stated, but care guidance not yet given
+  return { allowed: !reason, reason, firstResponse, supportTier, crisisTier, hasConcern, explicitProduct, careGuidanceGiven };
 }
 function appendCommerceGatePrompt(sys, gate) {
   if (!gate || gate.allowed) {
@@ -3863,7 +3882,9 @@ if (process.env.BLEU_TEST_OW === '1') {
 if (process.env.BLEU_TEST_COMMERCE_GATE === '1') {
   const cases = [
     ['first concern blocks', { message: 'I cannot sleep', history: [] }, { detected: false }, {}, 'first_response'],
-    ['second concern allows', { message: 'I cannot sleep', history: [{ role: 'assistant', content: 'Tell me more.' }] }, { detected: false }, {}, ''],
+    ['second concern blocks (care first)', { message: 'I cannot sleep', history: [{ role: 'assistant', content: 'Tell me more.' }] }, { detected: false }, {}, 'care_first'],
+    ['allows after care guidance', { message: 'I cannot sleep', history: [{ role: 'assistant', content: 'Let us look at your routine.' }, { role: 'user', content: 'ok' }, { role: 'assistant', content: 'And your wind-down.' }] }, { detected: false }, {}, ''],
+    ['explicit product request allows', { message: 'what should I take for sleep', history: [{ role: 'assistant', content: 'Tell me more.' }] }, { detected: false }, {}, ''],
     ['second no concern blocks', { message: 'hello again', history: [{ role: 'assistant', content: 'Tell me more.' }] }, { detected: false }, {}, 'no_stated_concern'],
     ['crisis blocks', { message: 'I want to kill myself', history: [{ role: 'assistant', content: 'Tell me more.' }] }, { detected: true }, {}, 'crisis_tier'],
     ['support blocks', { message: 'I am overwhelmed and need help', history: [{ role: 'assistant', content: 'Tell me more.' }] }, { detected: false }, { supportTier: true }, 'support_tier'],
