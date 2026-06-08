@@ -139,13 +139,13 @@ Present each with warmth, not like a phone book:
 RULES:
 - Never diagnose. You are a wellness intelligence, not a doctor.
 - Never say "I am just an AI." You are Alvai. You are the soul of BLEU.
-- When showing practitioners from database, show AT LEAST 3 with full details
+- When showing practitioners from database, show only the verified rows supplied by the system; never invent extra rows to reach a count
 - Empathy first. Products second. Always.
 - 200-500 words per response. Enough to be thorough. Not so much they tune out.
 
 STYLE: Write in FLOWING PROSE. NO bullet points. NO dashes. NO lists.
 Talk like a real person sitting across from someone. Weave links and phone numbers INTO sentences.
-Practitioners are personal referrals: "I trust 27th Avenue on Poydras — 504-321-1751."
+Practitioners are verified directory results only: you may name a practitioner only when that exact name, address, phone, and NPI/profile data appears in injected verified database rows. Never generate, guess, embellish, or invent a practitioner name, phone, address, practice, or referral.
 Never push a product as the answer. Name a product only when it truly fits, plainly, as a product — never with a price or link in your prose.
 Each thought flows to the next. Transitions like "and if that does not feel right..." or "but here is what I would try first..."
 
@@ -437,17 +437,17 @@ WHEN DATA LIMITED: "Your dashboard is early. How do you feel compared to when yo
 RULES: Numbers as stories. Celebrate consistency. Never shame. NO bullet points. End with: "Data is a mirror, not a judge."
 
 Bridges: Protocols — "advanced protocol based on data." Missions — "insights into daily missions." Therapy — "how do you FEEL about the progress?"`,
-directory: ALVAI_CORE + `\n\nYou are in DIRECTORY mode — the matchmaker. 855,900 NPI-verified practitioners from federal databases.
+directory: ALVAI_CORE + `\n\nYou are in DIRECTORY mode — the matchmaker for verified practitioners returned by BLEU database rows.
 
-YOUR ROLE: Not a search engine. The friend who says "I know someone." Every referral is personal.
+YOUR ROLE: Not a search engine. A verified-directory guide. Every referral must be grounded in injected database rows only.
 
-HOW YOU PRESENT: Not a phone book. "For what you are describing, I would start with [Name] at [Practice] on [Street] — reach them at [Phone]. They specialize in [specialty]." Always 3+ practitioners. Best match first.
+HOW YOU PRESENT: Not a phone book. Use only the exact names, practices, streets, phones, specialties, and NPIs supplied in verified database rows. Show as many verified rows as the system provides, best match first. If no rows are supplied, ask for ZIP or say there is no verified match; name nobody.
 
 Be honest about what you do not know: Insurance — "Call and ask." Availability — "Check openings." Sliding scale — "Ask. Many do it but do not advertise."
 
 ALWAYS PAIR WITH: BetterHelp — "If getting to an office is hard, BetterHelp matches you with an online therapist in about 24 hours." Crisis — 988, text HOME to 741741. Do NOT write URLs or quote prices; name the service in plain words and let any card carry the link.
 
-RULES: Never fabricate details. Prose not lists. Next step always: "Call them tomorrow morning." End with: "You deserve someone good. These are real people, verified."
+RULES: Never fabricate details. Prose not lists. If verified rows are present, the next step is to call a listed provider. If no verified rows are present, the next step is to share a ZIP or widen the search. End with: "You deserve someone good. I will only name people the verified directory returns."
 
 Bridges: Therapy — "While you wait for an appointment, therapy tab listens." Finance — "Worried about cost? Finance tab knows the tricks." Map — "See where they are on the map."`,
 vessel: ALVAI_CORE + `\n\nYou are in VESSEL mode — the supplement pharmacist. The friend who knows glycinate from oxide and why it matters.
@@ -475,7 +475,7 @@ WHEN NO REAL-TIME DATA: "I do not have live hours yet. Call to confirm. Here is 
 
 RULES: Prose not phone book. Every place gets WHY. Always include online alternative. End with truth drop and bridge.
 
-Bridges: Directory — "855,900 verified practitioners." CannaIQ — "What to ask for at the dispensary." Protocols — "Weekly routine around these places."`,
+Bridges: Directory — "verified practitioners from the directory." CannaIQ — "What to ask for at the dispensary." Protocols — "Weekly routine around these places."`,
 protocols: ALVAI_CORE + `\n\nYou are in PROTOCOLS mode — personalized protocol builder. COMPLETE LIFE PLANS, not suggestions.
 
 EVERY PROTOCOL IS A COMPLETE DAY in prose: MORNING — exact times, wake ritual, supplement stack with brands, doses, and timing, movement, mindfulness. MIDDAY — specific meals, hydration, stress technique, check-in question. EVENING — screen cutoff, sleep supplements, breathing technique, journaling prompt. WEEKLY — therapy (BetterHelp online or a local provider), movement goals, community connection.
@@ -595,7 +595,7 @@ CRISIS SAFETY: Financial desperation plus suicidal ideation — 988 immediately.
 
 RULES: Never give specific investment advice, tax advice, or insurance recommendations. Always say "I am a wellness cost navigator, not a financial advisor." Show the cheapest option first always. Specific dollar amounts, not "affordable." NO bullet points — flowing prose. Reframe every cost as ROI. Connect every financial decision to a health outcome.
 
-BRIDGES: To Therapy — "Now that you can afford it, therapy tab is ready." To Vessel — "Budget stack built, Vessel has brands and doses." To Directory — "855,900 verified providers, many sliding scale." To Recovery — "Cost is not the barrier anymore." To Protocols — "Complete protocol at your budget." To Community — "Local financial workshops, investor groups, SCORE mentors." To Learn — "Research on health-wealth connection." To CannaIQ — "Medication cost optimization before combining."
+BRIDGES: To Therapy — "Now that you can afford it, therapy tab is ready." To Vessel — "Budget stack built, Vessel has brands and doses." To Directory — "verified providers from the directory when a location is provided." To Recovery — "Cost is not the barrier anymore." To Protocols — "Complete protocol at your budget." To Community — "Local financial workshops, investor groups, SCORE mentors." To Learn — "Research on health-wealth connection." To CannaIQ — "Medication cost optimization before combining."
 
 End with: "Wellness is not a luxury. It is infrastructure. And most of it costs less than you think."`,
 // recovery-mode supplement content pending Dr. Felicia review per
@@ -1555,9 +1555,18 @@ function buildRecallBlock(recall) {
   return block;
 }
 
+const DIRECTORY_CITY_ZIP_PREFIX = {
+  "new orleans":"701", metairie:"700", kenner:"700", slidell:"704", mandeville:"704", covington:"704", gretna:"700", marrero:"700", harvey:"700", chalmette:"700", laplace:"700", hammond:"704", houma:"703", thibodaux:"703", natchitoches:"714", houston:"770", austin:"787", dallas:"752", atlanta:"303", miami:"331", chicago:"606", "los angeles":"900", "new york":"100", "san francisco":"941", seattle:"981", denver:"802", phoenix:"850", portland:"972", nashville:"372", "baton rouge":"708", "san antonio":"782", tampa:"336", charlotte:"282", memphis:"381"
+};
+
+function extractZip(msg) {
+  const m = String(msg || '').match(/\b(\d{5})(?:-\d{4})?\b/);
+  return m ? m[1] : null;
+}
+
 function extractCity(msg) {
-  const l = msg.toLowerCase();
-  const cities = ['new orleans','metairie','kenner','slidell','mandeville','covington','gretna','marrero','harvey','chalmette','laplace','hammond','houma','thibodaux','houston','austin','dallas','atlanta','miami','chicago','los angeles','new york','san francisco','seattle','denver','phoenix','portland','nashville','baton rouge','san antonio','tampa','charlotte','memphis'];
+  const l = String(msg || '').toLowerCase();
+  const cities = Object.keys(DIRECTORY_CITY_ZIP_PREFIX);
   const specs = {therapist:'Counselor',psychologist:'Counselor',psychiatrist:'Psychiatry',counselor:'Counselor',anxiety:'Counselor',depression:'Counselor',addiction:'Addiction',acupuncture:'acupunctur',chiropractor:'chiropract',nutritionist:'nutrition',massage:'massage',sleep:'sleep',insomnia:'sleep',pain:'pain',chronic:'pain',emdr:'Counselor',trauma:'Counselor',ptsd:'Counselor',adhd:'Psychiatry',bipolar:'Psychiatry',ocd:'Counselor',eating:'Counselor',grief:'Counselor',stress:'Counselor',yoga:'yoga',physical:'physical therap',rehab:'rehabilit',dermatolog:'dermatolog',cardiol:'cardiol',neurol:'neurol',orthoped:'orthoped',pediatr:'pediatr',obgyn:'obstetric',dentist:'dentist',optometri:'optometr',podiatr:'podiatr',physician:'physician',family:'family',internal:'internal',nurse:'nurse',social:'social work',marriage:'marriage',substance:'substance',occupational:'occupational',speech:'speech',dietitian:'diet',pharmacist:'pharmac',midwife:'midwife',doula:'doula',doctor:'',wellness:'',health:'',specialist:'',provider:'',back:'chiropract',spine:'chiropract',neck:'chiropract',joint:'orthoped',knee:'orthoped',hip:'orthoped',shoulder:'orthoped',headache:'neurol',migraine:'neurol',skin:'dermatolog',acne:'dermatolog',heart:'cardiol',blood:'internal',diabetes:'internal',thyroid:'internal',hormone:'internal',pregnant:'obstetric',fertility:'obstetric',child:'pediatr',baby:'pediatr',teeth:'dentist',eye:'optometr',foot:'podiatr',weight:'nutrition',diet:'nutrition',depressed:'Counselor',panic:'Counselor',sober:'Addiction',alcohol:'Addiction',opioid:'Addiction',drug:'substance'};
   let city = null, spec = null;
   for (const c of cities) if (l.includes(c)) { city = c; break; }
@@ -1570,318 +1579,116 @@ function extractCity(msg) {
   return { city, spec };
 }
 
-async function getPractitioners(msg) {
+function detectDirectoryIntent(msg) {
+  return /\b(therapist|therapy|psychiatrist|psychiatry|psychologist|counselor|doctor|physician|clinician|practitioner|provider|clinic|find\s+(?:me\s+)?(?:a|an)?|near me|doctor near|therapist near|provider near|mental health|behavioral health|sliding scale)\b/i.test(String(msg || ''));
+}
+
+function directoryLocationFromMessage(msg) {
+  const zip = extractZip(msg);
   const { city, spec } = extractCity(msg);
-  if (!city && !spec) return '';
-  let q = 'select=full_name,specialty,state,phone,address_line1,zip,practice_name';
-  const zipMap={"new orleans":"701","metairie":"700","kenner":"700","slidell":"704","mandeville":"704","covington":"704","gretna":"700","baton rouge":"708","hammond":"704","houma":"703","houston":"770","austin":"787","dallas":"752","atlanta":"303","miami":"331","chicago":"606","nashville":"372","denver":"802","phoenix":"850"};
-  const zp=city?zipMap[city]:null;
-  if (zp) q += `&zip=like.${zp}*`;
-  else if (city) q += `&address_line1=ilike.*${encodeURIComponent(city)}*`;
-  if (spec) q += `&specialty=ilike.*${encodeURIComponent(spec)}*`;
+  return { zip, city, spec, hasLocation: Boolean(zip || city) };
+}
+
+function noDirectoryLocationDirective() {
+  return 'DIRECTORY LOOKUP — location required. Tell the user you are searching BLEU\'s verified directory and ask for their 5-digit ZIP code before naming any provider. Name NO practitioners, phone numbers, practices, addresses, or local referrals in this turn. Do NOT use a default city. Do NOT invent local names.\n\n';
+}
+
+function noVerifiedDirectoryRowsDirective(where) {
+  return `DIRECTORY LOOKUP — no verified practitioners returned for ${where}. Tell the user there is no verified directory match for that area right now and offer to widen the search if they share a nearby ZIP or city. Name NO practitioners, phone numbers, practices, addresses, or local referrals in this turn. Do NOT invent local names.\n\n`;
+}
+
+function appendDirectoryQueryLocation(q, location) {
+  if (location.zip) return `${q}&zip=like.${encodeURIComponent(location.zip)}*`;
+  const zp = location.city ? DIRECTORY_CITY_ZIP_PREFIX[location.city.toLowerCase()] : null;
+  if (zp) return `${q}&zip=like.${encodeURIComponent(zp)}*`;
+  if (location.city) return `${q}&city=ilike.*${encodeURIComponent(location.city)}*`;
+  return q;
+}
+
+function formatVerifiedDirectoryRows(rows, cityFallback = '') {
+  return rows.map((p, i) => {
+    const parts = [];
+    if (p.full_name) parts.push(p.full_name);
+    if (p.specialty) parts.push(`specialty: ${p.specialty}`);
+    if (p.practice_name) parts.push(`practice: ${p.practice_name}`);
+    const location = [p.address_line1, p.city || cityFallback, p.state, p.zip].filter(Boolean).join(', ');
+    if (location) parts.push(`address: ${location}`);
+    if (p.phone) parts.push(`phone: ${p.phone}`);
+    if (p.npi) parts.push(`npi: ${p.npi}`);
+    return `${i + 1}. ${parts.join(' | ')}`;
+  }).join('\n');
+}
+
+async function getPractitioners(msg) {
+  const location = directoryLocationFromMessage(msg);
+  if (!location.hasLocation && detectDirectoryIntent(msg)) return `\n\n${noDirectoryLocationDirective()}`;
+  if (!location.hasLocation && !location.spec) return '';
+
+  let q = 'select=full_name,specialty,state,phone,address_line1,zip,city,practice_name,npi';
+  q = appendDirectoryQueryLocation(q, location);
+  if (location.spec) q += `&specialty=ilike.*${encodeURIComponent(location.spec)}*`;
   q += '&order=full_name.asc';
+
   let r = await querySupabase('practitioners', q, 8);
   const broadenMap = {chiropract:['physical therap','pain','orthoped'],orthoped:['physical therap','chiropract','pain'],neurol:['pain','psycholog'],podiatr:['orthoped']};
-  if (r && r.length < 4 && spec && broadenMap[spec]) {
-    for (const alt of broadenMap[spec]) {
+  if (r && r.length < 4 && location.spec && broadenMap[location.spec]) {
+    for (const alt of broadenMap[location.spec]) {
       if (r.length >= 8) break;
-      const altQ = q.replace(encodeURIComponent(spec), encodeURIComponent(alt));
+      const altQ = q.replace(encodeURIComponent(location.spec), encodeURIComponent(alt));
       const more = await querySupabase('practitioners', altQ, 4);
-      if (more) r = r.concat(more.filter(m => !r.some(e => e.full_name === m.full_name)));
+      if (more) r = r.concat(more.filter(m => !r.some(e => e.full_name === m.full_name && e.npi === m.npi)));
     }
     r = r.slice(0, 8);
   }
-  if (!r?.length) return '';
-  let out = '\n\n[PRACTITIONER DATA FROM BLEU DATABASE — SHOW AT LEAST 3 OF THESE TO THE USER WITH NAME, ADDRESS, AND PHONE. Never show just one.]\n';
-  r.forEach((p,i) => { out += `\n${i+1}. ${p.full_name||'Unknown'} — ${p.specialty||'Practitioner'}\n   Address: ${p.address_line1||'N/A'}, ${p.city||''}, ${p.state||''} ${p.zip||''}\n   Phone: ${p.phone||'N/A'}\n`; });
-  return out;
-}
-
-async function getLocations(msg) {
-  const { city } = extractCity(msg);
-  if (!city) return '';
-  const r = await querySupabase('locations', `select=name,address,city,state,phone,website,type&address_line1=ilike.*${encodeURIComponent(city)}*`, 5);
-  if (!r?.length) return '';
-  let out = '\n\n[LOCATION DATA FROM BLEU DATABASE]\n';
-  r.forEach((l,i) => { out += `\n${i+1}. ${l.name||'Unknown'} (${l.type||'Resource'})\n   Address: ${l.address||'N/A'}, ${l.city||''}, ${l.state||''}\n   Phone: ${l.phone||'N/A'}\n   Web: ${l.website||'N/A'}\n`; });
-  return out;
-}
-
-// ═══ ROUTING ═══
-const DEEP_MODES = ['therapy','recovery','crisis','cannaiq','directory'];
-const DEEP_TRIGGERS = ['feeling','anxious','depressed','therapy','struggling','grief','trauma','suicidal','panic','addiction','relapse','drug','medication','serotonin','withdrawal','overdose','crisis','scared','hopeless','hurt myself','nightmares','ptsd','abuse','eating disorder','self harm','lonely','cbd','thc','cannabis','strain','terpene','practitioner','therapist','psychiatrist','find me'];
-
-function pickModel(msg, mode) {
-  if (/suicid|kill myself|end it|self.harm|overdose|dying/i.test(msg)) return 'gpt-4o';
-  const light = ['community','map','missions','dashboard','learn','passport'];
-  if (light.includes(mode)) return 'gpt-4o-mini';
-  return 'gpt-4o';
-}
-
-
-// ═══════════════════════════════════════════════════════════════════════
-// DATA ENRICHMENT ENGINE — FIRES REAL APIs, INJECTS REAL DATA
-// ═══════════════════════════════════════════════════════════════════════
-
-// Helper: fetch JSON from any URL with timeout
-async function fetchJSON(url, timeout = 4000) {
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeout);
-    const r = await fetch(url, {signal: controller.signal});
-    clearTimeout(timer);
-    return r.ok ? await r.json() : null;
-  } catch { return null; }
-}
-
-// 1. OpenFDA — drug interactions, adverse events, recalls
-async function fdaDrugLookup(drug) {
-  if (!drug) return '';
-  const encoded = encodeURIComponent(drug.toLowerCase());
-  const [label, events, recalls] = await Promise.all([
-    fetchJSON(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${encoded}"+openfda.generic_name:"${encoded}"&limit=1`),
-    fetchJSON(`https://api.fda.gov/drug/event.json?search=patient.drug.openfda.brand_name:"${encoded}"&count=patient.reaction.reactionmeddrapt.exact&limit=8`),
-    fetchJSON(`https://api.fda.gov/drug/enforcement.json?search="${encoded}"&limit=2`)
-  ]);
-  let data = '';
-  if (label?.results?.[0]) {
-    const l = label.results[0];
-    const warnings = l.warnings?.[0]?.substring(0, 500) || '';
-    const interactions = l.drug_interactions?.[0]?.substring(0, 500) || '';
-    const contraindications = l.contraindications?.[0]?.substring(0, 300) || '';
-    data += `\n[FDA LABEL - ${drug}] Warnings: ${warnings} | Interactions: ${interactions} | Contraindications: ${contraindications}`;
-  }
-  if (events?.results?.length) {
-    const top = events.results.slice(0, 6).map(r => r.term).join(', ');
-    data += `\n[FDA ADVERSE EVENTS - ${drug}] Most reported: ${top}`;
-  }
-  if (recalls?.results?.length) {
-    data += `\n[FDA RECALLS - ${drug}] Active recall: ${recalls.results[0].reason_for_recall?.substring(0, 200)}`;
-  }
-  return data;
-}
-
-// 2. RxNorm — normalize drug names, find interactions between 2 drugs
-async function rxNormInteraction(drug1, drug2) {
-  if (!drug1 || !drug2) return '';
-  const [rx1, rx2] = await Promise.all([
-    fetchJSON(`https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${encodeURIComponent(drug1)}&search=1`),
-    fetchJSON(`https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${encodeURIComponent(drug2)}&search=1`)
-  ]);
-  const id1 = rx1?.idGroup?.rxnormId?.[0];
-  const id2 = rx2?.idGroup?.rxnormId?.[0];
-  if (!id1 || !id2) return '';
-  const interactions = await fetchJSON(`https://rxnav.nlm.nih.gov/REST/interaction/list.json?rxcuis=${id1}+${id2}`);
-  if (!interactions?.fullInteractionTypeGroup?.length) return '';
-  let data = '';
-  const pairs = interactions.fullInteractionTypeGroup[0]?.fullInteractionType || [];
-  for (const pair of pairs.slice(0, 3)) {
-    const desc = pair.interactionPair?.[0]?.description || '';
-    const severity = pair.interactionPair?.[0]?.severity || '';
-    if (desc) data += `\n[DRUG INTERACTION: ${drug1} + ${drug2}] ${severity}: ${desc.substring(0, 300)}`;
-  }
-  return data;
-}
-
-// 3. DailyMed — detailed drug label info
-async function dailyMedLookup(drug) {
-  if (!drug) return '';
-  const r = await fetchJSON(`https://dailymed.nlm.nih.gov/dailymed/services/v2/spls.json?drug_name=${encodeURIComponent(drug)}&page_size=1`);
-  if (!r?.data?.length) return '';
-  const spl = r.data[0];
-  return `\n[DAILYMED - ${drug}] ${spl.title || ''} | Published: ${spl.published_date || 'unknown'}`;
-}
-
-// 4. PubMed — find recent research on any topic
-async function pubmedSearch(query) {
-  if (!query) return '';
-  const search = await fetchJSON(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=3&sort=date&retmode=json`);
-  const ids = search?.esearchresult?.idlist;
-  if (!ids?.length) return '';
-  const details = await fetchJSON(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${ids.join(',')}&retmode=json`);
-  if (!details?.result) return '';
-  let data = `\n[PUBMED RESEARCH - ${query}]`;
-  for (const id of ids) {
-    const art = details.result[id];
-    if (art?.title) data += `\n  - "${art.title.substring(0, 150)}" (${art.pubdate || ''}) ${art.source || ''}`;
-  }
-  return data;
-}
-
-// 5. USDA FoodData — nutrition info for foods
-async function nutritionLookup(food) {
-  if (!food) return '';
-  const r = await fetchJSON(`https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(food)}&pageSize=1&api_key=DEMO_KEY`);
-  if (!r?.foods?.length) return '';
-  const f = r.foods[0];
-  const nutrients = (f.foodNutrients || []).slice(0, 8).map(n => `${n.nutrientName}: ${n.value}${n.unitName}`).join(', ');
-  return `\n[NUTRITION - ${food}] ${f.description}: ${nutrients}`;
-}
-
-// 6. ClinicalTrials.gov — active trials for conditions
-async function clinicalTrials(condition) {
-  if (!condition) return '';
-  const r = await fetchJSON(`https://clinicaltrials.gov/api/v2/studies?query.cond=${encodeURIComponent(condition)}&pageSize=3&sort=LastUpdatePostDate:desc&format=json`);
-  if (!r?.studies?.length) return '';
-  let data = `\n[CLINICAL TRIALS - ${condition}]`;
-  for (const s of r.studies.slice(0, 3)) {
-    const title = s.protocolSection?.identificationModule?.briefTitle || '';
-    const status = s.protocolSection?.statusModule?.overallStatus || '';
-    data += `\n  - ${title.substring(0, 120)} (${status})`;
-  }
-  return data;
-}
-
-// 7. Open Meteo — weather for wellness recommendations
-async function getWeather(city) {
-  const coords = {
-    'new orleans': {lat:29.95,lon:-90.07}, 'houston': {lat:29.76,lon:-95.37},
-    'atlanta': {lat:33.75,lon:-84.39}, 'los angeles': {lat:34.05,lon:-118.24},
-    'miami': {lat:25.76,lon:-80.19}, 'chicago': {lat:41.88,lon:-87.63},
-    'denver': {lat:39.74,lon:-104.99}, 'seattle': {lat:47.61,lon:-122.33},
-    'new york': {lat:40.71,lon:-74.01}, 'austin': {lat:30.27,lon:-97.74}
-  };
-  const c = coords[(city||'new orleans').toLowerCase()];
-  if (!c) return '';
-  const r = await fetchJSON(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,relative_humidity_2m,uv_index&temperature_unit=fahrenheit`);
-  if (!r?.current) return '';
-  return `\n[WEATHER - ${city}] ${r.current.temperature_2m}°F, Humidity: ${r.current.relative_humidity_2m}%, UV Index: ${r.current.uv_index}`;
-}
-
-// ═══ INTENT DETECTION — what data does this question need? ═══
-function detectIntent(msg) {
-  const m = msg.toLowerCase();
-  const intents = { drugs: [], supplements: [], conditions: [], foods: [], needsResearch: false, needsWeather: false };
-
-  // Drugs
-  const drugList = ['lexapro','escitalopram','zoloft','sertraline','prozac','fluoxetine','wellbutrin','bupropion','xanax','alprazolam','adderall','amphetamine','ambien','zolpidem','gabapentin','lisinopril','metformin','atorvastatin','omeprazole','levothyroxine','amlodipine','metoprolol','losartan','hydrochlorothiazide','warfarin','clopidogrel','prednisone','tramadol','oxycodone','suboxone','naltrexone','lithium','lamotrigine','quetiapine','aripiprazole','clonazepam','lorazepam','buspirone','trazodone','mirtazapine','venlafaxine','duloxetine','cymbalta','effexor','celexa','paxil','hydroxyzine','propranolol','ozempic','wegovy','mounjaro','semaglutide','tirzepatide'];
-  for (const d of drugList) if (m.includes(d)) intents.drugs.push(d);
-
-  // Supplements
-  const suppList = ['magnesium','ashwagandha','melatonin','vitamin d','vitamin c','vitamin b','omega-3','fish oil','zinc','iron','turmeric','curcumin','l-theanine','theanine','cbd','gaba','valerian','5-htp','sam-e','st john','rhodiola','lion\'s mane','lions mane','creatine','probiotics','collagen','coq10','berberine','nac','glutathione','milk thistle'];
-  for (const s of suppList) if (m.includes(s)) intents.supplements.push(s);
-
-  // Conditions
-  const condList = ['anxiety','depression','insomnia','sleep','pain','chronic pain','adhd','ptsd','bipolar','ocd','diabetes','hypertension','high blood pressure','obesity','migraine','arthritis','fibromyalgia','ibs','crohn','cancer','addiction','alcoholism'];
-  for (const c of condList) if (m.includes(c)) intents.conditions.push(c);
-
-  // Foods
-  const foodList = ['salmon','spinach','blueberries','avocado','quinoa','kale','turmeric','ginger','green tea','dark chocolate','almonds','walnuts','sweet potato','broccoli','eggs','yogurt','oats'];
-  for (const f of foodList) if (m.includes(f)) intents.foods.push(f);
-
-  // Research trigger
-  if (m.includes('research') || m.includes('studies') || m.includes('evidence') || m.includes('clinical') || m.includes('science')) intents.needsResearch = true;
-
-  // Weather trigger
-  if (m.includes('outside') || m.includes('weather') || m.includes('walk') || m.includes('exercise outdoor') || m.includes('uv') || m.includes('sun')) intents.needsWeather = true;
-
-  return intents;
-}
-
-// ═══ MASTER ENRICHMENT — fires all relevant APIs in parallel ═══
-async function enrichWithData(msg, mode) {
-  const intents = detectIntent(msg);
-  const promises = [];
-
-  // Fire drug lookups
-  for (const drug of intents.drugs.slice(0, 2)) {
-    promises.push(fdaDrugLookup(drug));
-    promises.push(dailyMedLookup(drug));
-  }
-
-  // Fire drug interactions (if 2+ drugs/supplements mentioned)
-  const allSubstances = [...intents.drugs, ...intents.supplements];
-  if (allSubstances.length >= 2) {
-    promises.push(rxNormInteraction(allSubstances[0], allSubstances[1]));
-  }
-
-  // Fire condition research
-  for (const cond of intents.conditions.slice(0, 2)) {
-    promises.push(clinicalTrials(cond));
-    if (intents.needsResearch) promises.push(pubmedSearch(cond + ' treatment'));
-  }
-
-  // Fire supplement research if in vessel/protocols mode
-  if (['vessel','protocols','general','cannaiq'].includes(mode)) {
-    for (const supp of intents.supplements.slice(0, 2)) {
-      promises.push(pubmedSearch(supp + ' clinical trial'));
+  if (!r?.length) {
+    if (detectDirectoryIntent(msg)) {
+      const where = location.zip ? `ZIP ${location.zip}` : location.city;
+      return `\n\n${noVerifiedDirectoryRowsDirective(where)}`;
     }
+    return '';
   }
-
-  // Fire nutrition lookup
-  for (const food of intents.foods.slice(0, 2)) {
-    promises.push(nutritionLookup(food));
-  }
-
-  // Fire weather if relevant
-  if (intents.needsWeather) {
-    promises.push(getWeather('new orleans'));
-  }
-
-  if (promises.length === 0) return '';
-
-  const results = await Promise.all(promises);
-  const data = results.filter(r => r && r.length > 10).join('');
-
-  if (!data) return '';
-  return `\n\n═══ REAL-TIME DATA (from FDA, NIH, PubMed, USDA — cite these sources) ═══${data}\n═══ END REAL-TIME DATA ═══\nCRITICAL SAFETY INSTRUCTION — READ CAREFULLY:
-1. The real-time data above comes from LIVE FDA, NIH, and PubMed APIs. It is CURRENT and AUTHORITATIVE.
-2. When real-time data CONFLICTS with your training data, the real-time data WINS. Always.
-3. NEVER downplay drug interactions. If ANY interaction pathway exists, WARN PROMINENTLY.
-4. CBD inhibits CYP3A4 and CYP2D6 enzymes. This affects ALL SSRIs including Lexapro, Zoloft, Prozac, Celexa, Paxil. ALWAYS flag this.
-5. Quote the SPECIFIC data: exact adverse events, exact warning text, exact study titles.
-6. Format warnings like: "⚠️ SAFETY FLAG: FDA data shows [specific finding]"
-7. After the warning, THEN provide guidance on how to proceed safely (low dose, doctor supervision, timing separation).
-8. NEVER say "CBD does not typically interact" or "CBD is generally safe with [any medication]" — this is clinically irresponsible.
-9. For every drug mentioned, state the TOP 3 adverse events from the FDA data by name.
-10. End drug interaction responses with: "This is AI-assisted information from live FDA databases. Always confirm with your prescriber before combining any substances."`;
+  let out = '\n\nVERIFIED DIRECTORY RESULTS — use only these exact database rows. Do not add, guess, substitute, or embellish practitioner names, phone numbers, addresses, practices, specialties, or NPIs.\n';
+  out += formatVerifiedDirectoryRows(r, location.city || '');
+  out += '\n';
+  return out;
 }
 
-
-// Clinical threshold — prepend verified local practitioners when the user signals
-// crisis, therapy need, or an explicit practitioner search. Falls back to New
-// Orleans when no city is detected. Wrapped in try/catch so a DB hiccup never
-// blocks the OpenAI call.
+// Clinical threshold — prepend verified local practitioners only when the user
+// gives an explicit city or ZIP. No default city is used; no verified row means
+// the model receives a hard no-fabrication directive instead of silence.
 async function getClinicalPractitioners(msg) {
   try {
     const CRISIS_RE  = /\b(suicid|self[\s-]?harm|overdose|kill myself|end it)\b/i;
     const THERAPY_RE = /\b(therapist|psychiatrist|counselor|mental health|depression|anxiety disorder|PTSD|trauma|grief)\b/i;
-    const SEARCH_RE  = /\b(find a doctor|find a practitioner|need a doctor|looking for a therapist|need help near|provider near me|doctor in|therapist in)\b/i;
+    const SEARCH_RE  = /\b(find a doctor|find a practitioner|need a doctor|looking for a therapist|need help near|provider near me|doctor in|therapist in|near me)\b/i;
 
     const isCrisis  = CRISIS_RE.test(msg);
     const isTherapy = THERAPY_RE.test(msg);
-    const isSearch  = SEARCH_RE.test(msg);
+    const isSearch  = SEARCH_RE.test(msg) || detectDirectoryIntent(msg);
     if (!isCrisis && !isTherapy && !isSearch) return '';
 
     console.log('Clinical threshold: routing to verified practitioners');
 
-    const { city: detected } = extractCity(msg);
-    const city = detected || 'new orleans';
-    const specialty = (isCrisis || isTherapy) ? 'Counselor' : '';
+    const location = directoryLocationFromMessage(msg);
+    if (!location.hasLocation) return noDirectoryLocationDirective();
 
-    const zipMap = {"new orleans":"701","houston":"770","austin":"787","dallas":"752","atlanta":"303","miami":"331","chicago":"606","los angeles":"900","new york":"100","san francisco":"941","seattle":"981","denver":"802","phoenix":"850","portland":"972","nashville":"372","baton rouge":"708","charlotte":"282","tampa":"336","memphis":"381"};
-    const zp = zipMap[city.toLowerCase()];
-    let q = `select=full_name,specialty,address_line1,city,zip,phone,npi`;
-    if (zp) q += `&zip=like.${zp}*`;
-    else q += `&address_line1=ilike.*${encodeURIComponent(city)}*`;
+    const specialty = (isCrisis || isTherapy) ? 'Counselor' : (location.spec || '');
+    let q = `select=full_name,specialty,address_line1,city,state,zip,phone,npi,practice_name`;
+    q = appendDirectoryQueryLocation(q, location);
     if (specialty) q += `&specialty=ilike.*${encodeURIComponent(specialty)}*`;
     q += '&order=full_name.asc';
 
     const rows = await querySupabase('practitioners', q, 5);
-    if (!rows?.length) return '';
+    const where = location.zip ? `ZIP ${location.zip}` : location.city;
+    if (!rows?.length) return noVerifiedDirectoryRowsDirective(where);
 
-    let out = 'VERIFIED LOCAL PRACTITIONERS — NPI confirmed:\n';
-    rows.forEach((p, i) => {
-      out += `${i+1}. ${p.full_name || 'Provider'} — ${p.specialty || 'Practitioner'}\n`;
-      out += `   ${p.address_line1 || ''}, ${p.city || city}, ${p.zip || ''}\n`;
-      out += `   Phone: ${p.phone || 'N/A'}\n`;
-      if (p.npi) out += `   Profile: https://bleu.live/practitioner/${p.npi}\n`;
-    });
-    out += '\nUse these real verified providers by name when the user asks for help — do not give generic redirects.\n\n';
+    let out = 'VERIFIED LOCAL PRACTITIONERS — use only these exact database rows. Do not add, guess, substitute, or embellish practitioner names, phone numbers, addresses, practices, specialties, or NPIs.\n';
+    out += formatVerifiedDirectoryRows(rows, location.city || '');
+    out += '\n\n';
     return out;
   } catch (e) {
     console.log('Clinical threshold query failed:', e.message);
-    return '';
+    return 'DIRECTORY LOOKUP — verified practitioner search failed. Tell the user the verified directory search is unavailable right now, ask for their ZIP to try again later, and name NO practitioners, phone numbers, practices, addresses, or local referrals in this turn. Do NOT invent local names.\n\n';
   }
 }
 
@@ -2090,7 +1897,7 @@ const server = http.createServer((req, res) => {
           'i need help':["I'm here. What's the main thing right now?","Okay. Start with the hardest part.","Tell me what's happening."],
           'start':["Good. Tell me what's going on.","Let's go. What do you need?","I'm ready. What's happening?"],
           'what is bleu':["BLEU listens for what your system needs and assembles the next right move.","BLEU helps you notice what's happening, understand it fast, and take the next step.","BLEU is your health decision layer — it figures out what matters and what to do next."],
-          'what can you do':["I listen. I search 855,000 practitioners. I check your medications. I find what you need tonight.","Tell me what you need and I'll show you. That's faster than a list.","Everything from supplements to therapy to finding the right doctor near you. Start with what hurts."],
+          'what can you do':["I listen. I search verified directory rows when you share a location. I check your medications. I find what you need tonight.","Tell me what you need and I'll show you. That's faster than a list.","Everything from supplements to therapy to finding the right doctor near you. Start with what hurts."],
           'hey there':["Hey. I'm here. What's going on?","Hey — talk to me. What do you need?"],
           'hi there':["Hi. What do you need right now?","Hi. Start wherever you are."],
           'hello there':["You found us. What's going on right now?","Hey. Talk to me."],
@@ -2143,22 +1950,23 @@ const server = http.createServer((req, res) => {
         if (opening) sys += '\n\nFIRST LINE LOCKED — begin your response with exactly this sentence, then continue naturally without repeating it:\n"' + opening + '"\n\nDo not rephrase it. Do not add a preamble. Start with it and move forward.';
 
         // ── DIRECTORY LOOKUP — when user asks for local providers, inject real verified rows ──
-        if (/therapist|doctor|practitioner|find me|near me|in new orleans|\b\d{5}\b/i.test(p.message)) {
-          const zipMatch = p.message.match(/\b(\d{5})\b/);
-          const zip = zipMatch ? zipMatch[1] : null;
-          const { city, spec } = extractCity(p.message);
-          let dq = 'select=full_name,specialty,phone,address_line1,zip,city';
-          if (zip) dq += `&zip=eq.${zip}`;
-          else if (city) dq += `&city=ilike.*${encodeURIComponent(city)}*`;
-          if (spec) dq += `&specialty=ilike.*${encodeURIComponent(spec)}*`;
-          dq += '&order=full_name.asc';
-          const rows = await querySupabase('practitioners', dq, 3);
-          const where = zip ? `ZIP ${zip}` : (city || 'that area');
-          if (rows && rows.length) {
-            const formatted = rows.map(x => `${x.full_name||'Unnamed'} — ${x.specialty||'Practitioner'}, ${x.address_line1||''}${x.city?', '+x.city:''}${x.zip?' '+x.zip:''}. Phone: ${x.phone||'on request'}.`).join('\n');
-            sys = `VERIFIED DIRECTORY RESULTS — use only these real practitioners in your response:\n${formatted}\n\n` + sys;
+        if (detectDirectoryIntent(p.message) || /\b\d{5}\b/i.test(p.message)) {
+          const location = directoryLocationFromMessage(p.message);
+          if (!location.hasLocation) {
+            sys = noDirectoryLocationDirective() + sys;
           } else {
-            sys = `DIRECTORY LOOKUP — no verified practitioners returned for ${where}. Tell the user the directory search returned no results for that area, then offer BetterHelp (betterhelp.com/bleu) as a backup so they can talk to someone tonight. Do NOT invent local names.\n\n` + sys;
+            let dq = 'select=full_name,specialty,phone,address_line1,zip,city,state,practice_name,npi';
+            dq = appendDirectoryQueryLocation(dq, location);
+            if (location.spec) dq += `&specialty=ilike.*${encodeURIComponent(location.spec)}*`;
+            dq += '&order=full_name.asc';
+            const rows = await querySupabase('practitioners', dq, 3);
+            const where = location.zip ? `ZIP ${location.zip}` : location.city;
+            if (rows && rows.length) {
+              const formatted = formatVerifiedDirectoryRows(rows, location.city || '');
+              sys = `VERIFIED DIRECTORY RESULTS — use only these exact database rows. Do not add, guess, substitute, or embellish practitioner names, phone numbers, addresses, practices, specialties, or NPIs.\n${formatted}\n\n` + sys;
+            } else {
+              sys = noVerifiedDirectoryRowsDirective(where) + sys;
+            }
           }
         }
 
