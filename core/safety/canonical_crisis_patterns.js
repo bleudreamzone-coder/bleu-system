@@ -21,7 +21,9 @@ const PATTERNS = [
   // active suicidal statements
   /\bkill (myself|me)\b/,
   /\bkilling myself\b/,
-  /\b(want|wanna|going) to die\b/,
+  /\bwant to die\b/,
+  /\bwanna die\b/,
+  /\bi(?:'m|m| am)?\s*(?:going to|gonna)\s+die\b/,
   /\bwant to be dead\b/,
   /\bend (my life|it all)\b/,
   /\bending (my life|it all|it)\b/,
