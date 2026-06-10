@@ -20,9 +20,9 @@ from urllib.error import HTTPError, URLError
 # CONFIG
 # ══════════════════════════════════════════════════════════
 SB_URL = os.environ.get('SUPABASE_URL', 'https://sqyzboesdpdussiwqpzk.supabase.co')
-SB_KEY = os.environ.get('SUPABASE_SERVICE_KEY', 'sb_secret__zYCYtWcOx9uKnIgRPPN4Q_PWkTOf96')
-GOOGLE_KEY = os.environ.get('GOOGLE_PLACES_KEY', 'AIzaSyCGYgOuRAPS5HO95ify2ZNmQj_21Tjn0Ks')
-YT_KEY = os.environ.get('YOUTUBE_API_KEY', 'AIzaSyCGYgOuRAPS5HO95ify2ZNmQj_21Tjn0Ks')
+SB_KEY = os.environ.get('SUPABASE_SERVICE_KEY', '')
+GOOGLE_KEY = os.environ.get('GOOGLE_PLACES_KEY', '')
+YT_KEY = os.environ.get('YOUTUBE_API_KEY', '')
 AMZ_TAG = 'bleu-live-20'
 IHERB_CODE = 'BLEU'
 
