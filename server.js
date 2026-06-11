@@ -14,6 +14,7 @@ const path = require('path');
 // _meta/clinical/signoffs/crisis_validator-2026-05-21-stoler.md.
 const { detectCrisis, CRISIS_BANNER } = require('./core/safety/crisis_validator');
 const { isCrisisPhrase } = require('./core/safety/canonical_crisis_patterns');
+const { resolveLocation } = require('./core/geo/resolveLocation');
 
 const OPENAI_KEY = process.env.OPENAI_API_KEY || '';
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
@@ -2097,6 +2098,22 @@ const server = http.createServer((req, res) => {
   if (req.method === 'OPTIONS') return json(res, 200, {});
 
   if (pn === '/health') return json(res, 200, { status: 'ok', hasKey: !!OPENAI_KEY, hasSupabase: !!(SUPABASE_URL&&SUPABASE_KEY), engine: 'openai', version: '4.0', modes: Object.keys(MODE_PROMPTS).length });
+
+  if (pn === '/geo' && req.method === 'GET') {
+    (async () => { try {
+      const location = await resolveLocation({
+        url,
+        headers: req.headers,
+        supabaseUrl: SUPABASE_URL,
+        supabaseKey: SUPABASE_KEY,
+        fetchImpl: fetch
+      });
+      return json(res, 200, { ok: true, ...location });
+    } catch (e) {
+      return json(res, 500, { ok: false, error: String(e.message || e) });
+    } })();
+    return;
+  }
 
   if (pn === '/api/chat' && req.method === 'POST') {
     let b = ''; req.on('data', c => b += c);
