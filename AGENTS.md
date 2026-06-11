@@ -48,17 +48,11 @@ One architecture, two vocabularies — doctrine names (Prism → Arbiter → Led
 
 ## 4. Current priority
 
-**Natchitoches Rural Health Transformation Summit demo — June 9–12, 2026.**
+**Natchitoches Rural Health Transformation Summit demo — CLOSED June 11, 2026 per Bleu.**
 
-The number-one engineering task this week is a reliable, controlled, stage-ready counterfactual demo path for the **Lexapro calibrate** scenario, returning the real governed output shape: **Signal → Decision → Governed Response → Trust Packet.**
+The current number-one engineering task is the **71457 rural med-change wedge** per `docs/bleu/source-of-truth/BLEU-CODEX-BUILD-PHASES.md`.
 
-The demo must NOT depend on: signup, Resend, a live model call, live account creation, external email delivery, random model improvisation, or unapproved clinical language.
-
-The demo must be **deterministic**: same input, same governed output, same decision structure, same Trust Packet shape, same safety boundaries, same observable proof.
-
-**Determinism integrity (critical):** deterministic means fixed input + the *real* governance logic + a fixed model stub, producing reproducible *real* outputs. The Signal, Decision, and Trust Packet must be genuinely emitted by the live code on the fixed input — never hand-written, never hardcoded. We demo the real governor on a controlled scenario; we never fake the output.
-
-Do not author the clinical content of the demo. Clinical wording comes from Dr. Stoler or is marked REQUIRES DR. STOLER SIGNOFF. All other migration, refactor, scaffold, and architecture work is secondary until the demo is stage-ready.
+The 71457 wedge supersedes the summit demo priority. All schema, architecture, clinical safety workflow, and live-path decision behavior changes still require the approvals named in this charter.
 
 ---
 
