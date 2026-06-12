@@ -41,6 +41,13 @@ const REORDER_CRON_SECRET = process.env.REORDER_CRON_SECRET || '';
 // Roughly ~1500 tokens at ~4 chars/token.
 const RECALL_CHAR_BUDGET = 6000;
 
+const RADIUS_ROUTING_RADII_MILES = [25, 50, 100];
+const RADIUS_ROUTING_SPARSE_ZIP_THRESHOLD = 5;
+
+function radiusRoutingEnabled() {
+  return String(process.env.USE_RADIUS_ROUTING || '').toLowerCase() === 'true';
+}
+
 async function sendSMS(to, body) {
   if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
   const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`;
@@ -898,19 +905,21 @@ function buildMedChangeSafeFallback(location) {
   const zipText = location && location.zip ? `I have ZIP ${location.zip}.` : 'If you share your 5-digit ZIP code, I can look for general care-transition resources.';
   return `I want to keep this safe. I cannot give medicine guidance from here until the care-transition handoff is properly recorded. ${zipText} For today, use your discharge papers to contact the hospital discharge team, your clinic, or your pharmacist, and ask them to review the medicine list with you.`;
 }
-function buildMedChangeCatalystEvent({ p, location, now } = {}) {
+function buildMedChangeCatalystEvent({ p, location, now, routeDecision } = {}) {
   const createdAt = now instanceof Date ? now : new Date(now || Date.now());
   const followUpDueAt = new Date(createdAt.getTime() + 2 * 24 * 60 * 60 * 1000);
   const zip = location && location.zip ? String(location.zip) : 'unconfirmed';
   const confidence = (location && location.confidence) || 'unknown';
   const source = (location && location.source) || 'unknown';
+  const routeId = routeDecision && routeDecision.route_id ? routeDecision.route_id : `phase1_record_gate_zip_${zip}`;
+  const routeStatus = routeDecision && routeDecision.status ? ` Route status=${routeDecision.status}; radius=${routeDecision.radius_miles || 'none'} miles.` : '';
   return {
     window_type: 'discharge',
     catalyst_type: 'medication_change',
     siren_level: 'amber',
     workflow_rail: 'care_transition',
-    route_id: `phase1_record_gate_zip_${zip}`,
-    rationale: `Post-discharge medication confusion signal detected; amber care_transition response requires a write-ahead catalyst_event before governed prose. Location source=${source}; confidence=${confidence}.`,
+    route_id: routeId,
+    rationale: `Post-discharge medication confusion signal detected; amber care_transition response requires a write-ahead catalyst_event before governed prose. Location source=${source}; confidence=${confidence}.${routeStatus}`,
     staff_action_required: false,
     human_owner: null,
     consent_status: 'unknown',
@@ -958,11 +967,11 @@ async function resolveRecordGateLocation(p, req, url, opts = {}) {
     fetchImpl: opts.fetchImpl || fetch
   });
 }
-async function runMedChangeRecordGate({ p, crisis, location, enabled = recordGateEnabled(), writeCatalystEvent = insertCatalystEvent, now } = {}) {
+async function runMedChangeRecordGate({ p, crisis, location, routeDecision, enabled = recordGateEnabled(), writeCatalystEvent = insertCatalystEvent, now } = {}) {
   if (!enabled) return { status: 'disabled', shouldContinue: true, gated: false };
   if (crisis && crisis.detected) return { status: 'crisis_bypass', shouldContinue: true, gated: false };
   if (!detectMedChangeSignal(p && p.message)) return { status: 'not_med_change', shouldContinue: true, gated: false };
-  const event = buildMedChangeCatalystEvent({ p, location, now: now || new Date() });
+  const event = buildMedChangeCatalystEvent({ p, location, routeDecision, now: now || new Date() });
   try {
     const result = await writeCatalystEvent(event);
     return { status: 'recorded', shouldContinue: true, gated: true, event, result, insertCompletedAt: new Date().toISOString() };
@@ -1721,12 +1730,171 @@ function noVerifiedDirectoryRowsDirective(where) {
   return `DIRECTORY LOOKUP — no verified practitioners returned for ${where}. Tell the user there is no verified directory match for that area right now and offer to widen the search if they share a nearby ZIP or city. Name NO practitioners, phone numbers, practices, addresses, or local referrals in this turn. Do NOT invent local names.\n\n`;
 }
 
+function lowConfidenceRadiusDirective() {
+  return 'RADIUS ROUTE — location confidence is low. Ask the user to confirm a 5-digit ZIP code before naming any provider. Name NO practitioners, phone numbers, practices, addresses, or local referrals in this turn. Do NOT use a default city. Do NOT invent local names.\n\n';
+}
+
+function honestDesertRadiusDirective(location, radiusMiles) {
+  const where = location && location.zip ? `ZIP ${location.zip}` : ((location && location.city) || 'that area');
+  const radius = radiusMiles || RADIUS_ROUTING_RADII_MILES[RADIUS_ROUTING_RADII_MILES.length - 1];
+  return `RADIUS ROUTE — honest desert. No verified practitioners returned within ${radius} miles of ${where}. Tell the user the verified directory does not have a local match in that radius right now. Name NO practitioners, phone numbers, practices, addresses, or local referrals in this turn. Offer to widen if they share a nearby ZIP, and offer general non-provider paths: telehealth, an HRSA FQHC/RHC or clinic navigator, 211 for local services, and the hospital discharge team or pharmacist for care-transition questions.\n\n`;
+}
+
 function appendDirectoryQueryLocation(q, location) {
   if (location.zip) return `${q}&zip=like.${encodeURIComponent(location.zip)}*`;
   const zp = location.city ? DIRECTORY_CITY_ZIP_PREFIX[location.city.toLowerCase()] : null;
   if (zp) return `${q}&zip=like.${encodeURIComponent(zp)}*`;
   if (location.city) return `${q}&city=ilike.*${encodeURIComponent(location.city)}*`;
   return q;
+}
+
+function directoryLocationUrl(url, location) {
+  const u = url instanceof URL ? new URL(url.toString()) : new URL(url || '/', 'http://localhost');
+  if (location && location.zip) u.searchParams.set('zip', location.zip);
+  else if (location && location.city) u.searchParams.set('loc', location.city);
+  return u;
+}
+
+async function resolveDirectoryRouteLocation(msg, opts = {}) {
+  const location = opts.directoryLocation || directoryLocationFromMessage(msg);
+  return resolveLocation({
+    url: directoryLocationUrl(opts.url || '/', location),
+    headers: opts.headers || (opts.req && opts.req.headers) || {},
+    supabaseUrl: opts.supabaseUrl || SUPABASE_URL,
+    supabaseKey: opts.supabaseKey || SUPABASE_KEY,
+    fetchImpl: opts.fetchImpl || fetch
+  });
+}
+
+function normalizeRadiusZipRows(rows) {
+  return (Array.isArray(rows) ? rows : [])
+    .map((row) => ({
+      zip: String(row && row.zip || '').trim(),
+      city: row && row.city || null,
+      state: row && row.state || null,
+      distance_miles: Number(row && (row.distance_miles ?? row.distance ?? row.miles ?? 0)),
+    }))
+    .filter((row) => /^\d{5}$/.test(row.zip) && Number.isFinite(row.distance_miles))
+    .sort((a, b) => a.distance_miles - b.distance_miles || a.zip.localeCompare(b.zip));
+}
+
+async function radiusZipSet(location, opts = {}) {
+  const rpcImpl = opts.rpcImpl || callSupabaseRPC;
+  const out = { radius_miles: null, zip_rows: [], attempts: [] };
+  if (!location || location.lat == null || location.lng == null) return out;
+  for (const radius of RADIUS_ROUTING_RADII_MILES) {
+    const rows = normalizeRadiusZipRows(await rpcImpl('zips_within_radius', {
+      p_lat: Number(location.lat),
+      p_lng: Number(location.lng),
+      p_radius_miles: radius
+    }));
+    out.attempts.push({ radius_miles: radius, zip_count: rows.length });
+    out.radius_miles = radius;
+    out.zip_rows = rows;
+    if (rows.length >= RADIUS_ROUTING_SPARSE_ZIP_THRESHOLD || radius === RADIUS_ROUTING_RADII_MILES[RADIUS_ROUTING_RADII_MILES.length - 1]) break;
+  }
+  return out;
+}
+
+function zipInFilter(zipRows) {
+  const zips = Array.from(new Set((zipRows || []).map(r => r.zip).filter(Boolean)));
+  return zips.length ? `zip=in.(${zips.map(encodeURIComponent).join(',')})` : '';
+}
+
+function sortPractitionersByZipDistance(rows, zipRows) {
+  const distanceByZip = new Map((zipRows || []).map((row, idx) => [row.zip, { distance: row.distance_miles, order: idx }]));
+  return (Array.isArray(rows) ? rows : [])
+    .map((row, idx) => {
+      const z = String(row && row.zip || '');
+      const d = distanceByZip.get(z) || { distance: Number.MAX_SAFE_INTEGER, order: Number.MAX_SAFE_INTEGER };
+      return { ...row, route_distance_miles: d.distance, _route_zip_order: d.order, _route_original_order: idx };
+    })
+    .sort((a, b) => a.route_distance_miles - b.route_distance_miles || a._route_zip_order - b._route_zip_order || String(a.full_name || '').localeCompare(String(b.full_name || '')));
+}
+
+function buildRadiusRouteId(location, route) {
+  const zip = location && location.zip ? String(location.zip) : 'unconfirmed';
+  const radius = route && route.radius_miles ? `${route.radius_miles}mi` : 'no_radius';
+  const status = route && route.status ? route.status : 'unknown';
+  return `radius_${zip}_${radius}_${status}`;
+}
+
+async function findRadiusPractitionerRoute(location, opts = {}) {
+  const limit = Math.max(1, Math.min(opts.limit || 8, 20));
+  const select = opts.select || 'select=full_name,specialty,state,phone,address_line1,zip,city,practice_name,npi';
+  const specialty = opts.specialty || '';
+  const queryImpl = opts.queryImpl || querySupabase;
+  if (!location || location.confidence !== 'high' || location.provider_names_allowed !== true) {
+    return {
+      status: 'low_confidence',
+      route_id: 'radius_low_confidence_no_names',
+      rows: [],
+      directive: lowConfidenceRadiusDirective(),
+      provider_names_allowed: false,
+      radius_miles: null,
+      zip_rows: []
+    };
+  }
+
+  const zipSet = await radiusZipSet(location, opts);
+  if (!zipSet.zip_rows.length) {
+    const route = {
+      status: 'honest_desert',
+      rows: [],
+      directive: honestDesertRadiusDirective(location, zipSet.radius_miles),
+      provider_names_allowed: true,
+      radius_miles: zipSet.radius_miles || RADIUS_ROUTING_RADII_MILES[RADIUS_ROUTING_RADII_MILES.length - 1],
+      zip_rows: [],
+      attempts: zipSet.attempts,
+    };
+    route.route_id = buildRadiusRouteId(location, route);
+    return route;
+  }
+
+  let q = `${select}&${zipInFilter(zipSet.zip_rows)}`;
+  if (specialty) q += `&specialty=ilike.*${encodeURIComponent(specialty)}*`;
+  q += '&order=zip.asc,full_name.asc';
+  const rows = sortPractitionersByZipDistance(await queryImpl('practitioners', q, Math.max(50, limit * 4)), zipSet.zip_rows).slice(0, limit);
+  if (!rows.length) {
+    const route = {
+      status: 'honest_desert',
+      rows: [],
+      directive: honestDesertRadiusDirective(location, zipSet.radius_miles),
+      provider_names_allowed: true,
+      radius_miles: zipSet.radius_miles,
+      zip_rows: zipSet.zip_rows,
+      attempts: zipSet.attempts,
+    };
+    route.route_id = buildRadiusRouteId(location, route);
+    return route;
+  }
+  const route = {
+    status: 'providers_found',
+    rows,
+    directive: '',
+    provider_names_allowed: true,
+    radius_miles: zipSet.radius_miles,
+    zip_rows: zipSet.zip_rows,
+    attempts: zipSet.attempts,
+  };
+  route.route_id = buildRadiusRouteId(location, route);
+  return route;
+}
+
+function formatRadiusRouteContext(route) {
+  if (!route) return '';
+  if (route.status !== 'providers_found') return '';
+  const zips = (route.zip_rows || []).slice(0, 12).map(row => `${row.zip} (${Number(row.distance_miles).toFixed(1)} mi)`).join(', ');
+  return `RADIUS ROUTE — verified by ZIP-set distance. Radius used: ${route.radius_miles} miles. ZIP order: ${zips}. Use only the rows below; do not invent providers.\n`;
+}
+
+async function radiusRouteForMessage(msg, opts = {}) {
+  const directoryLocation = opts.directoryLocation || directoryLocationFromMessage(msg);
+  const resolved = opts.resolvedLocation || await resolveDirectoryRouteLocation(msg, { ...opts, directoryLocation });
+  return findRadiusPractitionerRoute(resolved, {
+    ...opts,
+    specialty: opts.specialty !== undefined ? opts.specialty : (directoryLocation.spec || ''),
+  });
 }
 
 function formatVerifiedDirectoryRows(rows, cityFallback = '') {
@@ -1747,6 +1915,20 @@ async function getPractitioners(msg) {
   const location = directoryLocationFromMessage(msg);
   if (!location.hasLocation && detectDirectoryIntent(msg)) return `\n\n${noDirectoryLocationDirective()}`;
   if (!location.hasLocation && !location.spec) return '';
+
+  if (radiusRoutingEnabled()) {
+    const route = await radiusRouteForMessage(msg, {
+      directoryLocation: location,
+      specialty: location.spec || '',
+      limit: 8,
+    });
+    if (route.directive) return `\n\n${route.directive}`;
+    let out = '\n\nVERIFIED DIRECTORY RESULTS — use only these exact database rows. Do not add, guess, substitute, or embellish practitioner names, phone numbers, addresses, practices, specialties, or NPIs.\n';
+    out += formatRadiusRouteContext(route);
+    out += formatVerifiedDirectoryRows(route.rows, location.city || '');
+    out += '\n';
+    return out;
+  }
 
   let q = 'select=full_name,specialty,state,phone,address_line1,zip,city,practice_name,npi';
   q = appendDirectoryQueryLocation(q, location);
@@ -1797,6 +1979,21 @@ async function getClinicalPractitioners(msg) {
     if (!location.hasLocation) return noDirectoryLocationDirective();
 
     const specialty = (isCrisis || isTherapy) ? 'Counselor' : (location.spec || '');
+    if (radiusRoutingEnabled()) {
+      const route = await radiusRouteForMessage(msg, {
+        directoryLocation: location,
+        specialty,
+        limit: 5,
+        select: 'select=full_name,specialty,address_line1,city,state,zip,phone,npi,practice_name'
+      });
+      if (route.directive) return route.directive;
+      let out = 'VERIFIED LOCAL PRACTITIONERS — use only these exact database rows. Do not add, guess, substitute, or embellish practitioner names, phone numbers, addresses, practices, specialties, or NPIs.\n';
+      out += formatRadiusRouteContext(route);
+      out += formatVerifiedDirectoryRows(route.rows, location.city || '');
+      out += '\n\n';
+      return out;
+    }
+
     let q = `select=full_name,specialty,address_line1,city,state,zip,phone,npi,practice_name`;
     q = appendDirectoryQueryLocation(q, location);
     if (specialty) q += `&specialty=ilike.*${encodeURIComponent(specialty)}*`;
@@ -2270,7 +2467,15 @@ const server = http.createServer((req, res) => {
         };
         if (shouldAttemptMedChangeRecordGate(p, crisis)) {
           const recordGateLocation = await resolveRecordGateLocation(p, req, url);
-          const recordGate = await runMedChangeRecordGate({ p, crisis, location: recordGateLocation });
+          let routeDecision = null;
+          if (radiusRoutingEnabled()) {
+            try {
+              routeDecision = await findRadiusPractitionerRoute(recordGateLocation, { limit: 5 });
+            } catch (e) {
+              console.error('[RECORD_GATE_ROUTE_FAIL]', JSON.stringify({ err: String(e && e.message || e).substring(0, 180), ts: Date.now() }));
+            }
+          }
+          const recordGate = await runMedChangeRecordGate({ p, crisis, location: recordGateLocation, routeDecision });
           if (!recordGate.shouldContinue) {
             writeRecordGateFallbackSSE(res, recordGate.fallback, { suppressCommerce });
             return;
@@ -2344,6 +2549,21 @@ const server = http.createServer((req, res) => {
           const location = directoryLocationFromMessage(p.message);
           if (!location.hasLocation) {
             sys = noDirectoryLocationDirective() + sys;
+          } else if (radiusRoutingEnabled()) {
+            const route = await radiusRouteForMessage(p.message, {
+              directoryLocation: location,
+              req,
+              url,
+              specialty: location.spec || '',
+              limit: 3,
+              select: 'select=full_name,specialty,phone,address_line1,zip,city,state,practice_name,npi'
+            });
+            if (route.directive) {
+              sys = route.directive + sys;
+            } else {
+              const formatted = formatVerifiedDirectoryRows(route.rows, location.city || '');
+              sys = `VERIFIED DIRECTORY RESULTS — use only these exact database rows. Do not add, guess, substitute, or embellish practitioner names, phone numbers, addresses, practices, specialties, or NPIs.\n${formatRadiusRouteContext(route)}${formatted}\n\n` + sys;
+            }
           } else {
             let dq = 'select=full_name,specialty,phone,address_line1,zip,city,state,practice_name,npi';
             dq = appendDirectoryQueryLocation(dq, location);
@@ -2531,7 +2751,15 @@ const server = http.createServer((req, res) => {
         };
         if (shouldAttemptMedChangeRecordGate(p, crisis)) {
           const recordGateLocation = await resolveRecordGateLocation(p, req, url);
-          const recordGate = await runMedChangeRecordGate({ p, crisis, location: recordGateLocation });
+          let routeDecision = null;
+          if (radiusRoutingEnabled()) {
+            try {
+              routeDecision = await findRadiusPractitionerRoute(recordGateLocation, { limit: 5 });
+            } catch (e) {
+              console.error('[RECORD_GATE_ROUTE_FAIL]', JSON.stringify({ err: String(e && e.message || e).substring(0, 180), ts: Date.now() }));
+            }
+          }
+          const recordGate = await runMedChangeRecordGate({ p, crisis, location: recordGateLocation, routeDecision });
           if (!recordGate.shouldContinue) {
             writeRecordGateFallbackSSE(res, recordGate.fallback, { suppressCommerce });
             return;
@@ -2809,6 +3037,31 @@ const server = http.createServer((req, res) => {
       const zip = url.searchParams.get('zip');
       const city = url.searchParams.get('city');
       const sp = url.searchParams.get('specialty');
+      if (radiusRoutingEnabled()) {
+        const directoryLocation = { zip: extractZip(zip), city: zip ? null : (city ? String(city).toLowerCase() : null), spec: sp || null, hasLocation: Boolean(zip || city) };
+        if (!directoryLocation.hasLocation) {
+          return json(res, 200, { count: 0, practitioners: [], route: { status: 'low_confidence', provider_names_allowed: false }, message: '5-digit ZIP required before naming providers' });
+        }
+        const routeLocation = await resolveDirectoryRouteLocation(zip || city || '', { directoryLocation, req, url });
+        const route = await findRadiusPractitionerRoute(routeLocation, {
+          specialty: sp || '',
+          limit: 3,
+          select: 'select=full_name,specialty,phone,address_line1,zip,city,state,practice_name,npi'
+        });
+        if (route.directive) {
+          return json(res, 200, {
+            count: 0,
+            practitioners: [],
+            route: { status: route.status, route_id: route.route_id, radius_miles: route.radius_miles, provider_names_allowed: route.provider_names_allowed, attempts: route.attempts || [] },
+            message: route.directive.trim()
+          });
+        }
+        return json(res, 200, {
+          count: route.rows.length,
+          practitioners: route.rows.map(({ _route_zip_order, _route_original_order, ...row }) => row),
+          route: { status: route.status, route_id: route.route_id, radius_miles: route.radius_miles, zip_count: route.zip_rows.length, attempts: route.attempts || [] }
+        });
+      }
       let q = 'select=full_name,specialty,phone,address_line1,zip,city';
       if (zip) q += `&zip=eq.${encodeURIComponent(zip)}`;
       else if (city) q += `&city=ilike.*${encodeURIComponent(city)}*`;

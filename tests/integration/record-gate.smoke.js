@@ -76,6 +76,7 @@ eval([
     p: { message },
     crisis: { detected: false },
     location,
+    routeDecision: { route_id: 'radius_71457_25mi_providers_found', status: 'providers_found', radius_miles: 25 },
     enabled: true,
     now: new Date('2026-06-12T17:00:00.000Z'),
     writeCatalystEvent: async (event) => {
@@ -94,6 +95,8 @@ eval([
   assert.equal(writes[0].event.workflow_rail, 'care_transition');
   assert.equal(writes[0].event.commerce_allowed, false);
   assert.equal(writes[0].event.status, 'open');
+  assert.equal(writes[0].event.route_id, 'radius_71457_25mi_providers_found');
+  assert.match(writes[0].event.rationale, /Route status=providers_found/);
   assert.equal(writes[0].event.follow_up_due_at, '2026-06-14T17:00:00.000Z');
   assert.ok(Date.parse(recorded.insertCompletedAt) <= governedResponseAt.getTime(), 'insert completes before governed response timestamp');
 

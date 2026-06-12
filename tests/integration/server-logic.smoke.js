@@ -14,6 +14,7 @@ const blocks = [
   grab(/function signSession\(payload\) \{[\s\S]*?\n\}/, 'signSession'),
   grab(/function verifySession\(value\) \{[\s\S]*?\n\}/, 'verifySession'),
   grab(/function twilioSignatureValid\(req, params, fullUrl\) \{[\s\S]*?\n\}/, 'twilioSignatureValid'),
+  grab(/function radiusRoutingEnabled\(\) \{[\s\S]*?\n\}/, 'radiusRoutingEnabled'),
   src.slice(src.indexOf('const DIRECTORY_CITY_ZIP_PREFIX = {'), src.indexOf('\nasync function buildPrompt', src.indexOf('const DIRECTORY_CITY_ZIP_PREFIX = {'))),
   grab(/const TRUST_PACKET_ENUMS = \{[\s\S]*?\n\};/, 'TRUST_PACKET_ENUMS'),
   grab(/function buildTrustPacket\(args\) \{[\s\S]*?\n\}/, 'buildTrustPacket'),
