@@ -48,6 +48,14 @@ function radiusRoutingEnabled() {
   return String(process.env.USE_RADIUS_ROUTING || '').toLowerCase() === 'true';
 }
 
+function returnLoopEnabled() {
+  return String(process.env.RETURN_LOOP_ENABLED || '').toLowerCase() === 'true';
+}
+
+function smsEnabled() {
+  return String(process.env.SMS_ENABLED || '').toLowerCase() === 'true';
+}
+
 async function sendSMS(to, body) {
   if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
   const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`;
@@ -980,6 +988,190 @@ async function runMedChangeRecordGate({ p, crisis, location, routeDecision, enab
     return { status: 'blocked', shouldContinue: false, gated: true, event, fallback: buildMedChangeSafeFallback(location), error: e };
   }
 }
+
+// ═══ RETURN LOOP (Phase 3 — simulated only) ═══
+const RETURN_LOOP_OUTBOUND_BODY = 'Checking in after your hospital discharge. Did you reach someone about your medicine, or do you still need help? Reply REACHED or HELP.';
+const RETURN_LOOP_HELP_DELAY_MS = 24 * 60 * 60 * 1000;
+const RETURN_REPLY_REACHED_RE = /\b(reached|yes|ok|done|all set)\b/i;
+const RETURN_REPLY_HELP_RE = /\b(help|still|no|nothing|can'?t)\b/i;
+const RETURN_SMS_PHI_RE = /\b(lexapro|ozempic|wegovy|mounjaro|insulin|metformin|adderall|xanax|prozac|zoloft|cancer|diabetes|depression|anxiety|bipolar|diagnosis|diagnosed|\d{3}[-.\s]?\d{3}[-.\s]?\d{4}|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})\b/i;
+
+function returnSmsStatus() {
+  if (smsEnabled()) {
+    console.warn('[return-loop] SMS_ENABLED=true is reserved for a future live-SMS phase; Phase 3 remains simulated-only.');
+  }
+  return 'simulated';
+}
+
+function returnSmsBodyHasPhi(body) {
+  return RETURN_SMS_PHI_RE.test(String(body || ''));
+}
+
+function assertReturnSmsBodySafe(body) {
+  if (returnSmsBodyHasPhi(body)) throw new Error('return sms_log body failed PHI guard');
+}
+
+function normalizeReturnEventId(eventId) {
+  const v = String(eventId || '').trim();
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v) ? v : '';
+}
+
+function classifyReturnReply(reply) {
+  const text = String(reply || '');
+  if (RETURN_REPLY_REACHED_RE.test(text)) return 'closed';
+  if (RETURN_REPLY_HELP_RE.test(text)) return 'reopened';
+  return 'unclear';
+}
+
+function sanitizedReturnInboundBody(action) {
+  if (action === 'closed') return 'REACHED';
+  if (action === 'reopened') return 'HELP';
+  return 'UNCLEAR_REPLY';
+}
+
+function isReturnCrisisReply(reply, opts = {}) {
+  const text = String(reply || '');
+  const detectImpl = opts.detectCrisisImpl || detectCrisis;
+  const phraseImpl = opts.isCrisisPhraseImpl || isCrisisPhrase;
+  const detected = detectImpl(text);
+  return !!((detected && detected.detected) || phraseImpl(text));
+}
+
+function returnBearerAuth(req, label = 'return-loop') {
+  if (!REORDER_CRON_SECRET) {
+    console.error(`[${label}] CRITICAL: REORDER_CRON_SECRET not set — refusing to process`);
+    return { ok: false, status: 500, body: { error: 'REORDER_CRON_SECRET not configured' } };
+  }
+  const authHeader = String(req && req.headers && req.headers.authorization || '');
+  const presented = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+  let authOk = false;
+  try {
+    const crypto = require('crypto');
+    const a = Buffer.from(presented);
+    const b = Buffer.from(REORDER_CRON_SECRET);
+    authOk = a.length === b.length && crypto.timingSafeEqual(a, b);
+  } catch { authOk = false; }
+  if (!authOk) {
+    const ip = req && req.headers && req.headers['x-forwarded-for'] || (req && req.socket && req.socket.remoteAddress) || '?';
+    console.warn(`[${label}] unauthorized attempt from ${ip}`);
+    return { ok: false, status: 401, body: { error: 'Unauthorized' } };
+  }
+  return { ok: true };
+}
+
+async function insertReturnSmsLog({ event_id, direction, body, status }, opts = {}) {
+  const eventId = normalizeReturnEventId(event_id);
+  if (!eventId) throw new Error('valid return event_id required');
+  const dir = String(direction || '');
+  if (dir !== 'outbound' && dir !== 'inbound') throw new Error('valid return sms direction required');
+  assertReturnSmsBodySafe(body);
+  const payload = {
+    event_id: eventId,
+    direction: dir,
+    body,
+    status: status || returnSmsStatus()
+  };
+  if (opts.queryImpl) return opts.queryImpl('sms_log', '', 0, 'POST', payload);
+  const supabaseUrl = opts.supabaseUrl || SUPABASE_URL;
+  const supabaseKey = opts.supabaseKey || SUPABASE_KEY;
+  const fetchImpl = opts.fetchImpl || fetch;
+  if (!supabaseUrl || !supabaseKey) throw new Error('Supabase not configured');
+  const r = await fetchImpl(`${supabaseUrl}/rest/v1/sms_log`, {
+    method: 'POST',
+    headers: {
+      apikey: supabaseKey,
+      Authorization: 'Bearer ' + supabaseKey,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal'
+    },
+    body: JSON.stringify(payload)
+  });
+  if (!r || !r.ok) {
+    const responseBody = r && typeof r.text === 'function' ? await r.text().catch(() => '') : '';
+    throw new Error(`sms_log insert failed${r && r.status ? ` status=${r.status}` : ''}${responseBody ? ` body=${responseBody.substring(0, 180)}` : ''}`);
+  }
+  return { ok: true };
+}
+
+async function returnOutboundAlreadyLogged(eventId, opts = {}) {
+  const queryImpl = opts.queryImpl || querySupabase;
+  const id = normalizeReturnEventId(eventId);
+  if (!id) return true;
+  const rows = await queryImpl('sms_log', `event_id=eq.${encodeURIComponent(id)}&direction=eq.outbound&select=sms_id,event_id`, 1);
+  if (!Array.isArray(rows)) throw new Error('sms_log outbound dedupe query failed');
+  return rows.length > 0;
+}
+
+async function processDueReturnFollowUps(opts = {}) {
+  const enabled = opts.enabled !== undefined ? opts.enabled : returnLoopEnabled();
+  if (!enabled) return { enabled: false, processed: 0, simulated_sent: 0, skipped_no_consent: 0, skipped_duplicate: 0 };
+  const queryImpl = opts.queryImpl || querySupabase;
+  const now = opts.now instanceof Date ? opts.now : new Date(opts.now || Date.now());
+  const dueQuery = `status=eq.open&follow_up_due_at=lte.${encodeURIComponent(now.toISOString())}&select=event_id,consent_status,status,follow_up_due_at&order=follow_up_due_at.asc`;
+  const rows = await queryImpl('catalyst_event', dueQuery, opts.limit || 100);
+  if (!Array.isArray(rows)) throw new Error('catalyst_event due query failed');
+  const dueRows = rows;
+  const result = { enabled: true, processed: dueRows.length, simulated_sent: 0, skipped_no_consent: 0, skipped_duplicate: 0 };
+  for (const row of dueRows) {
+    if (!row || row.consent_status !== 'granted') {
+      result.skipped_no_consent++;
+      continue;
+    }
+    const eventId = normalizeReturnEventId(row.event_id);
+    if (!eventId) continue;
+    if (await returnOutboundAlreadyLogged(eventId, { queryImpl })) {
+      result.skipped_duplicate++;
+      continue;
+    }
+    await insertReturnSmsLog({
+      event_id: eventId,
+      direction: 'outbound',
+      body: RETURN_LOOP_OUTBOUND_BODY,
+      status: returnSmsStatus()
+    }, opts.queryImpl ? { queryImpl } : {});
+    result.simulated_sent++;
+  }
+  return result;
+}
+
+async function handleSimulatedReturnInbound({ event_id, reply, now, enabled, queryImpl, detectCrisisImpl, isCrisisPhraseImpl } = {}) {
+  const isEnabled = enabled !== undefined ? enabled : returnLoopEnabled();
+  if (!isEnabled) return { enabled: false, event_id: event_id || null, action: 'disabled' };
+  const text = String(reply || '');
+  if (isReturnCrisisReply(text, { detectCrisisImpl, isCrisisPhraseImpl })) {
+    const eventId = normalizeReturnEventId(event_id);
+    return { enabled: true, event_id: eventId, action: 'crisis', crisis: true, text: CRISIS_BANNER };
+  }
+  const eventId = normalizeReturnEventId(event_id);
+  if (!eventId) return { enabled: true, event_id: null, action: 'invalid', error: 'valid event_id required' };
+  const query = queryImpl || querySupabase;
+  const action = classifyReturnReply(text);
+  const at = now instanceof Date ? now : new Date(now || Date.now());
+  await insertReturnSmsLog({
+    event_id: eventId,
+    direction: 'inbound',
+    body: sanitizedReturnInboundBody(action),
+    status: returnSmsStatus()
+  }, queryImpl ? { queryImpl: query } : {});
+  if (action === 'closed') {
+    await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}`, 0, 'PATCH', {
+      status: 'resolved',
+      outcome: 'reached_support'
+    });
+    return { enabled: true, event_id: eventId, action: 'closed' };
+  }
+  if (action === 'reopened') {
+    await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}`, 0, 'PATCH', {
+      status: 'open',
+      staff_action_required: true,
+      follow_up_due_at: new Date(at.getTime() + RETURN_LOOP_HELP_DELAY_MS).toISOString(),
+      outcome: 'still_needs_help'
+    });
+    return { enabled: true, event_id: eventId, action: 'reopened' };
+  }
+  return { enabled: true, event_id: eventId, action: 'unclear', message: 'Please reply REACHED or HELP.' };
+}
+
 function writeRecordGateFallbackSSE(res, fallback, opts = {}) {
   if (!res.headersSent) {
     res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
@@ -3588,6 +3780,45 @@ const server = http.createServer((req, res) => {
         return json(res, 200, result);
       } catch (e) { return json(res, 500, { error: 'send-day7-outcomes failed', detail: String(e.message || e) }); }
     })();
+    return;
+  }
+
+  // ═══════ RETURN LOOP — SIMULATED FOLLOW-UP PROCESSOR ═══════
+  // Separate from live Twilio reorder/day-7 SMS. This endpoint writes sms_log
+  // rows only; it never calls sendSMS.
+  if (pn === '/api/return/process-due' && req.method === 'POST') {
+    (async () => {
+      try {
+        const auth = returnBearerAuth(req, 'return-process-due');
+        if (!auth.ok) return json(res, auth.status, auth.body);
+        if (!SUPABASE_URL || !SUPABASE_KEY) return json(res, 500, { error: 'Supabase not configured' });
+        const result = await processDueReturnFollowUps();
+        return json(res, 200, result);
+      } catch (e) {
+        return json(res, 500, { error: 'return process-due failed', detail: String(e.message || e) });
+      }
+    })();
+    return;
+  }
+
+  // ═══════ RETURN LOOP — SIMULATED INBOUND REPLY ═══════
+  // Separate from /api/sms/inbound and /twilio-reply. Simulation uses event_id
+  // instead of a phone number, and crisis replies return the signed-off banner
+  // without depending on a database write.
+  if (pn === '/api/return/inbound' && req.method === 'POST') {
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { (async () => {
+      try {
+        const auth = returnBearerAuth(req, 'return-inbound');
+        if (!auth.ok) return json(res, auth.status, auth.body);
+        const p = JSON.parse(b || '{}');
+        const result = await handleSimulatedReturnInbound({ event_id: p.event_id, reply: p.reply || p.body || '' });
+        const status = result.action === 'invalid' ? 400 : 200;
+        return json(res, status, result);
+      } catch (e) {
+        return json(res, 500, { error: 'return inbound failed', detail: String(e.message || e) });
+      }
+    })(); });
     return;
   }
 
