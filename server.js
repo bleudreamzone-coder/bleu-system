@@ -60,6 +60,10 @@ function commandViewEnabled() {
   return String(process.env.COMMAND_VIEW_ENABLED || '').toLowerCase() === 'true';
 }
 
+function navigatorQueueEnabled() {
+  return String(process.env.NAVIGATOR_QUEUE_ENABLED || '').toLowerCase() === 'true';
+}
+
 async function sendSMS(to, body) {
   if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
   const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`;
@@ -1184,6 +1188,83 @@ async function handleCommandOverview(req, res, opts = {}) {
   if (!auth.ok) return json(res, auth.status, auth.body);
   const overview = await fetchCommandOverview(opts);
   return json(res, 200, overview);
+}
+
+const NAVIGATOR_QUEUE_EVENT_SELECT = 'staff_action_required=eq.true&status=eq.open&select=event_id,catalyst_type,siren_level,workflow_rail,route_id,follow_up_due_at,status,staff_action_required,created_at&order=follow_up_due_at.asc.nullslast,created_at.asc';
+
+function buildNavigatorQueue(rows, opts = {}) {
+  const events = Array.isArray(rows) ? rows : [];
+  const now = opts.now instanceof Date ? opts.now : new Date(opts.now || Date.now());
+  const timestampOrMax = (value) => {
+    const parsed = value ? Date.parse(value) : NaN;
+    return Number.isFinite(parsed) ? parsed : Number.MAX_SAFE_INTEGER;
+  };
+  const items = events
+    .filter((event) => event && event.staff_action_required === true && normalizedMetricKey(event.status) === 'open')
+    .sort((a, b) => timestampOrMax(a.follow_up_due_at) - timestampOrMax(b.follow_up_due_at) || timestampOrMax(a.created_at) - timestampOrMax(b.created_at))
+    .map((event) => {
+      const dueAt = event.follow_up_due_at ? Date.parse(event.follow_up_due_at) : NaN;
+      return {
+        event_id: event.event_id || '',
+        catalyst_type: normalizedMetricKey(event.catalyst_type),
+        siren_level: normalizedMetricKey(event.siren_level),
+        workflow_rail: normalizedMetricKey(event.workflow_rail),
+        route_category: coarseRouteCategory(event.route_id),
+        status: 'open',
+        follow_up_due_at: event.follow_up_due_at || null,
+        created_at: event.created_at || null,
+        overdue: Number.isFinite(dueAt) && dueAt <= now.getTime(),
+      };
+    });
+
+  return {
+    enabled: true,
+    generated_at: now.toISOString(),
+    count: items.length,
+    source: {
+      ledger: 'catalyst_event',
+      filter: 'staff_action_required=true,status=open',
+      rows_read: events.length,
+    },
+    items,
+    privacy: {
+      triage_only: true,
+      raw_text: false,
+      categories_only: true,
+    },
+  };
+}
+
+function navigatorQueuePayloadIsSafe(payload, sourceRows = []) {
+  const text = JSON.stringify(payload || {});
+  if (/sms_log\.body|["']body["']|rationale|route_id/i.test(text)) return false;
+  if (/\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/.test(text)) return false;
+  for (const row of Array.isArray(sourceRows) ? sourceRows : []) {
+    const fullRouteId = row && row.route_id ? String(row.route_id) : '';
+    if (fullRouteId && text.includes(fullRouteId)) return false;
+    const rawRationale = row && row.rationale ? String(row.rationale) : '';
+    if (rawRationale && text.includes(rawRationale)) return false;
+  }
+  return true;
+}
+
+async function fetchNavigatorQueue(opts = {}) {
+  const queryImpl = opts.queryImpl || querySupabase;
+  const limit = Math.max(1, Math.min(Number(opts.limit || 500), 1000));
+  const rows = await queryImpl('catalyst_event', NAVIGATOR_QUEUE_EVENT_SELECT, limit);
+  if (!Array.isArray(rows)) throw new Error('catalyst_event navigator queue query failed');
+  const queue = buildNavigatorQueue(rows, { now: opts.now });
+  if (!navigatorQueuePayloadIsSafe(queue, rows)) throw new Error('navigator queue privacy assertion failed');
+  return queue;
+}
+
+async function handleNavigatorQueue(req, res, opts = {}) {
+  const enabled = opts.enabled !== undefined ? opts.enabled : navigatorQueueEnabled();
+  if (!enabled) return json(res, 404, { error: 'Not found' });
+  const auth = (opts.authImpl || returnBearerAuth)(req, 'navigator-queue');
+  if (!auth.ok) return json(res, auth.status, auth.body);
+  const queue = await fetchNavigatorQueue(opts);
+  return json(res, 200, queue);
 }
 
 async function insertReturnSmsLog({ event_id, direction, body, status }, opts = {}) {
@@ -2725,6 +2806,17 @@ const server = http.createServer((req, res) => {
         return await handleCommandOverview(req, res);
       } catch (e) {
         return json(res, 500, { error: 'command overview failed', detail: String(e.message || e) });
+      }
+    })();
+    return;
+  }
+
+  if (pn === '/api/navigator/queue' && req.method === 'GET') {
+    (async () => {
+      try {
+        return await handleNavigatorQueue(req, res);
+      } catch (e) {
+        return json(res, 500, { error: 'navigator queue failed', detail: String(e.message || e) });
       }
     })();
     return;
