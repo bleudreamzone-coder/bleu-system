@@ -15,6 +15,7 @@ const path = require('path');
 const { detectCrisis, CRISIS_BANNER } = require('./core/safety/crisis_validator');
 const { isCrisisPhrase } = require('./core/safety/canonical_crisis_patterns');
 const { resolveLocation } = require('./core/geo/resolveLocation');
+const PACKAGE_VERSION = require('./package.json').version || 'unknown';
 
 const OPENAI_KEY = process.env.OPENAI_API_KEY || '';
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
@@ -875,6 +876,109 @@ async function logTrustPacket(args) {
     console.error('[TRUST_PACKET_FAIL]', JSON.stringify({ err: e.message, ts: Date.now() }));
     return null;
   }
+}
+
+// ═══ RECORD GATE (Phase 1) ═══
+// Governed post-discharge medication-change responses must have a
+// catalyst_event ledger row with a non-null rationale before prose leaves the
+// server. Feature-flagged off by default while the PR is reviewed.
+const DISCHARGE_CONTEXT_RE = /\b(discharge(?:d|s|ing)?|after (?:my |the )?(?:hospital|er|emergency room) visit|sent home from (?:the )?(?:hospital|er|emergency room)|left (?:the )?(?:hospital|er|emergency room)|hospital sent me home)\b/i;
+const MEDICATION_CONTEXT_RE = /\b(medicine|medicines|medication|medications|meds|prescription|prescriptions|pill|pills|dose|dosage|new medicine|new med|changed my meds|changed my medicine|started me on|stopped my meds|stopped my medicine)\b/i;
+function recordGateEnabled() {
+  return String(process.env.RECORD_GATE_ENABLED || '').toLowerCase() === 'true';
+}
+function detectMedChangeSignal(message) {
+  const msg = String(message || '');
+  return DISCHARGE_CONTEXT_RE.test(msg) && MEDICATION_CONTEXT_RE.test(msg);
+}
+function shouldAttemptMedChangeRecordGate(p, crisis, enabled = recordGateEnabled()) {
+  return !!enabled && !(crisis && crisis.detected) && detectMedChangeSignal(p && p.message);
+}
+function buildMedChangeSafeFallback(location) {
+  const zipText = location && location.zip ? `I have ZIP ${location.zip}.` : 'If you share your 5-digit ZIP code, I can look for general care-transition resources.';
+  return `I want to keep this safe. I cannot give medicine guidance from here until the care-transition handoff is properly recorded. ${zipText} For today, use your discharge papers to contact the hospital discharge team, your clinic, or your pharmacist, and ask them to review the medicine list with you.`;
+}
+function buildMedChangeCatalystEvent({ p, location, now } = {}) {
+  const createdAt = now instanceof Date ? now : new Date(now || Date.now());
+  const followUpDueAt = new Date(createdAt.getTime() + 2 * 24 * 60 * 60 * 1000);
+  const zip = location && location.zip ? String(location.zip) : 'unconfirmed';
+  const confidence = (location && location.confidence) || 'unknown';
+  const source = (location && location.source) || 'unknown';
+  return {
+    window_type: 'discharge',
+    catalyst_type: 'medication_change',
+    siren_level: 'amber',
+    workflow_rail: 'care_transition',
+    route_id: `phase1_record_gate_zip_${zip}`,
+    rationale: `Post-discharge medication confusion signal detected; amber care_transition response requires a write-ahead catalyst_event before governed prose. Location source=${source}; confidence=${confidence}.`,
+    staff_action_required: false,
+    human_owner: null,
+    consent_status: 'unknown',
+    phi_zone: 'public',
+    commerce_allowed: false,
+    media_allowed: false,
+    follow_up_due_at: followUpDueAt.toISOString(),
+    status: 'open',
+    outcome: null,
+    system_version: PACKAGE_VERSION,
+  };
+}
+async function insertCatalystEvent(event, opts = {}) {
+  const supabaseUrl = opts.supabaseUrl || SUPABASE_URL;
+  const supabaseKey = opts.supabaseKey || SUPABASE_KEY;
+  const fetchImpl = opts.fetchImpl || fetch;
+  if (!supabaseUrl || !supabaseKey) throw new Error('Supabase not configured');
+  if (!event || !event.rationale) throw new Error('catalyst_event rationale required');
+  const r = await fetchImpl(`${supabaseUrl}/rest/v1/catalyst_event`, {
+    method: 'POST',
+    headers: {
+      apikey: supabaseKey,
+      Authorization: 'Bearer ' + supabaseKey,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation'
+    },
+    body: JSON.stringify(event)
+  });
+  if (!r || !r.ok) {
+    const body = r && typeof r.text === 'function' ? await r.text().catch(() => '') : '';
+    throw new Error(`catalyst_event insert failed${r && r.status ? ` status=${r.status}` : ''}${body ? ` body=${body.substring(0, 180)}` : ''}`);
+  }
+  const rows = await r.json().catch(() => []);
+  return { ok: true, row: Array.isArray(rows) ? rows[0] || null : rows, insertedAt: new Date().toISOString() };
+}
+async function resolveRecordGateLocation(p, req, url, opts = {}) {
+  const gateUrl = new URL(url.toString());
+  const zip = extractZip(p && p.message);
+  if (zip) gateUrl.searchParams.set('zip', zip);
+  return resolveLocation({
+    url: gateUrl,
+    headers: req && req.headers,
+    supabaseUrl: opts.supabaseUrl || SUPABASE_URL,
+    supabaseKey: opts.supabaseKey || SUPABASE_KEY,
+    fetchImpl: opts.fetchImpl || fetch
+  });
+}
+async function runMedChangeRecordGate({ p, crisis, location, enabled = recordGateEnabled(), writeCatalystEvent = insertCatalystEvent, now } = {}) {
+  if (!enabled) return { status: 'disabled', shouldContinue: true, gated: false };
+  if (crisis && crisis.detected) return { status: 'crisis_bypass', shouldContinue: true, gated: false };
+  if (!detectMedChangeSignal(p && p.message)) return { status: 'not_med_change', shouldContinue: true, gated: false };
+  const event = buildMedChangeCatalystEvent({ p, location, now: now || new Date() });
+  try {
+    const result = await writeCatalystEvent(event);
+    return { status: 'recorded', shouldContinue: true, gated: true, event, result, insertCompletedAt: new Date().toISOString() };
+  } catch (e) {
+    console.error('[RECORD_GATE_FAIL]', JSON.stringify({ err: String(e && e.message || e).substring(0, 220), ts: Date.now() }));
+    return { status: 'blocked', shouldContinue: false, gated: true, event, fallback: buildMedChangeSafeFallback(location), error: e };
+  }
+}
+function writeRecordGateFallbackSSE(res, fallback, opts = {}) {
+  if (!res.headersSent) {
+    res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
+  }
+  if (opts.suppressCommerce) res.write('data: ' + JSON.stringify({ suppressCommerce: true }) + '\n\n');
+  res.write('data: ' + JSON.stringify({ t: fallback, text: fallback, recordGateBlocked: true }) + '\n\n');
+  res.write('data: [DONE]\n\n');
+  res.end();
 }
 
 // ═══ COMMS HELPER (Mission 7.3) ═══
@@ -2164,6 +2268,14 @@ const server = http.createServer((req, res) => {
           openWindow: openWindowV0,
           commerceGate: commerceGateV0,
         };
+        if (shouldAttemptMedChangeRecordGate(p, crisis)) {
+          const recordGateLocation = await resolveRecordGateLocation(p, req, url);
+          const recordGate = await runMedChangeRecordGate({ p, crisis, location: recordGateLocation });
+          if (!recordGate.shouldContinue) {
+            writeRecordGateFallbackSSE(res, recordGate.fallback, { suppressCommerce });
+            return;
+          }
+        }
 
         // ── GREETING CACHE — instant response, zero API calls ──
         const GREET_CACHE = {
@@ -2417,6 +2529,14 @@ const server = http.createServer((req, res) => {
           openWindow: openWindowV0,
           commerceGate: commerceGateV0,
         };
+        if (shouldAttemptMedChangeRecordGate(p, crisis)) {
+          const recordGateLocation = await resolveRecordGateLocation(p, req, url);
+          const recordGate = await runMedChangeRecordGate({ p, crisis, location: recordGateLocation });
+          if (!recordGate.shouldContinue) {
+            writeRecordGateFallbackSSE(res, recordGate.fallback, { suppressCommerce });
+            return;
+          }
+        }
         const model = pickModel(p.message||'', p.mode||'general');
         let sys = await buildPrompt(p.message||'', p.mode||'general', p.therapy_mode||'talk', p.recovery_mode||'sobriety', p.assistant);
 
