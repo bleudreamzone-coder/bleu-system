@@ -84,6 +84,10 @@ Expected final state:
 
 Read-only verification on 2026-06-12 returned exactly that final state.
 
+## Metrics Integrity Note
+
+These proof events are mechanism evidence, not partner-facing organic outcomes. Event A and Event B remain origin-labeled proof rows for auditability. Command View organic metrics, including consented closed-loop counts and closure-rate calculations, exclude seeded, test, and demo rows from the primary metric set while preserving those rows in integrity counts.
+
 ## What This Proves
 
 Together, Event A and Event B prove this production mechanism:

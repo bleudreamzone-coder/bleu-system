@@ -943,6 +943,7 @@ function buildMedChangeCatalystEvent({ p, location, now, routeDecision } = {}) {
     staff_action_required: false,
     human_owner: null,
     consent_status: 'unknown',
+    event_origin: 'organic',
     phi_zone: 'public',
     commerce_allowed: false,
     media_allowed: false,
@@ -1071,7 +1072,7 @@ function returnBearerAuth(req, label = 'return-loop') {
   return { ok: true };
 }
 
-const COMMAND_VIEW_EVENT_SELECT = 'select=event_id,catalyst_type,siren_level,workflow_rail,route_id,follow_up_due_at,status,outcome,staff_action_required,created_at&order=created_at.desc';
+const COMMAND_VIEW_EVENT_SELECT = 'select=event_id,catalyst_type,siren_level,workflow_rail,route_id,follow_up_due_at,status,outcome,staff_action_required,created_at,resolved_at,event_origin,consent_status&order=created_at.desc';
 
 function normalizedMetricKey(value) {
   const key = String(value || '').trim().toLowerCase();
@@ -1102,26 +1103,76 @@ function sortedMetricObject(bucket) {
   }, {});
 }
 
+function eventOriginKey(event) {
+  return normalizedMetricKey(event && event.event_origin);
+}
+
+function consentStatusKey(event) {
+  return normalizedMetricKey(event && event.consent_status);
+}
+
+function medianClosureMinutes(events) {
+  const minutes = [];
+  for (const event of Array.isArray(events) ? events : []) {
+    const createdAt = event && event.created_at ? Date.parse(event.created_at) : NaN;
+    const resolvedAt = event && event.resolved_at ? Date.parse(event.resolved_at) : NaN;
+    if (!Number.isFinite(createdAt) || !Number.isFinite(resolvedAt) || resolvedAt < createdAt) continue;
+    minutes.push((resolvedAt - createdAt) / 60000);
+  }
+  if (minutes.length < 3) return 'insufficient_data';
+  minutes.sort((a, b) => a - b);
+  const mid = Math.floor(minutes.length / 2);
+  const median = minutes.length % 2 === 1 ? minutes[mid] : (minutes[mid - 1] + minutes[mid]) / 2;
+  return Number(median.toFixed(2));
+}
+
 function buildCommandOverview(rows, opts = {}) {
   const events = Array.isArray(rows) ? rows : [];
+  const organicEvents = events.filter((event) => eventOriginKey(event) === 'organic');
   const now = opts.now instanceof Date ? opts.now : new Date(opts.now || Date.now());
+  const integrity = {
+    organic_events: 0,
+    test_events: 0,
+    seeded_events: 0,
+    demo_events: 0,
+    consent_granted_events: 0,
+    consent_unknown_events: 0,
+  };
+  for (const event of events) {
+    const origin = eventOriginKey(event);
+    if (origin === 'organic') integrity.organic_events++;
+    if (origin === 'test') integrity.test_events++;
+    if (origin === 'seeded') integrity.seeded_events++;
+    if (origin === 'demo') integrity.demo_events++;
+
+    const consent = consentStatusKey(event);
+    if (consent === 'granted') integrity.consent_granted_events++;
+    if (consent === 'unknown') integrity.consent_unknown_events++;
+  }
+
   const metrics = {
-    total_events: events.length,
+    total_events: organicEvents.length,
     open_loops: 0,
     resolved_loops: 0,
     needs_action: 0,
     follow_ups_due_now: 0,
     reached_support_outcomes: 0,
     honest_desert_count: 0,
+    consented_closed_loops: 0,
+    consented_open_loops: 0,
+    closure_rate: null,
+    median_time_to_closure_minutes: 'insufficient_data',
     by_catalyst_type: {},
     by_siren_level: {},
     by_workflow_rail: {},
     by_route_category: {},
   };
+  const consentedResolvedEvents = [];
 
-  for (const event of events) {
+  for (const event of organicEvents) {
     const status = normalizedMetricKey(event && event.status);
     const outcome = normalizedMetricKey(event && event.outcome);
+    const consent = consentStatusKey(event);
     const category = coarseRouteCategory(event && event.route_id);
 
     if (status === 'open') metrics.open_loops++;
@@ -1129,6 +1180,11 @@ function buildCommandOverview(rows, opts = {}) {
     if (event && event.staff_action_required === true) metrics.needs_action++;
     if (outcome === 'reached_support') metrics.reached_support_outcomes++;
     if (category === 'honest_desert') metrics.honest_desert_count++;
+    if (consent === 'granted' && status === 'resolved') {
+      metrics.consented_closed_loops++;
+      consentedResolvedEvents.push(event);
+    }
+    if (consent === 'granted' && status === 'open') metrics.consented_open_loops++;
 
     const dueAt = event && event.follow_up_due_at ? Date.parse(event.follow_up_due_at) : NaN;
     if (status === 'open' && Number.isFinite(dueAt) && dueAt <= now.getTime()) {
@@ -1145,6 +1201,9 @@ function buildCommandOverview(rows, opts = {}) {
   metrics.by_siren_level = sortedMetricObject(metrics.by_siren_level);
   metrics.by_workflow_rail = sortedMetricObject(metrics.by_workflow_rail);
   metrics.by_route_category = sortedMetricObject(metrics.by_route_category);
+  const cclDenominator = metrics.consented_closed_loops + metrics.consented_open_loops;
+  metrics.closure_rate = cclDenominator > 0 ? Number((metrics.consented_closed_loops / cclDenominator).toFixed(4)) : null;
+  metrics.median_time_to_closure_minutes = medianClosureMinutes(consentedResolvedEvents);
 
   return {
     enabled: true,
@@ -1152,8 +1211,10 @@ function buildCommandOverview(rows, opts = {}) {
     source: {
       ledger: 'catalyst_event',
       rows_read: events.length,
+      primary_scope: 'event_origin=organic',
     },
     metrics,
+    integrity,
     privacy: {
       aggregate_only: true,
       categories_only: true,
@@ -1164,13 +1225,15 @@ function buildCommandOverview(rows, opts = {}) {
 
 function commandOverviewPayloadIsSafe(payload, sourceRows = []) {
   const text = JSON.stringify(payload || {});
-  if (/sms_log\.body|["']body["']|rationale|route_id/i.test(text)) return false;
+  if (/sms_log\.body|["']body["']|rationale|route_id|subject_id/i.test(text)) return false;
   if (/\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/.test(text)) return false;
   for (const row of Array.isArray(sourceRows) ? sourceRows : []) {
     const fullRouteId = row && row.route_id ? String(row.route_id) : '';
     if (fullRouteId && text.includes(fullRouteId)) return false;
     const rawRationale = row && row.rationale ? String(row.rationale) : '';
     if (rawRationale && text.includes(rawRationale)) return false;
+    const subjectId = row && row.subject_id ? String(row.subject_id) : '';
+    if (subjectId && text.includes(subjectId)) return false;
   }
   return true;
 }
@@ -1194,17 +1257,23 @@ async function handleCommandOverview(req, res, opts = {}) {
   return json(res, 200, overview);
 }
 
-const NAVIGATOR_QUEUE_EVENT_SELECT = 'staff_action_required=eq.true&status=eq.open&select=event_id,catalyst_type,siren_level,workflow_rail,route_id,follow_up_due_at,status,staff_action_required,created_at&order=follow_up_due_at.asc.nullslast,created_at.asc';
+const NAVIGATOR_QUEUE_EVENT_SELECT = 'event_origin=eq.organic&staff_action_required=eq.true&status=eq.open&select=event_id,catalyst_type,siren_level,workflow_rail,route_id,follow_up_due_at,status,staff_action_required,created_at,event_origin&order=follow_up_due_at.asc.nullslast,created_at.asc';
+const NAVIGATOR_QUEUE_INCLUDE_TEST_EVENT_SELECT = 'staff_action_required=eq.true&status=eq.open&select=event_id,catalyst_type,siren_level,workflow_rail,route_id,follow_up_due_at,status,staff_action_required,created_at,event_origin&order=follow_up_due_at.asc.nullslast,created_at.asc';
+
+function navigatorQueueEventSelect(opts = {}) {
+  return opts.includeTest === true ? NAVIGATOR_QUEUE_INCLUDE_TEST_EVENT_SELECT : NAVIGATOR_QUEUE_EVENT_SELECT;
+}
 
 function buildNavigatorQueue(rows, opts = {}) {
   const events = Array.isArray(rows) ? rows : [];
   const now = opts.now instanceof Date ? opts.now : new Date(opts.now || Date.now());
+  const includeTest = opts.includeTest === true;
   const timestampOrMax = (value) => {
     const parsed = value ? Date.parse(value) : NaN;
     return Number.isFinite(parsed) ? parsed : Number.MAX_SAFE_INTEGER;
   };
   const items = events
-    .filter((event) => event && event.staff_action_required === true && normalizedMetricKey(event.status) === 'open')
+    .filter((event) => event && event.staff_action_required === true && normalizedMetricKey(event.status) === 'open' && (includeTest || eventOriginKey(event) === 'organic'))
     .sort((a, b) => timestampOrMax(a.follow_up_due_at) - timestampOrMax(b.follow_up_due_at) || timestampOrMax(a.created_at) - timestampOrMax(b.created_at))
     .map((event) => {
       const dueAt = event.follow_up_due_at ? Date.parse(event.follow_up_due_at) : NaN;
@@ -1227,7 +1296,8 @@ function buildNavigatorQueue(rows, opts = {}) {
     count: items.length,
     source: {
       ledger: 'catalyst_event',
-      filter: 'staff_action_required=true,status=open',
+      filter: includeTest ? 'staff_action_required=true,status=open,event_origin=all' : 'staff_action_required=true,status=open,event_origin=organic',
+      include_test: includeTest,
       rows_read: events.length,
     },
     items,
@@ -1255,9 +1325,9 @@ function navigatorQueuePayloadIsSafe(payload, sourceRows = []) {
 async function fetchNavigatorQueue(opts = {}) {
   const queryImpl = opts.queryImpl || querySupabase;
   const limit = Math.max(1, Math.min(Number(opts.limit || 500), 1000));
-  const rows = await queryImpl('catalyst_event', NAVIGATOR_QUEUE_EVENT_SELECT, limit);
+  const rows = await queryImpl('catalyst_event', navigatorQueueEventSelect(opts), limit);
   if (!Array.isArray(rows)) throw new Error('catalyst_event navigator queue query failed');
-  const queue = buildNavigatorQueue(rows, { now: opts.now });
+  const queue = buildNavigatorQueue(rows, { now: opts.now, includeTest: opts.includeTest });
   if (!navigatorQueuePayloadIsSafe(queue, rows)) throw new Error('navigator queue privacy assertion failed');
   return queue;
 }
@@ -1571,10 +1641,15 @@ async function handleSimulatedReturnInbound({ event_id, reply, now, enabled, que
     status: returnSmsStatus()
   }, queryImpl ? { queryImpl: query } : {});
   if (action === 'closed') {
-    await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}`, 0, 'PATCH', {
+    const existingRows = await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}&select=event_id,resolved_at`, 1);
+    if (!Array.isArray(existingRows)) throw new Error('catalyst_event resolution query failed');
+    const existingEvent = existingRows[0] || null;
+    const patch = {
       status: 'resolved',
       outcome: 'reached_support'
-    });
+    };
+    if (!existingEvent || !existingEvent.resolved_at) patch.resolved_at = at.toISOString();
+    await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}`, 0, 'PATCH', patch);
     return { enabled: true, event_id: eventId, action: 'closed' };
   }
   if (action === 'reopened') {
@@ -3023,7 +3098,7 @@ const server = http.createServer((req, res) => {
   if (pn === '/api/navigator/queue' && req.method === 'GET') {
     (async () => {
       try {
-        return await handleNavigatorQueue(req, res);
+        return await handleNavigatorQueue(req, res, { includeTest: url.searchParams.get('include_test') === '1' });
       } catch (e) {
         return json(res, 500, { error: 'navigator queue failed', detail: String(e.message || e) });
       }

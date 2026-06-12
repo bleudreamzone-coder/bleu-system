@@ -54,10 +54,10 @@ const crisisEventId = '44444444-4444-4444-8444-444444444444';
 function makeState() {
   return {
     events: [
-      { event_id: grantedEventId, status: 'open', consent_status: 'granted', follow_up_due_at: duePast, staff_action_required: false, outcome: null },
-      { event_id: unknownEventId, status: 'open', consent_status: 'unknown', follow_up_due_at: duePast, staff_action_required: false, outcome: null },
-      { event_id: helpEventId, status: 'open', consent_status: 'granted', follow_up_due_at: duePast, staff_action_required: false, outcome: null },
-      { event_id: crisisEventId, status: 'open', consent_status: 'granted', follow_up_due_at: duePast, staff_action_required: false, outcome: null },
+      { event_id: grantedEventId, status: 'open', consent_status: 'granted', follow_up_due_at: duePast, staff_action_required: false, outcome: null, resolved_at: null },
+      { event_id: unknownEventId, status: 'open', consent_status: 'unknown', follow_up_due_at: duePast, staff_action_required: false, outcome: null, resolved_at: null },
+      { event_id: helpEventId, status: 'open', consent_status: 'granted', follow_up_due_at: duePast, staff_action_required: false, outcome: null, resolved_at: null },
+      { event_id: crisisEventId, status: 'open', consent_status: 'granted', follow_up_due_at: duePast, staff_action_required: false, outcome: null, resolved_at: null },
     ],
     smsLogs: [],
     patches: [],
@@ -66,6 +66,14 @@ function makeState() {
 
 function queryFor(state) {
   return async (table, query, limit, method, body) => {
+    if (table === 'catalyst_event' && !method && query.startsWith('event_id=eq.')) {
+      assert.match(query, /select=event_id,resolved_at/);
+      assert.equal(limit, 1);
+      const m = query.match(/event_id=eq\.([^&]+)/);
+      const id = m ? decodeURIComponent(m[1]) : '';
+      const event = state.events.find((row) => row.event_id === id);
+      return event ? [{ event_id: event.event_id, resolved_at: event.resolved_at || null }] : [];
+    }
     if (table === 'catalyst_event' && !method) {
       assert.match(query, /status=eq\.open/);
       assert.match(query, /follow_up_due_at=lte\./);
@@ -130,10 +138,20 @@ function assertNoPhi(body) {
   assert.equal(inbound.action, 'closed');
   assert.equal(state.events.find((row) => row.event_id === grantedEventId).status, 'resolved');
   assert.equal(state.events.find((row) => row.event_id === grantedEventId).outcome, 'reached_support');
+  assert.equal(state.events.find((row) => row.event_id === grantedEventId).resolved_at, now.toISOString());
+  assert.equal(state.patches.at(-1).body.resolved_at, now.toISOString(), 'first REACHED should set resolved_at');
   assert.equal(state.smsLogs.at(-1).direction, 'inbound');
   assert.equal(state.smsLogs.at(-1).body, 'REACHED');
   assertNoPhi(state.smsLogs.at(-1).body);
 
+  const firstResolvedAt = state.events.find((row) => row.event_id === grantedEventId).resolved_at;
+  inbound = await handleSimulatedReturnInbound({ event_id: grantedEventId, reply: 'REACHED', now: new Date('2026-06-12T21:00:00.000Z'), queryImpl: queryFor(state) });
+  assert.equal(inbound.action, 'closed');
+  assert.equal(state.events.find((row) => row.event_id === grantedEventId).resolved_at, firstResolvedAt, 'second REACHED must not overwrite resolved_at');
+  assert.equal(Object.prototype.hasOwnProperty.call(state.patches.at(-1).body, 'resolved_at'), false, 'resolved_at should be time-to-first-resolution only');
+
+  const preexistingResolvedAt = '2026-06-12T17:00:00.000Z';
+  state.events.find((row) => row.event_id === helpEventId).resolved_at = preexistingResolvedAt;
   inbound = await handleSimulatedReturnInbound({ event_id: helpEventId, reply: "HELP I can't reach anyone", now, queryImpl: queryFor(state) });
   assert.equal(inbound.action, 'reopened');
   const helped = state.events.find((row) => row.event_id === helpEventId);
@@ -141,6 +159,8 @@ function assertNoPhi(body) {
   assert.equal(helped.staff_action_required, true);
   assert.equal(helped.outcome, 'still_needs_help');
   assert.equal(helped.follow_up_due_at, '2026-06-13T19:00:00.000Z');
+  assert.equal(helped.resolved_at, preexistingResolvedAt, 'reopen must leave resolved_at intact');
+  assert.equal(Object.prototype.hasOwnProperty.call(state.patches.at(-1).body, 'resolved_at'), false, 'reopen patch must not clear resolved_at');
   assert.equal(state.smsLogs.at(-1).body, 'HELP');
   assertNoPhi(state.smsLogs.at(-1).body);
 

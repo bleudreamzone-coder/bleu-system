@@ -54,6 +54,9 @@ eval([
   grabFunction('incrementMetric'),
   grabFunction('coarseRouteCategory'),
   grabFunction('sortedMetricObject'),
+  grabFunction('eventOriginKey'),
+  grabFunction('consentStatusKey'),
+  grabFunction('medianClosureMinutes'),
   grabFunction('buildCommandOverview'),
   grabFunction('commandOverviewPayloadIsSafe'),
   grabFunction('fetchCommandOverview'),
@@ -99,11 +102,75 @@ const sampleRows = [
     staff_action_required: false,
     follow_up_due_at: '2026-06-12T19:30:00.000Z',
     created_at: '2026-06-12T19:00:00.000Z',
+    resolved_at: null,
+    event_origin: 'organic',
+    consent_status: 'granted',
     rationale: 'raw clinical narrative must never leave the command view',
     phone: '318-555-0100',
+    subject_id: 'subject-command-view-secret',
   },
   {
     event_id: '22222222-2222-4222-8222-222222222222',
+    catalyst_type: 'medication_change',
+    siren_level: 'amber',
+    workflow_rail: 'care_transition',
+    route_id: 'radius_71457_25mi_providers_found',
+    status: 'resolved',
+    outcome: 'reached_support',
+    staff_action_required: false,
+    follow_up_due_at: '2026-06-12T19:30:00.000Z',
+    created_at: '2026-06-12T19:00:00.000Z',
+    resolved_at: '2026-06-12T19:30:00.000Z',
+    event_origin: 'organic',
+    consent_status: 'granted',
+  },
+  {
+    event_id: '33333333-3333-4333-8333-333333333333',
+    catalyst_type: 'benefits_navigation',
+    siren_level: 'yellow',
+    workflow_rail: 'community_support',
+    route_id: 'radius_99999_100mi_honest_desert',
+    status: 'resolved',
+    outcome: 'reached_support',
+    staff_action_required: false,
+    follow_up_due_at: '2026-06-13T19:30:00.000Z',
+    created_at: '2026-06-12T18:00:00.000Z',
+    resolved_at: '2026-06-12T19:00:00.000Z',
+    event_origin: 'organic',
+    consent_status: 'granted',
+  },
+  {
+    event_id: '44444444-4444-4444-8444-444444444444',
+    catalyst_type: 'medication_change',
+    siren_level: 'amber',
+    workflow_rail: 'care_transition',
+    route_id: 'phase1_record_gate_zip_71457',
+    status: 'resolved',
+    outcome: 'reached_support',
+    staff_action_required: false,
+    follow_up_due_at: null,
+    created_at: '2026-06-12T17:00:00.000Z',
+    resolved_at: '2026-06-12T18:30:00.000Z',
+    event_origin: 'organic',
+    consent_status: 'granted',
+  },
+  {
+    event_id: '55555555-5555-4555-8555-555555555555',
+    catalyst_type: 'housing_support',
+    siren_level: 'orange',
+    workflow_rail: 'community_support',
+    route_id: '',
+    status: 'open',
+    outcome: null,
+    staff_action_required: true,
+    follow_up_due_at: '2026-06-13T19:30:00.000Z',
+    created_at: '2026-06-12T19:00:00.000Z',
+    resolved_at: null,
+    event_origin: 'organic',
+    consent_status: 'unknown',
+  },
+  {
+    event_id: '66666666-6666-4666-8666-666666666666',
     catalyst_type: 'medication_change',
     siren_level: 'amber',
     workflow_rail: 'care_transition',
@@ -112,31 +179,40 @@ const sampleRows = [
     outcome: 'reached_support',
     staff_action_required: false,
     follow_up_due_at: '2026-06-12T19:30:00.000Z',
-    created_at: '2026-06-12T19:00:00.000Z',
+    created_at: '2026-06-12T18:00:00.000Z',
+    resolved_at: '2026-06-12T18:15:00.000Z',
+    event_origin: 'seeded',
+    consent_status: 'granted',
   },
   {
-    event_id: '33333333-3333-4333-8333-333333333333',
-    catalyst_type: 'benefits_navigation',
+    event_id: '77777777-7777-4777-8777-777777777777',
+    catalyst_type: 'food_support',
     siren_level: 'yellow',
     workflow_rail: 'community_support',
-    route_id: 'radius_99999_100mi_honest_desert',
+    route_id: 'radius_test_25mi_providers_found',
     status: 'open',
-    outcome: 'still_needs_help',
+    outcome: null,
     staff_action_required: true,
-    follow_up_due_at: '2026-06-13T19:30:00.000Z',
+    follow_up_due_at: '2026-06-12T19:30:00.000Z',
     created_at: '2026-06-12T19:00:00.000Z',
+    resolved_at: null,
+    event_origin: 'test',
+    consent_status: 'unknown',
   },
   {
-    event_id: '44444444-4444-4444-8444-444444444444',
-    catalyst_type: '',
-    siren_level: '',
-    workflow_rail: '',
-    route_id: 'phase1_record_gate_zip_71457',
+    event_id: '88888888-8888-4888-8888-888888888888',
+    catalyst_type: 'transportation',
+    siren_level: 'green',
+    workflow_rail: 'community_support',
+    route_id: 'demo_route',
     status: 'open',
     outcome: null,
     staff_action_required: false,
     follow_up_due_at: null,
     created_at: '2026-06-12T19:00:00.000Z',
+    resolved_at: null,
+    event_origin: 'demo',
+    consent_status: 'granted',
   },
 ];
 
@@ -186,22 +262,39 @@ function queryFor(rows, calls) {
   assert.equal(calls.length, 1, 'authorized command view should read catalyst_event once');
 
   const metrics = res.body.metrics;
-  assert.equal(metrics.total_events, 4);
-  assert.equal(metrics.open_loops, 3);
-  assert.equal(metrics.resolved_loops, 1);
+  assert.equal(res.body.source.rows_read, 8);
+  assert.equal(res.body.source.primary_scope, 'event_origin=organic');
+  assert.equal(metrics.total_events, 5, 'primary metrics should count organic events only');
+  assert.equal(metrics.open_loops, 2);
+  assert.equal(metrics.resolved_loops, 3);
   assert.equal(metrics.needs_action, 1);
   assert.equal(metrics.follow_ups_due_now, 1);
-  assert.equal(metrics.reached_support_outcomes, 1);
+  assert.equal(metrics.reached_support_outcomes, 3);
   assert.equal(metrics.honest_desert_count, 1);
-  assert.deepEqual(metrics.by_catalyst_type, { benefits_navigation: 1, medication_change: 2, unknown: 1 });
-  assert.deepEqual(metrics.by_siren_level, { amber: 2, unknown: 1, yellow: 1 });
-  assert.deepEqual(metrics.by_workflow_rail, { care_transition: 2, community_support: 1, unknown: 1 });
+  assert.equal(metrics.consented_closed_loops, 3);
+  assert.equal(metrics.consented_open_loops, 1);
+  assert.equal(metrics.closure_rate, 0.75);
+  assert.equal(metrics.median_time_to_closure_minutes, 60);
+  assert.deepEqual(metrics.by_catalyst_type, { benefits_navigation: 1, housing_support: 1, medication_change: 3 });
+  assert.deepEqual(metrics.by_siren_level, { amber: 3, orange: 1, yellow: 1 });
+  assert.deepEqual(metrics.by_workflow_rail, { care_transition: 3, community_support: 2 });
   assert.deepEqual(metrics.by_route_category, {
     honest_desert: 1,
-    phase3_proof: 1,
-    radius_providers_found: 1,
+    none: 1,
+    radius_providers_found: 2,
     record_gate_default: 1,
   });
+  assert.deepEqual(res.body.integrity, {
+    organic_events: 5,
+    test_events: 1,
+    seeded_events: 1,
+    demo_events: 1,
+    consent_granted_events: 6,
+    consent_unknown_events: 2,
+  });
+
+  const insufficientOverview = buildCommandOverview(sampleRows.filter((row) => row.event_origin !== 'organic' || row.event_id !== '44444444-4444-4444-8444-444444444444'), { now });
+  assert.equal(insufficientOverview.metrics.median_time_to_closure_minutes, 'insufficient_data');
 
   const payloadText = JSON.stringify(res.body);
   assert.equal(commandOverviewPayloadIsSafe(res.body, sampleRows), true);
@@ -211,11 +304,13 @@ function queryFor(rows, calls) {
   assert.doesNotMatch(payloadText, /phase3_return_proof_71457/);
   assert.doesNotMatch(payloadText, /raw clinical narrative/);
   assert.doesNotMatch(payloadText, /rationale/i);
+  assert.doesNotMatch(payloadText, /subject_id|subject-command-view-secret/i);
 
   assert.equal(commandOverviewPayloadIsSafe({ route: 'radius_71457_25mi_providers_found' }, sampleRows), false);
   assert.equal(commandOverviewPayloadIsSafe({ text: 'raw clinical narrative must never leave the command view' }, sampleRows), false);
   assert.equal(commandOverviewPayloadIsSafe({ body: 'REACHED' }, sampleRows), false);
   assert.equal(commandOverviewPayloadIsSafe({ phone: '318-555-0100' }, sampleRows), false);
+  assert.equal(commandOverviewPayloadIsSafe({ subject_id: 'subject-command-view-secret' }, sampleRows), false);
 
   assert.equal(coarseRouteCategory('radius_71457_25mi_providers_found'), 'radius_providers_found');
   assert.equal(coarseRouteCategory('radius_99999_100mi_honest_desert'), 'honest_desert');
