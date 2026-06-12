@@ -40,7 +40,7 @@ function grabFunction(name) {
 }
 
 const routeStart = src.indexOf("if (pn === '/api/command/overview' && req.method === 'GET')");
-const routeEnd = src.indexOf("\n\n  if (pn === '/geo'", routeStart);
+const routeEnd = src.indexOf("\n\n  if (pn === '/api/navigator/queue'", routeStart);
 if (routeStart < 0 || routeEnd < 0) throw new Error('could not extract command overview route block');
 const commandRouteBlock = src.slice(routeStart, routeEnd);
 const expectedCommandViewSelect = grabConst('COMMAND_VIEW_EVENT_SELECT').match(/'([^']+)'/)[1];
