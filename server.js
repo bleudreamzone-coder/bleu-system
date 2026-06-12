@@ -64,6 +64,10 @@ function navigatorQueueEnabled() {
   return String(process.env.NAVIGATOR_QUEUE_ENABLED || '').toLowerCase() === 'true';
 }
 
+function consentCaptureEnabled() {
+  return String(process.env.CONSENT_CAPTURE_ENABLED || '').toLowerCase() === 'true';
+}
+
 async function sendSMS(to, body) {
   if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
   const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`;
@@ -1265,6 +1269,211 @@ async function handleNavigatorQueue(req, res, opts = {}) {
   if (!auth.ok) return json(res, auth.status, auth.body);
   const queue = await fetchNavigatorQueue(opts);
   return json(res, 200, queue);
+}
+
+const CONSENT_COPY_PLACEHOLDER = `BLEU can help you find one safe next step and check back later.
+If you say yes:
+- We may text you to see if you got help.
+- We keep track of how this request went.
+- We connect your future BLEU visits using a code, not your name.
+- We use overall numbers, never your story, to show where help is missing.
+You can reply STOP any time and we will stop.
+BLEU is not emergency care and does not give medical advice. If this is an emergency, or you might hurt yourself or someone else, call 911 now.
+Do not stop, start, or change medicine because of BLEU.`;
+
+function consentHashSecret(opts = {}) {
+  return opts.hashSecret || process.env.CONSENT_HASH_SECRET || '';
+}
+
+function normalizeConsentContact(contact) {
+  return String(contact || '').trim().toLowerCase();
+}
+
+function consentContactHash(contact, opts = {}) {
+  const normalized = normalizeConsentContact(contact);
+  if (!normalized) return null;
+  const secret = consentHashSecret(opts);
+  if (!secret) throw new Error('Consent hash secret not configured');
+  const crypto = require('crypto');
+  return crypto.createHmac('sha256', secret).update(normalized).digest('hex');
+}
+
+function consentTextHash(text) {
+  const value = String(text || '');
+  if (!value) return null;
+  const crypto = require('crypto');
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function consentBool(value, fallback) {
+  return typeof value === 'boolean' ? value : fallback;
+}
+
+function normalizedConsentScopes(scopes = {}) {
+  const input = scopes && typeof scopes === 'object' ? scopes : {};
+  return {
+    routing_allowed: consentBool(input.routing, true),
+    follow_up_allowed: consentBool(input.follow_up, true),
+    loop_status_allowed: consentBool(input.loop_status, true),
+    longitudinal_linkage_allowed: consentBool(input.longitudinal_linkage, false),
+    aggregate_reporting_allowed: consentBool(input.aggregate_reporting, true),
+  };
+}
+
+function publicConsentScopes(rowOrScopes = {}) {
+  return {
+    routing: !!rowOrScopes.routing_allowed,
+    follow_up: !!rowOrScopes.follow_up_allowed,
+    loop_status: !!rowOrScopes.loop_status_allowed,
+    longitudinal_linkage: !!rowOrScopes.longitudinal_linkage_allowed,
+    aggregate_reporting: !!rowOrScopes.aggregate_reporting_allowed,
+  };
+}
+
+function normalizeConsentEventId(eventId) {
+  const id = String(eventId || '').trim();
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id) ? id : '';
+}
+
+function buildConsentEventGrantPatch(subjectId) {
+  return {
+    consent_status: 'granted',
+    subject_id: subjectId,
+  };
+}
+
+function consentGrantResponse(subjectId, scopes) {
+  return {
+    subject_id: subjectId,
+    consent_status: 'granted',
+    scopes: publicConsentScopes(scopes),
+  };
+}
+
+async function findConsentSubjectByContactHash(contactHash, queryImpl) {
+  if (!contactHash) return null;
+  const rows = await queryImpl('consent_subject', `contact_hash=eq.${encodeURIComponent(contactHash)}&select=subject_id,consent_status,routing_allowed,follow_up_allowed,loop_status_allowed,longitudinal_linkage_allowed,aggregate_reporting_allowed`, 1);
+  if (!Array.isArray(rows)) throw new Error('consent_subject lookup failed');
+  return rows[0] || null;
+}
+
+async function grantConsentSubject(input, opts = {}) {
+  const queryImpl = opts.queryImpl || querySupabase;
+  const now = opts.now instanceof Date ? opts.now : new Date(opts.now || Date.now());
+  const eventId = input && input.event_id ? normalizeConsentEventId(input.event_id) : '';
+  if (input && input.event_id && !eventId) throw new Error('valid event_id required');
+  const consentTextVersion = String(input && input.consent_text_version || '').trim();
+  if (!consentTextVersion) throw new Error('consent_text_version required');
+  const contactHash = consentContactHash(input && input.contact, opts);
+  const scopes = normalizedConsentScopes(input && input.scopes);
+  const consentText = String(input && input.consent_text || '');
+  const existing = await findConsentSubjectByContactHash(contactHash, queryImpl);
+  const subjectId = existing && existing.subject_id ? existing.subject_id : (opts.subjectId || require('crypto').randomUUID());
+  const subjectPayload = {
+    ...scopes,
+    consent_status: 'granted',
+    consent_granted_at: now.toISOString(),
+    consent_revoked_at: null,
+    consent_source: 'api_consent_grant',
+    consent_text_version: consentTextVersion,
+    consent_text_hash: consentText ? consentTextHash(consentText) : null,
+    updated_at: now.toISOString(),
+  };
+  if (contactHash) subjectPayload.contact_hash = contactHash;
+
+  if (existing) {
+    await queryImpl('consent_subject', `subject_id=eq.${encodeURIComponent(subjectId)}`, 0, 'PATCH', subjectPayload);
+  } else {
+    await queryImpl('consent_subject', '', 0, 'POST', { subject_id: subjectId, ...subjectPayload });
+  }
+
+  if (eventId) {
+    await queryImpl('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}`, 0, 'PATCH', buildConsentEventGrantPatch(subjectId));
+  }
+
+  return consentGrantResponse(subjectId, scopes);
+}
+
+async function revokeConsentSubject(input, opts = {}) {
+  const queryImpl = opts.queryImpl || querySupabase;
+  const now = opts.now instanceof Date ? opts.now : new Date(opts.now || Date.now());
+  const contactHash = consentContactHash(input && input.contact, opts);
+  if (!contactHash) throw new Error('contact required');
+  const existing = await findConsentSubjectByContactHash(contactHash, queryImpl);
+  if (!existing) {
+    return {
+      subject_id: null,
+      consent_status: 'revoked',
+      scopes: publicConsentScopes({}),
+      events_updated: 0,
+    };
+  }
+  const subjectId = existing.subject_id;
+  await queryImpl('consent_subject', `subject_id=eq.${encodeURIComponent(subjectId)}`, 0, 'PATCH', {
+    consent_status: 'revoked',
+    consent_revoked_at: now.toISOString(),
+    updated_at: now.toISOString(),
+  });
+  const patchedEvents = await queryImpl('catalyst_event', `subject_id=eq.${encodeURIComponent(subjectId)}&status=eq.open`, 0, 'PATCH', {
+    consent_status: 'revoked',
+  });
+  return {
+    subject_id: subjectId,
+    consent_status: 'revoked',
+    scopes: publicConsentScopes(existing),
+    events_updated: Array.isArray(patchedEvents) ? patchedEvents.length : null,
+  };
+}
+
+function consentResponseLeaksSecret(response, input = {}) {
+  const text = JSON.stringify(response || {});
+  const contact = normalizeConsentContact(input && input.contact);
+  if (contact && text.toLowerCase().includes(contact)) return true;
+  if (/contact_hash|CONSENT_HASH_SECRET|hash_secret/i.test(text)) return true;
+  if (/\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/.test(text)) return true;
+  return false;
+}
+
+function safeConsentErrorMessage(err, input = {}) {
+  let msg = String(err && err.message || err || 'consent request failed');
+  const rawContact = String(input && input.contact || '');
+  const normalized = normalizeConsentContact(rawContact);
+  for (const token of [rawContact, normalized].filter(Boolean)) {
+    msg = msg.split(token).join('[redacted]');
+  }
+  return msg;
+}
+
+async function handleConsentGrant(req, res, bodyText, opts = {}) {
+  const enabled = opts.enabled !== undefined ? opts.enabled : consentCaptureEnabled();
+  if (!enabled) return json(res, 404, { error: 'Not found' });
+  let input = {};
+  try {
+    input = JSON.parse(bodyText || '{}');
+    const result = await grantConsentSubject(input, opts);
+    if (consentResponseLeaksSecret(result, input)) throw new Error('consent response privacy assertion failed');
+    return json(res, 200, result);
+  } catch (e) {
+    const msg = safeConsentErrorMessage(e, input);
+    const status = /required|valid event_id|contact required/i.test(msg) ? 400 : 500;
+    return json(res, status, { error: msg });
+  }
+}
+
+async function handleConsentRevoke(req, res, bodyText, opts = {}) {
+  const enabled = opts.enabled !== undefined ? opts.enabled : consentCaptureEnabled();
+  if (!enabled) return json(res, 404, { error: 'Not found' });
+  let input = {};
+  try {
+    input = JSON.parse(bodyText || '{}');
+    const result = await revokeConsentSubject(input, opts);
+    if (consentResponseLeaksSecret(result, input)) throw new Error('consent response privacy assertion failed');
+    return json(res, 200, result);
+  } catch (e) {
+    const msg = safeConsentErrorMessage(e, input);
+    const status = /required|contact required/i.test(msg) ? 400 : 500;
+    return json(res, status, { error: msg });
+  }
 }
 
 async function insertReturnSmsLog({ event_id, direction, body, status }, opts = {}) {
@@ -2819,6 +3028,20 @@ const server = http.createServer((req, res) => {
         return json(res, 500, { error: 'navigator queue failed', detail: String(e.message || e) });
       }
     })();
+    return;
+  }
+
+  if (pn === '/api/consent/grant' && req.method === 'POST') {
+    if (!consentCaptureEnabled()) return json(res, 404, { error: 'Not found' });
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { handleConsentGrant(req, res, b); });
+    return;
+  }
+
+  if (pn === '/api/consent/revoke' && req.method === 'POST') {
+    if (!consentCaptureEnabled()) return json(res, 404, { error: 'Not found' });
+    let b = ''; req.on('data', c => b += c);
+    req.on('end', () => { handleConsentRevoke(req, res, b); });
     return;
   }
 

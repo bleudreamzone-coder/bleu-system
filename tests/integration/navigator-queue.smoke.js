@@ -40,7 +40,7 @@ function grabFunction(name) {
 }
 
 const routeStart = src.indexOf("if (pn === '/api/navigator/queue' && req.method === 'GET')");
-const routeEnd = src.indexOf("\n\n  if (pn === '/geo'", routeStart);
+const routeEnd = src.indexOf("\n\n  if (pn === '/api/consent/grant'", routeStart);
 if (routeStart < 0 || routeEnd < 0) throw new Error('could not extract navigator queue route block');
 const navigatorRouteBlock = src.slice(routeStart, routeEnd);
 const expectedNavigatorSelect = grabConst('NAVIGATOR_QUEUE_EVENT_SELECT').match(/'([^']+)'/)[1];
