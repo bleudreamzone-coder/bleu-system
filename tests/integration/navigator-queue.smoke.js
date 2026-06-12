@@ -44,14 +44,18 @@ const routeEnd = src.indexOf("\n\n  if (pn === '/api/consent/grant'", routeStart
 if (routeStart < 0 || routeEnd < 0) throw new Error('could not extract navigator queue route block');
 const navigatorRouteBlock = src.slice(routeStart, routeEnd);
 const expectedNavigatorSelect = grabConst('NAVIGATOR_QUEUE_EVENT_SELECT').match(/'([^']+)'/)[1];
+const expectedNavigatorIncludeTestSelect = grabConst('NAVIGATOR_QUEUE_INCLUDE_TEST_EVENT_SELECT').match(/'([^']+)'/)[1];
 
 const REORDER_CRON_SECRET = 'navigator-smoke-secret';
 
 eval([
   grabFunction('navigatorQueueEnabled'),
   grabConst('NAVIGATOR_QUEUE_EVENT_SELECT'),
+  grabConst('NAVIGATOR_QUEUE_INCLUDE_TEST_EVENT_SELECT'),
   grabFunction('normalizedMetricKey'),
   grabFunction('coarseRouteCategory'),
+  grabFunction('eventOriginKey'),
+  grabFunction('navigatorQueueEventSelect'),
   grabFunction('buildNavigatorQueue'),
   grabFunction('navigatorQueuePayloadIsSafe'),
   grabFunction('fetchNavigatorQueue'),
@@ -97,6 +101,7 @@ const sampleRows = [
     staff_action_required: true,
     follow_up_due_at: '2026-06-12T19:30:00.000Z',
     created_at: '2026-06-12T18:00:00.000Z',
+    event_origin: 'organic',
     rationale: 'raw handoff story must not appear in navigator queue',
     phone: '318-555-0100',
   },
@@ -111,6 +116,7 @@ const sampleRows = [
     staff_action_required: true,
     follow_up_due_at: '2026-06-12T19:30:00.000Z',
     created_at: '2026-06-12T18:15:00.000Z',
+    event_origin: 'seeded',
   },
   {
     event_id: '33333333-3333-4333-8333-333333333333',
@@ -123,6 +129,7 @@ const sampleRows = [
     staff_action_required: true,
     follow_up_due_at: '2026-06-13T19:30:00.000Z',
     created_at: '2026-06-12T18:30:00.000Z',
+    event_origin: 'organic',
   },
   {
     event_id: '44444444-4444-4444-8444-444444444444',
@@ -135,11 +142,25 @@ const sampleRows = [
     staff_action_required: false,
     follow_up_due_at: '2026-06-12T18:30:00.000Z',
     created_at: '2026-06-12T18:45:00.000Z',
+    event_origin: 'organic',
+  },
+  {
+    event_id: '55555555-5555-4555-8555-555555555555',
+    catalyst_type: 'food_support',
+    siren_level: 'yellow',
+    workflow_rail: 'community_support',
+    route_id: 'radius_test_25mi_providers_found',
+    status: 'open',
+    outcome: null,
+    staff_action_required: true,
+    follow_up_due_at: '2026-06-12T19:45:00.000Z',
+    created_at: '2026-06-12T18:20:00.000Z',
+    event_origin: 'test',
   },
 ];
 
-function directFilteredRows() {
-  return sampleRows.filter((row) => row.staff_action_required === true && row.status === 'open');
+function directFilteredRows(includeTest = false) {
+  return sampleRows.filter((row) => row.staff_action_required === true && row.status === 'open' && (includeTest || row.event_origin === 'organic'));
 }
 
 function queryFor(rows, calls) {
@@ -147,11 +168,14 @@ function queryFor(rows, calls) {
     calls.push({ table, query, limit, method: method || 'GET' });
     assert.equal(table, 'catalyst_event');
     assert.equal(method, undefined);
-    assert.equal(query, expectedNavigatorSelect);
+    assert.equal(query === expectedNavigatorSelect || query === expectedNavigatorIncludeTestSelect, true);
     assert.match(query, /staff_action_required=eq\.true/);
     assert.match(query, /status=eq\.open/);
     assert.equal(limit, 500);
-    return rows.filter((row) => row.staff_action_required === true && row.status === 'open');
+    const includeTest = query === expectedNavigatorIncludeTestSelect;
+    if (includeTest) assert.doesNotMatch(query, /event_origin=eq\.organic/);
+    if (!includeTest) assert.match(query, /event_origin=eq\.organic/);
+    return rows.filter((row) => row.staff_action_required === true && row.status === 'open' && (includeTest || row.event_origin === 'organic'));
   };
 }
 
@@ -188,6 +212,9 @@ function queryFor(rows, calls) {
   await handleNavigatorQueue(makeReq(REORDER_CRON_SECRET), res, { queryImpl: queryFor(sampleRows, calls), now });
   assert.equal(res.statusCode, 200);
   assert.equal(calls.length, 1, 'authorized navigator queue should read catalyst_event once');
+  assert.equal(calls[0].query, expectedNavigatorSelect);
+  assert.equal(res.body.source.filter, 'staff_action_required=true,status=open,event_origin=organic');
+  assert.equal(res.body.source.include_test, false);
 
   const directRows = directFilteredRows();
   assert.equal(res.body.count, directRows.length, 'queue count should match direct filtered count');
@@ -212,11 +239,22 @@ function queryFor(rows, calls) {
     assert.equal(directIds.has(item.event_id), true, 'queue item must come from staff-action open source row');
     assert.equal(Object.prototype.hasOwnProperty.call(item, 'staff_action_required'), false);
     assert.equal(Object.prototype.hasOwnProperty.call(item, 'consent_status'), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(item, 'event_origin'), false);
   }
   assert.equal(res.body.items[0].route_category, 'radius_providers_found');
   assert.equal(res.body.items[0].overdue, true);
   assert.equal(res.body.items[1].route_category, 'honest_desert');
   assert.equal(res.body.items[1].overdue, false);
+
+  calls = [];
+  res = makeRes();
+  await handleNavigatorQueue(makeReq(REORDER_CRON_SECRET), res, { queryImpl: queryFor(sampleRows, calls), now, includeTest: true });
+  assert.equal(res.statusCode, 200);
+  assert.equal(calls[0].query, expectedNavigatorIncludeTestSelect);
+  assert.equal(res.body.source.filter, 'staff_action_required=true,status=open,event_origin=all');
+  assert.equal(res.body.source.include_test, true);
+  assert.equal(res.body.count, directFilteredRows(true).length, 'include_test should include non-organic staff-action rows for founder debugging');
+  assert.equal(res.body.items.some((item) => item.event_id === '55555555-5555-4555-8555-555555555555'), true);
 
   const payloadText = JSON.stringify(res.body);
   assert.equal(navigatorQueuePayloadIsSafe(res.body, sampleRows), true);
@@ -238,6 +276,7 @@ function queryFor(rows, calls) {
 
   assert.doesNotMatch(navigatorRouteBlock, /\b(POST|PATCH|PUT|DELETE|INSERT|UPDATE|UPSERT)\b|sendSMS|twilio/i);
   assert.match(navigatorRouteBlock, /handleNavigatorQueue/);
+  assert.match(navigatorRouteBlock, /include_test/);
 
   console.log('  passed navigator queue smoke tests');
 })().catch((err) => {
