@@ -56,6 +56,10 @@ function smsEnabled() {
   return String(process.env.SMS_ENABLED || '').toLowerCase() === 'true';
 }
 
+function commandViewEnabled() {
+  return String(process.env.COMMAND_VIEW_ENABLED || '').toLowerCase() === 'true';
+}
+
 async function sendSMS(to, body) {
   if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
   const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`;
@@ -1057,6 +1061,129 @@ function returnBearerAuth(req, label = 'return-loop') {
     return { ok: false, status: 401, body: { error: 'Unauthorized' } };
   }
   return { ok: true };
+}
+
+const COMMAND_VIEW_EVENT_SELECT = 'select=event_id,catalyst_type,siren_level,workflow_rail,route_id,follow_up_due_at,status,outcome,staff_action_required,created_at&order=created_at.desc';
+
+function normalizedMetricKey(value) {
+  const key = String(value || '').trim().toLowerCase();
+  return key || 'unknown';
+}
+
+function incrementMetric(bucket, key) {
+  const safeKey = normalizedMetricKey(key);
+  bucket[safeKey] = (bucket[safeKey] || 0) + 1;
+}
+
+function coarseRouteCategory(routeId) {
+  const id = String(routeId || '').toLowerCase();
+  if (!id) return 'none';
+  if (id.startsWith('phase3_return_proof')) return 'phase3_proof';
+  if (id.startsWith('phase1_record_gate') || id.startsWith('record_gate')) return 'record_gate_default';
+  if (id.startsWith('radius_low_confidence')) return 'radius_low_confidence';
+  if (id.startsWith('radius_') && id.includes('providers_found')) return 'radius_providers_found';
+  if (id.includes('honest_desert') || id.includes('no_match') || id.includes('no_providers')) return 'honest_desert';
+  if (id.startsWith('radius_')) return 'radius_other';
+  return 'other';
+}
+
+function sortedMetricObject(bucket) {
+  return Object.keys(bucket).sort().reduce((out, key) => {
+    out[key] = bucket[key];
+    return out;
+  }, {});
+}
+
+function buildCommandOverview(rows, opts = {}) {
+  const events = Array.isArray(rows) ? rows : [];
+  const now = opts.now instanceof Date ? opts.now : new Date(opts.now || Date.now());
+  const metrics = {
+    total_events: events.length,
+    open_loops: 0,
+    resolved_loops: 0,
+    needs_action: 0,
+    follow_ups_due_now: 0,
+    reached_support_outcomes: 0,
+    honest_desert_count: 0,
+    by_catalyst_type: {},
+    by_siren_level: {},
+    by_workflow_rail: {},
+    by_route_category: {},
+  };
+
+  for (const event of events) {
+    const status = normalizedMetricKey(event && event.status);
+    const outcome = normalizedMetricKey(event && event.outcome);
+    const category = coarseRouteCategory(event && event.route_id);
+
+    if (status === 'open') metrics.open_loops++;
+    if (status === 'resolved') metrics.resolved_loops++;
+    if (event && event.staff_action_required === true) metrics.needs_action++;
+    if (outcome === 'reached_support') metrics.reached_support_outcomes++;
+    if (category === 'honest_desert') metrics.honest_desert_count++;
+
+    const dueAt = event && event.follow_up_due_at ? Date.parse(event.follow_up_due_at) : NaN;
+    if (status === 'open' && Number.isFinite(dueAt) && dueAt <= now.getTime()) {
+      metrics.follow_ups_due_now++;
+    }
+
+    incrementMetric(metrics.by_catalyst_type, event && event.catalyst_type);
+    incrementMetric(metrics.by_siren_level, event && event.siren_level);
+    incrementMetric(metrics.by_workflow_rail, event && event.workflow_rail);
+    incrementMetric(metrics.by_route_category, category);
+  }
+
+  metrics.by_catalyst_type = sortedMetricObject(metrics.by_catalyst_type);
+  metrics.by_siren_level = sortedMetricObject(metrics.by_siren_level);
+  metrics.by_workflow_rail = sortedMetricObject(metrics.by_workflow_rail);
+  metrics.by_route_category = sortedMetricObject(metrics.by_route_category);
+
+  return {
+    enabled: true,
+    generated_at: now.toISOString(),
+    source: {
+      ledger: 'catalyst_event',
+      rows_read: events.length,
+    },
+    metrics,
+    privacy: {
+      aggregate_only: true,
+      categories_only: true,
+      raw_text: false,
+    },
+  };
+}
+
+function commandOverviewPayloadIsSafe(payload, sourceRows = []) {
+  const text = JSON.stringify(payload || {});
+  if (/sms_log\.body|["']body["']|rationale|route_id/i.test(text)) return false;
+  if (/\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/.test(text)) return false;
+  for (const row of Array.isArray(sourceRows) ? sourceRows : []) {
+    const fullRouteId = row && row.route_id ? String(row.route_id) : '';
+    if (fullRouteId && text.includes(fullRouteId)) return false;
+    const rawRationale = row && row.rationale ? String(row.rationale) : '';
+    if (rawRationale && text.includes(rawRationale)) return false;
+  }
+  return true;
+}
+
+async function fetchCommandOverview(opts = {}) {
+  const queryImpl = opts.queryImpl || querySupabase;
+  const limit = Math.max(1, Math.min(Number(opts.limit || 5000), 10000));
+  const rows = await queryImpl('catalyst_event', COMMAND_VIEW_EVENT_SELECT, limit);
+  if (!Array.isArray(rows)) throw new Error('catalyst_event command overview query failed');
+  const overview = buildCommandOverview(rows, { now: opts.now });
+  if (!commandOverviewPayloadIsSafe(overview, rows)) throw new Error('command overview privacy assertion failed');
+  return overview;
+}
+
+async function handleCommandOverview(req, res, opts = {}) {
+  const enabled = opts.enabled !== undefined ? opts.enabled : commandViewEnabled();
+  if (!enabled) return json(res, 404, { error: 'Not found' });
+  const auth = (opts.authImpl || returnBearerAuth)(req, 'command-view');
+  if (!auth.ok) return json(res, auth.status, auth.body);
+  const overview = await fetchCommandOverview(opts);
+  return json(res, 200, overview);
 }
 
 async function insertReturnSmsLog({ event_id, direction, body, status }, opts = {}) {
@@ -2591,6 +2718,17 @@ const server = http.createServer((req, res) => {
   if (req.method === 'OPTIONS') return json(res, 200, {});
 
   if (pn === '/health') return json(res, 200, { status: 'ok', hasKey: !!OPENAI_KEY, hasSupabase: !!(SUPABASE_URL&&SUPABASE_KEY), engine: 'openai', version: '4.0', modes: Object.keys(MODE_PROMPTS).length });
+
+  if (pn === '/api/command/overview' && req.method === 'GET') {
+    (async () => {
+      try {
+        return await handleCommandOverview(req, res);
+      } catch (e) {
+        return json(res, 500, { error: 'command overview failed', detail: String(e.message || e) });
+      }
+    })();
+    return;
+  }
 
   if (pn === '/geo' && req.method === 'GET') {
     (async () => { try {
