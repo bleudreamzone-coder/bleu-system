@@ -51,6 +51,7 @@ eval([
   grabConst('RADIUS_ROUTING_RADII_MILES'),
   grabConst('RADIUS_ROUTING_SPARSE_ZIP_THRESHOLD'),
   grabFunction('radiusRoutingEnabled'),
+  grabFunction('medChangeBiasEnabled'),
   src.slice(directoryStart, directoryEnd),
 ].join('\n'));
 
@@ -104,6 +105,66 @@ eval([
   assert.equal(low.rows.length, 0);
   assert.match(low.directive, /confirm a 5-digit ZIP/i);
   assert.match(low.directive, /Name NO practitioners/i);
+
+  const biasZipRows = [
+    { zip: '71457', city: 'Natchitoches', state: 'LA', distance_miles: 0.1 },
+    { zip: '71458', city: 'Example', state: 'LA', distance_miles: 12 },
+  ];
+  const biasRows = [
+    { full_name: 'Near Counselor, LPC', specialty: 'Counselor', zip: '71457', city: 'Natchitoches', state: 'LA' },
+    { full_name: 'Far Pharmacist, PharmD', specialty: 'Pharmacist', zip: '71458', city: 'Example', state: 'LA' },
+    { full_name: 'Far Primary Clinic', specialty: 'Primary Care Clinic', zip: '71458', city: 'Example', state: 'LA' },
+  ];
+  const routeNames = (route) => route.rows.map((row) => row.full_name);
+  const biasRpc = async () => biasZipRows;
+  const biasQuery = async () => biasRows;
+
+  process.env.MED_CHANGE_BIAS_ENABLED = '';
+  assert.equal(medChangeBiasEnabled(), false);
+  const flagOffRoute = await findRadiusPractitionerRoute(high71457, {
+    rpcImpl: biasRpc,
+    queryImpl: biasQuery,
+    limit: 3,
+    catalyst_type: 'medication_change',
+  });
+  assert.deepEqual(routeNames(flagOffRoute), ['Near Counselor, LPC', 'Far Pharmacist, PharmD', 'Far Primary Clinic'], 'flag-off med-change route should preserve existing ZIP-distance order');
+  assert.equal(flagOffRoute.med_change_bias, undefined);
+
+  process.env.MED_CHANGE_BIAS_ENABLED = 'true';
+  assert.equal(medChangeBiasEnabled(), true);
+  const biasedRoute = await findRadiusPractitionerRoute(high71457, {
+    rpcImpl: biasRpc,
+    queryImpl: biasQuery,
+    limit: 3,
+    catalyst_type: 'medication_change',
+  });
+  assert.deepEqual(routeNames(biasedRoute), ['Far Pharmacist, PharmD', 'Far Primary Clinic', 'Near Counselor, LPC'], 'flag-on med-change route should rank pharmacist, then clinic, then existing order');
+  assert.equal(biasedRoute.med_change_bias, 'med_change_bias=pharmacist_first');
+
+  const nonMedRoute = await findRadiusPractitionerRoute(high71457, {
+    rpcImpl: biasRpc,
+    queryImpl: biasQuery,
+    limit: 3,
+    catalyst_type: 'housing_support',
+  });
+  assert.deepEqual(routeNames(nonMedRoute), routeNames(flagOffRoute), 'flag-on non-med-change route should stay unchanged');
+  assert.equal(nonMedRoute.med_change_bias, undefined);
+
+  const desertWithoutBias = await findRadiusPractitionerRoute(high71457, {
+    rpcImpl: biasRpc,
+    queryImpl: async () => [],
+    limit: 3,
+    catalyst_type: 'housing_support',
+  });
+  const desertWithBias = await findRadiusPractitionerRoute(high71457, {
+    rpcImpl: biasRpc,
+    queryImpl: async () => [],
+    limit: 3,
+    catalyst_type: 'medication_change',
+  });
+  assert.deepEqual(desertWithBias, desertWithoutBias, 'zero candidates should still produce identical honest-desert routing');
+  assert.equal(desertWithBias.med_change_bias, undefined);
+  process.env.MED_CHANGE_BIAS_ENABLED = '';
 
   process.env.USE_RADIUS_ROUTING = '';
   rpcCalls = [];

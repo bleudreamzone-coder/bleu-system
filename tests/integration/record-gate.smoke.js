@@ -98,8 +98,22 @@ eval([
   assert.equal(writes[0].event.route_id, 'radius_71457_25mi_providers_found');
   assert.equal(writes[0].event.event_origin, 'organic');
   assert.match(writes[0].event.rationale, /Route status=providers_found/);
+  assert.doesNotMatch(writes[0].event.rationale, /med_change_bias=pharmacist_first/);
   assert.equal(writes[0].event.follow_up_due_at, '2026-06-14T17:00:00.000Z');
   assert.ok(Date.parse(recorded.insertCompletedAt) <= governedResponseAt.getTime(), 'insert completes before governed response timestamp');
+
+  const biasedEvent = buildMedChangeCatalystEvent({
+    p: { message },
+    location,
+    now: new Date('2026-06-12T17:00:00.000Z'),
+    routeDecision: {
+      route_id: 'radius_71457_25mi_providers_found',
+      status: 'providers_found',
+      radius_miles: 25,
+      med_change_bias: 'med_change_bias=pharmacist_first',
+    },
+  });
+  assert.match(biasedEvent.rationale, /med_change_bias=pharmacist_first/, 'biased route marker should be preserved in catalyst_event rationale');
 
   let failedWrites = 0;
   const originalConsoleError = console.error;

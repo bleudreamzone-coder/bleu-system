@@ -48,6 +48,10 @@ function radiusRoutingEnabled() {
   return String(process.env.USE_RADIUS_ROUTING || '').toLowerCase() === 'true';
 }
 
+function medChangeBiasEnabled() {
+  return String(process.env.MED_CHANGE_BIAS_ENABLED || '').toLowerCase() === 'true';
+}
+
 function returnLoopEnabled() {
   return String(process.env.RETURN_LOOP_ENABLED || '').toLowerCase() === 'true';
 }
@@ -933,13 +937,14 @@ function buildMedChangeCatalystEvent({ p, location, now, routeDecision } = {}) {
   const source = (location && location.source) || 'unknown';
   const routeId = routeDecision && routeDecision.route_id ? routeDecision.route_id : `phase1_record_gate_zip_${zip}`;
   const routeStatus = routeDecision && routeDecision.status ? ` Route status=${routeDecision.status}; radius=${routeDecision.radius_miles || 'none'} miles.` : '';
+  const biasStatus = routeDecision && routeDecision.med_change_bias ? ` ${routeDecision.med_change_bias}.` : '';
   return {
     window_type: 'discharge',
     catalyst_type: 'medication_change',
     siren_level: 'amber',
     workflow_rail: 'care_transition',
     route_id: routeId,
-    rationale: `Post-discharge medication confusion signal detected; amber care_transition response requires a write-ahead catalyst_event before governed prose. Location source=${source}; confidence=${confidence}.${routeStatus}`,
+    rationale: `Post-discharge medication confusion signal detected; amber care_transition response requires a write-ahead catalyst_event before governed prose. Location source=${source}; confidence=${confidence}.${routeStatus}${biasStatus}`,
     staff_action_required: false,
     human_owner: null,
     consent_status: 'unknown',
@@ -2496,6 +2501,30 @@ function sortPractitionersByZipDistance(rows, zipRows) {
     .sort((a, b) => a.route_distance_miles - b.route_distance_miles || a._route_zip_order - b._route_zip_order || String(a.full_name || '').localeCompare(String(b.full_name || '')));
 }
 
+function shouldApplyMedChangeBias(opts = {}) {
+  const catalystType = String(opts.catalyst_type || opts.catalystType || '').trim().toLowerCase();
+  return medChangeBiasEnabled() && catalystType === 'medication_change';
+}
+
+function medChangeBiasRank(row) {
+  const text = [
+    row && row.specialty,
+    row && row.practice_name,
+    row && row.full_name,
+  ].filter(Boolean).join(' ').toLowerCase();
+  if (/\b(pharmacist|pharmd|pharmacy)\b/.test(text)) return 0;
+  if (/\b(clinic|primary care|family medicine|internal medicine|physician|doctor|md|do|nurse practitioner|physician assistant|pa-c|fnp|aprn)\b/.test(text)) return 1;
+  return 2;
+}
+
+function applyMedChangeBiasOrdering(rows, opts = {}) {
+  if (!shouldApplyMedChangeBias(opts)) return Array.isArray(rows) ? rows : [];
+  return (Array.isArray(rows) ? rows : [])
+    .map((row, idx) => ({ row, idx, rank: medChangeBiasRank(row) }))
+    .sort((a, b) => a.rank - b.rank || a.idx - b.idx)
+    .map((entry) => entry.row);
+}
+
 function buildRadiusRouteId(location, route) {
   const zip = location && location.zip ? String(location.zip) : 'unconfirmed';
   const radius = route && route.radius_miles ? `${route.radius_miles}mi` : 'no_radius';
@@ -2538,7 +2567,9 @@ async function findRadiusPractitionerRoute(location, opts = {}) {
   let q = `${select}&${zipInFilter(zipSet.zip_rows)}`;
   if (specialty) q += `&specialty=ilike.*${encodeURIComponent(specialty)}*`;
   q += '&order=zip.asc,full_name.asc';
-  const rows = sortPractitionersByZipDistance(await queryImpl('practitioners', q, Math.max(50, limit * 4)), zipSet.zip_rows).slice(0, limit);
+  const sortedRows = sortPractitionersByZipDistance(await queryImpl('practitioners', q, Math.max(50, limit * 4)), zipSet.zip_rows);
+  const biasApplied = shouldApplyMedChangeBias(opts);
+  const rows = applyMedChangeBiasOrdering(sortedRows, opts).slice(0, limit);
   if (!rows.length) {
     const route = {
       status: 'honest_desert',
@@ -2561,6 +2592,7 @@ async function findRadiusPractitionerRoute(location, opts = {}) {
     zip_rows: zipSet.zip_rows,
     attempts: zipSet.attempts,
   };
+  if (biasApplied) route.med_change_bias = 'med_change_bias=pharmacist_first';
   route.route_id = buildRadiusRouteId(location, route);
   return route;
 }
@@ -3190,7 +3222,7 @@ const server = http.createServer((req, res) => {
           let routeDecision = null;
           if (radiusRoutingEnabled()) {
             try {
-              routeDecision = await findRadiusPractitionerRoute(recordGateLocation, { limit: 5 });
+              routeDecision = await findRadiusPractitionerRoute(recordGateLocation, { limit: 5, catalyst_type: 'medication_change' });
             } catch (e) {
               console.error('[RECORD_GATE_ROUTE_FAIL]', JSON.stringify({ err: String(e && e.message || e).substring(0, 180), ts: Date.now() }));
             }
@@ -3474,7 +3506,7 @@ const server = http.createServer((req, res) => {
           let routeDecision = null;
           if (radiusRoutingEnabled()) {
             try {
-              routeDecision = await findRadiusPractitionerRoute(recordGateLocation, { limit: 5 });
+              routeDecision = await findRadiusPractitionerRoute(recordGateLocation, { limit: 5, catalyst_type: 'medication_change' });
             } catch (e) {
               console.error('[RECORD_GATE_ROUTE_FAIL]', JSON.stringify({ err: String(e && e.message || e).substring(0, 180), ts: Date.now() }));
             }
