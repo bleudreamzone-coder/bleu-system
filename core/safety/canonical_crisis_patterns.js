@@ -50,10 +50,118 @@ const PATTERNS = [
   /\bshoot up the\b/,
 ];
 
-exports.isCrisisPhrase = function (message) {
-  if (!message || typeof message !== 'string') return false;
+const ACTIVE_INTENT_PATTERNS = [
+  /\b(want|wanna) to die\b/,
+  /\b(?:i(?:'m|m| am)\s+)?(?:going to|gonna)\s+kill myself\b/,
+  /\b(?:want|wanna|going|gonna|planning|plan|intend|intending) to end it(?: myself)?\b/,
+  /\bend my life\b/,
+  /\b(?:do not|don'?t) want to live\b/,
+  /\bno reason to (live|keep going)\b/,
+  /\bcan'?t stay safe\b|\bcannot stay safe\b/,
+  /\bsuicid(e|al)\b/,
+  /\b(hurt|hurting|cut|cutting|burn) myself\b/,
+  /\bself[- ]?(harm|injury)\b/,
+  /\boverdose\b|\bod on\b|\btake (all|too many) [a-z ]*pills\b|\bwhole bottle of\b/,
+  /\b(want|going) to (hurt|kill) (someone|them)\b/,
+  /\bshoot up the\b/,
+];
+
+const SERIOUS_ILLNESS_CONTEXT_RE = /\b(terminal|terminally ill|serious illness|cancer|hospice|stage\s*(?:4|iv)|dying of|months to live|palliative|my diagnosis)\b/;
+const FIRST_PERSON_DYING_RE = /\bi(?:'m|m| am)\s+dying\b/;
+const CAREGIVER_ILLNESS_CONTEXT_RE = /\b(my|our)\s+(mother|mom|father|dad|parent|wife|husband|spouse|partner|child|son|daughter|sister|brother|friend)\s+(is|was|are|were)?\s*(dying|terminal|terminally ill|in hospice|has cancer)\b/;
+const GOING_TO_DIE_RE = /\bi(?:'m|m| am)?\s*(?:going to|gonna)\s+die\b/;
+const PASSIVE_DISTRESS_RE = /\b(want it to be over|wish it was over|can'?t do this anymore|cannot do this anymore|can'?t go on|cannot go on|hopeless|despair|overwhelmed|can'?t cope|cannot cope)\b/;
+
+function terminalIllnessCrisisRuleEnabled(opts = {}) {
+  if (typeof opts.terminalIllnessRuleEnabled === 'boolean') return opts.terminalIllnessRuleEnabled;
+  return process.env.TERMINAL_ILLNESS_CRISIS_RULE_ENABLED === 'true';
+}
+
+function redResult(matched) {
+  return {
+    is_red: true,
+    risk: 'red',
+    classification: 'crisis',
+    matched,
+    crisis_takeover: true,
+    soft_safety_question_required: false,
+    commerce_allowed: false,
+    staff_action_required: true,
+  };
+}
+
+function amberResult(classification, matched) {
+  return {
+    is_red: false,
+    risk: 'amber',
+    classification,
+    matched,
+    crisis_takeover: false,
+    soft_safety_question_required: true,
+    commerce_allowed: false,
+    staff_action_required: true,
+  };
+}
+
+function noneResult() {
+  return {
+    is_red: false,
+    risk: 'none',
+    classification: 'none',
+    matched: null,
+    crisis_takeover: false,
+    soft_safety_question_required: false,
+    commerce_allowed: true,
+    staff_action_required: false,
+  };
+}
+
+function firstMatchingPattern(patterns, message) {
+  return patterns.find((re) => re.test(message)) || null;
+}
+
+function seriousIllnessContext(message) {
+  return SERIOUS_ILLNESS_CONTEXT_RE.test(message) || FIRST_PERSON_DYING_RE.test(message) || CAREGIVER_ILLNESS_CONTEXT_RE.test(message);
+}
+
+function strongSeriousIllnessContext(message) {
+  return SERIOUS_ILLNESS_CONTEXT_RE.test(message) || CAREGIVER_ILLNESS_CONTEXT_RE.test(message);
+}
+
+function classifyCrisisPhrase(message, opts = {}) {
+  if (!message || typeof message !== 'string') return noneResult();
   const m = message.toLowerCase();
-  return PATTERNS.some((re) => re.test(m));
+  const legacyMatch = firstMatchingPattern(PATTERNS, m);
+  if (!terminalIllnessCrisisRuleEnabled(opts)) {
+    return legacyMatch ? redResult('legacy_canonical_pattern') : noneResult();
+  }
+
+  const activeIntentMatch = firstMatchingPattern(ACTIVE_INTENT_PATTERNS, m);
+  if (activeIntentMatch) return redResult('active_intent_pattern');
+
+  if (seriousIllnessContext(m)) {
+    if (GOING_TO_DIE_RE.test(m) || PASSIVE_DISTRESS_RE.test(m)) {
+      return amberResult(
+        CAREGIVER_ILLNESS_CONTEXT_RE.test(m) ? 'caregiver_overload' : 'serious_illness',
+        'terminal_illness_determination_rule',
+      );
+    }
+  }
+
+  if (strongSeriousIllnessContext(m)) {
+    return amberResult(
+      CAREGIVER_ILLNESS_CONTEXT_RE.test(m) ? 'caregiver_overload' : 'serious_illness',
+      'terminal_illness_context',
+    );
+  }
+
+  return legacyMatch ? redResult('legacy_canonical_pattern') : noneResult();
+}
+
+exports.isCrisisPhrase = function (message) {
+  return classifyCrisisPhrase(message).is_red;
 };
 
+exports.classifyCrisisPhrase = classifyCrisisPhrase;
+exports.terminalIllnessCrisisRuleEnabled = terminalIllnessCrisisRuleEnabled;
 exports._PATTERNS = PATTERNS; // exposed for the audit test harness only
