@@ -6,16 +6,16 @@ const serverPath = path.join(repoRoot, 'server.js');
 const src = fs.readFileSync(serverPath, 'utf8');
 
 function extractPromptSource(source) {
-  const start = source.indexOf('const ALVAI_CORE = `');
-  if (start === -1) throw new Error('Could not find ALVAI_CORE in server.js');
+  const start = source.indexOf('const ALVA_SYSTEM_PROMPT_LEGACY = `');
+  if (start === -1) throw new Error('Could not find ALVA_SYSTEM_PROMPT_LEGACY in server.js');
 
-  const endMarker = '\nconst THERAPY_MODES = {';
+  const endMarker = '\nconst ALVA_SYSTEM_PROMPT_V1 = `';
   const end = source.indexOf(endMarker, start);
-  if (end === -1) throw new Error('Could not find end of MODE_PROMPTS block before THERAPY_MODES in server.js');
+  if (end === -1) throw new Error('Could not find end of legacy prompt before ALVA_SYSTEM_PROMPT_V1 in server.js');
 
   const promptSource = source.slice(start, end);
-  if (!/const MODE_PROMPTS\s*=\s*\{/.test(promptSource)) {
-    throw new Error('Could not find MODE_PROMPTS in extracted prompt source');
+  if (!/const ALVA_SYSTEM_PROMPT_LEGACY\s*=\s*`/.test(promptSource)) {
+    throw new Error('Could not find legacy prompt in extracted prompt source');
   }
   return promptSource;
 }
