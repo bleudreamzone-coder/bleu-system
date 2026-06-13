@@ -13,7 +13,7 @@ const path = require('path');
 // See _meta/audit/2026-05-21/07_CLINICAL_GOVERNANCE_AUDIT.md and
 // _meta/clinical/signoffs/crisis_validator-2026-05-21-stoler.md.
 const { detectCrisis, CRISIS_BANNER } = require('./core/safety/crisis_validator');
-const { isCrisisPhrase } = require('./core/safety/canonical_crisis_patterns');
+const { classifyCrisisPhrase, isCrisisPhrase } = require('./core/safety/canonical_crisis_patterns');
 const { resolveLocation } = require('./core/geo/resolveLocation');
 const PACKAGE_VERSION = require('./package.json').version || 'unknown';
 
@@ -70,6 +70,9 @@ function navigatorQueueEnabled() {
 
 function consentCaptureEnabled() {
   return String(process.env.CONSENT_CAPTURE_ENABLED || '').toLowerCase() === 'true';
+}
+function seriousIllnessLedgerEnabled() {
+  return String(process.env.SERIOUS_ILLNESS_LEDGER_ENABLED || '').toLowerCase() === 'true';
 }
 
 async function sendSMS(to, body) {
@@ -1117,6 +1120,58 @@ async function runMedChangeRecordGate({ p, crisis, location, routeDecision, enab
   } catch (e) {
     console.error('[RECORD_GATE_FAIL]', JSON.stringify({ err: String(e && e.message || e).substring(0, 220), ts: Date.now() }));
     return { status: 'blocked', shouldContinue: false, gated: true, event, fallback: buildMedChangeSafeFallback(location), error: e };
+  }
+}
+
+// ═══ SERIOUS-ILLNESS LEDGER (flagged; off by default) ═══
+// Terminal/serious-illness amber turns need a human-visible ledger row, but the
+// safe response must remain fail-open. Crisis red stays DB-independent.
+function seriousIllnessLedgerClassification(message, opts = {}) {
+  return opts.classification || classifyCrisisPhrase(String(message || ''));
+}
+function shouldAttemptSeriousIllnessLedger(p, crisis, classification, enabled = seriousIllnessLedgerEnabled()) {
+  if (!enabled) return false;
+  if (crisis && crisis.detected) return false;
+  const c = classification || seriousIllnessLedgerClassification(p && p.message);
+  return !!(c && c.risk === 'amber' && c.classification === 'serious_illness' && c.crisis_takeover === false);
+}
+function buildSeriousIllnessCatalystEvent({ p, classification, now } = {}) {
+  const createdAt = now instanceof Date ? now : new Date(now || Date.now());
+  const followUpDueAt = new Date(createdAt.getTime() + 24 * 60 * 60 * 1000);
+  const c = classification || seriousIllnessLedgerClassification(p && p.message);
+  const matched = c && c.matched ? ` matched=${c.matched}.` : '';
+  return {
+    window_type: 'serious_illness',
+    catalyst_type: 'serious_illness',
+    siren_level: 'amber',
+    workflow_rail: 'serious_illness_support',
+    route_id: 'serious_illness_staff_action_required',
+    rationale: `Serious-illness determination classified amber without crisis takeover; commerce closed and staff_action_required set for human follow-up.${matched}`,
+    staff_action_required: true,
+    human_owner: null,
+    consent_status: 'unknown',
+    event_origin: 'organic',
+    phi_zone: 'public',
+    commerce_allowed: false,
+    media_allowed: false,
+    follow_up_due_at: followUpDueAt.toISOString(),
+    status: 'open',
+    outcome: null,
+    system_version: PACKAGE_VERSION,
+  };
+}
+async function runSeriousIllnessLedgerGate({ p, crisis, classification, enabled = seriousIllnessLedgerEnabled(), writeCatalystEvent = insertCatalystEvent, now } = {}) {
+  const c = classification || seriousIllnessLedgerClassification(p && p.message);
+  if (!enabled) return { status: 'disabled', shouldContinue: true, gated: false, classification: c };
+  if (crisis && crisis.detected) return { status: 'crisis_bypass', shouldContinue: true, gated: false, classification: c };
+  if (!shouldAttemptSeriousIllnessLedger(p, crisis, c, enabled)) return { status: 'not_serious_illness', shouldContinue: true, gated: false, classification: c };
+  const event = buildSeriousIllnessCatalystEvent({ p, classification: c, now: now || new Date() });
+  try {
+    const result = await writeCatalystEvent(event);
+    return { status: 'recorded', shouldContinue: true, gated: true, classification: c, event, result, insertCompletedAt: new Date().toISOString() };
+  } catch (e) {
+    console.error('[SERIOUS_ILLNESS_LEDGER_FAIL]', JSON.stringify({ err: String(e && e.message || e).substring(0, 220), ts: Date.now() }));
+    return { status: 'write_failed_fail_open', shouldContinue: true, gated: true, classification: c, event, error: e };
   }
 }
 
@@ -3305,7 +3360,7 @@ const server = http.createServer((req, res) => {
         });
 
         // ── SESSION INTENT — mark emotional sessions so frontend suppresses commerce cards ──
-        const suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message);
+        let suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message);
 
         // ── CRISIS DETECTION — deterministic, non-overrideable. Audit ref:
         //    _meta/audit/2026-05-21/07_CLINICAL_GOVERNANCE_AUDIT.md
@@ -3321,6 +3376,9 @@ const server = http.createServer((req, res) => {
             endpoint: '/api/chat',
           }));
         }
+        const seriousIllnessClassification = seriousIllnessLedgerClassification(p.message);
+        const seriousIllnessLedgerActive = shouldAttemptSeriousIllnessLedger(p, crisis, seriousIllnessClassification);
+        if (seriousIllnessLedgerActive) suppressCommerce = true;
         const writeCrisisBannerSSE = () => {
           if (crisis.detected) {
             res.write('data: ' + JSON.stringify({ text: CRISIS_BANNER, crisis: true }) + '\n\n');
@@ -3335,6 +3393,9 @@ const server = http.createServer((req, res) => {
           openWindow: openWindowV0,
           commerceGate: commerceGateV0,
         };
+        if (seriousIllnessLedgerActive) {
+          await runSeriousIllnessLedgerGate({ p, crisis, classification: seriousIllnessClassification });
+        }
         if (shouldAttemptMedChangeRecordGate(p, crisis)) {
           const recordGateLocation = await resolveRecordGateLocation(p, req, url);
           let routeDecision = null;
@@ -3597,7 +3658,7 @@ const server = http.createServer((req, res) => {
           mode:       p.mode || 'general',
           payload:    { msg_len: (p.message||'').length, has_history: !!(p.history && p.history.length) }
         });
-        const suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message||'');
+        let suppressCommerce = checkEmotionalIntent(p.session || p.user_id || null, p.message||'');
         // Crisis detection — see /api/chat above and core/safety/crisis_validator.js
         const crisis = detectCrisis(p.message || '');
         if (crisis.detected) {
@@ -3610,6 +3671,9 @@ const server = http.createServer((req, res) => {
             endpoint: '/api/chat/stream',
           }));
         }
+        const seriousIllnessClassification = seriousIllnessLedgerClassification(p.message || '');
+        const seriousIllnessLedgerActive = shouldAttemptSeriousIllnessLedger(p, crisis, seriousIllnessClassification);
+        if (seriousIllnessLedgerActive) suppressCommerce = true;
         const openWindowV0 = openWindowGate({ message: p.message || '', session_id: p.session_id || p.session || p.user_id || null });
         let commerceGateV0 = getCommerceGate(p, crisis, { supportTier: suppressCommerce });
         const trustPacketContextV0 = {
@@ -3619,6 +3683,9 @@ const server = http.createServer((req, res) => {
           openWindow: openWindowV0,
           commerceGate: commerceGateV0,
         };
+        if (seriousIllnessLedgerActive) {
+          await runSeriousIllnessLedgerGate({ p, crisis, classification: seriousIllnessClassification });
+        }
         if (shouldAttemptMedChangeRecordGate(p, crisis)) {
           const recordGateLocation = await resolveRecordGateLocation(p, req, url);
           let routeDecision = null;
