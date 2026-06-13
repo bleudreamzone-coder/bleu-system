@@ -5,6 +5,13 @@ const path = require('path');
 const { classifyCrisisPhrase } = require('../../core/safety/canonical_crisis_patterns');
 const src = fs.readFileSync(path.resolve(__dirname, '../../server.js'), 'utf8');
 
+function grabConst(name) {
+  const re = new RegExp(`const ${name} = [^;]+;`);
+  const m = src.match(re);
+  if (!m) throw new Error(`could not extract const ${name}`);
+  return m[0];
+}
+
 function grabFunction(name) {
   const rawStart = src.indexOf(`function ${name}`);
   const start = rawStart >= 6 && src.slice(rawStart - 6, rawStart) === 'async ' ? rawStart - 6 : rawStart;
@@ -35,6 +42,11 @@ function grabFunction(name) {
 
 eval([
   "const PACKAGE_VERSION = '1.0.0';",
+  grabConst('BARRIER_RULES'),
+  grabFunction('barrierLedgerEnabled'),
+  grabFunction('classifyBarrierSignal'),
+  grabFunction('barrierLedgerFields'),
+  grabFunction('applyBarrierLedgerFields'),
   grabFunction('seriousIllnessLedgerEnabled'),
   grabFunction('seriousIllnessLedgerClassification'),
   grabFunction('shouldAttemptSeriousIllnessLedger'),
@@ -46,6 +58,7 @@ eval([
 (async () => {
   console.log('TEST: serious-illness ledger gate');
   process.env.TERMINAL_ILLNESS_CRISIS_RULE_ENABLED = 'true';
+  process.env.BARRIER_LEDGER_ENABLED = '';
 
   const message = "I have stage 4 cancer and I'm going to die — I need help planning";
   const classification = seriousIllnessLedgerClassification(message);
@@ -105,7 +118,21 @@ eval([
   assert.equal(event.follow_up_due_at, '2026-06-14T15:00:00.000Z');
   assert.match(event.rationale, /Serious-illness determination classified amber/);
   assert.match(event.rationale, /commerce closed/);
+  assert.equal(Object.prototype.hasOwnProperty.call(event, 'barrier_type'), false, 'flag-off path must not add barrier fields');
   assert.ok(Date.parse(recorded.insertCompletedAt) <= governedResponseAt.getTime(), 'insert completes before governed response timestamp');
+
+  process.env.BARRIER_LEDGER_ENABLED = 'true';
+  const barrierEvent = buildSeriousIllnessCatalystEvent({
+    p: { message: "I have stage 4 cancer and I'm scared and need help planning" },
+    classification,
+    now: new Date('2026-06-13T15:00:00.000Z'),
+  });
+  assert.equal(barrierEvent.barrier_type, 'fear');
+  assert.equal(barrierEvent.barrier_confidence, 0.78);
+  assert.equal(barrierEvent.user_confirmed, true);
+  assert.equal(barrierEvent.barrier_resolved_status, 'open');
+  assert.equal(barrierEvent.aggregate_allowed, false);
+  process.env.BARRIER_LEDGER_ENABLED = '';
 
   const originalConsoleError = console.error;
   let failed;
