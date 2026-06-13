@@ -86,6 +86,9 @@ function softSafetyQuestionEnabled() {
 function crisisBestEffortLoggingEnabled() {
   return String(process.env.CRISIS_BEST_EFFORT_LOGGING_ENABLED || '').toLowerCase() === 'true';
 }
+function sseCommerceConsistencyEnabled() {
+  return String(process.env.SSE_COMMERCE_CONSISTENCY_ENABLED || '').toLowerCase() === 'true';
+}
 
 async function sendSMS(to, body) {
   if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
@@ -431,6 +434,75 @@ function getCommerceGate(p, crisis, opts = {}) {
   else if (!hasConcern) reason = 'no_stated_concern';
   else if (!careGuidanceGiven) reason = 'care_first';  // concern stated, but care guidance not yet given
   return { allowed: !reason, reason, firstResponse, supportTier, crisisTier, hasConcern, explicitProduct, careGuidanceGiven };
+}
+const SSE_COMMERCE_SURFACE_FALLBACK_LINE = "I couldn't load that surface right now. I can still give you the safe path, try again, or route this to a human or practitioner.";
+const PRACTITIONER_MEDICATION_RE = /\b(heart med|heart medicine|heart medication|blood pressure|hypertension|bp med|warfarin|blood thinner|anticoagulant|statin|ssri|lexapro|zoloft|prozac|celexa|paxil|lisinopril|metoprolol|amlodipine|losartan|hydrochlorothiazide|prescription|medicine|medication|meds?)\b/i;
+const PRODUCT_OR_SUPPLEMENT_RE = /\b(supplement|vitamin|magnesium|omega|fish oil|melatonin|ashwagandha|berberine|probiotic|nac|5-htp|cbd|product|protocol|amazon|fullscript|take)\b/i;
+function practitionerReviewRequired(message) {
+  const text = String(message || '');
+  return PRACTITIONER_MEDICATION_RE.test(text) && PRODUCT_OR_SUPPLEMENT_RE.test(text);
+}
+function commerceSafetyRisk(crisis, classification) {
+  if (crisis && crisis.detected) return 'red';
+  const risk = classification && classification.risk ? String(classification.risk).toLowerCase() : 'none';
+  return risk === 'red' || risk === 'amber' ? risk : 'none';
+}
+function buildSseCommerceGate(p, crisis, opts = {}) {
+  const baseGate = opts.baseGate || getCommerceGate(p || {}, crisis, opts);
+  const classification = opts.classification || seriousIllnessLedgerClassification(p && p.message);
+  const risk = commerceSafetyRisk(crisis, classification);
+  const practitionerRequired = practitionerReviewRequired(p && p.message);
+  let reason = baseGate.reason || '';
+  if (risk === 'red') reason = 'red_safety';
+  else if (risk === 'amber') reason = 'amber_safety';
+  else if (opts.openWindow && opts.openWindow.commerce_allowed === false) reason = opts.openWindow.state || 'open_window_closed';
+  else if (practitionerRequired) reason = 'practitioner_required';
+  const allowed = !reason;
+  return {
+    ...baseGate,
+    allowed,
+    commerce_allowed: allowed,
+    cards_allowed: allowed,
+    suppressCommerce: !allowed,
+    reason,
+    safety_risk: risk,
+    practitioner_required: practitionerRequired,
+    affiliate_disclosure_required: allowed,
+  };
+}
+function writeSseCommerceGate(res, gate) {
+  if (!res || !gate) return false;
+  res.write('data: ' + JSON.stringify({
+    commerce_gate: {
+      allowed: gate.allowed === true,
+      cards_allowed: gate.cards_allowed === true,
+      suppressCommerce: gate.suppressCommerce === true,
+      reason: gate.reason || 'allowed',
+      safety_risk: gate.safety_risk || 'none',
+      practitioner_required: gate.practitioner_required === true,
+      affiliate_disclosure_required: gate.affiliate_disclosure_required === true,
+    }
+  }) + '\n\n');
+  return true;
+}
+function writeCommerceSurfaceFallbackSSE(res, gate, opts = {}) {
+  if (!res) return false;
+  res.write('data: ' + JSON.stringify({
+    text: opts.text || SSE_COMMERCE_SURFACE_FALLBACK_LINE,
+    commerce_surface_fallback: true,
+    commerce_gate: {
+      allowed: gate && gate.allowed === true,
+      reason: gate && gate.reason || 'surface_unavailable',
+    }
+  }) + '\n\n');
+  return true;
+}
+function affiliateDisclosureForCard(item) {
+  if (!item) return null;
+  if (item.amazon_url) return 'Amazon affiliate link disclosure: BLEU may earn from qualifying purchases at no extra cost to you.';
+  if (item.fullscript_template_id) return 'Fullscript disclosure: this supplement surface may support BLEU through practitioner dispensing.';
+  if (item.stripe_price_id) return 'Paid protocol disclosure: this is a BLEU paid protocol surface.';
+  return null;
 }
 function appendCommerceGatePrompt(sys, gate) {
   if (!gate || gate.allowed) {
@@ -2664,6 +2736,7 @@ function ecsiqMode(message) {
 // so the chat stream always completes cleanly.
 async function runCommerceSteward(res, p, crisis) {
   try {
+    const consistencyEnabled = sseCommerceConsistencyEnabled();
     const ctx = {
       message: p.message,
       sea: p.sea || 'home',
@@ -2674,7 +2747,7 @@ async function runCommerceSteward(res, p, crisis) {
       safety_status: 'clear'             // Phase 5 fills this
     };
     const intent = intentBrain(ctx);
-    const commerceGate = p._commerceGate || getCommerceGate(p, crisis);
+    let commerceGate = p._commerceGate || getCommerceGate(p, crisis);
 
     // ── Open Window screening (Phase 3 Layer 29, Mission 4.2) — runs on EVERY
     // evaluation BEFORE any early return, so crisis/unstable states are audited
@@ -2702,6 +2775,15 @@ async function runCommerceSteward(res, p, crisis) {
         });
       }
     }
+    if (consistencyEnabled) {
+      commerceGate = buildSseCommerceGate(p, crisis, {
+        baseGate: commerceGate,
+        classification: p._seriousIllnessClassification,
+        openWindow: owGate,
+      });
+      p._commerceGate = commerceGate;
+      writeSseCommerceGate(res, commerceGate);
+    }
 
     // Crisis/support/first-response/no-concern gates never see commerce cards.
     if (!commerceGate.allowed) {
@@ -2726,7 +2808,19 @@ async function runCommerceSteward(res, p, crisis) {
       return;
     }
 
-    const catalog = await querySupabase('bleu_catalog', '?active=eq.true&select=*', 50) || [];
+    const catalogRows = await querySupabase('bleu_catalog', '?active=eq.true&select=*', 50);
+    if (catalogRows == null && consistencyEnabled) {
+      writeCommerceSurfaceFallbackSSE(res, commerceGate);
+      memoryBrain(ctx, intent, { matched: [], no_match: true }, { decision: 'block', badge: null }, { max_cards: 0, reason: 'surface_unavailable' });
+      logDecision({
+        session_id: ctx.session_id,
+        decision_type: 'commerce_steward',
+        inputs: { intent: intent.intent, sea: ctx.sea, mode: ctx.mode, agent: 'commerce_steward', layer: 'sse_commerce_consistency' },
+        outputs: { cards_count: 0, suppressed: true, reason: 'surface_unavailable', fallback: true, commerce_gate: commerceGate.reason || 'allowed' }
+      });
+      return;
+    }
+    const catalog = catalogRows || [];
     const products = productBrain(ctx, catalog);
     const safety = safetyBrain(ctx);
     const cart = cartBrain(ctx);
@@ -2739,7 +2833,7 @@ async function runCommerceSteward(res, p, crisis) {
       for (const row of catalog) byId[row.sku] = row;
       cards = products.matched.slice(0, cart.max_cards).map(m => {
         const item = byId[m.sku] || {};
-        return {
+        const card = {
           sku: item.sku,
           rail: item.rail,
           name: item.name,
@@ -2753,6 +2847,8 @@ async function runCommerceSteward(res, p, crisis) {
           felicia_signoff: item.felicia_signoff,
           safety_badge: safety.badge
         };
+        if (consistencyEnabled) card.affiliate_disclosure = affiliateDisclosureForCard(item);
+        return card;
       });
     }
 
@@ -3750,6 +3846,14 @@ const server = http.createServer((req, res) => {
         if (seriousIllnessLedgerActive) suppressCommerce = true;
         const openWindowV0 = openWindowGate({ message: p.message, session_id: p.session_id || p.session || p.user_id || null });
         let commerceGateV0 = getCommerceGate(p, crisis, { supportTier: suppressCommerce });
+        if (sseCommerceConsistencyEnabled()) {
+          commerceGateV0 = buildSseCommerceGate(p, crisis, {
+            baseGate: commerceGateV0,
+            classification: seriousIllnessClassification,
+            openWindow: openWindowV0,
+          });
+          if (commerceGateV0.suppressCommerce) suppressCommerce = true;
+        }
         const trustPacketContextV0 = {
           endpoint: '/api/chat',
           payload: p,
@@ -3890,7 +3994,12 @@ const server = http.createServer((req, res) => {
         if (recallBlock) {
           sys += `\n\nRELEVANT CONTEXT FROM THIS USER'S PRIOR CONVERSATIONS — real things this user said to you or you said to them before. Use only if clearly relevant to the current question. Do NOT paraphrase as if they just said it now:\n${recallBlock}`;
         }
-        p._commerceGate = getCommerceGate(p, crisis, { priorMessages: shortTerm, supportTier: suppressCommerce });
+        const baseCommerceGate = getCommerceGate(p, crisis, { priorMessages: shortTerm, supportTier: suppressCommerce });
+        p._seriousIllnessClassification = seriousIllnessClassification;
+        p._commerceGate = sseCommerceConsistencyEnabled()
+          ? buildSseCommerceGate(p, crisis, { baseGate: baseCommerceGate, classification: seriousIllnessClassification })
+          : baseCommerceGate;
+        if (p._commerceGate.suppressCommerce) suppressCommerce = true;
         commerceGateV0 = p._commerceGate;
         trustPacketContextV0.commerceGate = commerceGateV0;
         sys = appendCommerceGatePrompt(sys, p._commerceGate);
@@ -4041,6 +4150,14 @@ const server = http.createServer((req, res) => {
         if (seriousIllnessLedgerActive) suppressCommerce = true;
         const openWindowV0 = openWindowGate({ message: p.message || '', session_id: p.session_id || p.session || p.user_id || null });
         let commerceGateV0 = getCommerceGate(p, crisis, { supportTier: suppressCommerce });
+        if (sseCommerceConsistencyEnabled()) {
+          commerceGateV0 = buildSseCommerceGate(p, crisis, {
+            baseGate: commerceGateV0,
+            classification: seriousIllnessClassification,
+            openWindow: openWindowV0,
+          });
+          if (commerceGateV0.suppressCommerce) suppressCommerce = true;
+        }
         const trustPacketContextV0 = {
           endpoint: '/api/chat/stream',
           payload: p,
@@ -4083,7 +4200,12 @@ const server = http.createServer((req, res) => {
         if (recallBlock) {
           sys += `\n\nRELEVANT CONTEXT FROM THIS USER'S PRIOR CONVERSATIONS — real things this user said to you or you said to them before. Use only if clearly relevant to the current question. Do NOT paraphrase as if they just said it now:\n${recallBlock}`;
         }
-        p._commerceGate = getCommerceGate(p, crisis, { priorMessages: shortTerm, supportTier: suppressCommerce });
+        const baseCommerceGate = getCommerceGate(p, crisis, { priorMessages: shortTerm, supportTier: suppressCommerce });
+        p._seriousIllnessClassification = seriousIllnessClassification;
+        p._commerceGate = sseCommerceConsistencyEnabled()
+          ? buildSseCommerceGate(p, crisis, { baseGate: baseCommerceGate, classification: seriousIllnessClassification })
+          : baseCommerceGate;
+        if (p._commerceGate.suppressCommerce) suppressCommerce = true;
         commerceGateV0 = p._commerceGate;
         trustPacketContextV0.commerceGate = commerceGateV0;
         sys = appendCommerceGatePrompt(sys, p._commerceGate);
