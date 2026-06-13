@@ -74,6 +74,9 @@ function consentCaptureEnabled() {
 function seriousIllnessLedgerEnabled() {
   return String(process.env.SERIOUS_ILLNESS_LEDGER_ENABLED || '').toLowerCase() === 'true';
 }
+function barrierLedgerEnabled() {
+  return String(process.env.BARRIER_LEDGER_ENABLED || '').toLowerCase() === 'true';
+}
 
 async function sendSMS(to, body) {
   if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
@@ -1025,6 +1028,65 @@ async function logTrustPacket(args) {
   }
 }
 
+// ═══ BARRIER LEDGER (flagged; off by default) ═══
+// Captures friction as structured, non-narrative data. No raw user story is
+// copied into the row; aggregate output stays disabled until suppression lands.
+const BARRIER_RULES = [
+  { type: 'transportation', confidence: 0.88, re: /\b(no ride|need a ride|can'?t get (?:there|to)|cannot get (?:there|to)|transportation|transport|car broke|no car|bus|gas money|too far|can'?t drive|cannot drive)\b/i },
+  { type: 'cost', confidence: 0.86, re: /\b(can'?t afford|cannot afford|too expensive|cost|costs|money|copay|co-pay|deductible|bill|bills|insurance won'?t|no insurance|pay for|price)\b/i },
+  { type: 'confusion', confidence: 0.84, re: /\b(don'?t understand|do not understand|confused|confusing|unclear|not sure|can'?t figure|cannot figure|what does this mean|new dose|instructions?|which medicine|which med)\b/i },
+  { type: 'pharmacy_access', confidence: 0.84, re: /\b(pharmacy closed|pharmacy is closed|pharmacy won'?t|pharmacist won'?t|refill denied|can'?t refill|cannot refill|prescription not ready|out of stock|backordered|prior authorization|prior auth)\b/i },
+  { type: 'fear', confidence: 0.78, re: /\b(scared|afraid|fear|worried|terrified|panic|panicked|nervous)\b/i },
+  { type: 'caregiver_burden', confidence: 0.82, re: /\b(caregiver|taking care of|care for my|care for our|my (?:mother|mom|father|dad|parent|spouse|partner|child) (?:needs|is sick|is dying|has cancer)|burned out from caring)\b/i },
+  { type: 'broadband', confidence: 0.8, re: /\b(no internet|internet is out|wifi|wi-fi|broadband|bad signal|no signal|data ran out|phone data|can'?t connect|cannot connect)\b/i },
+  { type: 'food_insecurity', confidence: 0.84, re: /\b(no food|need food|hungry|groceries|food stamps|snap benefits|snap card|food pantry|can'?t buy food|cannot buy food)\b/i },
+  { type: 'eligibility', confidence: 0.8, re: /\b(qualify|eligible|eligibility|paperwork|application|forms?|documents?|denied|approved|enroll|enrollment)\b/i },
+  { type: 'device_abandonment', confidence: 0.78, re: /\b(device|monitor|app|portal|equipment|tracker)\b.*\b(stopped|quit|gave up|can'?t use|cannot use|not working|broken)\b/i },
+  { type: 'work_schedule', confidence: 0.82, re: /\b(work schedule|shift|shifts|can'?t miss work|cannot miss work|time off|job won'?t|boss won'?t|working nights|working doubles)\b/i },
+  { type: 'trust', confidence: 0.8, re: /\b(don'?t trust|do not trust|lost trust|won'?t listen|don'?t listen|bad experience|treated me badly|ignored me|not believed)\b/i },
+];
+
+function classifyBarrierSignal(message) {
+  const text = String(message || '');
+  if (!text.trim()) return null;
+  for (const rule of BARRIER_RULES) {
+    if (rule.re.test(text)) {
+      return {
+        barrier_type: rule.type,
+        barrier_confidence: rule.confidence,
+        user_confirmed: true,
+      };
+    }
+  }
+  return null;
+}
+
+function barrierLedgerFields(message, opts = {}) {
+  const enabled = opts.enabled !== undefined ? opts.enabled : barrierLedgerEnabled();
+  if (!enabled) return {};
+  const signal = opts.barrierSignal !== undefined ? opts.barrierSignal : classifyBarrierSignal(message);
+  if (!signal || !signal.barrier_type) return {};
+  return {
+    barrier_type: signal.barrier_type,
+    barrier_confidence: signal.barrier_confidence,
+    user_confirmed: signal.user_confirmed === true,
+    barrier_resolved_status: 'open',
+    aggregate_allowed: false,
+  };
+}
+
+function applyBarrierLedgerFields(event, message, opts = {}) {
+  return { ...event, ...barrierLedgerFields(message, opts) };
+}
+
+function returnBarrierResolutionPatch(action, existingEvent, opts = {}) {
+  const enabled = opts.enabled !== undefined ? opts.enabled : barrierLedgerEnabled();
+  if (!enabled || !existingEvent || !existingEvent.barrier_type) return {};
+  if (action === 'closed') return { barrier_resolved_status: 'resolved' };
+  if (action === 'reopened') return { barrier_resolved_status: 'still_blocked' };
+  return {};
+}
+
 // ═══ RECORD GATE (Phase 1) ═══
 // Governed post-discharge medication-change responses must have a
 // catalyst_event ledger row with a non-null rationale before prose leaves the
@@ -1054,7 +1116,7 @@ function buildMedChangeCatalystEvent({ p, location, now, routeDecision } = {}) {
   const routeId = routeDecision && routeDecision.route_id ? routeDecision.route_id : `phase1_record_gate_zip_${zip}`;
   const routeStatus = routeDecision && routeDecision.status ? ` Route status=${routeDecision.status}; radius=${routeDecision.radius_miles || 'none'} miles.` : '';
   const biasStatus = routeDecision && routeDecision.med_change_bias ? ` ${routeDecision.med_change_bias}.` : '';
-  return {
+  return applyBarrierLedgerFields({
     window_type: 'discharge',
     catalyst_type: 'medication_change',
     siren_level: 'amber',
@@ -1072,7 +1134,7 @@ function buildMedChangeCatalystEvent({ p, location, now, routeDecision } = {}) {
     status: 'open',
     outcome: null,
     system_version: PACKAGE_VERSION,
-  };
+  }, p && p.message);
 }
 async function insertCatalystEvent(event, opts = {}) {
   const supabaseUrl = opts.supabaseUrl || SUPABASE_URL;
@@ -1140,7 +1202,7 @@ function buildSeriousIllnessCatalystEvent({ p, classification, now } = {}) {
   const followUpDueAt = new Date(createdAt.getTime() + 24 * 60 * 60 * 1000);
   const c = classification || seriousIllnessLedgerClassification(p && p.message);
   const matched = c && c.matched ? ` matched=${c.matched}.` : '';
-  return {
+  return applyBarrierLedgerFields({
     window_type: 'serious_illness',
     catalyst_type: 'serious_illness',
     siren_level: 'amber',
@@ -1158,7 +1220,7 @@ function buildSeriousIllnessCatalystEvent({ p, classification, now } = {}) {
     status: 'open',
     outcome: null,
     system_version: PACKAGE_VERSION,
-  };
+  }, p && p.message);
 }
 async function runSeriousIllnessLedgerGate({ p, crisis, classification, enabled = seriousIllnessLedgerEnabled(), writeCatalystEvent = insertCatalystEvent, now } = {}) {
   const c = classification || seriousIllnessLedgerClassification(p && p.message);
@@ -1794,7 +1856,7 @@ async function processDueReturnFollowUps(opts = {}) {
   return result;
 }
 
-async function handleSimulatedReturnInbound({ event_id, reply, now, enabled, queryImpl, detectCrisisImpl, isCrisisPhraseImpl } = {}) {
+async function handleSimulatedReturnInbound({ event_id, reply, now, enabled, queryImpl, detectCrisisImpl, isCrisisPhraseImpl, barrierLedgerEnabled: barrierEnabledOverride } = {}) {
   const isEnabled = enabled !== undefined ? enabled : returnLoopEnabled();
   if (!isEnabled) return { enabled: false, event_id: event_id || null, action: 'disabled' };
   const text = String(reply || '');
@@ -1807,6 +1869,7 @@ async function handleSimulatedReturnInbound({ event_id, reply, now, enabled, que
   const query = queryImpl || querySupabase;
   const action = classifyReturnReply(text);
   const at = now instanceof Date ? now : new Date(now || Date.now());
+  const barrierEnabled = barrierEnabledOverride !== undefined ? barrierEnabledOverride : barrierLedgerEnabled();
   await insertReturnSmsLog({
     event_id: eventId,
     direction: 'inbound',
@@ -1814,7 +1877,8 @@ async function handleSimulatedReturnInbound({ event_id, reply, now, enabled, que
     status: returnSmsStatus()
   }, queryImpl ? { queryImpl: query } : {});
   if (action === 'closed') {
-    const existingRows = await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}&select=event_id,resolved_at`, 1);
+    const select = barrierEnabled ? 'event_id,resolved_at,barrier_type' : 'event_id,resolved_at';
+    const existingRows = await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}&select=${select}`, 1);
     if (!Array.isArray(existingRows)) throw new Error('catalyst_event resolution query failed');
     const existingEvent = existingRows[0] || null;
     const patch = {
@@ -1822,16 +1886,25 @@ async function handleSimulatedReturnInbound({ event_id, reply, now, enabled, que
       outcome: 'reached_support'
     };
     if (!existingEvent || !existingEvent.resolved_at) patch.resolved_at = at.toISOString();
+    Object.assign(patch, returnBarrierResolutionPatch('closed', existingEvent, { enabled: barrierEnabled }));
     await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}`, 0, 'PATCH', patch);
     return { enabled: true, event_id: eventId, action: 'closed' };
   }
   if (action === 'reopened') {
-    await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}`, 0, 'PATCH', {
+    let existingEvent = null;
+    if (barrierEnabled) {
+      const existingRows = await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}&select=event_id,barrier_type`, 1);
+      if (!Array.isArray(existingRows)) throw new Error('catalyst_event barrier query failed');
+      existingEvent = existingRows[0] || null;
+    }
+    const patch = {
       status: 'open',
       staff_action_required: true,
       follow_up_due_at: new Date(at.getTime() + RETURN_LOOP_HELP_DELAY_MS).toISOString(),
       outcome: 'still_needs_help'
-    });
+    };
+    Object.assign(patch, returnBarrierResolutionPatch('reopened', existingEvent, { enabled: barrierEnabled }));
+    await query('catalyst_event', `event_id=eq.${encodeURIComponent(eventId)}`, 0, 'PATCH', patch);
     return { enabled: true, event_id: eventId, action: 'reopened' };
   }
   return { enabled: true, event_id: eventId, action: 'unclear', message: 'Please reply REACHED or HELP.' };

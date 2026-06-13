@@ -43,6 +43,11 @@ eval([
   "const PACKAGE_VERSION = '1.0.0';",
   grabConst('DISCHARGE_CONTEXT_RE'),
   grabConst('MEDICATION_CONTEXT_RE'),
+  grabConst('BARRIER_RULES'),
+  grabFunction('barrierLedgerEnabled'),
+  grabFunction('classifyBarrierSignal'),
+  grabFunction('barrierLedgerFields'),
+  grabFunction('applyBarrierLedgerFields'),
   grabFunction('recordGateEnabled'),
   grabFunction('detectMedChangeSignal'),
   grabFunction('shouldAttemptMedChangeRecordGate'),
@@ -54,6 +59,7 @@ eval([
 
 (async () => {
   console.log('TEST: med-change record gate');
+  process.env.BARRIER_LEDGER_ENABLED = '';
 
   assert.equal(
     detectMedChangeSignal("I got discharged and don't understand my new medicine."),
@@ -100,6 +106,7 @@ eval([
   assert.match(writes[0].event.rationale, /Route status=providers_found/);
   assert.doesNotMatch(writes[0].event.rationale, /med_change_bias=pharmacist_first/);
   assert.equal(writes[0].event.follow_up_due_at, '2026-06-14T17:00:00.000Z');
+  assert.equal(Object.prototype.hasOwnProperty.call(writes[0].event, 'barrier_type'), false, 'flag-off path must not add barrier fields');
   assert.ok(Date.parse(recorded.insertCompletedAt) <= governedResponseAt.getTime(), 'insert completes before governed response timestamp');
 
   const biasedEvent = buildMedChangeCatalystEvent({
@@ -114,6 +121,21 @@ eval([
     },
   });
   assert.match(biasedEvent.rationale, /med_change_bias=pharmacist_first/, 'biased route marker should be preserved in catalyst_event rationale');
+  assert.equal(Object.prototype.hasOwnProperty.call(biasedEvent, 'barrier_type'), false, 'flag-off builder remains byte-identical for new columns');
+
+  process.env.BARRIER_LEDGER_ENABLED = 'true';
+  const barrierEvent = buildMedChangeCatalystEvent({
+    p: { message },
+    location,
+    now: new Date('2026-06-12T17:00:00.000Z'),
+    routeDecision: { route_id: 'radius_71457_25mi_providers_found', status: 'providers_found', radius_miles: 25 },
+  });
+  assert.equal(barrierEvent.barrier_type, 'confusion');
+  assert.equal(barrierEvent.barrier_confidence, 0.84);
+  assert.equal(barrierEvent.user_confirmed, true);
+  assert.equal(barrierEvent.barrier_resolved_status, 'open');
+  assert.equal(barrierEvent.aggregate_allowed, false);
+  process.env.BARRIER_LEDGER_ENABLED = '';
 
   let failedWrites = 0;
   const originalConsoleError = console.error;

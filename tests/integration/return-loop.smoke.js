@@ -39,6 +39,8 @@ const CRISIS_BANNER = '988 crisis banner';
 const REORDER_CRON_SECRET = 'return-smoke-secret';
 
 eval([
+  grabFunction('barrierLedgerEnabled'),
+  grabFunction('returnBarrierResolutionPatch'),
   grabFunction('returnLoopEnabled'),
   grabFunction('smsEnabled'),
   returnBlock
@@ -67,12 +69,16 @@ function makeState() {
 function queryFor(state) {
   return async (table, query, limit, method, body) => {
     if (table === 'catalyst_event' && !method && query.startsWith('event_id=eq.')) {
-      assert.match(query, /select=event_id,resolved_at/);
+      assert.match(query, /select=event_id/);
       assert.equal(limit, 1);
       const m = query.match(/event_id=eq\.([^&]+)/);
       const id = m ? decodeURIComponent(m[1]) : '';
       const event = state.events.find((row) => row.event_id === id);
-      return event ? [{ event_id: event.event_id, resolved_at: event.resolved_at || null }] : [];
+      if (!event) return [];
+      const row = { event_id: event.event_id };
+      if (query.includes('resolved_at')) row.resolved_at = event.resolved_at || null;
+      if (query.includes('barrier_type')) row.barrier_type = event.barrier_type || null;
+      return [row];
     }
     if (table === 'catalyst_event' && !method) {
       assert.match(query, /status=eq\.open/);
@@ -108,6 +114,7 @@ function assertNoPhi(body) {
   console.log('TEST: simulated return loop');
 
   process.env.RETURN_LOOP_ENABLED = 'true';
+  process.env.BARRIER_LEDGER_ENABLED = '';
   process.env.SMS_ENABLED = '';
   let sendSmsCalls = 0;
   const sendSMS = () => { sendSmsCalls++; throw new Error('sendSMS must not be called by Phase 3'); };
@@ -150,6 +157,19 @@ function assertNoPhi(body) {
   assert.equal(state.events.find((row) => row.event_id === grantedEventId).resolved_at, firstResolvedAt, 'second REACHED must not overwrite resolved_at');
   assert.equal(Object.prototype.hasOwnProperty.call(state.patches.at(-1).body, 'resolved_at'), false, 'resolved_at should be time-to-first-resolution only');
 
+  state = makeState();
+  state.events.find((row) => row.event_id === grantedEventId).barrier_type = 'confusion';
+  inbound = await handleSimulatedReturnInbound({
+    event_id: grantedEventId,
+    reply: 'REACHED',
+    now,
+    queryImpl: queryFor(state),
+    barrierLedgerEnabled: true,
+  });
+  assert.equal(inbound.action, 'closed');
+  assert.equal(state.patches.at(-1).body.barrier_resolved_status, 'resolved', 'REACHED should resolve a barrier ledger row');
+
+  state = makeState();
   const preexistingResolvedAt = '2026-06-12T17:00:00.000Z';
   state.events.find((row) => row.event_id === helpEventId).resolved_at = preexistingResolvedAt;
   inbound = await handleSimulatedReturnInbound({ event_id: helpEventId, reply: "HELP I can't reach anyone", now, queryImpl: queryFor(state) });
@@ -163,6 +183,18 @@ function assertNoPhi(body) {
   assert.equal(Object.prototype.hasOwnProperty.call(state.patches.at(-1).body, 'resolved_at'), false, 'reopen patch must not clear resolved_at');
   assert.equal(state.smsLogs.at(-1).body, 'HELP');
   assertNoPhi(state.smsLogs.at(-1).body);
+
+  state = makeState();
+  state.events.find((row) => row.event_id === helpEventId).barrier_type = 'transportation';
+  inbound = await handleSimulatedReturnInbound({
+    event_id: helpEventId,
+    reply: "HELP I can't reach anyone",
+    now,
+    queryImpl: queryFor(state),
+    barrierLedgerEnabled: true,
+  });
+  assert.equal(inbound.action, 'reopened');
+  assert.equal(state.patches.at(-1).body.barrier_resolved_status, 'still_blocked', 'HELP should mark barrier as still blocked');
 
   inbound = await handleSimulatedReturnInbound({ event_id: grantedEventId, reply: 'maybe later', now, queryImpl: queryFor(state) });
   assert.equal(inbound.action, 'unclear');
