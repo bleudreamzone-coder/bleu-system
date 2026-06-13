@@ -80,6 +80,9 @@ function barrierLedgerEnabled() {
 function softSafetyQuestionEnabled() {
   return String(process.env.SOFT_SAFETY_QUESTION_ENABLED || '').toLowerCase() === 'true';
 }
+function crisisBestEffortLoggingEnabled() {
+  return String(process.env.CRISIS_BEST_EFFORT_LOGGING_ENABLED || '').toLowerCase() === 'true';
+}
 
 async function sendSMS(to, body) {
   if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
@@ -1262,6 +1265,76 @@ function writeSoftSafetyQuestionSSE(res, classification, crisis, opts = {}) {
     softSafetyQuestion: true,
     classification: classification && classification.classification || null
   }) + '\n\n');
+  return true;
+}
+
+function crisisRouteId(endpoint) {
+  const safeEndpoint = String(endpoint || 'unknown')
+    .replace(/^\/+/, '')
+    .replace(/[^a-z0-9]+/gi, '_')
+    .replace(/^_+|_+$/g, '')
+    .toLowerCase() || 'unknown';
+  return `crisis_banner_${safeEndpoint}`;
+}
+
+function shouldAttemptCrisisBestEffortLogging(crisis, enabled = crisisBestEffortLoggingEnabled()) {
+  return !!(enabled && crisis && crisis.detected);
+}
+
+function buildCrisisBestEffortCatalystEvent({ crisis, endpoint, now } = {}) {
+  const createdAt = now instanceof Date ? now : new Date(now || Date.now());
+  const category = String(crisis && crisis.category || 'unknown').replace(/[^a-z0-9_-]+/gi, '_').toLowerCase();
+  return {
+    window_type: 'crisis',
+    catalyst_type: 'crisis_signal',
+    siren_level: 'red',
+    workflow_rail: 'crisis_response',
+    route_id: crisisRouteId(endpoint),
+    rationale: `Crisis signal detected; 988 banner emitted before best-effort ledger write. category=${category}; endpoint=${String(endpoint || 'unknown')}.`,
+    staff_action_required: true,
+    human_owner: null,
+    consent_status: 'unknown',
+    event_origin: 'organic',
+    phi_zone: 'public',
+    commerce_allowed: false,
+    media_allowed: false,
+    follow_up_due_at: null,
+    status: 'open',
+    outcome: null,
+    system_version: PACKAGE_VERSION,
+  };
+}
+
+async function runCrisisBestEffortLogging({ crisis, endpoint, enabled = crisisBestEffortLoggingEnabled(), writeCatalystEvent = insertCatalystEvent, now } = {}) {
+  if (!shouldAttemptCrisisBestEffortLogging(crisis, enabled)) return { status: enabled ? 'not_crisis' : 'disabled', shouldContinue: true, gated: false };
+  const event = buildCrisisBestEffortCatalystEvent({ crisis, endpoint, now: now || new Date() });
+  try {
+    const result = await writeCatalystEvent(event);
+    return { status: 'recorded', shouldContinue: true, gated: false, event, result, insertCompletedAt: new Date().toISOString() };
+  } catch (e) {
+    console.error('[CRISIS_BEST_EFFORT_LOG_FAIL]', JSON.stringify({ err: String(e && e.message || e).substring(0, 220), ts: Date.now() }));
+    return { status: 'write_failed_fail_open', shouldContinue: true, gated: false, event, error: e };
+  }
+}
+
+function triggerCrisisBestEffortLogging(args = {}) {
+  if (!shouldAttemptCrisisBestEffortLogging(args.crisis, args.enabled !== undefined ? args.enabled : crisisBestEffortLoggingEnabled())) return false;
+  Promise.resolve()
+    .then(() => runCrisisBestEffortLogging(args))
+    .catch((e) => console.error('[CRISIS_BEST_EFFORT_TRIGGER_FAIL]', JSON.stringify({ err: String(e && e.message || e).substring(0, 220), ts: Date.now() })));
+  return true;
+}
+
+function writeCrisisBannerSSE(res, crisis, opts = {}) {
+  if (!(crisis && crisis.detected)) return false;
+  res.write('data: ' + JSON.stringify({ text: CRISIS_BANNER, crisis: true }) + '\n\n');
+  triggerCrisisBestEffortLogging({
+    crisis,
+    endpoint: opts.endpoint,
+    enabled: opts.enabled,
+    writeCatalystEvent: opts.writeCatalystEvent,
+    now: opts.now,
+  });
   return true;
 }
 
@@ -3480,11 +3553,6 @@ const server = http.createServer((req, res) => {
         const seriousIllnessClassification = seriousIllnessLedgerClassification(p.message);
         const seriousIllnessLedgerActive = shouldAttemptSeriousIllnessLedger(p, crisis, seriousIllnessClassification);
         if (seriousIllnessLedgerActive) suppressCommerce = true;
-        const writeCrisisBannerSSE = () => {
-          if (crisis.detected) {
-            res.write('data: ' + JSON.stringify({ text: CRISIS_BANNER, crisis: true }) + '\n\n');
-          }
-        };
         const openWindowV0 = openWindowGate({ message: p.message, session_id: p.session_id || p.session || p.user_id || null });
         let commerceGateV0 = getCommerceGate(p, crisis, { supportTier: suppressCommerce });
         const trustPacketContextV0 = {
@@ -3537,7 +3605,7 @@ const server = http.createServer((req, res) => {
           const reply = variants[Math.floor(Date.now()/60000) % variants.length];
           res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-cache','Connection':'keep-alive','Access-Control-Allow-Origin':'*'});
           if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
-          writeCrisisBannerSSE();
+          writeCrisisBannerSSE(res, crisis, { endpoint: '/api/chat' });
           res.write('data: '+JSON.stringify({text:reply})+'\n\n');
           res.write('data: [DONE]\n\n');
           res.end();
@@ -3655,7 +3723,7 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
         writeSoftSafetyQuestionSSE(res, seriousIllnessClassification, crisis);
-        writeCrisisBannerSSE();
+        writeCrisisBannerSSE(res, crisis, { endpoint: '/api/chat' });
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '', full = '', chunkCount = 0;
         while (true) {
           const { done, value } = await rd.read(); if (done) break;
@@ -3862,7 +3930,7 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
         writeSoftSafetyQuestionSSE(res, seriousIllnessClassification, crisis);
-        if (crisis.detected) res.write('data: ' + JSON.stringify({ text: CRISIS_BANNER, crisis: true }) + '\n\n');
+        writeCrisisBannerSSE(res, crisis, { endpoint: '/api/chat/stream' });
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = ''; let full = ''; let ts_ttfb = 0;
         while (true) { const { done, value } = await rd.read(); if (done) break; buf += dc.decode(value, { stream: true }); const ls = buf.split('\n'); buf = ls.pop()||'';
           for (const ln of ls) { if (!ln.startsWith('data: ')) continue; const d = ln.slice(6).trim(); if (d==='[DONE]') { res.write('data: '+JSON.stringify({done:true,model})+'\n\n'); continue; } try { const j=JSON.parse(d); const t=j.choices?.[0]?.delta?.content; if(t){ if(!ts_ttfb) ts_ttfb = Date.now(); full+=t; res.write('data: '+JSON.stringify({t,text:t})+'\n\n'); } } catch{} } }

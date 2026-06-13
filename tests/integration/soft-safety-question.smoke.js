@@ -103,12 +103,12 @@ function parseFirstSseChunk(res) {
 
   assert.match(
     src,
-    /if \(pn === '\/api\/chat'[\s\S]*writeSoftSafetyQuestionSSE\(res, seriousIllnessClassification, crisis\);[\s\S]*writeCrisisBannerSSE\(\);/,
+    /if \(pn === '\/api\/chat'[\s\S]*writeSoftSafetyQuestionSSE\(res, seriousIllnessClassification, crisis\);[\s\S]*writeCrisisBannerSSE\(res, crisis, \{ endpoint: '\/api\/chat' \}\);/,
     '/api/chat should write soft question before streamed model content'
   );
   assert.match(
     src,
-    /if \(pn === '\/api\/chat\/stream'[\s\S]*writeSoftSafetyQuestionSSE\(res, seriousIllnessClassification, crisis\);[\s\S]*if \(crisis\.detected\)/,
+    /if \(pn === '\/api\/chat\/stream'[\s\S]*writeSoftSafetyQuestionSSE\(res, seriousIllnessClassification, crisis\);[\s\S]*writeCrisisBannerSSE\(res, crisis, \{ endpoint: '\/api\/chat\/stream' \}\);/,
     '/api/chat/stream should write soft question before streamed model content'
   );
   assert.match(
