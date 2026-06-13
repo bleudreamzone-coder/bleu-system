@@ -49,6 +49,7 @@ const REORDER_CRON_SECRET = 'command-smoke-secret';
 
 eval([
   grabFunction('commandViewEnabled'),
+  grabFunction('commandViewV2Enabled'),
   grabConst('COMMAND_VIEW_EVENT_SELECT'),
   grabFunction('normalizedMetricKey'),
   grabFunction('incrementMetric'),
@@ -56,6 +57,7 @@ eval([
   grabFunction('sortedMetricObject'),
   grabFunction('eventOriginKey'),
   grabFunction('consentStatusKey'),
+  grabFunction('isOrganicCommandEvent'),
   grabFunction('medianClosureMinutes'),
   grabFunction('buildCommandOverview'),
   grabFunction('commandOverviewPayloadIsSafe'),
@@ -241,6 +243,7 @@ function queryFor(rows, calls) {
   assert.equal(calls.length, 0, 'disabled command view must not read data');
 
   process.env.COMMAND_VIEW_ENABLED = 'true';
+  process.env.COMMAND_VIEW_V2_ENABLED = '';
   assert.equal(commandViewEnabled(), true);
 
   calls = [];

@@ -63,6 +63,9 @@ function smsEnabled() {
 function commandViewEnabled() {
   return String(process.env.COMMAND_VIEW_ENABLED || '').toLowerCase() === 'true';
 }
+function commandViewV2Enabled() {
+  return String(process.env.COMMAND_VIEW_V2_ENABLED || '').toLowerCase() === 'true';
+}
 
 function navigatorQueueEnabled() {
   return String(process.env.NAVIGATOR_QUEUE_ENABLED || '').toLowerCase() === 'true';
@@ -1336,6 +1339,10 @@ function returnBearerAuth(req, label = 'return-loop') {
 }
 
 const COMMAND_VIEW_EVENT_SELECT = 'select=event_id,catalyst_type,siren_level,workflow_rail,route_id,follow_up_due_at,status,outcome,staff_action_required,created_at,resolved_at,event_origin,consent_status&order=created_at.desc';
+const COMMAND_VIEW_V2_EVENT_SELECT = 'select=event_id,catalyst_type,siren_level,workflow_rail,route_id,follow_up_due_at,status,outcome,staff_action_required,created_at,resolved_at,event_origin,consent_status,barrier_type,barrier_confidence,user_confirmed,barrier_resolved_status,aggregate_allowed&order=created_at.desc';
+const COMMAND_VIEW_ORIGIN_DEFAULT_SELECT = 'table_schema=eq.public&table_name=eq.catalyst_event&column_name=eq.event_origin&select=column_default';
+const COMMAND_VIEW_NON_ORGANIC_ORIGINS = ['test', 'seed', 'seeded', 'demo'];
+const COMMAND_VIEW_SMALL_COHORT_THRESHOLD = 5;
 
 function normalizedMetricKey(value) {
   const key = String(value || '').trim().toLowerCase();
@@ -1374,6 +1381,35 @@ function consentStatusKey(event) {
   return normalizedMetricKey(event && event.consent_status);
 }
 
+function isOrganicCommandEvent(event) {
+  return eventOriginKey(event) === 'organic';
+}
+
+function originValues(rows) {
+  const values = new Set();
+  for (const row of Array.isArray(rows) ? rows : []) values.add(eventOriginKey(row));
+  return Array.from(values).sort();
+}
+
+function countByField(rows, field) {
+  const bucket = {};
+  for (const row of Array.isArray(rows) ? rows : []) incrementMetric(bucket, row && row[field]);
+  return sortedMetricObject(bucket);
+}
+
+function suppressedAggregate(count, opts = {}) {
+  const threshold = opts.threshold || COMMAND_VIEW_SMALL_COHORT_THRESHOLD;
+  if (count < threshold) {
+    return {
+      status: 'suppressed',
+      label: 'suppressed for privacy',
+      threshold,
+      count: null,
+    };
+  }
+  return { status: 'available', threshold, count };
+}
+
 function medianClosureMinutes(events) {
   const minutes = [];
   for (const event of Array.isArray(events) ? events : []) {
@@ -1391,7 +1427,7 @@ function medianClosureMinutes(events) {
 
 function buildCommandOverview(rows, opts = {}) {
   const events = Array.isArray(rows) ? rows : [];
-  const organicEvents = events.filter((event) => eventOriginKey(event) === 'organic');
+  const organicEvents = events.filter(isOrganicCommandEvent);
   const now = opts.now instanceof Date ? opts.now : new Date(opts.now || Date.now());
   const integrity = {
     organic_events: 0,
@@ -1486,6 +1522,126 @@ function buildCommandOverview(rows, opts = {}) {
   };
 }
 
+function buildCommandOverviewV2(rows, opts = {}) {
+  const events = Array.isArray(rows) ? rows : [];
+  const organicEvents = events.filter(isOrganicCommandEvent);
+  const now = opts.now instanceof Date ? opts.now : new Date(opts.now || Date.now());
+  const barrierColumnsAvailable = opts.barrierColumnsAvailable === true;
+  const eventOriginDefault = opts.eventOriginDefault || 'unknown';
+  const base = buildCommandOverview(events, { now });
+  const statusCounts = countByField(organicEvents, 'status');
+  const outcomeCounts = countByField(organicEvents, 'outcome');
+  const reopenedLoops = organicEvents.filter((event) => normalizedMetricKey(event && event.outcome) === 'still_needs_help').length;
+  const redSafetyCount = organicEvents.filter((event) => normalizedMetricKey(event && event.siren_level) === 'red').length;
+  const amberSafetyCount = organicEvents.filter((event) => normalizedMetricKey(event && event.siren_level) === 'amber').length;
+  const seriousIllnessCount = organicEvents.filter((event) => normalizedMetricKey(event && event.catalyst_type) === 'serious_illness').length;
+  const medChangeCount = organicEvents.filter((event) => normalizedMetricKey(event && event.catalyst_type) === 'medication_change').length;
+  const dueCount = base.metrics.follow_ups_due_now;
+  const staffActionCount = base.metrics.needs_action;
+  const resolvedEvents = organicEvents.filter((event) => normalizedMetricKey(event && event.status) === 'resolved');
+  const consentedEvents = organicEvents.filter((event) => consentStatusKey(event) === 'granted');
+  const cclDenominator = base.metrics.consented_closed_loops + base.metrics.consented_open_loops;
+  const aggregateAllowedEvents = barrierColumnsAvailable
+    ? organicEvents.filter((event) => event && event.aggregate_allowed === true)
+    : [];
+  const aggregateBlockedEvents = barrierColumnsAvailable
+    ? organicEvents.filter((event) => event && event.barrier_type && event.aggregate_allowed !== true)
+    : [];
+  const allowedBarrierCounts = countByField(aggregateAllowedEvents, 'barrier_type');
+  const barrierAggregateState = barrierColumnsAvailable
+    ? suppressedAggregate(aggregateAllowedEvents.length)
+    : { status: 'unavailable', label: 'barrier columns not present yet', count: null, threshold: COMMAND_VIEW_SMALL_COHORT_THRESHOLD };
+
+  return {
+    enabled: true,
+    version: 'v2',
+    generated_at: now.toISOString(),
+    source: {
+      ledger: 'catalyst_event',
+      rows_read: events.length,
+      primary_scope: "event_origin=organic; excludes event_origin IN ('test','seed','seeded','demo')",
+      event_origin_values: originValues(events),
+      event_origin_default: eventOriginDefault,
+      excluded_origins: COMMAND_VIEW_NON_ORGANIC_ORIGINS,
+      barrier_columns_available: barrierColumnsAvailable,
+    },
+    metrics: {
+      total_organic_events: organicEvents.length,
+      open_loops: base.metrics.open_loops,
+      resolved_loops: base.metrics.resolved_loops,
+      reopened_loops: reopenedLoops,
+      follow_ups_due_now: dueCount,
+      staff_action_required: staffActionCount,
+      amber_safety_count: amberSafetyCount,
+      red_safety_count: redSafetyCount,
+      serious_illness_count: seriousIllnessCount,
+      med_change_count: medChangeCount,
+      consented_closed_loops: base.metrics.consented_closed_loops,
+      consented_open_loops: base.metrics.consented_open_loops,
+      reached_support_outcomes: base.metrics.reached_support_outcomes,
+      honest_desert_count: base.metrics.honest_desert_count,
+      median_time_to_closure_minutes: base.metrics.median_time_to_closure_minutes,
+      by_status: statusCounts,
+      by_outcome: outcomeCounts,
+      by_catalyst_type: base.metrics.by_catalyst_type,
+      by_siren_level: base.metrics.by_siren_level,
+      by_workflow_rail: base.metrics.by_workflow_rail,
+      by_route_category: base.metrics.by_route_category,
+    },
+    next_step_completion_rate: {
+      label: 'NSCR',
+      state: cclDenominator >= 30 ? 'ready' : 'denominator_forming',
+      numerator: base.metrics.consented_closed_loops,
+      denominator: cclDenominator,
+      value: cclDenominator >= 30 && cclDenominator > 0 ? Number((base.metrics.consented_closed_loops / cclDenominator).toFixed(4)) : null,
+    },
+    sections: {
+      citizen_outcomes: {
+        consented_closed_loops: base.metrics.consented_closed_loops,
+        reached_support_outcomes: base.metrics.reached_support_outcomes,
+        median_time_to_closure_minutes: base.metrics.median_time_to_closure_minutes,
+        denominator_state: cclDenominator >= 30 ? 'ready' : 'denominator_forming',
+      },
+      care_desk_queue: {
+        staff_action_required: staffActionCount,
+        follow_ups_due_now: dueCount,
+        navigator_queue_link: '/api/navigator/queue',
+      },
+      worksite_barriers: {
+        aggregate: barrierAggregateState,
+        counts: barrierAggregateState.status === 'available' ? allowedBarrierCounts : {},
+        aggregate_allowed_rows: aggregateAllowedEvents.length,
+        aggregate_blocked_rows: aggregateBlockedEvents.length,
+      },
+      city_barriers: {
+        aggregate: barrierAggregateState,
+        no_match_or_honest_desert_count: base.metrics.honest_desert_count,
+        place_placeholder: 'suppressed for privacy',
+      },
+      proof_export_readiness: {
+        status: consentedEvents.length >= COMMAND_VIEW_SMALL_COHORT_THRESHOLD ? 'forming' : 'denominator_forming',
+        organic_resolved_rows: resolvedEvents.length,
+        buyer_packets: {
+          care_desk: suppressedAggregate(staffActionCount),
+          worksite: barrierAggregateState,
+          city: suppressedAggregate(base.metrics.honest_desert_count),
+        },
+      },
+    },
+    integrity: base.integrity,
+    privacy: {
+      aggregate_only: true,
+      no_individual_rows: true,
+      categories_only: true,
+      raw_text: false,
+      raw_sms_body: false,
+      phone_strings: false,
+      suppression: `cohorts below ${COMMAND_VIEW_SMALL_COHORT_THRESHOLD} render suppressed for privacy`,
+      aggregate_allowed_respected: true,
+    },
+  };
+}
+
 function commandOverviewPayloadIsSafe(payload, sourceRows = []) {
   const text = JSON.stringify(payload || {});
   if (/sms_log\.body|["']body["']|rationale|route_id|subject_id/i.test(text)) return false;
@@ -1504,9 +1660,48 @@ function commandOverviewPayloadIsSafe(payload, sourceRows = []) {
 async function fetchCommandOverview(opts = {}) {
   const queryImpl = opts.queryImpl || querySupabase;
   const limit = Math.max(1, Math.min(Number(opts.limit || 5000), 10000));
+  const v2Enabled = opts.v2Enabled !== undefined ? opts.v2Enabled : commandViewV2Enabled();
+  if (v2Enabled) return fetchCommandOverviewV2({ ...opts, queryImpl, limit });
   const rows = await queryImpl('catalyst_event', COMMAND_VIEW_EVENT_SELECT, limit);
   if (!Array.isArray(rows)) throw new Error('catalyst_event command overview query failed');
   const overview = buildCommandOverview(rows, { now: opts.now });
+  if (!commandOverviewPayloadIsSafe(overview, rows)) throw new Error('command overview privacy assertion failed');
+  return overview;
+}
+
+async function readCommandEventOriginDefault(queryImpl) {
+  try {
+    const rows = await queryImpl('information_schema.columns', COMMAND_VIEW_ORIGIN_DEFAULT_SELECT, 1);
+    if (Array.isArray(rows) && rows.length) return rows[0].column_default || 'null';
+  } catch (e) {
+    console.warn('[command-view-v2] event_origin default unavailable:', e && e.message);
+  }
+  return 'unknown_unavailable';
+}
+
+async function fetchCommandOverviewV2(opts = {}) {
+  const queryImpl = opts.queryImpl || querySupabase;
+  const limit = Math.max(1, Math.min(Number(opts.limit || 5000), 10000));
+  let barrierColumnsAvailable = true;
+  let rows = null;
+  try {
+    rows = await queryImpl('catalyst_event', COMMAND_VIEW_V2_EVENT_SELECT, limit);
+  } catch (e) {
+    barrierColumnsAvailable = false;
+  }
+  if (!Array.isArray(rows)) {
+    barrierColumnsAvailable = false;
+    rows = await queryImpl('catalyst_event', COMMAND_VIEW_EVENT_SELECT, limit);
+  }
+  if (!Array.isArray(rows)) throw new Error('catalyst_event command overview query failed');
+  const eventOriginDefault = opts.eventOriginDefault !== undefined
+    ? opts.eventOriginDefault
+    : await readCommandEventOriginDefault(queryImpl);
+  const overview = buildCommandOverviewV2(rows, {
+    now: opts.now,
+    barrierColumnsAvailable,
+    eventOriginDefault,
+  });
   if (!commandOverviewPayloadIsSafe(overview, rows)) throw new Error('command overview privacy assertion failed');
   return overview;
 }
