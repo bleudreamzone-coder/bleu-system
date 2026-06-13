@@ -77,6 +77,9 @@ function seriousIllnessLedgerEnabled() {
 function barrierLedgerEnabled() {
   return String(process.env.BARRIER_LEDGER_ENABLED || '').toLowerCase() === 'true';
 }
+function softSafetyQuestionEnabled() {
+  return String(process.env.SOFT_SAFETY_QUESTION_ENABLED || '').toLowerCase() === 'true';
+}
 
 async function sendSMS(to, body) {
   if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) throw new Error('Twilio credentials not configured');
@@ -1235,6 +1238,31 @@ async function runSeriousIllnessLedgerGate({ p, crisis, classification, enabled 
     console.error('[SERIOUS_ILLNESS_LEDGER_FAIL]', JSON.stringify({ err: String(e && e.message || e).substring(0, 220), ts: Date.now() }));
     return { status: 'write_failed_fail_open', shouldContinue: true, gated: true, classification: c, event, error: e };
   }
+}
+
+// Clinical placeholder for Dr. Stoler's Monday wording replacement.
+const SOFT_SAFETY_QUESTION_PLACEHOLDER = "Before we plan, I want to check — are you safe right now? If you're having any thoughts of harming yourself, you can reach 988 anytime, by call or text.";
+
+function shouldEmitSoftSafetyQuestion(classification, crisis, opts = {}) {
+  const enabled = opts.enabled !== undefined ? opts.enabled : softSafetyQuestionEnabled();
+  if (!enabled) return false;
+  if (crisis && crisis.detected) return false;
+  return !!(
+    classification &&
+    classification.soft_safety_question_required === true &&
+    classification.crisis_takeover !== true
+  );
+}
+
+function writeSoftSafetyQuestionSSE(res, classification, crisis, opts = {}) {
+  if (!shouldEmitSoftSafetyQuestion(classification, crisis, opts)) return false;
+  const question = opts.question || SOFT_SAFETY_QUESTION_PLACEHOLDER;
+  res.write('data: ' + JSON.stringify({
+    text: `${question}\n\n`,
+    softSafetyQuestion: true,
+    classification: classification && classification.classification || null
+  }) + '\n\n');
+  return true;
 }
 
 // ═══ RETURN LOOP (Phase 3 — simulated only) ═══
@@ -3626,6 +3654,7 @@ const server = http.createServer((req, res) => {
         if (!ar.ok) { const errBody = await ar.text(); console.error('OpenAI error:', ar.status, errBody.substring(0,500)); return json(res, 500, {error:'OpenAI '+ar.status, detail:errBody.substring(0,300), model}); }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
+        writeSoftSafetyQuestionSSE(res, seriousIllnessClassification, crisis);
         writeCrisisBannerSSE();
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = '', full = '', chunkCount = 0;
         while (true) {
@@ -3832,6 +3861,7 @@ const server = http.createServer((req, res) => {
         }
         res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*' });
         if (suppressCommerce) res.write('data: '+JSON.stringify({suppressCommerce:true})+'\n\n');
+        writeSoftSafetyQuestionSSE(res, seriousIllnessClassification, crisis);
         if (crisis.detected) res.write('data: ' + JSON.stringify({ text: CRISIS_BANNER, crisis: true }) + '\n\n');
         const rd = ar.body.getReader(), dc = new TextDecoder(); let buf = ''; let full = ''; let ts_ttfb = 0;
         while (true) { const { done, value } = await rd.read(); if (done) break; buf += dc.decode(value, { stream: true }); const ls = buf.split('\n'); buf = ls.pop()||'';
