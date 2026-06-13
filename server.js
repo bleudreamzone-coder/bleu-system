@@ -3607,12 +3607,46 @@ function corsOrigin(reqOrigin) {
   return ALLOWED_ORIGINS[0];
 }
 function json(res, code, data) { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); }
+const PRIVATE_ADMIN_ROUTES = ['/api/command/overview', '/api/navigator/queue'];
+const PUBLIC_SURFACE_FORBIDDEN_PATTERNS = [
+  { label: 'command overview API route', re: /\/api\/command\/overview/i },
+  { label: 'navigator queue API route', re: /\/api\/navigator\/queue/i },
+  { label: 'command view flag', re: /\bCOMMAND_VIEW(?:_V2)?_ENABLED\b/i },
+  { label: 'navigator queue flag', re: /\bNAVIGATOR_QUEUE_ENABLED\b/i },
+  { label: 'cron/admin bearer secret', re: /\bREORDER_CRON_SECRET\b/i },
+  { label: 'ledger table name', re: /\bcatalyst_event\b/i },
+  { label: 'staff-action ledger field', re: /\bstaff_action_required\b/i },
+  { label: 'closed-loop private metric field', re: /\bconsented_closed_loops\b/i },
+  { label: 'subject spine field', re: /\bsubject_id\b/i },
+  { label: 'raw SMS field', re: /\bsms_log\.body\b/i },
+];
+function isPrivateAdminRoute(pathname) {
+  const normalized = String(pathname || '').replace(/\/+$/, '') || '/';
+  return PRIVATE_ADMIN_ROUTES.includes(normalized);
+}
+function publicSurfaceLeakReasons(content) {
+  const text = String(content || '');
+  return PUBLIC_SURFACE_FORBIDDEN_PATTERNS
+    .filter((pattern) => pattern.re.test(text))
+    .map((pattern) => pattern.label);
+}
+function publicSurfaceHtmlIsSafe(content) {
+  return publicSurfaceLeakReasons(content).length === 0;
+}
+function sendPublicHtml(res, content, headers) {
+  if (!publicSurfaceHtmlIsSafe(content)) {
+    console.error('[PUBLIC_SURFACE_ADMIN_LEAK_BLOCKED]', JSON.stringify({ reasons: publicSurfaceLeakReasons(content).slice(0, 4), ts: Date.now() }));
+    return json(res, 500, { error: 'public surface blocked' });
+  }
+  res.writeHead(200, headers || {'Content-Type':'text/html'});
+  res.end(content);
+}
 function serveIndex(res) {
   securityHeaders(res, {html:true});
   const noCacheHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'};
   fs.readFile(path.join(__dirname,'index.html'), (e,d) => {
     if(e){res.writeHead(200,noCacheHeaders);res.end('<html><body><h1>BLEU.live</h1></body></html>');}
-    else{res.writeHead(200,noCacheHeaders);res.end(d);}
+    else{sendPublicHtml(res, d, noCacheHeaders);}
   });
 }
 function cors(res, req) {
@@ -3655,6 +3689,7 @@ const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pn = url.pathname;
   if (req.method === 'OPTIONS') return json(res, 200, {});
+  if (isPrivateAdminRoute(pn) && req.method !== 'GET') return json(res, 404, { error: 'Not found' });
 
   if (pn === '/health') return json(res, 200, { status: 'ok', hasKey: !!OPENAI_KEY, hasSupabase: !!(SUPABASE_URL&&SUPABASE_KEY), engine: 'openai', version: '4.0', modes: Object.keys(MODE_PROMPT_LAYERS).length });
 
@@ -5235,7 +5270,9 @@ const server = http.createServer((req, res) => {
           const result = await seoEngine.handleRoute(seoRoute);
           if (!result) return json(res, 404, {error:'Page not found'});
           const types = {html:'text/html', xml:'application/xml', text:'text/plain'};
-          res.writeHead(200, {'Content-Type': types[result.type] || 'text/html', 'Cache-Control':'public, max-age=3600'});
+          const headers = {'Content-Type': types[result.type] || 'text/html', 'Cache-Control':'public, max-age=3600'};
+          if (result.type === 'html') return sendPublicHtml(res, result.content, headers);
+          res.writeHead(200, headers);
           res.end(result.content);
         } catch(e) { console.error('SEO engine error:', e); json(res, 500, {error:'SEO render failed'}); }
       })();
@@ -5250,7 +5287,7 @@ const server = http.createServer((req, res) => {
       const seaHeaders = {'Content-Type':'text/html','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0','Pragma':'no-cache','Expires':'0'};
       fs.readFile(path.join(__dirname, seaMatch[1] + '.html'), (e, d) => {
         if (e) return json(res, 404, { error: 'Sea not found' });
-        res.writeHead(200, seaHeaders); res.end(d);
+        sendPublicHtml(res, d, seaHeaders);
       });
       return;
     }
