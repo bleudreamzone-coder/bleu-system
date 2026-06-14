@@ -269,6 +269,12 @@ body{
 .bh-chip-quiet{color:var(--ink-faint);font-style:italic}
 .bh-chip-quiet:hover{font-style:normal}
 
+.bh-shame-line{
+  margin:11px auto 0;max-width:560px;
+  font-size:12.5px;line-height:1.45;color:var(--ink-soft);
+}
+.bh-shame-line strong{font-weight:500;color:var(--ink)}
+
 .bh-trust-row{
   display:flex;justify-content:center;align-items:center;gap:14px;
   margin-top:18px;flex-wrap:wrap;
@@ -277,6 +283,23 @@ body{
 }
 .bh-trust-row .tdot{width:3px;height:3px;border-radius:50%;background:var(--ink-faint);opacity:.5}
 .bh-trust-strong{color:var(--ink-soft);font-weight:500}
+
+.bh-capability-row{
+  display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;
+  max-width:860px;margin:14px auto 0;
+  opacity:0;animation:rise 1s ease-out 1.38s forwards;
+}
+.bh-capability-title{
+  font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);padding:8px 4px;
+}
+.bh-capability{
+  font-size:11.5px;line-height:1.4;color:var(--ink-soft);
+  background:rgba(255,250,241,.55);
+  border:0.5px solid rgba(232,220,192,.6);
+  border-radius:999px;padding:7px 11px;
+}
+.bh-capability strong{color:var(--ink);font-weight:500}
 
 /* PASSPORT — your BLEU account */
 .bh-passport-strip{
@@ -373,6 +396,45 @@ body{
   margin:0;font-size:13.5px;line-height:1.75;color:var(--ink-soft);
 }
 .bh-reviewer-copy strong{color:var(--ink);font-weight:500}
+
+.bh-moments{
+  max-width:1080px;margin:26px auto 0;padding:0 22px;position:relative;z-index:3;
+}
+.bh-moments-head{text-align:center;margin-bottom:14px}
+.bh-moments-sub{
+  margin:0 auto;max-width:580px;font-size:12.5px;line-height:1.5;color:var(--ink-faint);
+}
+.bh-moment-row{
+  display:grid;grid-auto-flow:column;grid-auto-columns:minmax(218px,1fr);
+  gap:1px;overflow-x:auto;overscroll-behavior-x:contain;
+  background:rgba(232,220,192,.5);
+  border:0.5px solid rgba(232,220,192,.5);
+  border-radius:18px;
+  scroll-snap-type:x proximity;
+}
+.bh-moment{
+  background:rgba(255,250,241,.65);padding:15px 14px;
+  min-height:230px;display:flex;flex-direction:column;gap:8px;
+  scroll-snap-align:start;
+}
+.bh-moment-kicker{
+  font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);
+}
+.bh-moment-title{
+  font-family:var(--display);font-weight:380;font-size:17px;
+  letter-spacing:-.018em;line-height:1.15;color:var(--ink);
+}
+.bh-moment-copy{font-size:12px;line-height:1.5;color:var(--ink-soft);margin:0}
+.bh-moment-tags{font-size:10.5px;line-height:1.45;color:var(--ink-faint);margin:0}
+.bh-moment-boundary{font-size:10.5px;line-height:1.45;color:var(--ink-faint);margin:0}
+.bh-moment-cta{
+  margin-top:auto;align-self:flex-start;
+  font-family:var(--body);font-size:11.5px;font-weight:500;letter-spacing:.04em;
+  background:var(--ink);color:var(--cream);border:0;
+  padding:8px 13px;border-radius:999px;cursor:pointer;transition:.3s ease;
+}
+.bh-moment-cta:hover{background:var(--purple);transform:translateY(-1px)}
 
 .bh-flow{padding:0 22px}
 
@@ -770,6 +832,7 @@ body{
   .bh-passport-strip{flex-wrap:wrap;text-align:center}
   .bh-passport-text{text-align:center;width:100%}
   .bh-ecosystem-grid{grid-template-columns:repeat(2,1fr)}
+  .bh-moment-row{grid-auto-columns:minmax(240px,70vw)}
   .bh-felicia-doctrine{flex-direction:column;gap:8px}
   .bh-doctrine-amp{display:none}
 }
@@ -787,6 +850,11 @@ body{
   .bh-modal-title{font-size:22px}
   .bh-ecosystem-grid{grid-template-columns:1fr}
   .bh-opening{font-size:17px}
+  .bh-capability-row{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}
+  .bh-capability{white-space:nowrap}
+  .bh-moments{margin-top:20px;padding:0 18px}
+  .bh-moments-sub{font-size:12px}
+  .bh-moment-row{grid-auto-columns:minmax(220px,82vw)}
   .bh-reviewer-panel{margin:20px 18px 0;padding:18px}
   .bh-reviewer-copy{font-size:13px}
 }
@@ -864,6 +932,8 @@ body{
           </button>
         </div>
 
+        <p class="bh-shame-line"><strong>You don't have to know where to start. Just tell us what's going on, in your own words.</strong></p>
+
         <div class="bh-chips" role="list" aria-label="quick starts">
           <button class="bh-chip" role="listitem" data-prompt="I can't sleep">I can't sleep</button>
           <button class="bh-chip" role="listitem" data-prompt="I'm anxious and can't shake it">I'm anxious and can't shake it</button>
@@ -883,15 +953,25 @@ body{
           <span class="tdot"></span>
           <span>Clinically governed</span>
         </div>
+
+        <div class="bh-capability-row" aria-label="What BLEU can do for you">
+          <span class="bh-capability-title">What BLEU can do for you</span>
+          <span class="bh-capability"><strong>Calm</strong> — Help you feel steady. (breathing, sleep, support)</span>
+          <span class="bh-capability"><strong>Explain</strong> — Tell you what's going on, in plain words. (real answers, real sources)</span>
+          <span class="bh-capability"><strong>Check</strong> — See if it's safe with your meds. (free — before you take anything)</span>
+          <span class="bh-capability"><strong>Find</strong> — Get you to real help near you. (clinics, food, rides, therapists)</span>
+          <span class="bh-capability"><strong>Plan</strong> — Give you one next step you can keep. (small steps you can save)</span>
+          <span class="bh-capability"><strong>Urgent help</strong> — Step aside fast when it's serious. (crisis lines, day or night)</span>
+        </div>
       </div>
 
       <div class="bh-passport-strip">
         <div class="bh-passport-glyph"></div>
         <div class="bh-passport-text">
-          <div class="bh-passport-line1">Your <em>BLEU account</em> · <strong>10 seconds with your email</strong></div>
-          <div class="bh-passport-line2">Saves your conversation, your saved resources, and your safety profile across the platform</div>
+          <div class="bh-passport-line1"><strong>Save your protocol</strong> &mdash; <em>It's your plan.</em></div>
+          <div class="bh-passport-line2">Come back any time. See what helped.</div>
         </div>
-        <button class="bh-passport-yes" id="passport-yes">Create account</button>
+        <button class="bh-passport-yes" id="passport-yes">Save my protocol</button>
       </div>
 
     </section>
@@ -937,6 +1017,58 @@ body{
         <span>Expanding parish by parish</span>
       </div>
     </div>
+
+    <section class="bh-moments" aria-label="Life moments BLEU can help with">
+      <div class="bh-moments-head">
+        <div class="bh-zone-label">Life moments BLEU can help with</div>
+        <p class="bh-moments-sub">Not sure what kind of help this is? Pick what's closest, or just type your own words.</p>
+      </div>
+      <div class="bh-moment-row">
+        <article class="bh-moment">
+          <div class="bh-moment-kicker">hospital</div>
+          <div class="bh-moment-title">Just out of the hospital?</div>
+          <p class="bh-moment-copy">Left the hospital or the ER? Tell us what your papers say. We'll help you understand them and make a simple next-step list.</p>
+          <p class="bh-moment-tags">follow-up visit · meds · who to call · warning signs · a ride · local help</p>
+          <p class="bh-moment-boundary">BLEU helps you understand and organize. It does not diagnose, change your treatment, or replace your care team.</p>
+          <button class="bh-moment-cta" data-prompt="What does your paper say? You can type one line at a time.">Start with my papers</button>
+        </article>
+
+        <article class="bh-moment">
+          <div class="bh-moment-kicker">plain words</div>
+          <div class="bh-moment-title">Confused by a health paper?</div>
+          <p class="bh-moment-copy">A lab result, a bill, instructions, or a letter you can't make sense of? Tell us the part that's confusing. We'll put it in plain words.</p>
+          <p class="bh-moment-tags">lab words · bills · instructions · what to ask your doctor</p>
+          <p class="bh-moment-boundary">We explain what the words mean. What your results mean for you is a question for your care team — and we'll help you ask it.</p>
+          <button class="bh-moment-cta" data-prompt="Type the word or line that's confusing. One at a time is fine.">Help me read this</button>
+        </article>
+
+        <article class="bh-moment">
+          <div class="bh-moment-kicker">safety check</div>
+          <div class="bh-moment-title">New med, or a med change?</div>
+          <p class="bh-moment-copy">Started or changed a medicine? We can help you check what may not mix well — free, before you take anything.</p>
+          <p class="bh-moment-tags">meds · supplements · side effects · pharmacist help</p>
+          <p class="bh-moment-boundary">BLEU checks for safety signals. It does not prescribe or change your meds.</p>
+          <button class="bh-moment-cta" data-prompt="What medicine changed? Tell me the name if you know it.">Check my meds</button>
+        </article>
+
+        <article class="bh-moment">
+          <div class="bh-moment-kicker">ride</div>
+          <div class="bh-moment-title">Need a ride to care?</div>
+          <p class="bh-moment-copy">Have an appointment but no way to get there? We'll help you find a ride — Medicaid rides, parish vans, volunteer drivers, or a telehealth visit instead.</p>
+          <p class="bh-moment-tags">Medicaid rides · parish vans · volunteer drivers · telehealth</p>
+          <button class="bh-moment-cta" data-prompt="Where do you need to go, and when? We'll look at what's near you.">Find me a ride</button>
+        </article>
+
+        <article class="bh-moment">
+          <div class="bh-moment-kicker">visit prep</div>
+          <div class="bh-moment-title">Getting ready for a visit?</div>
+          <p class="bh-moment-copy">Have a visit coming up? We'll help you write down what to ask, what to bring, and what you want to remember.</p>
+          <p class="bh-moment-tags">questions · symptoms · meds · notes</p>
+          <p class="bh-moment-boundary">BLEU helps you prepare. Your care team makes care decisions.</p>
+          <button class="bh-moment-cta" data-prompt="What is the visit for? We can make a short list.">Make my visit list</button>
+        </article>
+      </div>
+    </section>
 
     <section class="bh-reviewer-panel" aria-label="partner and reviewer note">
       <div class="bh-reviewer-kicker">partner / reviewer note</div>
