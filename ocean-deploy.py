@@ -5,6 +5,10 @@ Usage: python3 ocean-deploy.py
 """
 import os, json
 
+SB_ANON = os.environ.get("SUPABASE_ANON_KEY")
+if not SB_ANON:
+    raise SystemExit("Set SUPABASE_ANON_KEY before running ocean-deploy.py")
+
 print("═"*60)
 print("  BLEU OCEAN DEPLOY — Building the entire system")
 print("═"*60)
@@ -506,6 +510,7 @@ a{color:var(--teal);text-decoration:none}a:hover{text-decoration:underline}
 // ═══════════════════════════════════════════════════════════
 const SB='https://sqyzboesdpdussiwqpzk.supabase.co'
 const ALVAI=SB+'/functions/v1/alvai'
+const ANON='__SUPABASE_ANON_KEY__'
 const tabs=['home','alvai','dashboard','directory','vessel','map','protocols','learn','community','passport','therapy','finance','missions','recovery','cannaiq','terms','privacy']
 const chatHistories={},chatModes={therapy:'talk',recovery:'sobriety'}
 tabs.forEach(t=>chatHistories[t]=[])
@@ -580,7 +585,7 @@ async function send(tab){
   if(tab==='recovery')body.recovery_mode=chatModes.recovery||'sobriety'
 
   try{
-    const res=await fetch(ALVAI,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg0NDg2OTMsImV4cCI6MjA1NDAyNDY5M30.LVAjBCm23lxGx1mY0dCDn0AfT7GDVxAlKoh-G9TplGk')},body:JSON.stringify(body)})
+    const res=await fetch(ALVAI,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON},body:JSON.stringify(body)})
 
     if(res.headers.get('content-type')?.includes('text/event-stream')){
       // Streaming
@@ -617,7 +622,7 @@ async function send(tab){
 // ═══ LOAD STATS ═══
 async function loadStats(){
   try{
-    const h={'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg0NDg2OTMsImV4cCI6MjA1NDAyNDY5M30.LVAjBCm23lxGx1mY0dCDn0AfT7GDVxAlKoh-G9TplGk','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg0NDg2OTMsImV4cCI6MjA1NDAyNDY5M30.LVAjBCm23lxGx1mY0dCDn0AfT7GDVxAlKoh-G9TplGk','Range':'0-0','Prefer':'count=exact'}
+    const h={'apikey':ANON,'Authorization':'Bearer '+ANON,'Range':'0-0','Prefer':'count=exact'}
     const tables=['practitioners','products','locations']
     const counts={}
     let total=0
@@ -636,6 +641,8 @@ loadStats()
 </script>
 </body>
 </html>'''
+
+HTML = HTML.replace('__SUPABASE_ANON_KEY__', SB_ANON)
 
 with open('index.html', 'w') as f:
     f.write(HTML)

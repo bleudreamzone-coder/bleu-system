@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+: "${SUPABASE_ANON_KEY:?Set SUPABASE_ANON_KEY before running deploy.sh}"
 echo "🔵 BLEU Deploy Starting..."
 
 # Step 1: Add Supabase SDK
@@ -115,6 +116,11 @@ PYEOF
 # Step 7: Add Auth JavaScript
 if ! grep -q "doSignUp" index.html; then
 python3 << 'PYEOF2'
+import json
+import os
+
+sb_anon = os.environ['SUPABASE_ANON_KEY']
+
 with open('index.html','r') as f:
     html=f.read()
 
@@ -125,7 +131,7 @@ if idx==-1:
 eol=html.find('\\n',idx)
 
 auth_js="""
-const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc0MjMzMzUsImV4cCI6MjA1Mjk5OTMzNX0.eMHhdjJKZi0ZH0hgdGfszqJJ8KLbFG6fVPWFSYBfwDg'
+const SB_ANON=__SUPABASE_ANON_KEY__
 let sbClient=null,currentUser=null,currentConvoId=null
 try{if(window.supabase)sbClient=window.supabase.createClient(SB,SB_ANON)}catch(e){}
 window.addEventListener('DOMContentLoaded',()=>{
@@ -154,6 +160,7 @@ function togGoal(el){el.classList.toggle('active');if(!sbClient||!currentUser)re
 async function exportData(){if(!sbClient||!currentUser)return;const{data}=await sbClient.from('conversations').select('*').eq('user_id',currentUser.id);const b=new Blob([JSON.stringify(data||[],null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='bleu-data.json';a.click()}
 async function clearHist(){if(!confirm('Delete all history? Cannot undo.'))return;if(!sbClient||!currentUser)return;await sbClient.from('conversations').delete().eq('user_id',currentUser.id);document.getElementById('session-list').innerHTML='<div style=\"text-align:center;color:#8fa4b0;padding:20px\">Cleared.</div>'}
 """
+auth_js = auth_js.replace('__SUPABASE_ANON_KEY__', json.dumps(sb_anon))
 
 html=html[:eol]+auth_js+html[eol:]
 

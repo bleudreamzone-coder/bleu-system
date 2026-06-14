@@ -6,6 +6,10 @@ Only changes index.html. Does NOT touch edge function.
 """
 import os
 
+SB_ANON = os.environ.get("SUPABASE_ANON_KEY")
+if not SB_ANON:
+    raise SystemExit("Set SUPABASE_ANON_KEY before running ocean-enhance.py")
+
 print("═"*60)
 print("  BLEU OCEAN ENHANCE — Luxury Design Build")
 print("═"*60)
@@ -843,7 +847,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 <script>
 const SB='https://sqyzboesdpdussiwqpzk.supabase.co'
 const ALVAI=SB+'/functions/v1/alvai'
-const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg0NDg2OTMsImV4cCI6MjA1NDAyNDY5M30.LVAjBCm23lxGx1mY0dCDn0AfT7GDVxAlKoh-G9TplGk'
+const ANON='__SUPABASE_ANON_KEY__'
 const tabs=['home','alvai','dashboard','directory','vessel','map','protocols','learn','community','passport','therapy','finance','missions','recovery','cannaiq','terms','privacy']
 const chatHistories={},chatModes={therapy:'talk',recovery:'sobriety'}
 tabs.forEach(t=>chatHistories[t]=[])
@@ -927,6 +931,8 @@ document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))
 </script>
 </body>
 </html>'''
+
+HTML = HTML.replace('__SUPABASE_ANON_KEY__', SB_ANON)
 
 with open('index.html', 'w') as f:
     f.write(HTML)

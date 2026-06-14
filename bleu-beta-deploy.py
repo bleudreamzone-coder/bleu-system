@@ -4,7 +4,9 @@ import re, os, shutil
 
 ALVAI_URL = "https://sqyzboesdpdussiwqpzk.supabase.co/functions/v1/alvai"
 SB_URL = "https://sqyzboesdpdussiwqpzk.supabase.co"
-SB_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg0NDg2OTMsImV4cCI6MjA1NDAyNDY5M30.LVAjBCm23lxGx1mY0dCDn0AfT7GDVxAlKoh-G9TplGk"
+SB_ANON = os.environ.get("SUPABASE_ANON_KEY")
+if not SB_ANON:
+    raise SystemExit("Set SUPABASE_ANON_KEY before running bleu-beta-deploy.py")
 
 print("="*60)
 print("  BLEU BETA DEPLOY — Nothing changes, everything gets better")
