@@ -84,7 +84,7 @@ function parseFirstSseChunk(res) {
   let event = parseFirstSseChunk(res);
   assert.equal(event.softSafetyQuestion, true);
   assert.equal(event.classification, 'serious_illness');
-  assert.ok(event.text.startsWith(SOFT_SAFETY_QUESTION_PLACEHOLDER), 'response opens with placeholder question');
+  assert.ok(event.text.startsWith(SOFT_SAFETY_QUESTION_PLACEHOLDER), 'response opens with finalized clinical question');
   assert.ok(event.text.endsWith('\n\n'), 'question separates from support content');
 
   const caregiver = classifyCrisisPhrase("My mother is dying, I can't do this anymore");
@@ -113,8 +113,8 @@ function parseFirstSseChunk(res) {
   );
   assert.match(
     src,
-    /Clinical placeholder for Dr\. Stoler's Monday wording replacement\.\nconst SOFT_SAFETY_QUESTION_PLACEHOLDER/,
-    'placeholder should be clearly labeled for clinical replacement'
+    /Clinical wording locked by Dr\. Stoler sign-off dated 2026-06-14\.\nconst SOFT_SAFETY_QUESTION_PLACEHOLDER/,
+    'soft-safety question should be labeled as locked clinical wording'
   );
 
   process.env.SOFT_SAFETY_QUESTION_ENABLED = '';

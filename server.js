@@ -1318,8 +1318,8 @@ async function runSeriousIllnessLedgerGate({ p, crisis, classification, enabled 
   }
 }
 
-// Clinical placeholder for Dr. Stoler's Monday wording replacement.
-const SOFT_SAFETY_QUESTION_PLACEHOLDER = "Before we plan, I want to check — are you safe right now? If you're having any thoughts of harming yourself, you can reach 988 anytime, by call or text.";
+// Clinical wording locked by Dr. Stoler sign-off dated 2026-06-14.
+const SOFT_SAFETY_QUESTION_PLACEHOLDER = "Before we keep going: if any of this ever feels like too much, you're not alone, and there are people who can help. For now — how are you holding up?";
 
 function shouldEmitSoftSafetyQuestion(classification, crisis, opts = {}) {
   const enabled = opts.enabled !== undefined ? opts.enabled : softSafetyQuestionEnabled();
