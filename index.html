@@ -194,8 +194,8 @@ body{
 /* THE SACRED LINE — signed by Co-Founder & Chief Clinical Officer */
 .bh-opening{
   font-family:var(--display);font-style:italic;font-weight:300;
-  font-size:clamp(17px,2.4vw,22px);line-height:1.45;
-  color:var(--ink);max-width:600px;margin:0 auto 28px;
+  font-size:clamp(18px,2.4vw,24px);line-height:1.45;
+  color:var(--ink);max-width:780px;margin:0 auto 28px;
   letter-spacing:-.005em;position:relative;z-index:3;
   opacity:0;animation:rise 1s ease-out .45s forwards;
 }
@@ -357,6 +357,22 @@ body{
 }
 .bh-cities-line strong{color:var(--ink-soft);font-weight:500}
 .bh-cities-line .cdot{width:3px;height:3px;border-radius:50%;background:var(--gold);opacity:.6}
+
+.bh-reviewer-panel{
+  max-width:880px;margin:24px auto 0;padding:20px 24px;
+  background:rgba(255,250,241,.7);
+  border-top:0.5px solid rgba(201,162,39,.35);
+  border-bottom:0.5px solid rgba(201,162,39,.22);
+  position:relative;z-index:3;text-align:left;
+}
+.bh-reviewer-kicker{
+  font-size:9.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:9px;
+}
+.bh-reviewer-copy{
+  margin:0;font-size:13.5px;line-height:1.75;color:var(--ink-soft);
+}
+.bh-reviewer-copy strong{color:var(--ink);font-weight:500}
 
 .bh-flow{padding:0 22px}
 
@@ -771,6 +787,8 @@ body{
   .bh-modal-title{font-size:22px}
   .bh-ecosystem-grid{grid-template-columns:1fr}
   .bh-opening{font-size:17px}
+  .bh-reviewer-panel{margin:20px 18px 0;padding:18px}
+  .bh-reviewer-copy{font-size:13px}
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -827,7 +845,7 @@ body{
 
       <div class="bh-bigmark">bleu<span class="dot">.</span>live<span class="end">.</span></div>
 
-      <p class="bh-opening">A <em>clinically governed</em> care platform built for your life.</p>
+      <p class="bh-opening">BLEU helps you know what to do next — after a hospital visit, a new medicine, or a hard moment. Tell us what's happening, and we'll help you find one safe next step, then check back to see how it went.</p>
 
       <div class="bh-typewriter-shell" aria-live="polite">
         <h1 class="bh-typewriter">
@@ -919,6 +937,11 @@ body{
         <span>Expanding parish by parish</span>
       </div>
     </div>
+
+    <section class="bh-reviewer-panel" aria-label="partner and reviewer note">
+      <div class="bh-reviewer-kicker">partner / reviewer note</div>
+      <p class="bh-reviewer-copy">BLEU is a clinically governed routing layer. It checks safety first, routes one safe next step, writes its reasoning to an auditable record before it responds, and follows up. Proven today: the closed loop runs and re-proves on demand; the crisis safety layer is verified; every routed decision is written before the person sees a reply. Built to measure in pilot, not claimed today: follow-up completion, time-to-support, local-resource use. Built to work alongside Louisiana's rural-health GIS map. Clinical governance and written sign-off by Dr. Felicia Stoler.</p>
+    </section>
 
     <div class="bh-flow">
 
