@@ -6,6 +6,7 @@
 # ═══════════════════════════════════════════════════════════
 
 set -e
+: "${SUPABASE_ANON_KEY:?Set SUPABASE_ANON_KEY before running cities/deploy.sh}"
 echo "🔵 BLEU Deploy Starting..."
 
 # ═══ STEP 1: Add Supabase SDK before </head> ═══
@@ -217,6 +218,11 @@ if ! grep -q "doSignUp" index.html; then
 
 # Add the auth JS right after the existing SB constant line
 python3 << 'PYEOF2'
+import json
+import os
+
+sb_anon = os.environ['SUPABASE_ANON_KEY']
+
 with open('index.html', 'r') as f:
     html = f.read()
 
@@ -234,7 +240,7 @@ eol = html.find('\n', sb_idx)
 auth_js = '''
 
 // ═══ SUPABASE AUTH + HISTORY ═══
-const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc0MjMzMzUsImV4cCI6MjA1Mjk5OTMzNX0.eMHhdjJKZi0ZH0hgdGfszqJJ8KLbFG6fVPWFSYBfwDg'
+const SB_ANON=__SUPABASE_ANON_KEY__
 let sbClient=null,currentUser=null,currentConvoId=null
 try{sbClient=window.supabase?window.supabase.createClient(SB,SB_ANON):null}catch(e){console.log('Supabase SDK not loaded yet')}
 
@@ -398,6 +404,7 @@ async function clearHistory(){
   document.getElementById('session-list').innerHTML='<div style="text-align:center;color:#8fa4b0;padding:20px;font-size:0.85rem">History cleared.</div>'
 }
 '''
+auth_js = auth_js.replace('__SUPABASE_ANON_KEY__', json.dumps(sb_anon))
 
 html = html[:eol] + auth_js + html[eol:]
 

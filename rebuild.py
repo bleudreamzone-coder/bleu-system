@@ -4,6 +4,12 @@
 # This script generates a REPLACEMENT index.html
 # Run in /workspaces/bleu-system: python3 rebuild.py
 
+import os
+
+SB_ANON = os.environ.get("SUPABASE_ANON_KEY")
+if not SB_ANON:
+    raise SystemExit("Set SUPABASE_ANON_KEY before running rebuild.py")
+
 HTML = '''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -397,7 +403,7 @@ section.active{display:block}
 
 <script>
 const SB='https://sqyzboesdpdussiwqpzk.supabase.co'
-const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxeXpib2VzZHBkdXNzaXdxcHprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNDU0NDEsImV4cCI6MjA4NTYyMTQ0MX0.Z2xMkP31VXWhiGG9cVKFPAhzYH-B9zDWD_iTkYbawMw'
+const ANON='__SUPABASE_ANON_KEY__'
 const ALVAI='https://bleu-pipeline-production.up.railway.app/api/chat'
 const chatHistories={}, chatModes={}
 
@@ -457,6 +463,8 @@ async function send(tab){
 </script>
 </body>
 </html>'''
+
+HTML = HTML.replace('__SUPABASE_ANON_KEY__', SB_ANON)
 
 with open('index.html', 'w') as f:
     f.write(HTML)
